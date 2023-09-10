@@ -31,6 +31,18 @@ dependencies:
   flutter:
     sdk: flutter
 
+  # PDPA Utils package
+  pdpa_utils:
+    path: packages/utilities/pdpa_utils
+  
+  # Authentication Repository package
+  authentication_repository:
+    path: packages/repositories/authentication_repository
+
+  # Consent Management Repository package
+  consent_management_repository:
+    path: packages/repositories/consent_management_repository
+
   # Third-party APIs and Services
   firebase_core: ^2.15.1
   firebase_auth: ^4.9.0

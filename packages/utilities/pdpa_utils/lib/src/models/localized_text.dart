@@ -7,6 +7,8 @@ class LocalizedText {
     required this.text,
   });
 
+  static LocalizedText get initial => LocalizedText(language: '', text: '');
+
   static List<Map<String, dynamic>> toList(List<LocalizedText> list) {
     return list
         .map((localizedText) => <String, dynamic>{
@@ -16,8 +18,8 @@ class LocalizedText {
         .toList();
   }
 
-  static List<LocalizedText> fromList(List<Map<String, dynamic>> list) {
-    return list
+  static List<LocalizedText> fromList(List<dynamic> list) {
+    return List<Map<String, dynamic>>.from(list)
         .map((map) => LocalizedText(
               language: map['language'] as String,
               text: map['text'] as String,

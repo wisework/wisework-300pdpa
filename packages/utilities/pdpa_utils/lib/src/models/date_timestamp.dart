@@ -7,12 +7,20 @@ class DateTimestamp {
     required this.time,
   });
 
-  static Timestamp get initial => Timestamp.fromMillisecondsSinceEpoch(0);
+  static DateTimestamp get initial {
+    return DateTimestamp(time: Timestamp.fromMillisecondsSinceEpoch(0));
+  }
 
-  static Timestamp get now => Timestamp.now();
+  static DateTimestamp get now => DateTimestamp(time: Timestamp.now());
 
-  static DateTimestamp parse(String date) {
-    return DateTimestamp(time: Timestamp.fromDate(DateTime.parse(date)));
+  static DateTimestamp fromDate(DateTime date) {
+    return DateTimestamp(time: Timestamp.fromDate(date));
+  }
+
+  DateTimestamp addDays(int days) {
+    return DateTimestamp(
+      time: Timestamp.fromDate(time.toDate().add(Duration(days: days))),
+    );
   }
 
   DateTimestamp copyWith({

@@ -2,9 +2,9 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/foundation.dart';
 
 class FlutterFirebaseApi {
-  static Future<List<Map<String, dynamic>>> getCollection(
-    String collectionPath,
-  ) async {
+  static Future<List<Map<String, dynamic>>> getCollection({
+    required String collectionPath,
+  }) async {
     List<Map<String, dynamic>> documents = [];
 
     try {
@@ -16,15 +16,15 @@ class FlutterFirebaseApi {
         documents.add(response);
       }
     } catch (error) {
-      debugPrint('Error get [$collectionPath]: $error');
+      debugPrint('Failed to get [$collectionPath]: $error');
     }
 
     return documents;
   }
 
-  static Future<Map<String, dynamic>?> getDocument(
-    String documentPath,
-  ) async {
+  static Future<Map<String, dynamic>?> getDocument({
+    required String documentPath,
+  }) async {
     try {
       final documentRef =
           await FirebaseFirestore.instance.doc(documentPath).get();
@@ -34,46 +34,47 @@ class FlutterFirebaseApi {
         return response;
       }
     } catch (error) {
-      debugPrint('Error get [$documentPath]: $error');
+      debugPrint('Failed to get [$documentPath]: $error');
     }
 
     return null;
   }
 
-  static Future<void> createDocument(
-    String documentPath,
-    Map<String, dynamic> data,
+  static Future<void> addDocument({
+    required String collectionPath,
+    required Map<String, dynamic> data,
     SetOptions? options,
-  ) async {
+  }) async {
+    try {
+      final documentRef =
+          FirebaseFirestore.instance.collection(collectionPath).doc();
+      await documentRef.set(data, options);
+    } catch (error) {
+      debugPrint('Failed to add [$collectionPath]: $error');
+    }
+  }
+
+  static Future<void> updateDocument({
+    required String documentPath,
+    required Map<String, dynamic> data,
+    SetOptions? options,
+  }) async {
     try {
       final documentRef = FirebaseFirestore.instance.doc(documentPath);
       await documentRef.set(data, options);
     } catch (error) {
-      debugPrint('Error create [$documentPath]: $error');
+      debugPrint('Failed to update [$documentPath]: $error');
     }
   }
 
-  static Future<void> updateDocument(
-    String documentPath,
-    Map<String, dynamic> data,
-    SetOptions? options,
-  ) async {
-    try {
-      final documentRef = FirebaseFirestore.instance.doc(documentPath);
-      await documentRef.set(data, options);
-    } catch (error) {
-      debugPrint('Error update [$documentPath]: $error');
-    }
-  }
-
-  static Future<void> deleteDocument(
-    String documentPath,
-  ) async {
+  static Future<void> deleteDocument({
+    required String documentPath,
+  }) async {
     try {
       final documentRef = FirebaseFirestore.instance.doc(documentPath);
       await documentRef.delete();
     } catch (error) {
-      debugPrint('Error delete [$documentPath]: $error');
+      debugPrint('Failed to delete [$documentPath]: $error');
     }
   }
 }

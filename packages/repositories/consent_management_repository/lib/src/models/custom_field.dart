@@ -1,14 +1,16 @@
 import 'package:pdpa_utils/pdpa_utils.dart';
 
+enum CustomFieldInputType { text, textarea, number, email, phone }
+
 class CustomField {
   final String id;
   final List<LocalizedText> title;
   final List<LocalizedText> hintText;
-  final String inputType;
+  final CustomFieldInputType inputType;
   final int? lengthLimit;
   final int minLines;
   final int maxLines;
-  final String status;
+  final ActiveStatus status;
   final String createdBy;
   final DateTimestamp createdDate;
   final String updatedBy;
@@ -29,15 +31,31 @@ class CustomField {
     required this.updatedDate,
   });
 
+  static CustomField get initial {
+    return CustomField(
+      id: '',
+      title: [],
+      hintText: [],
+      inputType: CustomFieldInputType.text,
+      minLines: 1,
+      maxLines: 1,
+      status: ActiveStatus.active,
+      createdBy: '',
+      createdDate: DateTimestamp.initial,
+      updatedBy: '',
+      updatedDate: DateTimestamp.initial,
+    );
+  }
+
   CustomField copyWith({
     String? id,
     List<LocalizedText>? title,
     List<LocalizedText>? hintText,
-    String? inputType,
+    CustomFieldInputType? inputType,
     int? lengthLimit,
     int? minLines,
     int? maxLines,
-    String? status,
+    ActiveStatus? status,
     String? createdBy,
     DateTimestamp? createdDate,
     String? updatedBy,
@@ -63,11 +81,11 @@ class CustomField {
     return <String, dynamic>{
       'title': LocalizedText.toList(title),
       'hintText': LocalizedText.toList(hintText),
-      'inputType': inputType,
+      'inputType': inputType.index,
       'lengthLimit': lengthLimit,
       'minLines': minLines,
       'maxLines': maxLines,
-      'status': status,
+      'status': status.index,
       'createdBy': createdBy,
       'createdDate': createdDate.time,
       'updatedBy': updatedBy,
@@ -80,16 +98,16 @@ class CustomField {
       id: map['id'] as String,
       title: LocalizedText.fromList(map['title']),
       hintText: LocalizedText.fromList(map['hintText']),
-      inputType: map['inputType'] as String,
+      inputType: CustomFieldInputType.values[map['inputType'] as int],
       lengthLimit:
           map['lengthLimit'] != null ? int.parse(map['lengthLimit']) : null,
       minLines: map['minLines'] as int,
       maxLines: map['maxLines'] as int,
-      status: map['status'] as String,
+      status: ActiveStatus.values[map['status'] as int],
       createdBy: map['createdBy'] as String,
-      createdDate: DateTimestamp.parse(map['createdDate']),
+      createdDate: DateTimestamp(time: map['createdDate']),
       updatedBy: map['updatedBy'] as String,
-      updatedDate: DateTimestamp.parse(map['updatedDate']),
+      updatedDate: DateTimestamp(time: map['updatedDate']),
     );
   }
 
