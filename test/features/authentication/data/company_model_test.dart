@@ -2,26 +2,26 @@ import 'dart:convert';
 
 import 'package:flutter_test/flutter_test.dart';
 import 'package:pdpa/core/utils/typedef.dart';
-import 'package:pdpa/features/authentication/data/user_model.dart';
-import 'package:pdpa/features/authentication/domain/entities/user.dart';
+import 'package:pdpa/features/authentication/data/company_model.dart';
+import 'package:pdpa/features/authentication/domain/entities/company.dart';
 
 import '../../../fixtures/fixture_reader.dart';
 
 void main() {
-  final model = UserModel.empty();
+  final model = CompanyModel.empty();
 
-  test('Should be a subclass of [User] entity', () {
+  test('Should be a subclass of [Company] entity', () {
     //? Assert
-    expect(model, isA<User>());
+    expect(model, isA<Company>());
   });
 
-  final json = fixture('user.json');
+  final json = fixture('company.json');
   final map = jsonDecode(json) as DataMap;
 
   group('Test fromMap:', () {
-    test('Should return a [UserModel] with the right data', () {
+    test('Should return a [CompanyModel] with the right data', () {
       //? Act
-      final result = UserModel.fromMap(map);
+      final result = CompanyModel.fromMap(map);
 
       //? Assert
       expect(result, equals(model));
@@ -39,9 +39,9 @@ void main() {
   });
 
   group('Test fromJson:', () {
-    test('Should return a [UserModel] with the right data', () {
+    test('Should return a [CompanyModel] with the right data', () {
       //? Act
-      final result = UserModel.fromJson(json);
+      final result = CompanyModel.fromJson(json);
 
       //? Assert
       expect(result, equals(model));

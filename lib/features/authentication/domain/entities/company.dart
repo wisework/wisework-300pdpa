@@ -1,4 +1,3 @@
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:equatable/equatable.dart';
 
 import 'package:pdpa/core/utils/constants.dart';
@@ -22,9 +21,9 @@ class Company extends Equatable {
           profileImage: '',
           status: ActiveStatus.active,
           createdBy: '',
-          createdDate: Timestamp.fromMillisecondsSinceEpoch(0),
+          createdDate: DateTime.fromMillisecondsSinceEpoch(0),
           updatedBy: '',
-          updatedDate: Timestamp.fromMillisecondsSinceEpoch(0),
+          updatedDate: DateTime.fromMillisecondsSinceEpoch(0),
         );
 
   final String id;
@@ -32,9 +31,9 @@ class Company extends Equatable {
   final String profileImage;
   final ActiveStatus status;
   final String createdBy;
-  final Timestamp createdDate;
+  final DateTime createdDate;
   final String updatedBy;
-  final Timestamp updatedDate;
+  final DateTime updatedDate;
 
   @override
   List<Object?> get props {

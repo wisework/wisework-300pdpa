@@ -1,6 +1,5 @@
 import 'dart:convert';
 
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:pdpa/core/utils/constants.dart';
 import 'package:pdpa/core/utils/typedef.dart';
 import 'package:pdpa/features/authentication/domain/entities/user.dart';
@@ -50,9 +49,9 @@ class UserModel extends User {
           version: 1,
           status: ActiveStatus.active,
           createdBy: '',
-          createdDate: Timestamp.fromMillisecondsSinceEpoch(0),
+          createdDate: DateTime.fromMillisecondsSinceEpoch(0),
           updatedBy: '',
-          updatedDate: Timestamp.fromMillisecondsSinceEpoch(0),
+          updatedDate: DateTime.fromMillisecondsSinceEpoch(0),
         );
 
   UserModel.fromMap(DataMap map)
@@ -77,11 +76,9 @@ class UserModel extends User {
           version: map['version'] as int,
           status: ActiveStatus.values[map['status'] as int],
           createdBy: map['createdBy'] as String,
-          createdDate:
-              Timestamp.fromDate(DateTime.parse(map['createdDate'] as String)),
+          createdDate: DateTime.parse(map['createdDate'] as String),
           updatedBy: map['updatedBy'] as String,
-          updatedDate:
-              Timestamp.fromDate(DateTime.parse(map['updatedDate'] as String)),
+          updatedDate: DateTime.parse(map['updatedDate'] as String),
         );
 
   DataMap toMap() => {
@@ -103,9 +100,9 @@ class UserModel extends User {
         'version': version,
         'status': status.index,
         'createdBy': createdBy,
-        'createdDate': createdDate,
+        'createdDate': createdDate.toIso8601String(),
         'updatedBy': updatedBy,
-        'updatedDate': updatedDate,
+        'updatedDate': updatedDate.toIso8601String(),
       };
 
   factory UserModel.fromJson(String source) =>
@@ -132,9 +129,9 @@ class UserModel extends User {
     int? version,
     ActiveStatus? status,
     String? createdBy,
-    Timestamp? createdDate,
+    DateTime? createdDate,
     String? updatedBy,
-    Timestamp? updatedDate,
+    DateTime? updatedDate,
   }) {
     return UserModel(
       id: id ?? this.id,
