@@ -148,13 +148,13 @@ void main() {
         ).thenAnswer((_) async => userCredential);
 
         //? Act
-        final result = remoteDataSourceImpl.signInWithEmailAndPassword(
+        final methodCall = remoteDataSourceImpl.signInWithEmailAndPassword(
           email: email,
           password: password,
         );
 
         //? Assert
-        expect(result, throwsA(isA<ApiException>()));
+        expect(() => methodCall, throwsA(isA<ApiException>()));
         verify(
           () => auth.signInWithEmailAndPassword(
             email: email,
@@ -188,13 +188,13 @@ void main() {
             .thenAnswer((_) async => queryDocumentSnapshot);
 
         //? Act
-        final result = remoteDataSourceImpl.signInWithEmailAndPassword(
+        final methodCall = remoteDataSourceImpl.signInWithEmailAndPassword(
           email: email,
           password: password,
         );
 
         //? Assert
-        expect(result, throwsA(isA<ApiException>()));
+        expect(() => methodCall, throwsA(isA<ApiException>()));
         verify(
           () => auth.signInWithEmailAndPassword(
             email: email,
