@@ -6,21 +6,15 @@ import 'package:pdpa/firebase_options.dart';
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform);
-
-  WidgetsFlutterBinding
-      .ensureInitialized(); // Needs to be called so that we can await for EasyLocalization.ensureInitialized();
   await EasyLocalization.ensureInitialized();
 
   runApp(
     EasyLocalization(
-        supportedLocales: [
-          Locale('en','US'), 
-          Locale('th','TH')
-          ],
-        path:
-            'lib/core/localization', // <-- change the path of the translation files
-        fallbackLocale: Locale('en','US'),
-        child: MyApp()),
+      supportedLocales: const [Locale('en', 'US'), Locale('th', 'TH')],
+      path: 'lib/core/localization',
+      fallbackLocale: const Locale('en', 'US'),
+      child: const MyApp(),
+    ),
   );
 }
 
@@ -79,13 +73,13 @@ class _MyHomePageState extends State<MyHomePage> {
             child: TextButton(
               child: Text(
                 tr('app.changeLang'),
-                style: TextStyle(color: Colors.white),
+                style: const TextStyle(color: Colors.white),
               ),
               onPressed: () => setState(() {
                 if (context.locale.languageCode == 'en') {
-                  context.setLocale(Locale('th','TH'));
+                  context.setLocale(const Locale('th', 'TH'));
                 } else {
-                  context.setLocale(Locale('en','US'));
+                  context.setLocale(const Locale('en', 'US'));
                 }
               }),
             ),
@@ -96,11 +90,11 @@ class _MyHomePageState extends State<MyHomePage> {
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: <Widget>[
-            Text(
+            const Text(
               'app.description',
               style: TextStyle(),
             ).tr(),
-            Text(
+            const Text(
               'app.counter',
               style: TextStyle(),
             ).plural(_counter),
