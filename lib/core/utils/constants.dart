@@ -1,0 +1,1 @@
+enum ActiveStatus { active, inactive }
