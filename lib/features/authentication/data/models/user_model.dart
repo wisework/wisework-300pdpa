@@ -110,6 +110,12 @@ class UserModel extends User {
 
   String toJson() => json.encode(toMap());
 
+  factory UserModel.fromDocument(FirebaseDocument document) {
+    Map<String, dynamic> response = document.data()!;
+    response['id'] = document.id;
+    return UserModel.fromMap(response);
+  }
+
   UserModel copyWith({
     String? id,
     String? uid,

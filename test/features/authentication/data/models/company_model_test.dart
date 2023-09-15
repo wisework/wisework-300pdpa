@@ -2,10 +2,10 @@ import 'dart:convert';
 
 import 'package:flutter_test/flutter_test.dart';
 import 'package:pdpa/core/utils/typedef.dart';
-import 'package:pdpa/features/authentication/data/company_model.dart';
+import 'package:pdpa/features/authentication/data/models/company_model.dart';
 import 'package:pdpa/features/authentication/domain/entities/company.dart';
 
-import '../../../fixtures/fixture_reader.dart';
+import '../../../../fixtures/fixture_reader.dart';
 
 void main() {
   final model = CompanyModel.empty();
@@ -55,6 +55,16 @@ void main() {
 
       //? Assert
       expect(result, equals(json));
+    });
+  });
+
+  group('Test copyWith:', () {
+    test('Should return a [CompanyModel] with different data', () {
+      //? Act
+      final result = model.copyWith(name: 'Meow Corp.');
+
+      //? Assert
+      expect(result.name, equals('Meow Corp.'));
     });
   });
 }
