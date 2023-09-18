@@ -4,6 +4,7 @@ import 'package:google_sign_in/google_sign_in.dart';
 import 'package:pdpa/core/errors/exceptions.dart';
 import 'package:pdpa/features/authentication/data/datasources/remote/authentication_remote_data_source.dart';
 import 'package:pdpa/features/authentication/data/models/user_model.dart';
+import 'package:uuid/uuid.dart';
 
 class AuthenticationRemoteDataSourceImplementation
     extends AuthenticationRemoteDataSource {
@@ -56,6 +57,37 @@ class AuthenticationRemoteDataSourceImplementation
             .get();
         if (document.exists) {
           return UserModel.fromDocument(document);
+        } else {
+          final name = userCredential.user!.displayName?.split(' ') ??
+              [userCredential.user!.displayName!];
+
+          String firstName = '';
+          String lastName = '';
+
+          firstName = name.first;
+          if (name.length > 1) lastName = name.last;
+
+          final newUser = UserModel.empty().copyWith(
+            id: userCredential.user!.uid,
+            uid: const Uuid().v6(),
+            firstName: firstName,
+            lastName: lastName,
+            email: userCredential.user!.email,
+            role: 'User',
+            defaultLanguage: 'en-US',
+            isEmailVerified: userCredential.user!.emailVerified,
+            createdBy: 'Sign in with Google',
+            createdDate: DateTime.now(),
+            updatedBy: 'Sign in with Google',
+            updatedDate: DateTime.now(),
+          );
+
+          await _firestore
+              .collection('Users')
+              .doc(newUser.id)
+              .set(newUser.toMap());
+
+          return newUser;
         }
       }
     }

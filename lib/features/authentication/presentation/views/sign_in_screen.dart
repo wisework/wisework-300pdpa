@@ -253,8 +253,8 @@ class _SignInScreenState extends State<SignInScreen> {
               },
             ),
           ),
-          /*const SizedBox(height: 10.0),
-          BlocConsumer<AuthenticationBloc, AuthenticationState>(
+          const SizedBox(height: 10.0),
+          /*BlocConsumer<AuthenticationBloc, AuthenticationState>(
             listener: (context, state) {
               if (state is AuthenticationError) {
                 ScaffoldMessenger.of(context).showSnackBar(
@@ -279,7 +279,8 @@ class _SignInScreenState extends State<SignInScreen> {
               }
             },
             builder: (context, state) {
-              if (state is SignedInWithEmailAndPassword) {
+              if (state is SignedInWithEmailAndPassword ||
+                  state is SignedInWithGoogle) {
                 return CustomButton(
                   height: 40.0,
                   onPressed: () {
