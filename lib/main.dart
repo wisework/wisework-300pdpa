@@ -1,12 +1,19 @@
 import 'package:easy_localization/easy_localization.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
-import 'package:pdpa/firebase_options.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:pdpa/core/firebase_options.dart';
+import 'package:pdpa/core/services/injection_container.dart';
+import 'package:pdpa/core/themes/pdpa_theme_data.dart';
+import 'package:pdpa/features/authentication/presentation/bloc/authentication_bloc.dart';
+import 'package:pdpa/features/authentication/presentation/views/sign_in_screen.dart';
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform);
   await EasyLocalization.ensureInitialized();
+
+  await init();
 
   runApp(
     EasyLocalization(
@@ -23,22 +30,20 @@ class MyApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-      debugShowCheckedModeBanner: false,
-      localizationsDelegates: context.localizationDelegates,
-      supportedLocales: context.supportedLocales,
-      locale: context.locale,
-      title: 'Flutter Demo',
-      theme: ThemeData(
-        colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
-        useMaterial3: true,
-      ),
-      home: Builder(
-        builder: (context) {
-          return MyHomePage(
-            title: tr('app.title'),
-          );
-        },
+    return MultiBlocProvider(
+      providers: [
+        BlocProvider<AuthenticationBloc>(
+          create: (context) => serviceLocator<AuthenticationBloc>(),
+        ),
+      ],
+      child: MaterialApp(
+        localizationsDelegates: context.localizationDelegates,
+        supportedLocales: context.supportedLocales,
+        locale: context.locale,
+        title: 'PDPA Management Platform',
+        theme: PdpaThemeData.lightThemeData,
+        debugShowCheckedModeBanner: false,
+        home: const SignInScreen(),
       ),
     );
   }
