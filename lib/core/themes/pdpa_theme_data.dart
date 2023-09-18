@@ -19,21 +19,18 @@ class PdpaThemeData {
 
   static ThemeData themeData(ColorScheme colorScheme, Color focusColor) {
     return ThemeData(
-      useMaterial3: true,
-      visualDensity: VisualDensity.adaptivePlatformDensity,
-      colorScheme: colorScheme,
-      textTheme: _textTheme,
-      primaryColor: colorScheme.primary,
       appBarTheme: AppBarTheme(
         backgroundColor: colorScheme.background,
         elevation: 0,
         iconTheme: IconThemeData(color: colorScheme.primary),
       ),
-      iconTheme: IconThemeData(color: colorScheme.primary),
       canvasColor: colorScheme.background,
-      scaffoldBackgroundColor: colorScheme.background,
+      colorScheme: colorScheme,
+      focusColor: colorScheme.secondary,
       highlightColor: Colors.transparent,
-      focusColor: const Color(0xFF254960),
+      iconTheme: IconThemeData(color: colorScheme.primary),
+      primaryColor: colorScheme.primary,
+      scaffoldBackgroundColor: colorScheme.background,
       snackBarTheme: SnackBarThemeData(
         behavior: SnackBarBehavior.floating,
         backgroundColor: Color.alphaBlend(
@@ -44,6 +41,9 @@ class PdpaThemeData {
           color: _darkFillColor,
         ),
       ),
+      textTheme: _textTheme,
+      useMaterial3: true,
+      visualDensity: VisualDensity.adaptivePlatformDensity,
     );
   }
 
@@ -54,7 +54,7 @@ class PdpaThemeData {
     secondary: Color(0xFF2F3853), // secondary
     onSecondary: Color(0xFFC9DBFC),
     tertiary: Color(0xFFD9D9D9), // disable field
-    onTertiary: Color(0xFF9F9F9F), // hint text
+    onTertiary: Color(0xFF96A7AF), // hint text
     error: Color(0xFFF22525), // error
     onError: Color(0xFFF9C132), // warning
     background: Color(0xFFF3F2F2), // background
@@ -63,6 +63,7 @@ class PdpaThemeData {
     onSurface: Colors.black, // text
     outline: Color(0xFFC4C4C6), // outline 1
     outlineVariant: Color(0xFF909090), // outline 2
+    surfaceTint: Color(0xFF3A9FFD), // splash color
   );
 
   static const ColorScheme darkColorScheme = ColorScheme(
@@ -72,7 +73,7 @@ class PdpaThemeData {
     secondary: Color(0xFF2F3853), // secondary
     onSecondary: Color(0xFFC9DBFC),
     tertiary: Color(0xFFD9D9D9), // disable field
-    onTertiary: Color(0xFF9F9F9F), // hint text
+    onTertiary: Color(0xFF96A7AF), // hint text
     error: Color(0xFFF22525), // error
     onError: Color(0xFFF9C132), // warning
     background: Color(0xFFF3F2F2), // background
@@ -81,6 +82,7 @@ class PdpaThemeData {
     onSurface: Colors.black, // text
     outline: Color(0xFFC4C4C6), // outline 1
     outlineVariant: Color(0xFF909090), // outline 2
+    surfaceTint: Color(0xFF3A9FFD), // splash color
   );
 
   static const _light = FontWeight.w300;

@@ -2,6 +2,7 @@ import 'package:easy_localization/easy_localization.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:pdpa/core/configuration.dart';
 import 'package:pdpa/core/firebase_options.dart';
 import 'package:pdpa/core/services/injection_container.dart';
 import 'package:pdpa/core/themes/pdpa_theme_data.dart';
@@ -40,7 +41,7 @@ class MyApp extends StatelessWidget {
         localizationsDelegates: context.localizationDelegates,
         supportedLocales: context.supportedLocales,
         locale: context.locale,
-        title: 'PDPA Management Platform',
+        title: AppConfig.appName,
         theme: PdpaThemeData.lightThemeData,
         debugShowCheckedModeBanner: false,
         home: const SignInScreen(),

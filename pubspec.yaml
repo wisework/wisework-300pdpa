@@ -45,7 +45,9 @@ dependencies:
   easy_localization: ^3.0.3
   get_it: ^7.6.4
 
+  # Decoration packages
   google_fonts: ^6.0.0
+  ionicons: ^0.2.2
 
   # Test packages
   mocktail: ^1.0.0
@@ -79,6 +81,7 @@ flutter:
 
   # To add assets to your application, add an assets section, like this:
   assets:
+    - assets/images/
     - lib/core/localization/
   # An image asset can refer to one or more resolution-specific "variants", see
   # https://flutter.dev/assets-and-images/#resolution-aware

@@ -1,6 +1,6 @@
 {
     "app": {
-        "title": "PDPA Management Platform",
+        "name": "PDPA Management Platform",
         "changeLang": "เปลี่ยนภาษา",
         "description": "You have pushed the button this many times",
         "increment": "Increment",
@@ -9,6 +9,15 @@
             "one": "{} time",
             "two": "{} times",
             "other": "{} times"
+        },
+        "auth": {
+            "username": "Username or Email",
+            "password": "Password",
+            "rememberMe": "Remember me",
+            "forgotPassword": "Forgot password",
+            "signIn": "Sign in",
+            "signInWithGoogle": "Sign in with Google",
+            "joinOverForGoal": "Join over 100,000 users smashing their goals!"
         }
     }
 }

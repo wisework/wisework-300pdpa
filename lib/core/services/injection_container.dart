@@ -2,6 +2,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:get_it/get_it.dart';
 import 'package:google_sign_in/google_sign_in.dart';
+import 'package:pdpa/core/configuration.dart';
 import 'package:pdpa/features/authentication/data/datasources/remote/authentication_remote_data_source.dart';
 import 'package:pdpa/features/authentication/data/datasources/remote/authentication_remote_data_source_implementation.dart';
 import 'package:pdpa/features/authentication/data/repositories/authentication_repository_implementation.dart';
@@ -18,7 +19,11 @@ Future<void> init() async {
     // External Dependencies
     ..registerLazySingleton(() => FirebaseFirestore.instance)
     ..registerLazySingleton(() => FirebaseAuth.instance)
-    ..registerLazySingleton(() => GoogleSignIn);
+    ..registerLazySingleton(
+      () => GoogleSignIn(
+          clientId: AppConfig.webClientId,
+          scopes: ['https://www.googleapis.com/auth/contacts.readonly']),
+    );
 
   await _authentication();
 }

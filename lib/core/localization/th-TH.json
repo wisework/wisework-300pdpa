@@ -1,6 +1,6 @@
 {
     "app": {
-        "title": "PDPA Management Platform",
+        "name": "PDPA Management Platform",
         "changeLang": "Change language",
         "description": "คลิกสิคลิกหลายๆที",
         "increment": "เพิ่ม",
@@ -9,6 +9,15 @@
             "one": "{} ครั้ง",
             "two": "{} ครั้ง",
             "other": "{} ครั้ง"
+        },
+        "auth": {
+            "username": "ชื่อผู้ใช้หรืออีเมล",
+            "password": "รหัสผ่าน",
+            "rememberMe": "จำฉันไว้",
+            "forgotPassword": "ลืมรหัสผ่าน",
+            "signIn": "เข้าสู่ระบบ",
+            "signInWithGoogle": "เข้าสู่ระบบด้วย Google",
+            "joinOverForGoal": "เข้าร่วมกับผู้ใช้มากกว่า 100,000 ราย เพื่อบรรลุเป้าหมาย!"
         }
     }
 }
