@@ -14,17 +14,17 @@ class AuthenticationInitial extends AuthenticationState {
   List<Object> get props => [];
 }
 
-class SigningInWithEmailAndPassword extends AuthenticationState {
-  const SigningInWithEmailAndPassword();
+class GettingCurrentUser extends AuthenticationState {
+  const GettingCurrentUser();
 
   @override
   List<Object> get props => [];
 }
 
-class SignedInWithEmailAndPassword extends AuthenticationState {
-  const SignedInWithEmailAndPassword(this.user);
+class GotCurrentUser extends AuthenticationState {
+  const GotCurrentUser(this.user);
 
-  final User user;
+  final UserEntity user;
 
   @override
   List<Object> get props => [user];
@@ -40,7 +40,7 @@ class SigningInWithGoogle extends AuthenticationState {
 class SignedInWithGoogle extends AuthenticationState {
   const SignedInWithGoogle(this.user);
 
-  final User user;
+  final UserEntity user;
 
   @override
   List<Object> get props => [user];
@@ -55,6 +55,20 @@ class SigningOut extends AuthenticationState {
 
 class SignedOut extends AuthenticationState {
   const SignedOut();
+
+  @override
+  List<Object> get props => [];
+}
+
+class UpdatingUser extends AuthenticationState {
+  const UpdatingUser();
+
+  @override
+  List<Object> get props => [];
+}
+
+class UpdatedUser extends AuthenticationState {
+  const UpdatedUser();
 
   @override
   List<Object> get props => [];

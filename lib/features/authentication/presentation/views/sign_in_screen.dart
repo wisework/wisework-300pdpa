@@ -2,8 +2,6 @@ import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:pdpa/core/widgets/custom_button.dart';
-import 'package:pdpa/core/widgets/custom_checkbox.dart';
-import 'package:pdpa/core/widgets/custom_text_field.dart';
 import 'package:pdpa/features/authentication/presentation/bloc/authentication_bloc.dart';
 
 class SignInScreen extends StatefulWidget {
@@ -23,15 +21,16 @@ class _SignInScreenState extends State<SignInScreen> {
 
     usernameController = TextEditingController();
     passwordController = TextEditingController();
-  }
 
-  void signInWithEmailAndPassword() {
-    context.read<AuthenticationBloc>().add(SignInWithEmailAndPasswordEvent(
-        email: usernameController.text, password: passwordController.text));
+    getCurrentUser();
   }
 
   void signInWithGoogle() {
     context.read<AuthenticationBloc>().add(const SignInWithGoogleEvent());
+  }
+
+  void getCurrentUser() {
+    context.read<AuthenticationBloc>().add(const GetCurrentUserEvent());
   }
 
   @override
@@ -53,7 +52,7 @@ class _SignInScreenState extends State<SignInScreen> {
                     style: Theme.of(context).textTheme.displayLarge,
                   ),
                   const SizedBox(height: 40.0),
-                  _buildSignInForm(context),
+                  _buildAuthenticationButton(),
                   Padding(
                     padding: const EdgeInsets.symmetric(vertical: 20.0),
                     child: Text(
@@ -82,7 +81,7 @@ class _SignInScreenState extends State<SignInScreen> {
                       style: Theme.of(context).textTheme.displayLarge,
                     ),
                     const SizedBox(height: 40.0),
-                    _buildSignInForm(context),
+                    _buildAuthenticationButton(),
                   ],
                 ),
               ),
@@ -103,7 +102,108 @@ class _SignInScreenState extends State<SignInScreen> {
     );
   }
 
-  ConstrainedBox _buildSignInForm(BuildContext context) {
+  ConstrainedBox _buildAuthenticationButton() {
+    return ConstrainedBox(
+      constraints: const BoxConstraints(maxWidth: 300.0),
+      child: Column(
+        children: <Widget>[
+          CustomButton(
+            height: 40.0,
+            onPressed: signInWithGoogle,
+            child: BlocConsumer<AuthenticationBloc, AuthenticationState>(
+              listener: (context, state) {
+                if (state is AuthenticationError) {
+                  ScaffoldMessenger.of(context).showSnackBar(
+                    SnackBar(
+                      content: Text(
+                        state.message,
+                        style: Theme.of(context).textTheme.bodyMedium?.copyWith(
+                            color: Theme.of(context).colorScheme.onPrimary),
+                      ),
+                    ),
+                  );
+                } else if (state is SignedInWithGoogle) {
+                  ScaffoldMessenger.of(context).showSnackBar(
+                    SnackBar(
+                      content: Text(
+                        'Sign in with Google is successfully!',
+                        style: Theme.of(context).textTheme.bodyMedium?.copyWith(
+                            color: Theme.of(context).colorScheme.onPrimary),
+                      ),
+                    ),
+                  );
+                }
+              },
+              builder: (context, state) {
+                if (state is GettingCurrentUser) {
+                  return SizedBox(
+                    width: 24.0,
+                    height: 24.0,
+                    child: CircularProgressIndicator(
+                      color: Theme.of(context).colorScheme.onPrimary,
+                      strokeWidth: 3.0,
+                    ),
+                  );
+                }
+                return Text(
+                  tr('app.auth.signInWithGoogle'),
+                  style: Theme.of(context).textTheme.titleMedium?.copyWith(
+                      color: Theme.of(context).colorScheme.onPrimary),
+                );
+              },
+            ),
+          ),
+          const SizedBox(height: 10.0),
+          BlocConsumer<AuthenticationBloc, AuthenticationState>(
+            listener: (context, state) {
+              if (state is AuthenticationError) {
+                ScaffoldMessenger.of(context).showSnackBar(
+                  SnackBar(
+                    content: Text(
+                      state.message,
+                      style: Theme.of(context).textTheme.bodyMedium?.copyWith(
+                          color: Theme.of(context).colorScheme.onPrimary),
+                    ),
+                  ),
+                );
+              } else if (state is SignedOut) {
+                ScaffoldMessenger.of(context).showSnackBar(
+                  SnackBar(
+                    content: Text(
+                      'Sign out is successfully!',
+                      style: Theme.of(context).textTheme.bodyMedium?.copyWith(
+                          color: Theme.of(context).colorScheme.onPrimary),
+                    ),
+                  ),
+                );
+              }
+            },
+            builder: (context, state) {
+              if (state is SignedInWithGoogle || state is GotCurrentUser) {
+                return CustomButton(
+                  height: 40.0,
+                  onPressed: () {
+                    context
+                        .read<AuthenticationBloc>()
+                        .add(const SignOutEvent());
+                  },
+                  buttonType: CustomButtonType.outlined,
+                  child: Text(
+                    'Sign out',
+                    style: Theme.of(context).textTheme.titleMedium?.copyWith(
+                        color: Theme.of(context).colorScheme.primary),
+                  ),
+                );
+              }
+              return const SizedBox();
+            },
+          ),
+        ],
+      ),
+    );
+  }
+
+  /*ConstrainedBox _buildSignInForm(BuildContext context) {
     return ConstrainedBox(
       constraints: const BoxConstraints(
         maxWidth: 300.0,
@@ -159,7 +259,7 @@ class _SignInScreenState extends State<SignInScreen> {
           const SizedBox(height: 30.0),
           CustomButton(
             height: 40.0,
-            onPressed: signInWithEmailAndPassword,
+            onPressed: () {},
             child: BlocConsumer<AuthenticationBloc, AuthenticationState>(
               listener: (context, state) {
                 if (state is AuthenticationError) {
@@ -172,7 +272,7 @@ class _SignInScreenState extends State<SignInScreen> {
                       ),
                     ),
                   );
-                } else if (state is SignedInWithEmailAndPassword) {
+                } else if (state is GotCurrentUser) {
                   ScaffoldMessenger.of(context).showSnackBar(
                     SnackBar(
                       content: Text(
@@ -185,7 +285,7 @@ class _SignInScreenState extends State<SignInScreen> {
                 }
               },
               builder: (context, state) {
-                if (state is SigningInWithEmailAndPassword) {
+                if (state is GettingCurrentUser) {
                   return SizedBox(
                     width: 24.0,
                     height: 24.0,
@@ -233,7 +333,7 @@ class _SignInScreenState extends State<SignInScreen> {
                 }
               },
               builder: (context, state) {
-                if (state is SigningInWithEmailAndPassword) {
+                if (state is GettingCurrentUser) {
                   return SizedBox(
                     width: 24.0,
                     height: 24.0,
@@ -254,52 +354,8 @@ class _SignInScreenState extends State<SignInScreen> {
             ),
           ),
           const SizedBox(height: 10.0),
-          /*BlocConsumer<AuthenticationBloc, AuthenticationState>(
-            listener: (context, state) {
-              if (state is AuthenticationError) {
-                ScaffoldMessenger.of(context).showSnackBar(
-                  SnackBar(
-                    content: Text(
-                      state.message,
-                      style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                          color: Theme.of(context).colorScheme.onPrimary),
-                    ),
-                  ),
-                );
-              } else if (state is SignedOut) {
-                ScaffoldMessenger.of(context).showSnackBar(
-                  SnackBar(
-                    content: Text(
-                      'Sign out is successfully!',
-                      style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                          color: Theme.of(context).colorScheme.onPrimary),
-                    ),
-                  ),
-                );
-              }
-            },
-            builder: (context, state) {
-              if (state is SignedInWithEmailAndPassword ||
-                  state is SignedInWithGoogle) {
-                return CustomButton(
-                  height: 40.0,
-                  onPressed: () {
-                    context
-                        .read<AuthenticationBloc>()
-                        .add(const SignOutEvent());
-                  },
-                  child: Text(
-                    'Sign out',
-                    style: Theme.of(context).textTheme.titleMedium?.copyWith(
-                        color: Theme.of(context).colorScheme.onPrimary),
-                  ),
-                );
-              }
-              return const SizedBox();
-            },
-          ),*/
         ],
       ),
     );
-  }
+  }*/
 }

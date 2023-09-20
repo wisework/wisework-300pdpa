@@ -7,9 +7,10 @@ import 'package:pdpa/features/authentication/data/datasources/remote/authenticat
 import 'package:pdpa/features/authentication/data/datasources/remote/authentication_remote_data_source_implementation.dart';
 import 'package:pdpa/features/authentication/data/repositories/authentication_repository_implementation.dart';
 import 'package:pdpa/features/authentication/domain/repositories/authentication_repository.dart';
-import 'package:pdpa/features/authentication/domain/usecases/sign_in_with_email_and_password.dart';
+import 'package:pdpa/features/authentication/domain/usecases/get_current_user.dart';
 import 'package:pdpa/features/authentication/domain/usecases/sign_in_with_google.dart';
 import 'package:pdpa/features/authentication/domain/usecases/sign_out.dart';
+import 'package:pdpa/features/authentication/domain/usecases/update_user.dart';
 import 'package:pdpa/features/authentication/presentation/bloc/authentication_bloc.dart';
 
 final serviceLocator = GetIt.instance;
@@ -32,13 +33,15 @@ Future<void> _authentication() async {
   serviceLocator
     // App Logic
     ..registerFactory(() => AuthenticationBloc(
-        signInWithEmailAndPassword: serviceLocator(),
+        getCurrentUser: serviceLocator(),
         signInWithGoogle: serviceLocator(),
-        signOut: serviceLocator()))
+        signOut: serviceLocator(),
+        updateUser: serviceLocator()))
     // Use cases
-    ..registerLazySingleton(() => SignInWithEmailAndPassword(serviceLocator()))
+    ..registerLazySingleton(() => GetCurrentUser(serviceLocator()))
     ..registerLazySingleton(() => SignInWithGoogle(serviceLocator()))
     ..registerLazySingleton(() => SignOut(serviceLocator()))
+    ..registerLazySingleton(() => UpdateUser(serviceLocator()))
     // Repositories
     ..registerLazySingleton<AuthenticationRepository>(
         () => AuthenticationRepositoryImplementation(serviceLocator()))

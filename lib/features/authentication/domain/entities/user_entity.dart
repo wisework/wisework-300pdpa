@@ -2,8 +2,8 @@ import 'package:equatable/equatable.dart';
 
 import 'package:pdpa/core/utils/constants.dart';
 
-class User extends Equatable {
-  const User({
+class UserEntity extends Equatable {
+  const UserEntity({
     required this.id,
     required this.uid,
     required this.firstName,
@@ -27,7 +27,7 @@ class User extends Equatable {
     required this.updatedDate,
   });
 
-  User.empty()
+  UserEntity.empty()
       : this(
           id: '',
           uid: '',

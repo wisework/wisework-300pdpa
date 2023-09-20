@@ -1,15 +1,16 @@
 import 'package:pdpa/core/utils/typedef.dart';
-import 'package:pdpa/features/authentication/domain/entities/user.dart';
+import 'package:pdpa/features/authentication/domain/entities/user_entity.dart';
 
 abstract class AuthenticationRepository {
   const AuthenticationRepository();
 
-  ResultFuture<User> signInWithEmailAndPassword({
-    required String email,
-    required String password,
-  });
+  ResultFuture<UserEntity> getCurrentUser();
 
-  ResultFuture<User> signInWithGoogle();
+  ResultFuture<UserEntity> signInWithGoogle();
 
   ResultVoid signOut();
+
+  ResultVoid updateUser({
+    required UserEntity user,
+  });
 }

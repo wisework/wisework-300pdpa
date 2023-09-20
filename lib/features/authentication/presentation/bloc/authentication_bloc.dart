@@ -1,10 +1,12 @@
 // ignore: depend_on_referenced_packages
 import 'package:bloc/bloc.dart';
 import 'package:equatable/equatable.dart';
-import 'package:pdpa/features/authentication/domain/entities/user.dart';
-import 'package:pdpa/features/authentication/domain/usecases/sign_in_with_email_and_password.dart';
+import 'package:pdpa/features/authentication/data/models/user_model.dart';
+import 'package:pdpa/features/authentication/domain/entities/user_entity.dart';
+import 'package:pdpa/features/authentication/domain/usecases/get_current_user.dart';
 import 'package:pdpa/features/authentication/domain/usecases/sign_in_with_google.dart';
 import 'package:pdpa/features/authentication/domain/usecases/sign_out.dart';
+import 'package:pdpa/features/authentication/domain/usecases/update_user.dart';
 
 part 'authentication_event.dart';
 part 'authentication_state.dart';
@@ -12,38 +14,41 @@ part 'authentication_state.dart';
 class AuthenticationBloc
     extends Bloc<AuthenticationEvent, AuthenticationState> {
   AuthenticationBloc({
-    required SignInWithEmailAndPassword signInWithEmailAndPassword,
+    required GetCurrentUser getCurrentUser,
     required SignInWithGoogle signInWithGoogle,
     required SignOut signOut,
-  })  : _signInWithEmailAndPassword = signInWithEmailAndPassword,
+    required UpdateUser updateUser,
+  })  : _getCurrentUser = getCurrentUser,
         _signInWithGoogle = signInWithGoogle,
         _signOut = signOut,
+        _updateUser = updateUser,
         super(const AuthenticationInitial()) {
-    on<SignInWithEmailAndPasswordEvent>(_signInWithEmailAndPasswordHandler);
+    on<GetCurrentUserEvent>(_getCurrentUserHandler);
     on<SignInWithGoogleEvent>(_signInWithGoogleHandler);
     on<SignOutEvent>(_signOutEventHandler);
+    on<UpdateUserEvent>(_updateUserHandler);
   }
 
-  final SignInWithEmailAndPassword _signInWithEmailAndPassword;
+  final GetCurrentUser _getCurrentUser;
   final SignInWithGoogle _signInWithGoogle;
   final SignOut _signOut;
+  final UpdateUser _updateUser;
 
-  Future<void> _signInWithEmailAndPasswordHandler(
-    SignInWithEmailAndPasswordEvent event,
+  Future<void> _getCurrentUserHandler(
+    GetCurrentUserEvent event,
     Emitter<AuthenticationState> emit,
   ) async {
-    emit(const SigningInWithEmailAndPassword());
+    emit(const GettingCurrentUser());
 
-    final result = await _signInWithEmailAndPassword(
-      SignInWithEmailAndPasswordParams(
-        email: event.email,
-        password: event.password,
-      ),
-    );
+    final result = await _getCurrentUser();
 
     result.fold(
       (failure) => emit(AuthenticationError(failure.errorMessage)),
-      (user) => emit(SignedInWithEmailAndPassword(user)),
+      (user) => emit(
+        user == UserModel.empty()
+            ? const AuthenticationInitial()
+            : GotCurrentUser(user),
+      ),
     );
   }
 
@@ -72,6 +77,20 @@ class AuthenticationBloc
     result.fold(
       (failure) => emit(AuthenticationError(failure.errorMessage)),
       (_) => emit(const SignedOut()),
+    );
+  }
+
+  Future<void> _updateUserHandler(
+    UpdateUserEvent event,
+    Emitter<AuthenticationState> emit,
+  ) async {
+    emit(const UpdatingUser());
+
+    final result = await _updateUser(UpdateUserParams(user: event.user));
+
+    result.fold(
+      (failure) => emit(AuthenticationError(failure.errorMessage)),
+      (_) => emit(const UpdatedUser()),
     );
   }
 }

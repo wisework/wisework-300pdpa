@@ -3,11 +3,11 @@ import 'package:pdpa/core/utils/typedef.dart';
 import 'package:pdpa/features/authentication/domain/entities/user_entity.dart';
 import 'package:pdpa/features/authentication/domain/repositories/authentication_repository.dart';
 
-class SignInWithGoogle extends UsecaseWithoutParams<UserEntity> {
-  SignInWithGoogle(this._repository);
+class GetCurrentUser extends UsecaseWithoutParams<UserEntity> {
+  GetCurrentUser(this._repository);
 
   final AuthenticationRepository _repository;
 
   @override
-  ResultFuture<UserEntity> call() => _repository.signInWithGoogle();
+  ResultFuture<UserEntity> call() => _repository.getCurrentUser();
 }

@@ -3,46 +3,50 @@ import 'package:dartz/dartz.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mocktail/mocktail.dart';
 import 'package:pdpa/core/errors/failure.dart';
-import 'package:pdpa/features/authentication/domain/entities/user.dart';
-import 'package:pdpa/features/authentication/domain/usecases/sign_in_with_email_and_password.dart';
+import 'package:pdpa/features/authentication/domain/entities/user_entity.dart';
+import 'package:pdpa/features/authentication/domain/usecases/get_current_user.dart';
 import 'package:pdpa/features/authentication/domain/usecases/sign_in_with_google.dart';
 import 'package:pdpa/features/authentication/domain/usecases/sign_out.dart';
+import 'package:pdpa/features/authentication/domain/usecases/update_user.dart';
 import 'package:pdpa/features/authentication/presentation/bloc/authentication_bloc.dart';
 
-class MockSignInWithEmailAndPassword extends Mock
-    implements SignInWithEmailAndPassword {}
+class MockGetCurrentUser extends Mock implements GetCurrentUser {}
 
 class MockSignInWithGoogle extends Mock implements SignInWithGoogle {}
 
 class MockSignOut extends Mock implements SignOut {}
 
-class MockUser extends Mock implements User {}
+class MockUpdateUser extends Mock implements UpdateUser {}
+
+class MockUser extends Mock implements UserEntity {}
 
 void main() {
-  late SignInWithEmailAndPassword signInWithEmailAndPassword;
+  late GetCurrentUser getCurrentUser;
   late SignInWithGoogle signInWithGoogle;
   late SignOut signOut;
-  late User user;
+  late UpdateUser updateUser;
+  late UserEntity user;
   late AuthenticationBloc bloc;
 
-  const signInWithEmailAndPasswordParams =
-      SignInWithEmailAndPasswordParams.empty();
   const apiFailure = ApiFailure(message: 'User not found', statusCode: 404);
+  final updateUserParams = UpdateUserParams.empty();
 
   setUp(() {
-    signInWithEmailAndPassword = MockSignInWithEmailAndPassword();
+    getCurrentUser = MockGetCurrentUser();
     signInWithGoogle = MockSignInWithGoogle();
     signOut = MockSignOut();
+    updateUser = MockUpdateUser();
     user = MockUser();
     bloc = AuthenticationBloc(
-      signInWithEmailAndPassword: signInWithEmailAndPassword,
+      getCurrentUser: getCurrentUser,
       signInWithGoogle: signInWithGoogle,
       signOut: signOut,
+      updateUser: updateUser,
     );
   });
 
   setUpAll(() {
-    registerFallbackValue(signInWithEmailAndPasswordParams);
+    registerFallbackValue(updateUserParams);
   });
 
   tearDown(() => bloc.close());
@@ -51,56 +55,50 @@ void main() {
     expect(bloc.state, const AuthenticationInitial());
   });
 
-  group('SignInWithEmailAndPassword:', () {
+  group('GetCurrentUser:', () {
     blocTest<AuthenticationBloc, AuthenticationState>(
-      'Should emit [SigningInWithEmailAndPassword, SignedInWithEmailAndPassword] when successful',
+      'Should emit [GettingCurrentUser, GotCurrentUser] when successful',
       build: () {
-        when(() => signInWithEmailAndPassword(any())).thenAnswer(
+        when(() => getCurrentUser()).thenAnswer(
           (_) async => Right(user),
         );
         return bloc;
       },
       act: (bloc) => bloc.add(
-        SignInWithEmailAndPasswordEvent(
-          email: signInWithEmailAndPasswordParams.email,
-          password: signInWithEmailAndPasswordParams.password,
-        ),
+        const GetCurrentUserEvent(),
       ),
       expect: () => [
-        const SigningInWithEmailAndPassword(),
-        SignedInWithEmailAndPassword(user),
+        const GettingCurrentUser(),
+        GotCurrentUser(user),
       ],
       verify: (_) {
         verify(
-          () => signInWithEmailAndPassword(signInWithEmailAndPasswordParams),
+          () => getCurrentUser(),
         ).called(1);
-        verifyNoMoreInteractions(signInWithEmailAndPassword);
+        verifyNoMoreInteractions(getCurrentUser);
       },
     );
 
     blocTest<AuthenticationBloc, AuthenticationState>(
-      'Should emit [SigningInWithEmailAndPassword, AuthenticationError] when unsuccessful',
+      'Should emit [GettingCurrentUser, AuthenticationError] when unsuccessful',
       build: () {
-        when(() => signInWithEmailAndPassword(any())).thenAnswer(
+        when(() => getCurrentUser()).thenAnswer(
           (_) async => const Left(apiFailure),
         );
         return bloc;
       },
       act: (bloc) => bloc.add(
-        SignInWithEmailAndPasswordEvent(
-          email: signInWithEmailAndPasswordParams.email,
-          password: signInWithEmailAndPasswordParams.password,
-        ),
+        const GetCurrentUserEvent(),
       ),
       expect: () => [
-        const SigningInWithEmailAndPassword(),
+        const GettingCurrentUser(),
         AuthenticationError(apiFailure.errorMessage),
       ],
       verify: (_) {
         verify(
-          () => signInWithEmailAndPassword(signInWithEmailAndPasswordParams),
+          () => getCurrentUser(),
         ).called(1);
-        verifyNoMoreInteractions(signInWithEmailAndPassword);
+        verifyNoMoreInteractions(getCurrentUser);
       },
     );
   });
@@ -197,6 +195,54 @@ void main() {
           () => signOut(),
         ).called(1);
         verifyNoMoreInteractions(signOut);
+      },
+    );
+  });
+
+  group('UpdateUser:', () {
+    blocTest<AuthenticationBloc, AuthenticationState>(
+      'Should emit [UpdatingUser, UpdatedUser] when successful',
+      build: () {
+        when(() => updateUser(any())).thenAnswer(
+          (_) async => const Right(null),
+        );
+        return bloc;
+      },
+      act: (bloc) => bloc.add(
+        UpdateUserEvent(user: updateUserParams.user),
+      ),
+      expect: () => [
+        const UpdatingUser(),
+        const UpdatedUser(),
+      ],
+      verify: (_) {
+        verify(
+          () => updateUser(updateUserParams),
+        );
+        verifyNoMoreInteractions(updateUser);
+      },
+    );
+
+    blocTest<AuthenticationBloc, AuthenticationState>(
+      'Should emit [UpdatingUser, AuthenticationError] when unsuccessful',
+      build: () {
+        when(() => updateUser(any())).thenAnswer(
+          (_) async => const Left(apiFailure),
+        );
+        return bloc;
+      },
+      act: (bloc) => bloc.add(
+        UpdateUserEvent(user: user),
+      ),
+      expect: () => [
+        const UpdatingUser(),
+        AuthenticationError(apiFailure.errorMessage),
+      ],
+      verify: (_) {
+        verify(
+          () => updateUser(any()),
+        ).called(1);
+        verifyNoMoreInteractions(updateUser);
       },
     );
   });

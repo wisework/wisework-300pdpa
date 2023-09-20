@@ -1,9 +1,10 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:firebase_auth/firebase_auth.dart' hide User;
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 import 'package:pdpa/core/errors/exceptions.dart';
 import 'package:pdpa/features/authentication/data/datasources/remote/authentication_remote_data_source.dart';
 import 'package:pdpa/features/authentication/data/models/user_model.dart';
+import 'package:pdpa/features/authentication/domain/entities/user_entity.dart';
 import 'package:uuid/uuid.dart';
 
 class AuthenticationRemoteDataSourceImplementation
@@ -19,28 +20,20 @@ class AuthenticationRemoteDataSourceImplementation
   final GoogleSignIn _googleSignIn;
 
   @override
-  Future<UserModel> signInWithEmailAndPassword({
-    required String email,
-    required String password,
-  }) async {
-    final userCredential = await _auth.signInWithEmailAndPassword(
-      email: email,
-      password: password,
-    );
-    if (userCredential.user != null) {
-      final document = await _firestore
-          .collection('Users')
-          .doc(userCredential.user!.uid)
-          .get();
+  Future<UserEntity> getCurrentUser() async {
+    final user = _auth.currentUser;
+    if (user != null) {
+      final document = await _firestore.collection('Users').doc(user.uid).get();
       if (document.exists) {
         return UserModel.fromDocument(document);
       }
+      throw const ApiException(message: 'User not found', statusCode: 404);
     }
-    throw const ApiException(message: 'User not found', statusCode: 404);
+    return UserModel.empty();
   }
 
   @override
-  Future<UserModel> signInWithGoogle() async {
+  Future<UserEntity> signInWithGoogle() async {
     final result = await _googleSignIn.signIn();
     if (result != null) {
       final googleAuth = await result.authentication;
@@ -101,5 +94,14 @@ class AuthenticationRemoteDataSourceImplementation
       await _googleSignIn.disconnect();
     }
     _auth.signOut();
+  }
+
+  @override
+  Future<void> updateUser({required UserEntity user}) async {
+    final document = await _firestore.collection('Users').doc(user.id).get();
+    if (document.exists) {
+      // Update user logic
+    }
+    throw const ApiException(message: 'User not found', statusCode: 404);
   }
 }
