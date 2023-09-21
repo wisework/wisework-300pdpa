@@ -46,6 +46,9 @@ dependencies:
   uuid: ^4.0.0
   easy_localization: ^3.0.3
 
+  # Router package
+  go_router: ^10.2.0
+
   # Decoration packages
   google_fonts: ^6.0.0
   ionicons: ^0.2.2

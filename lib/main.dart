@@ -7,7 +7,7 @@ import 'package:pdpa/core/firebase_options.dart';
 import 'package:pdpa/core/services/injection_container.dart';
 import 'package:pdpa/core/themes/pdpa_theme_data.dart';
 import 'package:pdpa/features/authentication/presentation/bloc/authentication_bloc.dart';
-import 'package:pdpa/features/authentication/presentation/views/sign_in_screen.dart';
+import 'package:pdpa/features/authentication/presentation/screens/sign_in_screen.dart';
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
