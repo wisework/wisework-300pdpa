@@ -1,6 +1,7 @@
 import 'package:easy_localization/easy_localization.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
+import 'package:pdpa/core/route/go_router__provider.dart';
 import 'package:pdpa/firebase_options.dart';
 
 Future<void> main() async {
@@ -23,7 +24,9 @@ class MyApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
+    final route = GoRouteProvider();
+    return MaterialApp.router(
+      routerConfig: route.goRouter(),
       debugShowCheckedModeBanner: false,
       localizationsDelegates: context.localizationDelegates,
       supportedLocales: context.supportedLocales,
@@ -33,20 +36,14 @@ class MyApp extends StatelessWidget {
         colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
         useMaterial3: true,
       ),
-      home: Builder(
-        builder: (context) {
-          return MyHomePage(
-            title: tr('app.title'),
-          );
-        },
-      ),
     );
   }
 }
 
 class MyHomePage extends StatefulWidget {
-  const MyHomePage({super.key, required this.title});
+  const MyHomePage({super.key, required this.title, required this.counter});
   final String title;
+  final Object? counter;
 
   @override
   State<MyHomePage> createState() => _MyHomePageState();
@@ -97,7 +94,7 @@ class _MyHomePageState extends State<MyHomePage> {
             const Text(
               'app.counter',
               style: TextStyle(),
-            ).plural(_counter),
+            ).plural(widget.counter.hashCode),
           ],
         ),
       ),
