@@ -1,8 +1,10 @@
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:go_router/go_router.dart';
 import 'package:pdpa/core/widgets/custom_button.dart';
 import 'package:pdpa/features/authentication/presentation/bloc/authentication_bloc.dart';
+import 'package:pdpa/features/authentication/presentation/routes/authentication_route.dart';
 
 class SignInScreen extends StatefulWidget {
   const SignInScreen({super.key});
@@ -130,6 +132,7 @@ class _SignInScreenState extends State<SignInScreen> {
                   ),
                 ),
               );
+              context.pushReplacement(AuthenticationRoute.acceptInvite.path);
             }
           },
           builder: (context, state) {

@@ -4,10 +4,10 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:pdpa/core/configuration.dart';
 import 'package:pdpa/core/firebase_options.dart';
+import 'package:pdpa/core/router/global_router.dart';
 import 'package:pdpa/core/services/injection_container.dart';
 import 'package:pdpa/core/themes/pdpa_theme_data.dart';
 import 'package:pdpa/features/authentication/presentation/bloc/authentication_bloc.dart';
-import 'package:pdpa/features/authentication/presentation/screens/sign_in_screen.dart';
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -37,19 +37,19 @@ class MyApp extends StatelessWidget {
           create: (context) => serviceLocator<AuthenticationBloc>(),
         ),
       ],
-      child: MaterialApp(
+      child: MaterialApp.router(
+        routerConfig: GlobalRouter.router,
         localizationsDelegates: context.localizationDelegates,
         supportedLocales: context.supportedLocales,
         locale: context.locale,
         title: AppConfig.appName,
         theme: PdpaThemeData.lightThemeData,
         debugShowCheckedModeBanner: false,
-        home: const SignInScreen(),
       ),
     );
   }
 }
-
+/*
 class MyHomePage extends StatefulWidget {
   const MyHomePage({super.key, required this.title});
   final String title;
@@ -115,3 +115,4 @@ class _MyHomePageState extends State<MyHomePage> {
     );
   }
 }
+*/

@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:go_router/go_router.dart';
 import 'package:pdpa/core/widgets/custom_button.dart';
 import 'package:pdpa/features/authentication/presentation/bloc/authentication_bloc.dart';
+import 'package:pdpa/features/authentication/presentation/routes/authentication_route.dart';
 
 class AcceptInviteScreen extends StatelessWidget {
   const AcceptInviteScreen({super.key});
@@ -11,21 +13,25 @@ class AcceptInviteScreen extends StatelessWidget {
     return Scaffold(
       backgroundColor: Theme.of(context).colorScheme.onPrimary,
       body: Column(
-        mainAxisAlignment: MainAxisAlignment.center,
-        crossAxisAlignment: CrossAxisAlignment.center,
         children: <Widget>[
-          CustomButton(
-            height: 40.0,
-            onPressed: () {
-              context.read<AuthenticationBloc>().add(const SignOutEvent());
-            },
-            buttonType: CustomButtonType.outlined,
-            child: Text(
-              'Sign out',
-              style: Theme.of(context)
-                  .textTheme
-                  .titleMedium
-                  ?.copyWith(color: Theme.of(context).colorScheme.primary),
+          Center(
+            child: ConstrainedBox(
+              constraints: const BoxConstraints(maxWidth: 300.0),
+              child: CustomButton(
+                height: 40.0,
+                onPressed: () {
+                  context.read<AuthenticationBloc>().add(const SignOutEvent());
+                  context.pushReplacement(AuthenticationRoute.signIn.path);
+                },
+                buttonType: CustomButtonType.outlined,
+                child: Text(
+                  'Sign out',
+                  style: Theme.of(context)
+                      .textTheme
+                      .titleMedium
+                      ?.copyWith(color: Theme.of(context).colorScheme.primary),
+                ),
+              ),
             ),
           ),
         ],

@@ -1,18 +1,15 @@
 import 'package:go_router/go_router.dart';
-import 'package:pdpa/features/authentication/presentation/screens/sign_in_screen.dart';
+import 'package:pdpa/features/authentication/presentation/routes/authentication_route.dart';
 
 class GlobalRouter {
-  static const String initial = '/sign-in';
+  static final String initial = AuthenticationRoute.signIn.path;
 
-  static final router = GoRouter(
-    routes: [
-      GoRoute(
-        path: '/',
-      ),
-      GoRoute(
-        path: '/sign-in',
-        builder: (context, state) => const SignInScreen(),
-      ),
-    ],
-  );
+  static GoRouter get router {
+    return GoRouter(
+      initialLocation: initial,
+      routes: [
+        ...AuthenticationRoute.routes,
+      ],
+    );
+  }
 }
