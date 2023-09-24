@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:pdpa/core/route/route_name.dart';
-import 'package:pdpa/features/authentication/presentation/login.dart';
 import 'package:pdpa/features/home/presentation/home_page.dart';
 import 'package:pdpa/main.dart';
 
@@ -16,10 +15,7 @@ class GoRouteProvider {
         navigatorKey: _rootNavigatorKey,
         initialLocation: '/',
         routes: [
-          GoRoute(
-            path: '/',
-            builder: (context, state) => LoginScreen(),
-          ),
+          
           GoRoute(
             path: '/home',
             name: homeRoute,
@@ -38,7 +34,7 @@ class GoRouteProvider {
             pageBuilder: (context, state) {
               return CustomTransitionPage(
                 key: state.pageKey,
-                child: LoginScreen(),
+                child: MyApp(),
                 transitionsBuilder:
                     (context, animation, secondaryAnimation, child) {
                   // Change the opacity of the screen using a Curve based on the the animation's
