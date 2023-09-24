@@ -1,12 +1,21 @@
 import 'package:easy_localization/easy_localization.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
-import 'package:pdpa/firebase_options.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+
+import 'config/app_config.dart';
+import 'config/firebase_options.dart';
+import 'config/router/global_router.dart';
+import 'config/themes/pdpa_theme_data.dart';
+import 'core/services/injection_container.dart';
+import 'features/authentication/presentation/bloc/authentication_bloc.dart';
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform);
   await EasyLocalization.ensureInitialized();
+
+  await init();
 
   runApp(
     EasyLocalization(
@@ -23,27 +32,25 @@ class MyApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-      debugShowCheckedModeBanner: false,
-      localizationsDelegates: context.localizationDelegates,
-      supportedLocales: context.supportedLocales,
-      locale: context.locale,
-      title: 'Flutter Demo',
-      theme: ThemeData(
-        colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
-        useMaterial3: true,
-      ),
-      home: Builder(
-        builder: (context) {
-          return MyHomePage(
-            title: tr('app.title'),
-          );
-        },
+    return MultiBlocProvider(
+      providers: [
+        BlocProvider<AuthenticationBloc>(
+          create: (context) => serviceLocator<AuthenticationBloc>(),
+        ),
+      ],
+      child: MaterialApp.router(
+        routerConfig: GlobalRouter.router,
+        localizationsDelegates: context.localizationDelegates,
+        supportedLocales: context.supportedLocales,
+        locale: context.locale,
+        title: AppConfig.appName,
+        theme: PdpaThemeData.lightThemeData,
+        debugShowCheckedModeBanner: false,
       ),
     );
   }
 }
-
+/*
 class MyHomePage extends StatefulWidget {
   const MyHomePage({super.key, required this.title});
   final String title;
@@ -109,3 +116,4 @@ class _MyHomePageState extends State<MyHomePage> {
     );
   }
 }
+*/

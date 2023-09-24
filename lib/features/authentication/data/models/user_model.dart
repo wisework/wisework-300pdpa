@@ -2,9 +2,9 @@ import 'dart:convert';
 
 import 'package:pdpa/core/utils/constants.dart';
 import 'package:pdpa/core/utils/typedef.dart';
-import 'package:pdpa/features/authentication/domain/entities/user.dart';
+import 'package:pdpa/features/authentication/domain/entities/user_entity.dart';
 
-class UserModel extends User {
+class UserModel extends UserEntity {
   const UserModel({
     required super.id,
     required super.uid,

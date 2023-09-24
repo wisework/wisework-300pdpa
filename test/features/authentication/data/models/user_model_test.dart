@@ -5,7 +5,7 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:mocktail/mocktail.dart';
 import 'package:pdpa/core/utils/typedef.dart';
 import 'package:pdpa/features/authentication/data/models/user_model.dart';
-import 'package:pdpa/features/authentication/domain/entities/user.dart';
+import 'package:pdpa/features/authentication/domain/entities/user_entity.dart';
 
 import '../../../../fixtures/fixture_reader.dart';
 
@@ -29,19 +29,18 @@ class MockQueryDocumentSnapshot extends Mock
 void main() {
   late QueryDocumentSnapshot<DataMap> queryDocumentSnapshot;
 
+  final model = UserModel.empty();
+  final json = fixture('user.json');
+  final map = jsonDecode(json) as DataMap;
+
   setUp(() {
     queryDocumentSnapshot = MockQueryDocumentSnapshot();
   });
 
-  final model = UserModel.empty();
-
   test('Should be a subclass of [User] entity', () {
     //? Assert
-    expect(model, isA<User>());
+    expect(model, isA<UserEntity>());
   });
-
-  final json = fixture('user.json');
-  final map = jsonDecode(json) as DataMap;
 
   group('Test fromMap:', () {
     test('Should return a [UserModel] with the right data', () {

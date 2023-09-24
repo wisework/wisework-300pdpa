@@ -7,8 +7,8 @@ import 'package:pdpa/features/authentication/domain/usecases/sign_out.dart';
 class MockAuthRepo extends Mock implements AuthenticationRepository {}
 
 void main() {
-  late SignOut usecase;
   late AuthenticationRepository repository;
+  late SignOut usecase;
 
   setUp(() {
     repository = MockAuthRepo();

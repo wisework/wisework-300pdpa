@@ -6,7 +6,7 @@ import 'package:pdpa/core/errors/failure.dart';
 import 'package:pdpa/features/authentication/data/datasources/remote/authentication_remote_data_source.dart';
 import 'package:pdpa/features/authentication/data/models/user_model.dart';
 import 'package:pdpa/features/authentication/data/repositories/authentication_repository_implementation.dart';
-import 'package:pdpa/features/authentication/domain/entities/user.dart';
+import 'package:pdpa/features/authentication/domain/entities/user_entity.dart';
 
 class MockAuthRemoteDataSrc extends Mock
     implements AuthenticationRemoteDataSource {}
@@ -14,11 +14,6 @@ class MockAuthRemoteDataSrc extends Mock
 void main() {
   late AuthenticationRemoteDataSource remoteDataSource;
   late AuthenticationRepositoryImplementation repositoryImpl;
-
-  setUp(() {
-    remoteDataSource = MockAuthRemoteDataSrc();
-    repositoryImpl = AuthenticationRepositoryImplementation(remoteDataSource);
-  });
 
   final model = UserModel.empty();
   const exception = ApiException(
@@ -30,35 +25,32 @@ void main() {
     statusCode: exception.statusCode,
   );
 
-  group('Test signInWithEmailAndPassword:', () {
-    const email = '';
-    const password = '';
+  setUp(() {
+    remoteDataSource = MockAuthRemoteDataSrc();
+    repositoryImpl = AuthenticationRepositoryImplementation(remoteDataSource);
+  });
 
+  setUpAll(() {
+    registerFallbackValue(model);
+  });
+
+  group('Test getCurrentUser:', () {
     test(
-      'Should call the [RemoteDataSource.signInWithEmailAndPassword] '
+      'Should call the [RemoteDataSource.getCurrentUser] '
       'and complete successfully when the call to the remote data source is successful',
       () async {
         //? Arrange
         when(
-          () => remoteDataSource.signInWithEmailAndPassword(
-            email: any(named: 'email'),
-            password: any(named: 'password'),
-          ),
+          () => remoteDataSource.getCurrentUser(),
         ).thenAnswer((_) async => model);
 
         //? Act
-        final result = await repositoryImpl.signInWithEmailAndPassword(
-          email: email,
-          password: password,
-        );
+        final result = await repositoryImpl.getCurrentUser();
 
         //? Assert
-        expect(result, isA<Right<dynamic, User>>());
+        expect(result, isA<Right<dynamic, UserEntity>>());
         verify(
-          () => remoteDataSource.signInWithEmailAndPassword(
-            email: email,
-            password: password,
-          ),
+          () => remoteDataSource.getCurrentUser(),
         ).called(1);
 
         verifyNoMoreInteractions(remoteDataSource);
@@ -71,25 +63,16 @@ void main() {
       () async {
         //? Arrange
         when(
-          () => remoteDataSource.signInWithEmailAndPassword(
-            email: any(named: 'email'),
-            password: any(named: 'password'),
-          ),
+          () => remoteDataSource.getCurrentUser(),
         ).thenThrow(exception);
 
         //? Act
-        final result = await repositoryImpl.signInWithEmailAndPassword(
-          email: email,
-          password: password,
-        );
+        final result = await repositoryImpl.getCurrentUser();
 
         //? Assert
         expect(result, equals(Left(failure)));
         verify(
-          () => remoteDataSource.signInWithEmailAndPassword(
-            email: email,
-            password: password,
-          ),
+          () => remoteDataSource.getCurrentUser(),
         ).called(1);
 
         verifyNoMoreInteractions(remoteDataSource);
@@ -111,7 +94,7 @@ void main() {
         final result = await repositoryImpl.signInWithGoogle();
 
         //? Assert
-        expect(result, isA<Right<dynamic, User>>());
+        expect(result, isA<Right<dynamic, UserEntity>>());
         verify(
           () => remoteDataSource.signInWithGoogle(),
         ).called(1);
@@ -182,6 +165,52 @@ void main() {
         expect(result, equals(Left(failure)));
         verify(
           () => remoteDataSource.signOut(),
+        ).called(1);
+
+        verifyNoMoreInteractions(remoteDataSource);
+      },
+    );
+  });
+
+  group('Test updateUser:', () {
+    test(
+      'Should call the [RemoteDataSource.updateUser] '
+      'and complete successfully when the call to the remote data source is successful',
+      () async {
+        //? Arrange
+        when(
+          () => remoteDataSource.updateUser(user: any(named: 'user')),
+        ).thenAnswer((_) async => model);
+
+        //? Act
+        final result = await repositoryImpl.updateUser(user: model);
+
+        //? Assert
+        expect(result, equals(const Right(null)));
+        verify(
+          () => remoteDataSource.updateUser(user: model),
+        ).called(1);
+
+        verifyNoMoreInteractions(remoteDataSource);
+      },
+    );
+
+    test(
+      'Should return a [ApiFailure] '
+      'when the call to the remote data source is unsuccessful',
+      () async {
+        //? Arrange
+        when(
+          () => remoteDataSource.updateUser(user: any(named: 'user')),
+        ).thenThrow(exception);
+
+        //? Act
+        final result = await repositoryImpl.updateUser(user: model);
+
+        //? Assert
+        expect(result, equals(Left(failure)));
+        verify(
+          () => remoteDataSource.updateUser(user: model),
         ).called(1);
 
         verifyNoMoreInteractions(remoteDataSource);

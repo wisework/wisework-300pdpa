@@ -1,12 +1,13 @@
-import 'package:pdpa/features/authentication/data/models/user_model.dart';
+import 'package:pdpa/features/authentication/domain/entities/user_entity.dart';
 
 abstract class AuthenticationRemoteDataSource {
-  Future<UserModel> signInWithEmailAndPassword({
-    required String email,
-    required String password,
-  });
+  Future<UserEntity> getCurrentUser();
 
-  Future<UserModel> signInWithGoogle();
+  Future<UserEntity> signInWithGoogle();
 
   Future<void> signOut();
+
+  Future<void> updateUser({
+    required UserEntity user,
+  });
 }
