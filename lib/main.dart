@@ -2,12 +2,13 @@ import 'package:easy_localization/easy_localization.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:pdpa/core/configuration.dart';
-import 'package:pdpa/core/firebase_options.dart';
-import 'package:pdpa/core/router/global_router.dart';
-import 'package:pdpa/core/services/injection_container.dart';
-import 'package:pdpa/core/themes/pdpa_theme_data.dart';
-import 'package:pdpa/features/authentication/presentation/bloc/authentication_bloc.dart';
+
+import 'config/app_config.dart';
+import 'config/firebase_options.dart';
+import 'config/router/global_router.dart';
+import 'config/themes/pdpa_theme_data.dart';
+import 'core/services/injection_container.dart';
+import 'features/authentication/presentation/bloc/authentication_bloc.dart';
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();

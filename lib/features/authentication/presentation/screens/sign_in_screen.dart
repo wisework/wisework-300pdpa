@@ -133,10 +133,21 @@ class _SignInScreenState extends State<SignInScreen> {
                 ),
               );
               context.pushReplacement(AuthenticationRoute.acceptInvite.path);
+            } else if (state is GotCurrentUser) {
+              ScaffoldMessenger.of(context).showSnackBar(
+                SnackBar(
+                  content: Text(
+                    'Welcome back!',
+                    style: Theme.of(context).textTheme.bodyMedium?.copyWith(
+                        color: Theme.of(context).colorScheme.onPrimary),
+                  ),
+                ),
+              );
+              context.pushReplacement(AuthenticationRoute.acceptInvite.path);
             }
           },
           builder: (context, state) {
-            if (state is GettingCurrentUser) {
+            if (state is SigningInWithGoogle || state is GettingCurrentUser) {
               return SizedBox(
                 width: 24.0,
                 height: 24.0,

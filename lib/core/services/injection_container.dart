@@ -2,7 +2,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:get_it/get_it.dart';
 import 'package:google_sign_in/google_sign_in.dart';
-import 'package:pdpa/core/configuration.dart';
+import 'package:pdpa/config/app_config.dart';
 import 'package:pdpa/features/authentication/data/datasources/remote/authentication_remote_data_source.dart';
 import 'package:pdpa/features/authentication/data/datasources/remote/authentication_remote_data_source_implementation.dart';
 import 'package:pdpa/features/authentication/data/repositories/authentication_repository_implementation.dart';

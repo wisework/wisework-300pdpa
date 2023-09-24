@@ -31,6 +31,15 @@ class AuthenticationRepositoryImplementation
       return Right(user);
     } on ApiException catch (error) {
       return Left(ApiFailure.fromException(error));
+    } catch (error) {
+      if (error == 'popup_closed') {
+        return const Left(
+          ApiFailure(message: 'Sign in was canceled', statusCode: 500),
+        );
+      }
+      return Left(
+        ApiFailure(message: error.toString(), statusCode: 500),
+      );
     }
   }
 
