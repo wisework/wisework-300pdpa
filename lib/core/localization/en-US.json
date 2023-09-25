@@ -1,23 +1,20 @@
 {
     "app": {
         "name": "PDPA Management Platform",
-        "changeLang": "เปลี่ยนภาษา",
-        "description": "You have pushed the button this many times",
-        "increment": "Increment",
-        "counter": {
-            "zero": "{} times",
-            "one": "{} time",
-            "two": "{} times",
-            "other": "{} times"
-        },
-        "auth": {
-            "username": "Username or Email",
-            "password": "Password",
-            "rememberMe": "Remember me",
-            "forgotPassword": "Forgot password",
-            "signIn": "Sign in",
+        "changeLang": "เปลี่ยนภาษา"
+    },
+    "auth": {
+        "signIn": {
             "signInWithGoogle": "Sign in with Google",
             "joinOverForGoal": "Join over 100,000 users smashing their goals!"
+        },
+        "acceptInvite": {
+            "title": "Accept the invitation",
+            "hello": "Hello",
+            "tagline1": "Thank you for choosing our app!",
+            "tagline2": "We're thrilled to have you on board.",
+            "enterCode": "Enter invite code",
+            "continueButton": "Continue"
         }
     }
 }

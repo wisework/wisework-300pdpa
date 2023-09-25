@@ -2,10 +2,10 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 import 'package:pdpa/core/errors/exceptions.dart';
+import 'package:pdpa/core/utils/constants.dart';
 import 'package:pdpa/features/authentication/data/datasources/remote/authentication_remote_data_source.dart';
 import 'package:pdpa/features/authentication/data/models/user_model.dart';
 import 'package:pdpa/features/authentication/domain/entities/user_entity.dart';
-import 'package:uuid/uuid.dart';
 
 class AuthenticationRemoteDataSourceImplementation
     extends AuthenticationRemoteDataSource {
@@ -23,13 +23,20 @@ class AuthenticationRemoteDataSourceImplementation
   Future<UserEntity> getCurrentUser() async {
     final user = _auth.currentUser;
     if (user != null) {
-      final document = await _firestore.collection('Users').doc(user.uid).get();
-      if (document.exists) {
-        return UserModel.fromDocument(document);
+      final queryResult = await _firestore
+          .collection('Users')
+          .where('uid', isEqualTo: user.uid)
+          .get();
+
+      if (queryResult.docs.isNotEmpty) {
+        final version = queryResult.docs
+            .map((document) => UserModel.fromDocument(document))
+            .toList();
+        return version.first;
       }
       throw const ApiException(message: 'User not found', statusCode: 404);
     }
-    return UserModel.empty();
+    return UserEntity.empty();
   }
 
   @override
@@ -44,13 +51,18 @@ class AuthenticationRemoteDataSourceImplementation
 
       final userCredential = await _auth.signInWithCredential(credential);
       if (userCredential.user != null) {
-        final document = await _firestore
+        final queryResult = await _firestore
             .collection('Users')
-            .doc(userCredential.user!.uid)
+            .where('uid', isEqualTo: userCredential.user!.uid)
             .get();
-        if (document.exists) {
-          return UserModel.fromDocument(document);
+
+        if (queryResult.docs.isNotEmpty) {
+          final version = queryResult.docs
+              .map((document) => UserModel.fromDocument(document))
+              .toList();
+          return version.first;
         } else {
+          final userRef = _firestore.collection('Users').doc();
           final name = userCredential.user!.displayName?.split(' ') ??
               [userCredential.user!.displayName!];
 
@@ -61,24 +73,21 @@ class AuthenticationRemoteDataSourceImplementation
           if (name.length > 1) lastName = name.last;
 
           final newUser = UserModel.empty().copyWith(
-            id: userCredential.user!.uid,
-            uid: const Uuid().v6(),
+            id: userRef.id,
+            uid: userCredential.user!.uid,
             firstName: firstName,
             lastName: lastName,
             email: userCredential.user!.email,
-            role: 'User',
+            role: UserRoles.viewer,
             defaultLanguage: 'en-US',
             isEmailVerified: userCredential.user!.emailVerified,
-            createdBy: 'Sign in with Google',
+            createdBy: 'Google Sign In',
             createdDate: DateTime.now(),
-            updatedBy: 'Sign in with Google',
+            updatedBy: 'Google Sign In',
             updatedDate: DateTime.now(),
           );
 
-          await _firestore
-              .collection('Users')
-              .doc(newUser.id)
-              .set(newUser.toMap());
+          await userRef.set(newUser.toMap());
 
           return newUser;
         }
@@ -98,10 +107,11 @@ class AuthenticationRemoteDataSourceImplementation
 
   @override
   Future<void> updateUser({required UserEntity user}) async {
-    final document = await _firestore.collection('Users').doc(user.id).get();
-    if (document.exists) {
-      // Update user logic
-    }
-    throw const ApiException(message: 'User not found', statusCode: 404);
+    // final updated = user.copyWith(
+    //   updatedBy: user.uid,
+    //   updatedDate: DateTime.now(),
+    // );
+
+    // await _firestore.collection('Users').doc(user.id).set(updated.toMap());
   }
 }
