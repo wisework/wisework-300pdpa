@@ -2,6 +2,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 import 'package:pdpa/core/errors/exceptions.dart';
+import 'package:pdpa/core/utils/constants.dart';
 import 'package:pdpa/features/authentication/data/datasources/remote/authentication_remote_data_source.dart';
 import 'package:pdpa/features/authentication/data/models/user_model.dart';
 import 'package:pdpa/features/authentication/domain/entities/user_entity.dart';
@@ -30,13 +31,12 @@ class AuthenticationRemoteDataSourceImplementation
       if (queryResult.docs.isNotEmpty) {
         final version = queryResult.docs
             .map((document) => UserModel.fromDocument(document))
-            .toList()
-          ..sort((a, b) => b.version.compareTo(a.version));
+            .toList();
         return version.first;
       }
       throw const ApiException(message: 'User not found', statusCode: 404);
     }
-    return UserModel.empty();
+    return UserEntity.empty();
   }
 
   @override
@@ -59,8 +59,7 @@ class AuthenticationRemoteDataSourceImplementation
         if (queryResult.docs.isNotEmpty) {
           final version = queryResult.docs
               .map((document) => UserModel.fromDocument(document))
-              .toList()
-            ..sort((a, b) => b.version.compareTo(a.version));
+              .toList();
           return version.first;
         } else {
           final userRef = _firestore.collection('Users').doc();
@@ -79,12 +78,12 @@ class AuthenticationRemoteDataSourceImplementation
             firstName: firstName,
             lastName: lastName,
             email: userCredential.user!.email,
-            role: 'User',
+            role: UserRoles.viewer,
             defaultLanguage: 'en-US',
             isEmailVerified: userCredential.user!.emailVerified,
-            createdBy: 'Sign in with Google',
+            createdBy: 'Google Sign In',
             createdDate: DateTime.now(),
-            updatedBy: 'Sign in with Google',
+            updatedBy: 'Google Sign In',
             updatedDate: DateTime.now(),
           );
 
@@ -108,10 +107,11 @@ class AuthenticationRemoteDataSourceImplementation
 
   @override
   Future<void> updateUser({required UserEntity user}) async {
-    final document = await _firestore.collection('Users').doc(user.id).get();
-    if (document.exists) {
-      // Update user logic
-    }
-    throw const ApiException(message: 'User not found', statusCode: 404);
+    // final updated = user.copyWith(
+    //   updatedBy: user.uid,
+    //   updatedDate: DateTime.now(),
+    // );
+
+    // await _firestore.collection('Users').doc(user.id).set(updated.toMap());
   }
 }

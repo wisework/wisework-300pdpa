@@ -138,7 +138,14 @@ class _AcceptInviteScreenState extends State<AcceptInviteScreen> {
   CustomButton _buildContinueButton(BuildContext context) {
     return CustomButton(
       height: 40.0,
-      onPressed: () {},
+      onPressed: () {
+        // final authBloc = BlocProvider.of<AuthenticationBloc>(context);
+        // if (authBloc is SignedIn) {
+        //   final updated = (authBloc.state as SignedIn).user;
+
+        //   context.read<AuthenticationBloc>().add(UpdateUserEvent(user: updated));
+        // }
+      },
       child: Text(
         tr('auth.acceptInvite.continueButton'),
         style: Theme.of(context)

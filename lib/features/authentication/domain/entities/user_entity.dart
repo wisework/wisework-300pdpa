@@ -17,7 +17,6 @@ class UserEntity extends Equatable {
     required this.currentCompany,
     required this.defaultLanguage,
     required this.isEmailVerified,
-    required this.version,
     required this.status,
     required this.createdBy,
     required this.createdDate,
@@ -35,12 +34,11 @@ class UserEntity extends Equatable {
           phoneNumber: '',
           citizenId: '',
           profileImage: '',
-          role: '',
+          role: UserRoles.viewer,
           companies: [],
           currentCompany: '',
           defaultLanguage: '',
           isEmailVerified: false,
-          version: 0,
           status: ActiveStatus.active,
           createdBy: '',
           createdDate: DateTime.fromMillisecondsSinceEpoch(0),
@@ -56,12 +54,11 @@ class UserEntity extends Equatable {
   final String phoneNumber;
   final String citizenId;
   final String profileImage;
-  final String role;
+  final UserRoles role;
   final List<String> companies;
   final String currentCompany;
   final String defaultLanguage;
   final bool isEmailVerified;
-  final int version;
   final ActiveStatus status;
   final String createdBy;
   final DateTime createdDate;
@@ -84,7 +81,6 @@ class UserEntity extends Equatable {
       currentCompany,
       defaultLanguage,
       isEmailVerified,
-      version,
       status,
       createdBy,
       createdDate,
