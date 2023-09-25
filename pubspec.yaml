@@ -53,6 +53,9 @@ dependencies:
   google_fonts: ^6.0.0
   ionicons: ^0.2.2
 
+  # Animation packages
+  flutter_animate: ^4.2.0+1
+
   # Test packages
   mocktail: ^1.0.0
   bloc_test: ^9.1.4

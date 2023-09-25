@@ -23,16 +23,10 @@ class _SignInScreenState extends State<SignInScreen> {
 
     usernameController = TextEditingController();
     passwordController = TextEditingController();
-
-    getCurrentUser();
   }
 
-  void signInWithGoogle() {
+  void _signInWithGoogle() {
     context.read<AuthenticationBloc>().add(const SignInWithGoogleEvent());
-  }
-
-  void getCurrentUser() {
-    context.read<AuthenticationBloc>().add(const GetCurrentUserEvent());
   }
 
   @override
@@ -109,7 +103,7 @@ class _SignInScreenState extends State<SignInScreen> {
       constraints: const BoxConstraints(maxWidth: 300.0),
       child: CustomButton(
         height: 40.0,
-        onPressed: signInWithGoogle,
+        onPressed: _signInWithGoogle,
         child: BlocConsumer<AuthenticationBloc, AuthenticationState>(
           listener: (context, state) {
             if (state is AuthenticationError) {
@@ -133,21 +127,10 @@ class _SignInScreenState extends State<SignInScreen> {
                 ),
               );
               context.pushReplacement(AuthenticationRoute.acceptInvite.path);
-            } else if (state is GotCurrentUser) {
-              ScaffoldMessenger.of(context).showSnackBar(
-                SnackBar(
-                  content: Text(
-                    'Welcome back!',
-                    style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                        color: Theme.of(context).colorScheme.onPrimary),
-                  ),
-                ),
-              );
-              context.pushReplacement(AuthenticationRoute.acceptInvite.path);
             }
           },
           builder: (context, state) {
-            if (state is SigningInWithGoogle || state is GettingCurrentUser) {
+            if (state is SigningInWithGoogle) {
               return SizedBox(
                 width: 24.0,
                 height: 24.0,
