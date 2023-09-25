@@ -1,7 +1,15 @@
 {
     "app": {
         "name": "PDPA Management Platform",
-        "changeLang": "Change language"
+        "changeLang": "Change language",
+        "feature": {
+            "consentmanagement": "การจัดการความยินยอม",
+            "consentforms": "แบบฟอร์มความยินยอม",
+            "userconsents": "ความยินยอมของผู้ใช้",
+            "datasubjectright": "Data Subject Right",
+            "masterdata": "Master Data",
+            "setting": "การตั้งค่า"
+        }
     },
     "auth": {
         "signIn": {
@@ -15,6 +23,23 @@
             "tagline2": "เราตื่นเต้นมากที่คุณมาร่วมเป็นส่วนหนึ่ง",
             "enterCode": "กรุณากรอกรหัสคำเชิญ",
             "continueButton": "ดำเนินการต่อ"
-        }
+
     }
+    },
+    "masterdata" : {
+        "consentmasterdata": {
+            "consents": "Consents",
+            "inputfields": "Input Fields",
+            "purpose": "Purpose",
+            "purposecategory": "Purpose Catogory"
+        },
+        "datasubjectrightmasterdata": {
+            "datasubjectright": "Data Subject Right",            
+            "request": "Request",
+            "rejections": "Rejections",
+            "reason": "Reason",
+            "requestrejects": "Request rejects",
+            "requestreasons": "Request reasons"
+        }
+    }    
 }
