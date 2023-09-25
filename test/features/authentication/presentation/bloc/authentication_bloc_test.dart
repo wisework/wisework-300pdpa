@@ -57,7 +57,7 @@ void main() {
 
   group('GetCurrentUser:', () {
     blocTest<AuthenticationBloc, AuthenticationState>(
-      'Should emit [GettingCurrentUser, GotCurrentUser] when successful',
+      'Should emit [GettingCurrentUser, SignedIn] when successful',
       build: () {
         when(() => getCurrentUser()).thenAnswer(
           (_) async => Right(user),
@@ -69,7 +69,7 @@ void main() {
       ),
       expect: () => [
         const GettingCurrentUser(),
-        GotCurrentUser(user),
+        SignedIn(user),
       ],
       verify: (_) {
         verify(
@@ -105,7 +105,7 @@ void main() {
 
   group('SignInWithGoogle:', () {
     blocTest<AuthenticationBloc, AuthenticationState>(
-      'Should emit [SigningInWithGoogle, SignedInWithGoogle] when successful',
+      'Should emit [SigningInWithGoogle, SignedIn] when successful',
       build: () {
         when(() => signInWithGoogle()).thenAnswer(
           (_) async => Right(user),
@@ -117,7 +117,7 @@ void main() {
       ),
       expect: () => [
         const SigningInWithGoogle(),
-        SignedInWithGoogle(user),
+        SignedIn(user),
       ],
       verify: (_) {
         verify(

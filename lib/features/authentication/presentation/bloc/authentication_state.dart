@@ -21,15 +21,6 @@ class GettingCurrentUser extends AuthenticationState {
   List<Object> get props => [];
 }
 
-class GotCurrentUser extends AuthenticationState {
-  const GotCurrentUser(this.user);
-
-  final UserEntity user;
-
-  @override
-  List<Object> get props => [user];
-}
-
 class SigningInWithGoogle extends AuthenticationState {
   const SigningInWithGoogle();
 
@@ -37,8 +28,8 @@ class SigningInWithGoogle extends AuthenticationState {
   List<Object> get props => [];
 }
 
-class SignedInWithGoogle extends AuthenticationState {
-  const SignedInWithGoogle(this.user);
+class SignedIn extends AuthenticationState {
+  const SignedIn(this.user);
 
   final UserEntity user;
 

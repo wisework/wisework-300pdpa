@@ -23,93 +23,71 @@ class _SignInScreenState extends State<SignInScreen> {
 
     usernameController = TextEditingController();
     passwordController = TextEditingController();
-
-    getCurrentUser();
   }
 
-  void signInWithGoogle() {
+  @override
+  void dispose() {
+    usernameController.dispose();
+    passwordController.dispose();
+
+    super.dispose();
+  }
+
+  void _signInWithGoogle() {
     context.read<AuthenticationBloc>().add(const SignInWithGoogleEvent());
-  }
-
-  void getCurrentUser() {
-    context.read<AuthenticationBloc>().add(const GetCurrentUserEvent());
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: Theme.of(context).colorScheme.onPrimary,
-      body: LayoutBuilder(builder: (context, constraints) {
-        if (constraints.maxHeight < 600) {
-          return SingleChildScrollView(
+      body: Column(
+        crossAxisAlignment: CrossAxisAlignment.center,
+        children: <Widget>[
+          Expanded(
             child: Center(
               child: Column(
                 mainAxisSize: MainAxisSize.min,
                 children: <Widget>[
-                  const SizedBox(height: 20.0),
-                  Image.asset('assets/images/wisework-logo.png'),
+                  SizedBox(
+                    width: 240.0,
+                    child: Image.asset(
+                      'assets/images/wisework-logo.png',
+                      fit: BoxFit.contain,
+                    ),
+                  ),
                   const SizedBox(height: 60.0),
                   Text(
                     tr('app.name'),
-                    style: Theme.of(context).textTheme.displayLarge,
+                    style: Theme.of(context).textTheme.displayMedium,
                   ),
                   const SizedBox(height: 40.0),
                   _buildAuthenticationButton(),
-                  Padding(
-                    padding: const EdgeInsets.symmetric(vertical: 20.0),
-                    child: Text(
-                      tr('app.auth.joinOverForGoal'),
-                      style: Theme.of(context).textTheme.bodySmall?.copyWith(
-                          color: Theme.of(context).colorScheme.onTertiary),
-                    ),
-                  ),
                 ],
               ),
             ),
-          );
-        }
-        return Column(
-          crossAxisAlignment: CrossAxisAlignment.center,
-          children: <Widget>[
-            Expanded(
-              child: Center(
-                child: Column(
-                  mainAxisSize: MainAxisSize.min,
-                  children: <Widget>[
-                    Image.asset('assets/images/wisework-logo.png'),
-                    const SizedBox(height: 60.0),
-                    Text(
-                      tr('app.name'),
-                      style: Theme.of(context).textTheme.displayLarge,
-                    ),
-                    const SizedBox(height: 40.0),
-                    _buildAuthenticationButton(),
-                  ],
-                ),
-              ),
+          ),
+          Padding(
+            padding: const EdgeInsets.symmetric(vertical: 20.0),
+            child: Text(
+              tr('auth.signIn.joinOverForGoal'),
+              style: Theme.of(context)
+                  .textTheme
+                  .bodySmall
+                  ?.copyWith(color: Theme.of(context).colorScheme.onTertiary),
             ),
-            Padding(
-              padding: const EdgeInsets.symmetric(vertical: 20.0),
-              child: Text(
-                tr('app.auth.joinOverForGoal'),
-                style: Theme.of(context)
-                    .textTheme
-                    .bodySmall
-                    ?.copyWith(color: Theme.of(context).colorScheme.onTertiary),
-              ),
-            ),
-          ],
-        );
-      }),
+          ),
+        ],
+      ),
     );
   }
 
   ConstrainedBox _buildAuthenticationButton() {
     return ConstrainedBox(
-      constraints: const BoxConstraints(maxWidth: 300.0),
+      constraints: const BoxConstraints(maxWidth: 260.0),
       child: CustomButton(
         height: 40.0,
-        onPressed: signInWithGoogle,
+        onPressed: _signInWithGoogle,
         child: BlocConsumer<AuthenticationBloc, AuthenticationState>(
           listener: (context, state) {
             if (state is AuthenticationError) {
@@ -122,7 +100,7 @@ class _SignInScreenState extends State<SignInScreen> {
                   ),
                 ),
               );
-            } else if (state is SignedInWithGoogle) {
+            } else if (state is SignedIn) {
               ScaffoldMessenger.of(context).showSnackBar(
                 SnackBar(
                   content: Text(
@@ -133,21 +111,10 @@ class _SignInScreenState extends State<SignInScreen> {
                 ),
               );
               context.pushReplacement(AuthenticationRoute.acceptInvite.path);
-            } else if (state is GotCurrentUser) {
-              ScaffoldMessenger.of(context).showSnackBar(
-                SnackBar(
-                  content: Text(
-                    'Welcome back!',
-                    style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                        color: Theme.of(context).colorScheme.onPrimary),
-                  ),
-                ),
-              );
-              context.pushReplacement(AuthenticationRoute.acceptInvite.path);
             }
           },
           builder: (context, state) {
-            if (state is SigningInWithGoogle || state is GettingCurrentUser) {
+            if (state is SigningInWithGoogle) {
               return SizedBox(
                 width: 24.0,
                 height: 24.0,
@@ -158,7 +125,7 @@ class _SignInScreenState extends State<SignInScreen> {
               );
             }
             return Text(
-              tr('app.auth.signInWithGoogle'),
+              tr('auth.signIn.signInWithGoogle'),
               style: Theme.of(context)
                   .textTheme
                   .titleMedium
