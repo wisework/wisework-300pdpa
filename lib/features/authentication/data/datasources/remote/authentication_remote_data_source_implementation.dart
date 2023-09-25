@@ -5,7 +5,6 @@ import 'package:pdpa/core/errors/exceptions.dart';
 import 'package:pdpa/features/authentication/data/datasources/remote/authentication_remote_data_source.dart';
 import 'package:pdpa/features/authentication/data/models/user_model.dart';
 import 'package:pdpa/features/authentication/domain/entities/user_entity.dart';
-import 'package:uuid/uuid.dart';
 
 class AuthenticationRemoteDataSourceImplementation
     extends AuthenticationRemoteDataSource {
@@ -23,9 +22,17 @@ class AuthenticationRemoteDataSourceImplementation
   Future<UserEntity> getCurrentUser() async {
     final user = _auth.currentUser;
     if (user != null) {
-      final document = await _firestore.collection('Users').doc(user.uid).get();
-      if (document.exists) {
-        return UserModel.fromDocument(document);
+      final queryResult = await _firestore
+          .collection('Users')
+          .where('uid', isEqualTo: user.uid)
+          .get();
+
+      if (queryResult.docs.isNotEmpty) {
+        final version = queryResult.docs
+            .map((document) => UserModel.fromDocument(document))
+            .toList()
+          ..sort((a, b) => b.version.compareTo(a.version));
+        return version.first;
       }
       throw const ApiException(message: 'User not found', statusCode: 404);
     }
@@ -44,13 +51,19 @@ class AuthenticationRemoteDataSourceImplementation
 
       final userCredential = await _auth.signInWithCredential(credential);
       if (userCredential.user != null) {
-        final document = await _firestore
+        final queryResult = await _firestore
             .collection('Users')
-            .doc(userCredential.user!.uid)
+            .where('uid', isEqualTo: userCredential.user!.uid)
             .get();
-        if (document.exists) {
-          return UserModel.fromDocument(document);
+
+        if (queryResult.docs.isNotEmpty) {
+          final version = queryResult.docs
+              .map((document) => UserModel.fromDocument(document))
+              .toList()
+            ..sort((a, b) => b.version.compareTo(a.version));
+          return version.first;
         } else {
+          final userRef = _firestore.collection('Users').doc();
           final name = userCredential.user!.displayName?.split(' ') ??
               [userCredential.user!.displayName!];
 
@@ -61,8 +74,8 @@ class AuthenticationRemoteDataSourceImplementation
           if (name.length > 1) lastName = name.last;
 
           final newUser = UserModel.empty().copyWith(
-            id: userCredential.user!.uid,
-            uid: const Uuid().v6(),
+            id: userRef.id,
+            uid: userCredential.user!.uid,
             firstName: firstName,
             lastName: lastName,
             email: userCredential.user!.email,
@@ -75,10 +88,7 @@ class AuthenticationRemoteDataSourceImplementation
             updatedDate: DateTime.now(),
           );
 
-          await _firestore
-              .collection('Users')
-              .doc(newUser.id)
-              .set(newUser.toMap());
+          await userRef.set(newUser.toMap());
 
           return newUser;
         }

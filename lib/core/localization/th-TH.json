@@ -1,23 +1,20 @@
 {
     "app": {
         "name": "PDPA Management Platform",
-        "changeLang": "Change language",
-        "description": "คลิกสิคลิกหลายๆที",
-        "increment": "เพิ่ม",
-        "counter": {
-            "zero": "{} ครั้ง",
-            "one": "{} ครั้ง",
-            "two": "{} ครั้ง",
-            "other": "{} ครั้ง"
-        },
-        "auth": {
-            "username": "ชื่อผู้ใช้หรืออีเมล",
-            "password": "รหัสผ่าน",
-            "rememberMe": "จำฉันไว้",
-            "forgotPassword": "ลืมรหัสผ่าน",
-            "signIn": "เข้าสู่ระบบ",
+        "changeLang": "Change language"
+    },
+    "auth": {
+        "signIn": {
             "signInWithGoogle": "เข้าสู่ระบบด้วย Google",
             "joinOverForGoal": "เข้าร่วมกับผู้ใช้มากกว่า 100,000 ราย เพื่อบรรลุเป้าหมาย!"
+        },
+        "acceptInvite": {
+            "title": "ตอบรับคำเชิญ",
+            "hello": "สวัสดี",
+            "tagline1": "ขอบคุณที่เลือกใช้แอพของเรา!",
+            "tagline2": "เราตื่นเต้นมากที่คุณมาร่วมเป็นส่วนหนึ่ง",
+            "enterCode": "กรุณากรอกรหัสคำเชิญ",
+            "continueButton": "ดำเนินการต่อ"
         }
     }
 }

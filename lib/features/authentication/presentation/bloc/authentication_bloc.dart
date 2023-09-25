@@ -47,7 +47,7 @@ class AuthenticationBloc
       (user) => emit(
         user == UserModel.empty()
             ? const AuthenticationInitial()
-            : GotCurrentUser(user),
+            : SignedIn(user),
       ),
     );
   }
@@ -62,7 +62,7 @@ class AuthenticationBloc
 
     result.fold(
       (failure) => emit(AuthenticationError(failure.errorMessage)),
-      (user) => emit(SignedInWithGoogle(user)),
+      (user) => emit(SignedIn(user)),
     );
   }
 

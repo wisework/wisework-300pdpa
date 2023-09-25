@@ -50,10 +50,11 @@ class _SplashScreenState extends State<SplashScreen> {
       body: Center(
         child: BlocListener<AuthenticationBloc, AuthenticationState>(
           listener: (context, state) async {
-            await Future.delayed(const Duration(seconds: 1)).then((_) {
-              if (state is GotCurrentUser) {
+            await Future.delayed(const Duration(milliseconds: 500)).then((_) {
+              if (state is SignedIn) {
                 _alreadySignedIn();
-              } else if (state is AuthenticationInitial) {
+              } else if (state is AuthenticationInitial ||
+                  state is AuthenticationError) {
                 _redirectToSignIn();
               }
             });
