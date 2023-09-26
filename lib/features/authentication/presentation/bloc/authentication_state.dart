@@ -31,7 +31,7 @@ class SigningInWithGoogle extends AuthenticationState {
 class SignedIn extends AuthenticationState {
   const SignedIn(this.user);
 
-  final UserEntity user;
+  final UserModel user;
 
   @override
   List<Object> get props => [user];

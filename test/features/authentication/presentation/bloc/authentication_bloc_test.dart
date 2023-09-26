@@ -3,6 +3,7 @@ import 'package:dartz/dartz.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mocktail/mocktail.dart';
 import 'package:pdpa/core/errors/failure.dart';
+import 'package:pdpa/features/authentication/data/models/user_model.dart';
 import 'package:pdpa/features/authentication/domain/entities/user_entity.dart';
 import 'package:pdpa/features/authentication/domain/usecases/get_current_user.dart';
 import 'package:pdpa/features/authentication/domain/usecases/sign_in_with_google.dart';
@@ -69,7 +70,7 @@ void main() {
       ),
       expect: () => [
         const GettingCurrentUser(),
-        SignedIn(user),
+        SignedIn(user as UserModel),
       ],
       verify: (_) {
         verify(
@@ -117,7 +118,7 @@ void main() {
       ),
       expect: () => [
         const SigningInWithGoogle(),
-        SignedIn(user),
+        SignedIn(user as UserModel),
       ],
       verify: (_) {
         verify(

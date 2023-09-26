@@ -4,6 +4,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
 import 'package:ionicons/ionicons.dart';
 import 'package:pdpa/config/config.dart';
+import 'package:pdpa/core/utils/constants.dart';
 import 'package:pdpa/core/widgets/custom_button.dart';
 import 'package:pdpa/core/widgets/custom_icon_button.dart';
 import 'package:pdpa/core/widgets/custom_text_field.dart';
@@ -32,6 +33,32 @@ class _AcceptInviteScreenState extends State<AcceptInviteScreen> {
     inviteCodeController.dispose();
 
     super.dispose();
+  }
+
+  void _onContinuePressed() {
+    final authBloc = BlocProvider.of<AuthenticationBloc>(
+      context,
+      listen: false,
+    );
+
+    if (authBloc.state is SignedIn) {
+      final user = (authBloc.state as SignedIn).user;
+      final inviteCode = inviteCodeController.text;
+
+      List<String> companies =
+          user.companies.map((company) => company).toList();
+      if (!companies.contains(inviteCode)) {
+        companies.add(inviteCode);
+      }
+
+      final updated = user.copyWith(
+        role: UserRoles.editor,
+        companies: companies,
+        currentCompany: inviteCode,
+      );
+
+      context.read<AuthenticationBloc>().add(UpdateUserEvent(user: updated));
+    }
   }
 
   @override
@@ -138,14 +165,7 @@ class _AcceptInviteScreenState extends State<AcceptInviteScreen> {
   CustomButton _buildContinueButton(BuildContext context) {
     return CustomButton(
       height: 40.0,
-      onPressed: () {
-        // final authBloc = BlocProvider.of<AuthenticationBloc>(context);
-        // if (authBloc is SignedIn) {
-        //   final updated = (authBloc.state as SignedIn).user;
-
-        //   context.read<AuthenticationBloc>().add(UpdateUserEvent(user: updated));
-        // }
-      },
+      onPressed: _onContinuePressed,
       child: Text(
         tr('auth.acceptInvite.continueButton'),
         style: Theme.of(context)

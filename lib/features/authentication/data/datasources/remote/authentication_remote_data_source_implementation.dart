@@ -107,11 +107,11 @@ class AuthenticationRemoteDataSourceImplementation
 
   @override
   Future<void> updateUser({required UserEntity user}) async {
-    // final updated = user.copyWith(
-    //   updatedBy: user.uid,
-    //   updatedDate: DateTime.now(),
-    // );
+    final updated = (user as UserModel).copyWith(
+      updatedBy: user.uid,
+      updatedDate: DateTime.now(),
+    );
 
-    // await _firestore.collection('Users').doc(user.id).set(updated.toMap());
+    await _firestore.collection('Users').doc(user.id).set(updated.toMap());
   }
 }
