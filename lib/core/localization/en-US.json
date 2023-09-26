@@ -16,5 +16,11 @@
             "enterCode": "Enter invite code",
             "continueButton": "Continue"
         }
+    },
+    "general": {
+        "home": {
+            "hello": "Hello",
+            "tagline": "What you are looking for today"
+        }
     }
 }

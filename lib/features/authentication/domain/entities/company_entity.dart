@@ -2,8 +2,8 @@ import 'package:equatable/equatable.dart';
 
 import 'package:pdpa/core/utils/constants.dart';
 
-class Company extends Equatable {
-  const Company({
+class CompanyEntity extends Equatable {
+  const CompanyEntity({
     required this.id,
     required this.name,
     required this.profileImage,
@@ -14,7 +14,7 @@ class Company extends Equatable {
     required this.updatedDate,
   });
 
-  Company.empty()
+  CompanyEntity.empty()
       : this(
           id: '',
           name: '',

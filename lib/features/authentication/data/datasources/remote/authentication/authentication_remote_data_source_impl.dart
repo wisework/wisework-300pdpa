@@ -3,13 +3,14 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 import 'package:pdpa/core/errors/exceptions.dart';
 import 'package:pdpa/core/utils/constants.dart';
-import 'package:pdpa/features/authentication/data/datasources/remote/authentication_remote_data_source.dart';
 import 'package:pdpa/features/authentication/data/models/user_model.dart';
 import 'package:pdpa/features/authentication/domain/entities/user_entity.dart';
 
-class AuthenticationRemoteDataSourceImplementation
+import 'authentication_remote_data_source.dart';
+
+class AuthenticationRemoteDataSourceImpl
     extends AuthenticationRemoteDataSource {
-  AuthenticationRemoteDataSourceImplementation(
+  AuthenticationRemoteDataSourceImpl(
     this._firestore,
     this._auth,
     this._googleSignIn,

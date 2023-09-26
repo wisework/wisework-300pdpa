@@ -16,5 +16,11 @@
             "enterCode": "กรุณากรอกรหัสคำเชิญ",
             "continueButton": "ดำเนินการต่อ"
         }
+    },
+    "general": {
+        "home": {
+            "hello": "Hello",
+            "tagline": "What you are looking for today"
+        }
     }
 }

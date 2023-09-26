@@ -58,13 +58,6 @@ class UpdatingUser extends AuthenticationState {
   List<Object> get props => [];
 }
 
-class UpdatedUser extends AuthenticationState {
-  const UpdatedUser();
-
-  @override
-  List<Object> get props => [];
-}
-
 class AuthenticationError extends AuthenticationState {
   const AuthenticationError(this.message);
 

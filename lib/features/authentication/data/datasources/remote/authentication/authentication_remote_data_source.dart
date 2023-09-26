@@ -7,7 +7,5 @@ abstract class AuthenticationRemoteDataSource {
 
   Future<void> signOut();
 
-  Future<void> updateUser({
-    required UserEntity user,
-  });
+  Future<void> updateUser({required UserEntity user});
 }

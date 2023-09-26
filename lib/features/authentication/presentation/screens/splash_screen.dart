@@ -2,8 +2,10 @@ import 'package:flutter/material.dart';
 import 'package:flutter_animate/flutter_animate.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
+import 'package:pdpa/features/authentication/data/models/user_model.dart';
 import 'package:pdpa/features/authentication/presentation/bloc/authentication_bloc.dart';
 import 'package:pdpa/features/authentication/presentation/routes/authentication_route.dart';
+import 'package:pdpa/features/general/presentation/routes/general_route.dart';
 
 class SplashScreen extends StatefulWidget {
   const SplashScreen({super.key});
@@ -24,7 +26,7 @@ class _SplashScreenState extends State<SplashScreen> {
     context.read<AuthenticationBloc>().add(const GetCurrentUserEvent());
   }
 
-  void _alreadySignedIn() {
+  void _alreadySignedIn(UserModel user) {
     ScaffoldMessenger.of(context).showSnackBar(
       SnackBar(
         content: Text(
@@ -37,7 +39,11 @@ class _SplashScreenState extends State<SplashScreen> {
       ),
     );
 
-    context.pushReplacement(AuthenticationRoute.acceptInvite.path);
+    if (user.companies.isEmpty || user.currentCompany.isEmpty) {
+      context.pushReplacement(AuthenticationRoute.acceptInvite.path);
+    } else {
+      context.pushReplacement(GeneralRoute.home.path);
+    }
   }
 
   void _redirectToSignIn() {
@@ -52,7 +58,7 @@ class _SplashScreenState extends State<SplashScreen> {
           listener: (context, state) async {
             await Future.delayed(const Duration(milliseconds: 500)).then((_) {
               if (state is SignedIn) {
-                _alreadySignedIn();
+                _alreadySignedIn(state.user);
               } else if (state is AuthenticationInitial ||
                   state is AuthenticationError) {
                 _redirectToSignIn();

@@ -5,9 +5,9 @@ import 'package:go_router/go_router.dart';
 import 'package:ionicons/ionicons.dart';
 import 'package:pdpa/config/config.dart';
 import 'package:pdpa/core/utils/constants.dart';
-import 'package:pdpa/core/widgets/custom_button.dart';
-import 'package:pdpa/core/widgets/custom_icon_button.dart';
-import 'package:pdpa/core/widgets/custom_text_field.dart';
+import 'package:pdpa/core/widgets/customs/custom_button.dart';
+import 'package:pdpa/core/widgets/customs/custom_icon_button.dart';
+import 'package:pdpa/core/widgets/customs/custom_text_field.dart';
 import 'package:pdpa/features/authentication/presentation/bloc/authentication_bloc.dart';
 import 'package:pdpa/features/authentication/presentation/routes/authentication_route.dart';
 
@@ -66,36 +66,34 @@ class _AcceptInviteScreenState extends State<AcceptInviteScreen> {
     return Scaffold(
       appBar: _buildAppBar(context),
       body: SingleChildScrollView(
-        child: Padding(
+        child: Container(
           padding: const EdgeInsets.all(UiConfig.paddingAllSpacing),
-          child: Container(
-            padding: const EdgeInsets.all(UiConfig.paddingAllSpacing),
-            decoration: BoxDecoration(
-              color: Theme.of(context).colorScheme.onBackground,
-              borderRadius: BorderRadius.circular(10.0),
-            ),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: <Widget>[
-                _buildGreetingUser(context),
-                const SizedBox(height: UiConfig.lineSpacing),
-                Text(
-                  tr('auth.acceptInvite.tagline1'),
-                  style: Theme.of(context).textTheme.bodyMedium,
-                ),
-                Text(
-                  tr('auth.acceptInvite.tagline2'),
-                  style: Theme.of(context).textTheme.bodyMedium,
-                ),
-                const SizedBox(height: 20.0),
-                CustomTextField(
-                  controller: inviteCodeController,
-                  hintText: tr('auth.acceptInvite.enterCode'),
-                ),
-                const SizedBox(height: 20.0),
-                _buildContinueButton(context),
-              ],
-            ),
+          decoration: BoxDecoration(
+            color: Theme.of(context).colorScheme.onBackground,
+            borderRadius: BorderRadius.circular(10.0),
+          ),
+          margin: const EdgeInsets.all(UiConfig.paddingAllSpacing),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: <Widget>[
+              _buildGreetingUser(context),
+              const SizedBox(height: UiConfig.lineSpacing),
+              Text(
+                tr('auth.acceptInvite.tagline1'),
+                style: Theme.of(context).textTheme.bodyMedium,
+              ),
+              Text(
+                tr('auth.acceptInvite.tagline2'),
+                style: Theme.of(context).textTheme.bodyMedium,
+              ),
+              const SizedBox(height: 20.0),
+              CustomTextField(
+                controller: inviteCodeController,
+                hintText: tr('auth.acceptInvite.enterCode'),
+              ),
+              const SizedBox(height: 20.0),
+              _buildContinueButton(context),
+            ],
           ),
         ),
       ),

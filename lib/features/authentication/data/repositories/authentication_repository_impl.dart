@@ -2,13 +2,12 @@ import 'package:dartz/dartz.dart';
 import 'package:pdpa/core/errors/exceptions.dart';
 import 'package:pdpa/core/errors/failure.dart';
 import 'package:pdpa/core/utils/typedef.dart';
-import 'package:pdpa/features/authentication/data/datasources/remote/authentication_remote_data_source.dart';
+import 'package:pdpa/features/authentication/data/datasources/remote/authentication/authentication_remote_data_source.dart';
 import 'package:pdpa/features/authentication/domain/entities/user_entity.dart';
 import 'package:pdpa/features/authentication/domain/repositories/authentication_repository.dart';
 
-class AuthenticationRepositoryImplementation
-    implements AuthenticationRepository {
-  const AuthenticationRepositoryImplementation(this._remoteDataSource);
+class AuthenticationRepositoryImpl implements AuthenticationRepository {
+  const AuthenticationRepositoryImpl(this._remoteDataSource);
 
   final AuthenticationRemoteDataSource _remoteDataSource;
 

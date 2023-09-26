@@ -3,7 +3,7 @@ import 'dart:convert';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:pdpa/core/utils/typedef.dart';
 import 'package:pdpa/features/authentication/data/models/company_model.dart';
-import 'package:pdpa/features/authentication/domain/entities/company.dart';
+import 'package:pdpa/features/authentication/domain/entities/company_entity.dart';
 
 import '../../../../fixtures/fixture_reader.dart';
 
@@ -12,7 +12,7 @@ void main() {
 
   test('Should be a subclass of [Company] entity', () {
     //? Assert
-    expect(model, isA<Company>());
+    expect(model, isA<CompanyEntity>());
   });
 
   final json = fixture('company.json');

@@ -4,11 +4,10 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:mocktail/mocktail.dart';
 import 'package:pdpa/core/errors/failure.dart';
 import 'package:pdpa/features/authentication/data/models/user_model.dart';
-import 'package:pdpa/features/authentication/domain/entities/user_entity.dart';
-import 'package:pdpa/features/authentication/domain/usecases/get_current_user.dart';
-import 'package:pdpa/features/authentication/domain/usecases/sign_in_with_google.dart';
-import 'package:pdpa/features/authentication/domain/usecases/sign_out.dart';
-import 'package:pdpa/features/authentication/domain/usecases/update_user.dart';
+import 'package:pdpa/features/authentication/domain/usecases/authentication/get_current_user.dart';
+import 'package:pdpa/features/authentication/domain/usecases/authentication/sign_in_with_google.dart';
+import 'package:pdpa/features/authentication/domain/usecases/authentication/sign_out.dart';
+import 'package:pdpa/features/authentication/domain/usecases/authentication/update_user.dart';
 import 'package:pdpa/features/authentication/presentation/bloc/authentication_bloc.dart';
 
 class MockGetCurrentUser extends Mock implements GetCurrentUser {}
@@ -19,25 +18,22 @@ class MockSignOut extends Mock implements SignOut {}
 
 class MockUpdateUser extends Mock implements UpdateUser {}
 
-class MockUser extends Mock implements UserEntity {}
-
 void main() {
   late GetCurrentUser getCurrentUser;
   late SignInWithGoogle signInWithGoogle;
   late SignOut signOut;
   late UpdateUser updateUser;
-  late UserEntity user;
   late AuthenticationBloc bloc;
 
   const apiFailure = ApiFailure(message: 'User not found', statusCode: 404);
-  final updateUserParams = UpdateUserParams.empty();
+  final user = UserModel.empty();
+  final updateUserParams = UpdateUserParams(user: user);
 
   setUp(() {
     getCurrentUser = MockGetCurrentUser();
     signInWithGoogle = MockSignInWithGoogle();
     signOut = MockSignOut();
     updateUser = MockUpdateUser();
-    user = MockUser();
     bloc = AuthenticationBloc(
       getCurrentUser: getCurrentUser,
       signInWithGoogle: signInWithGoogle,
@@ -70,7 +66,7 @@ void main() {
       ),
       expect: () => [
         const GettingCurrentUser(),
-        SignedIn(user as UserModel),
+        SignedIn(user),
       ],
       verify: (_) {
         verify(
@@ -118,7 +114,7 @@ void main() {
       ),
       expect: () => [
         const SigningInWithGoogle(),
-        SignedIn(user as UserModel),
+        SignedIn(user),
       ],
       verify: (_) {
         verify(
@@ -202,7 +198,7 @@ void main() {
 
   group('UpdateUser:', () {
     blocTest<AuthenticationBloc, AuthenticationState>(
-      'Should emit [UpdatingUser, UpdatedUser] when successful',
+      'Should emit [UpdatingUser, SignedIn] when successful',
       build: () {
         when(() => updateUser(any())).thenAnswer(
           (_) async => const Right(null),
@@ -214,7 +210,7 @@ void main() {
       ),
       expect: () => [
         const UpdatingUser(),
-        const UpdatedUser(),
+        SignedIn(user),
       ],
       verify: (_) {
         verify(
