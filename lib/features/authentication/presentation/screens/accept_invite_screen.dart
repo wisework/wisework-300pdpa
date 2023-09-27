@@ -4,9 +4,10 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
 import 'package:ionicons/ionicons.dart';
 import 'package:pdpa/config/config.dart';
-import 'package:pdpa/core/widgets/custom_button.dart';
-import 'package:pdpa/core/widgets/custom_icon_button.dart';
-import 'package:pdpa/core/widgets/custom_text_field.dart';
+import 'package:pdpa/core/utils/constants.dart';
+import 'package:pdpa/core/widgets/customs/custom_button.dart';
+import 'package:pdpa/core/widgets/customs/custom_icon_button.dart';
+import 'package:pdpa/core/widgets/customs/custom_text_field.dart';
 import 'package:pdpa/features/authentication/presentation/bloc/authentication_bloc.dart';
 import 'package:pdpa/features/authentication/presentation/routes/authentication_route.dart';
 
@@ -34,41 +35,65 @@ class _AcceptInviteScreenState extends State<AcceptInviteScreen> {
     super.dispose();
   }
 
+  void _onContinuePressed() {
+    final authBloc = BlocProvider.of<AuthenticationBloc>(
+      context,
+      listen: false,
+    );
+
+    if (authBloc.state is SignedIn) {
+      final user = (authBloc.state as SignedIn).user;
+      final inviteCode = inviteCodeController.text;
+
+      List<String> companies =
+          user.companies.map((company) => company).toList();
+      if (!companies.contains(inviteCode)) {
+        companies.add(inviteCode);
+      }
+
+      final updated = user.copyWith(
+        role: UserRoles.editor,
+        companies: companies,
+        currentCompany: inviteCode,
+      );
+
+      context.read<AuthenticationBloc>().add(UpdateUserEvent(user: updated));
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: _buildAppBar(context),
       body: SingleChildScrollView(
-        child: Padding(
+        child: Container(
           padding: const EdgeInsets.all(UiConfig.paddingAllSpacing),
-          child: Container(
-            padding: const EdgeInsets.all(UiConfig.paddingAllSpacing),
-            decoration: BoxDecoration(
-              color: Theme.of(context).colorScheme.onBackground,
-              borderRadius: BorderRadius.circular(10.0),
-            ),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: <Widget>[
-                _buildGreetingUser(context),
-                const SizedBox(height: UiConfig.lineSpacing),
-                Text(
-                  tr('auth.acceptInvite.tagline1'),
-                  style: Theme.of(context).textTheme.bodyMedium,
-                ),
-                Text(
-                  tr('auth.acceptInvite.tagline2'),
-                  style: Theme.of(context).textTheme.bodyMedium,
-                ),
-                const SizedBox(height: 20.0),
-                CustomTextField(
-                  controller: inviteCodeController,
-                  hintText: tr('auth.acceptInvite.enterCode'),
-                ),
-                const SizedBox(height: 20.0),
-                _buildContinueButton(context),
-              ],
-            ),
+          decoration: BoxDecoration(
+            color: Theme.of(context).colorScheme.onBackground,
+            borderRadius: BorderRadius.circular(10.0),
+          ),
+          margin: const EdgeInsets.all(UiConfig.paddingAllSpacing),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: <Widget>[
+              _buildGreetingUser(context),
+              const SizedBox(height: UiConfig.lineSpacing),
+              Text(
+                tr('auth.acceptInvite.tagline1'),
+                style: Theme.of(context).textTheme.bodyMedium,
+              ),
+              Text(
+                tr('auth.acceptInvite.tagline2'),
+                style: Theme.of(context).textTheme.bodyMedium,
+              ),
+              const SizedBox(height: 20.0),
+              CustomTextField(
+                controller: inviteCodeController,
+                hintText: tr('auth.acceptInvite.enterCode'),
+              ),
+              const SizedBox(height: 20.0),
+              _buildContinueButton(context),
+            ],
           ),
         ),
       ),
@@ -138,14 +163,7 @@ class _AcceptInviteScreenState extends State<AcceptInviteScreen> {
   CustomButton _buildContinueButton(BuildContext context) {
     return CustomButton(
       height: 40.0,
-      onPressed: () {
-        // final authBloc = BlocProvider.of<AuthenticationBloc>(context);
-        // if (authBloc is SignedIn) {
-        //   final updated = (authBloc.state as SignedIn).user;
-
-        //   context.read<AuthenticationBloc>().add(UpdateUserEvent(user: updated));
-        // }
-      },
+      onPressed: _onContinuePressed,
       child: Text(
         tr('auth.acceptInvite.continueButton'),
         style: Theme.of(context)

@@ -10,7 +10,5 @@ abstract class AuthenticationRepository {
 
   ResultVoid signOut();
 
-  ResultVoid updateUser({
-    required UserEntity user,
-  });
+  ResultVoid updateUser({required UserEntity user});
 }

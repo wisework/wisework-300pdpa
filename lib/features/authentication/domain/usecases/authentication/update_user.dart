@@ -10,9 +10,8 @@ class UpdateUser extends UsecaseWithParams<void, UpdateUserParams> {
   final AuthenticationRepository _repository;
 
   @override
-  ResultFuture<void> call(UpdateUserParams params) => _repository.updateUser(
-        user: params.user,
-      );
+  ResultFuture<void> call(UpdateUserParams params) =>
+      _repository.updateUser(user: params.user);
 }
 
 class UpdateUserParams extends Equatable {

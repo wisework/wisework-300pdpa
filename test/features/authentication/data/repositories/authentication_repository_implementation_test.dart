@@ -3,9 +3,9 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:mocktail/mocktail.dart';
 import 'package:pdpa/core/errors/exceptions.dart';
 import 'package:pdpa/core/errors/failure.dart';
-import 'package:pdpa/features/authentication/data/datasources/remote/authentication_remote_data_source.dart';
+import 'package:pdpa/features/authentication/data/datasources/remote/authentication/authentication_remote_data_source.dart';
 import 'package:pdpa/features/authentication/data/models/user_model.dart';
-import 'package:pdpa/features/authentication/data/repositories/authentication_repository_implementation.dart';
+import 'package:pdpa/features/authentication/data/repositories/authentication_repository_impl.dart';
 import 'package:pdpa/features/authentication/domain/entities/user_entity.dart';
 
 class MockAuthRemoteDataSrc extends Mock
@@ -13,7 +13,7 @@ class MockAuthRemoteDataSrc extends Mock
 
 void main() {
   late AuthenticationRemoteDataSource remoteDataSource;
-  late AuthenticationRepositoryImplementation repositoryImpl;
+  late AuthenticationRepositoryImpl repositoryImpl;
 
   final model = UserModel.empty();
   const exception = ApiException(
@@ -27,7 +27,7 @@ void main() {
 
   setUp(() {
     remoteDataSource = MockAuthRemoteDataSrc();
-    repositoryImpl = AuthenticationRepositoryImplementation(remoteDataSource);
+    repositoryImpl = AuthenticationRepositoryImpl(remoteDataSource);
   });
 
   setUpAll(() {

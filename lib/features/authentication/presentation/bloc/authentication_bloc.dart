@@ -1,12 +1,12 @@
 // ignore: depend_on_referenced_packages
 import 'package:bloc/bloc.dart';
 import 'package:equatable/equatable.dart';
+import 'package:pdpa/features/authentication/data/models/user_model.dart';
 import 'package:pdpa/features/authentication/domain/entities/user_entity.dart';
-import 'package:pdpa/features/authentication/domain/usecases/get_current_user.dart';
-import 'package:pdpa/features/authentication/domain/usecases/sign_in_with_google.dart';
-import 'package:pdpa/features/authentication/domain/usecases/sign_out.dart';
-import 'package:pdpa/features/authentication/domain/usecases/update_user.dart';
-
+import 'package:pdpa/features/authentication/domain/usecases/authentication/get_current_user.dart';
+import 'package:pdpa/features/authentication/domain/usecases/authentication/sign_in_with_google.dart';
+import 'package:pdpa/features/authentication/domain/usecases/authentication/sign_out.dart';
+import 'package:pdpa/features/authentication/domain/usecases/authentication/update_user.dart';
 part 'authentication_event.dart';
 part 'authentication_state.dart';
 
@@ -46,7 +46,7 @@ class AuthenticationBloc
       (user) => emit(
         user == UserEntity.empty()
             ? const AuthenticationInitial()
-            : SignedIn(user),
+            : SignedIn(user as UserModel),
       ),
     );
   }
@@ -61,7 +61,7 @@ class AuthenticationBloc
 
     result.fold(
       (failure) => emit(AuthenticationError(failure.errorMessage)),
-      (user) => emit(SignedIn(user)),
+      (user) => emit(SignedIn(user as UserModel)),
     );
   }
 
@@ -89,7 +89,7 @@ class AuthenticationBloc
 
     result.fold(
       (failure) => emit(AuthenticationError(failure.errorMessage)),
-      (_) => emit(const UpdatedUser()),
+      (_) => emit(SignedIn(event.user as UserModel)),
     );
   }
 }

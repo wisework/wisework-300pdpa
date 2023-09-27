@@ -2,9 +2,9 @@ import 'dart:convert';
 
 import 'package:pdpa/core/utils/constants.dart';
 import 'package:pdpa/core/utils/typedef.dart';
-import 'package:pdpa/features/authentication/domain/entities/company.dart';
+import 'package:pdpa/features/authentication/domain/entities/company_entity.dart';
 
-class CompanyModel extends Company {
+class CompanyModel extends CompanyEntity {
   const CompanyModel({
     required super.id,
     required super.name,
@@ -55,6 +55,12 @@ class CompanyModel extends Company {
       CompanyModel.fromMap(json.decode(source) as DataMap);
 
   String toJson() => json.encode(toMap());
+
+  factory CompanyModel.fromDocument(FirebaseDocument document) {
+    Map<String, dynamic> response = document.data()!;
+    response['id'] = document.id;
+    return CompanyModel.fromMap(response);
+  }
 
   CompanyModel copyWith({
     String? id,

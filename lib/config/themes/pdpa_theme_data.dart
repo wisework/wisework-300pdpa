@@ -58,11 +58,11 @@ class PdpaThemeData {
     error: Color(0xFFF22525), // error
     onError: Color(0xFFF9C132), // warning
     background: Color(0xFFF3F2F2), // background
-    onBackground: Colors.white, // app bar | container | cards
+    onBackground: Colors.white, // app bar | container | cards | drawer
     surface: Colors.white, // card
     onSurface: Colors.black, // text
-    outline: Color(0xFFC4C4C6), // outline 1
-    outlineVariant: Color(0xFF909090), // outline 2
+    outline: Color(0xFFF0F0F0), // outline 1
+    outlineVariant: Color(0xFFC4C4C6), // outline 2
     surfaceTint: Color(0xFF3A9FFD), // splash color
   );
 

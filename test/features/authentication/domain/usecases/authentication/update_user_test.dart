@@ -3,7 +3,7 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:mocktail/mocktail.dart';
 import 'package:pdpa/features/authentication/domain/entities/user_entity.dart';
 import 'package:pdpa/features/authentication/domain/repositories/authentication_repository.dart';
-import 'package:pdpa/features/authentication/domain/usecases/update_user.dart';
+import 'package:pdpa/features/authentication/domain/usecases/authentication/update_user.dart';
 
 class MockAuthRepo extends Mock implements AuthenticationRepository {}
 
