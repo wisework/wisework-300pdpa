@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:pdpa/app/shared/widgets/material_ink_well_button.dart';
 
 enum CustomButtonType { filled, outlined, text }
 
@@ -34,33 +35,8 @@ class CustomButton extends StatelessWidget {
               borderRadius: BorderRadius.circular(9.0),
               color: Theme.of(context).colorScheme.primary,
             ),
-            child: Material(
-              color: Theme.of(context).colorScheme.onPrimary,
-              borderRadius: BorderRadius.circular(8.0),
-              child: InkWell(
-                onTap: onPressed,
-                splashColor:
-                    Theme.of(context).colorScheme.primary.withOpacity(0.3),
-                borderRadius: BorderRadius.circular(8.0),
-                child: Container(
-                  width: width,
-                  height: height,
-                  padding: padding,
-                  child: Center(child: child),
-                ),
-              ),
-            ),
-          );
-        }
-        if (buttonType == CustomButtonType.text) {
-          return Material(
-            color: Theme.of(context).colorScheme.onPrimary,
-            borderRadius: BorderRadius.circular(8.0),
-            child: InkWell(
-              onTap: onPressed,
-              splashColor:
-                  Theme.of(context).colorScheme.primary.withOpacity(0.3),
-              borderRadius: BorderRadius.circular(8.0),
+            child: MaterialInkWellButton(
+              onPressed: onPressed,
               child: Container(
                 width: width,
                 height: height,
@@ -70,20 +46,26 @@ class CustomButton extends StatelessWidget {
             ),
           );
         }
-        return Material(
-          color: Theme.of(context).colorScheme.primary,
-          borderRadius: BorderRadius.circular(8.0),
-          child: InkWell(
-            onTap: onPressed,
-            splashColor:
-                Theme.of(context).colorScheme.onPrimary.withOpacity(0.3),
-            borderRadius: BorderRadius.circular(8.0),
+        if (buttonType == CustomButtonType.text) {
+          return MaterialInkWellButton(
+            onPressed: onPressed,
             child: Container(
               width: width,
               height: height,
               padding: padding,
               child: Center(child: child),
             ),
+          );
+        }
+        return MaterialInkWellButton(
+          backgroundColor: Theme.of(context).colorScheme.primary,
+          splashColor: Theme.of(context).colorScheme.onPrimary.withOpacity(0.3),
+          onPressed: onPressed,
+          child: Container(
+            width: width,
+            height: height,
+            padding: padding,
+            child: Center(child: child),
           ),
         );
       }),
