@@ -8,6 +8,7 @@ import 'package:pdpa/app/features/authentication/bloc/invitation/invitation_bloc
 import 'package:pdpa/app/features/authentication/bloc/sign_in/sign_in_bloc.dart';
 import 'package:pdpa/app/features/authentication/routes/authentication_route.dart';
 import 'package:pdpa/app/features/general/routes/general_route.dart';
+import 'package:pdpa/app/injection.dart';
 import 'package:pdpa/app/shared/widgets/customs/custom_button.dart';
 import 'package:pdpa/app/shared/widgets/customs/custom_icon_button.dart';
 import 'package:pdpa/app/shared/widgets/customs/custom_text_field.dart';
@@ -50,37 +51,40 @@ class _AcceptInviteScreenState extends State<AcceptInviteScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: _buildAppBar(context),
-      body: SingleChildScrollView(
-        child: Container(
-          padding: const EdgeInsets.all(UiConfig.paddingAllSpacing),
-          decoration: BoxDecoration(
-            color: Theme.of(context).colorScheme.onBackground,
-            borderRadius: BorderRadius.circular(10.0),
-          ),
-          margin: const EdgeInsets.all(UiConfig.paddingAllSpacing),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: <Widget>[
-              _buildGreetingUser(context),
-              const SizedBox(height: UiConfig.lineSpacing),
-              Text(
-                tr('auth.acceptInvite.tagline1'),
-                style: Theme.of(context).textTheme.bodyMedium,
-              ),
-              Text(
-                tr('auth.acceptInvite.tagline2'),
-                style: Theme.of(context).textTheme.bodyMedium,
-              ),
-              const SizedBox(height: 20.0),
-              CustomTextField(
-                controller: inviteCodeController,
-                hintText: tr('auth.acceptInvite.enterCode'),
-              ),
-              const SizedBox(height: 20.0),
-              _buildContinueButton(context),
-            ],
+    return BlocProvider<InvitationBloc>(
+      create: (context) => serviceLocator<InvitationBloc>(),
+      child: Scaffold(
+        appBar: _buildAppBar(context),
+        body: SingleChildScrollView(
+          child: Container(
+            padding: const EdgeInsets.all(UiConfig.defaultPaddingSpacing),
+            decoration: BoxDecoration(
+              color: Theme.of(context).colorScheme.onBackground,
+              borderRadius: BorderRadius.circular(10.0),
+            ),
+            margin: const EdgeInsets.all(UiConfig.defaultPaddingSpacing),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: <Widget>[
+                _buildGreetingUser(context),
+                const SizedBox(height: UiConfig.lineSpacing),
+                Text(
+                  tr('auth.acceptInvite.tagline1'),
+                  style: Theme.of(context).textTheme.bodyMedium,
+                ),
+                Text(
+                  tr('auth.acceptInvite.tagline2'),
+                  style: Theme.of(context).textTheme.bodyMedium,
+                ),
+                const SizedBox(height: 20.0),
+                CustomTextField(
+                  controller: inviteCodeController,
+                  hintText: tr('auth.acceptInvite.enterCode'),
+                ),
+                const SizedBox(height: 20.0),
+                _buildContinueButton(context),
+              ],
+            ),
           ),
         ),
       ),
