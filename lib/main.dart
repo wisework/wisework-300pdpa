@@ -3,24 +3,25 @@ import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
-import 'config/config.dart';
-import 'config/firebase_options.dart';
-import 'config/router/global_router.dart';
-import 'config/themes/pdpa_theme_data.dart';
-import 'core/services/injection_container.dart';
-import 'features/authentication/presentation/bloc/authentication_bloc.dart';
+import 'app/config/config.dart';
+import 'app/config/firebase_options.dart';
+import 'app/config/router/global_router.dart';
+import 'app/config/themes/pdpa_theme_data.dart';
+import 'app/features/authentication/bloc/invitation/invitation_bloc.dart';
+import 'app/features/authentication/bloc/sign_in/sign_in_bloc.dart';
+import 'app/injection.dart';
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform);
   await EasyLocalization.ensureInitialized();
 
-  await init();
+  await initLocator();
 
   runApp(
     EasyLocalization(
       supportedLocales: const [Locale('en', 'US'), Locale('th', 'TH')],
-      path: 'lib/core/localization',
+      path: 'lib/app/localization',
       fallbackLocale: const Locale('en', 'US'),
       child: const MyApp(),
     ),
@@ -34,8 +35,11 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MultiBlocProvider(
       providers: [
-        BlocProvider<AuthenticationBloc>(
-          create: (context) => serviceLocator<AuthenticationBloc>(),
+        BlocProvider<SignInBloc>(
+          create: (context) => serviceLocator<SignInBloc>(),
+        ),
+        BlocProvider<InvitationBloc>(
+          create: (context) => serviceLocator<InvitationBloc>(),
         ),
       ],
       child: MaterialApp.router(
