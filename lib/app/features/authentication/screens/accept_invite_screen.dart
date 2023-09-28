@@ -141,23 +141,37 @@ class _AcceptInviteScreenState extends State<AcceptInviteScreen> {
     );
   }
 
-  BlocListener _buildContinueButton(BuildContext context) {
-    return BlocListener<InvitationBloc, InvitationState>(
-      listener: (context, state) {
-        if (state is AcceptedInvitation) {
-          context.pushReplacement(GeneralRoute.home.path);
-        }
-      },
-      child: CustomButton(
-        height: 40.0,
-        onPressed: _onContinuePressed,
-        child: Text(
-          tr('auth.acceptInvite.continueButton'),
-          style: Theme.of(context)
-              .textTheme
-              .titleMedium
-              ?.copyWith(color: Theme.of(context).colorScheme.onPrimary),
-        ),
+  CustomButton _buildContinueButton(BuildContext context) {
+    return CustomButton(
+      height: 40.0,
+      onPressed: _onContinuePressed,
+      child: BlocConsumer<InvitationBloc, InvitationState>(
+        listener: (context, state) {
+          if (state is AcceptedInvitation) {
+            context.read<SignInBloc>().add(UpdateCurrentUserEvent(
+                user: state.user, companies: state.companies));
+            context.pushReplacement(GeneralRoute.home.path);
+          }
+        },
+        builder: (context, state) {
+          if (state is SigningInWithGoogle) {
+            return SizedBox(
+              width: 24.0,
+              height: 24.0,
+              child: CircularProgressIndicator(
+                color: Theme.of(context).colorScheme.onPrimary,
+                strokeWidth: 3.0,
+              ),
+            );
+          }
+          return Text(
+            tr('auth.acceptInvite.continueButton'),
+            style: Theme.of(context)
+                .textTheme
+                .titleMedium
+                ?.copyWith(color: Theme.of(context).colorScheme.onPrimary),
+          );
+        },
       ),
     );
   }
