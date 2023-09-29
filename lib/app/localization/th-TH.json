@@ -1,7 +1,15 @@
 {
     "app": {
         "name": "PDPA Management Platform",
-        "changeLang": "Change language"
+        "changeLang": "Change language",
+        "feature": {
+            "consentmanagement": "Consent Management",
+            "consentforms": "Consent Forms",
+            "userconsents": "User Consents",
+            "datasubjectright": "Data Subject Right",
+            "masterdata": "Master Data",
+            "setting": "Setting"
+        }
     },
     "auth": {
         "signIn": {
@@ -22,5 +30,21 @@
             "hello": "Hello",
             "tagline": "What you are looking for today"
         }
-    }
+    },
+    "masterdata" : {
+        "consentmasterdata": {
+            "consents": "Consents",
+            "inputfields": "Input Fields",
+            "purpose": "Purpose",
+            "purposecategory": "Purpose Catogory"
+        },
+        "datasubjectrightmasterdata": {
+            "datasubjectright": "Data Subject Right",            
+            "request": "Request",
+            "rejections": "Rejections",
+            "reason": "Reason",
+            "requestrejects": "Request rejects",
+            "requestreasons": "Request reasons"
+        }
+    }    
 }
