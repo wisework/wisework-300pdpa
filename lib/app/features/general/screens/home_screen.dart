@@ -1,13 +1,11 @@
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:go_router/go_router.dart';
 import 'package:ionicons/ionicons.dart';
 import 'package:pdpa/app/config/config.dart';
 import 'package:pdpa/app/features/authentication/bloc/sign_in/sign_in_bloc.dart';
-import 'package:pdpa/app/features/authentication/routes/authentication_route.dart';
+import 'package:pdpa/app/shared/drawers/pdpa_drawer.dart';
 import 'package:pdpa/app/shared/widgets/customs/custom_icon_button.dart';
-import 'package:pdpa/app/shared/widgets/drawers/pdpa_drawer.dart';
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});
@@ -26,12 +24,12 @@ class _HomeScreenState extends State<HomeScreen> {
       appBar: _buildAppBar(context),
       body: SingleChildScrollView(
         child: Container(
-          padding: const EdgeInsets.all(UiConfig.paddingAllSpacing),
+          padding: const EdgeInsets.all(UiConfig.defaultPaddingSpacing),
           decoration: BoxDecoration(
             color: Theme.of(context).colorScheme.onBackground,
             borderRadius: BorderRadius.circular(10.0),
           ),
-          margin: const EdgeInsets.all(UiConfig.paddingAllSpacing),
+          margin: const EdgeInsets.all(UiConfig.defaultPaddingSpacing),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: <Widget>[
@@ -77,18 +75,6 @@ class _HomeScreenState extends State<HomeScreen> {
         ],
       ),
       actions: [
-        Padding(
-          padding: const EdgeInsets.only(right: 5.0),
-          child: CustomIconButton(
-            onPressed: () {
-              context.pushReplacement(AuthenticationRoute.signIn.path);
-              context.read<SignInBloc>().add(const SignOutEvent());
-            },
-            icon: Ionicons.log_out_outline,
-            iconColor: Theme.of(context).colorScheme.primary,
-            backgroundColor: Theme.of(context).colorScheme.onBackground,
-          ),
-        ),
         Padding(
           padding: const EdgeInsets.only(right: 15.0),
           child: CustomIconButton(

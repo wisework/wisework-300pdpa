@@ -5,6 +5,8 @@ class AppConfig {
 }
 
 class UiConfig {
-  static const double paddingAllSpacing = 15.0;
+  static const double defaultPaddingSpacing = 15.0;
   static const double lineSpacing = 15.0;
+  static const double lineGap = 10.0;
+  static const double paragraphSpacing = 15.0;
 }

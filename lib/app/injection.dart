@@ -5,6 +5,7 @@ import 'package:google_sign_in/google_sign_in.dart';
 import 'package:pdpa/app/data/repositories/authentication_repository.dart';
 import 'package:pdpa/app/features/authentication/bloc/invitation/invitation_bloc.dart';
 import 'package:pdpa/app/services/apis/authentication_api.dart';
+import 'package:pdpa/app/shared/drawers/bloc/drawer_bloc.dart';
 
 import 'config/config.dart';
 import 'features/authentication/bloc/sign_in/sign_in_bloc.dart';
@@ -24,6 +25,7 @@ Future<void> initLocator() async {
     );
 
   await _authentication();
+  await _other();
 }
 
 Future<void> _authentication() async {
@@ -53,4 +55,12 @@ Future<void> _authentication() async {
         serviceLocator(),
       ),
     );
+}
+
+Future<void> _other() async {
+  serviceLocator
+      //? App logic
+      .registerFactory(
+    () => DrawerBloc(),
+  );
 }
