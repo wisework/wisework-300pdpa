@@ -8,7 +8,6 @@ import 'app/config/config.dart';
 import 'app/config/firebase_options.dart';
 import 'app/config/router/global_router.dart';
 import 'app/config/themes/pdpa_theme_data.dart';
-import 'app/features/authentication/bloc/invitation/invitation_bloc.dart';
 import 'app/features/authentication/bloc/sign_in/sign_in_bloc.dart';
 import 'app/injection.dart';
 import 'app/shared/drawers/drawer_menu.dart';
@@ -39,9 +38,6 @@ class MyApp extends StatelessWidget {
       providers: [
         BlocProvider<SignInBloc>(
           create: (context) => serviceLocator<SignInBloc>(),
-        ),
-        BlocProvider<InvitationBloc>(
-          create: (context) => serviceLocator<InvitationBloc>(),
         ),
         BlocProvider<DrawerBloc>(
           create: (context) => serviceLocator<DrawerBloc>()
