@@ -25,7 +25,7 @@ class ConsentListView extends StatelessWidget {
         RefreshIndicator(
           onRefresh: () async {
             const Duration(seconds: 1);
-            print("Refresh Successfully");
+
           },
           child: consents.isNotEmpty
               ? Padding(
