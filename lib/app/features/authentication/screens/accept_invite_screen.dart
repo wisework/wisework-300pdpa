@@ -8,18 +8,31 @@ import 'package:pdpa/app/features/authentication/bloc/invitation/invitation_bloc
 import 'package:pdpa/app/features/authentication/bloc/sign_in/sign_in_bloc.dart';
 import 'package:pdpa/app/features/authentication/routes/authentication_route.dart';
 import 'package:pdpa/app/features/general/routes/general_route.dart';
+import 'package:pdpa/app/injection.dart';
 import 'package:pdpa/app/shared/widgets/customs/custom_button.dart';
 import 'package:pdpa/app/shared/widgets/customs/custom_icon_button.dart';
 import 'package:pdpa/app/shared/widgets/customs/custom_text_field.dart';
 
-class AcceptInviteScreen extends StatefulWidget {
+class AcceptInviteScreen extends StatelessWidget {
   const AcceptInviteScreen({super.key});
 
   @override
-  State<AcceptInviteScreen> createState() => _AcceptInviteScreenState();
+  Widget build(BuildContext context) {
+    return BlocProvider<InvitationBloc>(
+      create: (context) => serviceLocator<InvitationBloc>(),
+      child: const AcceptInviteView(),
+    );
+  }
 }
 
-class _AcceptInviteScreenState extends State<AcceptInviteScreen> {
+class AcceptInviteView extends StatefulWidget {
+  const AcceptInviteView({super.key});
+
+  @override
+  State<AcceptInviteView> createState() => _AcceptInviteViewState();
+}
+
+class _AcceptInviteViewState extends State<AcceptInviteView> {
   late TextEditingController inviteCodeController;
 
   @override
