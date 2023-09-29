@@ -34,7 +34,19 @@
     "masterdata" : {
         "consentmasterdata": {
             "consents": "Consents",
-            "inputfields": "Input Fields",
+            "customfields": {
+                "name" : "Custom Fields",
+                "edit" : "Edit Custom Fields",
+                "add" : "Add Custom Fields",
+                "delete" : "Delete",
+                "title" : "Title",
+                "placeholder" : "Place Holder",
+                "customfieldtype" : "Custom Field Type",
+                "lenghtlimit" : "Lenght Limit",
+                "maxline" : "Max Line",
+                "minline" : "Min Line"
+            },
+            "editcustomfield" : "Edit Custom Field",
             "purpose": "Purpose",
             "purposecategory": "Purpose Catogory"
         },

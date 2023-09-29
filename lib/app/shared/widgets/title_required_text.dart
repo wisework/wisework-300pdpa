@@ -1,3 +1,4 @@
+import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 
 class TitleRequiredText extends StatelessWidget {
@@ -21,7 +22,7 @@ class TitleRequiredText extends StatelessWidget {
         Row(
           children: <Widget>[
             Text(
-              text,
+              tr(text),
               style: textStyle ?? Theme.of(context).textTheme.bodyMedium,
             ),
             Visibility(
