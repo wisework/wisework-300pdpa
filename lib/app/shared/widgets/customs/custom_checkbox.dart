@@ -2,9 +2,9 @@ import 'package:flutter/material.dart';
 
 class CustomCheckBox extends StatelessWidget {
   const CustomCheckBox({
+    super.key,
     required this.value,
     required this.onChanged,
-    super.key,
   });
 
   final bool value;

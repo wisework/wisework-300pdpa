@@ -64,7 +64,7 @@ class _HomeScreenState extends State<HomeScreen> {
             iconColor: Theme.of(context).colorScheme.primary,
             backgroundColor: Theme.of(context).colorScheme.onBackground,
           ),
-          const SizedBox(width: 5.0),
+          const SizedBox(width: UiConfig.appBarTitleSpacing),
           SizedBox(
             width: 110.0,
             child: Image.asset(

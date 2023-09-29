@@ -61,7 +61,9 @@ class ConsentMaster extends StatelessWidget {
             thickness: 0.3,
           ),
           TextButton(
-            onPressed: () {},
+            onPressed: () {
+              context.go(MasterDataRoute.purpose.path);
+            },
             style: ButtonStyle(
                 shape: MaterialStateProperty.all<RoundedRectangleBorder>(
               RoundedRectangleBorder(

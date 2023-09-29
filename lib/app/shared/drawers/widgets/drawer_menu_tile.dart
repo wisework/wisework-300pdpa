@@ -6,7 +6,7 @@ import 'package:pdpa/app/config/config.dart';
 import 'package:pdpa/app/shared/drawers/bloc/drawer_bloc.dart';
 import 'package:pdpa/app/shared/drawers/models/drawer_menu_models.dart';
 import 'package:pdpa/app/shared/widgets/expanded_container.dart';
-import 'package:pdpa/app/shared/widgets/material_ink_well_button.dart';
+import 'package:pdpa/app/shared/widgets/material_ink_well.dart';
 
 class DrawerMenuTile extends StatefulWidget {
   const DrawerMenuTile({
@@ -102,13 +102,13 @@ class _DrawerMenuTileState extends State<DrawerMenuTile> {
     );
   }
 
-  MaterialInkWellButton _buildMenuContainer(
+  MaterialInkWell _buildMenuContainer(
     BuildContext context, {
     required bool active,
     required VoidCallback onPressed,
     required Widget child,
   }) {
-    return MaterialInkWellButton(
+    return MaterialInkWell(
       borderRadius: const BorderRadius.only(
         topRight: Radius.circular(12.0),
         bottomRight: Radius.circular(12.0),
@@ -119,7 +119,7 @@ class _DrawerMenuTileState extends State<DrawerMenuTile> {
       splashColor: active
           ? Theme.of(context).colorScheme.primary.withOpacity(0.3)
           : null,
-      onPressed: onPressed,
+      onTap: onPressed,
       child: Padding(
         padding: const EdgeInsets.symmetric(vertical: 12.0),
         child: child,
