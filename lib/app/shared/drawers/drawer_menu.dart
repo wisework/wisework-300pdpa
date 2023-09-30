@@ -42,7 +42,7 @@ final List<DrawerMenuModel> drawerMenu = [
     value: 'master_data',
     title: 'Master Data',
     icon: Ionicons.server_outline,
-    route: MasterDataRoute.masterdata,
+    route: MasterDataRoute.masterData,
   ),
   DrawerMenuModel(
     value: 'settings',

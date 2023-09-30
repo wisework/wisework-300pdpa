@@ -50,7 +50,7 @@ class _AcceptInviteViewState extends State<AcceptInviteView> {
   }
 
   void _onContinuePressed() {
-    final signInBloc = BlocProvider.of<SignInBloc>(context);
+    final signInBloc = BlocProvider.of<SignInBloc>(context, listen: false);
 
     if (signInBloc.state is SignedInUser) {
       final signedIn = signInBloc.state as SignedInUser;

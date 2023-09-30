@@ -40,10 +40,17 @@ class MasterDataItemCard extends StatelessWidget {
                       title,
                       style: Theme.of(context).textTheme.bodyMedium,
                     ),
-                    const SizedBox(height: UiConfig.textSpacing),
-                    Text(
-                      subtitle,
-                      style: Theme.of(context).textTheme.bodySmall,
+                    Visibility(
+                      visible: subtitle.isNotEmpty,
+                      child: Padding(
+                        padding: const EdgeInsets.only(
+                          top: UiConfig.textSpacing,
+                        ),
+                        child: Text(
+                          subtitle,
+                          style: Theme.of(context).textTheme.bodySmall,
+                        ),
+                      ),
                     ),
                   ],
                 ),

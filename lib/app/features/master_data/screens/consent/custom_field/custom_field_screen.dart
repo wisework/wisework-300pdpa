@@ -101,7 +101,7 @@ class _CustomFieldViewState extends State<CustomFieldView> {
       ),
       floatingActionButton: FloatingActionButton(
         onPressed: () {
-          context.push(MasterDataRoute.editCustomfield.path);
+          context.push(MasterDataRoute.editCustomField.path);
         },
         child: const Icon(Icons.add),
       ),

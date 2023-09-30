@@ -31,7 +31,7 @@ class _DrawerMenuTileState extends State<DrawerMenuTile> {
   }
 
   void _initialExpandMenu() {
-    final drawerBloc = BlocProvider.of<DrawerBloc>(context);
+    final drawerBloc = BlocProvider.of<DrawerBloc>(context, listen: false);
     if (drawerBloc.state is SelectedMenuDrawer) {
       final parentMenu = widget.menu;
       final selectedMenu = (drawerBloc.state as SelectedMenuDrawer).menu;

@@ -48,12 +48,12 @@ class PurposeModel extends Equatable {
           id: map['id'] as String,
           description: List<LocalizedText>.from(
             (map['description'] as List<dynamic>).map<LocalizedText>(
-              (item) => LocalizedText.fromMap(item as Map<String, dynamic>),
+              (item) => LocalizedText.fromMap(item as DataMap),
             ),
           ),
           warningDescription: List<LocalizedText>.from(
             (map['warningDescription'] as List<dynamic>).map<LocalizedText>(
-              (item) => LocalizedText.fromMap(item as Map<String, dynamic>),
+              (item) => LocalizedText.fromMap(item as DataMap),
             ),
           ),
           retentionPeriod: map['retentionPeriod'] as int,
@@ -80,7 +80,7 @@ class PurposeModel extends Equatable {
       };
 
   factory PurposeModel.fromDocument(FirebaseDocument document) {
-    Map<String, dynamic> response = document.data()!;
+    DataMap response = document.data()!;
     response['id'] = document.id;
     return PurposeModel.fromMap(response);
   }

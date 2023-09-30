@@ -28,7 +28,7 @@ class ConsentMaster extends StatelessWidget {
           const SizedBox(height: 10.0),
           TextButton(
             onPressed: () {
-              context.push(MasterDataRoute.customfield.path);
+              context.push(MasterDataRoute.customFields.path);
             },
             style: ButtonStyle(
                 shape: MaterialStateProperty.all<RoundedRectangleBorder>(
@@ -62,7 +62,7 @@ class ConsentMaster extends StatelessWidget {
           ),
           TextButton(
             onPressed: () {
-              context.go(MasterDataRoute.purpose.path);
+              context.push(MasterDataRoute.purposes.path);
             },
             style: ButtonStyle(
                 shape: MaterialStateProperty.all<RoundedRectangleBorder>(

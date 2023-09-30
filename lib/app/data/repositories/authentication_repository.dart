@@ -12,7 +12,6 @@ class AuthenticationRepository {
   final AuthenticationApi _api;
 
   //? Authentication
-
   ResultFuture<UserModel> signInWithGoogle() async {
     try {
       final user = await _api.signInWithGoogle();

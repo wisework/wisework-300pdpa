@@ -1,20 +1,53 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
 import 'package:ionicons/ionicons.dart';
 import 'package:pdpa/app/config/config.dart';
 import 'package:pdpa/app/data/models/master_data/purpose_model.dart';
+import 'package:pdpa/app/features/authentication/bloc/sign_in/sign_in_bloc.dart';
+import 'package:pdpa/app/features/master_data/bloc/consent/purpose/purpose_bloc.dart';
 import 'package:pdpa/app/features/master_data/routes/master_data_route.dart';
 import 'package:pdpa/app/features/master_data/widgets/master_data_item_card.dart';
+import 'package:pdpa/app/injection.dart';
 import 'package:pdpa/app/shared/models/localized_text.dart';
-import 'package:pdpa/app/shared/utils/constants.dart';
 import 'package:pdpa/app/shared/widgets/customs/custom_icon_button.dart';
 
-class PurposeScreen extends StatelessWidget {
+class PurposeScreen extends StatefulWidget {
   const PurposeScreen({super.key});
 
   @override
+  State<PurposeScreen> createState() => _PurposeScreenState();
+}
+
+class _PurposeScreenState extends State<PurposeScreen> {
+  late String companyId;
+
+  @override
+  void initState() {
+    super.initState();
+
+    _getCompanyId();
+  }
+
+  void _getCompanyId() {
+    final signInBloc = BlocProvider.of<SignInBloc>(context, listen: false);
+    if (signInBloc.state is SignedInUser) {
+      final signedIn = signInBloc.state as SignedInUser;
+      companyId = signedIn.user.currentCompany;
+    } else {
+      companyId = '';
+    }
+  }
+
+  @override
   Widget build(BuildContext context) {
-    return const PurposeView();
+    return BlocProvider<PurposeBloc>(
+      create: (context) => serviceLocator<PurposeBloc>()
+        ..add(
+          GetPurposesEvent(companyId: companyId),
+        ),
+      child: const PurposeView(),
+    );
   }
 }
 
@@ -26,45 +59,6 @@ class PurposeView extends StatefulWidget {
 }
 
 class _PurposeViewState extends State<PurposeView> {
-  final purposes = [
-    PurposeModel(
-      id: '1',
-      description: const [
-        LocalizedText(language: 'en-US', text: 'Description 1 EN'),
-        LocalizedText(language: 'th-TH', text: 'Description 1 TH'),
-      ],
-      warningDescription: const [
-        LocalizedText(language: 'en-US', text: 'WarningDescription 1 EN'),
-        LocalizedText(language: 'th-TH', text: 'WarningDescription 1 TH'),
-      ],
-      retentionPeriod: 2,
-      periodUnit: 'y',
-      status: ActiveStatus.active,
-      createdBy: 'Admin',
-      createdDate: DateTime.fromMillisecondsSinceEpoch(0),
-      updatedBy: 'Admin',
-      updatedDate: DateTime.fromMillisecondsSinceEpoch(0),
-    ),
-    PurposeModel(
-      id: '1',
-      description: const [
-        LocalizedText(language: 'en-US', text: 'Description 2 EN'),
-        LocalizedText(language: 'th-TH', text: 'Description 2 TH'),
-      ],
-      warningDescription: const [
-        LocalizedText(language: 'en-US', text: 'WarningDescription 2 EN'),
-        LocalizedText(language: 'th-TH', text: 'WarningDescription 2 TH'),
-      ],
-      retentionPeriod: 2,
-      periodUnit: 'y',
-      status: ActiveStatus.active,
-      createdBy: 'Admin',
-      createdDate: DateTime.fromMillisecondsSinceEpoch(0),
-      updatedBy: 'Admin',
-      updatedDate: DateTime.fromMillisecondsSinceEpoch(0),
-    ),
-  ];
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -79,12 +73,29 @@ class _PurposeViewState extends State<PurposeView> {
               decoration: BoxDecoration(
                 color: Theme.of(context).colorScheme.onBackground,
               ),
-              child: ListView.builder(
-                itemCount: purposes.length,
-                itemBuilder: (context, index) {
-                  return _buildItemCard(
-                    context,
-                    purpose: purposes[index],
+              child: BlocBuilder<PurposeBloc, PurposeState>(
+                builder: (context, state) {
+                  if (state is LoadedPurposes) {
+                    return ListView.builder(
+                      itemCount: state.purposes.length,
+                      itemBuilder: (context, index) {
+                        return _buildItemCard(
+                          context,
+                          purpose: state.purposes[index],
+                        );
+                      },
+                    );
+                  }
+                  if (state is PurposeError) {
+                    return Center(
+                      child: Text(
+                        state.message,
+                        style: Theme.of(context).textTheme.titleLarge,
+                      ),
+                    );
+                  }
+                  return const Center(
+                    child: CircularProgressIndicator(),
                   );
                 },
               ),
@@ -94,7 +105,7 @@ class _PurposeViewState extends State<PurposeView> {
       ),
       floatingActionButton: FloatingActionButton(
         onPressed: () {
-          context.go(MasterDataRoute.createPurpose.path);
+          context.push(MasterDataRoute.createPurpose.path);
         },
         child: const Icon(Icons.add),
       ),

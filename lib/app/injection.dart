@@ -3,8 +3,11 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:get_it/get_it.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 import 'package:pdpa/app/data/repositories/authentication_repository.dart';
+import 'package:pdpa/app/data/repositories/master_data_repository.dart';
 import 'package:pdpa/app/features/authentication/bloc/invitation/invitation_bloc.dart';
+import 'package:pdpa/app/features/master_data/bloc/consent/purpose/purpose_bloc.dart';
 import 'package:pdpa/app/services/apis/authentication_api.dart';
+import 'package:pdpa/app/services/apis/master_data_api.dart';
 import 'package:pdpa/app/shared/drawers/bloc/drawer_bloc.dart';
 
 import 'config/config.dart';
@@ -25,6 +28,7 @@ Future<void> initLocator() async {
     );
 
   await _authentication();
+  await _masterData();
   await _other();
 }
 
@@ -57,10 +61,31 @@ Future<void> _authentication() async {
     );
 }
 
-Future<void> _other() async {
+Future<void> _masterData() async {
   serviceLocator
-      //? App logic
-      .registerFactory(
+    //? App logic
+    ..registerFactory(
+      () => PurposeBloc(
+        masterDataRepository: serviceLocator(),
+      ),
+    )
+    //? Repositories
+    ..registerLazySingleton(
+      () => MasterDataRepository(
+        serviceLocator(),
+      ),
+    )
+    //? APIs
+    ..registerLazySingleton(
+      () => MasterDataApi(
+        serviceLocator(),
+      ),
+    );
+}
+
+Future<void> _other() async {
+  //? App logic
+  serviceLocator.registerFactory(
     () => DrawerBloc(),
   );
 }
