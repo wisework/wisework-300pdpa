@@ -163,6 +163,9 @@ class _EditCustomFieldViewState extends State<EditCustomFieldView> {
           backgroundColor: Theme.of(context).colorScheme.onPrimary,
         ),
       ],
+      elevation: 1.0,
+      shadowColor: Theme.of(context).colorScheme.background,
+      surfaceTintColor: Theme.of(context).colorScheme.onBackground,
       backgroundColor: Theme.of(context).colorScheme.onBackground,
     );
   }

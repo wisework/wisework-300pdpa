@@ -3,6 +3,7 @@ import 'package:go_router/go_router.dart';
 import 'package:ionicons/ionicons.dart';
 import 'package:pdpa/app/config/config.dart';
 import 'package:pdpa/app/shared/widgets/customs/custom_icon_button.dart';
+import 'package:pdpa/app/shared/widgets/customs/custom_switch_button.dart';
 import 'package:pdpa/app/shared/widgets/customs/custom_text_field.dart';
 import 'package:pdpa/app/shared/widgets/title_required_text.dart';
 
@@ -53,15 +54,31 @@ class _EditPurposeViewState extends State<EditPurposeView> {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: <Widget>[
+            const SizedBox(height: UiConfig.lineSpacing),
             Container(
               padding: const EdgeInsets.all(UiConfig.defaultPaddingSpacing),
               decoration: BoxDecoration(
                 color: Theme.of(context).colorScheme.onBackground,
                 borderRadius: BorderRadius.circular(10.0),
               ),
-              margin: const EdgeInsets.all(UiConfig.defaultPaddingSpacing),
+              margin: const EdgeInsets.symmetric(
+                horizontal: UiConfig.defaultPaddingSpacing,
+              ),
               child: _buildPurposeForm(context),
             ),
+            const SizedBox(height: UiConfig.lineSpacing),
+            Container(
+              padding: const EdgeInsets.all(UiConfig.defaultPaddingSpacing),
+              decoration: BoxDecoration(
+                color: Theme.of(context).colorScheme.onBackground,
+                borderRadius: BorderRadius.circular(10.0),
+              ),
+              margin: const EdgeInsets.symmetric(
+                horizontal: UiConfig.defaultPaddingSpacing,
+              ),
+              child: _buildConfiguration(context),
+            ),
+            const SizedBox(height: UiConfig.lineSpacing),
           ],
         ),
       ),
@@ -88,6 +105,9 @@ class _EditPurposeViewState extends State<EditPurposeView> {
           ),
         ],
       ),
+      elevation: 1.0,
+      shadowColor: Theme.of(context).colorScheme.background,
+      surfaceTintColor: Theme.of(context).colorScheme.onBackground,
       backgroundColor: Theme.of(context).colorScheme.onBackground,
     );
   }
@@ -124,11 +144,70 @@ class _EditPurposeViewState extends State<EditPurposeView> {
         CustomTextField(
           controller: retentionPeriodController,
           hintText: 'Enter retention period',
+          keyboardType: TextInputType.number,
         ),
         const SizedBox(height: UiConfig.lineSpacing),
         const TitleRequiredText(text: 'Period Unit'),
         const CustomTextField(
           hintText: 'Enter period unit',
+        ),
+      ],
+    );
+  }
+
+  Column _buildConfiguration(BuildContext context) {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: <Widget>[
+        Row(
+          children: <Widget>[
+            Text(
+              'Configuration',
+              style: Theme.of(context).textTheme.titleLarge,
+            ),
+          ],
+        ),
+        const SizedBox(height: UiConfig.lineSpacing),
+        Row(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          children: <Widget>[
+            Text(
+              'Active',
+              style: Theme.of(context).textTheme.bodyMedium,
+            ),
+            CustomSwitchButton(
+              value: false,
+              onChanged: (value) {},
+            ),
+          ],
+        ),
+        Divider(
+          color: Theme.of(context).colorScheme.outlineVariant.withOpacity(0.5),
+        ),
+        const SizedBox(height: UiConfig.lineSpacing),
+        Row(
+          children: <Widget>[
+            Text(
+              'Update Info',
+              style: Theme.of(context).textTheme.titleLarge,
+            ),
+          ],
+        ),
+        const SizedBox(height: UiConfig.lineSpacing),
+        Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: <Widget>[
+            Text(
+              'admin@gmail.com',
+              style: Theme.of(context).textTheme.bodyMedium,
+            ),
+            const SizedBox(height: UiConfig.textSpacing),
+            Text(
+              '30/09/2023 12:00:00',
+              style: Theme.of(context).textTheme.bodyMedium,
+            ),
+            const SizedBox(height: UiConfig.textSpacing),
+          ],
         ),
       ],
     );

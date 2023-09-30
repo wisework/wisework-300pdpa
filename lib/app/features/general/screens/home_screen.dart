@@ -85,6 +85,9 @@ class _HomeScreenState extends State<HomeScreen> {
           ),
         ),
       ],
+      elevation: 1.0,
+      shadowColor: Theme.of(context).colorScheme.background,
+      surfaceTintColor: Theme.of(context).colorScheme.onBackground,
       backgroundColor: Theme.of(context).colorScheme.onBackground,
     );
   }

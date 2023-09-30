@@ -121,6 +121,9 @@ class _PurposeViewState extends State<PurposeView> {
           ),
         ],
       ),
+      elevation: 1.0,
+      shadowColor: Theme.of(context).colorScheme.background,
+      surfaceTintColor: Theme.of(context).colorScheme.onBackground,
       backgroundColor: Theme.of(context).colorScheme.onBackground,
     );
   }

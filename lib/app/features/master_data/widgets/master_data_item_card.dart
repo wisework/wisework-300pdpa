@@ -40,7 +40,7 @@ class MasterDataItemCard extends StatelessWidget {
                       title,
                       style: Theme.of(context).textTheme.bodyMedium,
                     ),
-                    const SizedBox(height: 4.0),
+                    const SizedBox(height: UiConfig.textSpacing),
                     Text(
                       subtitle,
                       style: Theme.of(context).textTheme.bodySmall,
@@ -57,8 +57,6 @@ class MasterDataItemCard extends StatelessWidget {
             horizontal: UiConfig.defaultPaddingSpacing,
           ),
           child: Divider(
-            indent: 0,
-            endIndent: 0,
             color:
                 Theme.of(context).colorScheme.outlineVariant.withOpacity(0.5),
           ),

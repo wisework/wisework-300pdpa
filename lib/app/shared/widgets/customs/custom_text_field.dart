@@ -6,11 +6,13 @@ class CustomTextField extends StatefulWidget {
     this.controller,
     this.hintText,
     this.suffix,
+    this.keyboardType = TextInputType.text,
   });
 
   final TextEditingController? controller;
   final String? hintText;
   final Widget? suffix;
+  final TextInputType keyboardType;
 
   @override
   State<CustomTextField> createState() => _CustomTextFieldState();
@@ -47,6 +49,7 @@ class _CustomTextFieldState extends State<CustomTextField> {
             ?.copyWith(color: Theme.of(context).colorScheme.onTertiary),
         contentPadding: const EdgeInsets.symmetric(horizontal: 12.0),
       ),
+      keyboardType: widget.keyboardType,
     );
   }
 }
