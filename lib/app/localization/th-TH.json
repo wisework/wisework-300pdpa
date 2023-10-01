@@ -46,7 +46,6 @@
                 "maxline" : "Max Line",
                 "minline" : "Min Line"
             },
-            "editcustomfield" : "Edit Custom Field",
             "purpose": "Purpose",
             "purposecategory": "Purpose Catogory"
         },

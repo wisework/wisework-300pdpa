@@ -48,6 +48,6 @@ final List<DrawerMenuModel> drawerMenu = [
     value: 'settings',
     title: 'Settings',
     icon: Ionicons.settings_outline,
-    route: GeneralRoute.home,
+    route: GeneralRoute.setting,
   ),
 ];

@@ -34,13 +34,24 @@ class _EditCustomFieldViewState extends State<EditCustomFieldView> {
   @override
   void initState() {
     super.initState();
-
     titleController = TextEditingController();
     placeHolderController = TextEditingController();
     customFieldTypeController = TextEditingController();
     lenghtLimitController = TextEditingController();
     minLineController = TextEditingController();
     maxLineController = TextEditingController();
+  }
+
+  @override
+  void dispose() {
+    titleController.dispose();
+    placeHolderController.dispose();
+    customFieldTypeController.dispose();
+    lenghtLimitController.dispose();
+    minLineController.dispose();
+    maxLineController.dispose();
+
+    super.dispose();
   }
 
   @override
@@ -148,7 +159,7 @@ class _EditCustomFieldViewState extends State<EditCustomFieldView> {
           ),
           const SizedBox(width: UiConfig.appBarTitleSpacing),
           Text(
-            tr('masterdata.consentmasterdata.customfields.edit'), //!
+            tr('masterdata.consentmasterdata.customfields.create'), //!
             style: Theme.of(context).textTheme.titleLarge,
           ),
         ],

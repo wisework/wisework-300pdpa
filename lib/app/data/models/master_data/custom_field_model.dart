@@ -1,7 +1,6 @@
 // ignore_for_file: public_member_api_docs, sort_constructors_first
-import 'dart:convert';
-
 import 'package:equatable/equatable.dart';
+import 'package:pdpa/app/shared/models/localized_text.dart';
 
 import 'package:pdpa/app/shared/utils/constants.dart';
 import 'package:pdpa/app/shared/utils/typedef.dart';
@@ -25,15 +24,31 @@ class CustomFieldModel extends Equatable {
     required this.updatedDate,
   });
 
+  final String id;
+  final List<LocalizedText> title;
+  final String inputType;
+  final int lengthLimit;
+  final int maxLines;
+  final int minLines;
+  final List<LocalizedText> placeholder;
+  final String uid;
+  final String language;
+  final List<String> companies;
+  final ActiveStatus status;
+  final String createdBy;
+  final DateTime createdDate;
+  final String updatedBy;
+  final DateTime updatedDate;
+
   CustomFieldModel.empty()
       : this(
           id: '',
-          title: '',
+          title: [],
           inputType: '',
           lengthLimit: 1,
           maxLines: 1,
           minLines: 1,
-          placeholder: '',
+          placeholder: [],
           uid: '',
           language: '',
           companies: [],
@@ -44,31 +59,23 @@ class CustomFieldModel extends Equatable {
           updatedDate: DateTime.fromMillisecondsSinceEpoch(0),
         );
 
-  final String id;
-  final String title;
-  final String inputType;
-  final int lengthLimit;
-  final int maxLines;
-  final int minLines;
-  final String placeholder;
-  final String uid;
-  final String language;
-  final List<String> companies;
-  final ActiveStatus status;
-  final String createdBy;
-  final DateTime createdDate;
-  final String updatedBy;
-  final DateTime updatedDate;
-
   CustomFieldModel.fromMap(DataMap map)
       : this(
           id: map['id'] as String,
-          title: map['title'] as String,
+          title: List<LocalizedText>.from(
+            (map['title'] as List<dynamic>).map<LocalizedText>(
+              (item) => LocalizedText.fromMap(item as Map<String, dynamic>),
+            ),
+          ),
           inputType: map['inputType'] as String,
           lengthLimit: map['lengthLimit'] as int,
           maxLines: map['maxLines'] as int,
           minLines: map['minLines'] as int,
-          placeholder: map['placeholder'] as String,
+          placeholder: List<LocalizedText>.from(
+            (map['placeholder'] as List<dynamic>).map<LocalizedText>(
+              (item) => LocalizedText.fromMap(item as Map<String, dynamic>),
+            ),
+          ),
           uid: map['uid'] as String,
           language: map['language'] as String,
           companies: List<dynamic>.from((map['companies'] as List<dynamic>))
@@ -83,12 +90,12 @@ class CustomFieldModel extends Equatable {
 
   DataMap toMap() => {
         'id': id,
-        'title': title,
+        'title': title.map((item) => item.toMap()).toList(),
         'inputType': inputType,
         'lengthLimit': lengthLimit,
         'maxLines': maxLines,
         'minLines': minLines,
-        'placeholder': placeholder,
+        'placeholder': placeholder.map((item) => item.toMap()).toList(),
         'uid': uid,
         'language': language,
         'companies': companies,
@@ -99,19 +106,19 @@ class CustomFieldModel extends Equatable {
         'updatedDate': updatedDate.toIso8601String(),
       };
 
-  factory CustomFieldModel.fromJson(String source) =>
-      CustomFieldModel.fromMap(json.decode(source) as DataMap);
-
-  String toJson() => json.encode(toMap());
-
+  factory CustomFieldModel.fromDocument(FirebaseDocument document) {
+    Map<String, dynamic> response = document.data()!;
+    response['id'] = document.id;
+    return CustomFieldModel.fromMap(response);
+  }
   CustomFieldModel copyWith({
     String? id,
-    String? title,
+    List<LocalizedText>? title,
     String? inputType,
     int? lengthLimit,
     int? maxLines,
     int? minLines,
-    String? placeholder,
+    List<LocalizedText>? placeholder,
     String? uid,
     String? language,
     List<String>? companies,

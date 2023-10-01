@@ -95,7 +95,9 @@ class ConsentMaster extends StatelessWidget {
             thickness: 0.3,
           ),
           TextButton(
-            onPressed: () {},
+            onPressed: () {
+              context.push(MasterDataRoute.purposesCategory.path);
+            },
             style: ButtonStyle(
                 shape: MaterialStateProperty.all<RoundedRectangleBorder>(
               RoundedRectangleBorder(
@@ -108,7 +110,7 @@ class ConsentMaster extends StatelessWidget {
                 children: <Widget>[
                   Expanded(
                     child: Text(
-                      tr('masterdata.consentmasterdata.purposecategory'), //!!!
+                      tr('masterdata.consentmasterdata.purposecategory.name'), //!!!
                       style: Theme.of(context).textTheme.bodySmall?.copyWith(
                           color: Theme.of(context).colorScheme.secondary),
                     ),

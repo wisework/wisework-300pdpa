@@ -37,7 +37,7 @@
             "customfields": {
                 "name" : "Custom Fields",
                 "edit" : "Edit Custom Fields",
-                "add" : "Add Custom Fields",
+                "create" : "Create Custom Fields",
                 "delete" : "Delete",
                 "title" : "Title",
                 "placeholder" : "Place Holder",
@@ -47,7 +47,11 @@
                 "minline" : "Min Line"
             },
             "purpose": "Purpose",
-            "purposecategory": "Purpose Catogory"
+            "purposecategory": {
+                "name" : "Purpose Category",
+                "edit" : "Edit Purpose Category",
+                "create" : "Create Purpose Category"
+            }
         },
         "datasubjectrightmasterdata": {
             "datasubjectright": "Data Subject Right",            
