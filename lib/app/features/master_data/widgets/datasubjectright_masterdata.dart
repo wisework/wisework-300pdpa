@@ -1,5 +1,7 @@
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
+import 'package:pdpa/app/features/master_data/routes/master_data_route.dart';
 
 class DataSubjectRightMaster extends StatelessWidget {
   const DataSubjectRightMaster({Key? key}) : super(key: key);
@@ -26,10 +28,7 @@ class DataSubjectRightMaster extends StatelessWidget {
           const SizedBox(height: 10.0),
           TextButton(
             onPressed: () {
-              // Navigator.pushNamed(
-              //   context,
-              //   masterdataRoutes.masterData.requestType.view(),
-              // );
+              context.push(MasterDataRoute.requestType.path);
             },
             style: ButtonStyle(
                 shape: MaterialStateProperty.all<RoundedRectangleBorder>(
@@ -63,10 +62,7 @@ class DataSubjectRightMaster extends StatelessWidget {
           ),
           TextButton(
             onPressed: () {
-              // Navigator.pushNamed(
-              //   context,
-              //   masterdataRoutes.masterData.rejectType.view(),
-              // );
+              context.push(MasterDataRoute.rejectType.path);
             },
             style: ButtonStyle(
                 shape: MaterialStateProperty.all<RoundedRectangleBorder>(
@@ -100,10 +96,7 @@ class DataSubjectRightMaster extends StatelessWidget {
           ),
           TextButton(
             onPressed: () {
-              // Navigator.pushNamed(
-              //   context,
-              //   masterdataRoutes.masterData.reasonType.view(),
-              // );
+              context.push(MasterDataRoute.reasonType.path);
             },
             style: ButtonStyle(
                 shape: MaterialStateProperty.all<RoundedRectangleBorder>(
@@ -137,10 +130,7 @@ class DataSubjectRightMaster extends StatelessWidget {
           ),
           TextButton(
             onPressed: () {
-              // Navigator.pushNamed(
-              //   context,
-              //   masterdataRoutes.masterData.requestReject.view(),
-              // );
+              context.push(MasterDataRoute.requestReject.path);
             },
             style: ButtonStyle(
                 shape: MaterialStateProperty.all<RoundedRectangleBorder>(
@@ -174,10 +164,7 @@ class DataSubjectRightMaster extends StatelessWidget {
           ),
           TextButton(
             onPressed: () {
-              // Navigator.pushNamed(
-              //   context,
-              //   masterdataRoutes.masterData.requestReason.view(),
-              // );
+              context.push(MasterDataRoute.requestReason.path);
             },
             style: ButtonStyle(
                 shape: MaterialStateProperty.all<RoundedRectangleBorder>(

@@ -3,7 +3,11 @@ import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:ionicons/ionicons.dart';
 import 'package:pdpa/app/config/config.dart';
+import 'package:pdpa/app/data/models/master_data/custom_field_model.dart';
+import 'package:pdpa/app/data/models/master_data/localized_model.dart';
 import 'package:pdpa/app/features/master_data/routes/master_data_route.dart';
+import 'package:pdpa/app/features/master_data/widgets/master_data_item_card.dart';
+import 'package:pdpa/app/shared/utils/constants.dart';
 import 'package:pdpa/app/shared/widgets/customs/custom_icon_button.dart';
 
 class CustomFieldScreen extends StatelessWidget {
@@ -23,54 +27,54 @@ class CustomFieldView extends StatefulWidget {
 }
 
 class _CustomFieldViewState extends State<CustomFieldView> {
-  // final customfield = [
-  //  CustomFieldModel(
-  //     id: '1',
-  //     title: const [
-  //       LocalizedText(language: 'en-US', text: 'title 1 EN'),
-  //       LocalizedText(language: 'th-TH', text: 'title 1 TH'),
-  //     ],
-  //     inputType: 'Text',
-  //     lengthLimit: 1,
-  //     maxLines: 10,
-  //     minLines: 1,
-  //     placeholder: const [
-  //       LocalizedText(language: 'en-US', text: 'placeholder 1 EN'),
-  //       LocalizedText(language: 'th-TH', text: 'placeholder 1 TH'),
-  //     ],
-  //     uid: 'uid',
-  //     language: 'en-US',
-  //     companies: const [],
-  //     status: ActiveStatus.active,
-  //     createdBy: 'Admin',
-  //     createdDate: DateTime.fromMillisecondsSinceEpoch(0),
-  //     updatedBy: 'Admin',
-  //     updatedDate: DateTime.fromMillisecondsSinceEpoch(0),
-  //   ),
-  //   CustomFieldModel(
-  //     id: '2',
-  //     title: const [
-  //       LocalizedText(language: 'en-US', text: 'Description 1 EN'),
-  //       LocalizedText(language: 'th-TH', text: 'Description 1 TH'),
-  //     ],
-  //     inputType: 'Text',
-  //     lengthLimit: 1,
-  //     maxLines: 10,
-  //     minLines: 1,
-  //     placeholder: const [
-  //       LocalizedText(language: 'en-US', text: 'Description 1 EN'),
-  //       LocalizedText(language: 'th-TH', text: 'Description 1 TH'),
-  //     ],
-  //     uid: 'uid',
-  //     language: 'en-US',
-  //     companies: const [],
-  //     status: ActiveStatus.active,
-  //     createdBy: 'Admin',
-  //     createdDate: DateTime.fromMillisecondsSinceEpoch(0),
-  //     updatedBy: 'Admin',
-  //     updatedDate: DateTime.fromMillisecondsSinceEpoch(0),
-  //   ),
-  // ];
+  final customfield = [
+    CustomFieldModel(
+      id: '1',
+      title: const [
+        LocalizedModel(language: 'en-US', text: 'title 1 EN'),
+        LocalizedModel(language: 'th-TH', text: 'title 1 TH'),
+      ],
+      inputType: 'Text',
+      lengthLimit: 1,
+      maxLines: 10,
+      minLines: 1,
+      placeholder: const [
+        LocalizedModel(language: 'en-US', text: 'placeholder 1 EN'),
+        LocalizedModel(language: 'th-TH', text: 'placeholder 1 TH'),
+      ],
+      uid: 'uid',
+      language: 'en-US',
+      companies: const [],
+      status: ActiveStatus.active,
+      createdBy: 'Admin',
+      createdDate: DateTime.fromMillisecondsSinceEpoch(0),
+      updatedBy: 'Admin',
+      updatedDate: DateTime.fromMillisecondsSinceEpoch(0),
+    ),
+    CustomFieldModel(
+      id: '2',
+      title: const [
+        LocalizedModel(language: 'en-US', text: 'Description 1 EN'),
+        LocalizedModel(language: 'th-TH', text: 'Description 1 TH'),
+      ],
+      inputType: 'Text',
+      lengthLimit: 1,
+      maxLines: 10,
+      minLines: 1,
+      placeholder: const [
+        LocalizedModel(language: 'en-US', text: 'Description 1 EN'),
+        LocalizedModel(language: 'th-TH', text: 'Description 1 TH'),
+      ],
+      uid: 'uid',
+      language: 'en-US',
+      companies: const [],
+      status: ActiveStatus.active,
+      createdBy: 'Admin',
+      createdDate: DateTime.fromMillisecondsSinceEpoch(0),
+      updatedBy: 'Admin',
+      updatedDate: DateTime.fromMillisecondsSinceEpoch(0),
+    ),
+  ];
 
   @override
   Widget build(BuildContext context) {
@@ -86,15 +90,15 @@ class _CustomFieldViewState extends State<CustomFieldView> {
               decoration: BoxDecoration(
                 color: Theme.of(context).colorScheme.onBackground,
               ),
-              // child: ListView.builder(
-              //   itemCount: customfield.length,
-              //   itemBuilder: (context, index) {
-              //     return _buildItemCard(
-              //       context,
-              //       customfield: customfield[index],
-              //     );
-              //   },
-              // ),
+              child: ListView.builder(
+                itemCount: customfield.length,
+                itemBuilder: (context, index) {
+                  return _buildItemCard(
+                    context,
+                    customfield: customfield[index],
+                  );
+                },
+              ),
             ),
           ),
         ],
@@ -108,26 +112,27 @@ class _CustomFieldViewState extends State<CustomFieldView> {
     );
   }
 
-  // MasterDataItemCard _buildItemCard(
-  //   BuildContext context, {
-  //   required CustomFieldModel customfield,
-  // }) {
-  //   const language = 'en-US';
-  //   final description = customfield.title.firstWhere(
-  //     (item) => item.language == language,
-  //     orElse: LocalizedText.empty,
-  //   );
-  //   final warningDescription = customfield.placeholder.firstWhere(
-  //     (item) => item.language == language,
-  //     orElse: LocalizedText.empty,
-  //   );
+  MasterDataItemCard _buildItemCard(
+    BuildContext context, {
+    required CustomFieldModel customfield,
+  }) {
+    const language = 'en-US';
+    final description = customfield.title.firstWhere(
+      (item) => item.language == language,
+      orElse: LocalizedModel.empty,
+    );
+    final warningDescription = customfield.placeholder.firstWhere(
+      (item) => item.language == language,
+      orElse: LocalizedModel.empty,
+    );
 
-  //   return MasterDataItemCard(
-  //     title: description.text,
-  //     subtitle: warningDescription.text,
-  //     status: customfield.status,
-  //   );
-  // }
+    return MasterDataItemCard(
+      title: description.text,
+      subtitle: warningDescription.text,
+      status: customfield.status,
+      onTap: () {},
+    );
+  }
 
   AppBar _buildAppBar(BuildContext context) {
     return AppBar(
