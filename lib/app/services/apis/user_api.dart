@@ -7,9 +7,9 @@ class UserApi {
   final FirebaseFirestore _firestore;
 
   Future<UserModel?> getUserById(String userId) async {
-    final document = await _firestore.collection('Users').doc(userId).get();
+    final result = await _firestore.collection('Users').doc(userId).get();
 
-    if (!document.exists) return null;
-    return UserModel.fromDocument(document);
+    if (!result.exists) return null;
+    return UserModel.fromDocument(result);
   }
 }

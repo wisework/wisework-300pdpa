@@ -17,7 +17,7 @@ class DataSubjectRightMaster extends StatelessWidget {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: <Widget>[
           Text(
-            tr('masterdata.datasubjectrightmasterdata.datasubjectright'), //!!!
+            tr('masterData.dsr.datasubjectright'), //!!!
             style: Theme.of(context)
                 .textTheme
                 .titleMedium
@@ -43,7 +43,7 @@ class DataSubjectRightMaster extends StatelessWidget {
                 children: <Widget>[
                   Expanded(
                     child: Text(
-                      tr('masterdata.datasubjectrightmasterdata.request'), //!!!
+                      tr('masterData.dsr.request'), //!!!
                       style: Theme.of(context).textTheme.bodySmall?.copyWith(
                           color: Theme.of(context).colorScheme.secondary),
                     ),
@@ -80,7 +80,7 @@ class DataSubjectRightMaster extends StatelessWidget {
                 children: <Widget>[
                   Expanded(
                     child: Text(
-                      tr('masterdata.datasubjectrightmasterdata.rejections'), //!!!
+                      tr('masterData.dsr.rejections'), //!!!
                       style: Theme.of(context).textTheme.bodySmall?.copyWith(
                           color: Theme.of(context).colorScheme.secondary),
                     ),
@@ -117,7 +117,7 @@ class DataSubjectRightMaster extends StatelessWidget {
                 children: <Widget>[
                   Expanded(
                     child: Text(
-                      tr('masterdata.datasubjectrightmasterdata.reason'), //!!!
+                      tr('masterData.dsr.reason'), //!!!
                       style: Theme.of(context).textTheme.bodySmall?.copyWith(
                           color: Theme.of(context).colorScheme.secondary),
                     ),
@@ -154,7 +154,7 @@ class DataSubjectRightMaster extends StatelessWidget {
                 children: <Widget>[
                   Expanded(
                     child: Text(
-                      tr('masterdata.datasubjectrightmasterdata.requestrejects'), //!!!
+                      tr('masterData.dsr.requestrejects'), //!!!
                       style: Theme.of(context).textTheme.bodySmall?.copyWith(
                           color: Theme.of(context).colorScheme.secondary),
                     ),
@@ -191,7 +191,7 @@ class DataSubjectRightMaster extends StatelessWidget {
                 children: <Widget>[
                   Expanded(
                     child: Text(
-                      tr('masterdata.datasubjectrightmasterdata.requestreasons'), //!!!
+                      tr('masterData.dsr.requestreasons'), //!!!
                       style: Theme.of(context).textTheme.bodySmall?.copyWith(
                           color: Theme.of(context).colorScheme.secondary),
                     ),

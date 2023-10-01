@@ -1,3 +1,4 @@
+import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
@@ -8,9 +9,9 @@ import 'package:pdpa/app/features/authentication/bloc/sign_in/sign_in_bloc.dart'
 import 'package:pdpa/app/features/master_data/bloc/consent/purpose/purpose_bloc.dart';
 import 'package:pdpa/app/features/master_data/routes/master_data_route.dart';
 import 'package:pdpa/app/features/master_data/widgets/master_data_item_card.dart';
-import 'package:pdpa/app/injection.dart';
-import 'package:pdpa/app/shared/models/localized_text.dart';
+import 'package:pdpa/app/data/models/master_data/localized_model.dart';
 import 'package:pdpa/app/shared/widgets/customs/custom_icon_button.dart';
+import 'package:pdpa/app/shared/widgets/templates/pdpa_app_bar.dart';
 
 class PurposeScreen extends StatefulWidget {
   const PurposeScreen({super.key});
@@ -20,34 +21,32 @@ class PurposeScreen extends StatefulWidget {
 }
 
 class _PurposeScreenState extends State<PurposeScreen> {
-  late String companyId;
-
   @override
   void initState() {
     super.initState();
 
-    _getCompanyId();
+    _initialData();
   }
 
-  void _getCompanyId() {
+  void _initialData() {
     final signInBloc = BlocProvider.of<SignInBloc>(context, listen: false);
+
+    String companyId;
     if (signInBloc.state is SignedInUser) {
       final signedIn = signInBloc.state as SignedInUser;
       companyId = signedIn.user.currentCompany;
     } else {
       companyId = '';
     }
+
+    BlocProvider.of<PurposeBloc>(context, listen: false).add(
+      GetPurposesEvent(companyId: companyId),
+    );
   }
 
   @override
   Widget build(BuildContext context) {
-    return BlocProvider<PurposeBloc>(
-      create: (context) => serviceLocator<PurposeBloc>()
-        ..add(
-          GetPurposesEvent(companyId: companyId),
-        ),
-      child: const PurposeView(),
-    );
+    return const PurposeView();
   }
 }
 
@@ -62,7 +61,20 @@ class _PurposeViewState extends State<PurposeView> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: _buildAppBar(context),
+      appBar: PdpaAppBar(
+        leadingIcon: CustomIconButton(
+          onPressed: () {
+            context.pop();
+          },
+          icon: Ionicons.chevron_back_outline,
+          iconColor: Theme.of(context).colorScheme.primary,
+          backgroundColor: Theme.of(context).colorScheme.onBackground,
+        ),
+        title: Text(
+          tr('masterData.cm.purpose.list'),
+          style: Theme.of(context).textTheme.titleLarge,
+        ),
+      ),
       body: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: <Widget>[
@@ -75,7 +87,7 @@ class _PurposeViewState extends State<PurposeView> {
               ),
               child: BlocBuilder<PurposeBloc, PurposeState>(
                 builder: (context, state) {
-                  if (state is LoadedPurposes) {
+                  if (state is GotPurposes) {
                     return ListView.builder(
                       itemCount: state.purposes.length,
                       itemBuilder: (context, index) {
@@ -90,7 +102,7 @@ class _PurposeViewState extends State<PurposeView> {
                     return Center(
                       child: Text(
                         state.message,
-                        style: Theme.of(context).textTheme.titleLarge,
+                        style: Theme.of(context).textTheme.bodyMedium,
                       ),
                     );
                   }
@@ -112,33 +124,6 @@ class _PurposeViewState extends State<PurposeView> {
     );
   }
 
-  AppBar _buildAppBar(BuildContext context) {
-    return AppBar(
-      automaticallyImplyLeading: false,
-      title: Row(
-        children: <Widget>[
-          CustomIconButton(
-            onPressed: () {
-              context.pop();
-            },
-            icon: Ionicons.chevron_back_outline,
-            iconColor: Theme.of(context).colorScheme.primary,
-            backgroundColor: Theme.of(context).colorScheme.onBackground,
-          ),
-          const SizedBox(width: UiConfig.appBarTitleSpacing),
-          Text(
-            'Purpose',
-            style: Theme.of(context).textTheme.titleLarge,
-          ),
-        ],
-      ),
-      elevation: 1.0,
-      shadowColor: Theme.of(context).colorScheme.background,
-      surfaceTintColor: Theme.of(context).colorScheme.onBackground,
-      backgroundColor: Theme.of(context).colorScheme.onBackground,
-    );
-  }
-
   MasterDataItemCard _buildItemCard(
     BuildContext context, {
     required PurposeModel purpose,
@@ -146,17 +131,22 @@ class _PurposeViewState extends State<PurposeView> {
     const language = 'en-US';
     final description = purpose.description.firstWhere(
       (item) => item.language == language,
-      orElse: LocalizedText.empty,
+      orElse: LocalizedModel.empty,
     );
     final warningDescription = purpose.warningDescription.firstWhere(
       (item) => item.language == language,
-      orElse: LocalizedText.empty,
+      orElse: LocalizedModel.empty,
     );
 
     return MasterDataItemCard(
       title: description.text,
       subtitle: warningDescription.text,
       status: purpose.status,
+      onTap: () {
+        context.push(
+          MasterDataRoute.editPurpose.path.replaceFirst(':id', purpose.id),
+        );
+      },
     );
   }
 }

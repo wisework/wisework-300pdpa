@@ -3,10 +3,10 @@ import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:ionicons/ionicons.dart';
 import 'package:pdpa/app/config/config.dart';
+import 'package:pdpa/app/data/models/master_data/localized_model.dart';
 import 'package:pdpa/app/data/models/master_data/purpose_category_model.dart';
 import 'package:pdpa/app/features/master_data/routes/master_data_route.dart';
 import 'package:pdpa/app/features/master_data/widgets/master_data_item_card.dart';
-import 'package:pdpa/app/shared/models/localized_text.dart';
 import 'package:pdpa/app/shared/utils/constants.dart';
 import 'package:pdpa/app/shared/widgets/customs/custom_icon_button.dart';
 
@@ -31,12 +31,12 @@ class _PurposeCategoryViewState extends State<PurposeCategoryView> {
     PurposeCategoryModel(
         id: '1',
         title: const [
-          LocalizedText(language: 'en-US', text: 'Test1'),
-          LocalizedText(language: 'en-US', text: 'Test1'),
+          LocalizedModel(language: 'en-US', text: 'Test1'),
+          LocalizedModel(language: 'en-US', text: 'Test1'),
         ],
         description: const [
-          LocalizedText(language: 'en-US', text: 'Test1'),
-          LocalizedText(language: 'en-US', text: 'Test1'),
+          LocalizedModel(language: 'en-US', text: 'Test1'),
+          LocalizedModel(language: 'en-US', text: 'Test1'),
         ],
         purposes: [],
         priority: 1,
@@ -45,15 +45,15 @@ class _PurposeCategoryViewState extends State<PurposeCategoryView> {
         createdDate: DateTime.fromMillisecondsSinceEpoch(0),
         updatedBy: '',
         updatedDate: DateTime.fromMillisecondsSinceEpoch(0)),
-          PurposeCategoryModel(
+    PurposeCategoryModel(
         id: '2',
         title: const [
-          LocalizedText(language: 'en-US', text: 'Test2'),
-          LocalizedText(language: 'en-US', text: 'Test2'),
+          LocalizedModel(language: 'en-US', text: 'Test2'),
+          LocalizedModel(language: 'en-US', text: 'Test2'),
         ],
         description: const [
-          LocalizedText(language: 'en-US', text: 'Test2'),
-          LocalizedText(language: 'en-US', text: 'Test2'),
+          LocalizedModel(language: 'en-US', text: 'Test2'),
+          LocalizedModel(language: 'en-US', text: 'Test2'),
         ],
         purposes: [],
         priority: 1,
@@ -114,7 +114,7 @@ class _PurposeCategoryViewState extends State<PurposeCategoryView> {
           ),
           const SizedBox(width: UiConfig.appBarTitleSpacing),
           Text(
-            tr('masterdata.consentmasterdata.purposecategory.name'), //!
+            tr('masterData.cm.purposecategory.name'), //!
             style: Theme.of(context).textTheme.titleLarge,
           ),
         ],
@@ -130,17 +130,18 @@ class _PurposeCategoryViewState extends State<PurposeCategoryView> {
     const language = 'en-US';
     final description = purpose.description.firstWhere(
       (item) => item.language == language,
-      orElse: LocalizedText.empty,
+      orElse: LocalizedModel.empty,
     );
     final title = purpose.title.firstWhere(
       (item) => item.language == language,
-      orElse: LocalizedText.empty,
+      orElse: LocalizedModel.empty,
     );
 
     return MasterDataItemCard(
       title: description.text,
       subtitle: title.text,
       status: purpose.status,
+      onTap: () {},
     );
   }
 }

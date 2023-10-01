@@ -12,13 +12,13 @@ class PurposeBloc extends Bloc<PurposeEvent, PurposeState> {
     required MasterDataRepository masterDataRepository,
   })  : _masterDataRepository = masterDataRepository,
         super(const PurposeInitial()) {
-    on<GetPurposesEvent>(_onGetPurposesHandler);
-    on<UpdatePurposeEvent>(_onUpdatePurposeHandler);
+    on<GetPurposesEvent>(_getPurposesHandler);
+    on<UpdatePurposeEvent>(_updatePurposeHandler);
   }
 
   final MasterDataRepository _masterDataRepository;
 
-  Future<void> _onGetPurposesHandler(
+  Future<void> _getPurposesHandler(
     GetPurposesEvent event,
     Emitter<PurposeState> emit,
   ) async {
@@ -27,32 +27,45 @@ class PurposeBloc extends Bloc<PurposeEvent, PurposeState> {
       return;
     }
 
-    emit(const LoadingPurposes());
+    emit(const GettingPurposes());
 
     final result = await _masterDataRepository.getPurposes(event.companyId);
 
     result.fold(
       (failure) => emit(PurposeError(failure.errorMessage)),
-      (purposes) => emit(LoadedPurposes(purposes)),
+      (purposes) => emit(GotPurposes(
+        purposes..sort((a, b) => b.updatedDate.compareTo(a.updatedDate)),
+      )),
     );
   }
 
-  void _onUpdatePurposeHandler(
+  Future<void> _updatePurposeHandler(
     UpdatePurposeEvent event,
     Emitter<PurposeState> emit,
-  ) {
-    if (state is LoadedPurposes) {
-      List<PurposeModel> purposes = [];
+  ) async {
+    if (state is GotPurposes) {
+      final purposes = (state as GotPurposes).purposes;
+      final purposeIds = purposes.map((purpose) => purpose.id).toList();
 
-      for (PurposeModel purpose in (state as LoadedPurposes).purposes) {
-        if (purpose.id == event.purpose.id) {
-          purposes.add(event.purpose);
-        } else {
-          purposes.add(purpose);
+      List<PurposeModel> updated = [];
+      if (purposeIds.contains(event.purpose.id)) {
+        for (PurposeModel purpose in purposes) {
+          if (purpose.id == event.purpose.id) {
+            updated.add(event.purpose);
+          } else {
+            updated.add(purpose);
+          }
         }
+      } else {
+        updated = purposes.map((purpose) => purpose).toList()
+          ..add(event.purpose);
       }
 
-      emit(LoadedPurposes(purposes));
+      emit(
+        GotPurposes(
+          updated..sort((a, b) => b.updatedDate.compareTo(a.updatedDate)),
+        ),
+      );
     }
   }
 }

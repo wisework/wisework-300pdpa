@@ -10,11 +10,42 @@ class MasterDataRepository {
 
   final MasterDataApi _api;
 
+  //? Purpose
   ResultFuture<List<PurposeModel>> getPurposes(String companyId) async {
     try {
-      final purposes = await _api.getPurposes(companyId);
+      final result = await _api.getPurposes(companyId);
 
-      return Right(purposes);
+      return Right(result);
+    } on ApiException catch (error) {
+      return Left(ApiFailure.fromException(error));
+    }
+  }
+
+  ResultFuture<PurposeModel> getPurposeById(
+    String purposeId,
+    String companyId,
+  ) async {
+    try {
+      final result = await _api.getPurposeById(purposeId, companyId);
+
+      if (result != null) return Right(result);
+
+      return const Left(
+        ApiFailure(message: 'Purpose not found', statusCode: 404),
+      );
+    } on ApiException catch (error) {
+      return Left(ApiFailure.fromException(error));
+    }
+  }
+
+  ResultFuture<PurposeModel> updatePurpose(
+    PurposeModel purpose,
+    String companyId,
+  ) async {
+    try {
+      final result = await _api.updatePurpose(purpose, companyId);
+
+      return Right(result);
     } on ApiException catch (error) {
       return Left(ApiFailure.fromException(error));
     }

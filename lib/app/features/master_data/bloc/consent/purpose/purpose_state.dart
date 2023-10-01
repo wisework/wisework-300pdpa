@@ -14,22 +14,6 @@ class PurposeInitial extends PurposeState {
   List<Object> get props => [];
 }
 
-class LoadingPurposes extends PurposeState {
-  const LoadingPurposes();
-
-  @override
-  List<Object> get props => [];
-}
-
-class LoadedPurposes extends PurposeState {
-  const LoadedPurposes(this.purposes);
-
-  final List<PurposeModel> purposes;
-
-  @override
-  List<Object> get props => [purposes];
-}
-
 class PurposeError extends PurposeState {
   const PurposeError(this.message);
 
@@ -37,4 +21,20 @@ class PurposeError extends PurposeState {
 
   @override
   List<Object> get props => [message];
+}
+
+class GettingPurposes extends PurposeState {
+  const GettingPurposes();
+
+  @override
+  List<Object> get props => [];
+}
+
+class GotPurposes extends PurposeState {
+  const GotPurposes(this.purposes);
+
+  final List<PurposeModel> purposes;
+
+  @override
+  List<Object> get props => [purposes];
 }

@@ -84,14 +84,14 @@ class _EditCustomFieldViewState extends State<EditCustomFieldView> {
         Row(
           children: <Widget>[
             Text(
-              tr('masterdata.consentmasterdata.customfields.name'), //!
+              tr('masterData.cm.customfields.name'), //!
               style: Theme.of(context).textTheme.titleLarge,
             ),
           ],
         ),
         const SizedBox(height: UiConfig.lineSpacing),
         const TitleRequiredText(
-          text: 'masterdata.consentmasterdata.customfields.title',
+          text: 'masterData.cm.customfields.title',
           required: true,
         ),
         CustomTextField(
@@ -100,7 +100,7 @@ class _EditCustomFieldViewState extends State<EditCustomFieldView> {
         ),
         const SizedBox(height: UiConfig.lineSpacing),
         const TitleRequiredText(
-          text: 'masterdata.consentmasterdata.customfields.placeholder',
+          text: 'masterData.cm.customfields.placeholder',
           required: true,
         ),
         CustomTextField(
@@ -109,7 +109,7 @@ class _EditCustomFieldViewState extends State<EditCustomFieldView> {
         ),
         const SizedBox(height: UiConfig.lineSpacing),
         const TitleRequiredText(
-          text: 'masterdata.consentmasterdata.customfields.customfieldtype',
+          text: 'masterData.cm.customfields.customfieldtype',
           required: true,
         ),
         CustomTextField(
@@ -118,7 +118,7 @@ class _EditCustomFieldViewState extends State<EditCustomFieldView> {
         ),
         const SizedBox(height: UiConfig.lineSpacing),
         const TitleRequiredText(
-          text: 'masterdata.consentmasterdata.customfields.lenghtlimit',
+          text: 'masterData.cm.customfields.lenghtlimit',
           required: true,
         ),
         const CustomTextField(
@@ -126,7 +126,7 @@ class _EditCustomFieldViewState extends State<EditCustomFieldView> {
         ),
         const SizedBox(height: UiConfig.lineSpacing),
         const TitleRequiredText(
-          text: 'masterdata.consentmasterdata.customfields.maxline',
+          text: 'masterData.cm.customfields.maxline',
           required: true,
         ),
         const CustomTextField(
@@ -134,7 +134,7 @@ class _EditCustomFieldViewState extends State<EditCustomFieldView> {
         ),
         const SizedBox(height: UiConfig.lineSpacing),
         const TitleRequiredText(
-          text: 'masterdata.consentmasterdata.customfields.minline',
+          text: 'masterData.cm.customfields.minline',
           required: true,
         ),
         const CustomTextField(
@@ -159,7 +159,7 @@ class _EditCustomFieldViewState extends State<EditCustomFieldView> {
           ),
           const SizedBox(width: UiConfig.appBarTitleSpacing),
           Text(
-            tr('masterdata.consentmasterdata.customfields.create'), //!
+            tr('masterData.cm.customfields.create'), //!
             style: Theme.of(context).textTheme.titleLarge,
           ),
         ],

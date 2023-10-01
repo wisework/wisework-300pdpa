@@ -24,7 +24,7 @@ class MasterDataRoute {
   );
 
   static final GoRoute editCustomField = GoRoute(
-    path: '/master-data/custom-field/edit',
+    path: '/master-data/custom-fields/edit',
     builder: (context, _) => const EditCustomFieldScreen(),
   );
 
@@ -34,13 +34,15 @@ class MasterDataRoute {
   );
 
   static final GoRoute createPurpose = GoRoute(
-    path: '/master-data/purpose/create',
-    builder: (context, _) => const EditPurposeScreen(),
+    path: '/master-data/purposes/create',
+    builder: (context, _) => const EditPurposeScreen(purposeId: ''),
   );
 
   static final GoRoute editPurpose = GoRoute(
-    path: '/master-data/purpose/edit',
-    builder: (context, _) => const EditPurposeScreen(),
+    path: '/master-data/purposes/:id/edit',
+    builder: (context, state) => EditPurposeScreen(
+      purposeId: state.pathParameters['id'] ?? '',
+    ),
   );
 
   static final GoRoute purposesCategory = GoRoute(

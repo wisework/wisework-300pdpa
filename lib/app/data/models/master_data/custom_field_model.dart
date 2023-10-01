@@ -1,9 +1,10 @@
 // ignore_for_file: public_member_api_docs, sort_constructors_first
 import 'package:equatable/equatable.dart';
-import 'package:pdpa/app/shared/models/localized_text.dart';
 
 import 'package:pdpa/app/shared/utils/constants.dart';
 import 'package:pdpa/app/shared/utils/typedef.dart';
+
+import 'localized_model.dart';
 
 class CustomFieldModel extends Equatable {
   const CustomFieldModel({
@@ -25,12 +26,12 @@ class CustomFieldModel extends Equatable {
   });
 
   final String id;
-  final List<LocalizedText> title;
+  final List<LocalizedModel> title;
   final String inputType;
   final int lengthLimit;
   final int maxLines;
   final int minLines;
-  final List<LocalizedText> placeholder;
+  final List<LocalizedModel> placeholder;
   final String uid;
   final String language;
   final List<String> companies;
@@ -62,18 +63,18 @@ class CustomFieldModel extends Equatable {
   CustomFieldModel.fromMap(DataMap map)
       : this(
           id: map['id'] as String,
-          title: List<LocalizedText>.from(
-            (map['title'] as List<dynamic>).map<LocalizedText>(
-              (item) => LocalizedText.fromMap(item as Map<String, dynamic>),
+          title: List<LocalizedModel>.from(
+            (map['title'] as List<dynamic>).map<LocalizedModel>(
+              (item) => LocalizedModel.fromMap(item as Map<String, dynamic>),
             ),
           ),
           inputType: map['inputType'] as String,
           lengthLimit: map['lengthLimit'] as int,
           maxLines: map['maxLines'] as int,
           minLines: map['minLines'] as int,
-          placeholder: List<LocalizedText>.from(
-            (map['placeholder'] as List<dynamic>).map<LocalizedText>(
-              (item) => LocalizedText.fromMap(item as Map<String, dynamic>),
+          placeholder: List<LocalizedModel>.from(
+            (map['placeholder'] as List<dynamic>).map<LocalizedModel>(
+              (item) => LocalizedModel.fromMap(item as Map<String, dynamic>),
             ),
           ),
           uid: map['uid'] as String,
@@ -113,12 +114,12 @@ class CustomFieldModel extends Equatable {
   }
   CustomFieldModel copyWith({
     String? id,
-    List<LocalizedText>? title,
+    List<LocalizedModel>? title,
     String? inputType,
     int? lengthLimit,
     int? maxLines,
     int? minLines,
-    List<LocalizedText>? placeholder,
+    List<LocalizedModel>? placeholder,
     String? uid,
     String? language,
     List<String>? companies,

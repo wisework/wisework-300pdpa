@@ -1,9 +1,10 @@
 import 'package:equatable/equatable.dart';
 
-import 'package:pdpa/app/data/models/master_data/purpose_model.dart';
-import 'package:pdpa/app/shared/models/localized_text.dart';
 import 'package:pdpa/app/shared/utils/constants.dart';
 import 'package:pdpa/app/shared/utils/typedef.dart';
+
+import 'localized_model.dart';
+import 'purpose_model.dart';
 
 class PurposeCategoryModel extends Equatable {
   const PurposeCategoryModel({
@@ -20,8 +21,8 @@ class PurposeCategoryModel extends Equatable {
   });
 
   final String id;
-  final List<LocalizedText> title;
-  final List<LocalizedText> description;
+  final List<LocalizedModel> title;
+  final List<LocalizedModel> description;
   final List<PurposeModel> purposes;
   final int priority;
   final ActiveStatus status;
@@ -47,14 +48,14 @@ class PurposeCategoryModel extends Equatable {
   PurposeCategoryModel.fromMap(DataMap map)
       : this(
           id: map['id'] as String,
-          title: List<LocalizedText>.from(
-            (map['title'] as List<dynamic>).map<LocalizedText>(
-              (item) => LocalizedText.fromMap(item as DataMap),
+          title: List<LocalizedModel>.from(
+            (map['title'] as List<dynamic>).map<LocalizedModel>(
+              (item) => LocalizedModel.fromMap(item as DataMap),
             ),
           ),
-          description: List<LocalizedText>.from(
-            (map['description'] as List<dynamic>).map<LocalizedText>(
-              (item) => LocalizedText.fromMap(item as DataMap),
+          description: List<LocalizedModel>.from(
+            (map['description'] as List<dynamic>).map<LocalizedModel>(
+              (item) => LocalizedModel.fromMap(item as DataMap),
             ),
           ),
           purposes: List<PurposeModel>.from(
@@ -91,8 +92,8 @@ class PurposeCategoryModel extends Equatable {
 
   PurposeCategoryModel copyWith({
     String? id,
-    List<LocalizedText>? title,
-    List<LocalizedText>? description,
+    List<LocalizedModel>? title,
+    List<LocalizedModel>? description,
     List<PurposeModel>? purposes,
     int? priority,
     ActiveStatus? status,

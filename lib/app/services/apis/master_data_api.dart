@@ -18,4 +18,38 @@ class MasterDataApi {
 
     return purposes;
   }
+
+  Future<PurposeModel?> getPurposeById(
+    String purposeId,
+    String companyId,
+  ) async {
+    final result = await _firestore
+        .collection('Companies/$companyId/Purposes')
+        .doc(purposeId)
+        .get();
+
+    if (!result.exists) return null;
+    return PurposeModel.fromDocument(result);
+  }
+
+  Future<PurposeModel> updatePurpose(
+    PurposeModel purpose,
+    String companyId,
+  ) async {
+    if (purpose.id.isEmpty) {
+      final ref = _firestore.collection('Companies/$companyId/Purposes').doc();
+      final created = purpose.copyWith(id: ref.id);
+
+      await ref.set(created.toMap());
+
+      return created;
+    } else {
+      await _firestore
+          .collection('Companies/$companyId/Purposes')
+          .doc(purpose.id)
+          .set(purpose.toMap());
+
+      return purpose;
+    }
+  }
 }

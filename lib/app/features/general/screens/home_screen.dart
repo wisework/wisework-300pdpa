@@ -6,6 +6,7 @@ import 'package:pdpa/app/config/config.dart';
 import 'package:pdpa/app/features/authentication/bloc/sign_in/sign_in_bloc.dart';
 import 'package:pdpa/app/shared/drawers/pdpa_drawer.dart';
 import 'package:pdpa/app/shared/widgets/customs/custom_icon_button.dart';
+import 'package:pdpa/app/shared/widgets/templates/pdpa_app_bar.dart';
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});
@@ -21,7 +22,31 @@ class _HomeScreenState extends State<HomeScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       key: _scaffoldKey,
-      appBar: _buildAppBar(context),
+      appBar: PdpaAppBar(
+        leadingIcon: CustomIconButton(
+          onPressed: () {
+            _scaffoldKey.currentState?.openDrawer();
+          },
+          icon: Ionicons.menu_outline,
+          iconColor: Theme.of(context).colorScheme.primary,
+          backgroundColor: Theme.of(context).colorScheme.onBackground,
+        ),
+        title: SizedBox(
+          width: 110.0,
+          child: Image.asset(
+            'assets/images/wisework-logo-mini.png',
+            fit: BoxFit.contain,
+          ),
+        ),
+        actions: [
+          CustomIconButton(
+            onPressed: () {},
+            icon: Ionicons.notifications_outline,
+            iconColor: Theme.of(context).colorScheme.primary,
+            backgroundColor: Theme.of(context).colorScheme.onBackground,
+          ),
+        ],
+      ),
       body: SingleChildScrollView(
         child: Container(
           padding: const EdgeInsets.all(UiConfig.defaultPaddingSpacing),
@@ -48,47 +73,6 @@ class _HomeScreenState extends State<HomeScreen> {
           _scaffoldKey.currentState?.closeDrawer();
         },
       ),
-    );
-  }
-
-  AppBar _buildAppBar(BuildContext context) {
-    return AppBar(
-      automaticallyImplyLeading: false,
-      title: Row(
-        children: <Widget>[
-          CustomIconButton(
-            onPressed: () {
-              _scaffoldKey.currentState?.openDrawer();
-            },
-            icon: Ionicons.menu_outline,
-            iconColor: Theme.of(context).colorScheme.primary,
-            backgroundColor: Theme.of(context).colorScheme.onBackground,
-          ),
-          const SizedBox(width: UiConfig.appBarTitleSpacing),
-          SizedBox(
-            width: 110.0,
-            child: Image.asset(
-              'assets/images/wisework-logo-mini.png',
-              fit: BoxFit.contain,
-            ),
-          ),
-        ],
-      ),
-      actions: [
-        Padding(
-          padding: const EdgeInsets.only(right: 15.0),
-          child: CustomIconButton(
-            onPressed: () {},
-            icon: Ionicons.notifications_outline,
-            iconColor: Theme.of(context).colorScheme.primary,
-            backgroundColor: Theme.of(context).colorScheme.onBackground,
-          ),
-        ),
-      ],
-      elevation: 1.0,
-      shadowColor: Theme.of(context).colorScheme.background,
-      surfaceTintColor: Theme.of(context).colorScheme.onBackground,
-      backgroundColor: Theme.of(context).colorScheme.onBackground,
     );
   }
 

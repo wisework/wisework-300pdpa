@@ -1,23 +1,87 @@
+import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
 import 'package:ionicons/ionicons.dart';
 import 'package:pdpa/app/config/config.dart';
+import 'package:pdpa/app/data/models/master_data/localized_model.dart';
+import 'package:pdpa/app/data/models/master_data/purpose_model.dart';
+import 'package:pdpa/app/features/authentication/bloc/sign_in/sign_in_bloc.dart';
+import 'package:pdpa/app/features/master_data/bloc/consent/edit_purpose/edit_purpose_bloc.dart';
+import 'package:pdpa/app/features/master_data/bloc/consent/purpose/purpose_bloc.dart';
+import 'package:pdpa/app/features/master_data/widgets/configuration_info.dart';
+import 'package:pdpa/app/injection.dart';
+import 'package:pdpa/app/shared/utils/constants.dart';
+import 'package:pdpa/app/shared/widgets/customs/custom_dropdown_button.dart';
 import 'package:pdpa/app/shared/widgets/customs/custom_icon_button.dart';
 import 'package:pdpa/app/shared/widgets/customs/custom_switch_button.dart';
 import 'package:pdpa/app/shared/widgets/customs/custom_text_field.dart';
+import 'package:pdpa/app/shared/widgets/templates/pdpa_app_bar.dart';
 import 'package:pdpa/app/shared/widgets/title_required_text.dart';
 
-class EditPurposeScreen extends StatelessWidget {
-  const EditPurposeScreen({super.key});
+class EditPurposeScreen extends StatefulWidget {
+  const EditPurposeScreen({
+    super.key,
+    required this.purposeId,
+  });
+
+  final String purposeId;
+
+  @override
+  State<EditPurposeScreen> createState() => _EditPurposeScreenState();
+}
+
+class _EditPurposeScreenState extends State<EditPurposeScreen> {
+  late String userEmail;
+  late String companyId;
+
+  @override
+  void initState() {
+    super.initState();
+
+    _getUserInfo();
+  }
+
+  void _getUserInfo() {
+    final signInBloc = BlocProvider.of<SignInBloc>(context, listen: false);
+    if (signInBloc.state is SignedInUser) {
+      final signedIn = signInBloc.state as SignedInUser;
+
+      userEmail = signedIn.user.email;
+      companyId = signedIn.user.currentCompany;
+    } else {
+      userEmail = '';
+      companyId = '';
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
-    return const EditPurposeView();
+    return BlocProvider<EditPurposeBloc>(
+      create: (context) => serviceLocator<EditPurposeBloc>()
+        ..add(
+          GetCurrentPurposeEvent(
+            purposeId: widget.purposeId,
+            companyId: companyId,
+          ),
+        ),
+      child: EditPurposeView(
+        userEmail: userEmail,
+        companyId: companyId,
+      ),
+    );
   }
 }
 
 class EditPurposeView extends StatefulWidget {
-  const EditPurposeView({super.key});
+  const EditPurposeView({
+    super.key,
+    required this.userEmail,
+    required this.companyId,
+  });
+
+  final String userEmail;
+  final String companyId;
 
   @override
   State<EditPurposeView> createState() => _EditPurposeViewState();
@@ -28,13 +92,20 @@ class _EditPurposeViewState extends State<EditPurposeView> {
   late TextEditingController warningDescriptionController;
   late TextEditingController retentionPeriodController;
 
+  late String unitSelected;
+  late bool isActivated;
+
+  final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
+
   @override
   void initState() {
     super.initState();
-
     descriptionController = TextEditingController();
     warningDescriptionController = TextEditingController();
     retentionPeriodController = TextEditingController();
+
+    unitSelected = 'd';
+    isActivated = true;
   }
 
   @override
@@ -46,169 +117,287 @@ class _EditPurposeViewState extends State<EditPurposeView> {
     super.dispose();
   }
 
+  void _initialData(PurposeModel purpose) {
+    if (purpose != PurposeModel.empty()) {
+      if (purpose.description.isNotEmpty) {
+        descriptionController = TextEditingController(
+          text: purpose.description.first.text,
+        );
+      }
+      if (purpose.warningDescription.isNotEmpty) {
+        warningDescriptionController = TextEditingController(
+          text: purpose.warningDescription.first.text,
+        );
+      }
+
+      retentionPeriodController = TextEditingController(
+        text: purpose.retentionPeriod.toString(),
+      );
+
+      unitSelected = purpose.periodUnit.isNotEmpty ? purpose.periodUnit : 'd';
+
+      isActivated = purpose.status == ActiveStatus.active;
+    }
+  }
+
+  void _setPeriodUnit(String? value) {
+    if (value != null) {
+      setState(() {
+        unitSelected = value;
+      });
+    }
+  }
+
+  void _setActiveStatus(bool value) {
+    setState(() {
+      isActivated = value;
+    });
+  }
+
+  void _savePurpose() {
+    if (_formKey.currentState!.validate()) {
+      final editPurposeBloc = BlocProvider.of<EditPurposeBloc>(
+        context,
+        listen: false,
+      );
+
+      if (editPurposeBloc.state is GotCurrentPurpose) {
+        final purpose = (editPurposeBloc.state as GotCurrentPurpose).purpose;
+        _updatePurpose(purpose);
+      }
+    }
+  }
+
+  void _updatePurpose(PurposeModel initialPurpose) {
+    final description = [
+      LocalizedModel(
+        language: 'en-US',
+        text: descriptionController.text,
+      ),
+    ];
+    final warningDescription = [
+      LocalizedModel(
+        language: 'en-US',
+        text: warningDescriptionController.text,
+      ),
+    ];
+    final retentionPeriod = int.parse(retentionPeriodController.text);
+    final periodUnit = unitSelected;
+    final status = isActivated ? ActiveStatus.active : ActiveStatus.inactive;
+
+    PurposeModel updated = initialPurpose != PurposeModel.empty()
+        ? initialPurpose
+        : PurposeModel.empty().copyWith(
+            createdBy: widget.userEmail,
+            createdDate: DateTime.now(),
+          );
+
+    updated = updated.copyWith(
+      description: description,
+      warningDescription: warningDescription,
+      retentionPeriod: retentionPeriod,
+      periodUnit: periodUnit,
+      status: status,
+      updatedBy: widget.userEmail,
+      updatedDate: DateTime.now(),
+    );
+
+    context.read<EditPurposeBloc>().add(UpdateCurrentPurposeEvent(
+        purpose: updated, companyId: widget.companyId));
+  }
+
+  void _goBack() {
+    final editPurposeBloc = BlocProvider.of<EditPurposeBloc>(
+      context,
+      listen: false,
+    );
+
+    if (editPurposeBloc.state is GotCurrentPurpose) {
+      final purpose = (editPurposeBloc.state as GotCurrentPurpose).purpose;
+
+      context.read<PurposeBloc>().add(UpdatePurposeEvent(purpose: purpose));
+    }
+
+    context.pop();
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: _buildAppBar(context),
-      body: SingleChildScrollView(
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: <Widget>[
-            const SizedBox(height: UiConfig.lineSpacing),
-            Container(
-              padding: const EdgeInsets.all(UiConfig.defaultPaddingSpacing),
-              decoration: BoxDecoration(
-                color: Theme.of(context).colorScheme.onBackground,
-                borderRadius: BorderRadius.circular(10.0),
-              ),
-              margin: const EdgeInsets.symmetric(
-                horizontal: UiConfig.defaultPaddingSpacing,
-              ),
-              child: _buildPurposeForm(context),
-            ),
-            const SizedBox(height: UiConfig.lineSpacing),
-            Container(
-              padding: const EdgeInsets.all(UiConfig.defaultPaddingSpacing),
-              decoration: BoxDecoration(
-                color: Theme.of(context).colorScheme.onBackground,
-                borderRadius: BorderRadius.circular(10.0),
-              ),
-              margin: const EdgeInsets.symmetric(
-                horizontal: UiConfig.defaultPaddingSpacing,
-              ),
-              child: _buildConfiguration(context),
-            ),
-            const SizedBox(height: UiConfig.lineSpacing),
-          ],
+      appBar: PdpaAppBar(
+        leadingIcon: CustomIconButton(
+          onPressed: _goBack,
+          icon: Ionicons.chevron_back_outline,
+          iconColor: Theme.of(context).colorScheme.primary,
+          backgroundColor: Theme.of(context).colorScheme.onBackground,
         ),
-      ),
-    );
-  }
-
-  AppBar _buildAppBar(BuildContext context) {
-    return AppBar(
-      automaticallyImplyLeading: false,
-      title: Row(
-        children: <Widget>[
+        title: Text(
+          tr('masterData.cm.purpose.edit'),
+          style: Theme.of(context).textTheme.titleLarge,
+        ),
+        actions: [
           CustomIconButton(
-            onPressed: () {
-              context.pop();
-            },
-            icon: Ionicons.chevron_back_outline,
+            onPressed: _savePurpose,
+            icon: Ionicons.save_outline,
             iconColor: Theme.of(context).colorScheme.primary,
             backgroundColor: Theme.of(context).colorScheme.onBackground,
           ),
-          const SizedBox(width: UiConfig.appBarTitleSpacing),
-          Text(
-            'Edit Purpose',
-            style: Theme.of(context).textTheme.titleLarge,
+        ],
+      ),
+      body: BlocConsumer<EditPurposeBloc, EditPurposeState>(
+        listener: (context, state) {
+          if (state is GotCurrentPurpose) {
+            _initialData(state.purpose);
+          }
+        },
+        builder: (context, state) {
+          if (state is GotCurrentPurpose) {
+            return SingleChildScrollView(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: <Widget>[
+                  const SizedBox(height: UiConfig.lineSpacing),
+                  Container(
+                    padding: const EdgeInsets.all(
+                      UiConfig.defaultPaddingSpacing,
+                    ),
+                    decoration: BoxDecoration(
+                      color: Theme.of(context).colorScheme.onBackground,
+                      borderRadius: BorderRadius.circular(10.0),
+                    ),
+                    margin: const EdgeInsets.symmetric(
+                      horizontal: UiConfig.defaultPaddingSpacing,
+                    ),
+                    child: _buildPurposeForm(context),
+                  ),
+                  const SizedBox(height: UiConfig.lineSpacing),
+                  Visibility(
+                    visible: state.purpose != PurposeModel.empty(),
+                    child: _buildConfigurationInfo(context, state.purpose),
+                  ),
+                ],
+              ),
+            );
+          }
+          if (state is EditPurposeError) {
+            return Center(
+              child: Text(
+                state.message,
+                style: Theme.of(context).textTheme.bodyMedium,
+              ),
+            );
+          }
+          return const Center(
+            child: CircularProgressIndicator(),
+          );
+        },
+      ),
+    );
+  }
+
+  Form _buildPurposeForm(BuildContext context) {
+    return Form(
+      key: _formKey,
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: <Widget>[
+          Row(
+            children: <Widget>[
+              Text(
+                tr('masterData.cm.purpose.list'),
+                style: Theme.of(context).textTheme.titleLarge,
+              ),
+            ],
+          ),
+          const SizedBox(height: UiConfig.lineSpacing),
+          TitleRequiredText(
+            text: tr('masterData.cm.purpose.description'),
+            required: true,
+          ),
+          CustomTextField(
+            controller: descriptionController,
+            hintText: tr('masterData.cm.purpose.descriptionHint'),
+            required: true,
+          ),
+          const SizedBox(height: UiConfig.lineSpacing),
+          TitleRequiredText(
+            text: tr('masterData.cm.purpose.warningDescription'),
+          ),
+          CustomTextField(
+            controller: warningDescriptionController,
+            hintText: tr('masterData.cm.purpose.warningDescriptionHint'),
+          ),
+          const SizedBox(height: UiConfig.lineSpacing),
+          TitleRequiredText(
+            text: tr('masterData.cm.purpose.retentionPeriod'),
+            required: true,
+          ),
+          CustomTextField(
+            controller: retentionPeriodController,
+            hintText: tr('masterData.cm.purpose.retentionPeriodHint'),
+            keyboardType: TextInputType.number,
+            required: true,
+          ),
+          const SizedBox(height: UiConfig.lineSpacing),
+          TitleRequiredText(
+            text: tr('masterData.cm.purpose.periodUnit'),
+          ),
+          CustomDropdownButton<String>(
+            value: unitSelected,
+            items: periodUnits.map(
+              (unit) {
+                return DropdownMenuItem(
+                  value: unit[0].toLowerCase(),
+                  child: Text(
+                    unit,
+                    style: Theme.of(context).textTheme.bodyMedium,
+                  ),
+                );
+              },
+            ).toList(),
+            onSelected: _setPeriodUnit,
           ),
         ],
       ),
-      elevation: 1.0,
-      shadowColor: Theme.of(context).colorScheme.background,
-      surfaceTintColor: Theme.of(context).colorScheme.onBackground,
-      backgroundColor: Theme.of(context).colorScheme.onBackground,
     );
   }
 
-  Column _buildPurposeForm(BuildContext context) {
+  Column _buildConfigurationInfo(
+    BuildContext context,
+    PurposeModel purpose,
+  ) {
     return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
       children: <Widget>[
-        Row(
-          children: <Widget>[
-            Text(
-              'Purpose',
-              style: Theme.of(context).textTheme.titleLarge,
+        Container(
+          padding: const EdgeInsets.all(
+            UiConfig.defaultPaddingSpacing,
+          ),
+          decoration: BoxDecoration(
+            color: Theme.of(context).colorScheme.onBackground,
+            borderRadius: BorderRadius.circular(10.0),
+          ),
+          margin: const EdgeInsets.symmetric(
+            horizontal: UiConfig.defaultPaddingSpacing,
+          ),
+          child: ConfigurationInfo(
+            configBody: Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: <Widget>[
+                Text(
+                  tr('masterData.etc.active'),
+                  style: Theme.of(context).textTheme.bodyMedium,
+                ),
+                CustomSwitchButton(
+                  value: isActivated,
+                  onChanged: _setActiveStatus,
+                ),
+              ],
             ),
-          ],
+            updatedBy: purpose.updatedBy,
+            updatedDate: purpose.updatedDate,
+          ),
         ),
         const SizedBox(height: UiConfig.lineSpacing),
-        const TitleRequiredText(
-          text: 'Description',
-          required: true,
-        ),
-        CustomTextField(
-          controller: descriptionController,
-          hintText: 'Enter description',
-        ),
-        const SizedBox(height: UiConfig.lineSpacing),
-        const TitleRequiredText(text: 'Warning Description'),
-        CustomTextField(
-          controller: warningDescriptionController,
-          hintText: 'Enter warning description',
-        ),
-        const SizedBox(height: UiConfig.lineSpacing),
-        const TitleRequiredText(text: 'Retention Period'),
-        CustomTextField(
-          controller: retentionPeriodController,
-          hintText: 'Enter retention period',
-          keyboardType: TextInputType.number,
-        ),
-        const SizedBox(height: UiConfig.lineSpacing),
-        const TitleRequiredText(text: 'Period Unit'),
-        const CustomTextField(
-          hintText: 'Enter period unit',
-        ),
-      ],
-    );
-  }
-
-  Column _buildConfiguration(BuildContext context) {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: <Widget>[
-        Row(
-          children: <Widget>[
-            Text(
-              'Configuration',
-              style: Theme.of(context).textTheme.titleLarge,
-            ),
-          ],
-        ),
-        const SizedBox(height: UiConfig.lineSpacing),
-        Row(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          children: <Widget>[
-            Text(
-              'Active',
-              style: Theme.of(context).textTheme.bodyMedium,
-            ),
-            CustomSwitchButton(
-              value: false,
-              onChanged: (value) {},
-            ),
-          ],
-        ),
-        Divider(
-          color: Theme.of(context).colorScheme.outlineVariant.withOpacity(0.5),
-        ),
-        const SizedBox(height: UiConfig.lineSpacing),
-        Row(
-          children: <Widget>[
-            Text(
-              'Update Info',
-              style: Theme.of(context).textTheme.titleLarge,
-            ),
-          ],
-        ),
-        const SizedBox(height: UiConfig.lineSpacing),
-        Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: <Widget>[
-            Text(
-              'admin@gmail.com',
-              style: Theme.of(context).textTheme.bodyMedium,
-            ),
-            const SizedBox(height: UiConfig.textSpacing),
-            Text(
-              '30/09/2023 12:00:00',
-              style: Theme.of(context).textTheme.bodyMedium,
-            ),
-            const SizedBox(height: UiConfig.textSpacing),
-          ],
-        ),
       ],
     );
   }

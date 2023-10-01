@@ -19,7 +19,7 @@ class ConsentMaster extends StatelessWidget {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: <Widget>[
           Text(
-            tr('masterdata.consentmasterdata.consents'), //!!!
+            tr('masterData.cm.consents'), //!!!
             style: Theme.of(context)
                 .textTheme
                 .titleMedium
@@ -42,7 +42,7 @@ class ConsentMaster extends StatelessWidget {
                 children: <Widget>[
                   Expanded(
                     child: Text(
-                      tr('masterdata.consentmasterdata.customfields.name'), //!!!
+                      tr('masterData.cm.customfields.name'), //!!!
                       style: Theme.of(context).textTheme.bodySmall?.copyWith(
                           color: Theme.of(context).colorScheme.secondary),
                     ),
@@ -76,7 +76,7 @@ class ConsentMaster extends StatelessWidget {
                 children: <Widget>[
                   Expanded(
                     child: Text(
-                      tr('masterdata.consentmasterdata.purpose'), //!!!
+                      tr('masterData.cm.purpose.list'), //!!!
                       style: Theme.of(context).textTheme.bodySmall?.copyWith(
                           color: Theme.of(context).colorScheme.secondary),
                     ),
@@ -110,7 +110,7 @@ class ConsentMaster extends StatelessWidget {
                 children: <Widget>[
                   Expanded(
                     child: Text(
-                      tr('masterdata.consentmasterdata.purposecategory.name'), //!!!
+                      tr('masterData.cm.purposeCategory.list'), //!!!
                       style: Theme.of(context).textTheme.bodySmall?.copyWith(
                           color: Theme.of(context).colorScheme.secondary),
                     ),

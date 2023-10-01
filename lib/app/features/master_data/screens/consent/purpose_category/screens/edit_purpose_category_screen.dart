@@ -3,9 +3,6 @@ import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:ionicons/ionicons.dart';
 import 'package:pdpa/app/config/config.dart';
-import 'package:pdpa/app/features/master_data/routes/master_data_route.dart';
-import 'package:pdpa/app/features/master_data/widgets/master_data_item_card.dart';
-import 'package:pdpa/app/shared/models/localized_text.dart';
 import 'package:pdpa/app/shared/widgets/customs/custom_icon_button.dart';
 
 class EditPurposeCategoryScreen extends StatelessWidget {
@@ -21,7 +18,8 @@ class EditPurposeCategoryView extends StatefulWidget {
   const EditPurposeCategoryView({super.key});
 
   @override
-  State<EditPurposeCategoryView> createState() => _EditPurposeCategoryViewState();
+  State<EditPurposeCategoryView> createState() =>
+      _EditPurposeCategoryViewState();
 }
 
 class _EditPurposeCategoryViewState extends State<EditPurposeCategoryView> {
@@ -55,7 +53,7 @@ class _EditPurposeCategoryViewState extends State<EditPurposeCategoryView> {
     );
   }
 
-   AppBar _buildAppBar(BuildContext context) {
+  AppBar _buildAppBar(BuildContext context) {
     return AppBar(
       automaticallyImplyLeading: false,
       title: Row(
@@ -70,7 +68,7 @@ class _EditPurposeCategoryViewState extends State<EditPurposeCategoryView> {
           ),
           const SizedBox(width: UiConfig.appBarTitleSpacing),
           Text(
-            tr('masterdata.consentmasterdata.purposecategory.create'), //!
+            tr('masterData.cm.purposecategory.create'), //!
             style: Theme.of(context).textTheme.titleLarge,
           ),
         ],

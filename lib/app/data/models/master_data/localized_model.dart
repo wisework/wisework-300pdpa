@@ -1,18 +1,18 @@
 import 'package:equatable/equatable.dart';
 import 'package:pdpa/app/shared/utils/typedef.dart';
 
-class LocalizedText extends Equatable {
+class LocalizedModel extends Equatable {
   final String language;
   final String text;
 
-  const LocalizedText({
+  const LocalizedModel({
     required this.language,
     required this.text,
   });
 
-  const LocalizedText.empty() : this(language: '', text: '');
+  const LocalizedModel.empty() : this(language: '', text: '');
 
-  LocalizedText.fromMap(DataMap map)
+  LocalizedModel.fromMap(DataMap map)
       : this(
           language: map['language'] as String,
           text: map['text'] as String,
@@ -23,11 +23,11 @@ class LocalizedText extends Equatable {
         'text': text,
       };
 
-  LocalizedText copyWith({
+  LocalizedModel copyWith({
     String? language,
     String? text,
   }) {
-    return LocalizedText(
+    return LocalizedModel(
       language: language ?? this.language,
       text: text ?? this.text,
     );

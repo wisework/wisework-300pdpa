@@ -1,7 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:go_router/go_router.dart';
 import 'package:pdpa/app/config/config.dart';
-import 'package:pdpa/app/features/master_data/routes/master_data_route.dart';
 import 'package:pdpa/app/shared/utils/constants.dart';
 import 'package:pdpa/app/shared/widgets/material_ink_well.dart';
 
@@ -11,11 +9,13 @@ class MasterDataItemCard extends StatelessWidget {
     required this.title,
     required this.subtitle,
     required this.status,
+    required this.onTap,
   });
 
   final String title;
   final String subtitle;
   final ActiveStatus status;
+  final VoidCallback onTap;
 
   @override
   Widget build(BuildContext context) {
@@ -23,9 +23,7 @@ class MasterDataItemCard extends StatelessWidget {
       mainAxisSize: MainAxisSize.min,
       children: <Widget>[
         MaterialInkWell(
-          onTap: () {
-            context.push(MasterDataRoute.editPurpose.path);
-          },
+          onTap: onTap,
           child: Padding(
             padding: const EdgeInsets.all(UiConfig.defaultPaddingSpacing),
             child: Row(

@@ -9,6 +9,7 @@ import 'app/config/firebase_options.dart';
 import 'app/config/router/global_router.dart';
 import 'app/config/themes/pdpa_theme_data.dart';
 import 'app/features/authentication/bloc/sign_in/sign_in_bloc.dart';
+import 'app/features/master_data/bloc/consent/purpose/purpose_bloc.dart';
 import 'app/injection.dart';
 import 'app/shared/drawers/drawer_menu.dart';
 
@@ -42,6 +43,9 @@ class MyApp extends StatelessWidget {
         BlocProvider<DrawerBloc>(
           create: (context) => serviceLocator<DrawerBloc>()
             ..add(SelectMenuDrawerEvent(menu: drawerMenu.first)),
+        ),
+        BlocProvider<PurposeBloc>(
+          create: (context) => serviceLocator<PurposeBloc>(),
         ),
       ],
       child: MaterialApp.router(

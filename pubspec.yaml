@@ -45,6 +45,7 @@ dependencies:
   dartz: ^0.10.1
   uuid: ^4.0.0
   easy_localization: ^3.0.3
+  intl: ^0.18.1
 
   # Router package
   go_router: ^10.2.0
@@ -55,6 +56,10 @@ dependencies:
 
   # Animation packages
   flutter_animate: ^4.2.0+1
+  loading_animation_widget: ^1.2.0+4
+
+  # Widget packages
+  dropdown_button2: ^2.3.9
 
   # Test packages
   mocktail: ^1.0.0

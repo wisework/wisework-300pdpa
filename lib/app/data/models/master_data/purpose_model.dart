@@ -1,8 +1,9 @@
 import 'package:equatable/equatable.dart';
 
-import 'package:pdpa/app/shared/models/localized_text.dart';
 import 'package:pdpa/app/shared/utils/constants.dart';
 import 'package:pdpa/app/shared/utils/typedef.dart';
+
+import 'localized_model.dart';
 
 class PurposeModel extends Equatable {
   const PurposeModel({
@@ -19,8 +20,8 @@ class PurposeModel extends Equatable {
   });
 
   final String id;
-  final List<LocalizedText> description;
-  final List<LocalizedText> warningDescription;
+  final List<LocalizedModel> description;
+  final List<LocalizedModel> warningDescription;
   final int retentionPeriod;
   final String periodUnit;
   final ActiveStatus status;
@@ -46,14 +47,14 @@ class PurposeModel extends Equatable {
   PurposeModel.fromMap(DataMap map)
       : this(
           id: map['id'] as String,
-          description: List<LocalizedText>.from(
-            (map['description'] as List<dynamic>).map<LocalizedText>(
-              (item) => LocalizedText.fromMap(item as DataMap),
+          description: List<LocalizedModel>.from(
+            (map['description'] as List<dynamic>).map<LocalizedModel>(
+              (item) => LocalizedModel.fromMap(item as DataMap),
             ),
           ),
-          warningDescription: List<LocalizedText>.from(
-            (map['warningDescription'] as List<dynamic>).map<LocalizedText>(
-              (item) => LocalizedText.fromMap(item as DataMap),
+          warningDescription: List<LocalizedModel>.from(
+            (map['warningDescription'] as List<dynamic>).map<LocalizedModel>(
+              (item) => LocalizedModel.fromMap(item as DataMap),
             ),
           ),
           retentionPeriod: map['retentionPeriod'] as int,
@@ -87,8 +88,8 @@ class PurposeModel extends Equatable {
 
   PurposeModel copyWith({
     String? id,
-    List<LocalizedText>? description,
-    List<LocalizedText>? warningDescription,
+    List<LocalizedModel>? description,
+    List<LocalizedModel>? warningDescription,
     int? retentionPeriod,
     String? periodUnit,
     ActiveStatus? status,

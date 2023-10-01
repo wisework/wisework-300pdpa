@@ -1,8 +1,8 @@
 {
     "app": {
         "name": "PDPA Management Platform",
-        "changeLang": "Change language",
-        "feature": {
+        "changeLang": "เปลี่ยนภาษา",
+        "features": {
             "consentmanagement": "Consent Management",
             "consentforms": "Consent Forms",
             "userconsents": "User Consents",
@@ -31,31 +31,54 @@
             "tagline": "What you are looking for today"
         }
     },
-    "masterdata" : {
-        "consentmasterdata": {
+    "masterData": {
+        "cm": {
             "consents": "Consents",
             "customfields": {
-                "name" : "Custom Fields",
-                "edit" : "Edit Custom Fields",
-                "add" : "Add Custom Fields",
-                "delete" : "Delete",
-                "title" : "Title",
-                "placeholder" : "Place Holder",
-                "customfieldtype" : "Custom Field Type",
-                "lenghtlimit" : "Lenght Limit",
-                "maxline" : "Max Line",
-                "minline" : "Min Line"
+                "name": "Custom Fields",
+                "edit": "Edit Custom Fields",
+                "create": "Create Custom Fields",
+                "delete": "Delete",
+                "title": "Title",
+                "placeholder": "Place Holder",
+                "customfieldtype": "Custom Field Type",
+                "lenghtlimit": "Lenght Limit",
+                "maxline": "Max Line",
+                "minline": "Min Line"
             },
-            "purpose": "Purpose",
-            "purposecategory": "Purpose Catogory"
+            "purpose": {
+                "title": "Purpose",
+                "list": "Purposes",
+                "create": "Create Purpose",
+                "edit": "Edit Purpose",
+                "description": "Description",
+                "descriptionHint": "Enter description",
+                "warningDescription": "Warning Description",
+                "warningDescriptionHint": "Enter warning description",
+                "retentionPeriod": "Retention Period",
+                "retentionPeriodHint": "Enter retention period",
+                "periodUnit": "Period Unit"
+            },
+            "purposeCategory": {
+                "title": "Purpose Category",
+                "list": "Purpose Categories",
+                "create": "Create Purpose Category",
+                "edit": "Edit Purpose Category"
+            }
         },
-        "datasubjectrightmasterdata": {
-            "datasubjectright": "Data Subject Right",            
+        "dsr": {
+            "datasubjectright": "Data Subject Right",
             "request": "Request",
             "rejections": "Rejections",
             "reason": "Reason",
             "requestrejects": "Request rejects",
             "requestreasons": "Request reasons"
+        },
+        "etc": {
+            "fieldCannotEmpty": "Field cannot be empty",
+            "active": "Active",
+            "configuration": "Configuration",
+            "updateInfo": "Update Info"
         }
-    }    
+    }
 }

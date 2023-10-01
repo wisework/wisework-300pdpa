@@ -49,7 +49,7 @@ class MasterDataScreen extends StatelessWidget {
             backgroundColor: Theme.of(context).colorScheme.onBackground,
           ),
           const SizedBox(width: 5.0),
-          Text(tr('app.feature.masterdata'))
+          Text(tr('app.features.masterdata'))
         ],
       ),
       elevation: 1.0,
