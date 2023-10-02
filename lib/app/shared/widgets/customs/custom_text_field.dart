@@ -8,6 +8,7 @@ class CustomTextField extends StatefulWidget {
     this.hintText,
     this.suffix,
     this.keyboardType = TextInputType.text,
+    this.onChanged,
     this.required = false,
     this.errorText,
   });
@@ -16,6 +17,7 @@ class CustomTextField extends StatefulWidget {
   final String? hintText;
   final Widget? suffix;
   final TextInputType keyboardType;
+  final Function(String value)? onChanged;
   final bool required;
   final String? errorText;
 
@@ -38,12 +40,15 @@ class _CustomTextFieldState extends State<CustomTextField> {
             controller: widget.controller,
             decoration: _buildInputDecoration(context),
             keyboardType: widget.keyboardType,
+            onChanged: widget.onChanged,
             validator: _validateInput,
+            autovalidateMode: AutovalidateMode.onUserInteraction,
           )
         : TextField(
             controller: widget.controller,
             decoration: _buildInputDecoration(context),
             keyboardType: widget.keyboardType,
+            onChanged: widget.onChanged,
           );
   }
 

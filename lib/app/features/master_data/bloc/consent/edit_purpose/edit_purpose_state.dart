@@ -40,7 +40,14 @@ class GotCurrentPurpose extends EditPurposeState {
 }
 
 class UpdatingCurrentPurpose extends EditPurposeState {
-  const UpdatingCurrentPurpose(this.purpose);
+  const UpdatingCurrentPurpose();
+
+  @override
+  List<Object> get props => [];
+}
+
+class UpdatedCurrentPurpose extends EditPurposeState {
+  const UpdatedCurrentPurpose(this.purpose);
 
   final PurposeModel purpose;
 

@@ -38,6 +38,8 @@ class EditPurposeBloc extends Bloc<EditPurposeEvent, EditPurposeState> {
       event.companyId,
     );
 
+    await Future.delayed(const Duration(milliseconds: 800));
+
     result.fold(
       (failure) => emit(EditPurposeError(failure.errorMessage)),
       (purpose) => emit(GotCurrentPurpose(purpose)),
@@ -53,16 +55,18 @@ class EditPurposeBloc extends Bloc<EditPurposeEvent, EditPurposeState> {
       return;
     }
 
-    emit(UpdatingCurrentPurpose(event.purpose));
+    emit(const UpdatingCurrentPurpose());
 
     final result = await _masterDataRepository.updatePurpose(
       event.purpose,
       event.companyId,
     );
 
+    await Future.delayed(const Duration(milliseconds: 800));
+
     result.fold(
       (failure) => emit(EditPurposeError(failure.errorMessage)),
-      (purpose) => emit(GotCurrentPurpose(purpose)),
+      (purpose) => emit(UpdatedCurrentPurpose(purpose)),
     );
   }
 }

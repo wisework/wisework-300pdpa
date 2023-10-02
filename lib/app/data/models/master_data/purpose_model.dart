@@ -112,6 +112,18 @@ class PurposeModel extends Equatable {
     );
   }
 
+  PurposeModel toCreated(String email, DateTime date) => copyWith(
+        createdBy: email,
+        createdDate: date,
+        updatedBy: email,
+        updatedDate: date,
+      );
+
+  PurposeModel toUpdated(String email, DateTime date) => copyWith(
+        updatedBy: email,
+        updatedDate: date,
+      );
+
   @override
   List<Object> get props {
     return [

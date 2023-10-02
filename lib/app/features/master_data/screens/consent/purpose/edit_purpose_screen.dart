@@ -1,3 +1,4 @@
+import 'package:bot_toast/bot_toast.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -18,7 +19,8 @@ import 'package:pdpa/app/shared/widgets/customs/custom_dropdown_button.dart';
 import 'package:pdpa/app/shared/widgets/customs/custom_icon_button.dart';
 import 'package:pdpa/app/shared/widgets/customs/custom_switch_button.dart';
 import 'package:pdpa/app/shared/widgets/customs/custom_text_field.dart';
-import 'package:pdpa/app/shared/widgets/loading_indicator.dart';
+import 'package:pdpa/app/shared/widgets/screens/error_message_screen.dart';
+import 'package:pdpa/app/shared/widgets/screens/loading_screen.dart';
 import 'package:pdpa/app/shared/widgets/templates/pdpa_app_bar.dart';
 import 'package:pdpa/app/shared/widgets/title_required_text.dart';
 
@@ -41,10 +43,10 @@ class _EditPurposeScreenState extends State<EditPurposeScreen> {
   void initState() {
     super.initState();
 
-    _getUserInfo();
+    _initialData();
   }
 
-  void _getUserInfo() {
+  void _initialData() {
     final signInBloc = BlocProvider.of<SignInBloc>(context, listen: false);
     if (signInBloc.state is SignedInUser) {
       final signedIn = signInBloc.state as SignedInUser;
@@ -65,8 +67,37 @@ class _EditPurposeScreenState extends State<EditPurposeScreen> {
             companyId: currentUser.currentCompany,
           ),
         ),
-      child: EditPurposeView(
-        currentUser: currentUser,
+      child: BlocBuilder<EditPurposeBloc, EditPurposeState>(
+        builder: (context, state) {
+          if (state is GotCurrentPurpose) {
+            return EditPurposeView(
+              initialPurpose: state.purpose,
+              currentUser: currentUser,
+            );
+          }
+          if (state is UpdatedCurrentPurpose) {
+            BotToast.showText(
+              text: 'Save successfully',
+              contentColor:
+                  Theme.of(context).colorScheme.secondary.withOpacity(0.75),
+              borderRadius: BorderRadius.circular(8.0),
+              textStyle: Theme.of(context)
+                  .textTheme
+                  .bodyMedium!
+                  .copyWith(color: Theme.of(context).colorScheme.onPrimary),
+              duration: const Duration(seconds: 2),
+            );
+
+            return EditPurposeView(
+              initialPurpose: state.purpose,
+              currentUser: currentUser,
+            );
+          }
+          if (state is EditPurposeError) {
+            return ErrorMessageScreen(message: state.message);
+          }
+          return const LoadingScreen();
+        },
       ),
     );
   }
@@ -75,9 +106,11 @@ class _EditPurposeScreenState extends State<EditPurposeScreen> {
 class EditPurposeView extends StatefulWidget {
   const EditPurposeView({
     super.key,
+    required this.initialPurpose,
     required this.currentUser,
   });
 
+  final PurposeModel initialPurpose;
   final UserModel currentUser;
 
   @override
@@ -85,6 +118,8 @@ class EditPurposeView extends StatefulWidget {
 }
 
 class _EditPurposeViewState extends State<EditPurposeView> {
+  late PurposeModel purpose;
+
   late TextEditingController descriptionController;
   late TextEditingController warningDescriptionController;
   late TextEditingController retentionPeriodController;
@@ -97,12 +132,8 @@ class _EditPurposeViewState extends State<EditPurposeView> {
   @override
   void initState() {
     super.initState();
-    descriptionController = TextEditingController();
-    warningDescriptionController = TextEditingController();
-    retentionPeriodController = TextEditingController();
 
-    unitSelected = 'd';
-    isActivated = true;
+    _initialData();
   }
 
   @override
@@ -114,7 +145,9 @@ class _EditPurposeViewState extends State<EditPurposeView> {
     super.dispose();
   }
 
-  void _initialData(PurposeModel purpose) {
+  void _initialData() {
+    purpose = widget.initialPurpose;
+
     if (purpose != PurposeModel.empty()) {
       if (purpose.description.isNotEmpty) {
         descriptionController = TextEditingController(
@@ -134,6 +167,49 @@ class _EditPurposeViewState extends State<EditPurposeView> {
       unitSelected = purpose.periodUnit.isNotEmpty ? purpose.periodUnit : 'd';
 
       isActivated = purpose.status == ActiveStatus.active;
+    } else {
+      descriptionController = TextEditingController();
+      warningDescriptionController = TextEditingController();
+      retentionPeriodController = TextEditingController();
+
+      unitSelected = 'd';
+      isActivated = true;
+    }
+  }
+
+  void _setDescription(String? value) {
+    setState(() {
+      final description = [
+        LocalizedModel(
+          language: 'en-US',
+          text: descriptionController.text,
+        ),
+      ];
+
+      purpose = purpose.copyWith(description: description);
+    });
+  }
+
+  void _setWarningDescription(String? value) {
+    setState(() {
+      final warningDescription = [
+        LocalizedModel(
+          language: 'en-US',
+          text: warningDescriptionController.text,
+        ),
+      ];
+
+      purpose = purpose.copyWith(warningDescription: warningDescription);
+    });
+  }
+
+  void _setRetentionPeriod(String? value) {
+    if (value != null && value.isNotEmpty) {
+      setState(() {
+        final retentionPeriod = int.parse(retentionPeriodController.text);
+
+        purpose = purpose.copyWith(retentionPeriod: retentionPeriod);
+      });
     }
   }
 
@@ -141,6 +217,8 @@ class _EditPurposeViewState extends State<EditPurposeView> {
     if (value != null) {
       setState(() {
         unitSelected = value;
+
+        purpose = purpose.copyWith(periodUnit: unitSelected);
       });
     }
   }
@@ -148,144 +226,93 @@ class _EditPurposeViewState extends State<EditPurposeView> {
   void _setActiveStatus(bool value) {
     setState(() {
       isActivated = value;
+
+      final status = isActivated ? ActiveStatus.active : ActiveStatus.inactive;
+
+      purpose = purpose.copyWith(status: status);
     });
   }
 
   void _savePurpose() {
     if (_formKey.currentState!.validate()) {
-      final editPurposeBloc = BlocProvider.of<EditPurposeBloc>(
-        context,
-        listen: false,
-      );
+      purpose = widget.initialPurpose != PurposeModel.empty()
+          ? purpose.toUpdated(
+              widget.currentUser.email,
+              DateTime.now(),
+            )
+          : purpose.toCreated(
+              widget.currentUser.email,
+              DateTime.now(),
+            );
 
-      if (editPurposeBloc.state is GotCurrentPurpose) {
-        final purpose = (editPurposeBloc.state as GotCurrentPurpose).purpose;
-        _updatePurpose(purpose);
-      }
+      context.read<EditPurposeBloc>().add(UpdateCurrentPurposeEvent(
+          purpose: purpose, companyId: widget.currentUser.currentCompany));
     }
-  }
-
-  void _updatePurpose(PurposeModel initialPurpose) {
-    final description = [
-      LocalizedModel(
-        language: 'en-US',
-        text: descriptionController.text,
-      ),
-    ];
-    final warningDescription = [
-      LocalizedModel(
-        language: 'en-US',
-        text: warningDescriptionController.text,
-      ),
-    ];
-    final retentionPeriod = int.parse(retentionPeriodController.text);
-    final periodUnit = unitSelected;
-    final status = isActivated ? ActiveStatus.active : ActiveStatus.inactive;
-
-    PurposeModel updated = initialPurpose != PurposeModel.empty()
-        ? initialPurpose
-        : PurposeModel.empty().copyWith(
-            createdBy: widget.currentUser.email,
-            createdDate: DateTime.now(),
-          );
-
-    updated = updated.copyWith(
-      description: description,
-      warningDescription: warningDescription,
-      retentionPeriod: retentionPeriod,
-      periodUnit: periodUnit,
-      status: status,
-      updatedBy: widget.currentUser.email,
-      updatedDate: DateTime.now(),
-    );
-
-    context.read<EditPurposeBloc>().add(UpdateCurrentPurposeEvent(
-        purpose: updated, companyId: widget.currentUser.currentCompany));
-  }
-
-  void _goBack() {
-    final editPurposeBloc = BlocProvider.of<EditPurposeBloc>(
-      context,
-      listen: false,
-    );
-
-    if (editPurposeBloc.state is GotCurrentPurpose) {
-      final purpose = (editPurposeBloc.state as GotCurrentPurpose).purpose;
-
-      context.read<PurposeBloc>().add(UpdatePurposeEvent(purpose: purpose));
-    }
-
-    context.pop();
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: PdpaAppBar(
-        leadingIcon: CustomIconButton(
-          onPressed: _goBack,
-          icon: Ionicons.chevron_back_outline,
-          iconColor: Theme.of(context).colorScheme.primary,
-          backgroundColor: Theme.of(context).colorScheme.onBackground,
-        ),
+        leadingIcon: _buildPopButton(widget.initialPurpose),
         title: Text(
           tr('masterData.cm.purpose.edit'),
           style: Theme.of(context).textTheme.titleLarge,
         ),
         actions: [
-          CustomIconButton(
-            onPressed: _savePurpose,
-            icon: Ionicons.save_outline,
-            iconColor: Theme.of(context).colorScheme.primary,
-            backgroundColor: Theme.of(context).colorScheme.onBackground,
-          ),
+          _buildSaveButton(),
         ],
       ),
-      body: BlocConsumer<EditPurposeBloc, EditPurposeState>(
-        listener: (context, state) {
-          if (state is GotCurrentPurpose) {
-            _initialData(state.purpose);
-          }
-        },
-        builder: (context, state) {
-          if (state is GotCurrentPurpose) {
-            return SingleChildScrollView(
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: <Widget>[
-                  const SizedBox(height: UiConfig.lineSpacing),
-                  CustomContainer(
-                    child: _buildPurposeForm(context),
-                  ),
-                  const SizedBox(height: UiConfig.lineSpacing),
-                  Visibility(
-                    visible: state.purpose != PurposeModel.empty(),
-                    child: _buildConfigurationInfo(context, state.purpose),
-                  ),
-                ],
-              ),
-            );
-          }
-          if (state is EditPurposeError) {
-            return CustomContainer(
-              margin: const EdgeInsets.all(UiConfig.defaultPaddingSpacing),
-              child: Center(
-                child: Text(
-                  state.message,
-                  style: Theme.of(context).textTheme.bodyMedium,
-                ),
-              ),
-            );
-          }
-          return const CustomContainer(
-            margin: EdgeInsets.all(UiConfig.defaultPaddingSpacing),
-            child: Center(
-              child: LoadingIndicator(),
+      body: SingleChildScrollView(
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: <Widget>[
+            const SizedBox(height: UiConfig.lineSpacing),
+            CustomContainer(
+              child: _buildPurposeForm(context),
             ),
-          );
-        },
+            const SizedBox(height: UiConfig.lineSpacing),
+            Visibility(
+              visible: widget.initialPurpose != PurposeModel.empty(),
+              child: _buildConfigurationInfo(context, widget.initialPurpose),
+            ),
+          ],
+        ),
       ),
     );
+  }
+
+  CustomIconButton _buildPopButton(PurposeModel purpose) {
+    return CustomIconButton(
+      onPressed: () {
+        if (purpose != PurposeModel.empty()) {
+          context.read<PurposeBloc>().add(UpdatePurposeEvent(purpose: purpose));
+        }
+
+        context.pop();
+      },
+      icon: Ionicons.chevron_back_outline,
+      iconColor: Theme.of(context).colorScheme.primary,
+      backgroundColor: Theme.of(context).colorScheme.onBackground,
+    );
+  }
+
+  Builder _buildSaveButton() {
+    return Builder(builder: (context) {
+      if (purpose != widget.initialPurpose) {
+        return CustomIconButton(
+          onPressed: _savePurpose,
+          icon: Ionicons.save_outline,
+          iconColor: Theme.of(context).colorScheme.primary,
+          backgroundColor: Theme.of(context).colorScheme.onBackground,
+        );
+      }
+      return CustomIconButton(
+        icon: Ionicons.save_outline,
+        iconColor: Theme.of(context).colorScheme.outlineVariant,
+        backgroundColor: Theme.of(context).colorScheme.onBackground,
+      );
+    });
   }
 
   Form _buildPurposeForm(BuildContext context) {
@@ -310,6 +337,7 @@ class _EditPurposeViewState extends State<EditPurposeView> {
           CustomTextField(
             controller: descriptionController,
             hintText: tr('masterData.cm.purpose.descriptionHint'),
+            onChanged: _setDescription,
             required: true,
           ),
           const SizedBox(height: UiConfig.lineSpacing),
@@ -319,6 +347,7 @@ class _EditPurposeViewState extends State<EditPurposeView> {
           CustomTextField(
             controller: warningDescriptionController,
             hintText: tr('masterData.cm.purpose.warningDescriptionHint'),
+            onChanged: _setWarningDescription,
           ),
           const SizedBox(height: UiConfig.lineSpacing),
           TitleRequiredText(
@@ -329,6 +358,7 @@ class _EditPurposeViewState extends State<EditPurposeView> {
             controller: retentionPeriodController,
             hintText: tr('masterData.cm.purpose.retentionPeriodHint'),
             keyboardType: TextInputType.number,
+            onChanged: _setRetentionPeriod,
             required: true,
           ),
           const SizedBox(height: UiConfig.lineSpacing),
