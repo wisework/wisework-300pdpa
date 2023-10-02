@@ -1,10 +1,9 @@
-// ignore_for_file: public_member_api_docs, sort_constructors_first
-import 'dart:convert';
-
 import 'package:equatable/equatable.dart';
 
 import 'package:pdpa/app/shared/utils/constants.dart';
 import 'package:pdpa/app/shared/utils/typedef.dart';
+
+import 'localized_model.dart';
 
 class PurposeModel extends Equatable {
   const PurposeModel({
@@ -13,57 +12,53 @@ class PurposeModel extends Equatable {
     required this.warningDescription,
     required this.retentionPeriod,
     required this.periodUnit,
-    required this.uid,
-    required this.language,
     required this.status,
     required this.createdBy,
     required this.createdDate,
     required this.updatedBy,
     required this.updatedDate,
-    required this.companyId,
   });
 
-  PurposeModel.empty()
-      : this(
-          id: '',
-          description: '',
-          warningDescription: '',
-          retentionPeriod: 0,
-          periodUnit: '',
-          uid: '',
-          language: '',
-          status: ActiveStatus.active,
-          createdBy: '',
-          createdDate: DateTime.fromMillisecondsSinceEpoch(0),
-          updatedBy: '',
-          updatedDate: DateTime.fromMillisecondsSinceEpoch(0),
-          companyId: '',
-        );
-
   final String id;
-  final String description;
-  final String warningDescription;
+  final List<LocalizedModel> description;
+  final List<LocalizedModel> warningDescription;
   final int retentionPeriod;
   final String periodUnit;
-  final String uid;
-  final String language;
-  final String companyId;
   final ActiveStatus status;
   final String createdBy;
   final DateTime createdDate;
   final String updatedBy;
   final DateTime updatedDate;
 
+  PurposeModel.empty()
+      : this(
+          id: '',
+          description: [],
+          warningDescription: [],
+          retentionPeriod: 0,
+          periodUnit: '',
+          status: ActiveStatus.active,
+          createdBy: '',
+          createdDate: DateTime.fromMillisecondsSinceEpoch(0),
+          updatedBy: '',
+          updatedDate: DateTime.fromMillisecondsSinceEpoch(0),
+        );
+
   PurposeModel.fromMap(DataMap map)
       : this(
           id: map['id'] as String,
-          description: map['description'] as String,
-          warningDescription: map['warningDescription'] as String,
+          description: List<LocalizedModel>.from(
+            (map['description'] as List<dynamic>).map<LocalizedModel>(
+              (item) => LocalizedModel.fromMap(item as DataMap),
+            ),
+          ),
+          warningDescription: List<LocalizedModel>.from(
+            (map['warningDescription'] as List<dynamic>).map<LocalizedModel>(
+              (item) => LocalizedModel.fromMap(item as DataMap),
+            ),
+          ),
           retentionPeriod: map['retentionPeriod'] as int,
           periodUnit: map['periodUnit'] as String,
-          uid: map['uid'] as String,
-          language: map['language'] as String,
-          companyId: map['companyId'] as String,
           status: ActiveStatus.values[map['status'] as int],
           createdBy: map['createdBy'] as String,
           createdDate: DateTime.parse(map['createdDate'] as String),
@@ -73,13 +68,11 @@ class PurposeModel extends Equatable {
 
   DataMap toMap() => {
         'id': id,
-        'description': description,
-        'warningDescription': warningDescription,
+        'description': description.map((item) => item.toMap()).toList(),
+        'warningDescription':
+            warningDescription.map((item) => item.toMap()).toList(),
         'retentionPeriod': retentionPeriod,
         'periodUnit': periodUnit,
-        'uid': uid,
-        'language': language,
-        'companyId': companyId,
         'status': status.index,
         'createdBy': createdBy,
         'createdDate': createdDate.toIso8601String(),
@@ -87,26 +80,18 @@ class PurposeModel extends Equatable {
         'updatedDate': updatedDate.toIso8601String(),
       };
 
-  factory PurposeModel.fromJson(String source) =>
-      PurposeModel.fromMap(json.decode(source) as DataMap);
-
-  String toJson() => json.encode(toMap());
-
   factory PurposeModel.fromDocument(FirebaseDocument document) {
-    Map<String, dynamic> response = document.data()!;
+    DataMap response = document.data()!;
     response['id'] = document.id;
     return PurposeModel.fromMap(response);
   }
 
   PurposeModel copyWith({
     String? id,
-    String? description,
-    String? warningDescription,
+    List<LocalizedModel>? description,
+    List<LocalizedModel>? warningDescription,
     int? retentionPeriod,
     String? periodUnit,
-    String? uid,
-    String? language,
-    String? companyId,
     ActiveStatus? status,
     String? createdBy,
     DateTime? createdDate,
@@ -119,9 +104,6 @@ class PurposeModel extends Equatable {
       warningDescription: warningDescription ?? this.warningDescription,
       retentionPeriod: retentionPeriod ?? this.retentionPeriod,
       periodUnit: periodUnit ?? this.periodUnit,
-      uid: uid ?? this.uid,
-      language: language ?? this.language,
-      companyId: companyId ?? this.companyId,
       status: status ?? this.status,
       createdBy: createdBy ?? this.createdBy,
       createdDate: createdDate ?? this.createdDate,
@@ -129,6 +111,18 @@ class PurposeModel extends Equatable {
       updatedDate: updatedDate ?? this.updatedDate,
     );
   }
+
+  PurposeModel toCreated(String email, DateTime date) => copyWith(
+        createdBy: email,
+        createdDate: date,
+        updatedBy: email,
+        updatedDate: date,
+      );
+
+  PurposeModel toUpdated(String email, DateTime date) => copyWith(
+        updatedBy: email,
+        updatedDate: date,
+      );
 
   @override
   List<Object> get props {
@@ -138,9 +132,6 @@ class PurposeModel extends Equatable {
       warningDescription,
       retentionPeriod,
       periodUnit,
-      uid,
-      language,
-      companyId,
       status,
       createdBy,
       createdDate,

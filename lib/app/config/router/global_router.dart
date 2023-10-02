@@ -1,6 +1,7 @@
 import 'package:go_router/go_router.dart';
 import 'package:pdpa/app/features/authentication/routes/authentication_route.dart';
 import 'package:pdpa/app/features/general/routes/general_route.dart';
+import 'package:pdpa/app/features/master_data/routes/master_data_route.dart';
 
 class GlobalRouter {
   static final String initial = AuthenticationRoute.splash.path;
@@ -11,6 +12,7 @@ class GlobalRouter {
       routes: [
         ...AuthenticationRoute.routes,
         ...GeneralRoute.routes,
+        ...MasterDataRoute.routes
       ],
     );
   }

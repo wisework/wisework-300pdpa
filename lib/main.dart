@@ -1,16 +1,15 @@
+import 'package:bot_toast/bot_toast.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:pdpa/app/shared/drawers/bloc/drawer_bloc.dart';
 
 import 'app/config/config.dart';
 import 'app/config/firebase_options.dart';
+import 'app/config/provider/global_bloc_provider.dart';
 import 'app/config/router/global_router.dart';
 import 'app/config/themes/pdpa_theme_data.dart';
-import 'app/features/authentication/bloc/sign_in/sign_in_bloc.dart';
 import 'app/injection.dart';
-import 'app/shared/drawers/drawer_menu.dart';
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -35,17 +34,10 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MultiBlocProvider(
-      providers: [
-        BlocProvider<SignInBloc>(
-          create: (context) => serviceLocator<SignInBloc>(),
-        ),
-        BlocProvider<DrawerBloc>(
-          create: (context) => serviceLocator<DrawerBloc>()
-            ..add(SelectMenuDrawerEvent(menu: drawerMenu.first)),
-        ),
-      ],
+      providers: GlobalBlocProvider.providers,
       child: MaterialApp.router(
         routerConfig: GlobalRouter.router,
+        builder: BotToastInit(),
         localizationsDelegates: context.localizationDelegates,
         supportedLocales: context.supportedLocales,
         locale: context.locale,

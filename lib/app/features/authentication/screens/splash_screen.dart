@@ -67,6 +67,7 @@ class _SplashScreenState extends State<SplashScreen> {
           child: _buildWiseWorkLogo(),
         ),
       ),
+      backgroundColor: Theme.of(context).colorScheme.onBackground,
     );
   }
 

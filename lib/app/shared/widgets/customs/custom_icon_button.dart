@@ -5,7 +5,7 @@ class CustomIconButton extends StatelessWidget {
     super.key,
     this.padding,
     this.borderRadius = 8.0,
-    required this.onPressed,
+    this.onPressed,
     required this.icon,
     this.iconColor,
     this.backgroundColor,
@@ -14,7 +14,7 @@ class CustomIconButton extends StatelessWidget {
 
   final EdgeInsets? padding;
   final double borderRadius;
-  final VoidCallback onPressed;
+  final VoidCallback? onPressed;
   final IconData icon;
   final Color? iconColor;
   final Color? backgroundColor;

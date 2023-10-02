@@ -1,10 +1,11 @@
 import 'package:flutter/material.dart';
-import 'package:pdpa/app/shared/widgets/material_ink_well_button.dart';
+import 'package:pdpa/app/shared/widgets/material_ink_well.dart';
 
 enum CustomButtonType { filled, outlined, text }
 
 class CustomButton extends StatelessWidget {
   const CustomButton({
+    super.key,
     this.width,
     this.height,
     this.padding,
@@ -12,7 +13,6 @@ class CustomButton extends StatelessWidget {
     required this.onPressed,
     this.buttonType = CustomButtonType.filled,
     required this.child,
-    super.key,
   });
 
   final double? width;
@@ -35,8 +35,8 @@ class CustomButton extends StatelessWidget {
               borderRadius: BorderRadius.circular(9.0),
               color: Theme.of(context).colorScheme.primary,
             ),
-            child: MaterialInkWellButton(
-              onPressed: onPressed,
+            child: MaterialInkWell(
+              onTap: onPressed,
               child: Container(
                 width: width,
                 height: height,
@@ -47,8 +47,8 @@ class CustomButton extends StatelessWidget {
           );
         }
         if (buttonType == CustomButtonType.text) {
-          return MaterialInkWellButton(
-            onPressed: onPressed,
+          return MaterialInkWell(
+            onTap: onPressed,
             child: Container(
               width: width,
               height: height,
@@ -57,10 +57,10 @@ class CustomButton extends StatelessWidget {
             ),
           );
         }
-        return MaterialInkWellButton(
+        return MaterialInkWell(
           backgroundColor: Theme.of(context).colorScheme.primary,
           splashColor: Theme.of(context).colorScheme.onPrimary.withOpacity(0.3),
-          onPressed: onPressed,
+          onTap: onPressed,
           child: Container(
             width: width,
             height: height,

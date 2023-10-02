@@ -1,5 +1,6 @@
 import 'package:ionicons/ionicons.dart';
 import 'package:pdpa/app/features/general/routes/general_route.dart';
+import 'package:pdpa/app/features/master_data/routes/master_data_route.dart';
 import 'package:pdpa/app/shared/drawers/models/drawer_menu_models.dart';
 
 final List<DrawerMenuModel> drawerMenu = [
@@ -41,12 +42,12 @@ final List<DrawerMenuModel> drawerMenu = [
     value: 'master_data',
     title: 'Master Data',
     icon: Ionicons.server_outline,
-    route: GeneralRoute.home,
+    route: MasterDataRoute.masterData,
   ),
   DrawerMenuModel(
     value: 'settings',
     title: 'Settings',
     icon: Ionicons.settings_outline,
-    route: GeneralRoute.home,
+    route: GeneralRoute.setting,
   ),
 ];
