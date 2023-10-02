@@ -42,7 +42,7 @@ class ConsentMaster extends StatelessWidget {
                 children: <Widget>[
                   Expanded(
                     child: Text(
-                      tr('masterData.cm.customfields.name'), //!!!
+                      tr('masterData.cm.customfields.list'), //!!!
                       style: Theme.of(context).textTheme.bodySmall?.copyWith(
                           color: Theme.of(context).colorScheme.secondary),
                     ),

@@ -42,7 +42,7 @@ class DataSubjectRightMaster extends StatelessWidget {
                 children: <Widget>[
                   Expanded(
                     child: Text(
-                      tr('masterData.dsr.request'), //!!!
+                      tr('masterData.dsr.request.title'), //!!!
                       style: Theme.of(context).textTheme.bodySmall?.copyWith(
                           color: Theme.of(context).colorScheme.secondary),
                     ),
@@ -76,7 +76,7 @@ class DataSubjectRightMaster extends StatelessWidget {
                 children: <Widget>[
                   Expanded(
                     child: Text(
-                      tr('masterData.dsr.rejections'), //!!!
+                      tr('masterData.dsr.rejections.title'), //!!!
                       style: Theme.of(context).textTheme.bodySmall?.copyWith(
                           color: Theme.of(context).colorScheme.secondary),
                     ),
@@ -110,7 +110,7 @@ class DataSubjectRightMaster extends StatelessWidget {
                 children: <Widget>[
                   Expanded(
                     child: Text(
-                      tr('masterData.dsr.reason'), //!!!
+                      tr('masterData.dsr.reason.title'), //!!!
                       style: Theme.of(context).textTheme.bodySmall?.copyWith(
                           color: Theme.of(context).colorScheme.secondary),
                     ),
@@ -144,7 +144,7 @@ class DataSubjectRightMaster extends StatelessWidget {
                 children: <Widget>[
                   Expanded(
                     child: Text(
-                      tr('masterData.dsr.requestrejects'), //!!!
+                      tr('masterData.dsr.requestrejects.title'), //!!!
                       style: Theme.of(context).textTheme.bodySmall?.copyWith(
                           color: Theme.of(context).colorScheme.secondary),
                     ),
@@ -178,7 +178,7 @@ class DataSubjectRightMaster extends StatelessWidget {
                 children: <Widget>[
                   Expanded(
                     child: Text(
-                      tr('masterData.dsr.requestreasons'), //!!!
+                      tr('masterData.dsr.requestreasons.title'), //!!!
                       style: Theme.of(context).textTheme.bodySmall?.copyWith(
                           color: Theme.of(context).colorScheme.secondary),
                     ),

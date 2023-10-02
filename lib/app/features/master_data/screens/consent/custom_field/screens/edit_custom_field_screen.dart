@@ -5,6 +5,7 @@ import 'package:ionicons/ionicons.dart';
 import 'package:pdpa/app/config/config.dart';
 import 'package:pdpa/app/shared/widgets/customs/custom_icon_button.dart';
 import 'package:pdpa/app/shared/widgets/customs/custom_text_field.dart';
+import 'package:pdpa/app/shared/widgets/templates/pdpa_app_bar.dart';
 import 'package:pdpa/app/shared/widgets/title_required_text.dart';
 
 class EditCustomFieldScreen extends StatelessWidget {
@@ -57,7 +58,16 @@ class _EditCustomFieldViewState extends State<EditCustomFieldView> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: _buildAppBar(context),
+      appBar: PdpaAppBar(
+          leadingIcon: CustomIconButton(
+            onPressed: () {
+              context.pop();
+            },
+            icon: Ionicons.chevron_back_outline,
+            iconColor: Theme.of(context).colorScheme.primary,
+            backgroundColor: Theme.of(context).colorScheme.onBackground,
+          ),
+          title: Text(tr('masterData.cm.customfields.edit'))),
       body: SingleChildScrollView(
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
@@ -84,61 +94,61 @@ class _EditCustomFieldViewState extends State<EditCustomFieldView> {
         Row(
           children: <Widget>[
             Text(
-              tr('masterData.cm.customfields.name'), //!
+              tr('masterData.cm.customfields.title'), //!
               style: Theme.of(context).textTheme.titleLarge,
             ),
           ],
         ),
         const SizedBox(height: UiConfig.lineSpacing),
-        const TitleRequiredText(
-          text: 'masterData.cm.customfields.title',
+        TitleRequiredText(
+          text: tr('masterData.cm.customfields.formtitle'),
           required: true,
         ),
         CustomTextField(
           controller: titleController,
-          hintText: 'Enter title',
+          hintText: tr('masterData.cm.customfields.formtitlehint'),
         ),
         const SizedBox(height: UiConfig.lineSpacing),
-        const TitleRequiredText(
-          text: 'masterData.cm.customfields.placeholder',
+        TitleRequiredText(
+          text: tr('masterData.cm.customfields.placeholder'),
           required: true,
         ),
         CustomTextField(
           controller: placeHolderController,
-          hintText: 'Enter place holder',
+          hintText: tr('masterData.cm.customfields.placeholderhint'),
         ),
         const SizedBox(height: UiConfig.lineSpacing),
-        const TitleRequiredText(
-          text: 'masterData.cm.customfields.customfieldtype',
+        TitleRequiredText(
+          text: tr('masterData.cm.customfields.customfieldtype'),
           required: true,
         ),
         CustomTextField(
           controller: customFieldTypeController,
-          hintText: 'Enter customFieldType',
+          hintText: tr('masterData.cm.customfields.customfieldtypehint'),
         ),
         const SizedBox(height: UiConfig.lineSpacing),
-        const TitleRequiredText(
-          text: 'masterData.cm.customfields.lenghtlimit',
+        TitleRequiredText(
+          text: tr('masterData.cm.customfields.lenghtlimit'),
           required: true,
         ),
-        const CustomTextField(
-          hintText: 'Enter lenght limit',
+        CustomTextField(
+          hintText: tr('masterData.cm.customfields.lenghtlimithint'),
         ),
         const SizedBox(height: UiConfig.lineSpacing),
-        const TitleRequiredText(
-          text: 'masterData.cm.customfields.maxline',
+        TitleRequiredText(
+          text: tr('masterData.cm.customfields.maxline'),
           required: true,
         ),
-        const CustomTextField(
-          hintText: 'Enter max line',
+        CustomTextField(
+          hintText: tr('masterData.cm.customfields.maxlinehint'),
         ),
         const SizedBox(height: UiConfig.lineSpacing),
-        const TitleRequiredText(
-          text: 'masterData.cm.customfields.minline',
+        TitleRequiredText(
+          text: tr('masterData.cm.customfields.minline'),
           required: true,
         ),
-        const CustomTextField(
-          hintText: 'Enter min line',
+        CustomTextField(
+          hintText: tr('masterData.cm.customfields.minlinehint'),
         ),
       ],
     );

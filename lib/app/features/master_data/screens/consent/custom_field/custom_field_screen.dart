@@ -147,7 +147,7 @@ class _CustomFieldViewState extends State<CustomFieldView> {
             iconColor: Theme.of(context).colorScheme.primary,
             backgroundColor: Theme.of(context).colorScheme.onBackground,
           ),
-          Text(tr('masterData.cm.customfields.name'))
+          Text(tr('masterData.cm.customfields.title'))
         ],
       ),
       elevation: 1.0,

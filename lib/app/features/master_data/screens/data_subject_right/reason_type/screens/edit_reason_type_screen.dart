@@ -1,3 +1,4 @@
+import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:ionicons/ionicons.dart';
@@ -5,6 +6,7 @@ import 'package:pdpa/app/config/config.dart';
 import 'package:pdpa/app/shared/widgets/customs/custom_icon_button.dart';
 import 'package:pdpa/app/shared/widgets/customs/custom_switch_button.dart';
 import 'package:pdpa/app/shared/widgets/customs/custom_text_field.dart';
+import 'package:pdpa/app/shared/widgets/templates/pdpa_app_bar.dart';
 import 'package:pdpa/app/shared/widgets/title_required_text.dart';
 
 class EditReasonTypeScreen extends StatelessWidget {
@@ -46,7 +48,26 @@ class _EditReasonTypeViewState extends State<EditReasonTypeView> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: _buildAppBar(context),
+      appBar: PdpaAppBar(
+        leadingIcon: CustomIconButton(
+          onPressed: () {},
+          icon: Ionicons.chevron_back_outline,
+          iconColor: Theme.of(context).colorScheme.primary,
+          backgroundColor: Theme.of(context).colorScheme.onBackground,
+        ),
+        title: Text(
+          tr('masterData.cm.purpose.edit'),
+          style: Theme.of(context).textTheme.titleLarge,
+        ),
+        actions: [
+          CustomIconButton(
+            onPressed: () {},
+            icon: Ionicons.save_outline,
+            iconColor: Theme.of(context).colorScheme.primary,
+            backgroundColor: Theme.of(context).colorScheme.onBackground,
+          ),
+        ],
+      ),
       body: SingleChildScrollView(
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
@@ -89,27 +110,27 @@ class _EditReasonTypeViewState extends State<EditReasonTypeView> {
         Row(
           children: <Widget>[
             Text(
-              'Reason Type', //!
+              tr('masterdata.dsr.title'), //!
               style: Theme.of(context).textTheme.titleLarge,
             ),
           ],
         ),
         const SizedBox(height: UiConfig.lineSpacing),
-        const TitleRequiredText(
-          text: 'รหัสเหตุประกอบคำร้อง', //!
+        TitleRequiredText(
+          text: tr('masterdata.dsr.reasoncode'), //!
           required: true,
         ),
         CustomTextField(
           controller: reasonTypeCodeController,
-          hintText: 'Enter code', //!
+          hintText: tr('masterdata.dsr.reasoncodehint'), //!
         ),
         const SizedBox(height: UiConfig.lineSpacing),
-        const TitleRequiredText(
-          text: 'Description', //!
+        TitleRequiredText(
+          text: tr('masterdata.dsr.reasondescription'), //!
         ),
         CustomTextField(
           controller: descriptionController,
-          hintText: 'Enter description', //!
+          hintText: tr('masterdata.dsr.reasondescriptionhint'), //!
         ),
         const SizedBox(height: UiConfig.lineSpacing),
         Divider(
@@ -120,7 +141,7 @@ class _EditReasonTypeViewState extends State<EditReasonTypeView> {
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: <Widget>[
             Text(
-              'ต้องการข้อมูลเพิ่มเติม', //!
+              tr('masterdata.dsr.needmoreinformation'), //!
               style: Theme.of(context).textTheme.bodyMedium,
             ),
             CustomSwitchButton(

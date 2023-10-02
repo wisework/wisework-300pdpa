@@ -35,16 +35,22 @@
         "cm": {
             "consents": "Consents",
             "customfields": {
-                "name": "Custom Fields",
+                "title": "Custom Field",
+                "list": "Custom Fields",
                 "edit": "Edit Custom Fields",
                 "create": "Create Custom Fields",
-                "delete": "Delete",
-                "title": "Title",
+                "formtitle": "Title",
+                "formtitlehint": "Enter Title",
                 "placeholder": "Place Holder",
+                "placeholderhint": "Enter Place Holder",
                 "customfieldtype": "Custom Field Type",
+                "customfieldtypehint": "Choose Custom Field Type",
                 "lenghtlimit": "Lenght Limit",
+                "lenghtlimithint": "Enter Lenght Limit",
                 "maxline": "Max Line",
-                "minline": "Min Line"
+                "maxlinehint": "Enter Max Line",
+                "minline": "Min Line",
+                "minlinehint": "Enter Min Line"
             },
             "purpose": {
                 "title": "Purpose",
@@ -68,17 +74,60 @@
         },
         "dsr": {
             "datasubjectright": "Data Subject Right",
-            "request": "Request",
-            "rejections": "Rejections",
-            "reason": "Reason",
-            "requestrejects": "Request rejects",
-            "requestreasons": "Request reasons"
+            "request": {
+                "title": "Request Type",
+                "list": "List of Request Type",
+                "create": "Create Request Type",
+                "edit": "Edit Request Type",
+                "requestcode" : "Request Code",
+                "requestdescription" : "Request Description"
+            },
+            "rejections": {
+                "title": "Reject Type",
+                "list": "List of Reject Type",
+                "create": "Create Reject Type",
+                "edit": "Edit Reject Type",
+                "rejectcode" : "Reject Code",
+                "rejectdescription" : "Reject Description"
+            },
+            "reason": {
+                "title": "Reason Type",
+                "list": "List of Reason Type",
+                "create": "Create Reason Type",
+                "edit": "Edit Reason Type",
+                "reasoncode" : "Reason Code",
+                "reasoncodehint" : "Enter Code",
+                "reasondescription" : "Description",
+                "reasondescriptionhint" : "Enter Description",
+                "needmoreinformation" : "Need more information"
+            },
+            "requestrejects": {
+                "title": "Request Rejects",
+                "list": "List of Request Rejects",
+                "create": "Create Request Rejects",
+                "edit": "Edit Request Rejects",
+                "requesttype" : "Request Type",
+                "chooserequesttype" : "Choose Request Type",
+                "rejecttype" : "Rejects Type",
+                "chooserejecttype" : "Choose Rejects Type"
+            },
+            "requestreasons": {
+                "title": "Request Reasons",
+                "list": "List of Request Reasons",
+                "create": "Create Request Reasons",
+                "edit": "Edit Request Reasons",
+                "requesttype" : "Request Type",
+                "chooserequesttype" : "Choose Request Type",
+                "rejecttype" : "Reasons Type",
+                "chooserejecttype" : "Choose Reasons Type"
+            }
         },
         "etc": {
             "fieldCannotEmpty": "Field cannot be empty",
             "active": "Active",
             "configuration": "Configuration",
-            "updateInfo": "Update Info"
+            "updateInfo": "Update Info",
+            "delete" : "Delete"
         }
     }
 }

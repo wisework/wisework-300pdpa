@@ -68,17 +68,57 @@
         },
         "dsr": {
             "datasubjectright": "Data Subject Right",
-            "request": "Request",
-            "rejections": "Rejections",
-            "reason": "Reason",
-            "requestrejects": "Request rejects",
-            "requestreasons": "Request reasons"
+            "request": {
+                "title": "Request Type",
+                "list": "List of Request Type",
+                "create": "Create Request Type",
+                "edit": "Edit Request Type",
+                "requestcode" : "Request Code",
+                "requestdescription" : "Request Description"
+            },
+            "rejections": {
+                "title": "Reject Type",
+                "list": "List of Reject Type",
+                "create": "Create Reject Type",
+                "edit": "Edit Reject Type",
+                "rejectcode" : "Reject Code",
+                "rejectdescription" : "Reject Description"
+            },
+            "reason": {
+                "title": "Reason Type",
+                "list": "List of Reason Type",
+                "create": "Create Reason Type",
+                "edit": "Edit Reason Type",
+                "reasoncode" : "Reason Code",
+                "reasondescription" : "Reason Description"
+            },
+            "requestrejects": {
+                "title": "Request Rejects",
+                "list": "List of Request Rejects",
+                "create": "Create Request Rejects",
+                "edit": "Edit Request Rejects",
+                "requesttype" : "Request Type",
+                "chooserequesttype" : "Choose Request Type",
+                "rejecttype" : "Rejects Type",
+                "chooserejecttype" : "Choose Rejects Type"
+            },
+            "requestreasons": {
+                "title": "Request Reasons",
+                "list": "List of Request Reasons",
+                "create": "Create Request Reasons",
+                "edit": "Edit Request Reasons",
+                "requesttype" : "Request Type",
+                "chooserequesttype" : "Choose Request Type",
+                "rejecttype" : "Reasons Type",
+                "chooserejecttype" : "Choose Reasons Type"
+            }
         },
         "etc": {
             "fieldCannotEmpty": "Field cannot be empty",
             "active": "Active",
             "configuration": "Configuration",
-            "updateInfo": "Update Info"
+            "updateInfo": "Update Info",
+            "delete" : "Delete"
         }
     }
 }
