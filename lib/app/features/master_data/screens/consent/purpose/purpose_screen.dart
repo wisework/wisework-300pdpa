@@ -29,19 +29,14 @@ class _PurposeScreenState extends State<PurposeScreen> {
   }
 
   void _initialData() {
-    final signInBloc = BlocProvider.of<SignInBloc>(context, listen: false);
+    final bloc = context.read<SignInBloc>();
 
-    String companyId;
-    if (signInBloc.state is SignedInUser) {
-      final signedIn = signInBloc.state as SignedInUser;
-      companyId = signedIn.user.currentCompany;
-    } else {
-      companyId = '';
+    String companyId = '';
+    if (bloc.state is SignedInUser) {
+      companyId = (bloc.state as SignedInUser).user.currentCompany;
     }
 
-    BlocProvider.of<PurposeBloc>(context, listen: false).add(
-      GetPurposesEvent(companyId: companyId),
-    );
+    context.read<PurposeBloc>().add(GetPurposesEvent(companyId: companyId));
   }
 
   @override

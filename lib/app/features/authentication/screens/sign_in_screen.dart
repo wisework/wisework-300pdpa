@@ -2,6 +2,7 @@ import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
+import 'package:pdpa/app/config/config.dart';
 import 'package:pdpa/app/data/models/authentication/user_model.dart';
 import 'package:pdpa/app/features/authentication/bloc/sign_in/sign_in_bloc.dart';
 import 'package:pdpa/app/features/authentication/routes/authentication_route.dart';
@@ -49,6 +50,7 @@ class _SignInScreenState extends State<SignInScreen> {
               .bodyMedium
               ?.copyWith(color: Theme.of(context).colorScheme.onPrimary),
         ),
+        duration: UiConfig.toastDuration,
       ),
     );
 
@@ -69,6 +71,7 @@ class _SignInScreenState extends State<SignInScreen> {
               .bodyMedium
               ?.copyWith(color: Theme.of(context).colorScheme.onPrimary),
         ),
+        duration: UiConfig.toastDuration,
       ),
     );
   }
