@@ -114,7 +114,7 @@ class _PurposeCategoryViewState extends State<PurposeCategoryView> {
           ),
           const SizedBox(width: UiConfig.appBarTitleSpacing),
           Text(
-            tr('masterData.cm.purposecategory.title'), //!
+            tr('masterData.cm.purposeCategory.title'), //!
             style: Theme.of(context).textTheme.titleLarge,
           ),
         ],
