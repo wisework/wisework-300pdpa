@@ -4,6 +4,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
 import 'package:ionicons/ionicons.dart';
 import 'package:pdpa/app/config/config.dart';
+import 'package:pdpa/app/data/models/authentication/user_model.dart';
 import 'package:pdpa/app/data/models/master_data/localized_model.dart';
 import 'package:pdpa/app/data/models/master_data/purpose_model.dart';
 import 'package:pdpa/app/features/authentication/bloc/sign_in/sign_in_bloc.dart';
@@ -12,10 +13,12 @@ import 'package:pdpa/app/features/master_data/bloc/consent/purpose/purpose_bloc.
 import 'package:pdpa/app/features/master_data/widgets/configuration_info.dart';
 import 'package:pdpa/app/injection.dart';
 import 'package:pdpa/app/shared/utils/constants.dart';
+import 'package:pdpa/app/shared/widgets/customs/custom_container.dart';
 import 'package:pdpa/app/shared/widgets/customs/custom_dropdown_button.dart';
 import 'package:pdpa/app/shared/widgets/customs/custom_icon_button.dart';
 import 'package:pdpa/app/shared/widgets/customs/custom_switch_button.dart';
 import 'package:pdpa/app/shared/widgets/customs/custom_text_field.dart';
+import 'package:pdpa/app/shared/widgets/loading_indicator.dart';
 import 'package:pdpa/app/shared/widgets/templates/pdpa_app_bar.dart';
 import 'package:pdpa/app/shared/widgets/title_required_text.dart';
 
@@ -32,8 +35,7 @@ class EditPurposeScreen extends StatefulWidget {
 }
 
 class _EditPurposeScreenState extends State<EditPurposeScreen> {
-  late String userEmail;
-  late String companyId;
+  late UserModel currentUser;
 
   @override
   void initState() {
@@ -47,11 +49,9 @@ class _EditPurposeScreenState extends State<EditPurposeScreen> {
     if (signInBloc.state is SignedInUser) {
       final signedIn = signInBloc.state as SignedInUser;
 
-      userEmail = signedIn.user.email;
-      companyId = signedIn.user.currentCompany;
+      currentUser = signedIn.user;
     } else {
-      userEmail = '';
-      companyId = '';
+      currentUser = UserModel.empty();
     }
   }
 
@@ -62,12 +62,11 @@ class _EditPurposeScreenState extends State<EditPurposeScreen> {
         ..add(
           GetCurrentPurposeEvent(
             purposeId: widget.purposeId,
-            companyId: companyId,
+            companyId: currentUser.currentCompany,
           ),
         ),
       child: EditPurposeView(
-        userEmail: userEmail,
-        companyId: companyId,
+        currentUser: currentUser,
       ),
     );
   }
@@ -76,12 +75,10 @@ class _EditPurposeScreenState extends State<EditPurposeScreen> {
 class EditPurposeView extends StatefulWidget {
   const EditPurposeView({
     super.key,
-    required this.userEmail,
-    required this.companyId,
+    required this.currentUser,
   });
 
-  final String userEmail;
-  final String companyId;
+  final UserModel currentUser;
 
   @override
   State<EditPurposeView> createState() => _EditPurposeViewState();
@@ -188,7 +185,7 @@ class _EditPurposeViewState extends State<EditPurposeView> {
     PurposeModel updated = initialPurpose != PurposeModel.empty()
         ? initialPurpose
         : PurposeModel.empty().copyWith(
-            createdBy: widget.userEmail,
+            createdBy: widget.currentUser.email,
             createdDate: DateTime.now(),
           );
 
@@ -198,12 +195,12 @@ class _EditPurposeViewState extends State<EditPurposeView> {
       retentionPeriod: retentionPeriod,
       periodUnit: periodUnit,
       status: status,
-      updatedBy: widget.userEmail,
+      updatedBy: widget.currentUser.email,
       updatedDate: DateTime.now(),
     );
 
     context.read<EditPurposeBloc>().add(UpdateCurrentPurposeEvent(
-        purpose: updated, companyId: widget.companyId));
+        purpose: updated, companyId: widget.currentUser.currentCompany));
   }
 
   void _goBack() {
@@ -257,17 +254,7 @@ class _EditPurposeViewState extends State<EditPurposeView> {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: <Widget>[
                   const SizedBox(height: UiConfig.lineSpacing),
-                  Container(
-                    padding: const EdgeInsets.all(
-                      UiConfig.defaultPaddingSpacing,
-                    ),
-                    decoration: BoxDecoration(
-                      color: Theme.of(context).colorScheme.onBackground,
-                      borderRadius: BorderRadius.circular(10.0),
-                    ),
-                    margin: const EdgeInsets.symmetric(
-                      horizontal: UiConfig.defaultPaddingSpacing,
-                    ),
+                  CustomContainer(
                     child: _buildPurposeForm(context),
                   ),
                   const SizedBox(height: UiConfig.lineSpacing),
@@ -280,15 +267,21 @@ class _EditPurposeViewState extends State<EditPurposeView> {
             );
           }
           if (state is EditPurposeError) {
-            return Center(
-              child: Text(
-                state.message,
-                style: Theme.of(context).textTheme.bodyMedium,
+            return CustomContainer(
+              margin: const EdgeInsets.all(UiConfig.defaultPaddingSpacing),
+              child: Center(
+                child: Text(
+                  state.message,
+                  style: Theme.of(context).textTheme.bodyMedium,
+                ),
               ),
             );
           }
-          return const Center(
-            child: CircularProgressIndicator(),
+          return const CustomContainer(
+            margin: EdgeInsets.all(UiConfig.defaultPaddingSpacing),
+            child: Center(
+              child: LoadingIndicator(),
+            ),
           );
         },
       ),
@@ -368,17 +361,7 @@ class _EditPurposeViewState extends State<EditPurposeView> {
   ) {
     return Column(
       children: <Widget>[
-        Container(
-          padding: const EdgeInsets.all(
-            UiConfig.defaultPaddingSpacing,
-          ),
-          decoration: BoxDecoration(
-            color: Theme.of(context).colorScheme.onBackground,
-            borderRadius: BorderRadius.circular(10.0),
-          ),
-          margin: const EdgeInsets.symmetric(
-            horizontal: UiConfig.defaultPaddingSpacing,
-          ),
+        CustomContainer(
           child: ConfigurationInfo(
             configBody: Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
