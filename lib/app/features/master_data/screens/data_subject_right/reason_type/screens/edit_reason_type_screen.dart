@@ -1,6 +1,5 @@
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
-import 'package:go_router/go_router.dart';
 import 'package:ionicons/ionicons.dart';
 import 'package:pdpa/app/config/config.dart';
 import 'package:pdpa/app/shared/widgets/customs/custom_icon_button.dart';
@@ -151,43 +150,6 @@ class _EditReasonTypeViewState extends State<EditReasonTypeView> {
           ],
         ),
       ],
-    );
-  }
-
-  AppBar _buildAppBar(BuildContext context) {
-    return AppBar(
-      automaticallyImplyLeading: false,
-      title: Row(
-        children: <Widget>[
-          CustomIconButton(
-            onPressed: () {
-              context.pop();
-            },
-            icon: Ionicons.chevron_back_outline,
-            iconColor: Theme.of(context).colorScheme.primary,
-            backgroundColor: Theme.of(context).colorScheme.onBackground,
-          ),
-          const SizedBox(width: UiConfig.appBarTitleSpacing),
-          Text(
-            'Create Reason Type', //!
-            style: Theme.of(context).textTheme.titleLarge,
-          ),
-        ],
-      ),
-       actions: [
-        CustomIconButton(
-          onPressed: () {
-            context.pop();
-          },
-          icon: Ionicons.save_outline,
-          iconColor: Theme.of(context).colorScheme.primary,
-          backgroundColor: Theme.of(context).colorScheme.onPrimary,
-        ),
-      ],
-      elevation: 1.0,
-      shadowColor: Theme.of(context).colorScheme.background,
-      surfaceTintColor: Theme.of(context).colorScheme.onBackground,
-      backgroundColor: Theme.of(context).colorScheme.onBackground,
     );
   }
 

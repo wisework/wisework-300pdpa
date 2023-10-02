@@ -153,41 +153,4 @@ class _EditCustomFieldViewState extends State<EditCustomFieldView> {
       ],
     );
   }
-
-  AppBar _buildAppBar(BuildContext context) {
-    return AppBar(
-      automaticallyImplyLeading: false,
-      title: Row(
-        children: <Widget>[
-          CustomIconButton(
-            onPressed: () {
-              context.pop();
-            },
-            icon: Ionicons.chevron_back_outline,
-            iconColor: Theme.of(context).colorScheme.primary,
-            backgroundColor: Theme.of(context).colorScheme.onBackground,
-          ),
-          const SizedBox(width: UiConfig.appBarTitleSpacing),
-          Text(
-            tr('masterData.cm.customfields.create'), //!
-            style: Theme.of(context).textTheme.titleLarge,
-          ),
-        ],
-      ),
-      actions: [
-        CustomIconButton(
-          onPressed: () {
-            context.pop();
-          },
-          icon: Ionicons.save_outline,
-          iconColor: Theme.of(context).colorScheme.primary,
-          backgroundColor: Theme.of(context).colorScheme.onPrimary,
-        ),
-      ],
-      elevation: 1.0,
-      shadowColor: Theme.of(context).colorScheme.background,
-      surfaceTintColor: Theme.of(context).colorScheme.onBackground,
-      backgroundColor: Theme.of(context).colorScheme.onBackground,
-    );
-  }
 }
