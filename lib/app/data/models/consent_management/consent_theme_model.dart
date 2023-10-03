@@ -7,7 +7,7 @@ import 'package:pdpa/app/shared/utils/typedef.dart';
 
 class ConsentThemeModel extends Equatable {
   const ConsentThemeModel({
-    required this.themeId,
+    required this.consentThemeId,
     required this.themeTitle,
     required this.headerTextColor,
     required this.headerBackgroundColor,
@@ -28,7 +28,7 @@ class ConsentThemeModel extends Equatable {
     required this.companyId,
   });
 
-  final String themeId;
+  final String consentThemeId;
   final String themeTitle;
   final String headerTextColor;
   final String headerBackgroundColor;
@@ -50,7 +50,7 @@ class ConsentThemeModel extends Equatable {
 
   ConsentThemeModel.empty()
       : this(
-          themeId: '',
+          consentThemeId: '',
           themeTitle: '',
           headerTextColor: '',
           headerBackgroundColor: '',
@@ -73,7 +73,7 @@ class ConsentThemeModel extends Equatable {
 
   ConsentThemeModel.fromMap(DataMap map)
       : this(
-          themeId: map['themeId'] as String,
+          consentThemeId: map['consentThemeId'] as String,
           themeTitle: map['themeTitle'] as String,
           headerTextColor: map['headerTextColor'] as String,
           headerBackgroundColor: map['headerBackgroundColor'] as String,
@@ -95,7 +95,7 @@ class ConsentThemeModel extends Equatable {
         );
 
   DataMap toMap() => {
-        'themeId': themeId,
+        'consentThemeId': consentThemeId,
         'themeTitle': themeTitle,
         'headerTextColor': headerTextColor,
         'headerBackgroundColor': headerBackgroundColor,
@@ -123,7 +123,7 @@ class ConsentThemeModel extends Equatable {
   }
 
   ConsentThemeModel copyWith({
-    String? themeId,
+    String? consentThemeId,
     String? themeTitle,
     String? headerTextColor,
     String? headerBackgroundColor,
@@ -144,7 +144,7 @@ class ConsentThemeModel extends Equatable {
     String? companyId,
   }) {
     return ConsentThemeModel(
-      themeId: themeId ?? this.themeId,
+      consentThemeId: consentThemeId ?? this.consentThemeId,
       themeTitle: themeTitle ?? this.themeTitle,
       headerTextColor: headerTextColor ?? this.headerTextColor,
       headerBackgroundColor:
@@ -173,7 +173,7 @@ class ConsentThemeModel extends Equatable {
   @override
   List<Object> get props {
     return [
-      themeId,
+      consentThemeId,
       themeTitle,
       headerTextColor,
       headerBackgroundColor,
