@@ -5,19 +5,22 @@ class ConsentFormDrawer extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Drawer(
-      backgroundColor: Theme.of(context).colorScheme.onBackground,
-      surfaceTintColor: Theme.of(context).colorScheme.onBackground,
-      child: Column(
-        children: <Widget>[
-          Text(
-            'Consent Form',
-            style: Theme.of(context).textTheme.bodyMedium,
-          ),
-          Divider(
-            color: Theme.of(context).colorScheme.outline,
-          ),
-        ],
+    return FractionallySizedBox(
+      widthFactor: 0.75,
+      child: Drawer(
+        backgroundColor: Theme.of(context).colorScheme.onBackground,
+        surfaceTintColor: Theme.of(context).colorScheme.onBackground,
+        child: Column(
+          children: <Widget>[
+            Text(
+              'Consent Form',
+              style: Theme.of(context).textTheme.bodyMedium,
+            ),
+            Divider(
+              color: Theme.of(context).colorScheme.outline,
+            ),
+          ],
+        ),
       ),
     );
   }

@@ -1,13 +1,15 @@
-import 'package:bot_toast/bot_toast.dart';
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:ionicons/ionicons.dart';
+import 'package:pdpa/app/config/config.dart';
 import 'package:pdpa/app/data/models/consent_management/consent_theme_model.dart';
 import 'package:pdpa/app/features/consent_management/consent_form/screens/consent_form_settings/widgets/consent_form_drawer.dart';
-import 'package:pdpa/app/services/apis/consent_api.dart';
+import 'package:pdpa/app/shared/widgets/customs/custom_button.dart';
+import 'package:pdpa/app/shared/widgets/customs/custom_container.dart';
 import 'package:pdpa/app/shared/widgets/customs/custom_icon_button.dart';
+import 'package:pdpa/app/shared/widgets/customs/custom_text_field.dart';
 import 'package:pdpa/app/shared/widgets/templates/pdpa_app_bar.dart';
+import 'package:qr_flutter/qr_flutter.dart';
 
 class ConsentFormSettingScreen extends StatelessWidget {
   const ConsentFormSettingScreen({super.key});
@@ -27,6 +29,27 @@ class ConsentFormSettingView extends StatefulWidget {
 
 class _ConsentFormSettingViewState extends State<ConsentFormSettingView> {
   final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
+
+  final consentTheme = ConsentThemeModel(
+    id: '',
+    title: 'Meow theme',
+    headerTextColor: 'ff0a6152',
+    headerBackgroundColor: 'ffffffff',
+    bodyBackgroundColor: 'ffffffff',
+    formTextColor: 'ff0a6152',
+    categoryTitleTextColor: 'ff0a6152',
+    acceptConsentTextColor: 'ff0a6152',
+    linkToPolicyTextColor: 'ff0a6152',
+    acceptButtonColor: 'ff0a6152',
+    acceptTextColor: 'ffffffff',
+    cancelButtonColor: 'ffffffff',
+    cancelTextColor: 'ff0a6152',
+    actionButtonColor: 'ff0a6152',
+    createdBy: 'meow@gmail.com',
+    createdDate: DateTime.now(),
+    updatedBy: 'meow@gmail.com',
+    updatedDate: DateTime.now(),
+  );
 
   @override
   Widget build(BuildContext context) {
@@ -90,96 +113,118 @@ class _ConsentFormSettingViewState extends State<ConsentFormSettingView> {
   Column _buildUrlTab() {
     return Column(
       children: <Widget>[
-        Text(
-          'URL Tab',
-          style: Theme.of(context).textTheme.bodyMedium,
+        const SizedBox(height: UiConfig.lineSpacing),
+        CustomContainer(
+          child: Column(
+            children: <Widget>[
+              Row(
+                children: <Widget>[
+                  Text(
+                    'URL ลิงค์แบบฟอร์ม',
+                    style: Theme.of(context).textTheme.titleLarge,
+                  ),
+                ],
+              ),
+              const SizedBox(height: UiConfig.lineSpacing),
+              Row(
+                children: <Widget>[
+                  Expanded(
+                    child: CustomTextField(
+                      controller:
+                          TextEditingController(text: 'https://bit.ly/3y4LjmA'),
+                      readOnly: true,
+                    ),
+                  ),
+                  Padding(
+                    padding: const EdgeInsets.only(left: 10.0),
+                    child: CustomIconButton(
+                      onPressed: () {},
+                      icon: Ionicons.copy_outline,
+                      iconColor: Theme.of(context).colorScheme.primary,
+                      backgroundColor:
+                          Theme.of(context).colorScheme.onBackground,
+                    ),
+                  ),
+                ],
+              ),
+              const SizedBox(height: UiConfig.lineSpacing),
+              RichText(
+                text: TextSpan(
+                  children: [
+                    TextSpan(
+                      text: 'If you have a problem with URL, Click ',
+                      style: Theme.of(context).textTheme.bodySmall,
+                    ),
+                    TextSpan(
+                      text: 'here',
+                      style: Theme.of(context).textTheme.bodySmall?.copyWith(
+                          color: Theme.of(context).colorScheme.primary,
+                          decoration: TextDecoration.underline,
+                          decorationColor:
+                              Theme.of(context).colorScheme.primary),
+                    ),
+                    TextSpan(
+                      text: ' to regenerate a new one.',
+                      style: Theme.of(context).textTheme.bodySmall,
+                    ),
+                  ],
+                ),
+              ),
+            ],
+          ),
         ),
-        ElevatedButton(
-          onPressed: () async {
-            final consentTheme = ConsentThemeModel(
-              id: '',
-              title: 'Meow theme',
-              headerTextColor: 'ff0a6152',
-              headerBackgroundColor: 'ffffffff',
-              bodyBackgroundColor: 'ffffffff',
-              formTextColor: 'ff0a6152',
-              categoryTitleTextColor: 'ff0a6152',
-              acceptConsentTextColor: 'ff0a6152',
-              linkToPolicyTextColor: 'ff0a6152',
-              acceptButtonColor: 'ff0a6152',
-              acceptTextColor: 'ffffffff',
-              cancelButtonColor: 'ffffffff',
-              cancelTextColor: 'ff0a6152',
-              actionButtonColor: 'ff0a6152',
-              createdBy: 'meow@gmail.com',
-              createdDate: DateTime.now(),
-              updatedBy: 'meow@gmail.com',
-              updatedDate: DateTime.now(),
-            );
-
-            final api = ConsentApi(FirebaseFirestore.instance);
-            const companyId = 'C7q7rpbkjgLMeROuJQhi';
-
-            await api.createConsentTheme(consentTheme, companyId).then((value) {
-              BotToast.showText(text: value.id);
-            });
-          },
-          child: const Text('Add'),
-        ),
-        ElevatedButton(
-          onPressed: () async {
-            final consentTheme = ConsentThemeModel(
-              id: 'ftpfgZwoDSyDRk0Oj2Et',
-              title: 'Meow theme',
-              headerTextColor: 'ff044035',
-              headerBackgroundColor: 'ffffffff',
-              bodyBackgroundColor: 'ffffffff',
-              formTextColor: 'ff2b2b2b',
-              categoryTitleTextColor: 'ff044035',
-              acceptConsentTextColor: 'ff0a6152',
-              linkToPolicyTextColor: 'ff0a6152',
-              acceptButtonColor: 'ff044035',
-              acceptTextColor: 'ffffffff',
-              cancelButtonColor: 'ffffffff',
-              cancelTextColor: 'ff044035',
-              actionButtonColor: 'ff0a6152',
-              createdBy: 'meow@gmail.com',
-              createdDate: DateTime.now(),
-              updatedBy: 'meow@gmail.com',
-              updatedDate: DateTime.now(),
-            );
-            final api = ConsentApi(FirebaseFirestore.instance);
-            const companyId = 'C7q7rpbkjgLMeROuJQhi';
-
-            await api.updateConsentTheme(consentTheme, companyId).then((_) {
-              BotToast.showText(text: 'Updated');
-            });
-          },
-          child: const Text('Update'),
-        ),
-        ElevatedButton(
-          onPressed: () async {
-            final api = ConsentApi(FirebaseFirestore.instance);
-            const companyId = 'C7q7rpbkjgLMeROuJQhi';
-
-            await api.getConsentThemes(companyId).then((value) {
-              print(value);
-            });
-          },
-          child: const Text('Get'),
-        ),
-        ElevatedButton(
-          onPressed: () async {
-            final api = ConsentApi(FirebaseFirestore.instance);
-            const companyId = 'C7q7rpbkjgLMeROuJQhi';
-
-            await api
-                .getConsentThemeById('ftpfgZwoDSyDRk0Oj2Et', companyId)
-                .then((value) {
-              print(value);
-            });
-          },
-          child: const Text('Get by ID'),
+        const SizedBox(height: UiConfig.lineSpacing),
+        CustomContainer(
+          child: Column(
+            children: <Widget>[
+              Row(
+                children: <Widget>[
+                  Text(
+                    'QR Code ลิงค์แบบฟอร์ม',
+                    style: Theme.of(context).textTheme.titleLarge,
+                  ),
+                ],
+              ),
+              const SizedBox(height: UiConfig.lineSpacing),
+              QrImageView(
+                data: 'https://bit.ly/3y4LjmA',
+                version: QrVersions.auto,
+                size: 240.0,
+                embeddedImage: const AssetImage(
+                  'assets/images/wisework-logo.png',
+                ),
+                embeddedImageStyle: const QrEmbeddedImageStyle(
+                  size: Size(140.0, 0),
+                ),
+              ),
+              const SizedBox(height: UiConfig.lineSpacing),
+              ConstrainedBox(
+                constraints: const BoxConstraints(maxWidth: 240.0),
+                child: CustomButton(
+                  height: 40.0,
+                  onPressed: () {},
+                  buttonType: CustomButtonType.outlined,
+                  child: Row(
+                    mainAxisSize: MainAxisSize.min,
+                    children: <Widget>[
+                      Padding(
+                        padding: const EdgeInsets.only(right: 8.0, bottom: 8.0),
+                        child: Icon(
+                          Ionicons.download_outline,
+                          color: Theme.of(context).colorScheme.primary,
+                        ),
+                      ),
+                      Text(
+                        'Download',
+                        style: Theme.of(context).textTheme.bodyMedium?.copyWith(
+                            color: Theme.of(context).colorScheme.primary),
+                      ),
+                    ],
+                  ),
+                ),
+              ),
+            ],
+          ),
         ),
       ],
     );

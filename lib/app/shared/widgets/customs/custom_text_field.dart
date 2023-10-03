@@ -9,6 +9,7 @@ class CustomTextField extends StatefulWidget {
     this.suffix,
     this.keyboardType = TextInputType.text,
     this.onChanged,
+    this.readOnly = false,
     this.required = false,
     this.errorText,
   });
@@ -18,6 +19,7 @@ class CustomTextField extends StatefulWidget {
   final Widget? suffix;
   final TextInputType keyboardType;
   final Function(String value)? onChanged;
+  final bool readOnly;
   final bool required;
   final String? errorText;
 
@@ -41,6 +43,7 @@ class _CustomTextFieldState extends State<CustomTextField> {
             decoration: _buildInputDecoration(context),
             keyboardType: widget.keyboardType,
             onChanged: widget.onChanged,
+            readOnly: widget.readOnly,
             validator: _validateInput,
             autovalidateMode: AutovalidateMode.onUserInteraction,
           )
@@ -49,6 +52,7 @@ class _CustomTextFieldState extends State<CustomTextField> {
             decoration: _buildInputDecoration(context),
             keyboardType: widget.keyboardType,
             onChanged: widget.onChanged,
+            readOnly: widget.readOnly,
           );
   }
 
@@ -70,6 +74,9 @@ class _CustomTextFieldState extends State<CustomTextField> {
               child: widget.suffix,
             )
           : null,
+      filled: widget.readOnly,
+      fillColor:
+          widget.readOnly ? Theme.of(context).colorScheme.tertiary : null,
       errorBorder: OutlineInputBorder(
         borderRadius: BorderRadius.circular(8.0),
         borderSide: BorderSide(
@@ -86,6 +93,12 @@ class _CustomTextFieldState extends State<CustomTextField> {
         borderRadius: BorderRadius.circular(8.0),
         borderSide: BorderSide(
           color: Theme.of(context).colorScheme.error,
+        ),
+      ),
+      disabledBorder: OutlineInputBorder(
+        borderRadius: BorderRadius.circular(8.0),
+        borderSide: BorderSide(
+          color: Theme.of(context).colorScheme.outlineVariant,
         ),
       ),
       enabledBorder: OutlineInputBorder(
