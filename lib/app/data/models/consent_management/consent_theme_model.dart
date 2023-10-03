@@ -1,14 +1,11 @@
-// ignore_for_file: public_member_api_docs, sort_constructors_first
-import 'dart:convert';
-
 import 'package:equatable/equatable.dart';
 
 import 'package:pdpa/app/shared/utils/typedef.dart';
 
 class ConsentThemeModel extends Equatable {
   const ConsentThemeModel({
-    required this.consentThemeId,
-    required this.themeTitle,
+    required this.id,
+    required this.title,
     required this.headerTextColor,
     required this.headerBackgroundColor,
     required this.bodyBackgroundColor,
@@ -25,11 +22,10 @@ class ConsentThemeModel extends Equatable {
     required this.createdDate,
     required this.updatedBy,
     required this.updatedDate,
-    required this.companyId,
   });
 
-  final String consentThemeId;
-  final String themeTitle;
+  final String id;
+  final String title;
   final String headerTextColor;
   final String headerBackgroundColor;
   final String bodyBackgroundColor;
@@ -46,12 +42,11 @@ class ConsentThemeModel extends Equatable {
   final DateTime createdDate;
   final String updatedBy;
   final DateTime updatedDate;
-  final String companyId;
 
   ConsentThemeModel.empty()
       : this(
-          consentThemeId: '',
-          themeTitle: '',
+          id: '',
+          title: '',
           headerTextColor: '',
           headerBackgroundColor: '',
           bodyBackgroundColor: '',
@@ -68,13 +63,12 @@ class ConsentThemeModel extends Equatable {
           createdDate: DateTime.fromMillisecondsSinceEpoch(0),
           updatedBy: '',
           updatedDate: DateTime.fromMillisecondsSinceEpoch(0),
-          companyId: '',
         );
 
   ConsentThemeModel.fromMap(DataMap map)
       : this(
-          consentThemeId: map['consentThemeId'] as String,
-          themeTitle: map['themeTitle'] as String,
+          id: map['id'] as String,
+          title: map['title'] as String,
           headerTextColor: map['headerTextColor'] as String,
           headerBackgroundColor: map['headerBackgroundColor'] as String,
           bodyBackgroundColor: map['bodyBackgroundColor'] as String,
@@ -91,12 +85,11 @@ class ConsentThemeModel extends Equatable {
           createdDate: DateTime.parse(map['createdDate'] as String),
           updatedBy: map['updatedBy'] as String,
           updatedDate: DateTime.parse(map['updatedDate'] as String),
-          companyId: map['companyId'] as String,
         );
 
   DataMap toMap() => {
-        'consentThemeId': consentThemeId,
-        'themeTitle': themeTitle,
+        'id': id,
+        'title': title,
         'headerTextColor': headerTextColor,
         'headerBackgroundColor': headerBackgroundColor,
         'bodyBackgroundColor': bodyBackgroundColor,
@@ -113,18 +106,17 @@ class ConsentThemeModel extends Equatable {
         'createdDate': createdDate.toIso8601String(),
         'updatedBy': updatedBy,
         'updatedDate': updatedDate.toIso8601String(),
-        'companyId': companyId,
       };
 
   factory ConsentThemeModel.fromDocument(FirebaseDocument document) {
     Map<String, dynamic> response = document.data()!;
-    response['consentThemeId'] = document.id;
+    response['id'] = document.id;
     return ConsentThemeModel.fromMap(response);
   }
 
   ConsentThemeModel copyWith({
-    String? consentThemeId,
-    String? themeTitle,
+    String? id,
+    String? title,
     String? headerTextColor,
     String? headerBackgroundColor,
     String? bodyBackgroundColor,
@@ -141,11 +133,10 @@ class ConsentThemeModel extends Equatable {
     DateTime? createdDate,
     String? updatedBy,
     DateTime? updatedDate,
-    String? companyId,
   }) {
     return ConsentThemeModel(
-      consentThemeId: consentThemeId ?? this.consentThemeId,
-      themeTitle: themeTitle ?? this.themeTitle,
+      id: id ?? this.id,
+      title: title ?? this.title,
       headerTextColor: headerTextColor ?? this.headerTextColor,
       headerBackgroundColor:
           headerBackgroundColor ?? this.headerBackgroundColor,
@@ -166,15 +157,14 @@ class ConsentThemeModel extends Equatable {
       createdDate: createdDate ?? this.createdDate,
       updatedBy: updatedBy ?? this.updatedBy,
       updatedDate: updatedDate ?? this.updatedDate,
-      companyId: companyId ?? this.companyId,
     );
   }
 
   @override
   List<Object> get props {
     return [
-      consentThemeId,
-      themeTitle,
+      id,
+      title,
       headerTextColor,
       headerBackgroundColor,
       bodyBackgroundColor,
@@ -191,7 +181,6 @@ class ConsentThemeModel extends Equatable {
       createdDate,
       updatedBy,
       updatedDate,
-      companyId,
     ];
   }
 }
