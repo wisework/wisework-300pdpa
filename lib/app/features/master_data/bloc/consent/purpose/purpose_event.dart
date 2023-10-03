@@ -17,10 +17,14 @@ class GetPurposesEvent extends PurposeEvent {
 }
 
 class UpdatePurposeEvent extends PurposeEvent {
-  const UpdatePurposeEvent({required this.purpose});
+  const UpdatePurposeEvent({
+    required this.purpose,
+    required this.updateType,
+  });
 
   final PurposeModel purpose;
+  final UpdateType updateType;
 
   @override
-  List<Object> get props => [purpose];
+  List<Object> get props => [purpose, updateType];
 }

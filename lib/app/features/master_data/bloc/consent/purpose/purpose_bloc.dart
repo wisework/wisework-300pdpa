@@ -3,6 +3,7 @@ import 'package:bloc/bloc.dart';
 import 'package:equatable/equatable.dart';
 import 'package:pdpa/app/data/models/master_data/purpose_model.dart';
 import 'package:pdpa/app/data/repositories/master_data_repository.dart';
+import 'package:pdpa/app/shared/utils/constants.dart';
 
 part 'purpose_event.dart';
 part 'purpose_state.dart';
@@ -45,20 +46,28 @@ class PurposeBloc extends Bloc<PurposeEvent, PurposeState> {
   ) async {
     if (state is GotPurposes) {
       final purposes = (state as GotPurposes).purposes;
-      final purposeIds = purposes.map((purpose) => purpose.id).toList();
 
       List<PurposeModel> updated = [];
-      if (purposeIds.contains(event.purpose.id)) {
-        for (PurposeModel purpose in purposes) {
-          if (purpose.id == event.purpose.id) {
-            updated.add(event.purpose);
-          } else {
-            updated.add(purpose);
+
+      switch (event.updateType) {
+        case UpdateType.created:
+          updated = purposes.map((purpose) => purpose).toList()
+            ..add(event.purpose);
+          break;
+        case UpdateType.updated:
+          for (PurposeModel purpose in purposes) {
+            if (purpose.id == event.purpose.id) {
+              updated.add(event.purpose);
+            } else {
+              updated.add(purpose);
+            }
           }
-        }
-      } else {
-        updated = purposes.map((purpose) => purpose).toList()
-          ..add(event.purpose);
+          break;
+        case UpdateType.deleted:
+          updated = purposes
+              .where((purpose) => purpose.id != event.purpose.id)
+              .toList();
+          break;
       }
 
       emit(

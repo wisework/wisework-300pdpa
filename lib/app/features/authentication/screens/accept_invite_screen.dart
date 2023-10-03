@@ -50,14 +50,15 @@ class _AcceptInviteViewState extends State<AcceptInviteView> {
   }
 
   void _onContinuePressed() {
-    final signInBloc = BlocProvider.of<SignInBloc>(context, listen: false);
+    final bloc = context.read<SignInBloc>();
+    if (bloc.state is SignedInUser) {
+      final signedIn = bloc.state as SignedInUser;
 
-    if (signInBloc.state is SignedInUser) {
-      final signedIn = signInBloc.state as SignedInUser;
       context.read<InvitationBloc>().add(VerifyInviteCodeEvent(
-          inviteCode: inviteCodeController.text,
-          user: signedIn.user,
-          companies: signedIn.companies));
+            inviteCode: inviteCodeController.text,
+            user: signedIn.user,
+            companies: signedIn.companies,
+          ));
     }
   }
 
