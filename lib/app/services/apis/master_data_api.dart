@@ -32,24 +32,37 @@ class MasterDataApi {
     return PurposeModel.fromDocument(result);
   }
 
-  Future<PurposeModel> updatePurpose(
+  Future<PurposeModel> createPurpose(
     PurposeModel purpose,
     String companyId,
   ) async {
-    if (purpose.id.isEmpty) {
-      final ref = _firestore.collection('Companies/$companyId/Purposes').doc();
-      final created = purpose.copyWith(id: ref.id);
+    final ref = _firestore.collection('Companies/$companyId/Purposes').doc();
+    final created = purpose.copyWith(id: ref.id);
 
-      await ref.set(created.toMap());
+    await ref.set(created.toMap());
 
-      return created;
-    } else {
+    return created;
+  }
+
+  Future<void> updatePurpose(
+    PurposeModel purpose,
+    String companyId,
+  ) async {
+    await _firestore
+        .collection('Companies/$companyId/Purposes')
+        .doc(purpose.id)
+        .set(purpose.toMap());
+  }
+
+  Future<void> deletePurpose(
+    String purposeId,
+    String companyId,
+  ) async {
+    if (purposeId.isNotEmpty) {
       await _firestore
           .collection('Companies/$companyId/Purposes')
-          .doc(purpose.id)
-          .set(purpose.toMap());
-
-      return purpose;
+          .doc(purposeId)
+          .delete();
     }
   }
 }

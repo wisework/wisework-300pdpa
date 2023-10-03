@@ -1,10 +1,14 @@
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
 import 'package:ionicons/ionicons.dart';
-import 'package:pdpa/app/features/master_data/widgets/consent_masterdata.dart';
-import 'package:pdpa/app/features/master_data/widgets/datasubjectright_masterdata.dart';
+import 'package:pdpa/app/config/config.dart';
+import 'package:pdpa/app/features/master_data/routes/master_data_route.dart';
+import 'package:pdpa/app/features/master_data/widgets/master_data_list_tile.dart';
 import 'package:pdpa/app/shared/drawers/pdpa_drawer.dart';
+import 'package:pdpa/app/shared/widgets/customs/custom_container.dart';
 import 'package:pdpa/app/shared/widgets/customs/custom_icon_button.dart';
+import 'package:pdpa/app/shared/widgets/templates/pdpa_app_bar.dart';
 
 class MasterDataScreen extends StatelessWidget {
   MasterDataScreen({super.key});
@@ -14,17 +18,29 @@ class MasterDataScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       key: _scaffoldKey,
-      appBar: _buildAppBar(context),
-      body: const SingleChildScrollView(
-        child: Padding(
-          padding: EdgeInsets.all(10.0),
-          child: Column(
-            children: <Widget>[
-              ConsentMaster(),
-              SizedBox(height: 10.0),
-              DataSubjectRightMaster(),
-            ],
-          ),
+      appBar: PdpaAppBar(
+        leadingIcon: CustomIconButton(
+          onPressed: () {
+            _scaffoldKey.currentState?.openDrawer();
+          },
+          icon: Ionicons.menu_outline,
+          iconColor: Theme.of(context).colorScheme.primary,
+          backgroundColor: Theme.of(context).colorScheme.onBackground,
+        ),
+        title: Text(
+          tr('app.features.masterdata'),
+          style: Theme.of(context).textTheme.titleLarge,
+        ),
+      ),
+      body: SingleChildScrollView(
+        child: Column(
+          children: <Widget>[
+            const SizedBox(height: UiConfig.lineSpacing),
+            _buildConsentSection(context),
+            const SizedBox(height: UiConfig.lineSpacing),
+            _buildDataSubjectRightSection(context),
+            const SizedBox(height: UiConfig.lineSpacing),
+          ],
         ),
       ),
       drawer: PdpaDrawer(
@@ -35,27 +51,87 @@ class MasterDataScreen extends StatelessWidget {
     );
   }
 
-  AppBar _buildAppBar(BuildContext context) {
-    return AppBar(
-      automaticallyImplyLeading: false,
-      title: Row(
+  CustomContainer _buildConsentSection(BuildContext context) {
+    return CustomContainer(
+      child: Column(
         children: <Widget>[
-          CustomIconButton(
-            onPressed: () {
-              _scaffoldKey.currentState?.openDrawer();
-            },
-            icon: Ionicons.menu_outline,
-            iconColor: Theme.of(context).colorScheme.primary,
-            backgroundColor: Theme.of(context).colorScheme.onBackground,
+          Row(
+            children: <Widget>[
+              Text(
+                tr('masterData.cm.consents'),
+                style: Theme.of(context).textTheme.titleLarge,
+              ),
+            ],
           ),
-          const SizedBox(width: 5.0),
-          Text(tr('app.features.masterdata'))
+          const SizedBox(height: UiConfig.lineSpacing),
+          MasterDataListTile(
+            title: tr('masterData.cm.customfields.list'),
+            onTap: () {
+              context.push(MasterDataRoute.customFields.path);
+            },
+          ),
+          MasterDataListTile(
+            title: tr('masterData.cm.purpose.list'),
+            onTap: () {
+              context.push(MasterDataRoute.purposes.path);
+            },
+          ),
+          MasterDataListTile(
+            title: tr('masterData.cm.purposeCategory.list'),
+            onTap: () {
+              context.push(MasterDataRoute.purposesCategories.path);
+            },
+          ),
         ],
       ),
-      elevation: 1.0,
-      shadowColor: Theme.of(context).colorScheme.background,
-      surfaceTintColor: Theme.of(context).colorScheme.onBackground,
-      backgroundColor: Theme.of(context).colorScheme.onBackground,
+    );
+  }
+
+  CustomContainer _buildDataSubjectRightSection(BuildContext context) {
+    return CustomContainer(
+      child: Column(
+        children: <Widget>[
+          Row(
+            children: <Widget>[
+              Text(
+                tr('masterData.dsr.datasubjectright'),
+                style: Theme.of(context).textTheme.titleLarge,
+              ),
+            ],
+          ),
+          const SizedBox(height: UiConfig.lineSpacing),
+          MasterDataListTile(
+            title: tr('masterData.dsr.request.list'),
+            onTap: () {
+              context.push(MasterDataRoute.requestType.path);
+            },
+          ),
+          MasterDataListTile(
+            title: tr('masterData.dsr.rejections.list'),
+            onTap: () {
+              context.push(MasterDataRoute.rejectType.path);
+            },
+          ),
+          MasterDataListTile(
+            title: tr('masterData.dsr.reason.list'),
+            onTap: () {
+              context.push(MasterDataRoute.reasonType.path);
+            },
+          ),
+          MasterDataListTile(
+            title: tr('masterData.dsr.requestrejects.list'),
+            onTap: () {
+              context.push(MasterDataRoute.requestReject.path);
+            },
+          ),
+          MasterDataListTile(
+            title: tr('masterData.dsr.requestreasons.list'),
+            onTap: () {
+              context.push(MasterDataRoute.requestReason.path);
+            },
+          ),
+        ],
+      ),
     );
   }
 }

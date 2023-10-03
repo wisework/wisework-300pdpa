@@ -20,23 +20,22 @@ class ReasonTypeScreen extends StatefulWidget {
 }
 
 class _ReasonTypeScreenState extends State<ReasonTypeScreen> {
-  late String companyId;
-
   @override
   void initState() {
     super.initState();
 
-    _getCompanyId();
+    _initialData();
   }
 
-  void _getCompanyId() {
-    final signInBloc = BlocProvider.of<SignInBloc>(context, listen: false);
-    if (signInBloc.state is SignedInUser) {
-      final signedIn = signInBloc.state as SignedInUser;
-      companyId = signedIn.user.currentCompany;
-    } else {
-      companyId = '';
+  void _initialData() {
+    final bloc = context.read<SignInBloc>();
+
+    String companyId = '';
+    if (bloc.state is SignedInUser) {
+      companyId = (bloc.state as SignedInUser).user.currentCompany;
     }
+
+    debugPrint(companyId); // <-- use this company ID
   }
 
   @override
@@ -125,8 +124,9 @@ class _ReasonTypeViewState extends State<ReasonTypeView> {
       subtitle: reasoncode,
       status: reasontype.status,
       onTap: () {
-         context.push(
-          MasterDataRoute.editPurpose.path.replaceFirst(':id', reasontype.reasonTypeId),
+        context.push(
+          MasterDataRoute.editPurpose.path
+              .replaceFirst(':id', reasontype.reasonTypeId),
         );
       },
     );

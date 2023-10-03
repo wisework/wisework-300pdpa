@@ -18,23 +18,22 @@ class RequestTypeScreen extends StatefulWidget {
 }
 
 class _RequestTypeScreenState extends State<RequestTypeScreen> {
-  late String companyId;
-
   @override
   void initState() {
     super.initState();
 
-    _getCompanyId();
+    _initialData();
   }
 
-  void _getCompanyId() {
-    final signInBloc = BlocProvider.of<SignInBloc>(context, listen: false);
-    if (signInBloc.state is SignedInUser) {
-      final signedIn = signInBloc.state as SignedInUser;
-      companyId = signedIn.user.currentCompany;
-    } else {
-      companyId = '';
+  void _initialData() {
+    final bloc = context.read<SignInBloc>();
+
+    String companyId = '';
+    if (bloc.state is SignedInUser) {
+      companyId = (bloc.state as SignedInUser).user.currentCompany;
     }
+
+    debugPrint(companyId); // <-- use this company ID
   }
 
   @override

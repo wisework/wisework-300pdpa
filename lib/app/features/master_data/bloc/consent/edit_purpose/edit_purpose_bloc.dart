@@ -13,7 +13,9 @@ class EditPurposeBloc extends Bloc<EditPurposeEvent, EditPurposeState> {
   })  : _masterDataRepository = masterDataRepository,
         super(const EditPurposeInitial()) {
     on<GetCurrentPurposeEvent>(_getCurrentPurposeHandler);
+    on<CreateCurrentPurposeEvent>(_createCurrentPurposeHandler);
     on<UpdateCurrentPurposeEvent>(_updateCurrentPurposeHandler);
+    on<DeleteCurrentPurposeEvent>(_deleteCurrentPurposeHandler);
   }
 
   final MasterDataRepository _masterDataRepository;
@@ -46,6 +48,30 @@ class EditPurposeBloc extends Bloc<EditPurposeEvent, EditPurposeState> {
     );
   }
 
+  Future<void> _createCurrentPurposeHandler(
+    CreateCurrentPurposeEvent event,
+    Emitter<EditPurposeState> emit,
+  ) async {
+    if (event.companyId.isEmpty) {
+      emit(const EditPurposeError('Required company ID'));
+      return;
+    }
+
+    emit(const CreatingCurrentPurpose());
+
+    final result = await _masterDataRepository.createPurpose(
+      event.purpose,
+      event.companyId,
+    );
+
+    await Future.delayed(const Duration(milliseconds: 800));
+
+    result.fold(
+      (failure) => emit(EditPurposeError(failure.errorMessage)),
+      (purpose) => emit(CreatedCurrentPurpose(purpose)),
+    );
+  }
+
   Future<void> _updateCurrentPurposeHandler(
     UpdateCurrentPurposeEvent event,
     Emitter<EditPurposeState> emit,
@@ -66,7 +92,33 @@ class EditPurposeBloc extends Bloc<EditPurposeEvent, EditPurposeState> {
 
     result.fold(
       (failure) => emit(EditPurposeError(failure.errorMessage)),
-      (purpose) => emit(UpdatedCurrentPurpose(purpose)),
+      (_) => emit(UpdatedCurrentPurpose(event.purpose)),
+    );
+  }
+
+  Future<void> _deleteCurrentPurposeHandler(
+    DeleteCurrentPurposeEvent event,
+    Emitter<EditPurposeState> emit,
+  ) async {
+    if (event.purposeId.isEmpty) return;
+
+    if (event.companyId.isEmpty) {
+      emit(const EditPurposeError('Required company ID'));
+      return;
+    }
+
+    emit(const DeletingCurrentPurpose());
+
+    final result = await _masterDataRepository.deletePurpose(
+      event.purposeId,
+      event.companyId,
+    );
+
+    await Future.delayed(const Duration(milliseconds: 800));
+
+    result.fold(
+      (failure) => emit(EditPurposeError(failure.errorMessage)),
+      (_) => emit(DeletedCurrentPurpose(event.purposeId)),
     );
   }
 }

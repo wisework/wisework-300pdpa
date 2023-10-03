@@ -15,23 +15,22 @@ class RejectTypeScreen extends StatefulWidget {
 }
 
 class _RejectTypeScreenState extends State<RejectTypeScreen> {
-   late String companyId;
-
   @override
   void initState() {
     super.initState();
 
-    _getCompanyId();
+    _initialData();
   }
 
-  void _getCompanyId() {
-    final signInBloc = BlocProvider.of<SignInBloc>(context, listen: false);
-    if (signInBloc.state is SignedInUser) {
-      final signedIn = signInBloc.state as SignedInUser;
-      companyId = signedIn.user.currentCompany;
-    } else {
-      companyId = '';
+  void _initialData() {
+    final bloc = context.read<SignInBloc>();
+
+    String companyId = '';
+    if (bloc.state is SignedInUser) {
+      companyId = (bloc.state as SignedInUser).user.currentCompany;
     }
+
+    debugPrint(companyId); // <-- use this company ID
   }
 
   @override
@@ -84,7 +83,7 @@ class _RejectTypeViewState extends State<RejectTypeView> {
     );
   }
 
-   AppBar _buildAppBar(BuildContext context) {
+  AppBar _buildAppBar(BuildContext context) {
     return AppBar(
       automaticallyImplyLeading: false,
       title: Row(

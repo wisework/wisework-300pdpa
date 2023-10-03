@@ -47,11 +47,9 @@ class _EditPurposeScreenState extends State<EditPurposeScreen> {
   }
 
   void _initialData() {
-    final signInBloc = BlocProvider.of<SignInBloc>(context, listen: false);
-    if (signInBloc.state is SignedInUser) {
-      final signedIn = signInBloc.state as SignedInUser;
-
-      currentUser = signedIn.user;
+    final bloc = context.read<SignInBloc>();
+    if (bloc.state is SignedInUser) {
+      currentUser = (bloc.state as SignedInUser).user;
     } else {
       currentUser = UserModel.empty();
     }
@@ -67,17 +65,11 @@ class _EditPurposeScreenState extends State<EditPurposeScreen> {
             companyId: currentUser.currentCompany,
           ),
         ),
-      child: BlocBuilder<EditPurposeBloc, EditPurposeState>(
-        builder: (context, state) {
-          if (state is GotCurrentPurpose) {
-            return EditPurposeView(
-              initialPurpose: state.purpose,
-              currentUser: currentUser,
-            );
-          }
-          if (state is UpdatedCurrentPurpose) {
+      child: BlocConsumer<EditPurposeBloc, EditPurposeState>(
+        listener: (context, state) {
+          if (state is CreatedCurrentPurpose) {
             BotToast.showText(
-              text: 'Save successfully',
+              text: 'Create successfully',
               contentColor:
                   Theme.of(context).colorScheme.secondary.withOpacity(0.75),
               borderRadius: BorderRadius.circular(8.0),
@@ -85,17 +77,69 @@ class _EditPurposeScreenState extends State<EditPurposeScreen> {
                   .textTheme
                   .bodyMedium!
                   .copyWith(color: Theme.of(context).colorScheme.onPrimary),
-              duration: const Duration(seconds: 2),
+              duration: UiConfig.toastDuration,
             );
 
+            context.read<PurposeBloc>().add(UpdatePurposeEvent(
+                purpose: state.purpose, updateType: UpdateType.created));
+
+            context.pop();
+          }
+
+          if (state is UpdatedCurrentPurpose) {
+            BotToast.showText(
+              text: 'Update successfully',
+              contentColor:
+                  Theme.of(context).colorScheme.secondary.withOpacity(0.75),
+              borderRadius: BorderRadius.circular(8.0),
+              textStyle: Theme.of(context)
+                  .textTheme
+                  .bodyMedium!
+                  .copyWith(color: Theme.of(context).colorScheme.onPrimary),
+              duration: UiConfig.toastDuration,
+            );
+          }
+
+          if (state is DeletedCurrentPurpose) {
+            BotToast.showText(
+              text: 'Delete successfully',
+              contentColor:
+                  Theme.of(context).colorScheme.secondary.withOpacity(0.75),
+              borderRadius: BorderRadius.circular(8.0),
+              textStyle: Theme.of(context)
+                  .textTheme
+                  .bodyMedium!
+                  .copyWith(color: Theme.of(context).colorScheme.onPrimary),
+              duration: UiConfig.toastDuration,
+            );
+
+            final deleted = PurposeModel.empty().copyWith(id: state.purposeId);
+
+            context.read<PurposeBloc>().add(UpdatePurposeEvent(
+                purpose: deleted, updateType: UpdateType.deleted));
+
+            context.pop();
+          }
+        },
+        builder: (context, state) {
+          if (state is GotCurrentPurpose) {
             return EditPurposeView(
               initialPurpose: state.purpose,
               currentUser: currentUser,
+              isNewPurpose: widget.purposeId.isEmpty,
+            );
+          }
+          if (state is UpdatedCurrentPurpose) {
+            return EditPurposeView(
+              initialPurpose: state.purpose,
+              currentUser: currentUser,
+              isNewPurpose: widget.purposeId.isEmpty,
             );
           }
           if (state is EditPurposeError) {
             return ErrorMessageScreen(message: state.message);
           }
+
           return const LoadingScreen();
         },
       ),
@@ -108,10 +152,12 @@ class EditPurposeView extends StatefulWidget {
     super.key,
     required this.initialPurpose,
     required this.currentUser,
+    required this.isNewPurpose,
   });
 
   final PurposeModel initialPurpose;
   final UserModel currentUser;
+  final bool isNewPurpose;
 
   @override
   State<EditPurposeView> createState() => _EditPurposeViewState();
@@ -148,6 +194,13 @@ class _EditPurposeViewState extends State<EditPurposeView> {
   void _initialData() {
     purpose = widget.initialPurpose;
 
+    descriptionController = TextEditingController();
+    warningDescriptionController = TextEditingController();
+    retentionPeriodController = TextEditingController();
+
+    unitSelected = 'd';
+    isActivated = true;
+
     if (purpose != PurposeModel.empty()) {
       if (purpose.description.isNotEmpty) {
         descriptionController = TextEditingController(
@@ -167,13 +220,6 @@ class _EditPurposeViewState extends State<EditPurposeView> {
       unitSelected = purpose.periodUnit.isNotEmpty ? purpose.periodUnit : 'd';
 
       isActivated = purpose.status == ActiveStatus.active;
-    } else {
-      descriptionController = TextEditingController();
-      warningDescriptionController = TextEditingController();
-      retentionPeriodController = TextEditingController();
-
-      unitSelected = 'd';
-      isActivated = true;
     }
   }
 
@@ -235,19 +281,46 @@ class _EditPurposeViewState extends State<EditPurposeView> {
 
   void _savePurpose() {
     if (_formKey.currentState!.validate()) {
-      purpose = widget.initialPurpose != PurposeModel.empty()
-          ? purpose.toUpdated(
-              widget.currentUser.email,
-              DateTime.now(),
-            )
-          : purpose.toCreated(
-              widget.currentUser.email,
-              DateTime.now(),
-            );
+      if (widget.isNewPurpose) {
+        purpose = purpose.toCreated(
+          widget.currentUser.email,
+          DateTime.now(),
+        );
 
-      context.read<EditPurposeBloc>().add(UpdateCurrentPurposeEvent(
-          purpose: purpose, companyId: widget.currentUser.currentCompany));
+        context.read<EditPurposeBloc>().add(CreateCurrentPurposeEvent(
+              purpose: purpose,
+              companyId: widget.currentUser.currentCompany,
+            ));
+      } else {
+        purpose = purpose.toUpdated(
+          widget.currentUser.email,
+          DateTime.now(),
+        );
+
+        context.read<EditPurposeBloc>().add(UpdateCurrentPurposeEvent(
+              purpose: purpose,
+              companyId: widget.currentUser.currentCompany,
+            ));
+      }
     }
+  }
+
+  void _deletePurpose() {
+    context.read<EditPurposeBloc>().add(DeleteCurrentPurposeEvent(
+          purposeId: purpose.id,
+          companyId: widget.currentUser.currentCompany,
+        ));
+  }
+
+  void _goBackAndUpdate() {
+    if (!widget.isNewPurpose) {
+      context.read<PurposeBloc>().add(UpdatePurposeEvent(
+            purpose: purpose,
+            updateType: UpdateType.updated,
+          ));
+    }
+
+    context.pop();
   }
 
   @override
@@ -256,7 +329,9 @@ class _EditPurposeViewState extends State<EditPurposeView> {
       appBar: PdpaAppBar(
         leadingIcon: _buildPopButton(widget.initialPurpose),
         title: Text(
-          tr('masterData.cm.purpose.edit'),
+          widget.isNewPurpose
+              ? tr('masterData.cm.purpose.create')
+              : tr('masterData.cm.purpose.edit'),
           style: Theme.of(context).textTheme.titleLarge,
         ),
         actions: [
@@ -284,13 +359,7 @@ class _EditPurposeViewState extends State<EditPurposeView> {
 
   CustomIconButton _buildPopButton(PurposeModel purpose) {
     return CustomIconButton(
-      onPressed: () {
-        if (purpose != PurposeModel.empty()) {
-          context.read<PurposeBloc>().add(UpdatePurposeEvent(purpose: purpose));
-        }
-
-        context.pop();
-      },
+      onPressed: _goBackAndUpdate,
       icon: Ionicons.chevron_back_outline,
       iconColor: Theme.of(context).colorScheme.primary,
       backgroundColor: Theme.of(context).colorScheme.onBackground,
@@ -408,6 +477,7 @@ class _EditPurposeViewState extends State<EditPurposeView> {
             ),
             updatedBy: purpose.updatedBy,
             updatedDate: purpose.updatedDate,
+            onDeletePressed: _deletePurpose,
           ),
         ),
         const SizedBox(height: UiConfig.lineSpacing),

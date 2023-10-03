@@ -9,7 +9,7 @@ class PurposeCategoryBloc
     extends Bloc<PurposeCategoryEvent, PurposeCategoryState> {
   PurposeCategoryBloc() : super(PurposeCategoryInitial()) {
     on<PurposeCategoryEvent>((event, emit) {
-      // TODO: implement event handler
+      // implement event handler
     });
   }
 }

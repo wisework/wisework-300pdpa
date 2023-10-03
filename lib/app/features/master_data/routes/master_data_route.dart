@@ -51,7 +51,7 @@ class MasterDataRoute {
     ),
   );
 
-  static final GoRoute purposesCategory = GoRoute(
+  static final GoRoute purposesCategories = GoRoute(
     path: '/master-data/purposescategory',
     builder: (context, _) => const PurposeCategoryScreen(),
   );
@@ -150,7 +150,7 @@ class MasterDataRoute {
     purposes,
     createPurpose,
     editPurpose,
-    purposesCategory,
+    purposesCategories,
     createPurposeCategory,
     editPurposeCategory,
     //dsr

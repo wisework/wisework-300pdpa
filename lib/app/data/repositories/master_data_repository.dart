@@ -38,14 +38,40 @@ class MasterDataRepository {
     }
   }
 
-  ResultFuture<PurposeModel> updatePurpose(
+  ResultFuture<PurposeModel> createPurpose(
     PurposeModel purpose,
     String companyId,
   ) async {
     try {
-      final result = await _api.updatePurpose(purpose, companyId);
+      final result = await _api.createPurpose(purpose, companyId);
 
       return Right(result);
+    } on ApiException catch (error) {
+      return Left(ApiFailure.fromException(error));
+    }
+  }
+
+  ResultVoid updatePurpose(
+    PurposeModel purpose,
+    String companyId,
+  ) async {
+    try {
+      await _api.updatePurpose(purpose, companyId);
+
+      return const Right(null);
+    } on ApiException catch (error) {
+      return Left(ApiFailure.fromException(error));
+    }
+  }
+
+  ResultVoid deletePurpose(
+    String purposeId,
+    String companyId,
+  ) async {
+    try {
+      await _api.deletePurpose(purposeId, companyId);
+
+      return const Right(null);
     } on ApiException catch (error) {
       return Left(ApiFailure.fromException(error));
     }
