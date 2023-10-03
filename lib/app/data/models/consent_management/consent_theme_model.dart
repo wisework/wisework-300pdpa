@@ -116,10 +116,11 @@ class ConsentThemeModel extends Equatable {
         'companyId': companyId,
       };
 
-  factory ConsentThemeModel.fromJson(String source) =>
-      ConsentThemeModel.fromMap(json.decode(source) as DataMap);
-
-  String toJson() => json.encode(toMap());
+  factory ConsentThemeModel.fromDocument(FirebaseDocument document) {
+    Map<String, dynamic> response = document.data()!;
+    response['consentThemeId'] = document.id;
+    return ConsentThemeModel.fromMap(response);
+  }
 
   ConsentThemeModel copyWith({
     String? themeId,
