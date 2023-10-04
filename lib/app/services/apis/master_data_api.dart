@@ -1,4 +1,5 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:pdpa/app/data/models/master_data/custom_field_model.dart';
 import 'package:pdpa/app/data/models/master_data/purpose_model.dart';
 
 class MasterDataApi {
@@ -65,4 +66,65 @@ class MasterDataApi {
           .delete();
     }
   }
+
+   //? Customfield
+  Future<List<CustomFieldModel>> getCustomfield(String companyId) async {
+    final result =
+        await _firestore.collection('Companies/$companyId/CustomFields').get();
+
+    List<CustomFieldModel> purposes = [];
+    for (var document in result.docs) {
+      purposes.add(CustomFieldModel.fromDocument(document));
+    }
+
+    return purposes;
+  }
+
+  Future<CustomFieldModel?> getCustomFieldById(
+    String customfieldId,
+    String companyId,
+  ) async {
+    final result = await _firestore
+        .collection('Companies/$companyId/CustomFields')
+        .doc(customfieldId)
+        .get();
+
+    if (!result.exists) return null;
+    return CustomFieldModel.fromDocument(result);
+  }
+
+  Future<CustomFieldModel> createCustomField(
+    CustomFieldModel customfield,
+    String companyId,
+  ) async {
+    final ref = _firestore.collection('Companies/$companyId/CustomFields').doc();
+    final created = customfield.copyWith(id: ref.id);
+
+    await ref.set(created.toMap());
+
+    return created;
+  }
+
+  Future<void> updateCustomField(
+    CustomFieldModel customfield,
+    String companyId,
+  ) async {
+    await _firestore
+        .collection('Companies/$companyId/CustomFields')
+        .doc(customfield.id)
+        .set(customfield.toMap());
+  }
+
+  Future<void> deleteCustomField(
+    String customfieldId,
+    String companyId,
+  ) async {
+    if (customfieldId.isNotEmpty) {
+      await _firestore
+          .collection('Companies/$companyId/CustomFields')
+          .doc(customfieldId)
+          .delete();
+    }
+  }
+
 }

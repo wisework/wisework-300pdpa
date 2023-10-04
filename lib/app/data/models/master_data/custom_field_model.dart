@@ -14,10 +14,7 @@ class CustomFieldModel extends Equatable {
     required this.lengthLimit,
     required this.maxLines,
     required this.minLines,
-    required this.placeholder,
-    required this.uid,
-    required this.language,
-    required this.companies,
+    required this.hintText,
     required this.status,
     required this.createdBy,
     required this.createdDate,
@@ -28,13 +25,10 @@ class CustomFieldModel extends Equatable {
   final String id;
   final List<LocalizedModel> title;
   final String inputType;
-  final int lengthLimit;
+  final String lengthLimit;
   final int maxLines;
   final int minLines;
-  final List<LocalizedModel> placeholder;
-  final String uid;
-  final String language;
-  final List<String> companies;
+  final List<LocalizedModel> hintText;
   final ActiveStatus status;
   final String createdBy;
   final DateTime createdDate;
@@ -45,14 +39,11 @@ class CustomFieldModel extends Equatable {
       : this(
           id: '',
           title: [],
-          inputType: '',
-          lengthLimit: 1,
+          inputType: 'text',
+          lengthLimit: '',
           maxLines: 1,
           minLines: 1,
-          placeholder: [],
-          uid: '',
-          language: '',
-          companies: [],
+          hintText: [],
           status: ActiveStatus.active,
           createdBy: '',
           createdDate: DateTime.fromMillisecondsSinceEpoch(0),
@@ -69,19 +60,14 @@ class CustomFieldModel extends Equatable {
             ),
           ),
           inputType: map['inputType'] as String,
-          lengthLimit: map['lengthLimit'] as int,
+          lengthLimit: map['lengthLimit'] as String,
           maxLines: map['maxLines'] as int,
           minLines: map['minLines'] as int,
-          placeholder: List<LocalizedModel>.from(
-            (map['placeholder'] as List<dynamic>).map<LocalizedModel>(
+          hintText: List<LocalizedModel>.from(
+            (map['hintText'] as List<dynamic>).map<LocalizedModel>(
               (item) => LocalizedModel.fromMap(item as Map<String, dynamic>),
             ),
           ),
-          uid: map['uid'] as String,
-          language: map['language'] as String,
-          companies: List<dynamic>.from((map['companies'] as List<dynamic>))
-              .map((item) => item.toString())
-              .toList(),
           status: ActiveStatus.values[map['status'] as int],
           createdBy: map['createdBy'] as String,
           createdDate: DateTime.parse(map['createdDate'] as String),
@@ -96,10 +82,7 @@ class CustomFieldModel extends Equatable {
         'lengthLimit': lengthLimit,
         'maxLines': maxLines,
         'minLines': minLines,
-        'placeholder': placeholder.map((item) => item.toMap()).toList(),
-        'uid': uid,
-        'language': language,
-        'companies': companies,
+        'hintText': hintText.map((item) => item.toMap()).toList(),
         'status': status.index,
         'createdBy': createdBy,
         'createdDate': createdDate.toIso8601String(),
@@ -116,13 +99,10 @@ class CustomFieldModel extends Equatable {
     String? id,
     List<LocalizedModel>? title,
     String? inputType,
-    int? lengthLimit,
+    String? lengthLimit,
     int? maxLines,
     int? minLines,
-    List<LocalizedModel>? placeholder,
-    String? uid,
-    String? language,
-    List<String>? companies,
+    List<LocalizedModel>? hintText,
     ActiveStatus? status,
     String? createdBy,
     DateTime? createdDate,
@@ -136,10 +116,7 @@ class CustomFieldModel extends Equatable {
       lengthLimit: lengthLimit ?? this.lengthLimit,
       maxLines: maxLines ?? this.maxLines,
       minLines: minLines ?? this.minLines,
-      placeholder: placeholder ?? this.placeholder,
-      uid: uid ?? this.uid,
-      language: language ?? this.language,
-      companies: companies ?? this.companies,
+      hintText: hintText ?? this.hintText,
       status: status ?? this.status,
       createdBy: createdBy ?? this.createdBy,
       createdDate: createdDate ?? this.createdDate,
@@ -147,6 +124,18 @@ class CustomFieldModel extends Equatable {
       updatedDate: updatedDate ?? this.updatedDate,
     );
   }
+
+  CustomFieldModel toCreated(String email, DateTime date) => copyWith(
+        createdBy: email,
+        createdDate: date,
+        updatedBy: email,
+        updatedDate: date,
+      );
+
+  CustomFieldModel toUpdated(String email, DateTime date) => copyWith(
+        updatedBy: email,
+        updatedDate: date,
+      );
 
   @override
   List<Object> get props {
@@ -157,10 +146,7 @@ class CustomFieldModel extends Equatable {
       lengthLimit,
       maxLines,
       minLines,
-      placeholder,
-      uid,
-      language,
-      companies,
+      hintText,
       status,
       createdBy,
       createdDate,

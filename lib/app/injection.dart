@@ -2,6 +2,8 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:get_it/get_it.dart';
 import 'package:google_sign_in/google_sign_in.dart';
+import 'package:pdpa/app/features/master_data/bloc/consent/custom_field/custom_field_bloc.dart';
+import 'package:pdpa/app/features/master_data/bloc/consent/edit_custom_field/bloc/edit_custom_field_bloc.dart';
 
 import 'config/config.dart';
 import 'data/repositories/authentication_repository.dart';
@@ -72,6 +74,16 @@ Future<void> _masterData() async {
     )
     ..registerFactory(
       () => EditPurposeBloc(
+        masterDataRepository: serviceLocator(),
+      ),
+    )
+    ..registerFactory(
+      () => CustomFieldBloc(
+        masterDataRepository: serviceLocator(),
+      ),
+    )
+    ..registerFactory(
+      () => EditCustomFieldBloc(
         masterDataRepository: serviceLocator(),
       ),
     )
