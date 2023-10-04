@@ -1,4 +1,3 @@
-// ignore_for_file: public_member_api_docs, sort_constructors_first
 import 'package:equatable/equatable.dart';
 
 import 'package:pdpa/app/shared/utils/constants.dart';
@@ -10,11 +9,11 @@ class CustomFieldModel extends Equatable {
   const CustomFieldModel({
     required this.id,
     required this.title,
-    required this.inputType,
-    required this.lengthLimit,
-    required this.maxLines,
-    required this.minLines,
     required this.hintText,
+    required this.inputType,
+    this.lengthLimit,
+    required this.minLines,
+    required this.maxLines,
     required this.status,
     required this.createdBy,
     required this.createdDate,
@@ -24,11 +23,11 @@ class CustomFieldModel extends Equatable {
 
   final String id;
   final List<LocalizedModel> title;
-  final String inputType;
-  final String lengthLimit;
-  final int maxLines;
-  final int minLines;
   final List<LocalizedModel> hintText;
+  final String inputType;
+  final int? lengthLimit;
+  final int minLines;
+  final int maxLines;
   final ActiveStatus status;
   final String createdBy;
   final DateTime createdDate;
@@ -39,11 +38,11 @@ class CustomFieldModel extends Equatable {
       : this(
           id: '',
           title: [],
-          inputType: 'text',
-          lengthLimit: '',
-          maxLines: 1,
-          minLines: 1,
           hintText: [],
+          inputType: '',
+          lengthLimit: null,
+          minLines: 1,
+          maxLines: 1,
           status: ActiveStatus.active,
           createdBy: '',
           createdDate: DateTime.fromMillisecondsSinceEpoch(0),
@@ -56,18 +55,20 @@ class CustomFieldModel extends Equatable {
           id: map['id'] as String,
           title: List<LocalizedModel>.from(
             (map['title'] as List<dynamic>).map<LocalizedModel>(
-              (item) => LocalizedModel.fromMap(item as Map<String, dynamic>),
+              (item) => LocalizedModel.fromMap(item as DataMap),
+            ),
+          ),
+          hintText: List<LocalizedModel>.from(
+            (map['hintText'] as List<dynamic>).map<LocalizedModel>(
+              (item) => LocalizedModel.fromMap(item as DataMap),
             ),
           ),
           inputType: map['inputType'] as String,
-          lengthLimit: map['lengthLimit'] as String,
-          maxLines: map['maxLines'] as int,
+          lengthLimit: (map['lengthLimit'] as String).isNotEmpty
+              ? int.parse(map['lengthLimit'] as String)
+              : null,
           minLines: map['minLines'] as int,
-          hintText: List<LocalizedModel>.from(
-            (map['hintText'] as List<dynamic>).map<LocalizedModel>(
-              (item) => LocalizedModel.fromMap(item as Map<String, dynamic>),
-            ),
-          ),
+          maxLines: map['maxLines'] as int,
           status: ActiveStatus.values[map['status'] as int],
           createdBy: map['createdBy'] as String,
           createdDate: DateTime.parse(map['createdDate'] as String),
@@ -76,13 +77,12 @@ class CustomFieldModel extends Equatable {
         );
 
   DataMap toMap() => {
-        'id': id,
         'title': title.map((item) => item.toMap()).toList(),
-        'inputType': inputType,
-        'lengthLimit': lengthLimit,
-        'maxLines': maxLines,
-        'minLines': minLines,
         'hintText': hintText.map((item) => item.toMap()).toList(),
+        'inputType': inputType,
+        'lengthLimit': lengthLimit != null ? lengthLimit.toString() : '',
+        'minLines': minLines,
+        'maxLines': maxLines,
         'status': status.index,
         'createdBy': createdBy,
         'createdDate': createdDate.toIso8601String(),
@@ -91,18 +91,19 @@ class CustomFieldModel extends Equatable {
       };
 
   factory CustomFieldModel.fromDocument(FirebaseDocument document) {
-    Map<String, dynamic> response = document.data()!;
+    DataMap response = document.data()!;
     response['id'] = document.id;
     return CustomFieldModel.fromMap(response);
   }
+
   CustomFieldModel copyWith({
     String? id,
     List<LocalizedModel>? title,
-    String? inputType,
-    String? lengthLimit,
-    int? maxLines,
-    int? minLines,
     List<LocalizedModel>? hintText,
+    String? inputType,
+    int? lengthLimit,
+    int? minLines,
+    int? maxLines,
     ActiveStatus? status,
     String? createdBy,
     DateTime? createdDate,
@@ -112,11 +113,11 @@ class CustomFieldModel extends Equatable {
     return CustomFieldModel(
       id: id ?? this.id,
       title: title ?? this.title,
+      hintText: hintText ?? this.hintText,
       inputType: inputType ?? this.inputType,
       lengthLimit: lengthLimit ?? this.lengthLimit,
-      maxLines: maxLines ?? this.maxLines,
       minLines: minLines ?? this.minLines,
-      hintText: hintText ?? this.hintText,
+      maxLines: maxLines ?? this.maxLines,
       status: status ?? this.status,
       createdBy: createdBy ?? this.createdBy,
       createdDate: createdDate ?? this.createdDate,
@@ -138,15 +139,15 @@ class CustomFieldModel extends Equatable {
       );
 
   @override
-  List<Object> get props {
+  List<Object?> get props {
     return [
       id,
       title,
+      hintText,
       inputType,
       lengthLimit,
-      maxLines,
       minLines,
-      hintText,
+      maxLines,
       status,
       createdBy,
       createdDate,

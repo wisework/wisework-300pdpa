@@ -81,7 +81,7 @@ class MasterDataRepository {
   //? Customfield
   ResultFuture<List<CustomFieldModel>> getCustomfield(String companyId) async {
     try {
-      final result = await _api.getCustomfield(companyId);
+      final result = await _api.getCustomFields(companyId);
 
       return Right(result);
     } on ApiException catch (error) {

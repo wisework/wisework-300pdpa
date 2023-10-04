@@ -169,12 +169,13 @@ class _EditCustomFieldViewState extends State<EditCustomFieldView> {
 
   late TextEditingController titleController;
   late TextEditingController hintTextController;
-  late TextEditingController customFieldTypeController;
+  late TextEditingController inputTypeController;
   late TextEditingController lenghtLimitController;
   late TextEditingController minLineController;
   late TextEditingController maxLineController;
 
   late String typeSelected;
+  int? lenghtLimit;
   late bool isActivated;
 
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
@@ -183,20 +184,13 @@ class _EditCustomFieldViewState extends State<EditCustomFieldView> {
   void initState() {
     super.initState();
     _initialData();
-
-    titleController = TextEditingController();
-    hintTextController = TextEditingController();
-    customFieldTypeController = TextEditingController();
-    lenghtLimitController = TextEditingController();
-    minLineController = TextEditingController();
-    maxLineController = TextEditingController();
   }
 
   @override
   void dispose() {
     titleController.dispose();
     hintTextController.dispose();
-    customFieldTypeController.dispose();
+    inputTypeController.dispose();
     lenghtLimitController.dispose();
     minLineController.dispose();
     maxLineController.dispose();
@@ -206,18 +200,17 @@ class _EditCustomFieldViewState extends State<EditCustomFieldView> {
 
   void _initialData() {
     customfield = widget.initialCustomField;
-
     titleController = TextEditingController();
     hintTextController = TextEditingController();
-    customFieldTypeController = TextEditingController();
+    inputTypeController = TextEditingController();
     lenghtLimitController = TextEditingController();
     minLineController = TextEditingController();
     maxLineController = TextEditingController();
 
-    typeSelected = 'd';
     isActivated = true;
 
     if (customfield != CustomFieldModel.empty()) {
+
       if (customfield.title.isNotEmpty) {
         titleController = TextEditingController(
           text: customfield.title.first.text,
@@ -228,31 +221,28 @@ class _EditCustomFieldViewState extends State<EditCustomFieldView> {
           text: customfield.hintText.first.text,
         );
       }
-
-      // retentionPeriodController = TextEditingController(
-      //   text: customfield.retentionPeriod.toString(),
-      // );
-
-      typeSelected =
-          customfield.inputType.isNotEmpty ? customfield.inputType : 'd';
-
-      isActivated = customfield.status == ActiveStatus.active;
-
-      if (customfield.lengthLimit.isNotEmpty) {
-        hintTextController = TextEditingController(
-          text: customfield.hintText.first.text,
+      if (customfield.inputType.isNotEmpty) {
+        inputTypeController = TextEditingController(
+          text: customfield.inputType,
+        );
+      }
+      if (customfield.lengthLimit != 0) {
+        lenghtLimitController = TextEditingController(
+          text: customfield.lengthLimit.toString(),
         );
       }
       if (customfield.maxLines != 0) {
-        hintTextController = TextEditingController(
-          text: customfield.hintText.first.text,
+        maxLineController = TextEditingController(
+          text: customfield.maxLines.toString(),
         );
       }
       if (customfield.minLines != 0) {
-        hintTextController = TextEditingController(
-          text: customfield.hintText.first.text,
+        minLineController = TextEditingController(
+          text: customfield.minLines.toString(),
         );
       }
+
+      isActivated = customfield.status == ActiveStatus.active;
     }
   }
 
@@ -295,10 +285,13 @@ class _EditCustomFieldViewState extends State<EditCustomFieldView> {
   }
 
   void _setLenghtLimit(String? value) {
-    setState(() {
-      final lenghtLimit = lenghtLimitController.text;
-      customfield = customfield.copyWith(lengthLimit: lenghtLimit);
-    });
+    if (value != null) {
+      setState(() {
+        lenghtLimit = int.parse(value);
+
+        customfield = customfield.copyWith(lengthLimit: lenghtLimit);
+      });
+    }
   }
 
   void _setMaxLines(String? value) {
@@ -328,13 +321,37 @@ class _EditCustomFieldViewState extends State<EditCustomFieldView> {
   }
 
   void _saveCustomField() {
+    // print("i'min");
+    // var customtest = CustomFieldModel(
+    //   id: '',
+    //   title: const [
+    //     LocalizedModel(language: 'en-US', text: 'Test1'),
+    //     LocalizedModel(language: 'en-US', text: 'Test1'),
+    //   ],
+    //   hintText: const [
+    //     LocalizedModel(language: 'en-US', text: 'Test1'),
+    //     LocalizedModel(language: 'en-US', text: 'Test1'),
+    //   ],
+    //   inputType: 'text',
+    //   lengthLimit: 5,
+    //   minLines: 1,
+    //   maxLines: 5,
+    //   status: ActiveStatus.active,
+    //   createdBy: '',
+    //   createdDate: DateTime.fromMillisecondsSinceEpoch(0),
+    //   updatedBy: '',
+    //   updatedDate: DateTime.fromMillisecondsSinceEpoch(0),
+    // );
+    // context.read<EditCustomFieldBloc>().add(CreateCurrentCustomFieldEvent(
+    //       customfield: customtest,
+    //       companyId: widget.currentUser.currentCompany,
+    //     ));
     if (_formKey.currentState!.validate()) {
       if (widget.isNewCustomField) {
         customfield = customfield.toCreated(
           widget.currentUser.email,
           DateTime.now(),
         );
-        print(customfield);
         context.read<EditCustomFieldBloc>().add(CreateCurrentCustomFieldEvent(
               customfield: customfield,
               companyId: widget.currentUser.currentCompany,
@@ -406,6 +423,91 @@ class _EditCustomFieldViewState extends State<EditCustomFieldView> {
     );
   }
 
+  Form _buildCustomFieldForm(BuildContext context) {
+    return Form(
+      key: _formKey,
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: <Widget>[
+          Row(
+            children: <Widget>[
+              Text(
+                tr('masterData.cm.customfields.title'), 
+                style: Theme.of(context).textTheme.titleLarge,
+              ),
+            ],
+          ),
+          const SizedBox(height: UiConfig.lineSpacing),
+          TitleRequiredText(
+            text: tr('masterData.cm.customfields.formtitle'), //!
+            required: true,
+          ),
+          CustomTextField(
+            controller: titleController,
+            hintText: tr('masterData.cm.customfields.formtitlehint'), //!
+            onChanged: _setTitle,
+            required: true,
+          ),
+          const SizedBox(height: UiConfig.lineSpacing),
+          TitleRequiredText(
+            text: tr('masterData.cm.customfields.placeholder'), 
+            required: true,
+          ),
+          CustomTextField(
+            controller: hintTextController,
+            hintText: tr('masterData.cm.customfields.placeholderhint'), //!
+            onChanged: _setHintText,
+          ),
+          const SizedBox(height: UiConfig.lineSpacing),
+          TitleRequiredText(
+            text: tr('masterData.cm.customfields.customfieldtype'), 
+            required: true,
+          ),
+          CustomTextField(
+            controller: inputTypeController,
+            hintText: tr('masterData.cm.customfields.customfieldtypehint'), //!
+            onChanged: _setInputType,
+            required: true,
+          ),
+          const SizedBox(height: UiConfig.lineSpacing),
+          TitleRequiredText(
+            text: tr('masterData.cm.customfields.lenghtlimit'), 
+          ),
+          CustomTextField(
+            controller: lenghtLimitController,
+            hintText: tr('masterData.cm.customfields.lenghtlimithint'), //!
+            onChanged: _setLenghtLimit,
+            keyboardType: TextInputType.number,
+          ),
+          const SizedBox(height: UiConfig.lineSpacing),
+          TitleRequiredText(
+            text: tr('masterData.cm.customfields.maxline'), 
+            required: true,
+          ),
+          CustomTextField(
+            controller: maxLineController,
+            hintText: tr('masterData.cm.customfields.maxlinehint'), //!
+            onChanged: _setMaxLines,
+            required: true,
+            keyboardType: TextInputType.number,
+          ),
+          const SizedBox(height: UiConfig.lineSpacing),
+          TitleRequiredText(
+            text: tr('masterData.cm.customfields.minline'), 
+            required: true,
+          ),
+          CustomTextField(
+            controller: minLineController,
+            hintText: tr('masterData.cm.customfields.minlinehint'), //!
+            onChanged: _setMinLines,
+            required: true,
+            keyboardType: TextInputType.number,
+          ),
+        ],
+      ),
+    );
+  }
+
   CustomIconButton _buildPopButton(CustomFieldModel customfield) {
     return CustomIconButton(
       onPressed: _goBackAndUpdate,
@@ -432,86 +534,6 @@ class _EditCustomFieldViewState extends State<EditCustomFieldView> {
           backgroundColor: Theme.of(context).colorScheme.onBackground,
         );
       },
-    );
-  }
-
-  Column _buildCustomFieldForm(BuildContext context) {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: <Widget>[
-        Row(
-          children: <Widget>[
-            Text(
-              tr('masterData.cm.customfields.title'), //!
-              style: Theme.of(context).textTheme.titleLarge,
-            ),
-          ],
-        ),
-        const SizedBox(height: UiConfig.lineSpacing),
-        TitleRequiredText(
-          text: tr('masterData.cm.customfields.formtitle'), //!
-          required: true,
-        ),
-        CustomTextField(
-          controller: titleController,
-          hintText: tr('masterData.cm.customfields.formtitlehint'), //!
-          onChanged: _setTitle,
-          required: true,
-        ),
-        const SizedBox(height: UiConfig.lineSpacing),
-        TitleRequiredText(
-          text: tr('masterData.cm.customfields.placeholder'), //!
-          required: true,
-        ),
-        CustomTextField(
-          controller: hintTextController,
-          hintText: tr('masterData.cm.customfields.placeholderhint'), //!
-          onChanged: _setHintText,
-        ),
-        const SizedBox(height: UiConfig.lineSpacing),
-        TitleRequiredText(
-          text: tr('masterData.cm.customfields.customfieldtype'), //!
-          required: true,
-        ),
-        CustomTextField(
-          controller: customFieldTypeController,
-          hintText: tr('masterData.cm.customfields.customfieldtypehint'), //!
-          onChanged: _setInputType,
-          required: true,
-        ),
-        const SizedBox(height: UiConfig.lineSpacing),
-        TitleRequiredText(
-          text: tr('masterData.cm.customfields.lenghtlimit'), //!
-          required: true,
-        ),
-        CustomTextField(
-          hintText: tr('masterData.cm.customfields.lenghtlimithint'), //!
-          onChanged: _setLenghtLimit,
-          required: true,
-        ),
-        const SizedBox(height: UiConfig.lineSpacing),
-        TitleRequiredText(
-          text: tr('masterData.cm.customfields.maxline'), //!
-          required: true,
-        ),
-        CustomTextField(
-          hintText: tr('masterData.cm.customfields.maxlinehint'), //!
-          onChanged: _setMaxLines,
-          required: true,
-          keyboardType: TextInputType.number,
-        ),
-        const SizedBox(height: UiConfig.lineSpacing),
-        TitleRequiredText(
-          text: tr('masterData.cm.customfields.minline'), //!
-          required: true,
-        ),
-        CustomTextField(
-          hintText: tr('masterData.cm.customfields.minlinehint'), //!
-          onChanged: _setMinLines,
-          required: true,
-          keyboardType: TextInputType.number,
-        ),
-      ],
     );
   }
 
