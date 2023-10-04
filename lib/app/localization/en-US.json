@@ -69,7 +69,14 @@
                 "title": "Purpose Category",
                 "list": "Purpose Categories",
                 "create": "Create Purpose Category",
-                "edit": "Edit Purpose Category"
+                "edit": "Edit Purpose Category",
+                "titlform": "Title",
+                "titleformHint": "Enter title",
+                "description": "Description",
+                "descriptionHint": "Enter description",
+                "priority": "Priority",
+                "priorityHint": "Enter Priority",
+                "purposes": "Purposes"
             }
         },
         "dsr": {

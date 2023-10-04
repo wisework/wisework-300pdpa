@@ -30,7 +30,7 @@ class PurposeCategoryModel extends Equatable {
   final String updatedBy;
   final DateTime updatedDate;
 
-  PurposeCategoryModel.empty(DataMap map)
+  PurposeCategoryModel.empty()
       : this(
           id: '',
           title: [],
@@ -109,6 +109,18 @@ class PurposeCategoryModel extends Equatable {
       updatedDate: updatedDate ?? this.updatedDate,
     );
   }
+
+  PurposeCategoryModel toCreated(String email, DateTime date) => copyWith(
+        createdBy: email,
+        createdDate: date,
+        updatedBy: email,
+        updatedDate: date,
+      );
+
+  PurposeCategoryModel toUpdated(String email, DateTime date) => copyWith(
+        updatedBy: email,
+        updatedDate: date,
+      );
 
   @override
   List<Object> get props {

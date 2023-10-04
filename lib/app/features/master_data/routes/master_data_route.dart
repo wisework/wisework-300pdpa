@@ -27,7 +27,9 @@ class MasterDataRoute {
 
   static final GoRoute createCustomField = GoRoute(
     path: '/master-data/custom-field/create',
-    builder: (context, _) => const EditCustomFieldScreen(customfieldId: '',),
+    builder: (context, _) => const EditCustomFieldScreen(
+      customfieldId: '',
+    ),
   );
 
   static final GoRoute editCustomField = GoRoute(
@@ -63,12 +65,15 @@ class MasterDataRoute {
 
   static final GoRoute createPurposeCategory = GoRoute(
     path: '/master-data/purposecategory/create',
-    builder: (context, _) => const EditPurposeCategoryScreen(),
+    builder: (context, _) =>
+        const EditPurposeCategoryScreen(purposeCategoryId: ''),
   );
 
   static final GoRoute editPurposeCategory = GoRoute(
-    path: '/master-data/purposecategory/edit',
-    builder: (context, _) => const EditPurposeCategoryScreen(),
+    path: '/master-data/purposecategory/:id/edit',
+    builder: (context, state) => EditPurposeCategoryScreen(
+      purposeCategoryId: state.pathParameters['id'] ?? '',
+    ),
   );
 
   //? Reason Type
@@ -150,7 +155,6 @@ class MasterDataRoute {
     path: '/master-data/requestreject/edit',
     builder: (context, _) => const EditRequestRejectTemplateScreen(),
   );
-
 
   static final List<GoRoute> routes = <GoRoute>[
     masterData,

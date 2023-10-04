@@ -1,5 +1,6 @@
 import 'package:dartz/dartz.dart';
 import 'package:pdpa/app/data/models/master_data/custom_field_model.dart';
+import 'package:pdpa/app/data/models/master_data/purpose_category_model.dart';
 import 'package:pdpa/app/data/models/master_data/purpose_model.dart';
 import 'package:pdpa/app/services/apis/master_data_api.dart';
 import 'package:pdpa/app/shared/errors/exceptions.dart';
@@ -71,6 +72,73 @@ class MasterDataRepository {
   ) async {
     try {
       await _api.deletePurpose(purposeId, companyId);
+
+      return const Right(null);
+    } on ApiException catch (error) {
+      return Left(ApiFailure.fromException(error));
+    }
+  }
+
+//? Purpose Category
+  ResultFuture<List<PurposeCategoryModel>> getPurposeCategories(String companyId) async {
+    try {
+      final result = await _api.getPurposeCategories(companyId);
+
+      return Right(result);
+    } on ApiException catch (error) {
+      return Left(ApiFailure.fromException(error));
+    }
+  }
+
+  ResultFuture<PurposeCategoryModel> getPurposeCategoryById(
+    String purposeCategoryId,
+    String companyId,
+  ) async {
+    try {
+      final result = await _api.getPurposeCategoryById(purposeCategoryId, companyId);
+
+      if (result != null) return Right(result);
+
+      return const Left(
+        ApiFailure(message: 'Purpose not found', statusCode: 404),
+      );
+    } on ApiException catch (error) {
+      return Left(ApiFailure.fromException(error));
+    }
+  }
+
+  ResultFuture<PurposeCategoryModel> createPurposeCategory(
+    PurposeCategoryModel purposeCategory,
+    String companyId,
+  ) async {
+    try {
+      final result = await _api.createPurposeCategory(purposeCategory, companyId);
+
+      return Right(result);
+    } on ApiException catch (error) {
+      return Left(ApiFailure.fromException(error));
+    }
+  }
+
+  ResultVoid updatePurposeCategory(
+    PurposeCategoryModel purposeCategory,
+    String companyId,
+  ) async {
+    try {
+      await _api.updatePurposeCategory(purposeCategory, companyId);
+
+      return const Right(null);
+    } on ApiException catch (error) {
+      return Left(ApiFailure.fromException(error));
+    }
+  }
+
+  ResultVoid deletePurposeCategory(
+    String purposeCategoryId,
+    String companyId,
+  ) async {
+    try {
+      await _api.deletePurposeCategory(purposeCategoryId, companyId);
 
       return const Right(null);
     } on ApiException catch (error) {
