@@ -321,31 +321,6 @@ class _EditCustomFieldViewState extends State<EditCustomFieldView> {
   }
 
   void _saveCustomField() {
-    // print("i'min");
-    // var customtest = CustomFieldModel(
-    //   id: '',
-    //   title: const [
-    //     LocalizedModel(language: 'en-US', text: 'Test1'),
-    //     LocalizedModel(language: 'en-US', text: 'Test1'),
-    //   ],
-    //   hintText: const [
-    //     LocalizedModel(language: 'en-US', text: 'Test1'),
-    //     LocalizedModel(language: 'en-US', text: 'Test1'),
-    //   ],
-    //   inputType: 'text',
-    //   lengthLimit: 5,
-    //   minLines: 1,
-    //   maxLines: 5,
-    //   status: ActiveStatus.active,
-    //   createdBy: '',
-    //   createdDate: DateTime.fromMillisecondsSinceEpoch(0),
-    //   updatedBy: '',
-    //   updatedDate: DateTime.fromMillisecondsSinceEpoch(0),
-    // );
-    // context.read<EditCustomFieldBloc>().add(CreateCurrentCustomFieldEvent(
-    //       customfield: customtest,
-    //       companyId: widget.currentUser.currentCompany,
-    //     ));
     if (_formKey.currentState!.validate()) {
       if (widget.isNewCustomField) {
         customfield = customfield.toCreated(
@@ -450,22 +425,22 @@ class _EditCustomFieldViewState extends State<EditCustomFieldView> {
           ),
           const SizedBox(height: UiConfig.lineSpacing),
           TitleRequiredText(
-            text: tr('masterData.cm.customfields.placeholder'), 
+            text: tr('masterData.cm.customfields.hinttext'), 
             required: true,
           ),
           CustomTextField(
             controller: hintTextController,
-            hintText: tr('masterData.cm.customfields.placeholderhint'), //!
+            hintText: tr('masterData.cm.customfields.hinttexthint'), //!
             onChanged: _setHintText,
           ),
           const SizedBox(height: UiConfig.lineSpacing),
           TitleRequiredText(
-            text: tr('masterData.cm.customfields.customfieldtype'), 
+            text: tr('masterData.cm.customfields.inputtype'), 
             required: true,
           ),
           CustomTextField(
             controller: inputTypeController,
-            hintText: tr('masterData.cm.customfields.customfieldtypehint'), //!
+            hintText: tr('masterData.cm.customfields.inputtypehint'), //!
             onChanged: _setInputType,
             required: true,
           ),
