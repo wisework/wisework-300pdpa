@@ -1,4 +1,5 @@
 import 'package:dartz/dartz.dart';
+import 'package:pdpa/app/data/models/master_data/custom_field_model.dart';
 import 'package:pdpa/app/data/models/master_data/purpose_model.dart';
 import 'package:pdpa/app/services/apis/master_data_api.dart';
 import 'package:pdpa/app/shared/errors/exceptions.dart';
@@ -70,6 +71,73 @@ class MasterDataRepository {
   ) async {
     try {
       await _api.deletePurpose(purposeId, companyId);
+
+      return const Right(null);
+    } on ApiException catch (error) {
+      return Left(ApiFailure.fromException(error));
+    }
+  }
+
+  //? Customfield
+  ResultFuture<List<CustomFieldModel>> getCustomfield(String companyId) async {
+    try {
+      final result = await _api.getCustomFields(companyId);
+
+      return Right(result);
+    } on ApiException catch (error) {
+      return Left(ApiFailure.fromException(error));
+    }
+  }
+
+  ResultFuture<CustomFieldModel> getCustomFieldById(
+    String customfieldId,
+    String companyId,
+  ) async {
+    try {
+      final result = await _api.getCustomFieldById(customfieldId, companyId);
+
+      if (result != null) return Right(result);
+
+      return const Left(
+        ApiFailure(message: 'CustomField not found', statusCode: 404),
+      );
+    } on ApiException catch (error) {
+      return Left(ApiFailure.fromException(error));
+    }
+  }
+
+  ResultFuture<CustomFieldModel> createCustomField(
+    CustomFieldModel customfield,
+    String companyId,
+  ) async {
+    try {
+      final result = await _api.createCustomField(customfield, companyId);
+
+      return Right(result);
+    } on ApiException catch (error) {
+      return Left(ApiFailure.fromException(error));
+    }
+  }
+
+  ResultVoid updateCustomField(
+    CustomFieldModel customfield,
+    String companyId,
+  ) async {
+    try {
+      await _api.updateCustomField(customfield, companyId);
+
+      return const Right(null);
+    } on ApiException catch (error) {
+      return Left(ApiFailure.fromException(error));
+    }
+  }
+
+  ResultVoid deleteCustomField(
+    String customfieldId,
+    String companyId,
+  ) async {
+    try {
+      await _api.deleteCustomField(customfieldId, companyId);
 
       return const Right(null);
     } on ApiException catch (error) {

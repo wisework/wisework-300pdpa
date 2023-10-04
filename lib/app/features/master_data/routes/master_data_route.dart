@@ -19,6 +19,7 @@ class MasterDataRoute {
     builder: (context, _) => MasterDataScreen(),
   );
 
+  //? CustomField
   static final GoRoute customFields = GoRoute(
     path: '/master-data/custom-fields',
     builder: (context, _) => const CustomFieldScreen(),
@@ -26,14 +27,17 @@ class MasterDataRoute {
 
   static final GoRoute createCustomField = GoRoute(
     path: '/master-data/custom-field/create',
-    builder: (context, _) => const EditCustomFieldScreen(),
+    builder: (context, _) => const EditCustomFieldScreen(customfieldId: '',),
   );
 
   static final GoRoute editCustomField = GoRoute(
-    path: '/master-data/custom-fields/edit',
-    builder: (context, _) => const EditCustomFieldScreen(),
+    path: '/master-data/custom-fields/:id/edit',
+    builder: (context, state) => EditCustomFieldScreen(
+      customfieldId: state.pathParameters['id'] ?? '',
+    ),
   );
 
+  //? Purpose
   static final GoRoute purposes = GoRoute(
     path: '/master-data/purposes',
     builder: (context, _) => const PurposeScreen(),
@@ -51,6 +55,7 @@ class MasterDataRoute {
     ),
   );
 
+  //? Purpose Category
   static final GoRoute purposesCategories = GoRoute(
     path: '/master-data/purposescategory',
     builder: (context, _) => const PurposeCategoryScreen(),
@@ -66,6 +71,7 @@ class MasterDataRoute {
     builder: (context, _) => const EditPurposeCategoryScreen(),
   );
 
+  //? Reason Type
   static final GoRoute reasonType = GoRoute(
     path: '/master-data/reasontype',
     builder: (context, _) => const ReasonTypeScreen(),
@@ -81,6 +87,7 @@ class MasterDataRoute {
     builder: (context, _) => const EditReasonTypeScreen(),
   );
 
+  //? Request Type
   static final GoRoute requestType = GoRoute(
     path: '/master-data/requesttype',
     builder: (context, _) => const RequestTypeScreen(),
@@ -96,6 +103,7 @@ class MasterDataRoute {
     builder: (context, _) => const EditRequestTypeScreen(),
   );
 
+  //? Reject Type
   static final GoRoute rejectType = GoRoute(
     path: '/master-data/rejecttype',
     builder: (context, _) => const RejectTypeScreen(),
@@ -111,6 +119,7 @@ class MasterDataRoute {
     builder: (context, _) => const EditRejectTypeScreen(),
   );
 
+  //? Request Reason
   static final GoRoute requestReason = GoRoute(
     path: '/master-data/requestreason',
     builder: (context, _) => const RequestReasonTemplateScreen(),
@@ -126,6 +135,7 @@ class MasterDataRoute {
     builder: (context, _) => const EditRequestReasonTemplateScreen(),
   );
 
+  //? Request Reject
   static final GoRoute requestReject = GoRoute(
     path: '/master-data/requestreject',
     builder: (context, _) => const RequestRejectTemplateScreen(),
@@ -140,6 +150,7 @@ class MasterDataRoute {
     path: '/master-data/requestreject/edit',
     builder: (context, _) => const EditRequestRejectTemplateScreen(),
   );
+
 
   static final List<GoRoute> routes = <GoRoute>[
     masterData,
