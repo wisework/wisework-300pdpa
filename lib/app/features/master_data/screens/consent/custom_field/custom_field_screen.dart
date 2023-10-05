@@ -7,7 +7,6 @@ import 'package:pdpa/app/data/models/master_data/custom_field_model.dart';
 import 'package:pdpa/app/data/models/master_data/localized_model.dart';
 import 'package:pdpa/app/features/master_data/routes/master_data_route.dart';
 import 'package:pdpa/app/features/master_data/widgets/master_data_item_card.dart';
-import 'package:pdpa/app/shared/utils/constants.dart';
 import 'package:pdpa/app/shared/widgets/customs/custom_icon_button.dart';
 
 class CustomFieldScreen extends StatelessWidget {
@@ -28,52 +27,52 @@ class CustomFieldView extends StatefulWidget {
 
 class _CustomFieldViewState extends State<CustomFieldView> {
   final customfield = [
-    CustomFieldModel(
-      id: '1',
-      title: const [
-        LocalizedModel(language: 'en-US', text: 'title 1 EN'),
-        LocalizedModel(language: 'th-TH', text: 'title 1 TH'),
-      ],
-      inputType: 'Text',
-      lengthLimit: 1,
-      maxLines: 10,
-      minLines: 1,
-      placeholder: const [
-        LocalizedModel(language: 'en-US', text: 'placeholder 1 EN'),
-        LocalizedModel(language: 'th-TH', text: 'placeholder 1 TH'),
-      ],
-      uid: 'uid',
-      language: 'en-US',
-      companies: const [],
-      status: ActiveStatus.active,
-      createdBy: 'Admin',
-      createdDate: DateTime.fromMillisecondsSinceEpoch(0),
-      updatedBy: 'Admin',
-      updatedDate: DateTime.fromMillisecondsSinceEpoch(0),
-    ),
-    CustomFieldModel(
-      id: '2',
-      title: const [
-        LocalizedModel(language: 'en-US', text: 'Description 1 EN'),
-        LocalizedModel(language: 'th-TH', text: 'Description 1 TH'),
-      ],
-      inputType: 'Text',
-      lengthLimit: 1,
-      maxLines: 10,
-      minLines: 1,
-      placeholder: const [
-        LocalizedModel(language: 'en-US', text: 'Description 1 EN'),
-        LocalizedModel(language: 'th-TH', text: 'Description 1 TH'),
-      ],
-      uid: 'uid',
-      language: 'en-US',
-      companies: const [],
-      status: ActiveStatus.active,
-      createdBy: 'Admin',
-      createdDate: DateTime.fromMillisecondsSinceEpoch(0),
-      updatedBy: 'Admin',
-      updatedDate: DateTime.fromMillisecondsSinceEpoch(0),
-    ),
+    // CustomFieldModel(
+    //   id: '1',
+    //   title: const [
+    //     LocalizedModel(language: 'en-US', text: 'title 1 EN'),
+    //     LocalizedModel(language: 'th-TH', text: 'title 1 TH'),
+    //   ],
+    //   inputType: 'Text',
+    //   lengthLimit: 1,
+    //   maxLines: 10,
+    //   minLines: 1,
+    //   placeholder: const [
+    //     LocalizedModel(language: 'en-US', text: 'placeholder 1 EN'),
+    //     LocalizedModel(language: 'th-TH', text: 'placeholder 1 TH'),
+    //   ],
+    //   uid: 'uid',
+    //   language: 'en-US',
+    //   companies: const [],
+    //   status: ActiveStatus.active,
+    //   createdBy: 'Admin',
+    //   createdDate: DateTime.fromMillisecondsSinceEpoch(0),
+    //   updatedBy: 'Admin',
+    //   updatedDate: DateTime.fromMillisecondsSinceEpoch(0),
+    // ),
+    // CustomFieldModel(
+    //   id: '2',
+    //   title: const [
+    //     LocalizedModel(language: 'en-US', text: 'Description 1 EN'),
+    //     LocalizedModel(language: 'th-TH', text: 'Description 1 TH'),
+    //   ],
+    //   inputType: 'Text',
+    //   lengthLimit: 1,
+    //   maxLines: 10,
+    //   minLines: 1,
+    //   placeholder: const [
+    //     LocalizedModel(language: 'en-US', text: 'Description 1 EN'),
+    //     LocalizedModel(language: 'th-TH', text: 'Description 1 TH'),
+    //   ],
+    //   uid: 'uid',
+    //   language: 'en-US',
+    //   companies: const [],
+    //   status: ActiveStatus.active,
+    //   createdBy: 'Admin',
+    //   createdDate: DateTime.fromMillisecondsSinceEpoch(0),
+    //   updatedBy: 'Admin',
+    //   updatedDate: DateTime.fromMillisecondsSinceEpoch(0),
+    // ),
   ];
 
   @override
@@ -121,7 +120,7 @@ class _CustomFieldViewState extends State<CustomFieldView> {
       (item) => item.language == language,
       orElse: LocalizedModel.empty,
     );
-    final warningDescription = customfield.placeholder.firstWhere(
+    final warningDescription = customfield.hintText.firstWhere(
       (item) => item.language == language,
       orElse: LocalizedModel.empty,
     );

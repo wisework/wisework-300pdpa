@@ -86,7 +86,9 @@ class _CustomTextFieldState extends State<CustomTextField> {
       focusedBorder: OutlineInputBorder(
         borderRadius: BorderRadius.circular(8.0),
         borderSide: BorderSide(
-          color: Theme.of(context).colorScheme.primary,
+          color: widget.readOnly
+              ? Theme.of(context).colorScheme.outlineVariant
+              : Theme.of(context).colorScheme.primary,
         ),
       ),
       focusedErrorBorder: OutlineInputBorder(

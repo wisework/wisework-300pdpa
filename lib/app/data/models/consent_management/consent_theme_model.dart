@@ -88,7 +88,6 @@ class ConsentThemeModel extends Equatable {
         );
 
   DataMap toMap() => {
-        'id': id,
         'title': title,
         'headerTextColor': headerTextColor,
         'headerBackgroundColor': headerBackgroundColor,

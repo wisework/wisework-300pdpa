@@ -147,7 +147,6 @@ class ConsentFormModel extends Equatable {
         );
 
   DataMap toMap() => {
-        'id': id,
         'title': title.map((item) => item.toMap()).toList(),
         'description': description.map((item) => item.toMap()).toList(),
         'purposeCategories': purposeCategories,
