@@ -4,13 +4,13 @@ class CustomRadioButton<T> extends StatelessWidget {
   const CustomRadioButton({
     super.key,
     required this.value,
-    required this.selectedValue,
+    required this.selected,
     this.onChanged,
     this.activeColor,
   });
 
   final T value;
-  final T selectedValue;
+  final T selected;
   final Function(T?)? onChanged;
   final Color? activeColor;
 
@@ -18,18 +18,26 @@ class CustomRadioButton<T> extends StatelessWidget {
   Widget build(BuildContext context) {
     return Radio(
       value: value,
-      groupValue: selectedValue,
+      groupValue: selected,
       onChanged: onChanged,
       fillColor: MaterialStateColor.resolveWith(
         (states) {
-          if (value == selectedValue) {
-            return activeColor ?? Theme.of(context).colorScheme.primary;
-          }
-          return Theme.of(context).colorScheme.outlineVariant;
+          final color = value == selected
+              ? activeColor ?? Theme.of(context).colorScheme.primary
+              : Theme.of(context).colorScheme.outlineVariant;
+
+          return color;
         },
       ),
-      hoverColor: (activeColor ?? Theme.of(context).colorScheme.primary)
-          .withOpacity(0.1),
+      overlayColor: MaterialStateColor.resolveWith(
+        (states) {
+          final color = activeColor ?? Theme.of(context).colorScheme.primary;
+          if (states.contains(MaterialState.pressed)) {
+            return color.withOpacity(0.2);
+          }
+          return color.withOpacity(0.1);
+        },
+      ),
     );
   }
 }

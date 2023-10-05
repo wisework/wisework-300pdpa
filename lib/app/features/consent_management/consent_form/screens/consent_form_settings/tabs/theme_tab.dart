@@ -64,7 +64,7 @@ class ThemeTab extends StatelessWidget {
           itemCount: consentThemes.length,
           itemBuilder: (context, index) => ConsentThemeTile(
             consentTheme: consentThemes[index],
-            selectedValue: '',
+            selectedValue: consentForm.consentThemeId,
           ),
           separatorBuilder: (context, _) => const SizedBox(
             height: UiConfig.lineSpacing,

@@ -122,6 +122,10 @@ class ConsentFormSettingsBloc
       gotPurposeCategories,
       gotPurposes,
       gotConsentThemes,
+      gotConsentThemes.firstWhere(
+        (theme) => theme.id == gotConsentForm.consentThemeId,
+        orElse: () => ConsentThemeModel.initial(),
+      ),
     ));
   }
 }

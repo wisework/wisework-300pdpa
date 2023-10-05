@@ -91,8 +91,8 @@ class ConfigurationInfo extends StatelessWidget {
             onTap: onDeletePressed!,
             child: Padding(
               padding: const EdgeInsets.symmetric(
-                horizontal: 8.0,
                 vertical: 4.0,
+                horizontal: 8.0,
               ),
               child: Text(
                 'Delete',

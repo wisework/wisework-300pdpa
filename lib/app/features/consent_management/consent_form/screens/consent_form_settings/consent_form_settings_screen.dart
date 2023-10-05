@@ -7,6 +7,7 @@ import 'package:pdpa/app/data/models/consent_management/consent_form_model.dart'
 import 'package:pdpa/app/data/models/consent_management/consent_theme_model.dart';
 import 'package:pdpa/app/data/models/master_data/custom_field_model.dart';
 import 'package:pdpa/app/data/models/master_data/purpose_category_model.dart';
+import 'package:pdpa/app/data/models/master_data/purpose_model.dart';
 import 'package:pdpa/app/features/authentication/bloc/sign_in/sign_in_bloc.dart';
 import 'package:pdpa/app/features/consent_management/consent_form/bloc/consent_form_settings/consent_form_settings_bloc.dart';
 import 'package:pdpa/app/injection.dart';
@@ -68,8 +69,9 @@ class _ConsentFormSettingScreenState extends State<ConsentFormSettingScreen> {
               consentForm: state.consentForm,
               customFields: state.customFields,
               purposeCategories: state.purposeCategories,
-              purposes: state.purposeCategories,
+              purposes: state.purposes,
               consentThemes: state.consentThemes,
+              currentConsentTheme: state.currentConsentTheme,
             );
           }
           if (state is ConsentFormSettingsError) {
@@ -91,13 +93,15 @@ class ConsentFormSettingView extends StatefulWidget {
     required this.purposeCategories,
     required this.purposes,
     required this.consentThemes,
+    required this.currentConsentTheme,
   });
 
   final ConsentFormModel consentForm;
   final List<CustomFieldModel> customFields;
   final List<PurposeCategoryModel> purposeCategories;
-  final List<PurposeCategoryModel> purposes;
+  final List<PurposeModel> purposes;
   final List<ConsentThemeModel> consentThemes;
+  final ConsentThemeModel currentConsentTheme;
 
   @override
   State<ConsentFormSettingView> createState() => _ConsentFormSettingViewState();
@@ -105,27 +109,6 @@ class ConsentFormSettingView extends StatefulWidget {
 
 class _ConsentFormSettingViewState extends State<ConsentFormSettingView> {
   final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
-
-  final consentTheme = ConsentThemeModel(
-    id: '',
-    title: 'Meow theme',
-    headerTextColor: 'ff0a6152',
-    headerBackgroundColor: 'ffffffff',
-    bodyBackgroundColor: 'ffffffff',
-    formTextColor: 'ff0a6152',
-    categoryTitleTextColor: 'ff0a6152',
-    acceptConsentTextColor: 'ff0a6152',
-    linkToPolicyTextColor: 'ff0a6152',
-    acceptButtonColor: 'ff0a6152',
-    acceptTextColor: 'ffffffff',
-    cancelButtonColor: 'ffffffff',
-    cancelTextColor: 'ff0a6152',
-    actionButtonColor: 'ff0a6152',
-    createdBy: 'meow@gmail.com',
-    createdDate: DateTime.now(),
-    updatedBy: 'meow@gmail.com',
-    updatedDate: DateTime.now(),
-  );
 
   @override
   Widget build(BuildContext context) {
@@ -187,7 +170,13 @@ class _ConsentFormSettingViewState extends State<ConsentFormSettingView> {
             ),
           ],
         ),
-        endDrawer: const ConsentFormDrawer(),
+        endDrawer: ConsentFormDrawer(
+          consentForm: widget.consentForm,
+          customFields: widget.customFields,
+          purposeCategories: widget.purposeCategories,
+          purposes: widget.purposes,
+          consentTheme: widget.currentConsentTheme,
+        ),
       ),
     );
   }

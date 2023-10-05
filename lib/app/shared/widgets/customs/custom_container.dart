@@ -27,7 +27,8 @@ class CustomContainer extends StatelessWidget {
       ),
       margin: margin ??
           const EdgeInsets.symmetric(
-              horizontal: UiConfig.defaultPaddingSpacing),
+            horizontal: UiConfig.defaultPaddingSpacing,
+          ),
       child: child,
     );
   }
