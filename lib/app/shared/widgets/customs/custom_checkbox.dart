@@ -5,10 +5,12 @@ class CustomCheckBox extends StatelessWidget {
     super.key,
     required this.value,
     required this.onChanged,
+    this.activeColor,
   });
 
   final bool value;
   final ValueChanged<bool> onChanged;
+  final Color? activeColor;
 
   @override
   Widget build(BuildContext context) {
@@ -21,11 +23,20 @@ class CustomCheckBox extends StatelessWidget {
       side: MaterialStateBorderSide.resolveWith(
         (states) => BorderSide(
           width: 2.0,
-          color: Theme.of(context).colorScheme.primary,
+          color: activeColor ?? Theme.of(context).colorScheme.primary,
         ),
       ),
+      activeColor: activeColor ?? Theme.of(context).colorScheme.primary,
       checkColor: Theme.of(context).colorScheme.onPrimary,
-      activeColor: Theme.of(context).colorScheme.primary,
+      overlayColor: MaterialStateColor.resolveWith(
+        (states) {
+          final color = activeColor ?? Theme.of(context).colorScheme.primary;
+          if (states.contains(MaterialState.pressed)) {
+            return color.withOpacity(0.2);
+          }
+          return color.withOpacity(0.1);
+        },
+      ),
     );
   }
 }

@@ -29,7 +29,7 @@ class CustomFieldBloc extends Bloc<CustomFieldEvent, CustomFieldState> {
 
     emit(const GettingCustomField());
 
-    final result = await _masterDataRepository.getCustomfield(event.companyId);
+    final result = await _masterDataRepository.getCustomFields(event.companyId);
 
     result.fold(
       (failure) => emit(CustomfieldError(failure.errorMessage)),
