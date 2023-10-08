@@ -5,10 +5,10 @@ import 'package:pdpa/app/data/models/consent_management/consent_theme_model.dart
 import 'package:pdpa/app/data/models/master_data/custom_field_model.dart';
 import 'package:pdpa/app/data/models/master_data/purpose_category_model.dart';
 import 'package:pdpa/app/data/models/master_data/purpose_model.dart';
+import 'package:pdpa/app/features/consent_management/consent_form/widgets/preview/purpose_radio_option.dart';
 import 'package:pdpa/app/shared/utils/functions.dart';
 import 'package:pdpa/app/shared/widgets/customs/custom_button.dart';
 import 'package:pdpa/app/shared/widgets/customs/custom_checkbox.dart';
-import 'package:pdpa/app/shared/widgets/customs/custom_container.dart';
 import 'package:pdpa/app/shared/widgets/customs/custom_text_field.dart';
 import 'package:pdpa/app/shared/widgets/title_required_text.dart';
 
@@ -51,17 +51,11 @@ class ConsentFormDrawer extends StatelessWidget {
                         ?.copyWith(color: consentTheme.headerTextColor),
                   ),
                 ),
-                // const SizedBox(height: UiConfig.lineSpacing),
-                // Text(
-                //   'This consent form outlines the terms and conditions for the collection.',
-                //   style: Theme.of(context)
-                //       .textTheme
-                //       .bodyMedium
-                //       ?.copyWith(color: consentTheme.formTextColor),
-                // ),
                 const SizedBox(height: UiConfig.lineSpacing),
+                _buildHeaderDescription(context),
                 _buildCustomFieldSection(context),
                 _buildPurposeCategorySection(context),
+                _buildFooterDescription(context),
                 Row(
                   children: <Widget>[
                     CustomCheckBox(
@@ -71,24 +65,42 @@ class ConsentFormDrawer extends StatelessWidget {
                     ),
                     const SizedBox(width: UiConfig.actionSpacing),
                     Expanded(
-                      child: Text(
-                        'I accept: Consent to Personal Data Use for Property Insights and Analysis Purposes.',
-                        style: Theme.of(context)
-                            .textTheme
-                            .bodyMedium
-                            ?.copyWith(color: consentTheme.formTextColor),
+                      child: RichText(
+                        text: TextSpan(
+                          children: [
+                            TextSpan(
+                              text: consentForm.acceptConsentText.first.text,
+                              style: Theme.of(context)
+                                  .textTheme
+                                  .bodyMedium
+                                  ?.copyWith(color: consentTheme.formTextColor),
+                            ),
+                            const WidgetSpan(
+                              child: SizedBox(width: UiConfig.textSpacing),
+                            ),
+                            TextSpan(
+                              text: consentForm.linkToPolicyText.first.text,
+                              style: Theme.of(context)
+                                  .textTheme
+                                  .bodyMedium
+                                  ?.copyWith(
+                                    color: consentTheme.linkToPolicyTextColor,
+                                  ),
+                            ),
+                          ],
+                        ),
                       ),
                     ),
                   ],
                 ),
-                const SizedBox(height: UiConfig.lineSpacing),
+                const SizedBox(height: UiConfig.lineGap * 2),
                 CustomButton(
                   height: 40.0,
                   onPressed: () {},
                   buttonColor: consentTheme.submitButtonColor,
                   splashColor: consentTheme.submitTextColor,
                   child: Text(
-                    'Submit',
+                    consentForm.acceptText.first.text,
                     style: Theme.of(context)
                         .textTheme
                         .bodyMedium
@@ -102,7 +114,7 @@ class ConsentFormDrawer extends StatelessWidget {
                   buttonColor: consentTheme.cancelButtonColor,
                   splashColor: consentTheme.cancelTextColor,
                   child: Text(
-                    'Cancel',
+                    consentForm.cancelText.first.text,
                     style: Theme.of(context)
                         .textTheme
                         .bodyMedium
@@ -113,6 +125,56 @@ class ConsentFormDrawer extends StatelessWidget {
             ),
           ),
         ),
+      ),
+    );
+  }
+
+  Visibility _buildHeaderDescription(BuildContext context) {
+    return Visibility(
+      visible: consentForm.headerDescription.first.text.isNotEmpty,
+      child: Padding(
+        padding: const EdgeInsets.only(
+          bottom: UiConfig.lineSpacing,
+        ),
+        child: Text(
+          consentForm.headerDescription.first.text,
+          style: Theme.of(context)
+              .textTheme
+              .bodyMedium
+              ?.copyWith(color: consentTheme.formTextColor),
+        ),
+      ),
+    );
+  }
+
+  Visibility _buildFooterDescription(BuildContext context) {
+    return Visibility(
+      visible: consentForm.headerDescription.first.text.isNotEmpty,
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: <Widget>[
+          Divider(
+            height: 0.1,
+            color:
+                Theme.of(context).colorScheme.outlineVariant.withOpacity(0.6),
+          ),
+          Padding(
+            padding: const EdgeInsets.symmetric(vertical: UiConfig.lineSpacing),
+            child: Text(
+              consentForm.footerDescription.first.text,
+              style: Theme.of(context)
+                  .textTheme
+                  .bodyMedium
+                  ?.copyWith(color: consentTheme.formTextColor),
+            ),
+          ),
+          Divider(
+            height: 0.1,
+            color:
+                Theme.of(context).colorScheme.outlineVariant.withOpacity(0.6),
+          ),
+          const SizedBox(height: UiConfig.lineSpacing),
+        ],
       ),
     );
   }
@@ -175,13 +237,25 @@ class ConsentFormDrawer extends StatelessWidget {
         mainAxisSize: MainAxisSize.min,
         crossAxisAlignment: CrossAxisAlignment.start,
         children: <Widget>[
-          ListView.builder(
+          ListView.separated(
             shrinkWrap: true,
             itemCount: purposeCategoryFiltered.length,
             itemBuilder: (context, index) => _buildPurposeCategory(
               context,
               index: index + 1,
               purposeCategory: purposeCategoryFiltered[index],
+            ),
+            separatorBuilder: (context, _) => Padding(
+              padding: const EdgeInsets.symmetric(
+                vertical: UiConfig.lineSpacing,
+              ),
+              child: Divider(
+                height: 0.1,
+                color: Theme.of(context)
+                    .colorScheme
+                    .outlineVariant
+                    .withOpacity(0.6),
+              ),
             ),
           ),
           const SizedBox(height: UiConfig.lineSpacing),
@@ -263,37 +337,15 @@ class ConsentFormDrawer extends StatelessWidget {
           ListView.separated(
             shrinkWrap: true,
             itemCount: purposeFiltered.length,
-            itemBuilder: (context, index) => _buildPurpose(
-              context,
+            itemBuilder: (context, index) => PurposeRadioOption(
               purpose: purposeFiltered[index],
+              consentTheme: consentTheme,
             ),
             separatorBuilder: (context, _) => const SizedBox(
               height: UiConfig.lineSpacing,
             ),
           ),
           const SizedBox(height: UiConfig.lineSpacing),
-        ],
-      ),
-    );
-  }
-
-  CustomContainer _buildPurpose(
-    BuildContext context, {
-    required PurposeModel purpose,
-  }) {
-    return CustomContainer(
-      margin: EdgeInsets.zero,
-      color: consentTheme.backgroundColor,
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: <Widget>[
-          Text(
-            purpose.description.first.text,
-            style: Theme.of(context)
-                .textTheme
-                .bodyMedium
-                ?.copyWith(color: consentTheme.categoryTitleTextColor),
-          ),
         ],
       ),
     );

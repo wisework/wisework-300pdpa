@@ -42,7 +42,7 @@ class MasterDataItemCard extends StatelessWidget {
                       visible: subtitle.isNotEmpty,
                       child: Padding(
                         padding: const EdgeInsets.only(
-                          top: UiConfig.textSpacing,
+                          top: UiConfig.textLineSpacing,
                         ),
                         child: Text(
                           subtitle,

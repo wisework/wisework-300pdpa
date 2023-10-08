@@ -70,14 +70,14 @@ class _ConsentThemeTileState extends State<ConsentThemeTile> {
                       ),
                     ),
                   ),
-                  const SizedBox(width: UiConfig.textSpacing),
+                  const SizedBox(width: UiConfig.textLineSpacing),
                   CustomIconButton(
                     onPressed: () {},
                     icon: Ionicons.pencil_outline,
                     iconColor: Theme.of(context).colorScheme.primary,
                     backgroundColor: Theme.of(context).colorScheme.onBackground,
                   ),
-                  const SizedBox(width: UiConfig.textSpacing),
+                  const SizedBox(width: UiConfig.textLineSpacing),
                   CustomIconButton(
                     onPressed: () {},
                     icon: Ionicons.copy_outline,
@@ -87,7 +87,7 @@ class _ConsentThemeTileState extends State<ConsentThemeTile> {
                 ],
               ),
               _buildConsentThemeExample(context),
-              const SizedBox(height: UiConfig.textSpacing),
+              const SizedBox(height: UiConfig.textLineSpacing),
               Divider(
                 height: 0.1,
                 color: Theme.of(context)
@@ -109,7 +109,7 @@ class _ConsentThemeTileState extends State<ConsentThemeTile> {
       child: Container(
         padding: const EdgeInsets.all(UiConfig.defaultPaddingSpacing),
         color: Theme.of(context).colorScheme.background,
-        margin: const EdgeInsets.symmetric(vertical: UiConfig.textSpacing),
+        margin: const EdgeInsets.symmetric(vertical: UiConfig.textLineSpacing),
         child: CustomContainer(
           margin: EdgeInsets.zero,
           child: Column(

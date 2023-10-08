@@ -11,7 +11,7 @@ class CustomRadioButton<T> extends StatelessWidget {
 
   final T value;
   final T selected;
-  final Function(T?)? onChanged;
+  final Function(T? value)? onChanged;
   final Color? activeColor;
 
   @override

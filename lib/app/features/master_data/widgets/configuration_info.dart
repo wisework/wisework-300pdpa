@@ -62,7 +62,7 @@ class ConfigurationInfo extends StatelessWidget {
         Visibility(
           visible: updatedBy != null && updatedBy!.isNotEmpty,
           child: Padding(
-            padding: const EdgeInsets.only(bottom: UiConfig.textSpacing),
+            padding: const EdgeInsets.only(bottom: UiConfig.textLineSpacing),
             child: Text(
               updatedBy!,
               style: Theme.of(context).textTheme.bodyMedium,
