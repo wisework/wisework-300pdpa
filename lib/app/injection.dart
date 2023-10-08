@@ -5,6 +5,8 @@ import 'package:google_sign_in/google_sign_in.dart';
 import 'package:pdpa/app/data/repositories/consent_repository.dart';
 import 'package:pdpa/app/features/consent_management/consent_form/bloc/consent_form_settings/consent_form_settings_bloc.dart';
 import 'package:pdpa/app/services/apis/consent_api.dart';
+import 'package:pdpa/app/features/master_data/bloc/consent/custom_field/custom_field_bloc.dart';
+import 'package:pdpa/app/features/master_data/bloc/consent/edit_custom_field/bloc/edit_custom_field_bloc.dart';
 
 import 'config/config.dart';
 import 'data/repositories/authentication_repository.dart';
@@ -99,6 +101,16 @@ Future<void> _masterData() async {
     )
     ..registerFactory(
       () => EditPurposeBloc(
+        masterDataRepository: serviceLocator(),
+      ),
+    )
+    ..registerFactory(
+      () => CustomFieldBloc(
+        masterDataRepository: serviceLocator(),
+      ),
+    )
+    ..registerFactory(
+      () => EditCustomFieldBloc(
         masterDataRepository: serviceLocator(),
       ),
     )

@@ -1,16 +1,45 @@
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
 import 'package:ionicons/ionicons.dart';
 import 'package:pdpa/app/config/config.dart';
 import 'package:pdpa/app/data/models/master_data/custom_field_model.dart';
 import 'package:pdpa/app/data/models/master_data/localized_model.dart';
+import 'package:pdpa/app/features/authentication/bloc/sign_in/sign_in_bloc.dart';
+import 'package:pdpa/app/features/master_data/bloc/consent/custom_field/custom_field_bloc.dart';
 import 'package:pdpa/app/features/master_data/routes/master_data_route.dart';
 import 'package:pdpa/app/features/master_data/widgets/master_data_item_card.dart';
 import 'package:pdpa/app/shared/widgets/customs/custom_icon_button.dart';
+import 'package:pdpa/app/shared/widgets/templates/pdpa_app_bar.dart';
 
-class CustomFieldScreen extends StatelessWidget {
+class CustomFieldScreen extends StatefulWidget {
   const CustomFieldScreen({super.key});
+
+  @override
+  State<CustomFieldScreen> createState() => _CustomFieldScreenState();
+}
+
+class _CustomFieldScreenState extends State<CustomFieldScreen> {
+  @override
+  void initState() {
+    super.initState();
+
+    _initialData();
+  }
+
+  void _initialData() {
+    final bloc = context.read<SignInBloc>();
+
+    String companyId = '';
+    if (bloc.state is SignedInUser) {
+      companyId = (bloc.state as SignedInUser).user.currentCompany;
+    }
+
+    context
+        .read<CustomFieldBloc>()
+        .add(GetCustomFieldEvent(companyId: companyId));
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -26,59 +55,23 @@ class CustomFieldView extends StatefulWidget {
 }
 
 class _CustomFieldViewState extends State<CustomFieldView> {
-  final customfield = [
-    // CustomFieldModel(
-    //   id: '1',
-    //   title: const [
-    //     LocalizedModel(language: 'en-US', text: 'title 1 EN'),
-    //     LocalizedModel(language: 'th-TH', text: 'title 1 TH'),
-    //   ],
-    //   inputType: 'Text',
-    //   lengthLimit: 1,
-    //   maxLines: 10,
-    //   minLines: 1,
-    //   placeholder: const [
-    //     LocalizedModel(language: 'en-US', text: 'placeholder 1 EN'),
-    //     LocalizedModel(language: 'th-TH', text: 'placeholder 1 TH'),
-    //   ],
-    //   uid: 'uid',
-    //   language: 'en-US',
-    //   companies: const [],
-    //   status: ActiveStatus.active,
-    //   createdBy: 'Admin',
-    //   createdDate: DateTime.fromMillisecondsSinceEpoch(0),
-    //   updatedBy: 'Admin',
-    //   updatedDate: DateTime.fromMillisecondsSinceEpoch(0),
-    // ),
-    // CustomFieldModel(
-    //   id: '2',
-    //   title: const [
-    //     LocalizedModel(language: 'en-US', text: 'Description 1 EN'),
-    //     LocalizedModel(language: 'th-TH', text: 'Description 1 TH'),
-    //   ],
-    //   inputType: 'Text',
-    //   lengthLimit: 1,
-    //   maxLines: 10,
-    //   minLines: 1,
-    //   placeholder: const [
-    //     LocalizedModel(language: 'en-US', text: 'Description 1 EN'),
-    //     LocalizedModel(language: 'th-TH', text: 'Description 1 TH'),
-    //   ],
-    //   uid: 'uid',
-    //   language: 'en-US',
-    //   companies: const [],
-    //   status: ActiveStatus.active,
-    //   createdBy: 'Admin',
-    //   createdDate: DateTime.fromMillisecondsSinceEpoch(0),
-    //   updatedBy: 'Admin',
-    //   updatedDate: DateTime.fromMillisecondsSinceEpoch(0),
-    // ),
-  ];
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: _buildAppBar(context),
+      appBar: PdpaAppBar(
+        leadingIcon: CustomIconButton(
+          onPressed: () {
+            context.pop();
+          },
+          icon: Ionicons.chevron_back_outline,
+          iconColor: Theme.of(context).colorScheme.primary,
+          backgroundColor: Theme.of(context).colorScheme.onBackground,
+        ),
+        title: Text(
+          tr('masterData.cm.customfields.list'),
+          style: Theme.of(context).textTheme.titleLarge,
+        ),
+      ),
       body: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: <Widget>[
@@ -89,12 +82,29 @@ class _CustomFieldViewState extends State<CustomFieldView> {
               decoration: BoxDecoration(
                 color: Theme.of(context).colorScheme.onBackground,
               ),
-              child: ListView.builder(
-                itemCount: customfield.length,
-                itemBuilder: (context, index) {
-                  return _buildItemCard(
-                    context,
-                    customfield: customfield[index],
+              child: BlocBuilder<CustomFieldBloc, CustomFieldState>(
+                builder: (context, state) {
+                  if (state is GotCustomFields) {
+                    return ListView.builder(
+                      itemCount: state.customfields.length,
+                      itemBuilder: (context, index) {
+                        return _buildItemCard(
+                          context,
+                          customfield: state.customfields[index],
+                        );
+                      },
+                    );
+                  }
+                  if (state is CustomfieldError) {
+                    return Center(
+                      child: Text(
+                        state.message,
+                        style: Theme.of(context).textTheme.bodyMedium,
+                      ),
+                    );
+                  }
+                  return const Center(
+                    child: CircularProgressIndicator(),
                   );
                 },
               ),
@@ -104,7 +114,7 @@ class _CustomFieldViewState extends State<CustomFieldView> {
       ),
       floatingActionButton: FloatingActionButton(
         onPressed: () {
-          context.push(MasterDataRoute.editCustomField.path);
+          context.push(MasterDataRoute.createCustomField.path);
         },
         child: const Icon(Icons.add),
       ),
@@ -116,43 +126,25 @@ class _CustomFieldViewState extends State<CustomFieldView> {
     required CustomFieldModel customfield,
   }) {
     const language = 'en-US';
-    final description = customfield.title.firstWhere(
+    final title = customfield.title.firstWhere(
       (item) => item.language == language,
       orElse: LocalizedModel.empty,
     );
-    final warningDescription = customfield.hintText.firstWhere(
+    final hintText = customfield.hintText.firstWhere(
       (item) => item.language == language,
       orElse: LocalizedModel.empty,
     );
 
     return MasterDataItemCard(
-      title: description.text,
-      subtitle: warningDescription.text,
+      title: title.text,
+      subtitle: hintText.text,
       status: customfield.status,
-      onTap: () {},
-    );
-  }
-
-  AppBar _buildAppBar(BuildContext context) {
-    return AppBar(
-      automaticallyImplyLeading: false,
-      title: Row(
-        children: [
-          CustomIconButton(
-            onPressed: () {
-              context.pop();
-            },
-            icon: Ionicons.arrow_back,
-            iconColor: Theme.of(context).colorScheme.primary,
-            backgroundColor: Theme.of(context).colorScheme.onBackground,
-          ),
-          Text(tr('masterData.cm.customfields.title'))
-        ],
-      ),
-      elevation: 1.0,
-      shadowColor: Theme.of(context).colorScheme.background,
-      surfaceTintColor: Theme.of(context).colorScheme.onBackground,
-      backgroundColor: Theme.of(context).colorScheme.onBackground,
+      onTap: () {
+        context.push(
+          MasterDataRoute.editCustomField.path
+              .replaceFirst(':id', customfield.id),
+        );
+      },
     );
   }
 }
