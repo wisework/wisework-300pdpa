@@ -1,4 +1,5 @@
 import 'package:ionicons/ionicons.dart';
+import 'package:pdpa/app/features/consent_management/consent_form/routes/consent_form_route.dart';
 import 'package:pdpa/app/features/general/routes/general_route.dart';
 import 'package:pdpa/app/features/master_data/routes/master_data_route.dart';
 import 'package:pdpa/app/shared/drawers/models/drawer_menu_models.dart';
@@ -48,6 +49,6 @@ final List<DrawerMenuModel> drawerMenu = [
     value: 'settings',
     title: 'Settings',
     icon: Ionicons.settings_outline,
-    route: GeneralRoute.setting,
+    route: ConsentFormRoute.consentFormSettings,
   ),
 ];

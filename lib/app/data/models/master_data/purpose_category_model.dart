@@ -30,7 +30,7 @@ class PurposeCategoryModel extends Equatable {
   final String updatedBy;
   final DateTime updatedDate;
 
-  PurposeCategoryModel.empty(DataMap map)
+  PurposeCategoryModel.empty()
       : this(
           id: '',
           title: [],

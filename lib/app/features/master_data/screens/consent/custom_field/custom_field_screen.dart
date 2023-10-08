@@ -36,7 +36,9 @@ class _CustomFieldScreenState extends State<CustomFieldScreen> {
       companyId = (bloc.state as SignedInUser).user.currentCompany;
     }
 
-    context.read<CustomFieldBloc>().add(GetCustomFieldEvent(companyId: companyId));
+    context
+        .read<CustomFieldBloc>()
+        .add(GetCustomFieldEvent(companyId: companyId));
   }
 
   @override
@@ -53,7 +55,6 @@ class CustomFieldView extends StatefulWidget {
 }
 
 class _CustomFieldViewState extends State<CustomFieldView> {
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -81,7 +82,7 @@ class _CustomFieldViewState extends State<CustomFieldView> {
               decoration: BoxDecoration(
                 color: Theme.of(context).colorScheme.onBackground,
               ),
-               child: BlocBuilder<CustomFieldBloc, CustomFieldState>(
+              child: BlocBuilder<CustomFieldBloc, CustomFieldState>(
                 builder: (context, state) {
                   if (state is GotCustomFields) {
                     return ListView.builder(
@@ -140,7 +141,8 @@ class _CustomFieldViewState extends State<CustomFieldView> {
       status: customfield.status,
       onTap: () {
         context.push(
-          MasterDataRoute.editCustomField.path.replaceFirst(':id', customfield.id),
+          MasterDataRoute.editCustomField.path
+              .replaceFirst(':id', customfield.id),
         );
       },
     );

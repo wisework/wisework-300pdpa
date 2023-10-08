@@ -56,7 +56,8 @@ class _PdpaDrawerState extends State<PdpaDrawer> {
                   child: SingleChildScrollView(
                     child: Padding(
                       padding: const EdgeInsets.symmetric(
-                          vertical: UiConfig.lineGap),
+                        vertical: UiConfig.lineGap,
+                      ),
                       child: Column(
                         children: drawerMenu
                             .map((menu) => Padding(

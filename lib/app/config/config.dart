@@ -10,6 +10,8 @@ class UiConfig {
   static const double lineSpacing = 15.0;
   static const double lineGap = 10.0;
   static const double paragraphSpacing = 15.0;
-  static const double textSpacing = 4.0;
+  static const double textSpacing = 6.0;
+  static const double textLineSpacing = 4.0;
+  static const double actionSpacing = 10.0;
   static const Duration toastDuration = Duration(milliseconds: 1500);
 }

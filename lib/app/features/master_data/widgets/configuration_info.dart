@@ -62,7 +62,7 @@ class ConfigurationInfo extends StatelessWidget {
         Visibility(
           visible: updatedBy != null && updatedBy!.isNotEmpty,
           child: Padding(
-            padding: const EdgeInsets.only(bottom: UiConfig.textSpacing),
+            padding: const EdgeInsets.only(bottom: UiConfig.textLineSpacing),
             child: Text(
               updatedBy!,
               style: Theme.of(context).textTheme.bodyMedium,
@@ -91,8 +91,8 @@ class ConfigurationInfo extends StatelessWidget {
             onTap: onDeletePressed!,
             child: Padding(
               padding: const EdgeInsets.symmetric(
-                horizontal: 8.0,
                 vertical: 4.0,
+                horizontal: 8.0,
               ),
               child: Text(
                 'Delete',

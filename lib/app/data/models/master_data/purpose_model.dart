@@ -67,7 +67,6 @@ class PurposeModel extends Equatable {
         );
 
   DataMap toMap() => {
-        'id': id,
         'description': description.map((item) => item.toMap()).toList(),
         'warningDescription':
             warningDescription.map((item) => item.toMap()).toList(),

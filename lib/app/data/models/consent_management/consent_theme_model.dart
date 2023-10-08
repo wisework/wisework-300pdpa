@@ -1,197 +1,280 @@
-// ignore_for_file: public_member_api_docs, sort_constructors_first
-import 'dart:convert';
-
 import 'package:equatable/equatable.dart';
+import 'package:flutter/material.dart';
 
 import 'package:pdpa/app/shared/utils/typedef.dart';
 
 class ConsentThemeModel extends Equatable {
   const ConsentThemeModel({
-    required this.consentThemeId,
-    required this.themeTitle,
-    required this.headerTextColor,
+    required this.id,
+    required this.title,
     required this.headerBackgroundColor,
     required this.bodyBackgroundColor,
+    required this.backgroundColor,
+    required this.headerTextColor,
     required this.formTextColor,
+    required this.categoryIconColor,
     required this.categoryTitleTextColor,
-    required this.acceptConsentTextColor,
+    required this.actionButtonColor,
     required this.linkToPolicyTextColor,
-    required this.acceptButtonColor,
-    required this.acceptTextColor,
+    required this.submitButtonColor,
+    required this.submitTextColor,
     required this.cancelButtonColor,
     required this.cancelTextColor,
-    required this.actionButtonColor,
     required this.createdBy,
     required this.createdDate,
     required this.updatedBy,
     required this.updatedDate,
-    required this.companyId,
   });
 
-  final String consentThemeId;
-  final String themeTitle;
-  final String headerTextColor;
-  final String headerBackgroundColor;
-  final String bodyBackgroundColor;
-  final String formTextColor;
-  final String categoryTitleTextColor;
-  final String acceptConsentTextColor;
-  final String linkToPolicyTextColor;
-  final String acceptButtonColor;
-  final String acceptTextColor;
-  final String cancelButtonColor;
-  final String cancelTextColor;
-  final String actionButtonColor;
+  final String id;
+  final String title;
+  final Color headerBackgroundColor;
+  final Color bodyBackgroundColor;
+  final Color backgroundColor;
+  final Color headerTextColor;
+  final Color formTextColor;
+  final Color categoryIconColor;
+  final Color categoryTitleTextColor;
+  final Color actionButtonColor;
+  final Color linkToPolicyTextColor;
+  final Color submitButtonColor;
+  final Color submitTextColor;
+  final Color cancelButtonColor;
+  final Color cancelTextColor;
   final String createdBy;
   final DateTime createdDate;
   final String updatedBy;
   final DateTime updatedDate;
-  final String companyId;
 
   ConsentThemeModel.empty()
       : this(
-          consentThemeId: '',
-          themeTitle: '',
-          headerTextColor: '',
-          headerBackgroundColor: '',
-          bodyBackgroundColor: '',
-          formTextColor: '',
-          categoryTitleTextColor: '',
-          acceptConsentTextColor: '',
-          linkToPolicyTextColor: '',
-          acceptButtonColor: '',
-          acceptTextColor: '',
-          cancelButtonColor: '',
-          cancelTextColor: '',
-          actionButtonColor: '',
+          id: '',
+          title: '',
+          headerBackgroundColor: Colors.transparent,
+          bodyBackgroundColor: Colors.transparent,
+          backgroundColor: Colors.transparent,
+          headerTextColor: Colors.transparent,
+          formTextColor: Colors.transparent,
+          categoryIconColor: Colors.transparent,
+          categoryTitleTextColor: Colors.transparent,
+          actionButtonColor: Colors.transparent,
+          linkToPolicyTextColor: Colors.transparent,
+          submitButtonColor: Colors.transparent,
+          submitTextColor: Colors.transparent,
+          cancelButtonColor: Colors.transparent,
+          cancelTextColor: Colors.transparent,
           createdBy: '',
           createdDate: DateTime.fromMillisecondsSinceEpoch(0),
           updatedBy: '',
           updatedDate: DateTime.fromMillisecondsSinceEpoch(0),
-          companyId: '',
+        );
+
+  ConsentThemeModel.initial()
+      : this(
+          id: '',
+          title: 'Default theme',
+          headerBackgroundColor: const Color(0xFFFFFFFF),
+          bodyBackgroundColor: const Color(0xFFFFFFFF),
+          backgroundColor: const Color(0xFFF3F2F2),
+          headerTextColor: const Color(0xFF0172E6),
+          formTextColor: const Color(0xFF000000),
+          categoryIconColor: const Color(0xFF0172E6),
+          categoryTitleTextColor: const Color(0xFF3A9FFD),
+          actionButtonColor: const Color(0xFF0172E6),
+          linkToPolicyTextColor: const Color(0xFF3A9FFD),
+          submitButtonColor: const Color(0xFF0172E6),
+          submitTextColor: const Color(0xFFFFFFFF),
+          cancelButtonColor: const Color(0xFFFFFFFF),
+          cancelTextColor: const Color(0xFF0172E6),
+          createdBy: '',
+          createdDate: DateTime.now(),
+          updatedBy: '',
+          updatedDate: DateTime.now(),
         );
 
   ConsentThemeModel.fromMap(DataMap map)
       : this(
-          consentThemeId: map['consentThemeId'] as String,
-          themeTitle: map['themeTitle'] as String,
-          headerTextColor: map['headerTextColor'] as String,
-          headerBackgroundColor: map['headerBackgroundColor'] as String,
-          bodyBackgroundColor: map['bodyBackgroundColor'] as String,
-          formTextColor: map['formTextColor'] as String,
-          categoryTitleTextColor: map['categoryTitleTextColor'] as String,
-          acceptConsentTextColor: map['acceptConsentTextColor'] as String,
-          linkToPolicyTextColor: map['linkToPolicyTextColor'] as String,
-          acceptButtonColor: map['acceptButtonColor'] as String,
-          acceptTextColor: map['acceptTextColor'] as String,
-          cancelButtonColor: map['cancelButtonColor'] as String,
-          cancelTextColor: map['cancelTextColor'] as String,
-          actionButtonColor: map['actionButtonColor'] as String,
+          id: map['id'] as String,
+          title: map['title'] as String,
+          headerBackgroundColor: Color(
+            int.parse('0x${map['headerBackgroundColor'] as String}'),
+          ),
+          bodyBackgroundColor: Color(
+            int.parse('0x${map['bodyBackgroundColor'] as String}'),
+          ),
+          backgroundColor: Color(
+            int.parse('0x${map['backgroundColor'] as String}'),
+          ),
+          headerTextColor: Color(
+            int.parse('0x${map['headerTextColor'] as String}'),
+          ),
+          formTextColor: Color(
+            int.parse('0x${map['formTextColor'] as String}'),
+          ),
+          categoryIconColor: Color(
+            int.parse('0x${map['categoryIconColor'] as String}'),
+          ),
+          categoryTitleTextColor: Color(
+            int.parse('0x${map['categoryTitleTextColor'] as String}'),
+          ),
+          actionButtonColor: Color(
+            int.parse('0x${map['actionButtonColor'] as String}'),
+          ),
+          linkToPolicyTextColor: Color(
+            int.parse('0x${map['linkToPolicyTextColor'] as String}'),
+          ),
+          submitButtonColor: Color(
+            int.parse('0x${map['submitButtonColor'] as String}'),
+          ),
+          submitTextColor: Color(
+            int.parse('0x${map['submitTextColor'] as String}'),
+          ),
+          cancelButtonColor: Color(
+            int.parse('0x${map['cancelButtonColor'] as String}'),
+          ),
+          cancelTextColor: Color(
+            int.parse('0x${map['cancelTextColor'] as String}'),
+          ),
           createdBy: map['createdBy'] as String,
           createdDate: DateTime.parse(map['createdDate'] as String),
           updatedBy: map['updatedBy'] as String,
           updatedDate: DateTime.parse(map['updatedDate'] as String),
-          companyId: map['companyId'] as String,
         );
 
   DataMap toMap() => {
-        'consentThemeId': consentThemeId,
-        'themeTitle': themeTitle,
-        'headerTextColor': headerTextColor,
-        'headerBackgroundColor': headerBackgroundColor,
-        'bodyBackgroundColor': bodyBackgroundColor,
-        'formTextColor': formTextColor,
-        'categoryTitleTextColor': categoryTitleTextColor,
-        'acceptConsentTextColor': acceptConsentTextColor,
-        'linkToPolicyTextColor': linkToPolicyTextColor,
-        'acceptButtonColor': acceptButtonColor,
-        'acceptTextColor': acceptTextColor,
-        'cancelButtonColor': cancelButtonColor,
-        'cancelTextColor': cancelTextColor,
-        'actionButtonColor': actionButtonColor,
+        'id': id,
+        'title': title,
+        'headerBackgroundColor': headerBackgroundColor.value
+            .toRadixString(16)
+            .toUpperCase()
+            .padLeft(8, '0'),
+        'bodyBackgroundColor': bodyBackgroundColor.value
+            .toRadixString(16)
+            .toUpperCase()
+            .padLeft(8, '0'),
+        'backgroundColor': backgroundColor.value
+            .toRadixString(16)
+            .toUpperCase()
+            .padLeft(8, '0'),
+        'headerTextColor': headerTextColor.value
+            .toRadixString(16)
+            .toUpperCase()
+            .padLeft(8, '0'),
+        'formTextColor':
+            formTextColor.value.toRadixString(16).toUpperCase().padLeft(8, '0'),
+        'categoryIconColor': categoryIconColor.value
+            .toRadixString(16)
+            .toUpperCase()
+            .padLeft(8, '0'),
+        'categoryTitleTextColor': categoryTitleTextColor.value
+            .toRadixString(16)
+            .toUpperCase()
+            .padLeft(8, '0'),
+        'actionButtonColor': actionButtonColor.value
+            .toRadixString(16)
+            .toUpperCase()
+            .padLeft(8, '0'),
+        'linkToPolicyTextColor': linkToPolicyTextColor.value
+            .toRadixString(16)
+            .toUpperCase()
+            .padLeft(8, '0'),
+        'submitButtonColor': submitButtonColor.value
+            .toRadixString(16)
+            .toUpperCase()
+            .padLeft(8, '0'),
+        'submitTextColor': submitTextColor.value
+            .toRadixString(16)
+            .toUpperCase()
+            .padLeft(8, '0'),
+        'cancelButtonColor': cancelButtonColor.value
+            .toRadixString(16)
+            .toUpperCase()
+            .padLeft(8, '0'),
+        'cancelTextColor': cancelTextColor.value
+            .toRadixString(16)
+            .toUpperCase()
+            .padLeft(8, '0'),
         'createdBy': createdBy,
         'createdDate': createdDate.toIso8601String(),
         'updatedBy': updatedBy,
         'updatedDate': updatedDate.toIso8601String(),
-        'companyId': companyId,
       };
 
   factory ConsentThemeModel.fromDocument(FirebaseDocument document) {
     Map<String, dynamic> response = document.data()!;
-    response['consentThemeId'] = document.id;
+    response['id'] = document.id;
     return ConsentThemeModel.fromMap(response);
   }
 
   ConsentThemeModel copyWith({
-    String? consentThemeId,
-    String? themeTitle,
-    String? headerTextColor,
-    String? headerBackgroundColor,
-    String? bodyBackgroundColor,
-    String? formTextColor,
-    String? categoryTitleTextColor,
-    String? acceptConsentTextColor,
-    String? linkToPolicyTextColor,
-    String? acceptButtonColor,
-    String? acceptTextColor,
-    String? cancelButtonColor,
-    String? cancelTextColor,
-    String? actionButtonColor,
+    String? id,
+    String? title,
+    Color? headerBackgroundColor,
+    Color? bodyBackgroundColor,
+    Color? backgroundColor,
+    Color? headerTextColor,
+    Color? formTextColor,
+    Color? categoryIconColor,
+    Color? categoryTitleTextColor,
+    Color? actionButtonColor,
+    Color? linkToPolicyTextColor,
+    Color? submitButtonColor,
+    Color? submitTextColor,
+    Color? cancelButtonColor,
+    Color? cancelTextColor,
     String? createdBy,
     DateTime? createdDate,
     String? updatedBy,
     DateTime? updatedDate,
-    String? companyId,
   }) {
     return ConsentThemeModel(
-      consentThemeId: consentThemeId ?? this.consentThemeId,
-      themeTitle: themeTitle ?? this.themeTitle,
-      headerTextColor: headerTextColor ?? this.headerTextColor,
+      id: id ?? this.id,
+      title: title ?? this.title,
       headerBackgroundColor:
           headerBackgroundColor ?? this.headerBackgroundColor,
       bodyBackgroundColor: bodyBackgroundColor ?? this.bodyBackgroundColor,
+      backgroundColor: backgroundColor ?? this.backgroundColor,
+      headerTextColor: headerTextColor ?? this.headerTextColor,
       formTextColor: formTextColor ?? this.formTextColor,
+      categoryIconColor: categoryIconColor ?? this.categoryIconColor,
       categoryTitleTextColor:
           categoryTitleTextColor ?? this.categoryTitleTextColor,
-      acceptConsentTextColor:
-          acceptConsentTextColor ?? this.acceptConsentTextColor,
+      actionButtonColor: actionButtonColor ?? this.actionButtonColor,
       linkToPolicyTextColor:
           linkToPolicyTextColor ?? this.linkToPolicyTextColor,
-      acceptButtonColor: acceptButtonColor ?? this.acceptButtonColor,
-      acceptTextColor: acceptTextColor ?? this.acceptTextColor,
+      submitButtonColor: submitButtonColor ?? this.submitButtonColor,
+      submitTextColor: submitTextColor ?? this.submitTextColor,
       cancelButtonColor: cancelButtonColor ?? this.cancelButtonColor,
       cancelTextColor: cancelTextColor ?? this.cancelTextColor,
-      actionButtonColor: actionButtonColor ?? this.actionButtonColor,
       createdBy: createdBy ?? this.createdBy,
       createdDate: createdDate ?? this.createdDate,
       updatedBy: updatedBy ?? this.updatedBy,
       updatedDate: updatedDate ?? this.updatedDate,
-      companyId: companyId ?? this.companyId,
     );
   }
 
   @override
   List<Object> get props {
     return [
-      consentThemeId,
-      themeTitle,
-      headerTextColor,
+      id,
+      title,
       headerBackgroundColor,
       bodyBackgroundColor,
+      backgroundColor,
+      headerTextColor,
       formTextColor,
+      categoryIconColor,
       categoryTitleTextColor,
-      acceptConsentTextColor,
+      actionButtonColor,
       linkToPolicyTextColor,
-      acceptButtonColor,
-      acceptTextColor,
+      submitButtonColor,
+      submitTextColor,
       cancelButtonColor,
       cancelTextColor,
-      actionButtonColor,
       createdBy,
       createdDate,
       updatedBy,
       updatedDate,
-      companyId,
     ];
   }
 }
