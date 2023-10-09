@@ -1,3 +1,4 @@
+import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
@@ -9,6 +10,7 @@ import 'package:pdpa/app/features/master_data/routes/master_data_route.dart';
 import 'package:pdpa/app/features/master_data/widgets/master_data_item_card.dart';
 import 'package:pdpa/app/shared/utils/constants.dart';
 import 'package:pdpa/app/shared/widgets/customs/custom_icon_button.dart';
+import 'package:pdpa/app/shared/widgets/templates/pdpa_app_bar.dart';
 
 class RequestTypeScreen extends StatefulWidget {
   const RequestTypeScreen({super.key});
@@ -66,7 +68,19 @@ class _RequestTypeViewState extends State<RequestTypeView> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: _buildAppBar(context),
+      appBar: PdpaAppBar(
+        leadingIcon: CustomIconButton(
+          onPressed: () {
+            context.pop();
+          },
+          icon: Ionicons.chevron_back_outline,
+          iconColor: Theme.of(context).colorScheme.primary,
+          backgroundColor: Theme.of(context).colorScheme.onBackground,
+        ),
+        title: Text(
+          tr('masterData.dsr.request.title'),
+        ),
+      ),
       body: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: <Widget>[
@@ -96,30 +110,6 @@ class _RequestTypeViewState extends State<RequestTypeView> {
         },
         child: const Icon(Icons.add),
       ),
-    );
-  }
-
-  AppBar _buildAppBar(BuildContext context) {
-    return AppBar(
-      automaticallyImplyLeading: false,
-      title: Row(
-        children: <Widget>[
-          CustomIconButton(
-            onPressed: () {
-              context.pop();
-            },
-            icon: Ionicons.chevron_back_outline,
-            iconColor: Theme.of(context).colorScheme.primary,
-            backgroundColor: Theme.of(context).colorScheme.onBackground,
-          ),
-          const SizedBox(width: UiConfig.appBarTitleSpacing),
-          Text(
-            'requestType',
-            style: Theme.of(context).textTheme.titleLarge,
-          ),
-        ],
-      ),
-      backgroundColor: Theme.of(context).colorScheme.onBackground,
     );
   }
 

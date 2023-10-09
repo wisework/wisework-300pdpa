@@ -70,15 +70,18 @@ class _ReasonTypeViewState extends State<ReasonTypeView> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: PdpaAppBar(
-          leadingIcon: CustomIconButton(
-            onPressed: () {
-              context.pop();
-            },
-            icon: Ionicons.chevron_back_outline,
-            iconColor: Theme.of(context).colorScheme.primary,
-            backgroundColor: Theme.of(context).colorScheme.onBackground,
-          ),
-          title: Text(tr('masterdata.dsr.reason.title'))),
+        leadingIcon: CustomIconButton(
+          onPressed: () {
+            context.pop();
+          },
+          icon: Ionicons.chevron_back_outline,
+          iconColor: Theme.of(context).colorScheme.primary,
+          backgroundColor: Theme.of(context).colorScheme.onBackground,
+        ),
+        title: Text(
+          tr('masterData.dsr.reason.title'),
+        ),
+      ),
       body: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: <Widget>[

@@ -1,5 +1,6 @@
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
 import 'package:ionicons/ionicons.dart';
 import 'package:pdpa/app/config/config.dart';
 import 'package:pdpa/app/shared/widgets/customs/custom_icon_button.dart';
@@ -49,7 +50,9 @@ class _EditReasonTypeViewState extends State<EditReasonTypeView> {
     return Scaffold(
       appBar: PdpaAppBar(
         leadingIcon: CustomIconButton(
-          onPressed: () {},
+          onPressed: () {
+            context.pop();
+          },
           icon: Ionicons.chevron_back_outline,
           iconColor: Theme.of(context).colorScheme.primary,
           backgroundColor: Theme.of(context).colorScheme.onBackground,
@@ -109,27 +112,27 @@ class _EditReasonTypeViewState extends State<EditReasonTypeView> {
         Row(
           children: <Widget>[
             Text(
-              tr('masterdata.dsr.title'), //!
+              tr('masterData.dsr.reason.title'), //!
               style: Theme.of(context).textTheme.titleLarge,
             ),
           ],
         ),
         const SizedBox(height: UiConfig.lineSpacing),
         TitleRequiredText(
-          text: tr('masterdata.dsr.reasoncode'), //!
+          text: tr('masterData.dsr.reason.reasoncode'), //!
           required: true,
         ),
         CustomTextField(
           controller: reasonTypeCodeController,
-          hintText: tr('masterdata.dsr.reasoncodehint'), //!
+          hintText: tr('masterData.dsr.reason.reasoncodehint'), //!
         ),
         const SizedBox(height: UiConfig.lineSpacing),
         TitleRequiredText(
-          text: tr('masterdata.dsr.reasondescription'), //!
+          text: tr('masterData.dsr.reason.reasondescription'), //!
         ),
         CustomTextField(
           controller: descriptionController,
-          hintText: tr('masterdata.dsr.reasondescriptionhint'), //!
+          hintText: tr('masterData.dsr.reason.reasondescriptionhint'), //!
         ),
         const SizedBox(height: UiConfig.lineSpacing),
         Divider(
@@ -140,7 +143,7 @@ class _EditReasonTypeViewState extends State<EditReasonTypeView> {
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: <Widget>[
             Text(
-              tr('masterdata.dsr.needmoreinformation'), //!
+              tr('masterData.dsr.reason.needmoreinformation'), //!
               style: Theme.of(context).textTheme.bodyMedium,
             ),
             CustomSwitchButton(
