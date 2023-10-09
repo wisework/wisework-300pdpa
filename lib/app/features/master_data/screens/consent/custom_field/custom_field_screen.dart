@@ -38,13 +38,11 @@ class _CustomFieldViewState extends State<CustomFieldView> {
       lengthLimit: 1,
       maxLines: 10,
       minLines: 1,
-      placeholder: const [
+      hintText: const [
         LocalizedModel(language: 'en-US', text: 'placeholder 1 EN'),
         LocalizedModel(language: 'th-TH', text: 'placeholder 1 TH'),
       ],
-      uid: 'uid',
-      language: 'en-US',
-      companies: const [],
+
       status: ActiveStatus.active,
       createdBy: 'Admin',
       createdDate: DateTime.fromMillisecondsSinceEpoch(0),
@@ -61,13 +59,11 @@ class _CustomFieldViewState extends State<CustomFieldView> {
       lengthLimit: 1,
       maxLines: 10,
       minLines: 1,
-      placeholder: const [
+      hintText: const [
         LocalizedModel(language: 'en-US', text: 'Description 1 EN'),
         LocalizedModel(language: 'th-TH', text: 'Description 1 TH'),
       ],
-      uid: 'uid',
-      language: 'en-US',
-      companies: const [],
+
       status: ActiveStatus.active,
       createdBy: 'Admin',
       createdDate: DateTime.fromMillisecondsSinceEpoch(0),
@@ -121,7 +117,7 @@ class _CustomFieldViewState extends State<CustomFieldView> {
       (item) => item.language == language,
       orElse: LocalizedModel.empty,
     );
-    final warningDescription = customfield.placeholder.firstWhere(
+    final warningDescription = customfield.hintText.firstWhere(
       (item) => item.language == language,
       orElse: LocalizedModel.empty,
     );

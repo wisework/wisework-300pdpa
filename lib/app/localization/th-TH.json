@@ -2,6 +2,7 @@
     "app": {
         "name": "PDPA Management Platform",
         "changeLang": "เปลี่ยนภาษา",
+        "search": "ค้นหา",
         "features": {
             "consentmanagement": "Consent Management",
             "consentforms": "Consent Forms",
@@ -119,6 +120,15 @@
             "configuration": "Configuration",
             "updateInfo": "Update Info",
             "delete" : "Delete"
+        }
+    },
+    "consentManagement": {
+        "cf": {
+            "consentForms": {
+                "title": "Consent Forms",
+                "create": "Edit consent form",
+                "edit": "Create consent form"
+            }           
         }
     }
 }

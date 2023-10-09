@@ -6,17 +6,19 @@ class PdpaAppBar extends StatelessWidget implements PreferredSizeWidget {
     super.key,
     this.leadingIcon,
     required this.title,
+    this.bottom,
     this.titleSpacing = UiConfig.appBarTitleSpacing,
     this.actions,
   });
 
   final Widget? leadingIcon;
   final Widget title;
+  final Widget? bottom;
   final double titleSpacing;
   final List<Widget>? actions;
 
   @override
-  Size get preferredSize => const Size.fromHeight(kToolbarHeight);
+  Size get preferredSize => Size.fromHeight(bottom != null ? 110 : kToolbarHeight);
 
   @override
   Widget build(BuildContext context) {
@@ -43,6 +45,18 @@ class PdpaAppBar extends StatelessWidget implements PreferredSizeWidget {
               return action;
             }).toList()
           : null,
+      bottom: bottom != null ? 
+      PreferredSize(
+          preferredSize: const Size.fromHeight(120),
+          child: Container(
+            padding: const EdgeInsets.symmetric(
+              vertical: UiConfig.appBarTitleSpacing,
+              horizontal: UiConfig.defaultPaddingSpacing,
+            ),
+            child: bottom,
+          ),
+        )
+       : null,
       elevation: 1.0,
       shadowColor: Theme.of(context).colorScheme.background,
       surfaceTintColor: Theme.of(context).colorScheme.onBackground,

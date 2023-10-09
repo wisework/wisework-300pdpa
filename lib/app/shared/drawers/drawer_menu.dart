@@ -1,4 +1,5 @@
 import 'package:ionicons/ionicons.dart';
+import 'package:pdpa/app/features/consent_management/routes/consent_management_route.dart';
 import 'package:pdpa/app/features/general/routes/general_route.dart';
 import 'package:pdpa/app/features/master_data/routes/master_data_route.dart';
 import 'package:pdpa/app/shared/drawers/models/drawer_menu_models.dart';
@@ -20,7 +21,7 @@ final List<DrawerMenuModel> drawerMenu = [
         value: 'consent_forms',
         title: 'Consent Forms',
         icon: Ionicons.clipboard_outline,
-        route: GeneralRoute.home,
+        route: ConsentManagementRoute.consentForm,
         parent: 'consent_management',
       ),
       DrawerMenuModel(

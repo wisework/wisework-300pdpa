@@ -2,6 +2,10 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:get_it/get_it.dart';
 import 'package:google_sign_in/google_sign_in.dart';
+import 'package:pdpa/app/data/repositories/consent_repository.dart';
+import 'package:pdpa/app/features/consent_management/bloc/consent_form/consent_form_bloc.dart';
+import 'package:pdpa/app/features/consent_management/bloc/edit_consent_form/edit_consent_form_bloc.dart';
+import 'package:pdpa/app/services/apis/consent_api.dart';
 
 import 'config/config.dart';
 import 'data/repositories/authentication_repository.dart';
@@ -30,6 +34,7 @@ Future<void> initLocator() async {
 
   await _authentication();
   await _masterData();
+  await _consentManagement();
   await _other();
 }
 
@@ -97,6 +102,36 @@ Future<void> _masterData() async {
   //     serviceLocator(),
   //   ),
   // );
+}
+
+Future<void> _consentManagement() async {
+ serviceLocator
+    //? App logic
+    ..registerFactory(
+      () => ConsentFormBloc(
+        consentRepository: serviceLocator(),
+      ),
+    )
+    ..registerFactory(
+      () => EditConsentFormBloc(
+        consentRepository: serviceLocator(),
+      ),
+    )
+
+    //? Repositories
+    ..registerLazySingleton(
+      () => ConsentRepository(
+        serviceLocator(),
+      ),
+    )
+
+    //? APIs
+    ..registerLazySingleton(
+      () => ConsentApi(
+        serviceLocator(),
+      ),
+    );
+ 
 }
 
 Future<void> _other() async {

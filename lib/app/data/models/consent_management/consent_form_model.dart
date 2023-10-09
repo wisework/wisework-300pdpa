@@ -1,6 +1,4 @@
-// ignore_for_file: public_member_api_docs, sort_constructors_first
 
-import 'dart:convert';
 
 import 'package:equatable/equatable.dart';
 
@@ -10,13 +8,11 @@ import 'package:pdpa/app/shared/utils/typedef.dart';
 
 class ConsentFormModel extends Equatable {
   const ConsentFormModel({
-    required this.consentFormId,
-    required this.consentThemeId,
+    required this.id,
     required this.title,
     required this.description,
     required this.purposeCategories,
     required this.customFields,
-    required this.consentformUrl,
     required this.headerText,
     required this.headerDescription,
     required this.footerDescription,
@@ -25,25 +21,23 @@ class ConsentFormModel extends Equatable {
     required this.cancelText,
     required this.linkToPolicyText,
     required this.linkToPolicyUrl,
+    required this.consentFormUrl,
+    required this.consentThemeId,
     required this.logoImage,
     required this.headerBackgroundImage,
     required this.bodyBackgroundImage,
-    required this.uid,
     required this.status,
-    required this.version,
     required this.createdBy,
     required this.createdDate,
     required this.updatedBy,
     required this.updatedDate,
   });
 
-  final String consentFormId;
-  final String consentThemeId;
+  final String id;
   final List<LocalizedModel> title;
   final List<LocalizedModel> description;
   final List<String> purposeCategories;
   final List<String> customFields;
-  final String consentformUrl;
   final List<LocalizedModel> headerText;
   final List<LocalizedModel> headerDescription;
   final List<LocalizedModel> footerDescription;
@@ -52,12 +46,12 @@ class ConsentFormModel extends Equatable {
   final List<LocalizedModel> cancelText;
   final List<LocalizedModel> linkToPolicyText;
   final String linkToPolicyUrl;
+  final String consentFormUrl;
+  final String consentThemeId;
   final String logoImage;
   final String headerBackgroundImage;
   final String bodyBackgroundImage;
-  final String uid;
   final ActiveStatus status;
-  final int version;
   final String createdBy;
   final DateTime createdDate;
   final String updatedBy;
@@ -65,13 +59,11 @@ class ConsentFormModel extends Equatable {
 
   ConsentFormModel.empty()
       : this(
-          consentFormId: '',
-          consentThemeId: '',
+          id: '',
           title: [],
           description: [],
           purposeCategories: [],
           customFields: [],
-          consentformUrl: '',
           headerText: [],
           headerDescription: [],
           footerDescription: [],
@@ -80,12 +72,12 @@ class ConsentFormModel extends Equatable {
           cancelText: [],
           linkToPolicyText: [],
           linkToPolicyUrl: '',
+          consentFormUrl: '',
+          consentThemeId: '',
           logoImage: '',
           headerBackgroundImage: '',
           bodyBackgroundImage: '',
-          uid: '',
           status: ActiveStatus.active,
-          version: 1,
           createdBy: '',
           createdDate: DateTime.fromMillisecondsSinceEpoch(0),
           updatedBy: '',
@@ -94,45 +86,62 @@ class ConsentFormModel extends Equatable {
 
   ConsentFormModel.fromMap(DataMap map)
       : this(
-          consentFormId: map['consentFormId'] as String,
-          consentThemeId: map['consentThemeId'] as String,
-          title: List<LocalizedModel>.from((map['title'] as List<dynamic>)
-              .map<LocalizedModel>((item) => LocalizedModel.fromMap(item))),
+          id: map['id'] as String,
+          title: List<LocalizedModel>.from(
+            (map['title'] as List<dynamic>).map<LocalizedModel>(
+              (item) => LocalizedModel.fromMap(item as DataMap),
+            ),
+          ),
           description: List<LocalizedModel>.from(
-              (map['description'] as List<dynamic>)
-                  .map<LocalizedModel>((item) => LocalizedModel.fromMap(item))),
+            (map['description'] as List<dynamic>).map<LocalizedModel>(
+              (item) => LocalizedModel.fromMap(item as DataMap),
+            ),
+          ),
           purposeCategories:
               List<String>.from(map['purposeCategories'] as List<dynamic>),
           customFields: List<String>.from(map['customFields'] as List<dynamic>),
-          consentformUrl: map['consentformUrl'] as String,
           headerText: List<LocalizedModel>.from(
-              (map['headerText'] as List<dynamic>)
-                  .map<LocalizedModel>((item) => LocalizedModel.fromMap(item))),
+            (map['headerText'] as List<dynamic>).map<LocalizedModel>(
+              (item) => LocalizedModel.fromMap(item as DataMap),
+            ),
+          ),
           headerDescription: List<LocalizedModel>.from(
-              (map['headerDescription'] as List<dynamic>)
-                  .map<LocalizedModel>((item) => LocalizedModel.fromMap(item))),
+            (map['headerDescription'] as List<dynamic>).map<LocalizedModel>(
+              (item) => LocalizedModel.fromMap(item as DataMap),
+            ),
+          ),
           footerDescription: List<LocalizedModel>.from(
-              (map['footerDescription'] as List<dynamic>)
-                  .map<LocalizedModel>((item) => LocalizedModel.fromMap(item))),
+            (map['footerDescription'] as List<dynamic>).map<LocalizedModel>(
+              (item) => LocalizedModel.fromMap(item as DataMap),
+            ),
+          ),
           acceptConsentText: List<LocalizedModel>.from(
-              (map['acceptConsentText'] as List<dynamic>)
-                  .map<LocalizedModel>((item) => LocalizedModel.fromMap(item))),
+            (map['acceptConsentText'] as List<dynamic>).map<LocalizedModel>(
+              (item) => LocalizedModel.fromMap(item as DataMap),
+            ),
+          ),
           acceptText: List<LocalizedModel>.from(
-              (map['acceptText'] as List<dynamic>)
-                  .map<LocalizedModel>((item) => LocalizedModel.fromMap(item))),
+            (map['acceptText'] as List<dynamic>).map<LocalizedModel>(
+              (item) => LocalizedModel.fromMap(item as DataMap),
+            ),
+          ),
           cancelText: List<LocalizedModel>.from(
-              (map['cancelText'] as List<dynamic>)
-                  .map<LocalizedModel>((item) => LocalizedModel.fromMap(item))),
+            (map['cancelText'] as List<dynamic>).map<LocalizedModel>(
+              (item) => LocalizedModel.fromMap(item as DataMap),
+            ),
+          ),
           linkToPolicyText: List<LocalizedModel>.from(
-              (map['linkToPolicyText'] as List<dynamic>)
-                  .map<LocalizedModel>((item) => LocalizedModel.fromMap(item))),
+            (map['linkToPolicyText'] as List<dynamic>).map<LocalizedModel>(
+              (item) => LocalizedModel.fromMap(item as DataMap),
+            ),
+          ),
           linkToPolicyUrl: map['linkToPolicyUrl'] as String,
+          consentFormUrl: map['consentFormUrl'] as String,
+          consentThemeId: map['consentThemeId'] as String,
           logoImage: map['logoImage'] as String,
           headerBackgroundImage: map['headerBackgroundImage'] as String,
           bodyBackgroundImage: map['bodyBackgroundImage'] as String,
-          uid: map['uid'] as String,
           status: ActiveStatus.values[map['status'] as int],
-          version: map['version'] as int,
           createdBy: map['createdBy'] as String,
           createdDate: DateTime.parse(map['createdDate'] as String),
           updatedBy: map['updatedBy'] as String,
@@ -140,27 +149,29 @@ class ConsentFormModel extends Equatable {
         );
 
   DataMap toMap() => {
-        'consentFormId': consentFormId,
-        'themeId': consentThemeId,
-        'title': title,
-        'description': description,
+        'id': id,
+        'title': title.map((item) => item.toMap()).toList(),
+        'description': description.map((item) => item.toMap()).toList(),
         'purposeCategories': purposeCategories,
         'customFields': customFields,
-        'consentformUrl': consentformUrl,
-        'headerText': headerText,
-        'headerDescription': headerDescription,
-        'footerDescription': footerDescription,
-        'acceptConsentText': acceptConsentText,
-        'acceptText': acceptText,
-        'cancelText': cancelText,
-        'linkToPolicyText': linkToPolicyText,
+        'headerText': headerText.map((item) => item.toMap()).toList(),
+        'headerDescription':
+            headerDescription.map((item) => item.toMap()).toList(),
+        'footerDescription':
+            footerDescription.map((item) => item.toMap()).toList(),
+        'acceptConsentText':
+            acceptConsentText.map((item) => item.toMap()).toList(),
+        'acceptText': acceptText.map((item) => item.toMap()).toList(),
+        'cancelText': cancelText.map((item) => item.toMap()).toList(),
+        'linkToPolicyText':
+            linkToPolicyText.map((item) => item.toMap()).toList(),
         'linkToPolicyUrl': linkToPolicyUrl,
+        'consentFormUrl': consentFormUrl,
+        'consentThemeId': consentThemeId,
         'logoImage': logoImage,
         'headerBackgroundImage': headerBackgroundImage,
         'bodyBackgroundImage': bodyBackgroundImage,
-        'uid': uid,
         'status': status.index,
-        'version': version,
         'createdBy': createdBy,
         'createdDate': createdDate.toIso8601String(),
         'updatedBy': updatedBy,
@@ -168,19 +179,17 @@ class ConsentFormModel extends Equatable {
       };
 
   factory ConsentFormModel.fromDocument(FirebaseDocument document) {
-    Map<String, dynamic> response = document.data()!;
-    response['consentFormId'] = document.id;
+    DataMap response = document.data()!;
+    response['id'] = document.id;
     return ConsentFormModel.fromMap(response);
   }
 
   ConsentFormModel copyWith({
-    String? consentFormId,
-    String? consentThemeId,
+    String? id,
     List<LocalizedModel>? title,
     List<LocalizedModel>? description,
     List<String>? purposeCategories,
     List<String>? customFields,
-    String? consentformUrl,
     List<LocalizedModel>? headerText,
     List<LocalizedModel>? headerDescription,
     List<LocalizedModel>? footerDescription,
@@ -189,25 +198,23 @@ class ConsentFormModel extends Equatable {
     List<LocalizedModel>? cancelText,
     List<LocalizedModel>? linkToPolicyText,
     String? linkToPolicyUrl,
+    String? consentFormUrl,
+    String? consentThemeId,
     String? logoImage,
     String? headerBackgroundImage,
     String? bodyBackgroundImage,
-    String? uid,
     ActiveStatus? status,
-    int? version,
     String? createdBy,
     DateTime? createdDate,
     String? updatedBy,
     DateTime? updatedDate,
   }) {
     return ConsentFormModel(
-      consentFormId: consentFormId ?? this.consentFormId,
-      consentThemeId: consentThemeId ?? this.consentThemeId,
+      id: id ?? this.id,
       title: title ?? this.title,
       description: description ?? this.description,
       purposeCategories: purposeCategories ?? this.purposeCategories,
       customFields: customFields ?? this.customFields,
-      consentformUrl: consentformUrl ?? this.consentformUrl,
       headerText: headerText ?? this.headerText,
       headerDescription: headerDescription ?? this.headerDescription,
       footerDescription: footerDescription ?? this.footerDescription,
@@ -216,13 +223,13 @@ class ConsentFormModel extends Equatable {
       cancelText: cancelText ?? this.cancelText,
       linkToPolicyText: linkToPolicyText ?? this.linkToPolicyText,
       linkToPolicyUrl: linkToPolicyUrl ?? this.linkToPolicyUrl,
+      consentFormUrl: consentFormUrl ?? this.consentFormUrl,
+      consentThemeId: consentThemeId ?? this.consentThemeId,
       logoImage: logoImage ?? this.logoImage,
       headerBackgroundImage:
           headerBackgroundImage ?? this.headerBackgroundImage,
       bodyBackgroundImage: bodyBackgroundImage ?? this.bodyBackgroundImage,
-      uid: uid ?? this.uid,
       status: status ?? this.status,
-      version: version ?? this.version,
       createdBy: createdBy ?? this.createdBy,
       createdDate: createdDate ?? this.createdDate,
       updatedBy: updatedBy ?? this.updatedBy,
@@ -230,16 +237,26 @@ class ConsentFormModel extends Equatable {
     );
   }
 
+   ConsentFormModel toCreated(String email, DateTime date) => copyWith(
+        createdBy: email,
+        createdDate: date,
+        updatedBy: email,
+        updatedDate: date,
+      );
+
+  ConsentFormModel toUpdated(String email, DateTime date) => copyWith(
+        updatedBy: email,
+        updatedDate: date,
+      );
+
   @override
   List<Object> get props {
     return [
-      consentFormId,
-      consentThemeId,
+      id,
       title,
       description,
       purposeCategories,
       customFields,
-      consentformUrl,
       headerText,
       headerDescription,
       footerDescription,
@@ -248,12 +265,12 @@ class ConsentFormModel extends Equatable {
       cancelText,
       linkToPolicyText,
       linkToPolicyUrl,
+      consentFormUrl,
+      consentThemeId,
       logoImage,
       headerBackgroundImage,
       bodyBackgroundImage,
-      uid,
       status,
-      version,
       createdBy,
       createdDate,
       updatedBy,

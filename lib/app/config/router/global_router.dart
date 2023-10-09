@@ -1,5 +1,6 @@
 import 'package:go_router/go_router.dart';
 import 'package:pdpa/app/features/authentication/routes/authentication_route.dart';
+import 'package:pdpa/app/features/consent_management/routes/consent_management_route.dart';
 import 'package:pdpa/app/features/general/routes/general_route.dart';
 import 'package:pdpa/app/features/master_data/routes/master_data_route.dart';
 
@@ -12,7 +13,8 @@ class GlobalRouter {
       routes: [
         ...AuthenticationRoute.routes,
         ...GeneralRoute.routes,
-        ...MasterDataRoute.routes
+        ...MasterDataRoute.routes,
+        ...ConsentManagementRoute.routes,
       ],
     );
   }

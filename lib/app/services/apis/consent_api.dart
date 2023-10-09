@@ -3,12 +3,12 @@ import 'package:pdpa/app/data/models/consent_management/consent_form_model.dart'
 import 'package:pdpa/app/data/models/consent_management/consent_theme_model.dart';
 import 'package:pdpa/app/data/models/consent_management/user_consent_model.dart';
 
-class ConsentApi{
+class ConsentApi {
   const ConsentApi(this._firestore);
 
   final FirebaseFirestore _firestore;
 
-//? Consenst Form
+  //? Consenst Form
   Future<List<ConsentFormModel>> getConsentForms(String companyId) async {
     final result =
         await _firestore.collection('Companies/$companyId/ConsentForms').get();
@@ -22,12 +22,12 @@ class ConsentApi{
   }
 
   Future<ConsentFormModel?> getConsentFormById(
-    String consentFormsId,
+    String consentFormId,
     String companyId,
   ) async {
     final result = await _firestore
         .collection('Companies/$companyId/ConsentForms')
-        .doc(consentFormsId)
+        .doc(consentFormId)
         .get();
 
     if (!result.exists) return null;
@@ -38,8 +38,9 @@ class ConsentApi{
     ConsentFormModel consentForm,
     String companyId,
   ) async {
-    final ref = _firestore.collection('Companies/$companyId/ConsentForms').doc();
-    final created = consentForm.copyWith(consentFormId: ref.id);
+    final ref =
+        _firestore.collection('Companies/$companyId/ConsentForms').doc();
+    final created = consentForm.copyWith(id: ref.id);
 
     await ref.set(created.toMap());
 
@@ -52,13 +53,12 @@ class ConsentApi{
   ) async {
     await _firestore
         .collection('Companies/$companyId/ConsentForms')
-        .doc(consentForm.consentFormId)
+        .doc(consentForm.id)
         .set(consentForm.toMap());
   }
 
-
   //? Consenst Theme
- Future<List<ConsentThemeModel>> getConsentThemes(String companyId) async {
+  Future<List<ConsentThemeModel>> getConsentThemes(String companyId) async {
     final result =
         await _firestore.collection('Companies/$companyId/ConsentThemes').get();
 
@@ -87,7 +87,8 @@ class ConsentApi{
     ConsentThemeModel consentTheme,
     String companyId,
   ) async {
-    final ref = _firestore.collection('Companies/$companyId/ConsentThemes').doc();
+    final ref =
+        _firestore.collection('Companies/$companyId/ConsentThemes').doc();
     final created = consentTheme.copyWith(consentThemeId: ref.id);
 
     await ref.set(created.toMap());
@@ -118,7 +119,7 @@ class ConsentApi{
   }
 
   //? User consent
-Future<List<UserConsentModel>> getUserConsents(String companyId) async {
+  Future<List<UserConsentModel>> getUserConsents(String companyId) async {
     final result =
         await _firestore.collection('Companies/$companyId/UserConsents').get();
 
@@ -147,7 +148,8 @@ Future<List<UserConsentModel>> getUserConsents(String companyId) async {
     UserConsentModel userConsent,
     String companyId,
   ) async {
-    final ref = _firestore.collection('Companies/$companyId/UserConsents').doc();
+    final ref =
+        _firestore.collection('Companies/$companyId/UserConsents').doc();
     final created = userConsent.copyWith(consentFormId: ref.id);
 
     await ref.set(created.toMap());
@@ -164,5 +166,4 @@ Future<List<UserConsentModel>> getUserConsents(String companyId) async {
         .doc(userConsent.consentFormId)
         .set(userConsent.toMap());
   }
-
 }

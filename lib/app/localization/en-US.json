@@ -2,6 +2,7 @@
     "app": {
         "name": "PDPA Management Platform",
         "changeLang": "Change language",
+        "search": "Search",
         "features": {
             "consentmanagement": "Consent Management",
             "consentforms": "Consent Forms",
@@ -122,12 +123,24 @@
                 "chooserejecttype" : "Choose Reasons Type"
             }
         },
+        
         "etc": {
             "fieldCannotEmpty": "Field cannot be empty",
             "active": "Active",
             "configuration": "Configuration",
             "updateInfo": "Update Info",
             "delete" : "Delete"
+        }
+    },
+    "consentManagement": {
+        "cf": {
+            "consentForms": {
+                "consentForms": "Consent Forms",
+                "create": "Edit consent form",
+                "edit": "Create consent form",
+                "title": "Title",
+                "description": "Description"
+            }           
         }
     }
 }
