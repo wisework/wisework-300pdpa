@@ -36,92 +36,102 @@ class ConsentFormDrawer extends StatelessWidget {
         backgroundColor: Theme.of(context).colorScheme.onBackground,
         surfaceTintColor: Theme.of(context).colorScheme.onBackground,
         child: SingleChildScrollView(
-          child: Padding(
+          child: Container(
             padding: const EdgeInsets.all(UiConfig.defaultPaddingSpacing),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: <Widget>[
-                Align(
-                  alignment: Alignment.center,
-                  child: Text(
-                    consentForm.headerText.first.text,
-                    style: Theme.of(context)
-                        .textTheme
-                        .bodyLarge
-                        ?.copyWith(color: consentTheme.headerTextColor),
-                  ),
-                ),
-                const SizedBox(height: UiConfig.lineSpacing),
-                _buildHeaderDescription(context),
-                _buildCustomFieldSection(context),
-                _buildPurposeCategorySection(context),
-                _buildFooterDescription(context),
-                Row(
-                  children: <Widget>[
-                    CustomCheckBox(
-                      value: false,
-                      onChanged: (value) {},
-                      activeColor: consentTheme.actionButtonColor,
+            decoration: BoxDecoration(
+              color: consentTheme.backgroundColor,
+            ),
+            child: Container(
+              padding: const EdgeInsets.all(UiConfig.defaultPaddingSpacing),
+              decoration: BoxDecoration(
+                color: consentTheme.bodyBackgroundColor,
+              ),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: <Widget>[
+                  Align(
+                    alignment: Alignment.center,
+                    child: Text(
+                      consentForm.headerText.first.text,
+                      style: Theme.of(context)
+                          .textTheme
+                          .bodyLarge
+                          ?.copyWith(color: consentTheme.headerTextColor),
                     ),
-                    const SizedBox(width: UiConfig.actionSpacing),
-                    Expanded(
-                      child: RichText(
-                        text: TextSpan(
-                          children: [
-                            TextSpan(
-                              text: consentForm.acceptConsentText.first.text,
-                              style: Theme.of(context)
-                                  .textTheme
-                                  .bodyMedium
-                                  ?.copyWith(color: consentTheme.formTextColor),
-                            ),
-                            const WidgetSpan(
-                              child: SizedBox(width: UiConfig.textSpacing),
-                            ),
-                            TextSpan(
-                              text: consentForm.linkToPolicyText.first.text,
-                              style: Theme.of(context)
-                                  .textTheme
-                                  .bodyMedium
-                                  ?.copyWith(
-                                    color: consentTheme.linkToPolicyTextColor,
-                                  ),
-                            ),
-                          ],
+                  ),
+                  const SizedBox(height: UiConfig.lineSpacing),
+                  _buildHeaderDescription(context),
+                  _buildCustomFieldSection(context),
+                  _buildPurposeCategorySection(context),
+                  _buildFooterDescription(context),
+                  Row(
+                    children: <Widget>[
+                      CustomCheckBox(
+                        value: false,
+                        onChanged: (value) {},
+                        activeColor: consentTheme.actionButtonColor,
+                      ),
+                      const SizedBox(width: UiConfig.actionSpacing),
+                      Expanded(
+                        child: RichText(
+                          text: TextSpan(
+                            children: [
+                              TextSpan(
+                                text: consentForm.acceptConsentText.first.text,
+                                style: Theme.of(context)
+                                    .textTheme
+                                    .bodyMedium
+                                    ?.copyWith(
+                                        color: consentTheme.formTextColor),
+                              ),
+                              const WidgetSpan(
+                                child: SizedBox(width: UiConfig.textSpacing),
+                              ),
+                              TextSpan(
+                                text: consentForm.linkToPolicyText.first.text,
+                                style: Theme.of(context)
+                                    .textTheme
+                                    .bodyMedium
+                                    ?.copyWith(
+                                      color: consentTheme.linkToPolicyTextColor,
+                                    ),
+                              ),
+                            ],
+                          ),
                         ),
                       ),
+                    ],
+                  ),
+                  const SizedBox(height: UiConfig.lineGap * 2),
+                  CustomButton(
+                    height: 40.0,
+                    onPressed: () {},
+                    buttonColor: consentTheme.submitButtonColor,
+                    splashColor: consentTheme.submitTextColor,
+                    child: Text(
+                      consentForm.acceptText.first.text,
+                      style: Theme.of(context)
+                          .textTheme
+                          .bodyMedium
+                          ?.copyWith(color: consentTheme.submitTextColor),
                     ),
-                  ],
-                ),
-                const SizedBox(height: UiConfig.lineGap * 2),
-                CustomButton(
-                  height: 40.0,
-                  onPressed: () {},
-                  buttonColor: consentTheme.submitButtonColor,
-                  splashColor: consentTheme.submitTextColor,
-                  child: Text(
-                    consentForm.acceptText.first.text,
-                    style: Theme.of(context)
-                        .textTheme
-                        .bodyMedium
-                        ?.copyWith(color: consentTheme.submitTextColor),
                   ),
-                ),
-                const SizedBox(height: UiConfig.lineGap),
-                CustomButton(
-                  height: 40.0,
-                  onPressed: () {},
-                  buttonColor: consentTheme.cancelButtonColor,
-                  splashColor: consentTheme.cancelTextColor,
-                  child: Text(
-                    consentForm.cancelText.first.text,
-                    style: Theme.of(context)
-                        .textTheme
-                        .bodyMedium
-                        ?.copyWith(color: consentTheme.cancelTextColor),
+                  const SizedBox(height: UiConfig.lineGap),
+                  CustomButton(
+                    height: 40.0,
+                    onPressed: () {},
+                    buttonColor: consentTheme.cancelButtonColor,
+                    splashColor: consentTheme.cancelTextColor,
+                    child: Text(
+                      consentForm.cancelText.first.text,
+                      style: Theme.of(context)
+                          .textTheme
+                          .bodyMedium
+                          ?.copyWith(color: consentTheme.cancelTextColor),
+                    ),
                   ),
-                ),
-              ],
+                ],
+              ),
             ),
           ),
         ),

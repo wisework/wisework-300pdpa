@@ -48,12 +48,21 @@ class GotConsentFormSettings extends ConsentFormSettingsState {
   final ConsentThemeModel currentConsentTheme;
 
   @override
-  List<Object> get props => [
-        consentForm,
-        customFields,
-        purposeCategories,
-        purposes,
-        consentThemes,
-        currentConsentTheme,
-      ];
+  List<Object> get props {
+    return [
+      consentForm,
+      customFields,
+      purposeCategories,
+      purposes,
+      consentThemes,
+      currentConsentTheme,
+    ];
+  }
+}
+
+class UpdatingConsentFormSettings extends ConsentFormSettingsState {
+  const UpdatingConsentFormSettings();
+
+  @override
+  List<Object> get props => [];
 }

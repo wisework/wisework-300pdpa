@@ -1,8 +1,10 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:ionicons/ionicons.dart';
 import 'package:pdpa/app/config/config.dart';
 import 'package:pdpa/app/data/models/consent_management/consent_form_model.dart';
 import 'package:pdpa/app/data/models/consent_management/consent_theme_model.dart';
+import 'package:pdpa/app/features/consent_management/consent_form/bloc/consent_form_settings/consent_form_settings_bloc.dart';
 import 'package:pdpa/app/features/consent_management/consent_form/screens/consent_form_settings/widgets/consent_theme_tile.dart';
 import 'package:pdpa/app/shared/widgets/customs/custom_container.dart';
 import 'package:pdpa/app/shared/widgets/material_ink_well.dart';
@@ -65,6 +67,15 @@ class ThemeTab extends StatelessWidget {
           itemBuilder: (context, index) => ConsentThemeTile(
             consentTheme: consentThemes[index],
             selectedValue: consentForm.consentThemeId,
+            onChanged: (value) {
+              final event = UpdateCurrentThemeSettingsEvent(
+                consentForm: consentForm.copyWith(
+                  consentThemeId: consentThemes[index].id,
+                ),
+                consentTheme: consentThemes[index],
+              );
+              context.read<ConsentFormSettingsBloc>().add(event);
+            },
           ),
           separatorBuilder: (context, _) => const SizedBox(
             height: UiConfig.lineSpacing,

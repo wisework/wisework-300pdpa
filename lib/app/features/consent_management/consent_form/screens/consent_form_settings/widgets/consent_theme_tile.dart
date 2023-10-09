@@ -15,10 +15,12 @@ class ConsentThemeTile extends StatefulWidget {
     super.key,
     required this.consentTheme,
     required this.selectedValue,
+    required this.onChanged,
   });
 
   final ConsentThemeModel consentTheme;
   final String selectedValue;
+  final Function(String? value) onChanged;
 
   @override
   State<ConsentThemeTile> createState() => _ConsentThemeTileState();
@@ -43,7 +45,7 @@ class _ConsentThemeTileState extends State<ConsentThemeTile> {
           child: CustomRadioButton(
             value: widget.consentTheme.id,
             selected: widget.selectedValue,
-            onChanged: (value) {},
+            onChanged: widget.onChanged,
           ),
         ),
         const SizedBox(width: UiConfig.actionSpacing),
@@ -108,10 +110,11 @@ class _ConsentThemeTileState extends State<ConsentThemeTile> {
       duration: const Duration(milliseconds: 400),
       child: Container(
         padding: const EdgeInsets.all(UiConfig.defaultPaddingSpacing),
-        color: Theme.of(context).colorScheme.background,
+        color: widget.consentTheme.backgroundColor,
         margin: const EdgeInsets.symmetric(vertical: UiConfig.textLineSpacing),
         child: CustomContainer(
           margin: EdgeInsets.zero,
+          color: widget.consentTheme.bodyBackgroundColor,
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: <Widget>[

@@ -62,7 +62,22 @@ class _ConsentFormSettingScreenState extends State<ConsentFormSettingScreen> {
             companyId: currentUser.currentCompany,
           ),
         ),
-      child: BlocBuilder<ConsentFormSettingsBloc, ConsentFormSettingsState>(
+      child: BlocConsumer<ConsentFormSettingsBloc, ConsentFormSettingsState>(
+        listener: (context, state) {
+          // if (state is UpdatedConsentFormSettings) {
+          //   BotToast.showText(
+          //     text: 'Update successfully',
+          //     contentColor:
+          //         Theme.of(context).colorScheme.secondary.withOpacity(0.75),
+          //     borderRadius: BorderRadius.circular(8.0),
+          //     textStyle: Theme.of(context)
+          //         .textTheme
+          //         .bodyMedium!
+          //         .copyWith(color: Theme.of(context).colorScheme.onPrimary),
+          //     duration: UiConfig.toastDuration,
+          //   );
+          // }
+        },
         builder: (context, state) {
           if (state is GotConsentFormSettings) {
             return ConsentFormSettingView(
@@ -72,8 +87,10 @@ class _ConsentFormSettingScreenState extends State<ConsentFormSettingScreen> {
               purposes: state.purposes,
               consentThemes: state.consentThemes,
               currentConsentTheme: state.currentConsentTheme,
+              companyId: currentUser.currentCompany,
             );
           }
+
           if (state is ConsentFormSettingsError) {
             return ErrorMessageScreen(message: state.message);
           }
@@ -94,6 +111,7 @@ class ConsentFormSettingView extends StatefulWidget {
     required this.purposes,
     required this.consentThemes,
     required this.currentConsentTheme,
+    required this.companyId,
   });
 
   final ConsentFormModel consentForm;
@@ -102,13 +120,23 @@ class ConsentFormSettingView extends StatefulWidget {
   final List<PurposeModel> purposes;
   final List<ConsentThemeModel> consentThemes;
   final ConsentThemeModel currentConsentTheme;
+  final String companyId;
 
   @override
   State<ConsentFormSettingView> createState() => _ConsentFormSettingViewState();
 }
 
 class _ConsentFormSettingViewState extends State<ConsentFormSettingView> {
+  late ConsentFormModel initialConsentForm;
+
   final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
+
+  @override
+  void initState() {
+    super.initState();
+
+    initialConsentForm = widget.consentForm;
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -130,14 +158,7 @@ class _ConsentFormSettingViewState extends State<ConsentFormSettingView> {
             style: Theme.of(context).textTheme.titleLarge,
           ),
           actions: [
-            CustomIconButton(
-              onPressed: () {
-                _scaffoldKey.currentState?.openEndDrawer();
-              },
-              icon: Ionicons.eye_outline,
-              iconColor: Theme.of(context).colorScheme.primary,
-              backgroundColor: Theme.of(context).colorScheme.onBackground,
-            ),
+            _buildSaveButton(),
           ],
           bottom: TabBar(
             tabs: const [
@@ -147,7 +168,6 @@ class _ConsentFormSettingViewState extends State<ConsentFormSettingView> {
               Tab(text: 'Footer'),
               Tab(text: 'Theme'),
             ],
-            // isScrollable: true,
             indicatorColor: Theme.of(context).colorScheme.primary,
             indicatorSize: TabBarIndicatorSize.tab,
             labelColor: Theme.of(context).colorScheme.primary,
@@ -159,16 +179,22 @@ class _ConsentFormSettingViewState extends State<ConsentFormSettingView> {
           children: <Widget>[
             UrlTab(consentForm: widget.consentForm),
             HeaderTab(consentForm: widget.consentForm),
-            BodyTab(
-              consentForm: widget.consentForm,
-              purposeCategories: widget.purposeCategories,
-            ),
+            BodyTab(consentForm: widget.consentForm),
             FooterTab(consentForm: widget.consentForm),
             ThemeTab(
               consentForm: widget.consentForm,
               consentThemes: widget.consentThemes,
             ),
           ],
+        ),
+        floatingActionButton: FloatingActionButton(
+          onPressed: () {
+            _scaffoldKey.currentState?.openEndDrawer();
+          },
+          child: Icon(
+            Ionicons.eye_outline,
+            color: Theme.of(context).colorScheme.onPrimary,
+          ),
         ),
         endDrawer: ConsentFormDrawer(
           consentForm: widget.consentForm,
@@ -181,114 +207,36 @@ class _ConsentFormSettingViewState extends State<ConsentFormSettingView> {
     );
   }
 
-  // Column _buildThemeTab() {
-  //   return Column(
-  //     children: <Widget>[
-  //       Text(
-  //         'Footer Tab',
-  //         style: Theme.of(context).textTheme.bodyMedium,
-  //       ),
-  //       ElevatedButton(
-  //         onPressed: () async {
-  //           final purposeCategory = PurposeCategoryModel(
-  //             id: '',
-  //             title: const [
-  //               LocalizedModel(language: 'en-US', text: 'Something'),
-  //             ],
-  //             description: const [
-  //               LocalizedModel(language: 'en-US', text: 'Something like that'),
-  //             ],
-  //             purposes: const ['cLouEcHLR7AIWfxNtmzs'],
-  //             priority: 2,
-  //             status: ActiveStatus.active,
-  //             createdBy: 'meow@gmail.com',
-  //             createdDate: DateTime.now(),
-  //             updatedBy: 'meow@gmail.com',
-  //             updatedDate: DateTime.now(),
-  //           );
+  BlocBuilder _buildSaveButton() {
+    return BlocBuilder<ConsentFormSettingsBloc, ConsentFormSettingsState>(
+      builder: (context, state) {
+        if (state is GotConsentFormSettings) {
+          if (state.consentForm != initialConsentForm) {
+            return _buildActiveSaveButton(context);
+          }
+        }
 
-  //           final api = MasterDataApi(FirebaseFirestore.instance);
-  //           const companyId = 'C7q7rpbkjgLMeROuJQhi';
+        return CustomIconButton(
+          icon: Ionicons.save_outline,
+          iconColor: Theme.of(context).colorScheme.outlineVariant,
+          backgroundColor: Theme.of(context).colorScheme.onBackground,
+        );
+      },
+    );
+  }
 
-  //           await api
-  //               .createPurposeCategory(purposeCategory, companyId)
-  //               .then((value) {
-  //             BotToast.showText(text: value.id);
-  //           });
-  //         },
-  //         child: const Text('Add'),
-  //       ),
-  //       ElevatedButton(
-  //         onPressed: () async {
-  //           final purposeCategory = PurposeCategoryModel(
-  //             id: 'XnOAtOwdZKf7y9keMaL3',
-  //             title: const [
-  //               LocalizedModel(language: 'en-US', text: 'My field'),
-  //             ],
-  //             description: const [
-  //               LocalizedModel(language: 'en-US', text: 'Enter my field'),
-  //             ],
-  //             purposes: const [
-  //               '5gIaK0L7N8GrX7Nd40FC',
-  //               'MGGzjoFrgJHNLeYqTeKv',
-  //             ],
-  //             priority: 1,
-  //             status: ActiveStatus.active,
-  //             createdBy: 'meow@gmail.com',
-  //             createdDate: DateTime.now(),
-  //             updatedBy: 'meow@gmail.com',
-  //             updatedDate: DateTime.now(),
-  //           );
+  CustomIconButton _buildActiveSaveButton(BuildContext context) {
+    return CustomIconButton(
+      onPressed: () {
+        final event = UpdateConsentFormSettingsEvent(
+          companyId: widget.companyId,
+        );
 
-  //           final api = MasterDataApi(FirebaseFirestore.instance);
-  //           const companyId = 'C7q7rpbkjgLMeROuJQhi';
-
-  //           await api
-  //               .updatePurposeCategory(purposeCategory, companyId)
-  //               .then((_) {
-  //             BotToast.showText(text: 'Updated');
-  //           });
-  //         },
-  //         child: const Text('Update'),
-  //       ),
-  //       ElevatedButton(
-  //         onPressed: () async {
-  //           final api = MasterDataApi(FirebaseFirestore.instance);
-  //           const companyId = 'C7q7rpbkjgLMeROuJQhi';
-
-  //           await api.getPurposeCategories(companyId).then((value) {
-  //             print(value);
-  //           });
-  //         },
-  //         child: const Text('Get'),
-  //       ),
-  //       ElevatedButton(
-  //         onPressed: () async {
-  //           final api = MasterDataApi(FirebaseFirestore.instance);
-  //           const companyId = 'C7q7rpbkjgLMeROuJQhi';
-
-  //           await api
-  //               .getPurposeCategoryById('XnOAtOwdZKf7y9keMaL3', companyId)
-  //               .then((value) {
-  //             print(value);
-  //           });
-  //         },
-  //         child: const Text('Get by ID'),
-  //       ),
-  //       ElevatedButton(
-  //         onPressed: () async {
-  //           final api = MasterDataApi(FirebaseFirestore.instance);
-  //           const companyId = 'C7q7rpbkjgLMeROuJQhi';
-
-  //           await api
-  //               .deletePurposeCategory('pUfTe3pX3EqreOC8f4ly', companyId)
-  //               .then((_) {
-  //             BotToast.showText(text: 'Deleted');
-  //           });
-  //         },
-  //         child: const Text('Delete by ID'),
-  //       ),
-  //     ],
-  //   );
-  // }
+        context.read<ConsentFormSettingsBloc>().add(event);
+      },
+      icon: Ionicons.save_outline,
+      iconColor: Theme.of(context).colorScheme.primary,
+      backgroundColor: Theme.of(context).colorScheme.onBackground,
+    );
+  }
 }

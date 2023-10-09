@@ -21,6 +21,9 @@ class ConsentFormSettingsBloc
         _masterDataRepository = masterDataRepository,
         super(const ConsentFormSettingsInitial()) {
     on<GetConsentFormSettingsEvent>(_getConsentFormSettingsHandler);
+    on<UpdateCurrentFormSettingsEvent>(_updateCurrentFormSettingsHandler);
+    on<UpdateCurrentThemeSettingsEvent>(_updateCurrentThemeSettingsHandler);
+    on<UpdateConsentFormSettingsEvent>(_updateConsentFormSettingsHandler);
   }
 
   final ConsentRepository _consentRepository;
@@ -127,5 +130,82 @@ class ConsentFormSettingsBloc
         orElse: () => ConsentThemeModel.initial(),
       ),
     ));
+  }
+
+  void _updateCurrentFormSettingsHandler(
+    UpdateCurrentFormSettingsEvent event,
+    Emitter<ConsentFormSettingsState> emit,
+  ) {
+    if (state is GotConsentFormSettings) {
+      final settings = state as GotConsentFormSettings;
+
+      emit(
+        GotConsentFormSettings(
+          event.consentForm,
+          settings.customFields,
+          settings.purposeCategories,
+          settings.purposes,
+          settings.consentThemes,
+          settings.currentConsentTheme,
+        ),
+      );
+    }
+  }
+
+  void _updateCurrentThemeSettingsHandler(
+    UpdateCurrentThemeSettingsEvent event,
+    Emitter<ConsentFormSettingsState> emit,
+  ) {
+    if (state is GotConsentFormSettings) {
+      final settings = state as GotConsentFormSettings;
+
+      emit(
+        GotConsentFormSettings(
+          event.consentForm,
+          settings.customFields,
+          settings.purposeCategories,
+          settings.purposes,
+          settings.consentThemes,
+          event.consentTheme,
+        ),
+      );
+    }
+  }
+
+  Future<void> _updateConsentFormSettingsHandler(
+    UpdateConsentFormSettingsEvent event,
+    Emitter<ConsentFormSettingsState> emit,
+  ) async {
+    if (event.companyId.isEmpty) {
+      emit(const ConsentFormSettingsError('Required company ID'));
+      return;
+    }
+
+    if (state is GotConsentFormSettings) {
+      final settings = state as GotConsentFormSettings;
+
+      emit(const UpdatingConsentFormSettings());
+
+      final result = await _consentRepository.updateConsentForm(
+        settings.consentForm,
+        event.companyId,
+      );
+
+      await Future.delayed(const Duration(milliseconds: 800));
+
+      result.fold(
+        (failure) => emit(ConsentFormSettingsError(failure.errorMessage)),
+        (_) => emit(
+          GotConsentFormSettings(
+            settings.consentForm,
+            settings.customFields,
+            settings.purposeCategories,
+            settings.purposes,
+            settings.consentThemes,
+            settings.currentConsentTheme,
+          ),
+        ),
+      );
+    }
   }
 }

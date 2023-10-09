@@ -1,6 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:pdpa/app/config/config.dart';
 import 'package:pdpa/app/data/models/consent_management/consent_form_model.dart';
+import 'package:pdpa/app/data/models/master_data/localized_model.dart';
+import 'package:pdpa/app/features/consent_management/consent_form/bloc/consent_form_settings/consent_form_settings_bloc.dart';
 import 'package:pdpa/app/shared/widgets/customs/custom_container.dart';
 import 'package:pdpa/app/shared/widgets/customs/custom_icon_button.dart';
 import 'package:pdpa/app/shared/widgets/customs/custom_text_field.dart';
@@ -29,13 +32,30 @@ class _HeaderTabState extends State<HeaderTab> {
     _initialData();
   }
 
+  @override
+  void dispose() {
+    headerTextController.dispose();
+    headerDescriptionController.dispose();
+
+    super.dispose();
+  }
+
   void _initialData() {
-    headerTextController = TextEditingController(
-      text: widget.consentForm.headerText.first.text,
-    );
-    headerDescriptionController = TextEditingController(
-      text: widget.consentForm.headerDescription.first.text,
-    );
+    if (widget.consentForm.headerText.isNotEmpty) {
+      headerTextController = TextEditingController(
+        text: widget.consentForm.headerText.first.text,
+      );
+    } else {
+      headerTextController = TextEditingController();
+    }
+
+    if (widget.consentForm.headerDescription.isNotEmpty) {
+      headerDescriptionController = TextEditingController(
+        text: widget.consentForm.headerDescription.first.text,
+      );
+    } else {
+      headerDescriptionController = TextEditingController();
+    }
   }
 
   @override
@@ -119,12 +139,34 @@ class _HeaderTabState extends State<HeaderTab> {
           CustomTextField(
             controller: headerTextController,
             hintText: 'Enter header text',
+            onChanged: (value) {
+              final event = UpdateCurrentFormSettingsEvent(
+                consentForm: widget.consentForm.copyWith(
+                  headerText: [
+                    LocalizedModel(language: 'en-US', text: value),
+                  ],
+                ),
+              );
+
+              context.read<ConsentFormSettingsBloc>().add(event);
+            },
           ),
           const SizedBox(height: UiConfig.lineSpacing),
           const TitleRequiredText(text: 'Description'),
           CustomTextField(
             controller: headerDescriptionController,
             hintText: 'Enter description',
+            onChanged: (value) {
+              final event = UpdateCurrentFormSettingsEvent(
+                consentForm: widget.consentForm.copyWith(
+                  headerDescription: [
+                    LocalizedModel(language: 'en-US', text: value),
+                  ],
+                ),
+              );
+
+              context.read<ConsentFormSettingsBloc>().add(event);
+            },
           ),
           const SizedBox(height: UiConfig.lineSpacing),
         ],
