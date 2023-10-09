@@ -1,3 +1,4 @@
+import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
@@ -76,7 +77,7 @@ class _RejectTypeViewState extends State<RejectTypeView> {
       ),
       floatingActionButton: FloatingActionButton(
         onPressed: () {
-          context.go(MasterDataRoute.createPurpose.path);
+          context.push(MasterDataRoute.createRejectType.path);
         },
         child: const Icon(Icons.add),
       ),
@@ -98,7 +99,7 @@ class _RejectTypeViewState extends State<RejectTypeView> {
           ),
           const SizedBox(width: UiConfig.appBarTitleSpacing),
           Text(
-            'Purpose',
+            tr('masterData.dsr.rejections.title'),
             style: Theme.of(context).textTheme.titleLarge,
           ),
         ],

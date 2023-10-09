@@ -78,7 +78,7 @@ class _ReasonTypeViewState extends State<ReasonTypeView> {
             iconColor: Theme.of(context).colorScheme.primary,
             backgroundColor: Theme.of(context).colorScheme.onBackground,
           ),
-          title: Text(tr('masterdata.dsr.reason.title'))),
+          title: Text(tr('masterData.dsr.reason.title'))),
       body: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: <Widget>[
