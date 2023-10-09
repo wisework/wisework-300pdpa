@@ -1,5 +1,4 @@
 import 'package:bot_toast/bot_toast.dart';
-import 'package:dropdown_button2/dropdown_button2.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -12,16 +11,16 @@ import 'package:pdpa/app/data/models/master_data/purpose_category_model.dart';
 import 'package:pdpa/app/data/models/master_data/purpose_model.dart';
 import 'package:pdpa/app/features/authentication/bloc/sign_in/sign_in_bloc.dart';
 import 'package:pdpa/app/features/master_data/bloc/consent/edit_purpose_category/edit_purpose_category_bloc.dart';
+import 'package:pdpa/app/features/master_data/bloc/consent/purpose/purpose_bloc.dart';
 import 'package:pdpa/app/features/master_data/bloc/consent/purpose_category/purpose_category_bloc.dart';
 import 'package:pdpa/app/features/master_data/widgets/configuration_info.dart';
 import 'package:pdpa/app/injection.dart';
 import 'package:pdpa/app/shared/utils/constants.dart';
 import 'package:pdpa/app/shared/widgets/customs/custom_container.dart';
-import 'package:pdpa/app/shared/widgets/customs/custom_dropdown_button.dart';
 import 'package:pdpa/app/shared/widgets/customs/custom_icon_button.dart';
-import 'package:pdpa/app/shared/widgets/customs/custom_multiselect_dropdown_button.dart';
 import 'package:pdpa/app/shared/widgets/customs/custom_switch_button.dart';
 import 'package:pdpa/app/shared/widgets/customs/custom_text_field.dart';
+import 'package:pdpa/app/shared/widgets/material_ink_well.dart';
 import 'package:pdpa/app/shared/widgets/screens/error_message_screen.dart';
 import 'package:pdpa/app/shared/widgets/screens/loading_screen.dart';
 import 'package:pdpa/app/shared/widgets/templates/pdpa_app_bar.dart';
@@ -57,6 +56,13 @@ class _EditPurposeCategoryScreenState extends State<EditPurposeCategoryScreen> {
     } else {
       currentUser = UserModel.empty();
     }
+
+    String companyId = '';
+    if (bloc.state is SignedInUser) {
+      companyId = (bloc.state as SignedInUser).user.currentCompany;
+    }
+
+    context.read<PurposeBloc>().add(GetPurposesEvent(companyId: companyId));
   }
 
   @override
@@ -176,7 +182,7 @@ class _EditPurposeCategoryViewState extends State<EditPurposeCategoryView> {
   late TextEditingController titleController;
   late TextEditingController descriptionController;
   late TextEditingController priorityController;
-  late List<String> purposeList;
+  late List<PurposeModel> purposeList;
 
   late bool isActivated;
 
@@ -225,12 +231,6 @@ class _EditPurposeCategoryViewState extends State<EditPurposeCategoryView> {
         );
       }
 
-      purposeList = purposeCategory.purposes;
-      // print(purpose);
-
-      // purpose = purposeCategory.purposes.;
-      // unitSelected = purpose.periodUnit.isNotEmpty ? purpose.periodUnit : 'd';
-
       isActivated = purposeCategory.status == ActiveStatus.active;
     }
   }
@@ -271,18 +271,13 @@ class _EditPurposeCategoryViewState extends State<EditPurposeCategoryView> {
     }
   }
 
-  // void _setPurpose(List<String>? value) {
-  //   setState(() {
-  //     final description = [
-  //       LocalizedModel(
-  //         language: 'en-US',
-  //         text: descriptionController.text,
-  //       ),
-  //     ];
-
-  //     purpose = purpose.copyWith(description: description);
-  //   });
-  // }
+  void _setPurpose(List<String>? value) {
+    setState(() {
+      final purposes = value;
+      print(value);
+      purposeCategory = purposeCategory.copyWith(purposes: purposes);
+    });
+  }
 
   void _setActiveStatus(bool value) {
     setState(() {
@@ -296,6 +291,7 @@ class _EditPurposeCategoryViewState extends State<EditPurposeCategoryView> {
 
   void _savePurposeCategory() {
     if (_formKey.currentState!.validate()) {
+      print('pass1');
       if (widget.isNewPurposeCategory) {
         purposeCategory = purposeCategory.toCreated(
           widget.currentUser.email,
@@ -313,7 +309,7 @@ class _EditPurposeCategoryViewState extends State<EditPurposeCategoryView> {
           widget.currentUser.email,
           DateTime.now(),
         );
-
+        print('pass2');
         context
             .read<EditPurposeCategoryBloc>()
             .add(UpdateCurrentPurposeCategoryEvent(
@@ -430,114 +426,201 @@ class _EditPurposeCategoryViewState extends State<EditPurposeCategoryView> {
             text: tr('masterData.cm.purposeCategory.purposes'),
           ),
           const SizedBox(height: UiConfig.lineSpacing),
-          _buildPurposeList(context),
-
-          // CustomDropdownButton<String>(
-          //   value: unitSelected,
-          //   items: periodUnits.map(
-          //     (unit) {
-          //       return DropdownMenuItem(
-          //         value: unit[0].toLowerCase(),
-          //         child: Text(
-          //           unit,
-          //           style: Theme.of(context).textTheme.bodyMedium,
-          //         ),
-          //       );
-          //     },
-          //   ).toList(),
-          //   onSelected: _setPeriodUnit,
-          // ),
+          BlocBuilder<PurposeBloc, PurposeState>(
+            builder: (context, state) {
+              if (state is GotPurposes) {
+                return CustomContainer(
+                  child: Column(
+                    mainAxisSize: MainAxisSize.min,
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: <Widget>[
+                      const SizedBox(height: UiConfig.lineSpacing),
+                      Visibility(
+                        visible: purposeCategory.purposes.isNotEmpty,
+                        child: _buildPurposeList(context, state),
+                      ),
+                      Visibility(
+                        visible: purposeCategory.purposes.isEmpty,
+                        child: _buildAddPurposesBottomSheet(context, state),
+                      ),
+                    ],
+                  ),
+                );
+              }
+              if (state is PurposeError) {
+                return Center(
+                  child: Text(
+                    state.message,
+                    style: Theme.of(context).textTheme.bodyMedium,
+                  ),
+                );
+              }
+              return const Center(
+                child: CircularProgressIndicator(),
+              );
+            },
+          ),
         ],
       ),
     );
   }
 
-  Column _buildPurposeList(BuildContext context) {
-    List<String> items = purposeList;
-    Map<String, bool> itemSelection = {};
-    final List<String> itemsDropDown = [
-      'Item1',
-      'Item2',
-      'Item3',
-      'Item4',
-    ];
-    List<String> selectedItems = [];
-    String _selectedItems = '';
+  MaterialInkWell _buildNewPurposeButton(BuildContext context) {
+    return MaterialInkWell(
+      onTap: () {},
+      child: Padding(
+        padding: const EdgeInsets.all(8.0),
+        child: Row(
+          children: <Widget>[
+            Padding(
+              padding: const EdgeInsets.only(bottom: 2.0),
+              child: Icon(
+                Ionicons.add,
+                color: Theme.of(context).colorScheme.primary,
+              ),
+            ),
+            const SizedBox(width: UiConfig.actionSpacing + 11),
+            Expanded(
+              child: Text(
+                'New Purpose',
+                style: Theme.of(context).textTheme.bodyMedium,
+              ),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
 
-    void addItem(String item) {
-      setState(() {
-        items.add(item);
-        itemSelection[item] = false;
-      });
-    }
-
-    void removeItem(String item) {
-      setState(() {
-        items.remove(item);
-        itemSelection.remove(item);
-      });
-    }
+  Column _buildPurposeList(BuildContext context, GotPurposes state) {
+    final purposeName = state.purposes
+        .where((id) => purposeCategory.purposes.contains(id.id))
+        .toList();
 
     return Column(
-      crossAxisAlignment: CrossAxisAlignment.center,
-      children: [
-        purposeList.isEmpty
-            ? const CustomContainer(child: Text('No Data'))
-            : CustomContainer(
-                color: Theme.of(context).colorScheme.onTertiary,
-                child: ListView.builder(
-                  shrinkWrap: true,
-                  itemCount: purposeList.length,
-                  itemBuilder: (BuildContext context, int index) {
-                    // return Text(purposeList[index]);
-                    final item = items[index];
-
-                    return CheckboxListTile(
-                      title: Text(item),
-                      value: itemSelection[item] ?? false,
-                      onChanged: (newValue) {
-                        setState(() {
-                          itemSelection[item] = newValue!;
-                        });
-                      },
-                      secondary: IconButton(
-                        icon: Icon(Icons.delete),
-                        onPressed: () {
-                          removeItem(item);
-                        },
-                      ),
-                    );
-                  },
+      mainAxisSize: MainAxisSize.min,
+      children: <Widget>[
+        ListView.separated(
+          shrinkWrap: true,
+          itemCount: purposeName.length,
+          itemBuilder: (context, index) => Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: <Widget>[
+              Expanded(
+                child: Text(
+                  purposeName[index].description.first.text,
+                  style: Theme.of(context).textTheme.bodyMedium,
                 ),
               ),
-        const SizedBox(height: UiConfig.lineSpacing),
-        // CustomIconButton(
-        //   icon: Icons.add,
-        //   onPressed: _addPurposes,
-        // ),
-        const SizedBox(height: UiConfig.lineSpacing),
-
-        CustomMultiSelectDropdownButton(
-          hint: 'Select Purposes',
-          value: selectedItems.isEmpty ? null : selectedItems.last,
-          dropdownItems: itemsDropDown,
-          onChanged: (value) {},
+              const SizedBox(width: UiConfig.textLineSpacing),
+              CustomIconButton(
+                onPressed: () {
+                  //? Delete purpose from seleted
+                  setState(() {
+                    purposeCategory.purposes.remove(purposeName[index].id);
+                    _setPurpose(purposeCategory.purposes);
+                  });
+                },
+                icon: Ionicons.close,
+                iconColor: Theme.of(context).colorScheme.primary,
+                backgroundColor: Theme.of(context).colorScheme.onBackground,
+              ),
+            ],
+          ),
+          separatorBuilder: (context, _) => const SizedBox(
+            height: UiConfig.lineSpacing,
+          ),
         ),
-       
+        const SizedBox(height: UiConfig.lineSpacing),
+        _buildAddPurposesBottomSheet(context, state),
       ],
     );
   }
 
-  // void _addPurposes() {
-  //   showModalBottomSheet<dynamic>(
-  //     context: context,
-  //     builder: (BuildContext context) {
-  //       return Column(
-  //         children: [CheckboxListTile(value: value, onChanged: onChanged)],
-  //       );
-  //     },
-  //   );
-  // }
+  MaterialInkWell _buildAddPurposesBottomSheet(
+      BuildContext context, GotPurposes state) {
+    return MaterialInkWell(
+      onTap: () async {
+        //? Open ModalBottomSheet to add Purposes selected
+        await showModalBottomSheet(
+          backgroundColor: Theme.of(context).colorScheme.onBackground,
+          useSafeArea: true,
+          isScrollControlled: true, //* required for min/max child size
+          // constraints:  BoxConstraints(
+          //   maxHeight: double.infinity,
+          //   minHeight: MediaQuery.of(context).size.height * 50.0,
+          // ),
+          context: context,
+          builder: (ctx) {
+            return CustomContainer(
+              child: Column(
+                children: [
+                  const SizedBox(height: UiConfig.lineSpacing),
+                  const Text('Purpose List'),
+                  const SizedBox(height: UiConfig.lineSpacing),
+                  ListView.builder(
+                    shrinkWrap: true,
+                    physics: const NeverScrollableScrollPhysics(),
+                    itemCount: state.purposes.length,
+                    itemBuilder: (_, index) {
+                      return Builder(builder: (context) {
+                        final item = state.purposes[index];
+
+                        if (state.purposes.isEmpty) {
+                          return const Text('No Data');
+                        }
+                        return CheckboxListTile(
+                          controlAffinity: ListTileControlAffinity.leading,
+                          title: Text(
+                              state.purposes[index].description.first.text),
+                          value: false,
+                          onChanged: (newValue) {
+                            setState(() {
+                              if (newValue!) {
+                                purposeCategory.purposes.add(item.id);
+                                _setPurpose(purposeCategory.purposes);
+                              } else {
+                                purposeCategory.purposes.remove(item.id);
+                                _setPurpose(purposeCategory.purposes);
+                              }
+                            });
+                          },
+                        );
+                      });
+                    },
+                  ),
+                  const SizedBox(height: UiConfig.lineSpacing),
+                  _buildNewPurposeButton(context),
+                  const SizedBox(height: UiConfig.lineSpacing),
+                ],
+              ),
+            );
+          },
+        );
+      },
+      child: Padding(
+        padding: const EdgeInsets.all(8.0),
+        child: Row(
+          children: <Widget>[
+            Padding(
+              padding: const EdgeInsets.only(bottom: 2.0),
+              child: Icon(
+                Ionicons.add,
+                color: Theme.of(context).colorScheme.primary,
+              ),
+            ),
+            const SizedBox(width: UiConfig.actionSpacing + 11),
+            Expanded(
+              child: Text(
+                'Add Purpose',
+                style: Theme.of(context).textTheme.bodyMedium,
+              ),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
 
   CustomIconButton _buildPopButton(PurposeCategoryModel purposeCategory) {
     return CustomIconButton(
