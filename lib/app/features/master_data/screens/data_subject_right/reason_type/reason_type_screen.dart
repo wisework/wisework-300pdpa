@@ -4,8 +4,10 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
 import 'package:ionicons/ionicons.dart';
 import 'package:pdpa/app/config/config.dart';
+import 'package:pdpa/app/data/models/master_data/localized_model.dart';
 import 'package:pdpa/app/data/models/master_data/reason_type_model.dart';
 import 'package:pdpa/app/features/authentication/bloc/sign_in/sign_in_bloc.dart';
+import 'package:pdpa/app/features/master_data/bloc/data_subject_right/reason_type/reason_type_bloc.dart';
 import 'package:pdpa/app/features/master_data/routes/master_data_route.dart';
 import 'package:pdpa/app/features/master_data/widgets/master_data_item_card.dart';
 import 'package:pdpa/app/shared/utils/constants.dart';
@@ -35,7 +37,9 @@ class _ReasonTypeScreenState extends State<ReasonTypeScreen> {
       companyId = (bloc.state as SignedInUser).user.currentCompany;
     }
 
-    debugPrint(companyId); // <-- use this company ID
+    context
+        .read<ReasonTypeBloc>()
+        .add(GetReasonTypeEvent(companyId: companyId));
   }
 
   @override
@@ -54,16 +58,16 @@ class ReasonTypeView extends StatefulWidget {
 class _ReasonTypeViewState extends State<ReasonTypeView> {
   final reasontypemodel = [
     ReasonTypeModel(
-        reasonTypeId: '1',
-        reasonCode: '1',
-        description: 'Test1',
-        requiredInputReasonText: false,
-        status: ActiveStatus.active,
-        createdBy: '',
-        createdDate: DateTime.fromMillisecondsSinceEpoch(0),
-        updatedBy: '',
-        updatedDate: DateTime.fromMillisecondsSinceEpoch(0),
-        companyId: '1')
+      reasonTypeId: '1',
+      reasonCode: '1',
+      description: const [],
+      requiredInputReasonText: false,
+      status: ActiveStatus.active,
+      createdBy: '',
+      createdDate: DateTime.fromMillisecondsSinceEpoch(0),
+      updatedBy: '',
+      updatedDate: DateTime.fromMillisecondsSinceEpoch(0),
+    )
   ];
 
   @override
@@ -92,12 +96,29 @@ class _ReasonTypeViewState extends State<ReasonTypeView> {
               decoration: BoxDecoration(
                 color: Theme.of(context).colorScheme.onBackground,
               ),
-              child: ListView.builder(
-                itemCount: reasontypemodel.length,
-                itemBuilder: (context, index) {
-                  return _buildItemCard(
-                    context,
-                    reasontype: reasontypemodel[index],
+              child: BlocBuilder<ReasonTypeBloc, ReasonTypeState>(
+                builder: (context, state) {
+                  if (state is GotReasonTypes) {
+                    return ListView.builder(
+                      itemCount: state.reasonTypes.length,
+                      itemBuilder: (context, index) {
+                        return _buildItemCard(
+                          context,
+                          reasontype: state.reasonTypes[index],
+                        );
+                      },
+                    );
+                  }
+                  if (state is ReasonTypeError) {
+                    return Center(
+                      child: Text(
+                        state.message,
+                        style: Theme.of(context).textTheme.bodyMedium,
+                      ),
+                    );
+                  }
+                  return const Center(
+                    child: CircularProgressIndicator(),
                   );
                 },
               ),
@@ -118,17 +139,21 @@ class _ReasonTypeViewState extends State<ReasonTypeView> {
     BuildContext context, {
     required ReasonTypeModel reasontype,
   }) {
-    final description = reasontype.description;
+    const language = 'en-US';
+    final description = reasontype.description.firstWhere(
+      (item) => item.language == language,
+      orElse: LocalizedModel.empty,
+    );
 
     final reasoncode = reasontype.reasonCode;
 
     return MasterDataItemCard(
-      title: description,
+      title: description.text,
       subtitle: reasoncode,
       status: reasontype.status,
       onTap: () {
         context.push(
-          MasterDataRoute.editPurpose.path
+          MasterDataRoute.editReasonType.path
               .replaceFirst(':id', reasontype.reasonTypeId),
         );
       },

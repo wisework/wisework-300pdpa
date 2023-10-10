@@ -3,6 +3,9 @@ import 'package:pdpa/app/features/authentication/bloc/sign_in/sign_in_bloc.dart'
 import 'package:pdpa/app/features/master_data/bloc/consent/custom_field/custom_field_bloc.dart';
 import 'package:pdpa/app/features/master_data/bloc/consent/purpose/purpose_bloc.dart';
 import 'package:pdpa/app/features/master_data/bloc/consent/purpose_category/purpose_category_bloc.dart';
+import 'package:pdpa/app/features/master_data/bloc/data_subject_right/reason_type/reason_type_bloc.dart';
+import 'package:pdpa/app/features/master_data/bloc/data_subject_right/reject_type/reject_type_bloc.dart';
+import 'package:pdpa/app/features/master_data/bloc/data_subject_right/request_type/request_type_bloc.dart';
 import 'package:pdpa/app/injection.dart';
 import 'package:pdpa/app/shared/drawers/bloc/drawer_bloc.dart';
 import 'package:pdpa/app/shared/drawers/drawer_menu.dart';
@@ -25,6 +28,15 @@ class GlobalBlocProvider {
       ),
       BlocProvider<PurposeCategoryBloc>(
         create: (context) => serviceLocator<PurposeCategoryBloc>(),
+      ),
+      BlocProvider<RequestTypeBloc>(
+        create: (context) => serviceLocator<RequestTypeBloc>(),
+      ),
+      BlocProvider<RejectTypeBloc>(
+        create: (context) => serviceLocator<RejectTypeBloc>(),
+      ),
+      BlocProvider<ReasonTypeBloc>(
+        create: (context) => serviceLocator<ReasonTypeBloc>(),
       ),
     ];
   }

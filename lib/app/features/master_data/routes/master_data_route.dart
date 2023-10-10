@@ -84,12 +84,16 @@ class MasterDataRoute {
 
   static final GoRoute createReasonType = GoRoute(
     path: '/master-data/reasontype/create',
-    builder: (context, _) => const EditReasonTypeScreen(),
+    builder: (context, _) => const EditReasonTypeScreen(
+      reasonTypeId: '',
+    ),
   );
 
   static final GoRoute editReasonType = GoRoute(
-    path: '/master-data/reasontype/edit',
-    builder: (context, _) => const EditReasonTypeScreen(),
+    path: '/master-data/reasontype/:id/edit',
+    builder: (context, state) => EditReasonTypeScreen(
+      reasonTypeId: state.pathParameters['id'] ?? '',
+    ),
   );
 
   //? Request Type
@@ -100,12 +104,16 @@ class MasterDataRoute {
 
   static final GoRoute createRequestType = GoRoute(
     path: '/master-data/requesttype/create',
-    builder: (context, _) => const EditRequestTypeScreen(),
+    builder: (context, _) => const EditRequestTypeScreen(
+      requestTypeId: '',
+    ),
   );
 
   static final GoRoute editRequestType = GoRoute(
-    path: '/master-data/requesttype/edit',
-    builder: (context, _) => const EditRequestTypeScreen(),
+    path: '/master-data/requesttype/:id/edit',
+    builder: (context, state) => EditRequestTypeScreen(
+      requestTypeId: state.pathParameters['id'] ?? '',
+    ),
   );
 
   //? Reject Type
@@ -116,12 +124,16 @@ class MasterDataRoute {
 
   static final GoRoute createRejectType = GoRoute(
     path: '/master-data/rejecttype/create',
-    builder: (context, _) => const EditRejectTypeScreen(),
+    builder: (context, _) => const EditRejectTypeScreen(
+      rejectTypeId: '',
+    ),
   );
 
   static final GoRoute editRejectType = GoRoute(
-    path: '/master-data/rejecttype/edit',
-    builder: (context, _) => const EditRejectTypeScreen(),
+    path: '/master-data/rejecttype/:id/edit',
+    builder: (context, state) => EditRejectTypeScreen(
+      rejectTypeId: state.pathParameters['id'] ?? '',
+    ),
   );
 
   //? Request Reason

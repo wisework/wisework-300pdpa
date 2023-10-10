@@ -2,6 +2,9 @@ import 'package:dartz/dartz.dart';
 import 'package:pdpa/app/data/models/master_data/custom_field_model.dart';
 import 'package:pdpa/app/data/models/master_data/purpose_category_model.dart';
 import 'package:pdpa/app/data/models/master_data/purpose_model.dart';
+import 'package:pdpa/app/data/models/master_data/reason_type_model.dart';
+import 'package:pdpa/app/data/models/master_data/reject_type_model.dart';
+import 'package:pdpa/app/data/models/master_data/request_type_model.dart';
 import 'package:pdpa/app/services/apis/master_data_api.dart';
 import 'package:pdpa/app/shared/errors/exceptions.dart';
 import 'package:pdpa/app/shared/errors/failure.dart';
@@ -219,15 +222,223 @@ class MasterDataRepository {
     }
   }
 
-  //? Customfield
-  ResultFuture<List<CustomFieldModel>> getCustomfield(String companyId) async {
+  //! //? Customfield
+  // ResultFuture<List<CustomFieldModel>> getCustomfield(String companyId) async {
+  //   try {
+  //     final result = await _api.getCustomFields(companyId);
+
+  //     return Right(result);
+  //   } on ApiException catch (error) {
+  //     return Left(ApiFailure.fromException(error));
+  //   }
+  // }
+
+  //? Request Type
+  ResultFuture<List<RequestTypeModel>> getRequestTypes(
+    String companyId,
+  ) async {
     try {
-      final result = await _api.getCustomFields(companyId);
+      final result = await _api.getRequestTypes(companyId);
 
       return Right(result);
     } on ApiException catch (error) {
       return Left(ApiFailure.fromException(error));
     }
   }
+
+  ResultFuture<RequestTypeModel> getRequestTypeById(
+    String requestTypeId,
+    String companyId,
+  ) async {
+    try {
+      final result = await _api.getRequestTypeById(requestTypeId, companyId);
+
+      if (result != null) return Right(result);
+
+      return const Left(
+        ApiFailure(message: 'Request Type not found', statusCode: 404),
+      );
+    } on ApiException catch (error) {
+      return Left(ApiFailure.fromException(error));
+    }
+  }
+
+  ResultFuture<RequestTypeModel> createRequestType(
+    RequestTypeModel requestType,
+    String companyId,
+  ) async {
+    try {
+      final result = await _api.createRequestType(requestType, companyId);
+
+      return Right(result);
+    } on ApiException catch (error) {
+      return Left(ApiFailure.fromException(error));
+    }
+  }
+
+  ResultVoid updateRequestType(
+    RequestTypeModel requestType,
+    String companyId,
+  ) async {
+    try {
+      await _api.updateRequestType(requestType, companyId);
+
+      return const Right(null);
+    } on ApiException catch (error) {
+      return Left(ApiFailure.fromException(error));
+    }
+  }
+
+  ResultVoid deleteRequestType(
+    String requestTypeId,
+    String companyId,
+  ) async {
+    try {
+      await _api.deleteRequestType(requestTypeId, companyId);
+
+      return const Right(null);
+    } on ApiException catch (error) {
+      return Left(ApiFailure.fromException(error));
+    }
+  }
+
+//? Reject Type
+  ResultFuture<List<RejectTypeModel>> getRejectTypes(
+    String companyId,
+  ) async {
+    try {
+      final result = await _api.getRejectTypes(companyId);
+
+      return Right(result);
+    } on ApiException catch (error) {
+      return Left(ApiFailure.fromException(error));
+    }
+  }
+
+  ResultFuture<RejectTypeModel> getRejectTypeById(
+    String rejectTypeId,
+    String companyId,
+  ) async {
+    try {
+      final result = await _api.getRejectTypeById(rejectTypeId, companyId);
+
+      if (result != null) return Right(result);
+
+      return const Left(
+        ApiFailure(message: 'Reject Type not found', statusCode: 404),
+      );
+    } on ApiException catch (error) {
+      return Left(ApiFailure.fromException(error));
+    }
+  }
+
+  ResultFuture<RejectTypeModel> createRejectType(
+    RejectTypeModel rejectType,
+    String companyId,
+  ) async {
+    try {
+      final result = await _api.createRejectType(rejectType, companyId);
+
+      return Right(result);
+    } on ApiException catch (error) {
+      return Left(ApiFailure.fromException(error));
+    }
+  }
+
+  ResultVoid updateRejectType(
+    RejectTypeModel rejectType,
+    String companyId,
+  ) async {
+    try {
+      await _api.updateRejectType(rejectType, companyId);
+
+      return const Right(null);
+    } on ApiException catch (error) {
+      return Left(ApiFailure.fromException(error));
+    }
+  }
+
+  ResultVoid deleteRejectType(
+    String rejectTypeId,
+    String companyId,
+  ) async {
+    try {
+      await _api.deleteRejectType(rejectTypeId, companyId);
+
+      return const Right(null);
+    } on ApiException catch (error) {
+      return Left(ApiFailure.fromException(error));
+    }
+  }
+
+//? Reason Type
+  ResultFuture<List<ReasonTypeModel>> getReasonTypes(
+    String companyId,
+  ) async {
+    try {
+      final result = await _api.getReasonTypes(companyId);
+
+      return Right(result);
+    } on ApiException catch (error) {
+      return Left(ApiFailure.fromException(error));
+    }
+  }
+
+  ResultFuture<ReasonTypeModel> getReasonTypeById(
+    String reasonTypeId,
+    String companyId,
+  ) async {
+    try {
+      final result = await _api.getReasonTypeById(reasonTypeId, companyId);
+
+      if (result != null) return Right(result);
+
+      return const Left(
+        ApiFailure(message: 'Reason Type not found', statusCode: 404),
+      );
+    } on ApiException catch (error) {
+      return Left(ApiFailure.fromException(error));
+    }
+  }
+
+  ResultFuture<ReasonTypeModel> createReasonType(
+    ReasonTypeModel reasonType,
+    String companyId,
+  ) async {
+    try {
+      final result = await _api.createReasonType(reasonType, companyId);
+
+      return Right(result);
+    } on ApiException catch (error) {
+      return Left(ApiFailure.fromException(error));
+    }
+  }
+
+  ResultVoid updateReasonType(
+    ReasonTypeModel reasonType,
+    String companyId,
+  ) async {
+    try {
+      await _api.updateReasonType(reasonType, companyId);
+
+      return const Right(null);
+    } on ApiException catch (error) {
+      return Left(ApiFailure.fromException(error));
+    }
+  }
+
+  ResultVoid deleteReasonType(
+    String reasonTypeId,
+    String companyId,
+  ) async {
+    try {
+      await _api.deleteReasonType(reasonTypeId, companyId);
+
+      return const Right(null);
+    } on ApiException catch (error) {
+      return Left(ApiFailure.fromException(error));
+    }
+  }
+
 
 }
