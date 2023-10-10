@@ -45,20 +45,23 @@ class _EditReasonTypeViewState extends State<EditReasonTypeView> {
     super.dispose();
   }
 
+  void _goBackAndUpdate() {
+    context.pop();
+  }
+
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: PdpaAppBar(
         leadingIcon: CustomIconButton(
-          onPressed: () {
-            context.pop();
-          },
+          onPressed: _goBackAndUpdate,
           icon: Ionicons.chevron_back_outline,
           iconColor: Theme.of(context).colorScheme.primary,
           backgroundColor: Theme.of(context).colorScheme.onBackground,
         ),
         title: Text(
-          tr('masterData.cm.purpose.edit'),
+          tr('masterData.dsr.reason.create'),
           style: Theme.of(context).textTheme.titleLarge,
         ),
         actions: [
@@ -87,17 +90,7 @@ class _EditReasonTypeViewState extends State<EditReasonTypeView> {
               child: _buildReasonTypeForm(context),
             ),
             const SizedBox(height: UiConfig.lineSpacing),
-            Container(
-              padding: const EdgeInsets.all(UiConfig.defaultPaddingSpacing),
-              decoration: BoxDecoration(
-                color: Theme.of(context).colorScheme.onBackground,
-                borderRadius: BorderRadius.circular(10.0),
-              ),
-              margin: const EdgeInsets.symmetric(
-                horizontal: UiConfig.defaultPaddingSpacing,
-              ),
-              child: _buildConfiguration(context),
-            ),
+            
             const SizedBox(height: UiConfig.lineSpacing),
           ],
         ),
@@ -112,27 +105,27 @@ class _EditReasonTypeViewState extends State<EditReasonTypeView> {
         Row(
           children: <Widget>[
             Text(
-              tr('masterData.dsr.reason.title'), //!
+              tr('masterData.dsr.reason.title'),
               style: Theme.of(context).textTheme.titleLarge,
             ),
           ],
         ),
         const SizedBox(height: UiConfig.lineSpacing),
         TitleRequiredText(
-          text: tr('masterData.dsr.reason.reasoncode'), //!
+          text: tr('masterData.dsr.reason.reasoncode'),
           required: true,
         ),
         CustomTextField(
           controller: reasonTypeCodeController,
-          hintText: tr('masterData.dsr.reason.reasoncodehint'), //!
+          hintText: tr('masterData.dsr.reason.reasoncodehint'),
         ),
         const SizedBox(height: UiConfig.lineSpacing),
         TitleRequiredText(
-          text: tr('masterData.dsr.reason.reasondescription'), //!
+          text: tr('masterData.dsr.reason.reasondescription'),
         ),
         CustomTextField(
           controller: descriptionController,
-          hintText: tr('masterData.dsr.reason.reasondescriptionhint'), //!
+          hintText: tr('masterData.dsr.reason.reasondescriptionhint'),
         ),
         const SizedBox(height: UiConfig.lineSpacing),
         Divider(
@@ -143,7 +136,7 @@ class _EditReasonTypeViewState extends State<EditReasonTypeView> {
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: <Widget>[
             Text(
-              tr('masterData.dsr.reason.needmoreinformation'), //!
+              tr('masterData.dsr.reason.needmoreinformation'),
               style: Theme.of(context).textTheme.bodyMedium,
             ),
             CustomSwitchButton(
@@ -156,61 +149,4 @@ class _EditReasonTypeViewState extends State<EditReasonTypeView> {
     );
   }
 
-  Column _buildConfiguration(BuildContext context) {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: <Widget>[
-        Row(
-          children: <Widget>[
-            Text(
-              'Configuration', //!
-              style: Theme.of(context).textTheme.titleLarge,
-            ),
-          ],
-        ),
-        const SizedBox(height: UiConfig.lineSpacing),
-        Row(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          children: <Widget>[
-            Text(
-              'Active', //!
-              style: Theme.of(context).textTheme.bodyMedium,
-            ),
-            CustomSwitchButton(
-              value: false,
-              onChanged: (value) {},
-            ),
-          ],
-        ),
-        Divider(
-          color: Theme.of(context).colorScheme.outlineVariant.withOpacity(0.5),
-        ),
-        const SizedBox(height: UiConfig.lineSpacing),
-        Row(
-          children: <Widget>[
-            Text(
-              'Update Info', //!
-              style: Theme.of(context).textTheme.titleLarge,
-            ),
-          ],
-        ),
-        const SizedBox(height: UiConfig.lineSpacing),
-        Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: <Widget>[
-            Text(
-              'admin@gmail.com',
-              style: Theme.of(context).textTheme.bodyMedium,
-            ),
-            const SizedBox(height: UiConfig.textLineSpacing),
-            Text(
-              '30/09/2023 12:00:00',
-              style: Theme.of(context).textTheme.bodyMedium,
-            ),
-            const SizedBox(height: UiConfig.textLineSpacing),
-          ],
-        ),
-      ],
-    );
-  }
 }

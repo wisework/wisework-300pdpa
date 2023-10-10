@@ -7,7 +7,6 @@ import 'package:pdpa/app/config/config.dart';
 import 'package:pdpa/app/features/authentication/bloc/sign_in/sign_in_bloc.dart';
 import 'package:pdpa/app/features/master_data/routes/master_data_route.dart';
 import 'package:pdpa/app/shared/widgets/customs/custom_icon_button.dart';
-import 'package:pdpa/app/shared/widgets/templates/pdpa_app_bar.dart';
 
 class RejectTypeScreen extends StatefulWidget {
   const RejectTypeScreen({super.key});
@@ -52,19 +51,7 @@ class _RejectTypeViewState extends State<RejectTypeView> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: PdpaAppBar(
-        leadingIcon: CustomIconButton(
-          onPressed: () {
-            context.pop();
-          },
-          icon: Ionicons.chevron_back_outline,
-          iconColor: Theme.of(context).colorScheme.primary,
-          backgroundColor: Theme.of(context).colorScheme.onBackground,
-        ),
-        title: Text(
-          tr('masterData.dsr.rejections.title'),
-        ),
-      ),
+      appBar: _buildAppBar(context),
       body: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: <Widget>[
@@ -90,13 +77,36 @@ class _RejectTypeViewState extends State<RejectTypeView> {
       ),
       floatingActionButton: FloatingActionButton(
         onPressed: () {
-          context.push(MasterDataRoute.createPurpose.path);
+          context.push(MasterDataRoute.createRejectType.path);
         },
         child: const Icon(Icons.add),
       ),
     );
   }
 
+  AppBar _buildAppBar(BuildContext context) {
+    return AppBar(
+      automaticallyImplyLeading: false,
+      title: Row(
+        children: <Widget>[
+          CustomIconButton(
+            onPressed: () {
+              context.pop();
+            },
+            icon: Ionicons.chevron_back_outline,
+            iconColor: Theme.of(context).colorScheme.primary,
+            backgroundColor: Theme.of(context).colorScheme.onBackground,
+          ),
+          const SizedBox(width: UiConfig.appBarTitleSpacing),
+          Text(
+            tr('masterData.dsr.rejections.title'),
+            style: Theme.of(context).textTheme.titleLarge,
+          ),
+        ],
+      ),
+      backgroundColor: Theme.of(context).colorScheme.onBackground,
+    );
+  }
 
   // MasterDataItemCard _buildItemCard(
   //   BuildContext context, {
