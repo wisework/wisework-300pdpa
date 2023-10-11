@@ -49,7 +49,7 @@ class EditConsentThemeBloc
 
     result.fold(
       (failure) => emit(EditConsentThemeError(failure.errorMessage)),
-      (purpose) => emit(GotCurrentConsentTheme(purpose)),
+      (consentTheme) => emit(GotCurrentConsentTheme(consentTheme)),
     );
   }
 
@@ -73,7 +73,7 @@ class EditConsentThemeBloc
 
     result.fold(
       (failure) => emit(EditConsentThemeError(failure.errorMessage)),
-      (purpose) => emit(CreatedCurrentConsentTheme(purpose)),
+      (consentTheme) => emit(CreatedCurrentConsentTheme(consentTheme)),
     );
   }
 

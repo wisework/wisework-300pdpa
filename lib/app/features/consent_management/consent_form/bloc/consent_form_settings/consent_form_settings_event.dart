@@ -32,3 +32,16 @@ class UpdateConsentFormSettingsEvent extends ConsentFormSettingsEvent {
   @override
   List<Object> get props => [consentForm, companyId];
 }
+
+class UpdateConsentThemesEvent extends ConsentFormSettingsEvent {
+  const UpdateConsentThemesEvent({
+    required this.consentTheme,
+    required this.updateType,
+  });
+
+  final ConsentThemeModel consentTheme;
+  final UpdateType updateType;
+
+  @override
+  List<Object> get props => [consentTheme, updateType];
+}

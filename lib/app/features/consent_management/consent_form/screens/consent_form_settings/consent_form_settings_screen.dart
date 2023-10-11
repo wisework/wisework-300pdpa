@@ -13,7 +13,6 @@ import 'package:pdpa/app/data/models/master_data/purpose_model.dart';
 import 'package:pdpa/app/features/authentication/bloc/sign_in/sign_in_bloc.dart';
 import 'package:pdpa/app/features/consent_management/consent_form/bloc/consent_form_settings/consent_form_settings_bloc.dart';
 import 'package:pdpa/app/features/consent_management/consent_form/cubit/current_consent_form_settings/current_consent_form_settings_cubit.dart';
-import 'package:pdpa/app/injection.dart';
 import 'package:pdpa/app/shared/widgets/customs/custom_icon_button.dart';
 import 'package:pdpa/app/shared/widgets/screens/error_message_screen.dart';
 import 'package:pdpa/app/shared/widgets/screens/loading_screen.dart';
@@ -42,8 +41,8 @@ class _ConsentFormSettingScreenState extends State<ConsentFormSettingScreen> {
   void initState() {
     super.initState();
 
-    _initialData();
     consentId = 'L1qX5GsxWn5u9CCKzNCr';
+    _initialData();
   }
 
   void _initialData() {
@@ -53,25 +52,22 @@ class _ConsentFormSettingScreenState extends State<ConsentFormSettingScreen> {
     } else {
       currentUser = UserModel.empty();
     }
+
+    _getConsentFormSettings();
+  }
+
+  void _getConsentFormSettings() {
+    final bloc = context.read<ConsentFormSettingsBloc>();
+    bloc.add(GetConsentFormSettingsEvent(
+      consentId: consentId,
+      companyId: currentUser.currentCompany,
+    ));
   }
 
   @override
   Widget build(BuildContext context) {
-    return MultiBlocProvider(
-      providers: [
-        BlocProvider<ConsentFormSettingsBloc>(
-          create: (context) => serviceLocator<ConsentFormSettingsBloc>()
-            ..add(
-              GetConsentFormSettingsEvent(
-                consentId: consentId,
-                companyId: currentUser.currentCompany,
-              ),
-            ),
-        ),
-        BlocProvider<CurrentConsentFormSettingsCubit>(
-          create: (context) => CurrentConsentFormSettingsCubit(),
-        ),
-      ],
+    return BlocProvider<CurrentConsentFormSettingsCubit>(
+      create: (context) => CurrentConsentFormSettingsCubit(),
       child: BlocConsumer<ConsentFormSettingsBloc, ConsentFormSettingsState>(
         listener: (context, state) {
           if (state is UpdatedConsentFormSettings) {
@@ -176,53 +172,46 @@ class _ConsentFormSettingViewState extends State<ConsentFormSettingView> {
       (CurrentConsentFormSettingsCubit cubit) => cubit.state.consentTheme,
     );
 
-    return BlocBuilder<CurrentConsentFormSettingsCubit,
-        CurrentConsentFormSettingsState>(
-      builder: (context, state) {
-        return DefaultTabController(
-          length: 5,
-          initialIndex: state.settingTabs,
-          child: Scaffold(
-            key: _scaffoldKey,
-            appBar: PdpaAppBar(
-              leadingIcon: CustomIconButton(
-                onPressed: () {
-                  context.pop();
-                },
-                icon: Ionicons.chevron_back_outline,
-                iconColor: Theme.of(context).colorScheme.primary,
-                backgroundColor: Theme.of(context).colorScheme.onBackground,
-              ),
-              title: Text(
-                'Consent Form Settings',
-                style: Theme.of(context).textTheme.titleLarge,
-              ),
-              actions: [
-                _buildSaveButton(consentForm),
-              ],
-              bottom: _buildTabBar(context),
-              appBarHeight: 100.0,
-            ),
-            body: _buildTabBarView(consentForm),
-            floatingActionButton: FloatingActionButton(
-              onPressed: () {
-                _scaffoldKey.currentState?.openEndDrawer();
-              },
-              child: Icon(
-                Ionicons.eye_outline,
-                color: Theme.of(context).colorScheme.onPrimary,
-              ),
-            ),
-            endDrawer: ConsentFormDrawer(
-              consentForm: consentForm,
-              customFields: widget.customFields,
-              purposeCategories: widget.purposeCategories,
-              purposes: widget.purposes,
-              consentTheme: consentTheme,
-            ),
+    return _buildTabController(
+      child: Scaffold(
+        key: _scaffoldKey,
+        appBar: PdpaAppBar(
+          leadingIcon: CustomIconButton(
+            onPressed: () {
+              context.pop();
+            },
+            icon: Ionicons.chevron_back_outline,
+            iconColor: Theme.of(context).colorScheme.primary,
+            backgroundColor: Theme.of(context).colorScheme.onBackground,
           ),
-        );
-      },
+          title: Text(
+            'Consent Form Settings',
+            style: Theme.of(context).textTheme.titleLarge,
+          ),
+          actions: [
+            _buildSaveButton(consentForm),
+          ],
+          bottom: _buildTabBar(context),
+          appBarHeight: 100.0,
+        ),
+        body: _buildTabBarView(consentForm),
+        floatingActionButton: FloatingActionButton(
+          onPressed: () {
+            _scaffoldKey.currentState?.openEndDrawer();
+          },
+          child: Icon(
+            Ionicons.eye_outline,
+            color: Theme.of(context).colorScheme.onPrimary,
+          ),
+        ),
+        endDrawer: ConsentFormDrawer(
+          consentForm: consentForm,
+          customFields: widget.customFields,
+          purposeCategories: widget.purposeCategories,
+          purposes: widget.purposes,
+          consentTheme: consentTheme,
+        ),
+      ),
     );
   }
 
@@ -250,6 +239,21 @@ class _ConsentFormSettingViewState extends State<ConsentFormSettingView> {
         backgroundColor: Theme.of(context).colorScheme.onBackground,
       );
     });
+  }
+
+  BlocBuilder _buildTabController({
+    required Widget child,
+  }) {
+    return BlocBuilder<CurrentConsentFormSettingsCubit,
+        CurrentConsentFormSettingsState>(
+      builder: (context, state) {
+        return DefaultTabController(
+          length: 5,
+          initialIndex: state.settingTabs,
+          child: child,
+        );
+      },
+    );
   }
 
   TabBar _buildTabBar(BuildContext context) {

@@ -80,7 +80,7 @@ class _EditPurposeScreenState extends State<EditPurposeScreen> {
               duration: UiConfig.toastDuration,
             );
 
-            context.read<PurposeBloc>().add(UpdatePurposeEvent(
+            context.read<PurposeBloc>().add(UpdatePurposesEvent(
                 purpose: state.purpose, updateType: UpdateType.created));
 
             context.pop();
@@ -115,7 +115,7 @@ class _EditPurposeScreenState extends State<EditPurposeScreen> {
 
             final deleted = PurposeModel.empty().copyWith(id: state.purposeId);
 
-            context.read<PurposeBloc>().add(UpdatePurposeEvent(
+            context.read<PurposeBloc>().add(UpdatePurposesEvent(
                 purpose: deleted, updateType: UpdateType.deleted));
 
             context.pop();
@@ -314,7 +314,7 @@ class _EditPurposeViewState extends State<EditPurposeView> {
 
   void _goBackAndUpdate() {
     if (!widget.isNewPurpose) {
-      context.read<PurposeBloc>().add(UpdatePurposeEvent(
+      context.read<PurposeBloc>().add(UpdatePurposesEvent(
             purpose: purpose,
             updateType: UpdateType.updated,
           ));

@@ -7,8 +7,11 @@ import 'package:pdpa/app/config/config.dart';
 import 'package:pdpa/app/data/models/authentication/user_model.dart';
 import 'package:pdpa/app/data/models/consent_management/consent_theme_model.dart';
 import 'package:pdpa/app/features/authentication/bloc/sign_in/sign_in_bloc.dart';
+import 'package:pdpa/app/features/consent_management/consent_form/bloc/consent_form_settings/consent_form_settings_bloc.dart';
 import 'package:pdpa/app/features/consent_management/consent_form/bloc/edit_consent_theme/edit_consent_theme_bloc.dart';
+import 'package:pdpa/app/features/master_data/widgets/configuration_info.dart';
 import 'package:pdpa/app/injection.dart';
+import 'package:pdpa/app/shared/utils/constants.dart';
 import 'package:pdpa/app/shared/widgets/color_picker_button.dart';
 import 'package:pdpa/app/shared/widgets/customs/custom_container.dart';
 import 'package:pdpa/app/shared/widgets/customs/custom_icon_button.dart';
@@ -78,8 +81,11 @@ class _EditConsentThemeScreenState extends State<EditConsentThemeScreen> {
               duration: UiConfig.toastDuration,
             );
 
-            // context.read<PurposeBloc>().add(UpdatePurposeEvent(
-            //     purpose: state.purpose, updateType: UpdateType.created));
+            final event = UpdateConsentThemesEvent(
+              consentTheme: state.consentTheme,
+              updateType: UpdateType.created,
+            );
+            context.read<ConsentFormSettingsBloc>().add(event);
 
             context.pop();
           }
@@ -111,10 +117,15 @@ class _EditConsentThemeScreenState extends State<EditConsentThemeScreen> {
               duration: UiConfig.toastDuration,
             );
 
-            // final deleted = PurposeModel.empty().copyWith(id: state.purposeId);
+            final deleted = ConsentThemeModel.empty().copyWith(
+              id: state.consentThemeId,
+            );
+            final event = UpdateConsentThemesEvent(
+              consentTheme: deleted,
+              updateType: UpdateType.deleted,
+            );
 
-            // context.read<PurposeBloc>().add(UpdatePurposeEvent(
-            //     purpose: deleted, updateType: UpdateType.deleted));
+            context.read<ConsentFormSettingsBloc>().add(event);
 
             context.pop();
           }
@@ -226,12 +237,23 @@ class _EditConsentThemeViewState extends State<EditConsentThemeView> {
     }
   }
 
+  void _deleteConsentTheme() {
+    final event = DeleteCurrentConsentThemeEvent(
+      consentThemeId: consentTheme.id,
+      companyId: widget.currentUser.currentCompany,
+    );
+
+    context.read<EditConsentThemeBloc>().add(event);
+  }
+
   void _goBackAndUpdate() {
     if (!widget.isNewConsentTheme) {
-      // context.read<PurposeBloc>().add(UpdatePurposeEvent(
-      //       purpose: purpose,
-      //       updateType: UpdateType.updated,
-      //     ));
+      final event = UpdateConsentThemesEvent(
+        consentTheme: consentTheme,
+        updateType: UpdateType.updated,
+      );
+
+      context.read<ConsentFormSettingsBloc>().add(event);
     }
 
     context.pop();
@@ -262,6 +284,14 @@ class _EditConsentThemeViewState extends State<EditConsentThemeView> {
             _buildBodySection(context),
             const SizedBox(height: UiConfig.lineSpacing),
             _buildFooterSection(context),
+            const SizedBox(height: UiConfig.lineSpacing),
+            Visibility(
+              visible: !widget.isNewConsentTheme,
+              child: _buildConfigurationInfo(
+                context,
+                consentTheme: widget.initialConsentTheme,
+              ),
+            ),
             const SizedBox(height: UiConfig.lineSpacing),
           ],
         ),
@@ -643,6 +673,24 @@ class _EditConsentThemeViewState extends State<EditConsentThemeView> {
           ),
         ],
       ),
+    );
+  }
+
+  Column _buildConfigurationInfo(
+    BuildContext context, {
+    required ConsentThemeModel consentTheme,
+  }) {
+    return Column(
+      children: <Widget>[
+        CustomContainer(
+          child: ConfigurationInfo(
+            updatedBy: consentTheme.updatedBy,
+            updatedDate: consentTheme.updatedDate,
+            onDeletePressed: _deleteConsentTheme,
+          ),
+        ),
+        const SizedBox(height: UiConfig.lineSpacing),
+      ],
     );
   }
 }
