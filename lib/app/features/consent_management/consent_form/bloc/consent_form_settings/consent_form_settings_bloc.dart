@@ -21,8 +21,6 @@ class ConsentFormSettingsBloc
         _masterDataRepository = masterDataRepository,
         super(const ConsentFormSettingsInitial()) {
     on<GetConsentFormSettingsEvent>(_getConsentFormSettingsHandler);
-    on<UpdateCurrentFormSettingsEvent>(_updateCurrentFormSettingsHandler);
-    on<UpdateCurrentThemeSettingsEvent>(_updateCurrentThemeSettingsHandler);
     on<UpdateConsentFormSettingsEvent>(_updateConsentFormSettingsHandler);
   }
 
@@ -132,46 +130,6 @@ class ConsentFormSettingsBloc
     ));
   }
 
-  void _updateCurrentFormSettingsHandler(
-    UpdateCurrentFormSettingsEvent event,
-    Emitter<ConsentFormSettingsState> emit,
-  ) {
-    if (state is GotConsentFormSettings) {
-      final settings = state as GotConsentFormSettings;
-
-      emit(
-        GotConsentFormSettings(
-          event.consentForm,
-          settings.customFields,
-          settings.purposeCategories,
-          settings.purposes,
-          settings.consentThemes,
-          settings.currentConsentTheme,
-        ),
-      );
-    }
-  }
-
-  void _updateCurrentThemeSettingsHandler(
-    UpdateCurrentThemeSettingsEvent event,
-    Emitter<ConsentFormSettingsState> emit,
-  ) {
-    if (state is GotConsentFormSettings) {
-      final settings = state as GotConsentFormSettings;
-
-      emit(
-        GotConsentFormSettings(
-          event.consentForm,
-          settings.customFields,
-          settings.purposeCategories,
-          settings.purposes,
-          settings.consentThemes,
-          event.consentTheme,
-        ),
-      );
-    }
-  }
-
   Future<void> _updateConsentFormSettingsHandler(
     UpdateConsentFormSettingsEvent event,
     Emitter<ConsentFormSettingsState> emit,
@@ -181,31 +139,51 @@ class ConsentFormSettingsBloc
       return;
     }
 
+    List<CustomFieldModel> customFields = [];
+    List<PurposeCategoryModel> purposeCategories = [];
+    List<PurposeModel> purposes = [];
+    List<ConsentThemeModel> consentThemes = [];
+
     if (state is GotConsentFormSettings) {
       final settings = state as GotConsentFormSettings;
 
-      emit(const UpdatingConsentFormSettings());
+      customFields = settings.customFields;
+      purposeCategories = settings.purposeCategories;
+      purposes = settings.purposes;
+      consentThemes = settings.consentThemes;
+    } else if (state is UpdatedConsentFormSettings) {
+      final settings = state as UpdatedConsentFormSettings;
 
-      final result = await _consentRepository.updateConsentForm(
-        settings.consentForm,
-        event.companyId,
-      );
+      customFields = settings.customFields;
+      purposeCategories = settings.purposeCategories;
+      purposes = settings.purposes;
+      consentThemes = settings.consentThemes;
+    }
 
-      await Future.delayed(const Duration(milliseconds: 800));
+    emit(const UpdatingConsentFormSettings());
 
-      result.fold(
-        (failure) => emit(ConsentFormSettingsError(failure.errorMessage)),
-        (_) => emit(
-          GotConsentFormSettings(
-            settings.consentForm,
-            settings.customFields,
-            settings.purposeCategories,
-            settings.purposes,
-            settings.consentThemes,
-            settings.currentConsentTheme,
+    final result = await _consentRepository.updateConsentForm(
+      event.consentForm,
+      event.companyId,
+    );
+
+    await Future.delayed(const Duration(milliseconds: 800));
+
+    result.fold(
+      (failure) => emit(ConsentFormSettingsError(failure.errorMessage)),
+      (_) => emit(
+        UpdatedConsentFormSettings(
+          event.consentForm,
+          customFields,
+          purposeCategories,
+          purposes,
+          consentThemes,
+          consentThemes.firstWhere(
+            (theme) => theme.id == event.consentForm.consentThemeId,
+            orElse: () => ConsentThemeModel.initial(),
           ),
         ),
-      );
-    }
+      ),
+    );
   }
 }

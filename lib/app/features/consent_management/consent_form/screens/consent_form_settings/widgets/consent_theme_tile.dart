@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
 import 'package:ionicons/ionicons.dart';
 import 'package:pdpa/app/config/config.dart';
 import 'package:pdpa/app/data/models/consent_management/consent_theme_model.dart';
+import 'package:pdpa/app/features/consent_management/consent_form/routes/consent_form_route.dart';
 import 'package:pdpa/app/shared/widgets/customs/custom_button.dart';
 import 'package:pdpa/app/shared/widgets/customs/custom_checkbox.dart';
 import 'package:pdpa/app/shared/widgets/customs/custom_container.dart';
@@ -74,14 +76,24 @@ class _ConsentThemeTileState extends State<ConsentThemeTile> {
                   ),
                   const SizedBox(width: UiConfig.textLineSpacing),
                   CustomIconButton(
-                    onPressed: () {},
+                    onPressed: () {
+                      context.push(
+                        ConsentFormRoute.editConsentTheme.path
+                            .replaceFirst(':id', widget.consentTheme.id),
+                      );
+                    },
                     icon: Ionicons.pencil_outline,
                     iconColor: Theme.of(context).colorScheme.primary,
                     backgroundColor: Theme.of(context).colorScheme.onBackground,
                   ),
                   const SizedBox(width: UiConfig.textLineSpacing),
                   CustomIconButton(
-                    onPressed: () {},
+                    onPressed: () {
+                      context.push(
+                        ConsentFormRoute.copyConsentTheme.path
+                            .replaceFirst(':id', widget.consentTheme.id),
+                      );
+                    },
                     icon: Ionicons.copy_outline,
                     iconColor: Theme.of(context).colorScheme.primary,
                     backgroundColor: Theme.of(context).colorScheme.onBackground,

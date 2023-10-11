@@ -3,7 +3,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:pdpa/app/config/config.dart';
 import 'package:pdpa/app/data/models/consent_management/consent_form_model.dart';
 import 'package:pdpa/app/data/models/master_data/localized_model.dart';
-import 'package:pdpa/app/features/consent_management/consent_form/bloc/consent_form_settings/consent_form_settings_bloc.dart';
+import 'package:pdpa/app/features/consent_management/consent_form/cubit/current_consent_form_settings/current_consent_form_settings_cubit.dart';
 import 'package:pdpa/app/shared/widgets/customs/custom_container.dart';
 import 'package:pdpa/app/shared/widgets/customs/custom_text_field.dart';
 import 'package:pdpa/app/shared/widgets/title_required_text.dart';
@@ -131,15 +131,15 @@ class _FooterTabState extends State<FooterTab> {
             controller: footerDescriptionController,
             hintText: 'Enter footer description',
             onChanged: (value) {
-              final event = UpdateCurrentFormSettingsEvent(
-                consentForm: widget.consentForm.copyWith(
-                  footerDescription: [
-                    LocalizedModel(language: 'en-US', text: value),
-                  ],
-                ),
+              final updated = widget.consentForm.copyWith(
+                footerDescription: [
+                  LocalizedModel(language: 'en-US', text: value),
+                ],
               );
 
-              context.read<ConsentFormSettingsBloc>().add(event);
+              context
+                  .read<CurrentConsentFormSettingsCubit>()
+                  .setConsentForm(updated);
             },
           ),
         ],
@@ -170,15 +170,15 @@ class _FooterTabState extends State<FooterTab> {
             controller: acceptConsentTextController,
             hintText: 'Enter accept consent text',
             onChanged: (value) {
-              final event = UpdateCurrentFormSettingsEvent(
-                consentForm: widget.consentForm.copyWith(
-                  acceptConsentText: [
-                    LocalizedModel(language: 'en-US', text: value),
-                  ],
-                ),
+              final updated = widget.consentForm.copyWith(
+                acceptConsentText: [
+                  LocalizedModel(language: 'en-US', text: value),
+                ],
               );
 
-              context.read<ConsentFormSettingsBloc>().add(event);
+              context
+                  .read<CurrentConsentFormSettingsCubit>()
+                  .setConsentForm(updated);
             },
           ),
           const SizedBox(height: UiConfig.lineSpacing),
@@ -187,15 +187,15 @@ class _FooterTabState extends State<FooterTab> {
             controller: linkToPolicyTextController,
             hintText: 'Enter link to policy text',
             onChanged: (value) {
-              final event = UpdateCurrentFormSettingsEvent(
-                consentForm: widget.consentForm.copyWith(
-                  linkToPolicyText: [
-                    LocalizedModel(language: 'en-US', text: value),
-                  ],
-                ),
+              final updated = widget.consentForm.copyWith(
+                linkToPolicyText: [
+                  LocalizedModel(language: 'en-US', text: value),
+                ],
               );
 
-              context.read<ConsentFormSettingsBloc>().add(event);
+              context
+                  .read<CurrentConsentFormSettingsCubit>()
+                  .setConsentForm(updated);
             },
           ),
           const SizedBox(height: UiConfig.lineSpacing),
@@ -204,13 +204,13 @@ class _FooterTabState extends State<FooterTab> {
             controller: linkToPolicyUrlController,
             hintText: 'Enter link to policy URL',
             onChanged: (value) {
-              final event = UpdateCurrentFormSettingsEvent(
-                consentForm: widget.consentForm.copyWith(
-                  linkToPolicyUrl: value,
-                ),
+              final updated = widget.consentForm.copyWith(
+                linkToPolicyUrl: value,
               );
 
-              context.read<ConsentFormSettingsBloc>().add(event);
+              context
+                  .read<CurrentConsentFormSettingsCubit>()
+                  .setConsentForm(updated);
             },
           ),
           const SizedBox(height: UiConfig.lineSpacing),
@@ -219,15 +219,15 @@ class _FooterTabState extends State<FooterTab> {
             controller: acceptTextController,
             hintText: 'Enter accept text',
             onChanged: (value) {
-              final event = UpdateCurrentFormSettingsEvent(
-                consentForm: widget.consentForm.copyWith(
-                  acceptText: [
-                    LocalizedModel(language: 'en-US', text: value),
-                  ],
-                ),
+              final updated = widget.consentForm.copyWith(
+                acceptText: [
+                  LocalizedModel(language: 'en-US', text: value),
+                ],
               );
 
-              context.read<ConsentFormSettingsBloc>().add(event);
+              context
+                  .read<CurrentConsentFormSettingsCubit>()
+                  .setConsentForm(updated);
             },
           ),
           const SizedBox(height: UiConfig.lineSpacing),
@@ -236,15 +236,15 @@ class _FooterTabState extends State<FooterTab> {
             controller: cancelTextController,
             hintText: 'Enter cancel text',
             onChanged: (value) {
-              final event = UpdateCurrentFormSettingsEvent(
-                consentForm: widget.consentForm.copyWith(
-                  cancelText: [
-                    LocalizedModel(language: 'en-US', text: value),
-                  ],
-                ),
+              final updated = widget.consentForm.copyWith(
+                cancelText: [
+                  LocalizedModel(language: 'en-US', text: value),
+                ],
               );
 
-              context.read<ConsentFormSettingsBloc>().add(event);
+              context
+                  .read<CurrentConsentFormSettingsCubit>()
+                  .setConsentForm(updated);
             },
           ),
         ],

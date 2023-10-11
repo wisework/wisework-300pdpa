@@ -282,7 +282,7 @@ class _EditPurposeViewState extends State<EditPurposeView> {
   void _savePurpose() {
     if (_formKey.currentState!.validate()) {
       if (widget.isNewPurpose) {
-        purpose = purpose.toCreated(
+        purpose = purpose.setCreate(
           widget.currentUser.email,
           DateTime.now(),
         );
@@ -292,7 +292,7 @@ class _EditPurposeViewState extends State<EditPurposeView> {
               companyId: widget.currentUser.currentCompany,
             ));
       } else {
-        purpose = purpose.toUpdated(
+        purpose = purpose.setUpdate(
           widget.currentUser.email,
           DateTime.now(),
         );

@@ -119,4 +119,17 @@ class ConsentRepository {
       return Left(ApiFailure.fromException(error));
     }
   }
+
+  ResultVoid deleteConsentTheme(
+    String consentThemeId,
+    String companyId,
+  ) async {
+    try {
+      await _api.deleteConsentTheme(consentThemeId, companyId);
+
+      return const Right(null);
+    } on ApiException catch (error) {
+      return Left(ApiFailure.fromException(error));
+    }
+  }
 }
