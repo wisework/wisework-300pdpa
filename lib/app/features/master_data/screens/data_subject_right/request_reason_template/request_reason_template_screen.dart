@@ -1,9 +1,11 @@
+import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:ionicons/ionicons.dart';
 import 'package:pdpa/app/config/config.dart';
 import 'package:pdpa/app/features/master_data/routes/master_data_route.dart';
 import 'package:pdpa/app/shared/widgets/customs/custom_icon_button.dart';
+import 'package:pdpa/app/shared/widgets/templates/pdpa_app_bar.dart';
 
 class RequestReasonTemplateScreen extends StatelessWidget {
   const RequestReasonTemplateScreen({super.key});
@@ -25,7 +27,19 @@ class _RequestReasonTemplateViewState extends State<RequestReasonTemplateView> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: _buildAppBar(context),
+      appBar: PdpaAppBar(
+        leadingIcon: CustomIconButton(
+          onPressed: () {
+            context.pop();
+          },
+          icon: Ionicons.chevron_back_outline,
+          iconColor: Theme.of(context).colorScheme.primary,
+          backgroundColor: Theme.of(context).colorScheme.onBackground,
+        ),
+        title: Text(
+          tr('masterData.dsr.requestreasons.title'),
+        ),
+      ),
       body: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: <Widget>[
@@ -51,34 +65,10 @@ class _RequestReasonTemplateViewState extends State<RequestReasonTemplateView> {
       ),
       floatingActionButton: FloatingActionButton(
         onPressed: () {
-          context.go(MasterDataRoute.createPurpose.path);
+          context.push(MasterDataRoute.createRequestReason.path);
         },
         child: const Icon(Icons.add),
       ),
-    );
-  }
-
-   AppBar _buildAppBar(BuildContext context) {
-    return AppBar(
-      automaticallyImplyLeading: false,
-      title: Row(
-        children: <Widget>[
-          CustomIconButton(
-            onPressed: () {
-              context.pop();
-            },
-            icon: Ionicons.chevron_back_outline,
-            iconColor: Theme.of(context).colorScheme.primary,
-            backgroundColor: Theme.of(context).colorScheme.onBackground,
-          ),
-          const SizedBox(width: UiConfig.appBarTitleSpacing),
-          Text(
-            'Purpose',
-            style: Theme.of(context).textTheme.titleLarge,
-          ),
-        ],
-      ),
-      backgroundColor: Theme.of(context).colorScheme.onBackground,
     );
   }
 

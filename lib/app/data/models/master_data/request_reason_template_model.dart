@@ -1,41 +1,114 @@
-//   requestReasonTemplateId string [primary key]
-//   requestTypeId string [ref: > request_type.requestTypeId]
-//   reasonTypeId array [ref: > reason_type.reasonTypeId]
+import 'package:equatable/equatable.dart';
+import 'package:pdpa/app/shared/utils/constants.dart';
+import 'package:pdpa/app/shared/utils/typedef.dart';
 
-//   status string
-//   createdBy string
-//   createdDate timestamp
-//   updatedBy string
-//   updatedDate timestamp
-//   companyId string [ref: > company.companyId]
-//   branchId string [ref: > branch.branchId]
+class RequestReasonTemplateModel extends Equatable {
+  const RequestReasonTemplateModel({
+    required this.requestReasonTemplateId,
+    required this.requestTypeId,
+    required this.reasonTypeId,
+    required this.status,
+    required this.createdBy,
+    required this.createdDate,
+    required this.updatedBy,
+    required this.updatedDate,
+  });
 
-//   import 'package:equatable/equatable.dart';
-// import 'package:pdpa/app/shared/models/localized_text.dart';
-// import 'package:pdpa/app/shared/utils/constants.dart';
+  final String requestReasonTemplateId;
+  final String requestTypeId;
+  final List<String> reasonTypeId;
+  final ActiveStatus status;
+  final String createdBy;
+  final DateTime createdDate;
+  final String updatedBy;
+  final DateTime updatedDate;
 
-// class RequestReasonTemplateModel extends Equatable {
-//   const RequestReasonTemplateModel({
-//     required this.requestReasonTemplateId,
-//     required this.requestTypeId,
-//     required this.reasonTypeId,
-//     required this.requiredInputReasonText,
-//     required this.status,
-//     required this.createdBy,
-//     required this.createdDate,
-//     required this.updatedBy,
-//     required this.updatedDate,
-//     required this.companyId,
-//   });
+  RequestReasonTemplateModel.empty()
+      : this(
+          requestReasonTemplateId: '',
+          requestTypeId: '',
+          reasonTypeId: [],
+          status: ActiveStatus.active,
+          createdBy: '',
+          createdDate: DateTime.fromMillisecondsSinceEpoch(0),
+          updatedBy: '',
+          updatedDate: DateTime.fromMillisecondsSinceEpoch(0),
+        );
 
-//   final String requestReasonTemplateId;
-//   final String requestTypeId;
-//   final List<LocalizedText> reasonTypeId;
-//   final bool requiredInputReasonText;
-//   final ActiveStatus status;
-//   final String createdBy;
-//   final DateTime createdDate;
-//   final String updatedBy;
-//   final DateTime updatedDate;
-//   final String companyId;
-// }
+  RequestReasonTemplateModel.fromMap(DataMap map)
+      : this(
+          requestReasonTemplateId: map['requestReasonTemplateId'] as String,
+          requestTypeId: map['requestTypeId'] as String,
+          reasonTypeId: List<String>.from(map['reasonTypeId'] as List<dynamic>),
+          status: ActiveStatus.values[map['status'] as int],
+          createdBy: map['createdBy'] as String,
+          createdDate: DateTime.parse(map['createdDate'] as String),
+          updatedBy: map['updatedBy'] as String,
+          updatedDate: DateTime.parse(map['updatedDate'] as String),
+        );
+
+  DataMap toMap() => {
+        'requestTypeId': requestTypeId,
+        'reasonTypeId': reasonTypeId,
+        'status': status.index,
+        'createdBy': createdBy,
+        'createdDate': createdDate.toIso8601String(),
+        'updatedBy': updatedBy,
+        'updatedDate': updatedDate.toIso8601String(),
+      };
+
+  factory RequestReasonTemplateModel.fromDocument(FirebaseDocument document) {
+    DataMap response = document.data()!;
+    response['id'] = document.id;
+    return RequestReasonTemplateModel.fromMap(response);
+  }
+
+  RequestReasonTemplateModel copyWith({
+    String? requestReasonTemplateId,
+    String? requestTypeId,
+    List<String>? reasonTypeId,
+    ActiveStatus? status,
+    String? createdBy,
+    DateTime? createdDate,
+    String? updatedBy,
+    DateTime? updatedDate,
+  }) {
+    return RequestReasonTemplateModel(
+      requestReasonTemplateId:
+          requestReasonTemplateId ?? this.requestReasonTemplateId,
+      requestTypeId: requestTypeId ?? this.requestTypeId,
+      reasonTypeId: reasonTypeId ?? this.reasonTypeId,
+      status: status ?? this.status,
+      createdBy: createdBy ?? this.createdBy,
+      createdDate: createdDate ?? this.createdDate,
+      updatedBy: updatedBy ?? this.updatedBy,
+      updatedDate: updatedDate ?? this.updatedDate,
+    );
+  }
+
+  RequestReasonTemplateModel toCreated(String email, DateTime date) => copyWith(
+        createdBy: email,
+        createdDate: date,
+        updatedBy: email,
+        updatedDate: date,
+      );
+
+  RequestReasonTemplateModel toUpdated(String email, DateTime date) => copyWith(
+        updatedBy: email,
+        updatedDate: date,
+      );
+
+  @override
+  List<Object> get props {
+    return [
+      requestReasonTemplateId,
+      requestTypeId,
+      reasonTypeId,
+      status,
+      createdBy,
+      createdDate,
+      updatedBy,
+      updatedDate,
+    ];
+  }
+}

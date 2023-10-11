@@ -110,6 +110,18 @@ class PurposeCategoryModel extends Equatable {
     );
   }
 
+  PurposeCategoryModel toCreated(String email, DateTime date) => copyWith(
+        createdBy: email,
+        createdDate: date,
+        updatedBy: email,
+        updatedDate: date,
+      );
+
+  PurposeCategoryModel toUpdated(String email, DateTime date) => copyWith(
+        updatedBy: email,
+        updatedDate: date,
+      );
+
   @override
   List<Object> get props {
     return [

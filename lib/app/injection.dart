@@ -4,9 +4,17 @@ import 'package:get_it/get_it.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 import 'package:pdpa/app/data/repositories/consent_repository.dart';
 import 'package:pdpa/app/features/consent_management/consent_form/bloc/consent_form_settings/consent_form_settings_bloc.dart';
+import 'package:pdpa/app/features/master_data/bloc/data_subject_right/edit_reason_type/edit_reason_type_bloc.dart';
+import 'package:pdpa/app/features/master_data/bloc/data_subject_right/edit_reject_type/edit_reject_type_bloc.dart';
+import 'package:pdpa/app/features/master_data/bloc/data_subject_right/edit_request_type/edit_request_type_bloc.dart';
+import 'package:pdpa/app/features/master_data/bloc/data_subject_right/reason_type/reason_type_bloc.dart';
+import 'package:pdpa/app/features/master_data/bloc/data_subject_right/reject_type/reject_type_bloc.dart';
+import 'package:pdpa/app/features/master_data/bloc/data_subject_right/request_type/request_type_bloc.dart';
 import 'package:pdpa/app/services/apis/consent_api.dart';
 import 'package:pdpa/app/features/master_data/bloc/consent/custom_field/custom_field_bloc.dart';
 import 'package:pdpa/app/features/master_data/bloc/consent/edit_custom_field/bloc/edit_custom_field_bloc.dart';
+import 'package:pdpa/app/features/master_data/bloc/consent/edit_purpose_category/edit_purpose_category_bloc.dart';
+import 'package:pdpa/app/features/master_data/bloc/consent/purpose_category/purpose_category_bloc.dart';
 
 import 'config/config.dart';
 import 'data/repositories/authentication_repository.dart';
@@ -111,6 +119,46 @@ Future<void> _masterData() async {
     )
     ..registerFactory(
       () => EditCustomFieldBloc(
+        masterDataRepository: serviceLocator(),
+      ),
+    )
+    ..registerFactory(
+      () => PurposeCategoryBloc(
+        masterDataRepository: serviceLocator(),
+      ),
+    )
+    ..registerFactory(
+      () => EditPurposeCategoryBloc(
+        masterDataRepository: serviceLocator(),
+      ),
+    )
+    ..registerFactory(
+      () => RequestTypeBloc(
+        masterDataRepository: serviceLocator(),
+      ),
+    )
+    ..registerFactory(
+      () => EditRequestTypeBloc(
+        masterDataRepository: serviceLocator(),
+      ),
+    )
+    ..registerFactory(
+      () => RejectTypeBloc(
+        masterDataRepository: serviceLocator(),
+      ),
+    )
+    ..registerFactory(
+      () => EditRejectTypeBloc(
+        masterDataRepository: serviceLocator(),
+      ),
+    )
+    ..registerFactory(
+      () => ReasonTypeBloc(
+        masterDataRepository: serviceLocator(),
+      ),
+    )
+    ..registerFactory(
+      () => EditReasonTypeBloc(
         masterDataRepository: serviceLocator(),
       ),
     )
