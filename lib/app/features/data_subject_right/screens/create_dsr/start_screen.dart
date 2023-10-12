@@ -27,7 +27,7 @@ class _DSRStratScreenState extends State<DSRStratScreen> {
         decoration: BoxDecoration(
           color: Theme.of(context).colorScheme.onBackground,
         ),
-        padding: const EdgeInsets.only(left : 50 , right: 50 , top : 20),
+        padding: const EdgeInsets.only(left: 50, right: 50, top: 20),
         child: Column(
           children: [
             Container(
@@ -43,7 +43,7 @@ class _DSRStratScreenState extends State<DSRStratScreen> {
                 children: [
                   Text(
                     'M',
-                    style: TextStyle(fontSize: 48 , color: Colors.white),
+                    style: TextStyle(fontSize: 48, color: Colors.white),
                   ),
                 ],
               ),
@@ -73,14 +73,17 @@ class _DSRStratScreenState extends State<DSRStratScreen> {
             CustomButton(
               width: double.infinity,
               height: 50,
-                onPressed: () {
-                  context.push(DataSubjectRightRouter.step1.path);
-                },
-                child: Text(
-                  'กรอกแบบคำร้อง',
-                  style: Theme.of(context).textTheme.titleMedium?.copyWith(
-                      color: Theme.of(context).colorScheme.onPrimary),
-                ))
+              onPressed: () {
+                context.push(DataSubjectRightRouter.step1.path);
+              },
+              child: Text(
+                'กรอกแบบคำร้อง',
+                style: Theme.of(context)
+                    .textTheme
+                    .titleMedium
+                    ?.copyWith(color: Theme.of(context).colorScheme.onPrimary),
+              ),
+            ),
           ],
         ),
       ),
