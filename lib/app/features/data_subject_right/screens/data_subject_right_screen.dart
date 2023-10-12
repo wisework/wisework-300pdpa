@@ -36,6 +36,32 @@ class _DSRScreenState extends State<DSRScreen> {
           tr('app.features.datasubjectright'),
           style: Theme.of(context).textTheme.titleLarge,
         ),
+        // appBarHeight: 100,
+        actions: [
+          Container(
+            decoration: BoxDecoration(
+              color: Theme.of(context).colorScheme.primary,
+              borderRadius: BorderRadius.circular(15),
+            ),
+            child: IconButton(
+              icon: const Icon(Icons.link),
+              color: Colors.white,
+              onPressed: () {},
+            ),
+          ),
+          const SizedBox(width: UiConfig.lineSpacing),
+          Container(
+            decoration: BoxDecoration(
+              color: Theme.of(context).colorScheme.primary,
+              borderRadius: BorderRadius.circular(15),
+            ),
+            child: IconButton(
+              icon: const Icon(Icons.search),
+              color: Colors.white,
+              onPressed: () {},
+            ),
+          ),
+        ],
       ),
       body: const SingleChildScrollView(
         child: Column(

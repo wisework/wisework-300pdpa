@@ -23,27 +23,27 @@ class DataSubjectRightRouter {
     builder: (context, _) => const DSRStep1Screen(),
   );
   static final GoRoute step2 = GoRoute(
-    path: '/dsr/step1',
+    path: '/dsr/step2',
     builder: (context, _) => const DSRStep2Screen(),
   );
   static final GoRoute step3 = GoRoute(
-    path: '/dsr/step1',
+    path: '/dsr/step3',
     builder: (context, _) => const DSRStep3Screen(),
   );
   static final GoRoute step4 = GoRoute(
-    path: '/dsr/step1',
+    path: '/dsr/step4',
     builder: (context, _) => const DSRStep4Screen(),
   );
   static final GoRoute step5 = GoRoute(
-    path: '/dsr/step1',
+    path: '/dsr/step5',
     builder: (context, _) => const DSRStep5Screen(),
   );
   static final GoRoute step6 = GoRoute(
-    path: '/dsr/step1',
+    path: '/dsr/step6',
     builder: (context, _) => const DSRStep6Screen(),
   );
   static final GoRoute step7 = GoRoute(
-    path: '/dsr/step1',
+    path: '/dsr/step7',
     builder: (context, _) => const DSRStep7Screen(),
   );
   static final List<GoRoute> routes = <GoRoute>[
