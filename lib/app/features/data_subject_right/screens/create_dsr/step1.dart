@@ -1,10 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:ionicons/ionicons.dart';
-import 'package:pdpa/app/config/config.dart';
-import 'package:pdpa/app/features/data_subject_right/routes/data_subject_right_route.dart';
-import 'package:pdpa/app/shared/widgets/customs/custom_button.dart';
-import 'package:pdpa/app/shared/widgets/customs/custom_container.dart';
 import 'package:pdpa/app/shared/widgets/customs/custom_icon_button.dart';
 import 'package:pdpa/app/shared/widgets/customs/custom_text_field.dart';
 import 'package:pdpa/app/shared/widgets/templates/pdpa_app_bar.dart';

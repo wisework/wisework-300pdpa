@@ -4,7 +4,6 @@ import 'package:ionicons/ionicons.dart';
 import 'package:pdpa/app/config/config.dart';
 import 'package:pdpa/app/features/data_subject_right/routes/data_subject_right_route.dart';
 import 'package:pdpa/app/shared/widgets/customs/custom_button.dart';
-import 'package:pdpa/app/shared/widgets/customs/custom_container.dart';
 import 'package:pdpa/app/shared/widgets/customs/custom_icon_button.dart';
 import 'package:pdpa/app/shared/widgets/templates/pdpa_app_bar.dart';
 
@@ -73,17 +72,14 @@ class _DSRStratScreenState extends State<DSRStratScreen> {
             CustomButton(
               width: double.infinity,
               height: 50,
-              onPressed: () {
-                context.push(DataSubjectRightRouter.step1.path);
-              },
-              child: Text(
-                'กรอกแบบคำร้อง',
-                style: Theme.of(context)
-                    .textTheme
-                    .titleMedium
-                    ?.copyWith(color: Theme.of(context).colorScheme.onPrimary),
-              ),
-            ),
+                onPressed: () {
+                  context.push(DataSubjectRightRouter.step2.path);
+                },
+                child: Text(
+                  'กรอกแบบคำร้อง',
+                  style: Theme.of(context).textTheme.titleMedium?.copyWith(
+                      color: Theme.of(context).colorScheme.onPrimary),
+                ))
           ],
         ),
       ),
