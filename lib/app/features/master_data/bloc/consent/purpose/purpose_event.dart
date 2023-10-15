@@ -16,8 +16,8 @@ class GetPurposesEvent extends PurposeEvent {
   List<Object> get props => [companyId];
 }
 
-class UpdatePurposeEvent extends PurposeEvent {
-  const UpdatePurposeEvent({
+class UpdatePurposesEvent extends PurposeEvent {
+  const UpdatePurposesEvent({
     required this.purpose,
     required this.updateType,
   });

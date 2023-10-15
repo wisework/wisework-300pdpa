@@ -253,6 +253,18 @@ class ConsentThemeModel extends Equatable {
     );
   }
 
+  ConsentThemeModel setCreate(String email, DateTime date) => copyWith(
+        createdBy: email,
+        createdDate: date,
+        updatedBy: email,
+        updatedDate: date,
+      );
+
+  ConsentThemeModel setUpdate(String email, DateTime date) => copyWith(
+        updatedBy: email,
+        updatedDate: date,
+      );
+
   @override
   List<Object> get props {
     return [

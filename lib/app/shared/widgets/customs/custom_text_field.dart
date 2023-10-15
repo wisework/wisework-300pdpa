@@ -8,6 +8,9 @@ class CustomTextField extends StatefulWidget {
     this.hintText,
     this.suffix,
     this.keyboardType = TextInputType.text,
+    this.maxLines,
+    this.minLines,
+    this.maxLength,
     this.onChanged,
     this.readOnly = false,
     this.required = false,
@@ -18,6 +21,9 @@ class CustomTextField extends StatefulWidget {
   final String? hintText;
   final Widget? suffix;
   final TextInputType keyboardType;
+  final int? maxLines;
+  final int? minLines;
+  final int? maxLength;
   final Function(String value)? onChanged;
   final bool readOnly;
   final bool required;
@@ -38,19 +44,55 @@ class _CustomTextFieldState extends State<CustomTextField> {
   @override
   Widget build(BuildContext context) {
     return widget.required
+        ? _buildTextFormField(context)
+        : _buildTextField(context);
+  }
+
+  TextFormField _buildTextFormField(BuildContext context) {
+    return widget.maxLines != null
         ? TextFormField(
             controller: widget.controller,
             decoration: _buildInputDecoration(context),
             keyboardType: widget.keyboardType,
+            maxLines: widget.maxLines,
+            minLines: widget.minLines ?? 1,
+            maxLength: widget.maxLength,
             onChanged: widget.onChanged,
             readOnly: widget.readOnly,
             validator: _validateInput,
             autovalidateMode: AutovalidateMode.onUserInteraction,
           )
+        : TextFormField(
+            controller: widget.controller,
+            decoration: _buildInputDecoration(context),
+            keyboardType: widget.keyboardType,
+            minLines: widget.minLines ?? 1,
+            maxLength: widget.maxLength,
+            onChanged: widget.onChanged,
+            readOnly: widget.readOnly,
+            validator: _validateInput,
+            autovalidateMode: AutovalidateMode.onUserInteraction,
+          );
+  }
+
+  TextField _buildTextField(BuildContext context) {
+    return widget.maxLines != null
+        ? TextField(
+            controller: widget.controller,
+            decoration: _buildInputDecoration(context),
+            keyboardType: widget.keyboardType,
+            maxLines: widget.maxLines,
+            minLines: widget.minLines ?? 1,
+            maxLength: widget.maxLength,
+            onChanged: widget.onChanged,
+            readOnly: widget.readOnly,
+          )
         : TextField(
             controller: widget.controller,
             decoration: _buildInputDecoration(context),
             keyboardType: widget.keyboardType,
+            minLines: widget.minLines ?? 1,
+            maxLength: widget.maxLength,
             onChanged: widget.onChanged,
             readOnly: widget.readOnly,
           );
@@ -67,7 +109,10 @@ class _CustomTextFieldState extends State<CustomTextField> {
           .textTheme
           .bodySmall
           ?.copyWith(color: Theme.of(context).colorScheme.error),
-      contentPadding: const EdgeInsets.symmetric(horizontal: 12.0),
+      contentPadding: const EdgeInsets.symmetric(
+        vertical: 4.0,
+        horizontal: 12.0,
+      ),
       suffix: widget.suffix != null
           ? Padding(
               padding: const EdgeInsets.only(right: 4.0),

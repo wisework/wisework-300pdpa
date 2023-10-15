@@ -31,100 +31,163 @@ class ConsentFormDrawer extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return FractionallySizedBox(
-      widthFactor: 0.75,
+      widthFactor: 0.85,
       child: Drawer(
         backgroundColor: Theme.of(context).colorScheme.onBackground,
         surfaceTintColor: Theme.of(context).colorScheme.onBackground,
         child: SingleChildScrollView(
-          child: Padding(
+          child: Container(
             padding: const EdgeInsets.all(UiConfig.defaultPaddingSpacing),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: <Widget>[
-                Align(
-                  alignment: Alignment.center,
-                  child: Text(
-                    consentForm.headerText.first.text,
-                    style: Theme.of(context)
-                        .textTheme
-                        .bodyLarge
-                        ?.copyWith(color: consentTheme.headerTextColor),
+            decoration: BoxDecoration(
+              color: consentTheme.backgroundColor,
+            ),
+            child: Container(
+              decoration: BoxDecoration(
+                color: consentTheme.bodyBackgroundColor,
+              ),
+              child: Column(
+                children: <Widget>[
+                  Visibility(
+                    visible: consentForm.logoImage.isNotEmpty ||
+                        consentForm.headerBackgroundImage.isNotEmpty,
+                    child: _buildHeaderImage(),
                   ),
-                ),
-                const SizedBox(height: UiConfig.lineSpacing),
-                _buildHeaderDescription(context),
-                _buildCustomFieldSection(context),
-                _buildPurposeCategorySection(context),
-                _buildFooterDescription(context),
-                Row(
-                  children: <Widget>[
-                    CustomCheckBox(
-                      value: false,
-                      onChanged: (value) {},
-                      activeColor: consentTheme.actionButtonColor,
-                    ),
-                    const SizedBox(width: UiConfig.actionSpacing),
-                    Expanded(
-                      child: RichText(
-                        text: TextSpan(
-                          children: [
-                            TextSpan(
-                              text: consentForm.acceptConsentText.first.text,
-                              style: Theme.of(context)
-                                  .textTheme
-                                  .bodyMedium
-                                  ?.copyWith(color: consentTheme.formTextColor),
-                            ),
-                            const WidgetSpan(
-                              child: SizedBox(width: UiConfig.textSpacing),
-                            ),
-                            TextSpan(
-                              text: consentForm.linkToPolicyText.first.text,
-                              style: Theme.of(context)
-                                  .textTheme
-                                  .bodyMedium
-                                  ?.copyWith(
-                                    color: consentTheme.linkToPolicyTextColor,
-                                  ),
-                            ),
-                          ],
-                        ),
-                      ),
-                    ),
-                  ],
-                ),
-                const SizedBox(height: UiConfig.lineGap * 2),
-                CustomButton(
-                  height: 40.0,
-                  onPressed: () {},
-                  buttonColor: consentTheme.submitButtonColor,
-                  splashColor: consentTheme.submitTextColor,
-                  child: Text(
-                    consentForm.acceptText.first.text,
-                    style: Theme.of(context)
-                        .textTheme
-                        .bodyMedium
-                        ?.copyWith(color: consentTheme.submitTextColor),
-                  ),
-                ),
-                const SizedBox(height: UiConfig.lineGap),
-                CustomButton(
-                  height: 40.0,
-                  onPressed: () {},
-                  buttonColor: consentTheme.cancelButtonColor,
-                  splashColor: consentTheme.cancelTextColor,
-                  child: Text(
-                    consentForm.cancelText.first.text,
-                    style: Theme.of(context)
-                        .textTheme
-                        .bodyMedium
-                        ?.copyWith(color: consentTheme.cancelTextColor),
-                  ),
-                ),
-              ],
+                  _buildConsentForm(context),
+                ],
+              ),
             ),
           ),
         ),
+      ),
+    );
+  }
+
+  Container _buildHeaderImage() {
+    return Container(
+      width: double.infinity,
+      decoration: BoxDecoration(
+        color: consentTheme.headerBackgroundColor,
+        image: consentForm.headerBackgroundImage.isNotEmpty
+            ? DecorationImage(
+                image: NetworkImage(
+                  consentForm.headerBackgroundImage,
+                ),
+                fit: BoxFit.fitWidth,
+              )
+            : null,
+      ),
+      child: Padding(
+        padding: const EdgeInsets.symmetric(
+          vertical: UiConfig.lineSpacing,
+        ),
+        child: SizedBox(
+          height: 90.0,
+          child: Visibility(
+            visible: consentForm.logoImage.isNotEmpty,
+            child: Image.network(
+              consentForm.logoImage,
+              fit: BoxFit.contain,
+            ),
+          ),
+        ),
+      ),
+    );
+  }
+
+  Container _buildConsentForm(BuildContext context) {
+    return Container(
+      padding: const EdgeInsets.all(UiConfig.defaultPaddingSpacing),
+      decoration: BoxDecoration(
+        image: consentForm.bodyBackgroundImage.isNotEmpty
+            ? DecorationImage(
+                image: NetworkImage(
+                  consentForm.bodyBackgroundImage,
+                ),
+                fit: BoxFit.fitHeight,
+              )
+            : null,
+      ),
+      child: Column(
+        mainAxisSize: MainAxisSize.min,
+        children: <Widget>[
+          Text(
+            consentForm.headerText.first.text,
+            style: Theme.of(context)
+                .textTheme
+                .bodyLarge
+                ?.copyWith(color: consentTheme.headerTextColor),
+          ),
+          const SizedBox(height: UiConfig.lineSpacing),
+          Align(
+            alignment: Alignment.centerLeft,
+            child: _buildHeaderDescription(context),
+          ),
+          _buildCustomFieldSection(context),
+          _buildPurposeCategorySection(context),
+          _buildFooterDescription(context),
+          Row(
+            children: <Widget>[
+              CustomCheckBox(
+                value: false,
+                onChanged: (value) {},
+                activeColor: consentTheme.actionButtonColor,
+              ),
+              const SizedBox(width: UiConfig.actionSpacing),
+              Expanded(
+                child: RichText(
+                  text: TextSpan(
+                    children: [
+                      TextSpan(
+                        text: consentForm.acceptConsentText.first.text,
+                        style: Theme.of(context)
+                            .textTheme
+                            .bodyMedium
+                            ?.copyWith(color: consentTheme.formTextColor),
+                      ),
+                      const WidgetSpan(
+                        child: SizedBox(width: UiConfig.textSpacing),
+                      ),
+                      TextSpan(
+                        text: consentForm.linkToPolicyText.first.text,
+                        style: Theme.of(context).textTheme.bodyMedium?.copyWith(
+                              color: consentTheme.linkToPolicyTextColor,
+                            ),
+                      ),
+                    ],
+                  ),
+                ),
+              ),
+            ],
+          ),
+          const SizedBox(height: UiConfig.lineGap * 2),
+          CustomButton(
+            height: 40.0,
+            onPressed: () {},
+            buttonColor: consentTheme.submitButtonColor,
+            splashColor: consentTheme.submitTextColor,
+            child: Text(
+              consentForm.acceptText.first.text,
+              style: Theme.of(context)
+                  .textTheme
+                  .bodyMedium
+                  ?.copyWith(color: consentTheme.submitTextColor),
+            ),
+          ),
+          const SizedBox(height: UiConfig.lineGap),
+          CustomButton(
+            height: 40.0,
+            onPressed: () {},
+            buttonColor: consentTheme.cancelButtonColor,
+            splashColor: consentTheme.cancelTextColor,
+            child: Text(
+              consentForm.cancelText.first.text,
+              style: Theme.of(context)
+                  .textTheme
+                  .bodyMedium
+                  ?.copyWith(color: consentTheme.cancelTextColor),
+            ),
+          ),
+        ],
       ),
     );
   }
@@ -192,6 +255,7 @@ class ConsentFormDrawer extends StatelessWidget {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: <Widget>[
           ListView.separated(
+            physics: const NeverScrollableScrollPhysics(),
             shrinkWrap: true,
             itemCount: customFieldFiltered.length,
             itemBuilder: (context, index) => _buildCustomField(
@@ -213,10 +277,10 @@ class ConsentFormDrawer extends StatelessWidget {
     required CustomFieldModel customField,
   }) {
     return Column(
+      mainAxisSize: MainAxisSize.min,
       children: <Widget>[
         TitleRequiredText(
           text: customField.title.first.text,
-          // required: true,
         ),
         CustomTextField(
           hintText: customField.hintText.first.text,
@@ -238,6 +302,7 @@ class ConsentFormDrawer extends StatelessWidget {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: <Widget>[
           ListView.separated(
+            physics: const NeverScrollableScrollPhysics(),
             shrinkWrap: true,
             itemCount: purposeCategoryFiltered.length,
             itemBuilder: (context, index) => _buildPurposeCategory(
@@ -289,6 +354,7 @@ class ConsentFormDrawer extends StatelessWidget {
         const SizedBox(width: UiConfig.actionSpacing),
         Expanded(
           child: Column(
+            mainAxisSize: MainAxisSize.min,
             crossAxisAlignment: CrossAxisAlignment.start,
             children: <Widget>[
               const SizedBox(height: 11.0),
@@ -335,6 +401,7 @@ class ConsentFormDrawer extends StatelessWidget {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: <Widget>[
           ListView.separated(
+            physics: const NeverScrollableScrollPhysics(),
             shrinkWrap: true,
             itemCount: purposeFiltered.length,
             itemBuilder: (context, index) => PurposeRadioOption(
