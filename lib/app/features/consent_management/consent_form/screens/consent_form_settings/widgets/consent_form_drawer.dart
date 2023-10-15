@@ -31,7 +31,7 @@ class ConsentFormDrawer extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return FractionallySizedBox(
-      widthFactor: 0.75,
+      widthFactor: 0.85,
       child: Drawer(
         backgroundColor: Theme.of(context).colorScheme.onBackground,
         surfaceTintColor: Theme.of(context).colorScheme.onBackground,
@@ -202,6 +202,7 @@ class ConsentFormDrawer extends StatelessWidget {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: <Widget>[
           ListView.separated(
+            physics: const NeverScrollableScrollPhysics(),
             shrinkWrap: true,
             itemCount: customFieldFiltered.length,
             itemBuilder: (context, index) => _buildCustomField(
@@ -248,6 +249,7 @@ class ConsentFormDrawer extends StatelessWidget {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: <Widget>[
           ListView.separated(
+            physics: const NeverScrollableScrollPhysics(),
             shrinkWrap: true,
             itemCount: purposeCategoryFiltered.length,
             itemBuilder: (context, index) => _buildPurposeCategory(
@@ -345,6 +347,7 @@ class ConsentFormDrawer extends StatelessWidget {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: <Widget>[
           ListView.separated(
+            physics: const NeverScrollableScrollPhysics(),
             shrinkWrap: true,
             itemCount: purposeFiltered.length,
             itemBuilder: (context, index) => PurposeRadioOption(

@@ -4,11 +4,13 @@ import 'package:firebase_storage/firebase_storage.dart';
 import 'package:get_it/get_it.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 import 'package:pdpa/app/data/repositories/consent_repository.dart';
+import 'package:pdpa/app/data/repositories/general_repository.dart';
 import 'package:pdpa/app/features/consent_management/consent_form/bloc/consent_form_settings/consent_form_settings_bloc.dart';
 import 'package:pdpa/app/features/consent_management/consent_form/bloc/edit_consent_theme/edit_consent_theme_bloc.dart';
 import 'package:pdpa/app/services/apis/consent_api.dart';
 import 'package:pdpa/app/features/master_data/bloc/consent/custom_field/custom_field_bloc.dart';
 import 'package:pdpa/app/features/master_data/bloc/consent/edit_custom_field/bloc/edit_custom_field_bloc.dart';
+import 'package:pdpa/app/services/apis/general_api.dart';
 
 import 'config/config.dart';
 import 'data/repositories/authentication_repository.dart';
@@ -95,7 +97,6 @@ Future<void> _consentManagement() async {
     ..registerLazySingleton(
       () => ConsentApi(
         serviceLocator(),
-        serviceLocator(),
       ),
     );
 }
@@ -148,8 +149,21 @@ Future<void> _masterData() async {
 }
 
 Future<void> _other() async {
-  //? App logic
-  serviceLocator.registerFactory(
-    () => DrawerBloc(),
-  );
+  serviceLocator
+    //? App logic
+    ..registerFactory(
+      () => DrawerBloc(),
+    )
+    //? Repositories
+    ..registerLazySingleton(
+      () => GeneralRepository(
+        serviceLocator(),
+      ),
+    )
+    //? APIs
+    ..registerLazySingleton(
+      () => GeneralApi(
+        serviceLocator(),
+      ),
+    );
 }

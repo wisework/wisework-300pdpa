@@ -119,17 +119,20 @@ class ConsentFormSettingsBloc
       },
     );
 
-    emit(GotConsentFormSettings(
-      gotConsentForm,
-      gotCustomFields,
-      gotPurposeCategories,
-      gotPurposes,
-      gotConsentThemes..sort((a, b) => b.updatedDate.compareTo(a.updatedDate)),
-      gotConsentThemes.firstWhere(
-        (theme) => theme.id == gotConsentForm.consentThemeId,
-        orElse: () => ConsentThemeModel.initial(),
+    emit(
+      GotConsentFormSettings(
+        gotConsentForm,
+        gotCustomFields,
+        gotPurposeCategories,
+        gotPurposes,
+        gotConsentThemes
+          ..sort((a, b) => b.updatedDate.compareTo(a.updatedDate)),
+        gotConsentThemes.firstWhere(
+          (theme) => theme.id == gotConsentForm.consentThemeId,
+          orElse: () => ConsentThemeModel.initial(),
+        ),
       ),
-    ));
+    );
   }
 
   Future<void> _updateConsentFormSettingsHandler(
@@ -174,7 +177,7 @@ class ConsentFormSettingsBloc
     result.fold(
       (failure) => emit(ConsentFormSettingsError(failure.errorMessage)),
       (_) => emit(
-        UpdatedConsentFormSettings(
+        GotConsentFormSettings(
           event.consentForm,
           customFields,
           purposeCategories,

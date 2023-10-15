@@ -10,9 +10,11 @@ import 'package:pdpa/app/data/models/consent_management/consent_theme_model.dart
 import 'package:pdpa/app/data/models/master_data/custom_field_model.dart';
 import 'package:pdpa/app/data/models/master_data/purpose_category_model.dart';
 import 'package:pdpa/app/data/models/master_data/purpose_model.dart';
+import 'package:pdpa/app/data/repositories/general_repository.dart';
 import 'package:pdpa/app/features/authentication/bloc/sign_in/sign_in_bloc.dart';
 import 'package:pdpa/app/features/consent_management/consent_form/bloc/consent_form_settings/consent_form_settings_bloc.dart';
 import 'package:pdpa/app/features/consent_management/consent_form/cubit/current_consent_form_settings/current_consent_form_settings_cubit.dart';
+import 'package:pdpa/app/injection.dart';
 import 'package:pdpa/app/shared/widgets/customs/custom_icon_button.dart';
 import 'package:pdpa/app/shared/widgets/screens/error_message_screen.dart';
 import 'package:pdpa/app/shared/widgets/screens/loading_screen.dart';
@@ -67,7 +69,9 @@ class _ConsentFormSettingScreenState extends State<ConsentFormSettingScreen> {
   @override
   Widget build(BuildContext context) {
     return BlocProvider<CurrentConsentFormSettingsCubit>(
-      create: (context) => CurrentConsentFormSettingsCubit(),
+      create: (context) => CurrentConsentFormSettingsCubit(
+        generalRepository: serviceLocator<GeneralRepository>(),
+      ),
       child: BlocConsumer<ConsentFormSettingsBloc, ConsentFormSettingsState>(
         listener: (context, state) {
           if (state is UpdatedConsentFormSettings) {
@@ -160,6 +164,7 @@ class _ConsentFormSettingViewState extends State<ConsentFormSettingView> {
     cubit.initialSettings(
       widget.consentForm,
       widget.consentTheme,
+      widget.currentUser.currentCompany,
     );
   }
 
@@ -220,8 +225,12 @@ class _ConsentFormSettingViewState extends State<ConsentFormSettingView> {
       if (consentForm != initialConsentForm) {
         return CustomIconButton(
           onPressed: () {
+            final updated = consentForm.setUpdate(
+              widget.currentUser.email,
+              DateTime.now(),
+            );
             final event = UpdateConsentFormSettingsEvent(
-              consentForm: consentForm,
+              consentForm: updated,
               companyId: widget.currentUser.currentCompany,
             );
 
@@ -270,7 +279,8 @@ class _ConsentFormSettingViewState extends State<ConsentFormSettingView> {
       labelColor: Theme.of(context).colorScheme.primary,
       labelStyle: Theme.of(context).textTheme.bodySmall,
       onTap: (value) {
-        context.read<CurrentConsentFormSettingsCubit>().setSettingTab(value);
+        final cubit = context.read<CurrentConsentFormSettingsCubit>();
+        cubit.setSettingTab(value);
       },
     );
   }
@@ -279,8 +289,14 @@ class _ConsentFormSettingViewState extends State<ConsentFormSettingView> {
     return TabBarView(
       children: <Widget>[
         UrlTab(consentForm: consentForm),
-        HeaderTab(consentForm: consentForm),
-        BodyTab(consentForm: consentForm),
+        HeaderTab(
+          consentForm: consentForm,
+          companyId: widget.currentUser.currentCompany,
+        ),
+        BodyTab(
+          consentForm: consentForm,
+          companyId: widget.currentUser.currentCompany,
+        ),
         FooterTab(consentForm: consentForm),
         ThemeTab(consentForm: consentForm, consentThemes: widget.consentThemes),
       ],

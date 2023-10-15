@@ -1,14 +1,12 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:firebase_storage/firebase_storage.dart';
 import 'package:pdpa/app/data/models/consent_management/consent_form_model.dart';
 import 'package:pdpa/app/data/models/consent_management/consent_theme_model.dart';
 import 'package:pdpa/app/data/models/consent_management/user_consent_model.dart';
 
 class ConsentApi {
-  const ConsentApi(this._firestore, this._storage);
+  const ConsentApi(this._firestore);
 
   final FirebaseFirestore _firestore;
-  final FirebaseStorage _storage;
 
   //? Consenst Form
   Future<List<ConsentFormModel>> getConsentForms(String companyId) async {
