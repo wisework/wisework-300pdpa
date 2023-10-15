@@ -9,6 +9,7 @@ import 'package:pdpa/app/data/models/consent_management/consent_theme_model.dart
 import 'package:pdpa/app/features/authentication/bloc/sign_in/sign_in_bloc.dart';
 import 'package:pdpa/app/features/consent_management/consent_form/bloc/consent_form_settings/consent_form_settings_bloc.dart';
 import 'package:pdpa/app/features/consent_management/consent_form/bloc/edit_consent_theme/edit_consent_theme_bloc.dart';
+import 'package:pdpa/app/features/consent_management/consent_form/cubit/current_consent_form_settings/current_consent_form_settings_cubit.dart';
 import 'package:pdpa/app/features/master_data/widgets/configuration_info.dart';
 import 'package:pdpa/app/injection.dart';
 import 'package:pdpa/app/shared/utils/constants.dart';
@@ -254,6 +255,10 @@ class _EditConsentThemeViewState extends State<EditConsentThemeView> {
       );
 
       context.read<ConsentFormSettingsBloc>().add(event);
+
+      context
+          .read<CurrentConsentFormSettingsCubit>()
+          .setConsentTheme(consentTheme);
     }
 
     context.pop();

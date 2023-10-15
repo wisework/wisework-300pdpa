@@ -207,7 +207,6 @@ class _HeaderTabState extends State<HeaderTab> {
           const SizedBox(height: UiConfig.lineSpacing),
           const TitleRequiredText(
             text: 'Header Text',
-            required: true,
           ),
           CustomTextField(
             controller: headerTextController,

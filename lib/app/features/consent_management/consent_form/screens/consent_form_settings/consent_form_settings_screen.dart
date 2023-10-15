@@ -10,11 +10,9 @@ import 'package:pdpa/app/data/models/consent_management/consent_theme_model.dart
 import 'package:pdpa/app/data/models/master_data/custom_field_model.dart';
 import 'package:pdpa/app/data/models/master_data/purpose_category_model.dart';
 import 'package:pdpa/app/data/models/master_data/purpose_model.dart';
-import 'package:pdpa/app/data/repositories/general_repository.dart';
 import 'package:pdpa/app/features/authentication/bloc/sign_in/sign_in_bloc.dart';
 import 'package:pdpa/app/features/consent_management/consent_form/bloc/consent_form_settings/consent_form_settings_bloc.dart';
 import 'package:pdpa/app/features/consent_management/consent_form/cubit/current_consent_form_settings/current_consent_form_settings_cubit.dart';
-import 'package:pdpa/app/injection.dart';
 import 'package:pdpa/app/shared/widgets/customs/custom_icon_button.dart';
 import 'package:pdpa/app/shared/widgets/screens/error_message_screen.dart';
 import 'package:pdpa/app/shared/widgets/screens/loading_screen.dart';
@@ -28,7 +26,12 @@ import 'tabs/url_tab.dart';
 import 'widgets/consent_form_drawer.dart';
 
 class ConsentFormSettingScreen extends StatefulWidget {
-  const ConsentFormSettingScreen({super.key});
+  const ConsentFormSettingScreen({
+    super.key,
+    required this.consentFormId,
+  });
+
+  final String consentFormId;
 
   @override
   State<ConsentFormSettingScreen> createState() =>
@@ -37,13 +40,11 @@ class ConsentFormSettingScreen extends StatefulWidget {
 
 class _ConsentFormSettingScreenState extends State<ConsentFormSettingScreen> {
   late UserModel currentUser;
-  late String consentId;
 
   @override
   void initState() {
     super.initState();
 
-    consentId = 'L1qX5GsxWn5u9CCKzNCr';
     _initialData();
   }
 
@@ -61,62 +62,57 @@ class _ConsentFormSettingScreenState extends State<ConsentFormSettingScreen> {
   void _getConsentFormSettings() {
     final bloc = context.read<ConsentFormSettingsBloc>();
     bloc.add(GetConsentFormSettingsEvent(
-      consentId: consentId,
+      consentId: widget.consentFormId,
       companyId: currentUser.currentCompany,
     ));
   }
 
   @override
   Widget build(BuildContext context) {
-    return BlocProvider<CurrentConsentFormSettingsCubit>(
-      create: (context) => CurrentConsentFormSettingsCubit(
-        generalRepository: serviceLocator<GeneralRepository>(),
-      ),
-      child: BlocConsumer<ConsentFormSettingsBloc, ConsentFormSettingsState>(
-        listener: (context, state) {
-          if (state is UpdatedConsentFormSettings) {
-            BotToast.showText(
-              text: 'Update successfully',
-              contentColor:
-                  Theme.of(context).colorScheme.secondary.withOpacity(0.75),
-              borderRadius: BorderRadius.circular(8.0),
-              textStyle: Theme.of(context)
-                  .textTheme
-                  .bodyMedium!
-                  .copyWith(color: Theme.of(context).colorScheme.onPrimary),
-              duration: UiConfig.toastDuration,
-            );
-          }
-        },
-        builder: (context, state) {
-          if (state is GotConsentFormSettings) {
-            return ConsentFormSettingView(
-              consentForm: state.consentForm,
-              customFields: state.customFields,
-              purposeCategories: state.purposeCategories,
-              purposes: state.purposes,
-              consentThemes: state.consentThemes,
-              consentTheme: state.consentTheme,
-              currentUser: currentUser,
-            );
-          }
-          if (state is UpdatedConsentFormSettings) {
-            return ConsentFormSettingView(
-              consentForm: state.consentForm,
-              customFields: state.customFields,
-              purposeCategories: state.purposeCategories,
-              purposes: state.purposes,
-              consentThemes: state.consentThemes,
-              consentTheme: state.consentTheme,
-              currentUser: currentUser,
-            );
-          }
-          if (state is ConsentFormSettingsError) {
-            return ErrorMessageScreen(message: state.message);
-          }
-          return const LoadingScreen();
-        },
-      ),
+    return BlocConsumer<ConsentFormSettingsBloc, ConsentFormSettingsState>(
+      listener: (context, state) {
+        if (state is UpdatedConsentFormSettings) {
+          BotToast.showText(
+            text: 'Update successfully',
+            contentColor:
+                Theme.of(context).colorScheme.secondary.withOpacity(0.75),
+            borderRadius: BorderRadius.circular(8.0),
+            textStyle: Theme.of(context)
+                .textTheme
+                .bodyMedium!
+                .copyWith(color: Theme.of(context).colorScheme.onPrimary),
+            duration: UiConfig.toastDuration,
+          );
+        }
+      },
+      builder: (context, state) {
+        if (state is GotConsentFormSettings) {
+          return ConsentFormSettingView(
+            consentForm: state.consentForm,
+            customFields: state.customFields,
+            purposeCategories: state.purposeCategories,
+            purposes: state.purposes,
+            consentThemes: state.consentThemes,
+            consentTheme: state.consentTheme,
+            currentUser: currentUser,
+          );
+        }
+        if (state is UpdatedConsentFormSettings) {
+          return ConsentFormSettingView(
+            consentForm: state.consentForm,
+            customFields: state.customFields,
+            purposeCategories: state.purposeCategories,
+            purposes: state.purposes,
+            consentThemes: state.consentThemes,
+            consentTheme: state.consentTheme,
+            currentUser: currentUser,
+          );
+        }
+        if (state is ConsentFormSettingsError) {
+          return ErrorMessageScreen(message: state.message);
+        }
+        return const LoadingScreen();
+      },
     );
   }
 }

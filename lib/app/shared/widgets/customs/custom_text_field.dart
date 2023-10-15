@@ -109,7 +109,10 @@ class _CustomTextFieldState extends State<CustomTextField> {
           .textTheme
           .bodySmall
           ?.copyWith(color: Theme.of(context).colorScheme.error),
-      contentPadding: const EdgeInsets.symmetric(horizontal: 12.0),
+      contentPadding: const EdgeInsets.symmetric(
+        vertical: 4.0,
+        horizontal: 12.0,
+      ),
       suffix: widget.suffix != null
           ? Padding(
               padding: const EdgeInsets.only(right: 4.0),

@@ -17,6 +17,7 @@ import 'data/repositories/authentication_repository.dart';
 import 'data/repositories/master_data_repository.dart';
 import 'features/authentication/bloc/invitation/invitation_bloc.dart';
 import 'features/authentication/bloc/sign_in/sign_in_bloc.dart';
+import 'features/consent_management/consent_form/cubit/current_consent_form_settings/current_consent_form_settings_cubit.dart';
 import 'features/master_data/bloc/consent/edit_purpose/edit_purpose_bloc.dart';
 import 'features/master_data/bloc/consent/purpose/purpose_bloc.dart';
 import 'services/apis/authentication_api.dart';
@@ -80,6 +81,11 @@ Future<void> _consentManagement() async {
       () => ConsentFormSettingsBloc(
         consentRepository: serviceLocator(),
         masterDataRepository: serviceLocator(),
+      ),
+    )
+    ..registerFactory(
+      () => CurrentConsentFormSettingsCubit(
+        generalRepository: serviceLocator(),
       ),
     )
     ..registerFactory(
