@@ -4,6 +4,7 @@ import 'package:get_it/get_it.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 import 'package:pdpa/app/data/repositories/consent_repository.dart';
 import 'package:pdpa/app/features/consent_management/bloc/consent_form/consent_form_bloc.dart';
+import 'package:pdpa/app/features/consent_management/bloc/consent_form_detail/consent_form_detail_bloc.dart';
 import 'package:pdpa/app/features/consent_management/bloc/edit_consent_form/edit_consent_form_bloc.dart';
 import 'package:pdpa/app/services/apis/consent_api.dart';
 
@@ -105,16 +106,23 @@ Future<void> _masterData() async {
 }
 
 Future<void> _consentManagement() async {
- serviceLocator
+  serviceLocator
     //? App logic
     ..registerFactory(
       () => ConsentFormBloc(
         consentRepository: serviceLocator(),
+        masterDataRepository: serviceLocator(),
       ),
     )
     ..registerFactory(
       () => EditConsentFormBloc(
         consentRepository: serviceLocator(),
+      ),
+    )
+    ..registerFactory(
+      () => ConsentFormDetailBloc(
+        consentRepository: serviceLocator(),
+        masterDataRepository: serviceLocator(),
       ),
     )
 
@@ -131,7 +139,6 @@ Future<void> _consentManagement() async {
         serviceLocator(),
       ),
     );
- 
 }
 
 Future<void> _other() async {

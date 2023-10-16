@@ -105,14 +105,14 @@ class _ConsentFormViewState extends State<ConsentFormView> {
             ),
           ),
         ],
-        bottom: Row(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          crossAxisAlignment: CrossAxisAlignment.center,
-          children: <Widget>[
-            _sortButtonGroup(context),
-            _sortByDateButton(context),
-          ],
-        ),
+        // bottom: Row(
+        //   mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        //   crossAxisAlignment: CrossAxisAlignment.center,
+        //   children: <Widget>[
+        //     _sortButtonGroup(context),
+        //     _sortByDateButton(context),
+        //   ],
+        // ),
       ),
       drawer: PdpaDrawer(
         onClosed: () {
@@ -183,12 +183,6 @@ class _ConsentFormViewState extends State<ConsentFormView> {
               color: Theme.of(context).colorScheme.surface,
               borderRadius: BorderRadius.circular(10.0),
             ),
-            // state.filter == FilterConsentListView.all
-            //     ? BoxDecoration(
-            //         color: Theme.of(context).colorScheme.surface,
-            //         borderRadius: BorderRadius.circular(10.0),
-            //       )
-            //     : null,
             child: Center(
               child: Text(
                 "ทั้งหมด",
@@ -198,11 +192,7 @@ class _ConsentFormViewState extends State<ConsentFormView> {
           ),
         ),
         IconButton(
-          onPressed: () {
-            // context.read<GeneralConsentBloc>().add(
-            //     const GeneralConsentFilterChanged(
-            //         FilterConsentListView.recent));
-          },
+          onPressed: () {},
           padding: EdgeInsets.zero,
           icon: Container(
             padding: const EdgeInsets.symmetric(
@@ -213,12 +203,6 @@ class _ConsentFormViewState extends State<ConsentFormView> {
               color: Theme.of(context).colorScheme.surface,
               borderRadius: BorderRadius.circular(10.0),
             ),
-            // state.filter == FilterConsentListView.recent
-            //     ? BoxDecoration(
-            //         color: Theme.of(context).colorScheme.surface,
-            //         borderRadius: BorderRadius.circular(10.0),
-            //       )
-            //     : null,
             child: Text(
               "ล่าสุด",
               style: Theme.of(context).textTheme.bodySmall,
@@ -226,11 +210,7 @@ class _ConsentFormViewState extends State<ConsentFormView> {
           ),
         ),
         IconButton(
-          onPressed: () {
-            // context.read<GeneralConsentBloc>().add(
-            //     const GeneralConsentFilterChanged(
-            //         FilterConsentListView.issue));
-          },
+          onPressed: () {},
           padding: EdgeInsets.zero,
           icon: Container(
             padding: const EdgeInsets.symmetric(
@@ -241,12 +221,6 @@ class _ConsentFormViewState extends State<ConsentFormView> {
               color: Theme.of(context).colorScheme.surface,
               borderRadius: BorderRadius.circular(10.0),
             ),
-            // state.filter == FilterConsentListView.issue
-            //     ? BoxDecoration(
-            //         color: Theme.of(context).colorScheme.surface,
-            //         borderRadius: BorderRadius.circular(10.0),
-            //       )
-            //     : null,
             child: Text(
               "ปัญหา",
               style: Theme.of(context).textTheme.bodySmall,
@@ -259,11 +233,7 @@ class _ConsentFormViewState extends State<ConsentFormView> {
 
   IconButton _sortByDateButton(BuildContext context) {
     return IconButton(
-      onPressed: () {
-        // context
-        //     .read<GeneralConsentBloc>()
-        //     .add(const GeneralConsentSortChanged());
-      },
+      onPressed: () {},
       padding: EdgeInsets.zero,
       icon: Column(
         children: [
@@ -276,9 +246,6 @@ class _ConsentFormViewState extends State<ConsentFormView> {
               WidgetSpan(
                 child: Icon(
                   Icons.arrow_drop_down,
-                  // state.sort == SortConsentListView.desc
-                  //     ? Icons.arrow_drop_down
-                  //     : Icons.arrow_drop_up,
                   size: 20,
                   color: Theme.of(context).colorScheme.secondary,
                 ),
@@ -303,6 +270,8 @@ class _ConsentFormViewState extends State<ConsentFormView> {
         )
         .text;
 
+    List<String> purposeCategories = consentForm.purposeCategories;
+
     final dateConsentForm =
         DateFormat("dd.MM.yy").format(consentForm.updatedDate);
 
@@ -310,25 +279,11 @@ class _ConsentFormViewState extends State<ConsentFormView> {
       mainAxisSize: MainAxisSize.min,
       children: <Widget>[
         MaterialInkWell(
-          onTap: () async {
-            // if (consent.consentId.isNotEmpty &&
-            //     consent.companyId != null) {
-            //   await Navigator.pushNamed(
-            //     context,
-            //     AppRoutes.consentManagement.generalConsent.detail(
-            //       consent.consentId,
-            //     ),
-            //   ).then((result) {
-            //     if (result != null) {
-            //       final isCreated = result as bool;
-            //       if (isCreated) {
-            //         context
-            //             .read<GeneralConsentBloc>()
-            //             .add(const GeneralConsentInitialized());
-            //       }
-            //     }
-            //   });
-            // }
+          onTap: () {
+            context.push(
+              ConsentManagementRoute.consentFormDetail.path
+                  .replaceFirst(':id', consentForm.id),
+            );
           },
           child: Padding(
             padding: const EdgeInsets.all(UiConfig.defaultPaddingSpacing),
@@ -355,12 +310,12 @@ class _ConsentFormViewState extends State<ConsentFormView> {
                 ListView.builder(
                   shrinkWrap: true,
                   physics: const NeverScrollableScrollPhysics(),
-                  itemCount: consentForm.purposeCategories.length,
+                  itemCount: purposeCategories.length,
                   itemBuilder: (_, index) {
                     return Padding(
                       padding: const EdgeInsets.only(top: UiConfig.textSpacing),
                       child: Text(
-                        "2",
+                        purposeCategories[index].toString(),
                         style: Theme.of(context).textTheme.bodySmall,
                       ),
                     );

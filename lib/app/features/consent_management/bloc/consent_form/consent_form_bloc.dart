@@ -2,7 +2,9 @@
 import 'package:bloc/bloc.dart';
 import 'package:equatable/equatable.dart';
 import 'package:pdpa/app/data/models/consent_management/consent_form_model.dart';
+import 'package:pdpa/app/data/models/master_data/purpose_category_model.dart';
 import 'package:pdpa/app/data/repositories/consent_repository.dart';
+import 'package:pdpa/app/data/repositories/master_data_repository.dart';
 import 'package:pdpa/app/shared/utils/constants.dart';
 
 part 'consent_form_event.dart';
@@ -11,13 +13,16 @@ part 'consent_form_state.dart';
 class ConsentFormBloc extends Bloc<ConsentFormEvent, ConsentFormState> {
   ConsentFormBloc({
     required ConsentRepository consentRepository,
+    required MasterDataRepository masterDataRepository,
   })  : _consentRepository = consentRepository,
+        _masterDataRepository = masterDataRepository,
         super(const ConsentFormInitial()) {
     on<GetConsentFormsEvent>(_getConstFormsHandler);
     on<UpdateConsentFormEvent>(_updateConsentFormsEvent);
   }
 
   final ConsentRepository _consentRepository;
+  final MasterDataRepository _masterDataRepository;
 
   Future<void> _getConstFormsHandler(
     GetConsentFormsEvent event,
@@ -32,12 +37,14 @@ class ConsentFormBloc extends Bloc<ConsentFormEvent, ConsentFormState> {
 
     final result = await _consentRepository.getConsentForms(event.companyId);
 
-    result.fold(
-      (failure) => emit(ConsentFormError(failure.errorMessage)),
-      (consentForms) => emit(GotConsentForms(
-        consentForms..sort((a, b) => b.updatedDate.compareTo(a.updatedDate)),
-      )),
-    );
+    result.fold((failure) => emit(ConsentFormError(failure.errorMessage)),
+        (consentForms) async {
+      emit(
+        GotConsentForms(
+          consentForms..sort((a, b) => b.updatedDate.compareTo(a.updatedDate)),
+        ),
+      );
+    });
   }
 
   Future<void> _updateConsentFormsEvent(

@@ -89,7 +89,7 @@ class ConsentApi {
   ) async {
     final ref =
         _firestore.collection('Companies/$companyId/ConsentThemes').doc();
-    final created = consentTheme.copyWith(consentThemeId: ref.id);
+    final created = consentTheme.copyWith(id: ref.id);
 
     await ref.set(created.toMap());
 
@@ -102,7 +102,7 @@ class ConsentApi {
   ) async {
     await _firestore
         .collection('Companies/$companyId/ConsentThemes')
-        .doc(consentTheme.consentThemeId)
+        .doc(consentTheme.id)
         .set(consentTheme.toMap());
   }
 

@@ -4,21 +4,23 @@ import 'package:pdpa/app/config/config.dart';
 class PdpaAppBar extends StatelessWidget implements PreferredSizeWidget {
   const PdpaAppBar({
     super.key,
+    this.appBarHeight = kToolbarHeight,
     this.leadingIcon,
     required this.title,
-    this.bottom,
     this.titleSpacing = UiConfig.appBarTitleSpacing,
     this.actions,
+    this.bottom,
   });
 
+  final double appBarHeight;
   final Widget? leadingIcon;
   final Widget title;
-  final Widget? bottom;
   final double titleSpacing;
   final List<Widget>? actions;
+  final PreferredSizeWidget? bottom;
 
   @override
-  Size get preferredSize => Size.fromHeight(bottom != null ? 110 : kToolbarHeight);
+  Size get preferredSize => Size.fromHeight(appBarHeight);
 
   @override
   Widget build(BuildContext context) {
@@ -45,18 +47,7 @@ class PdpaAppBar extends StatelessWidget implements PreferredSizeWidget {
               return action;
             }).toList()
           : null,
-      bottom: bottom != null ? 
-      PreferredSize(
-          preferredSize: const Size.fromHeight(120),
-          child: Container(
-            padding: const EdgeInsets.symmetric(
-              vertical: UiConfig.appBarTitleSpacing,
-              horizontal: UiConfig.defaultPaddingSpacing,
-            ),
-            child: bottom,
-          ),
-        )
-       : null,
+      bottom: bottom,
       elevation: 1.0,
       shadowColor: Theme.of(context).colorScheme.background,
       surfaceTintColor: Theme.of(context).colorScheme.onBackground,

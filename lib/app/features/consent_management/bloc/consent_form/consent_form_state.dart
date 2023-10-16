@@ -2,7 +2,7 @@ part of 'consent_form_bloc.dart';
 
 abstract class ConsentFormState extends Equatable {
   const ConsentFormState();
-  
+
   @override
   List<Object> get props => [];
 }
@@ -31,10 +31,23 @@ class GettingConsentForms extends ConsentFormState {
 }
 
 class GotConsentForms extends ConsentFormState {
-  const GotConsentForms(this.consentForms);
+  const GotConsentForms(
+    this.consentForms,
+  );
 
   final List<ConsentFormModel> consentForms;
 
   @override
   List<Object> get props => [consentForms];
+}
+
+class GotPurposeCategories extends ConsentFormState {
+  const GotPurposeCategories(
+    this.purposeCategories,
+  );
+
+  final List<PurposeCategoryModel> purposeCategories;
+
+  @override
+  List<Object> get props => [purposeCategories];
 }
