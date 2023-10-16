@@ -4,11 +4,13 @@ import 'package:go_router/go_router.dart';
 import 'package:ionicons/ionicons.dart';
 import 'package:pdpa/app/data/models/authentication/user_model.dart';
 import 'package:pdpa/app/data/models/consent_management/consent_form_model.dart';
+import 'package:pdpa/app/data/models/consent_management/consent_theme_model.dart';
 import 'package:pdpa/app/data/models/master_data/custom_field_model.dart';
 import 'package:pdpa/app/data/models/master_data/purpose_category_model.dart';
 import 'package:pdpa/app/data/models/master_data/purpose_model.dart';
 import 'package:pdpa/app/features/authentication/bloc/sign_in/sign_in_bloc.dart';
 import 'package:pdpa/app/features/consent_management/consent_form/bloc/consent_form_detail/consent_form_detail_bloc.dart';
+import 'package:pdpa/app/features/consent_management/consent_form/screens/consent_form_detail/tabs/consent_form_tab.dart';
 import 'package:pdpa/app/features/consent_management/consent_form/screens/consent_form_detail/tabs/consent_info_tab.dart';
 import 'package:pdpa/app/injection.dart';
 import 'package:pdpa/app/shared/widgets/customs/custom_icon_button.dart';
@@ -66,6 +68,7 @@ class _DetailConsentFormScreenState extends State<DetailConsentFormScreen> {
               customFields: state.customFields,
               purposeCategories: state.purposeCategories,
               purposes: state.purposes,
+              consentTheme: state.consentTheme,
             );
           }
           if (state is ConsentFormDetailError) {
@@ -86,12 +89,14 @@ class ConsentFormDetailView extends StatefulWidget {
     required this.customFields,
     required this.purposeCategories,
     required this.purposes,
+    required this.consentTheme,
   });
 
   final ConsentFormModel consentForm;
   final List<CustomFieldModel> customFields;
   final List<PurposeCategoryModel> purposeCategories;
   final List<PurposeModel> purposes;
+  final ConsentThemeModel consentTheme;
 
   @override
   State<ConsentFormDetailView> createState() => _ConsentFormDetailViewState();
@@ -120,10 +125,8 @@ class _ConsentFormDetailViewState extends State<ConsentFormDetailView> {
           ),
           actions: [
             CustomIconButton(
-              onPressed: () {
-                _scaffoldKey.currentState?.openEndDrawer();
-              },
-              icon: Ionicons.eye_outline,
+              onPressed: () {},
+              icon: Ionicons.pencil_outline,
               iconColor: Theme.of(context).colorScheme.primary,
               backgroundColor: Theme.of(context).colorScheme.onBackground,
             ),
@@ -149,7 +152,13 @@ class _ConsentFormDetailViewState extends State<ConsentFormDetailView> {
               purposeCategories: widget.purposeCategories,
               purposes: widget.purposes,
             ),
-            const Text("data"),
+            ConsentFormTab(
+              consentForm: widget.consentForm,
+              customFields: widget.customFields,
+              purposeCategories: widget.purposeCategories,
+              purposes: widget.purposes,
+              consentTheme: widget.consentTheme,
+            ),
           ],
         ),
       ),

@@ -1,6 +1,7 @@
 import 'package:bloc/bloc.dart';
 import 'package:equatable/equatable.dart';
 import 'package:pdpa/app/data/models/consent_management/consent_form_model.dart';
+import 'package:pdpa/app/data/models/consent_management/consent_theme_model.dart';
 import 'package:pdpa/app/data/models/master_data/custom_field_model.dart';
 import 'package:pdpa/app/data/models/master_data/purpose_category_model.dart';
 import 'package:pdpa/app/data/models/master_data/purpose_model.dart';
@@ -48,6 +49,7 @@ class ConsentFormDetailBloc
     List<CustomFieldModel> gotCustomFields = [];
     List<PurposeCategoryModel> gotPurposeCategories = [];
     List<PurposeModel> gotPurposes = [];
+    List<ConsentThemeModel> gotConsentThemes = [];
 
     await result.fold(
       (failure) {
@@ -96,17 +98,38 @@ class ConsentFormDetailBloc
                   (purpose) => gotPurposes.add(purpose),
                 );
               }
+
+              print(gotPurposes.length);
             },
           );
         }
+
+        final result = await _consentRepository.getConsentThemes(
+          event.companyId,
+        );
+
+        result.fold(
+          (failure) => emit(ConsentFormDetailError(failure.errorMessage)),
+          (consentThemes) {
+            gotConsentThemes = consentThemes;
+          },
+        );
       },
     );
 
-    emit(GotConsentFormDetail(
-      gotConsentForm,
-      gotCustomFields,
-      gotPurposeCategories,
-      gotPurposes,
-    ));
+    emit(
+      GotConsentFormDetail(
+        gotConsentForm,
+        gotCustomFields,
+        gotPurposeCategories,
+        gotPurposes,
+        gotConsentThemes
+          ..sort((a, b) => b.updatedDate.compareTo(a.updatedDate)),
+        gotConsentThemes.firstWhere(
+          (theme) => theme.id == gotConsentForm.consentThemeId,
+          orElse: () => ConsentThemeModel.initial(),
+        ),
+      ),
+    );
   }
 }

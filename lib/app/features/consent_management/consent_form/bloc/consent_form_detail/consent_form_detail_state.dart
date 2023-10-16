@@ -36,12 +36,16 @@ class GotConsentFormDetail extends ConsentFormDetailState {
     this.customFields,
     this.purposeCategories,
     this.purposes,
+    this.consentThemes,
+    this.consentTheme,
   );
 
   final ConsentFormModel consentForm;
   final List<CustomFieldModel> customFields;
   final List<PurposeCategoryModel> purposeCategories;
   final List<PurposeModel> purposes;
+  final List<ConsentThemeModel> consentThemes;
+  final ConsentThemeModel consentTheme;
 
   @override
   List<Object> get props => [
@@ -49,5 +53,7 @@ class GotConsentFormDetail extends ConsentFormDetailState {
         customFields,
         purposeCategories,
         purposes,
+        consentThemes,
+        consentTheme,
       ];
 }
