@@ -17,7 +17,6 @@ class UtilFunctions {
     }
     return CompanyModel.empty();
   }
-<<<<<<< HEAD
 
   static List<CustomFieldModel> filterCustomFieldsByIds(
     List<CustomFieldModel> customFields,
@@ -81,8 +80,6 @@ class UtilFunctions {
 
     return [company, consent, folder].join('/');
   }
-=======
->>>>>>> parent of 376bc1f (add consent form detail)
 }
 
 // class GeneralFunctions {
