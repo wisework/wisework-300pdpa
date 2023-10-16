@@ -150,10 +150,7 @@
                 "create": "Edit consent form",
                 "edit": "Create consent form",
                 "title": "Title",
-                "description": "Description",
-                "detail": "รายละเอียดแบบฟอร์มความยินยอม",
-                "consentFormInfo" : "ข้อมูลขวัตถุ-ประสงค์",
-                "form" : "แบบฟอร์ม"
+                "description": "Description"
             }           
         }
     }

@@ -4,9 +4,6 @@ import 'dart:io';
 
 import 'package:path/path.dart';
 import 'package:pdpa/app/data/models/authentication/company_model.dart';
-import 'package:pdpa/app/data/models/master_data/custom_field_model.dart';
-import 'package:pdpa/app/data/models/master_data/purpose_category_model.dart';
-import 'package:pdpa/app/data/models/master_data/purpose_model.dart';
 
 import 'constants.dart';
 
@@ -20,6 +17,7 @@ class UtilFunctions {
     }
     return CompanyModel.empty();
   }
+<<<<<<< HEAD
 
   static List<CustomFieldModel> filterCustomFieldsByIds(
     List<CustomFieldModel> customFields,
@@ -83,6 +81,8 @@ class UtilFunctions {
 
     return [company, consent, folder].join('/');
   }
+=======
+>>>>>>> parent of 376bc1f (add consent form detail)
 }
 
 // class GeneralFunctions {
