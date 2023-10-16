@@ -36,16 +36,22 @@
         "cm": {
             "consents": "Consents",
             "customfields": {
-                "name": "Custom Fields",
+                "title": "Custom Field",
+                "list": "Custom Fields",
                 "edit": "Edit Custom Fields",
                 "create": "Create Custom Fields",
-                "delete": "Delete",
-                "title": "Title",
-                "placeholder": "Place Holder",
-                "customfieldtype": "Custom Field Type",
+                "formtitle": "Title",
+                "formtitlehint": "Enter Title",
+                "hinttext": "Hint Text",
+                "hinttexthint": "Enter Hint Text",
+                "inputtype": "Input Type",
+                "inputtypehint": "Choose Input Type",
                 "lenghtlimit": "Lenght Limit",
+                "lenghtlimithint": "Enter Lenght Limit",
                 "maxline": "Max Line",
-                "minline": "Min Line"
+                "maxlinehint": "Enter Max Line",
+                "minline": "Min Line",
+                "minlinehint": "Enter Min Line"
             },
             "purpose": {
                 "title": "Purpose",
@@ -64,34 +70,48 @@
                 "title": "Purpose Category",
                 "list": "Purpose Categories",
                 "create": "Create Purpose Category",
-                "edit": "Edit Purpose Category"
+                "edit": "Edit Purpose Category",
+                "titlform": "Edit Purpose Category",
+                "titleformHint": "Edit Purpose Category",
+                "description": "Edit Purpose Category",
+                "descriptionHint": "Edit Purpose Category",
+                "priority": "Edit Purpose Category",
+                "priorityHint": "Edit Purpose Category",
+                "purposes": "Edit Purpose Category"
             }
         },
         "dsr": {
             "datasubjectright": "Data Subject Right",
             "request": {
-                "title": "Request Type",
-                "list": "List of Request Type",
+                "title": "Request Types",
+                "list": "Requests",
                 "create": "Create Request Type",
                 "edit": "Edit Request Type",
                 "requestcode" : "Request Code",
-                "requestdescription" : "Request Description"
+                "requestcodeHint" : "Request Code",
+                "description" : "Request Description",
+                "descriptionHint" : "Request Description"
             },
             "rejections": {
                 "title": "Reject Type",
-                "list": "List of Reject Type",
+                "list": "Rejections",
                 "create": "Create Reject Type",
                 "edit": "Edit Reject Type",
                 "rejectcode" : "Reject Code",
-                "rejectdescription" : "Reject Description"
+                "rejectcodeHint" : "Reject Code",
+                "description" : "Reject Description",
+                "descriptionHint" : "Reject Description"
             },
             "reason": {
                 "title": "Reason Type",
-                "list": "List of Reason Type",
+                "list": "Reasons",
                 "create": "Create Reason Type",
                 "edit": "Edit Reason Type",
                 "reasoncode" : "Reason Code",
-                "reasondescription" : "Reason Description"
+                "reasoncodeHint" : "Enter Code",
+                "description" : "Description",
+                "descriptionHint" : "Enter Description",
+                "needmoreinformation" : "Need more information"
             },
             "requestrejects": {
                 "title": "Request Rejects",

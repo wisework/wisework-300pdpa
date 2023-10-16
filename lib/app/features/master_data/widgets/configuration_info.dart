@@ -7,19 +7,35 @@ import 'package:pdpa/app/shared/widgets/material_ink_well.dart';
 class ConfigurationInfo extends StatelessWidget {
   const ConfigurationInfo({
     super.key,
-    required this.configBody,
+    this.configBody,
     this.updatedBy,
     required this.updatedDate,
     this.onDeletePressed,
   });
 
-  final Widget configBody;
+  final Widget? configBody;
   final String? updatedBy;
   final DateTime updatedDate;
   final VoidCallback? onDeletePressed;
 
   @override
   Widget build(BuildContext context) {
+    return Column(
+      children: <Widget>[
+        Visibility(
+          visible: configBody != null,
+          child: _buildConfiguration(context),
+        ),
+        _buildUserInfo(context),
+        Visibility(
+          visible: onDeletePressed != null,
+          child: _buildDeleteButton(context),
+        ),
+      ],
+    );
+  }
+
+  Column _buildConfiguration(BuildContext context) {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: <Widget>[
@@ -32,14 +48,9 @@ class ConfigurationInfo extends StatelessWidget {
           ],
         ),
         const SizedBox(height: UiConfig.lineSpacing),
-        configBody,
+        if (configBody != null) configBody!,
         Divider(
           color: Theme.of(context).colorScheme.outlineVariant.withOpacity(0.5),
-        ),
-        _buildUserInfo(context),
-        Visibility(
-          visible: onDeletePressed != null,
-          child: _buildDeleteButton(context),
         ),
       ],
     );
@@ -62,7 +73,7 @@ class ConfigurationInfo extends StatelessWidget {
         Visibility(
           visible: updatedBy != null && updatedBy!.isNotEmpty,
           child: Padding(
-            padding: const EdgeInsets.only(bottom: UiConfig.textSpacing),
+            padding: const EdgeInsets.only(bottom: UiConfig.textLineSpacing),
             child: Text(
               updatedBy!,
               style: Theme.of(context).textTheme.bodyMedium,
@@ -91,8 +102,8 @@ class ConfigurationInfo extends StatelessWidget {
             onTap: onDeletePressed!,
             child: Padding(
               padding: const EdgeInsets.symmetric(
-                horizontal: 8.0,
                 vertical: 4.0,
+                horizontal: 8.0,
               ),
               child: Text(
                 'Delete',

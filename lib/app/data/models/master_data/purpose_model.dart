@@ -67,7 +67,6 @@ class PurposeModel extends Equatable {
         );
 
   DataMap toMap() => {
-        'id': id,
         'description': description.map((item) => item.toMap()).toList(),
         'warningDescription':
             warningDescription.map((item) => item.toMap()).toList(),
@@ -112,14 +111,14 @@ class PurposeModel extends Equatable {
     );
   }
 
-  PurposeModel toCreated(String email, DateTime date) => copyWith(
+  PurposeModel setCreate(String email, DateTime date) => copyWith(
         createdBy: email,
         createdDate: date,
         updatedBy: email,
         updatedDate: date,
       );
 
-  PurposeModel toUpdated(String email, DateTime date) => copyWith(
+  PurposeModel setUpdate(String email, DateTime date) => copyWith(
         updatedBy: email,
         updatedDate: date,
       );

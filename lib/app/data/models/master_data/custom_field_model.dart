@@ -126,6 +126,18 @@ class CustomFieldModel extends Equatable {
     );
   }
 
+  CustomFieldModel toCreated(String email, DateTime date) => copyWith(
+        createdBy: email,
+        createdDate: date,
+        updatedBy: email,
+        updatedDate: date,
+      );
+
+  CustomFieldModel toUpdated(String email, DateTime date) => copyWith(
+        updatedBy: email,
+        updatedDate: date,
+      );
+
   @override
   List<Object?> get props {
     return [

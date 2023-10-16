@@ -9,3 +9,5 @@ enum UpdateType { created, updated, deleted }
 List<String> periodUnits = ['Day', 'Month', 'Year'];
 
 final datetimeFormatter = DateFormat('dd-MM-yyyy HH:mm:ss');
+
+enum ConsentFormImageType { logo, header, body }

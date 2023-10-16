@@ -30,27 +30,29 @@ class MasterDataItemCard extends StatelessWidget {
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               crossAxisAlignment: CrossAxisAlignment.start,
               children: <Widget>[
-                Column(
-                  mainAxisSize: MainAxisSize.min,
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: <Widget>[
-                    Text(
-                      title,
-                      style: Theme.of(context).textTheme.bodyMedium,
-                    ),
-                    Visibility(
-                      visible: subtitle.isNotEmpty,
-                      child: Padding(
-                        padding: const EdgeInsets.only(
-                          top: UiConfig.textSpacing,
-                        ),
-                        child: Text(
-                          subtitle,
-                          style: Theme.of(context).textTheme.bodySmall,
+                Expanded(
+                  child: Column(
+                    mainAxisSize: MainAxisSize.min,
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: <Widget>[
+                      Text(
+                        title,
+                        style: Theme.of(context).textTheme.titleMedium,
+                      ),
+                      Visibility(
+                        visible: subtitle.isNotEmpty,
+                        child: Padding(
+                          padding: const EdgeInsets.only(
+                            top: UiConfig.textLineSpacing,
+                          ),
+                          child: Text(
+                            subtitle,
+                            style: Theme.of(context).textTheme.bodySmall,
+                          ),
                         ),
                       ),
-                    ),
-                  ],
+                    ],
+                  ),
                 ),
                 _buildCardStatus(context),
               ],
@@ -72,7 +74,10 @@ class MasterDataItemCard extends StatelessWidget {
 
   Container _buildCardStatus(BuildContext context) {
     return Container(
-      padding: const EdgeInsets.symmetric(horizontal: 10.0, vertical: 2.0),
+      padding: const EdgeInsets.symmetric(
+        vertical: 2.0,
+        horizontal: 10.0,
+      ),
       decoration: BoxDecoration(
         color: status == ActiveStatus.active
             ? Theme.of(context).colorScheme.primary.withOpacity(0.1)

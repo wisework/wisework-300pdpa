@@ -53,7 +53,7 @@ class PdpaThemeData {
     onPrimary: Colors.white,
     secondary: Color(0xFF2F3853), // secondary
     onSecondary: Color(0xFFC9DBFC),
-    tertiary: Color(0xFFD9D9D9), // disable field
+    tertiary: Color(0xFFF0F0F0), // disable field
     onTertiary: Color(0xFF96A7AF), // hint text
     error: Color(0xFFF22525), // error
     onError: Color(0xFFF9C132), // warning

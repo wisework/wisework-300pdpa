@@ -66,7 +66,8 @@ class ConsentRepository {
   }
 
   //? Consent Theme
-  ResultFuture<List<ConsentThemeModel>> getConsentThemes(String companyId) async {
+  ResultFuture<List<ConsentThemeModel>> getConsentThemes(
+      String companyId) async {
     try {
       final result = await _api.getConsentThemes(companyId);
 
@@ -86,7 +87,7 @@ class ConsentRepository {
       if (result != null) return Right(result);
 
       return const Left(
-        ApiFailure(message: 'Consent Form not found', statusCode: 404),
+        ApiFailure(message: 'Consent theme not found', statusCode: 404),
       );
     } on ApiException catch (error) {
       return Left(ApiFailure.fromException(error));
@@ -112,6 +113,19 @@ class ConsentRepository {
   ) async {
     try {
       await _api.updateConsentTheme(consentTheme, companyId);
+
+      return const Right(null);
+    } on ApiException catch (error) {
+      return Left(ApiFailure.fromException(error));
+    }
+  }
+
+  ResultVoid deleteConsentTheme(
+    String consentThemeId,
+    String companyId,
+  ) async {
+    try {
+      await _api.deleteConsentTheme(consentThemeId, companyId);
 
       return const Right(null);
     } on ApiException catch (error) {

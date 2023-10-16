@@ -1,5 +1,3 @@
-
-
 import 'package:equatable/equatable.dart';
 
 import 'package:pdpa/app/data/models/master_data/localized_model.dart';
@@ -149,7 +147,6 @@ class ConsentFormModel extends Equatable {
         );
 
   DataMap toMap() => {
-        'id': id,
         'title': title.map((item) => item.toMap()).toList(),
         'description': description.map((item) => item.toMap()).toList(),
         'purposeCategories': purposeCategories,
@@ -237,14 +234,14 @@ class ConsentFormModel extends Equatable {
     );
   }
 
-   ConsentFormModel toCreated(String email, DateTime date) => copyWith(
+  ConsentFormModel setCreate(String email, DateTime date) => copyWith(
         createdBy: email,
         createdDate: date,
         updatedBy: email,
         updatedDate: date,
       );
 
-  ConsentFormModel toUpdated(String email, DateTime date) => copyWith(
+  ConsentFormModel setUpdate(String email, DateTime date) => copyWith(
         updatedBy: email,
         updatedDate: date,
       );
