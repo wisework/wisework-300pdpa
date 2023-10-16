@@ -3,6 +3,9 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:get_it/get_it.dart';
 import 'package:google_sign_in/google_sign_in.dart';
+import 'package:pdpa/app/features/consent_management/consent_form/bloc/consent_form/consent_form_bloc.dart';
+import 'package:pdpa/app/features/consent_management/consent_form/bloc/consent_form_detail/consent_form_detail_bloc.dart';
+import 'package:pdpa/app/features/consent_management/consent_form/bloc/edit_consent_form/edit_consent_form_bloc.dart';
 
 import 'config/config.dart';
 import 'data/repositories/authentication_repository.dart';
@@ -85,6 +88,23 @@ Future<void> _authentication() async {
 Future<void> _consentManagement() async {
   serviceLocator
     //? App logic
+    ..registerFactory(
+      () => ConsentFormBloc(
+        consentRepository: serviceLocator(),
+        masterDataRepository: serviceLocator(),
+      ),
+    )
+    ..registerFactory(
+      () => EditConsentFormBloc(
+        consentRepository: serviceLocator(),
+      ),
+    )
+    ..registerFactory(
+      () => ConsentFormDetailBloc(
+        consentRepository: serviceLocator(),
+        masterDataRepository: serviceLocator(),
+      ),
+    )
     ..registerFactory(
       () => ConsentFormSettingsBloc(
         consentRepository: serviceLocator(),

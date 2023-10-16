@@ -1,259 +1,343 @@
+import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/widgets.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:go_router/go_router.dart';
+import 'package:ionicons/ionicons.dart';
+import 'package:pdpa/app/config/config.dart';
+import 'package:pdpa/app/data/models/consent_management/consent_form_model.dart';
+import 'package:pdpa/app/data/models/master_data/localized_model.dart';
+import 'package:pdpa/app/features/authentication/bloc/sign_in/sign_in_bloc.dart';
+import 'package:pdpa/app/features/consent_management/consent_form/bloc/consent_form/consent_form_bloc.dart';
+import 'package:pdpa/app/features/consent_management/consent_form/routes/consent_form_route.dart';
+import 'package:pdpa/app/shared/drawers/pdpa_drawer.dart';
+import 'package:pdpa/app/shared/widgets/customs/custom_icon_button.dart';
+import 'package:pdpa/app/shared/widgets/material_ink_well.dart';
+import 'package:pdpa/app/shared/widgets/templates/pdpa_app_bar.dart';
 
-class ConsentForm extends StatelessWidget {
-  const ConsentForm({super.key});
+class ConsentFormScreen extends StatefulWidget {
+  const ConsentFormScreen({super.key});
+
+  @override
+  State<ConsentFormScreen> createState() => _ConsentFormScreenState();
+}
+
+class _ConsentFormScreenState extends State<ConsentFormScreen> {
+  @override
+  void initState() {
+    super.initState();
+
+    _initialData();
+  }
+
+  void _initialData() {
+    final bloc = context.read<SignInBloc>();
+
+    String companyId = '';
+    if (bloc.state is SignedInUser) {
+      companyId = (bloc.state as SignedInUser).user.currentCompany;
+    }
+
+    context
+        .read<ConsentFormBloc>()
+        .add(GetConsentFormsEvent(companyId: companyId));
+  }
 
   @override
   Widget build(BuildContext context) {
-    return const Placeholder();
+    return const ConsentFormView();
   }
 }
 
-class ConsentListView extends StatelessWidget {
-  const ConsentListView({
-    Key? key,
-    required this.consents,
-  }) : super(key: key);
-
-  final List<ConsentForm> consents;
+class ConsentFormView extends StatefulWidget {
+  const ConsentFormView({super.key});
 
   @override
+  State<ConsentFormView> createState() => _ConsentFormViewState();
+}
+
+class _ConsentFormViewState extends State<ConsentFormView> {
+  final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
+  @override
   Widget build(BuildContext context) {
-    return Column(
-      children: <Widget>[
-        RefreshIndicator(
-          onRefresh: () async {
-            const Duration(seconds: 1);
+    return Scaffold(
+      key: _scaffoldKey,
+      appBar: PdpaAppBar(
+        leadingIcon: CustomIconButton(
+          onPressed: () {
+            _scaffoldKey.currentState?.openDrawer();
           },
-          child: consents.isNotEmpty
-              ? Padding(
-                  padding: const EdgeInsets.symmetric(vertical: 25.0),
-                  child: ListView.builder(
-                    shrinkWrap: true,
-                    physics: const NeverScrollableScrollPhysics(),
-                    itemCount: consents.length,
-                    itemBuilder: (_, index) {
-                      return ConsentFormCard(context: context);
-                    },
+          icon: Ionicons.menu_outline,
+          iconColor: Theme.of(context).colorScheme.primary,
+          backgroundColor: Theme.of(context).colorScheme.onBackground,
+        ),
+        title: Text(
+          tr('consentManagement.cf.consentForms.consentForms'),
+          style: Theme.of(context).textTheme.titleLarge,
+        ),
+        actions: [
+          IconButton(
+            onPressed: () {},
+            icon: Container(
+              padding: const EdgeInsets.symmetric(
+                vertical: 6.0,
+                horizontal: 12.0,
+              ),
+              decoration: BoxDecoration(
+                color: Theme.of(context).colorScheme.primary,
+                borderRadius: BorderRadius.circular(10.0),
+              ),
+              child: RichText(
+                text: TextSpan(children: [
+                  WidgetSpan(
+                      child: Icon(
+                    Icons.search_rounded,
+                    size: 18,
+                    color: Theme.of(context).colorScheme.onPrimary,
+                  )),
+                  const WidgetSpan(child: SizedBox(width: 4.0)),
+                  TextSpan(
+                    text: tr('app.search'),
+                    style: Theme.of(context).textTheme.titleMedium?.copyWith(
+                        color: Theme.of(context).colorScheme.onPrimary),
                   ),
-                )
-              : const ConsentFormExample(),
+                ]),
+              ),
+            ),
+          ),
+        ],
+        bottom: PreferredSize(
+          preferredSize: const Size.fromHeight(140),
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            crossAxisAlignment: CrossAxisAlignment.center,
+            children: <Widget>[
+              _sortButtonGroup(context),
+              _sortByDateButton(context),
+            ],
+          ),
+        ),
+      ),
+      drawer: PdpaDrawer(
+        onClosed: () {
+          _scaffoldKey.currentState?.closeDrawer();
+        },
+      ),
+      body: Column(
+        children: [
+          const SizedBox(height: UiConfig.lineSpacing),
+          Expanded(
+            child: Container(
+              width: double.infinity,
+              color: Theme.of(context).colorScheme.onPrimary,
+              child: BlocBuilder<ConsentFormBloc, ConsentFormState>(
+                builder: (context, state) {
+                  if (state is GotConsentForms) {
+                    return ListView.builder(
+                      shrinkWrap: true,
+                      itemCount: state.consentForms.length,
+                      itemBuilder: (context, index) {
+                        return _buildItemCard(
+                          context,
+                          consentForm: state.consentForms[index],
+                        );
+                      },
+                    );
+                  }
+                  if (state is ConsentFormError) {
+                    return Center(
+                      child: Text(
+                        state.message,
+                        style: Theme.of(context).textTheme.bodyMedium,
+                      ),
+                    );
+                  }
+                  return const Center(
+                    child: CircularProgressIndicator(),
+                  );
+                },
+              ),
+            ),
+          ),
+        ],
+      ),
+      floatingActionButton: FloatingActionButton(
+        onPressed: () {
+          context.push(ConsentFormRoute.editConsentForm.path);
+        },
+        child: const Icon(Icons.add),
+      ),
+    );
+  }
+
+  Wrap _sortButtonGroup(BuildContext context) {
+    return Wrap(
+      direction: Axis.horizontal,
+      crossAxisAlignment: WrapCrossAlignment.center,
+      children: <Widget>[
+        IconButton(
+          onPressed: () {},
+          padding: EdgeInsets.zero,
+          icon: Container(
+            padding: const EdgeInsets.symmetric(
+              vertical: 6.0,
+              horizontal: 12.0,
+            ),
+            decoration: BoxDecoration(
+              color: Theme.of(context).colorScheme.surface,
+              borderRadius: BorderRadius.circular(10.0),
+            ),
+            child: Center(
+              child: Text(
+                "ทั้งหมด",
+                style: Theme.of(context).textTheme.bodySmall,
+              ),
+            ),
+          ),
+        ),
+        IconButton(
+          onPressed: () {},
+          padding: EdgeInsets.zero,
+          icon: Container(
+            padding: const EdgeInsets.symmetric(
+              vertical: 6.0,
+              horizontal: 12.0,
+            ),
+            decoration: BoxDecoration(
+              color: Theme.of(context).colorScheme.surface,
+              borderRadius: BorderRadius.circular(10.0),
+            ),
+            child: Text(
+              "ล่าสุด",
+              style: Theme.of(context).textTheme.bodySmall,
+            ),
+          ),
+        ),
+        IconButton(
+          onPressed: () {},
+          padding: EdgeInsets.zero,
+          icon: Container(
+            padding: const EdgeInsets.symmetric(
+              vertical: 6.0,
+              horizontal: 12.0,
+            ),
+            decoration: BoxDecoration(
+              color: Theme.of(context).colorScheme.surface,
+              borderRadius: BorderRadius.circular(10.0),
+            ),
+            child: Text(
+              "ปัญหา",
+              style: Theme.of(context).textTheme.bodySmall,
+            ),
+          ),
         ),
       ],
     );
   }
-}
 
-class ConsentFormCard extends StatelessWidget {
-  const ConsentFormCard({
-    super.key,
-    required this.context,
-  });
-
-  final BuildContext context;
-
-  @override
-  Widget build(BuildContext context) {
-    return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 25.0),
-      child: SizedBox(
-          width: double.infinity,
-          child: Column(
-            children: <Widget>[
-              GestureDetector(
-                onTap: () async {
-                  // if (consent.consentId.isNotEmpty &&
-                  //     consent.companyId != null) {
-                  //   await Navigator.pushNamed(
-                  //     context,
-                  //     AppRoutes
-                  //         .cm.generalConsent
-                  //         .detail(
-                  //       consent.consentId,
-                  //     ),
-                  //   ).then((result) {
-                  //     if (result != null) {
-                  //       final isCreated = result as bool;
-                  //       if (isCreated) {
-                  //         context.read<GeneralConsentBloc>().add(
-                  //             const GeneralConsentInitialized());
-                  //       }
-                  //     }
-                  //   });
-                  // }
-                },
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: <Widget>[
-                    Row(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: <Widget>[
-                        Expanded(
-                          child: Text(
-                            "example test",
-                            //consent.title.toString(),
-                            style: Theme.of(context).textTheme.button?.copyWith(
-                                height: 1.6,
-                                color: Theme.of(context).colorScheme.secondary),
-                          ),
-                        ),
-                        Padding(
-                          padding: const EdgeInsets.only(left: 40.0),
-                          child: Text(
-                            "11/11/1111",
-                            // Convert.toDate(
-                            //   consent.updatedDate,
-                            //   "dd.MM.yy",
-                            // ),
-                            style: Theme.of(context)
-                                .textTheme
-                                .bodyText2
-                                ?.copyWith(
-                                    color: Theme.of(context)
-                                        .colorScheme
-                                        .onBackground),
-                          ),
-                        ),
-                      ],
-                    ),
-                    const SizedBox(height: 5.0),
-                    ListView.builder(
-                      shrinkWrap: true,
-                      physics: const NeverScrollableScrollPhysics(),
-                      itemCount: 1,
-                      // consent.purposeCategories.length,
-                      itemBuilder: (_, index) {
-                        return Padding(
-                          padding: const EdgeInsets.only(
-                            top: 2.0,
-                          ),
-                          // consent.purposeCategories
-                          //             .first ==
-                          //         consent.purposeCategories[
-                          //             index]
-                          //     ? 2.0
-                          //     : 8.0),
-                          child: Text(
-                            "test categories",
-                            // consent.purposeCategories[index]
-                            //     .title
-                            //     .toString(),
-                            style: Theme.of(context)
-                                .textTheme
-                                .bodyText2
-                                ?.copyWith(
-                                    height: 1.6,
-                                    color: Theme.of(context)
-                                        .colorScheme
-                                        .onBackground),
-                          ),
-                        );
-                      },
-                    ),
-                    const SizedBox(height: 5.0),
-                  ],
-                ),
-              ),
-              Padding(
-                padding: const EdgeInsets.only(top: 5.0, bottom: 10.0),
-                child: Divider(
-                  color: Theme.of(context).colorScheme.outline,
-                  thickness: 0.3,
+  IconButton _sortByDateButton(BuildContext context) {
+    return IconButton(
+      onPressed: () {},
+      padding: EdgeInsets.zero,
+      icon: Column(
+        children: [
+          RichText(
+              text: TextSpan(
+            children: [
+              TextSpan(
+                  text: "วันที่",
+                  style: Theme.of(context).textTheme.bodyMedium),
+              WidgetSpan(
+                child: Icon(
+                  Icons.arrow_drop_down,
+                  size: 20,
+                  color: Theme.of(context).colorScheme.secondary,
                 ),
               ),
             ],
           )),
+        ],
+      ),
     );
   }
-}
 
-class ConsentFormExample extends StatelessWidget {
-  const ConsentFormExample({
-    super.key,
-  });
+  _buildItemCard(
+    BuildContext context, {
+    required ConsentFormModel consentForm,
+  }) {
+    const language = 'en-US';
 
-  @override
-  Widget build(BuildContext context) {
-    return Padding(
-      padding: const EdgeInsets.all(10.0),
-      child: Container(
-        width: double.infinity,
-        padding: const EdgeInsets.all(20.0),
-        decoration: BoxDecoration(
-          color: Theme.of(context).colorScheme.onSecondary,
-          borderRadius: BorderRadius.circular(10.0),
-        ),
-        child: Column(
-          mainAxisSize: MainAxisSize.min,
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: <Widget>[
-            Text(
-              "General consent form",
-              style: Theme.of(context).textTheme.subtitle1?.copyWith(
-                    color: Theme.of(context).colorScheme.onPrimary,
-                  ),
-            ),
-            Text(
-              "A consent to collect user’s data",
-              style: Theme.of(context).textTheme.bodyText2?.copyWith(
-                    color: Theme.of(context).colorScheme.onPrimary,
-                  ),
-            ),
-            Center(
-              child: Padding(
-                padding: const EdgeInsets.symmetric(vertical: 20.0),
-                child: SizedBox(
-                  width: double.infinity,
-                  child: Image.asset(
-                    "assets/images/general-consent-example.png",
-                    fit: BoxFit.cover,
-                  ),
+    final title = consentForm.title
+        .firstWhere(
+          (item) => item.language == language,
+          orElse: LocalizedModel.empty,
+        )
+        .text;
+
+    List<String> purposeCategories = consentForm.purposeCategories;
+
+    final dateConsentForm =
+        DateFormat("dd.MM.yy").format(consentForm.updatedDate);
+
+    return Column(
+      mainAxisSize: MainAxisSize.min,
+      children: <Widget>[
+        MaterialInkWell(
+          onTap: () {
+            context.push(
+              ConsentFormRoute.consentFormDetail.path
+                  .replaceFirst(':id', consentForm.id),
+            );
+          },
+          child: Padding(
+            padding: const EdgeInsets.all(UiConfig.defaultPaddingSpacing),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: <Widget>[
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: <Widget>[
+                    Text(
+                      title,
+                      style: Theme.of(context).textTheme.bodyMedium,
+                    ),
+                    Padding(
+                      padding: const EdgeInsets.only(left: 40.0),
+                      child: Text(
+                        dateConsentForm,
+                        style: Theme.of(context).textTheme.bodySmall,
+                      ),
+                    ),
+                  ],
                 ),
-              ),
+                ListView.builder(
+                  shrinkWrap: true,
+                  physics: const NeverScrollableScrollPhysics(),
+                  itemCount: purposeCategories.length,
+                  itemBuilder: (_, index) {
+                    return Padding(
+                      padding: const EdgeInsets.only(top: UiConfig.textSpacing),
+                      child: Text(
+                        purposeCategories[index].toString(),
+                        style: Theme.of(context).textTheme.bodySmall,
+                      ),
+                    );
+                  },
+                ),
+              ],
             ),
-            Text(
-              "According to the act 23 and 26 of the PDPA law suit, if you collect customer/user’s data, you need to defind the following",
-              style: Theme.of(context).textTheme.bodyText1?.copyWith(
-                    color: Theme.of(context).colorScheme.onPrimary,
-                  ),
-            ),
-            const SizedBox(height: 25.0),
-            SizedBox(
-              width: double.infinity,
-              height: 50.0,
-              child: ElevatedButton(
-                onPressed: () async {
-                  // await Navigator.pushNamed(
-                  //   context,
-                  //   AppRoutes.cm.generalConsent
-                  //       .create(),
-                  // ).then((result) {
-                  //   if (result != null) {
-                  //     final isCreated = result as bool;
-                  //     if (isCreated) {
-                  //       context
-                  //           .read<GeneralConsentBloc>()
-                  //           .add(const GeneralConsentInitialized());
-                  //     }
-                  //   }
-                  // });
-                },
-                style: ButtonStyle(
-                    shape: MaterialStateProperty.all<RoundedRectangleBorder>(
-                  RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(8.0),
-                  ),
-                )),
-                child: Text("Create general consent",
-                    maxLines: 1,
-                    style: Theme.of(context).textTheme.button?.copyWith(
-                        color: Theme.of(context).colorScheme.onSecondary)),
-              ),
-            ),
-          ],
+          ),
         ),
-      ),
+        Padding(
+          padding: const EdgeInsets.symmetric(
+            horizontal: UiConfig.defaultPaddingSpacing,
+          ),
+          child: Divider(
+            color:
+                Theme.of(context).colorScheme.outlineVariant.withOpacity(0.5),
+          ),
+        ),
+      ],
     );
   }
 }

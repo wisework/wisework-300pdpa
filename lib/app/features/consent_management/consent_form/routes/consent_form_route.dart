@@ -1,22 +1,34 @@
 import 'package:go_router/go_router.dart';
+import 'package:pdpa/app/features/consent_management/consent_form/screens/consent_form_detail/detail_consent_form_screen.dart';
+import 'package:pdpa/app/features/consent_management/consent_form/screens/consent_form_screen.dart';
 import 'package:pdpa/app/features/consent_management/consent_form/screens/consent_form_settings/consent_form_settings_screen.dart';
 import 'package:pdpa/app/features/consent_management/consent_form/screens/consent_form_settings/screens/edit_consent_theme_screen.dart';
+import 'package:pdpa/app/features/consent_management/consent_form/screens/edit_consent_form/edit_consent_form_screen.dart';
 
 class ConsentFormRoute {
-  static final GoRoute consentFormDetail = GoRoute(
-    path: '/consent-form-detail',
+  static final GoRoute consentForm = GoRoute(
+    path: '/consent-management/consent-form',
+    builder: (context, _) => const ConsentFormScreen(),
   );
 
   static final GoRoute createConsentForm = GoRoute(
-    path: '/consent-form-detail',
+    path: '/consent-management/consent-form/create',
+    builder: (context, _) => const EditConsentFormScreen(cansentFormId: ''),
   );
 
-  // static final GoRoute consentFormSettings = GoRoute(
-  //   path: '/consent-form/:id/settings',
-  //   builder: (context, state) => ConsentFormSettingScreen(
-  //     consentFormId: state.pathParameters['id'] ?? 'L1qX5GsxWn5u9CCKzNCr',
-  //   ),
-  // );
+  static final GoRoute consentFormDetail = GoRoute(
+    path: '/consent-management/consent-form/:id/detail',
+    builder: (context, state) => DetailConsentFormScreen(
+      consentFormId: state.pathParameters['id'] ?? '',
+    ),
+  );
+
+  static final GoRoute editConsentForm = GoRoute(
+    path: '/consent-management/consent-form/:id/edit',
+    builder: (context, state) => EditConsentFormScreen(
+      cansentFormId: state.pathParameters['id'] ?? '',
+    ),
+  );
 
   static final GoRoute consentFormSettings = GoRoute(
     path: '/consent-form/L1qX5GsxWn5u9CCKzNCr/settings',
@@ -48,8 +60,10 @@ class ConsentFormRoute {
   );
 
   static final List<GoRoute> routes = <GoRoute>[
-    // consentFormDetail,
-    // createConsentForm,
+    consentForm,
+    createConsentForm,
+    consentFormDetail,
+    editConsentForm,
     consentFormSettings,
     createConsentTheme,
     editConsentTheme,

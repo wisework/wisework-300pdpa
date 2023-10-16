@@ -21,7 +21,7 @@ final List<DrawerMenuModel> drawerMenu = [
         value: 'consent_forms',
         title: 'Consent Forms',
         icon: Ionicons.clipboard_outline,
-        route: GeneralRoute.home,
+        route: ConsentFormRoute.consentForm,
         parent: 'consent_management',
       ),
       DrawerMenuModel(
