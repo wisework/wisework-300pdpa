@@ -145,7 +145,7 @@
     "consentManagement": {
         "cf": {
             "consentForms": {
-                "consentForms": "Consent Forms",
+                "consentForms": "ข้อมูลแบบฟอร์ม",
                 "create": "Edit consent form",
                 "edit": "Create consent form",
                 "title": "Title",

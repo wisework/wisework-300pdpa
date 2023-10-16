@@ -6,6 +6,7 @@ import 'package:google_sign_in/google_sign_in.dart';
 import 'package:pdpa/app/features/consent_management/consent_form/bloc/consent_form/consent_form_bloc.dart';
 import 'package:pdpa/app/features/consent_management/consent_form/bloc/consent_form_detail/consent_form_detail_bloc.dart';
 import 'package:pdpa/app/features/consent_management/consent_form/bloc/edit_consent_form/edit_consent_form_bloc.dart';
+import 'package:pdpa/app/features/consent_management/consent_form/cubit/current_consent_form_detail/current_consent_form_detail_cubit.dart';
 
 import 'config/config.dart';
 import 'data/repositories/authentication_repository.dart';
@@ -104,6 +105,9 @@ Future<void> _consentManagement() async {
         consentRepository: serviceLocator(),
         masterDataRepository: serviceLocator(),
       ),
+    )
+    ..registerFactory(
+      () => CurrentConsentFormDetailCubit(),
     )
     ..registerFactory(
       () => ConsentFormSettingsBloc(

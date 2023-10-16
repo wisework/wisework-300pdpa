@@ -162,7 +162,7 @@ class _ConsentFormViewState extends State<ConsentFormView> {
       ),
       floatingActionButton: FloatingActionButton(
         onPressed: () {
-          context.push(ConsentFormRoute.editConsentForm.path);
+          context.push(ConsentFormRoute.createConsentForm.path);
         },
         child: const Icon(Icons.add),
       ),

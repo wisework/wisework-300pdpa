@@ -10,6 +10,8 @@ import 'package:pdpa/app/data/models/master_data/purpose_category_model.dart';
 import 'package:pdpa/app/data/models/master_data/purpose_model.dart';
 import 'package:pdpa/app/features/authentication/bloc/sign_in/sign_in_bloc.dart';
 import 'package:pdpa/app/features/consent_management/consent_form/bloc/consent_form_detail/consent_form_detail_bloc.dart';
+import 'package:pdpa/app/features/consent_management/consent_form/cubit/current_consent_form_detail/current_consent_form_detail_cubit.dart';
+import 'package:pdpa/app/features/consent_management/consent_form/routes/consent_form_route.dart';
 import 'package:pdpa/app/features/consent_management/consent_form/screens/consent_form_detail/tabs/consent_form_tab.dart';
 import 'package:pdpa/app/features/consent_management/consent_form/screens/consent_form_detail/tabs/consent_info_tab.dart';
 import 'package:pdpa/app/injection.dart';
@@ -124,11 +126,24 @@ class _ConsentFormDetailViewState extends State<ConsentFormDetailView> {
             style: Theme.of(context).textTheme.titleLarge,
           ),
           actions: [
-            CustomIconButton(
-              onPressed: () {},
-              icon: Ionicons.pencil_outline,
-              iconColor: Theme.of(context).colorScheme.primary,
-              backgroundColor: Theme.of(context).colorScheme.onBackground,
+            BlocBuilder<CurrentConsentFormDetailCubit,
+                CurrentConsentFormDetailState>(
+              builder: (context, state) {
+                return CustomIconButton(
+                  onPressed: () {
+                    if (state.settingTabs == 1) {
+                      context.push(
+                        ConsentFormRoute.consentFormSettings.path
+                            .replaceFirst(':id', widget.consentForm.id),
+                      );
+                    }
+                    print(state.settingTabs);
+                  },
+                  icon: Ionicons.pencil_outline,
+                  iconColor: Theme.of(context).colorScheme.primary,
+                  backgroundColor: Theme.of(context).colorScheme.onBackground,
+                );
+              },
             ),
           ],
           bottom: TabBar(
@@ -141,6 +156,10 @@ class _ConsentFormDetailViewState extends State<ConsentFormDetailView> {
             indicatorSize: TabBarIndicatorSize.tab,
             labelColor: Theme.of(context).colorScheme.primary,
             labelStyle: Theme.of(context).textTheme.bodySmall,
+            onTap: (value) {
+              final cubit = context.read<CurrentConsentFormDetailCubit>();
+              cubit.setSettingTab(value);
+            },
           ),
           appBarHeight: 100.0,
         ),

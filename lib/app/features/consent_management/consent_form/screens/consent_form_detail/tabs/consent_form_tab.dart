@@ -517,7 +517,7 @@ class ConsentFormTab extends StatelessWidget {
           ListView.separated(
             physics: const NeverScrollableScrollPhysics(),
             shrinkWrap: true,
-            itemCount: purposeFiltered.length,
+            itemCount: purposeFiltered.length - 1,
             itemBuilder: (context, index) => PurposeRadioOption(
               purpose: purposeFiltered[index],
               consentTheme: consentTheme,

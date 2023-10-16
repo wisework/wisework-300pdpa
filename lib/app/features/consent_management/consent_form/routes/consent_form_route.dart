@@ -13,7 +13,7 @@ class ConsentFormRoute {
 
   static final GoRoute createConsentForm = GoRoute(
     path: '/consent-management/consent-form/create',
-    builder: (context, _) => const EditConsentFormScreen(cansentFormId: ''),
+    builder: (context, _) => const EditConsentFormScreen(consentFormId: ''),
   );
 
   static final GoRoute consentFormDetail = GoRoute(
@@ -26,7 +26,7 @@ class ConsentFormRoute {
   static final GoRoute editConsentForm = GoRoute(
     path: '/consent-management/consent-form/:id/edit',
     builder: (context, state) => EditConsentFormScreen(
-      cansentFormId: state.pathParameters['id'] ?? '',
+      consentFormId: state.pathParameters['id'] ?? '',
     ),
   );
 

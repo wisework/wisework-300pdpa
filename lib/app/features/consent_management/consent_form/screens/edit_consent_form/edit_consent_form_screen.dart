@@ -16,6 +16,7 @@ import 'package:pdpa/app/injection.dart';
 import 'package:pdpa/app/shared/utils/constants.dart';
 import 'package:pdpa/app/shared/widgets/customs/custom_container.dart';
 import 'package:pdpa/app/shared/widgets/customs/custom_icon_button.dart';
+import 'package:pdpa/app/shared/widgets/customs/custom_switch_button.dart';
 import 'package:pdpa/app/shared/widgets/customs/custom_text_field.dart';
 import 'package:pdpa/app/shared/widgets/screens/error_message_screen.dart';
 import 'package:pdpa/app/shared/widgets/screens/loading_screen.dart';
@@ -25,10 +26,10 @@ import 'package:pdpa/app/shared/widgets/title_required_text.dart';
 class EditConsentFormScreen extends StatefulWidget {
   const EditConsentFormScreen({
     super.key,
-    required this.cansentFormId,
+    required this.consentFormId,
   });
 
-  final String cansentFormId;
+  final String consentFormId;
 
   @override
   State<EditConsentFormScreen> createState() => _EditConsentFormScreenState();
@@ -59,7 +60,7 @@ class _EditConsentFormScreenState extends State<EditConsentFormScreen> {
       create: (context) => serviceLocator<EditConsentFormBloc>()
         ..add(
           GetCurrentConsentFormEvent(
-            consentFormId: widget.cansentFormId,
+            consentFormId: widget.consentFormId,
             companyId: currentUser.currentCompany,
           ),
         ),
@@ -104,14 +105,14 @@ class _EditConsentFormScreenState extends State<EditConsentFormScreen> {
             return EditConsentFormView(
               initialConsentForm: state.consentForm,
               currentUser: currentUser,
-              isNewConsentForm: widget.cansentFormId.isEmpty,
+              isNewConsentForm: widget.consentFormId.isEmpty,
             );
           }
           if (state is UpdatedCurrentConsentForm) {
             return EditConsentFormView(
               initialConsentForm: state.consentForm,
               currentUser: currentUser,
-              isNewConsentForm: widget.cansentFormId.isEmpty,
+              isNewConsentForm: widget.consentFormId.isEmpty,
             );
           }
           if (state is EditConsentFormError) {
@@ -279,43 +280,76 @@ class _EditConsentFormViewState extends State<EditConsentFormView> {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: <Widget>[
             const SizedBox(height: UiConfig.lineSpacing),
-            CustomContainer(
-              child: Form(
-                key: _formKey,
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: <Widget>[
-                    Row(
+            Form(
+              key: _formKey,
+              child: Column(
+                children: [
+                  CustomContainer(
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
                       children: <Widget>[
-                        Text(
-                          tr('consentManagement.cf.consentForms.consentForms'),
-                          style: Theme.of(context).textTheme.titleLarge,
+                        Row(
+                          children: <Widget>[
+                            Text(
+                              tr('consentManagement.cf.consentForms.consentForms'),
+                              style: Theme.of(context).textTheme.titleLarge,
+                            ),
+                          ],
+                        ),
+                        const SizedBox(height: UiConfig.lineSpacing),
+                        TitleRequiredText(
+                          text: tr('consentManagement.cf.consentForms.title'),
+                          required: true,
+                        ),
+                        CustomTextField(
+                          controller: descriptionController,
+                          hintText:
+                              tr('consentManagement.cf.consentForms.title'),
+                          onChanged: _setDescription,
+                          required: true,
+                        ),
+                        const SizedBox(height: UiConfig.lineSpacing),
+                        TitleRequiredText(
+                          text: tr(
+                              'consentManagement.cf.consentForms.description'),
+                        ),
+                        CustomTextField(
+                          controller: titleController,
+                          hintText: tr(
+                              'consentManagement.cf.consentForms.description'),
+                          onChanged: _setTitleController,
                         ),
                       ],
                     ),
-                    const SizedBox(height: UiConfig.lineSpacing),
-                    TitleRequiredText(
-                      text: tr('consentManagement.cf.consentForms.title'),
-                      required: true,
-                    ),
-                    CustomTextField(
-                      controller: descriptionController,
-                      hintText: tr('consentManagement.cf.consentForms.title'),
-                      onChanged: _setDescription,
-                      required: true,
-                    ),
-                    const SizedBox(height: UiConfig.lineSpacing),
-                    TitleRequiredText(
-                      text: tr('consentManagement.cf.consentForms.description'),
-                    ),
-                    CustomTextField(
-                      controller: titleController,
-                      hintText:
-                          tr('consentManagement.cf.consentForms.description'),
-                      onChanged: _setTitleController,
-                    ),
-                  ],
+                  ),
+                  const SizedBox(height: UiConfig.lineSpacing),
+                  CustomContainer(
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: <Widget>[
+                        ListView.builder(
+                            shrinkWrap: true,
+                            physics: const NeverScrollableScrollPhysics(),
+                            itemCount: ,
+                            itemBuilder: (_, index) {
+                              return Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: <Widget>[
+                Text(
+                  tr('masterData.etc.active'),
+                  style: Theme.of(context).textTheme.bodyMedium,
                 ),
+                CustomSwitchButton(
+                  value: isActivated,
+                  onChanged: (value) => print("Text"),
+                ),
+              ],
+            );
+                            })
+                      ],
+                    ),
+                  ),
+                ],
               ),
             ),
           ],
