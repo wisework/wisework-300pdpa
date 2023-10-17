@@ -174,7 +174,7 @@ class _EditCustomFieldViewState extends State<EditCustomFieldView> {
   late TextEditingController minLineController;
   late TextEditingController maxLineController;
 
-  late String typeSelected;
+  late int typeSelected;
   int? lenghtLimit;
   late bool isActivated;
 
@@ -210,7 +210,6 @@ class _EditCustomFieldViewState extends State<EditCustomFieldView> {
     isActivated = true;
 
     if (customfield != CustomFieldModel.empty()) {
-
       if (customfield.title.isNotEmpty) {
         titleController = TextEditingController(
           text: customfield.title.first.text,
@@ -221,9 +220,9 @@ class _EditCustomFieldViewState extends State<EditCustomFieldView> {
           text: customfield.hintText.first.text,
         );
       }
-      if (customfield.inputType.isNotEmpty) {
+      if (customfield.inputType != 0) {
         inputTypeController = TextEditingController(
-          text: customfield.inputType,
+          text: customfield.inputType.toString(),
         );
       }
       if (customfield.lengthLimit != 0) {
@@ -277,7 +276,7 @@ class _EditCustomFieldViewState extends State<EditCustomFieldView> {
   void _setInputType(String? value) {
     if (value != null) {
       setState(() {
-        typeSelected = value;
+        typeSelected = int.parse(value);
 
         customfield = customfield.copyWith(inputType: typeSelected);
       });
@@ -407,7 +406,7 @@ class _EditCustomFieldViewState extends State<EditCustomFieldView> {
           Row(
             children: <Widget>[
               Text(
-                tr('masterData.cm.customfields.title'), 
+                tr('masterData.cm.customfields.title'),
                 style: Theme.of(context).textTheme.titleLarge,
               ),
             ],
@@ -425,7 +424,7 @@ class _EditCustomFieldViewState extends State<EditCustomFieldView> {
           ),
           const SizedBox(height: UiConfig.lineSpacing),
           TitleRequiredText(
-            text: tr('masterData.cm.customfields.hinttext'), 
+            text: tr('masterData.cm.customfields.hinttext'),
             required: true,
           ),
           CustomTextField(
@@ -435,7 +434,7 @@ class _EditCustomFieldViewState extends State<EditCustomFieldView> {
           ),
           const SizedBox(height: UiConfig.lineSpacing),
           TitleRequiredText(
-            text: tr('masterData.cm.customfields.inputtype'), 
+            text: tr('masterData.cm.customfields.inputtype'),
             required: true,
           ),
           CustomTextField(
@@ -443,10 +442,11 @@ class _EditCustomFieldViewState extends State<EditCustomFieldView> {
             hintText: tr('masterData.cm.customfields.inputtypehint'), //!
             onChanged: _setInputType,
             required: true,
+            keyboardType: TextInputType.number,
           ),
           const SizedBox(height: UiConfig.lineSpacing),
           TitleRequiredText(
-            text: tr('masterData.cm.customfields.lenghtlimit'), 
+            text: tr('masterData.cm.customfields.lenghtlimit'),
           ),
           CustomTextField(
             controller: lenghtLimitController,
@@ -456,7 +456,7 @@ class _EditCustomFieldViewState extends State<EditCustomFieldView> {
           ),
           const SizedBox(height: UiConfig.lineSpacing),
           TitleRequiredText(
-            text: tr('masterData.cm.customfields.maxline'), 
+            text: tr('masterData.cm.customfields.maxline'),
             required: true,
           ),
           CustomTextField(
@@ -468,7 +468,7 @@ class _EditCustomFieldViewState extends State<EditCustomFieldView> {
           ),
           const SizedBox(height: UiConfig.lineSpacing),
           TitleRequiredText(
-            text: tr('masterData.cm.customfields.minline'), 
+            text: tr('masterData.cm.customfields.minline'),
             required: true,
           ),
           CustomTextField(

@@ -131,13 +131,18 @@ class _ConsentFormDetailViewState extends State<ConsentFormDetailView> {
               builder: (context, state) {
                 return CustomIconButton(
                   onPressed: () {
+                    if (state.settingTabs == 0) {
+                      context.push(
+                        ConsentFormRoute.editConsentForm.path
+                            .replaceFirst(':id', widget.consentForm.id),
+                      );
+                    }
                     if (state.settingTabs == 1) {
                       context.push(
                         ConsentFormRoute.consentFormSettings.path
                             .replaceFirst(':id', widget.consentForm.id),
                       );
                     }
-                    print(state.settingTabs);
                   },
                   icon: Ionicons.pencil_outline,
                   iconColor: Theme.of(context).colorScheme.primary,

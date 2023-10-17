@@ -24,7 +24,7 @@ class CustomFieldModel extends Equatable {
   final String id;
   final List<LocalizedModel> title;
   final List<LocalizedModel> hintText;
-  final String inputType;
+  final int inputType;
   final int? lengthLimit;
   final int minLines;
   final int maxLines;
@@ -39,7 +39,7 @@ class CustomFieldModel extends Equatable {
           id: '',
           title: [],
           hintText: [],
-          inputType: '',
+          inputType: 0,
           lengthLimit: null,
           minLines: 1,
           maxLines: 1,
@@ -63,7 +63,7 @@ class CustomFieldModel extends Equatable {
               (item) => LocalizedModel.fromMap(item as DataMap),
             ),
           ),
-          inputType: map['inputType'] as String,
+          inputType: map['inputType'] as int,
           lengthLimit: (map['lengthLimit'] as String).isNotEmpty
               ? int.parse(map['lengthLimit'] as String)
               : null,
@@ -100,7 +100,7 @@ class CustomFieldModel extends Equatable {
     String? id,
     List<LocalizedModel>? title,
     List<LocalizedModel>? hintText,
-    String? inputType,
+    int? inputType,
     int? lengthLimit,
     int? minLines,
     int? maxLines,

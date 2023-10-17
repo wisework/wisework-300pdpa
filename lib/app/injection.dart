@@ -98,6 +98,7 @@ Future<void> _consentManagement() async {
     ..registerFactory(
       () => EditConsentFormBloc(
         consentRepository: serviceLocator(),
+        masterDataRepository: serviceLocator(),
       ),
     )
     ..registerFactory(

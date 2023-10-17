@@ -2,7 +2,7 @@ part of 'edit_consent_form_bloc.dart';
 
 abstract class EditConsentFormState extends Equatable {
   const EditConsentFormState();
-  
+
   @override
   List<Object> get props => [];
 }
@@ -31,12 +31,25 @@ class GetingCurrentConsentForm extends EditConsentFormState {
 }
 
 class GotCurrentConsentForm extends EditConsentFormState {
-  const GotCurrentConsentForm(this.consentForm);
+  const GotCurrentConsentForm(
+    this.consentForm,
+    this.customFields,
+    this.purposeCategories,
+    this.purposes,
+  );
 
   final ConsentFormModel consentForm;
+  final List<CustomFieldModel> customFields;
+  final List<PurposeCategoryModel> purposeCategories;
+  final List<PurposeModel> purposes;
 
   @override
-  List<Object> get props => [consentForm];
+  List<Object> get props => [
+        consentForm,
+        customFields,
+        purposeCategories,
+        purposes,
+      ];
 }
 
 class CreatingCurrentConsentForm extends EditConsentFormState {

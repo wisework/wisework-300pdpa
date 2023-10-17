@@ -280,7 +280,7 @@ class ConsentFormTab extends StatelessWidget {
             buttonColor: consentTheme.submitButtonColor,
             splashColor: consentTheme.submitTextColor,
             child: Text(
-              consentForm.acceptText.first.text,
+              consentForm.submitText.first.text,
               style: Theme.of(context)
                   .textTheme
                   .bodyMedium

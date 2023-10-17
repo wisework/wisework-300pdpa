@@ -7,10 +7,14 @@ import 'package:ionicons/ionicons.dart';
 import 'package:pdpa/app/config/config.dart';
 import 'package:pdpa/app/data/models/authentication/user_model.dart';
 import 'package:pdpa/app/data/models/consent_management/consent_form_model.dart';
+import 'package:pdpa/app/data/models/master_data/custom_field_model.dart';
 import 'package:pdpa/app/data/models/master_data/localized_model.dart';
+import 'package:pdpa/app/data/models/master_data/purpose_category_model.dart';
+import 'package:pdpa/app/data/models/master_data/purpose_model.dart';
 import 'package:pdpa/app/features/authentication/bloc/sign_in/sign_in_bloc.dart';
 import 'package:pdpa/app/features/consent_management/consent_form/bloc/consent_form/consent_form_bloc.dart';
 import 'package:pdpa/app/features/consent_management/consent_form/bloc/edit_consent_form/edit_consent_form_bloc.dart';
+import 'package:pdpa/app/features/consent_management/consent_form/screens/edit_consent_form/widgets/ReorderPurposeCategory.dart';
 
 import 'package:pdpa/app/injection.dart';
 import 'package:pdpa/app/shared/utils/constants.dart';
@@ -106,15 +110,18 @@ class _EditConsentFormScreenState extends State<EditConsentFormScreen> {
               initialConsentForm: state.consentForm,
               currentUser: currentUser,
               isNewConsentForm: widget.consentFormId.isEmpty,
+              customfields: state.customFields,
+              purposeCategories: state.purposeCategories,
+              purposes: state.purposes,
             );
           }
-          if (state is UpdatedCurrentConsentForm) {
-            return EditConsentFormView(
-              initialConsentForm: state.consentForm,
-              currentUser: currentUser,
-              isNewConsentForm: widget.consentFormId.isEmpty,
-            );
-          }
+          // if (state is UpdatedCurrentConsentForm) {
+          //   return EditConsentFormView(
+          //     initialConsentForm: state.consentForm,
+          //     currentUser: currentUser,
+          //     isNewConsentForm: widget.consentFormId.isEmpty,
+          //   );
+          // }
           if (state is EditConsentFormError) {
             return ErrorMessageScreen(message: state.message);
           }
@@ -132,9 +139,15 @@ class EditConsentFormView extends StatefulWidget {
     required this.initialConsentForm,
     required this.currentUser,
     required this.isNewConsentForm,
+    required this.customfields,
+    required this.purposeCategories,
+    required this.purposes,
   });
 
   final ConsentFormModel initialConsentForm;
+  final List<CustomFieldModel> customfields;
+  final List<PurposeCategoryModel> purposeCategories;
+  final List<PurposeModel> purposes;
   final UserModel currentUser;
   final bool isNewConsentForm;
 
@@ -148,8 +161,7 @@ class _EditConsentFormViewState extends State<EditConsentFormView> {
   late TextEditingController titleController;
   late TextEditingController descriptionController;
 
-  late String unitSelected;
-  late bool isActivated;
+  // late bool isActivated;
 
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
 
@@ -174,8 +186,7 @@ class _EditConsentFormViewState extends State<EditConsentFormView> {
     titleController = TextEditingController();
     descriptionController = TextEditingController();
 
-    unitSelected = 'd';
-    isActivated = true;
+    // isActivated = true;
 
     if (consentForm != ConsentFormModel.empty()) {
       if (consentForm.description.isNotEmpty) {
@@ -188,8 +199,6 @@ class _EditConsentFormViewState extends State<EditConsentFormView> {
           text: consentForm.description.first.text,
         );
       }
-
-      isActivated = consentForm.status == ActiveStatus.active;
     }
   }
 
@@ -267,8 +276,8 @@ class _EditConsentFormViewState extends State<EditConsentFormView> {
         leadingIcon: _buildPopButton(widget.initialConsentForm),
         title: Text(
           widget.isNewConsentForm
-              ? tr('consentManagement.cf.consentForms.create')
-              : tr('consentManagement.cf.consentForms.edit'),
+              ? tr('consentManagement.cf.consentForms.edit')
+              : tr('consentManagement.cf.consentForms.create'),
           style: Theme.of(context).textTheme.titleLarge,
         ),
         actions: [
@@ -327,28 +336,114 @@ class _EditConsentFormViewState extends State<EditConsentFormView> {
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: <Widget>[
+                        Row(
+                          children: <Widget>[
+                            Text(
+                              "ข้อมูลที่จัดเก็บ",
+                              style: Theme.of(context).textTheme.titleLarge,
+                            ),
+                          ],
+                        ),
+                        const SizedBox(height: UiConfig.lineSpacing),
                         ListView.builder(
                             shrinkWrap: true,
                             physics: const NeverScrollableScrollPhysics(),
-                            itemCount: ,
+                            itemCount: widget.customfields.length,
                             itemBuilder: (_, index) {
+                              const language = "en-US";
+                              final title =
+                                  widget.customfields[index].title.firstWhere(
+                                (item) => item.language == language,
+                                orElse: LocalizedModel.empty,
+                              );
                               return Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: <Widget>[
-                Text(
-                  tr('masterData.etc.active'),
-                  style: Theme.of(context).textTheme.bodyMedium,
-                ),
-                CustomSwitchButton(
-                  value: isActivated,
-                  onChanged: (value) => print("Text"),
-                ),
-              ],
-            );
-                            })
+                                mainAxisAlignment:
+                                    MainAxisAlignment.spaceBetween,
+                                children: <Widget>[
+                                  Text(
+                                    title.text,
+                                    style:
+                                        Theme.of(context).textTheme.bodyMedium,
+                                  ),
+                                  CustomSwitchButton(
+                                    value: true,
+                                    onChanged: (value) => {},
+                                  ),
+                                ],
+                              );
+                            }),
                       ],
                     ),
                   ),
+                  const SizedBox(height: UiConfig.lineSpacing),
+                  CustomContainer(
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      mainAxisAlignment: MainAxisAlignment.start,
+                      children: <Widget>[
+                        Text(
+                          "วัตถุประสงค์",
+                          style: Theme.of(context).textTheme.titleLarge,
+                        ),
+                        Text(
+                          "วัตถุประสงค์ในการเก็บข้อมูล",
+                          style: Theme.of(context).textTheme.labelLarge,
+                        ),
+                        const SizedBox(height: UiConfig.lineSpacing),
+                        ReorderPurposeCategory(
+                          purposeCategory: widget.purposeCategories,
+                          consentForm: widget.initialConsentForm,
+                        ),
+                        Divider(
+                          color: Theme.of(context).colorScheme.outline,
+                          thickness: 0.3,
+                        ),
+                        SizedBox(
+                          width: double.infinity,
+                          height: 50.0,
+                          child: OutlinedButton(
+                            onPressed: () async {},
+                            style: ButtonStyle(
+                                side: MaterialStateProperty.all<BorderSide>(
+                                    BorderSide(
+                                        color: Theme.of(context)
+                                            .colorScheme
+                                            .outline)),
+                                shape: MaterialStateProperty.all<
+                                    RoundedRectangleBorder>(
+                                  RoundedRectangleBorder(
+                                    borderRadius: BorderRadius.circular(8.0),
+                                  ),
+                                )),
+                            child: Row(
+                              children: <Widget>[
+                                Expanded(
+                                  child: Text(
+                                    "เลือกหมวดหมู่วัตถุประสงค์",
+                                    style: Theme.of(context)
+                                        .textTheme
+                                        .labelLarge
+                                        ?.copyWith(
+                                          color: Theme.of(context)
+                                              .colorScheme
+                                              .onSurface,
+                                        ),
+                                  ),
+                                ),
+                                Icon(
+                                  Icons.arrow_forward_ios_rounded,
+                                  size: 18,
+                                  color:
+                                      Theme.of(context).colorScheme.onSurface,
+                                ),
+                              ],
+                            ),
+                          ),
+                        )
+                      ],
+                    ),
+                  ),
+                  const SizedBox(height: UiConfig.lineSpacing),
                 ],
               ),
             ),
