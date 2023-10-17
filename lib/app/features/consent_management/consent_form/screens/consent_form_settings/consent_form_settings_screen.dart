@@ -13,6 +13,7 @@ import 'package:pdpa/app/data/models/master_data/purpose_model.dart';
 import 'package:pdpa/app/features/authentication/bloc/sign_in/sign_in_bloc.dart';
 import 'package:pdpa/app/features/consent_management/consent_form/bloc/consent_form_settings/consent_form_settings_bloc.dart';
 import 'package:pdpa/app/features/consent_management/consent_form/cubit/current_consent_form_settings/current_consent_form_settings_cubit.dart';
+import 'package:pdpa/app/features/consent_management/consent_form/widgets/consent_form_preview.dart';
 import 'package:pdpa/app/shared/widgets/customs/custom_icon_button.dart';
 import 'package:pdpa/app/shared/widgets/screens/error_message_screen.dart';
 import 'package:pdpa/app/shared/widgets/screens/loading_screen.dart';
@@ -23,7 +24,6 @@ import 'tabs/footer_tab.dart';
 import 'tabs/header_tab.dart';
 import 'tabs/theme_tab.dart';
 import 'tabs/url_tab.dart';
-import 'widgets/consent_form_drawer.dart';
 
 class ConsentFormSettingScreen extends StatefulWidget {
   const ConsentFormSettingScreen({
@@ -205,11 +205,9 @@ class _ConsentFormSettingViewState extends State<ConsentFormSettingView> {
             color: Theme.of(context).colorScheme.onPrimary,
           ),
         ),
-        endDrawer: ConsentFormDrawer(
+        endDrawer: _buildPreviewDrawer(
+          context,
           consentForm: consentForm,
-          customFields: widget.customFields,
-          purposeCategories: widget.purposeCategories,
-          purposes: widget.purposes,
           consentTheme: consentTheme,
         ),
       ),
@@ -244,6 +242,29 @@ class _ConsentFormSettingViewState extends State<ConsentFormSettingView> {
         backgroundColor: Theme.of(context).colorScheme.onBackground,
       );
     });
+  }
+
+  FractionallySizedBox _buildPreviewDrawer(
+    BuildContext context, {
+    required ConsentFormModel consentForm,
+    required ConsentThemeModel consentTheme,
+  }) {
+    return FractionallySizedBox(
+      widthFactor: 0.85,
+      child: Drawer(
+        backgroundColor: Theme.of(context).colorScheme.onBackground,
+        surfaceTintColor: Theme.of(context).colorScheme.onBackground,
+        child: SingleChildScrollView(
+          child: ConsentFormPreview(
+            consentForm: consentForm,
+            customFields: widget.customFields,
+            purposeCategories: widget.purposeCategories,
+            purposes: widget.purposes,
+            consentTheme: consentTheme,
+          ),
+        ),
+      ),
+    );
   }
 
   BlocBuilder _buildTabController({
@@ -284,7 +305,10 @@ class _ConsentFormSettingViewState extends State<ConsentFormSettingView> {
   TabBarView _buildTabBarView(ConsentFormModel consentForm) {
     return TabBarView(
       children: <Widget>[
-        UrlTab(consentForm: consentForm),
+        UrlTab(
+          consentForm: consentForm,
+          companyId: widget.currentUser.currentCompany,
+        ),
         HeaderTab(
           consentForm: consentForm,
           companyId: widget.currentUser.currentCompany,

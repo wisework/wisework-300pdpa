@@ -15,7 +15,7 @@ class ConsentFormModel extends Equatable {
     required this.headerDescription,
     required this.footerDescription,
     required this.acceptConsentText,
-    required this.acceptText,
+    required this.submitText,
     required this.cancelText,
     required this.linkToPolicyText,
     required this.linkToPolicyUrl,
@@ -40,7 +40,7 @@ class ConsentFormModel extends Equatable {
   final List<LocalizedModel> headerDescription;
   final List<LocalizedModel> footerDescription;
   final List<LocalizedModel> acceptConsentText;
-  final List<LocalizedModel> acceptText;
+  final List<LocalizedModel> submitText;
   final List<LocalizedModel> cancelText;
   final List<LocalizedModel> linkToPolicyText;
   final String linkToPolicyUrl;
@@ -66,7 +66,7 @@ class ConsentFormModel extends Equatable {
           headerDescription: [],
           footerDescription: [],
           acceptConsentText: [],
-          acceptText: [],
+          submitText: [],
           cancelText: [],
           linkToPolicyText: [],
           linkToPolicyUrl: '',
@@ -118,8 +118,8 @@ class ConsentFormModel extends Equatable {
               (item) => LocalizedModel.fromMap(item as DataMap),
             ),
           ),
-          acceptText: List<LocalizedModel>.from(
-            (map['acceptText'] as List<dynamic>).map<LocalizedModel>(
+          submitText: List<LocalizedModel>.from(
+            (map['submitText'] as List<dynamic>).map<LocalizedModel>(
               (item) => LocalizedModel.fromMap(item as DataMap),
             ),
           ),
@@ -158,7 +158,7 @@ class ConsentFormModel extends Equatable {
             footerDescription.map((item) => item.toMap()).toList(),
         'acceptConsentText':
             acceptConsentText.map((item) => item.toMap()).toList(),
-        'acceptText': acceptText.map((item) => item.toMap()).toList(),
+        'submitText': submitText.map((item) => item.toMap()).toList(),
         'cancelText': cancelText.map((item) => item.toMap()).toList(),
         'linkToPolicyText':
             linkToPolicyText.map((item) => item.toMap()).toList(),
@@ -191,7 +191,7 @@ class ConsentFormModel extends Equatable {
     List<LocalizedModel>? headerDescription,
     List<LocalizedModel>? footerDescription,
     List<LocalizedModel>? acceptConsentText,
-    List<LocalizedModel>? acceptText,
+    List<LocalizedModel>? submitText,
     List<LocalizedModel>? cancelText,
     List<LocalizedModel>? linkToPolicyText,
     String? linkToPolicyUrl,
@@ -216,7 +216,7 @@ class ConsentFormModel extends Equatable {
       headerDescription: headerDescription ?? this.headerDescription,
       footerDescription: footerDescription ?? this.footerDescription,
       acceptConsentText: acceptConsentText ?? this.acceptConsentText,
-      acceptText: acceptText ?? this.acceptText,
+      submitText: submitText ?? this.submitText,
       cancelText: cancelText ?? this.cancelText,
       linkToPolicyText: linkToPolicyText ?? this.linkToPolicyText,
       linkToPolicyUrl: linkToPolicyUrl ?? this.linkToPolicyUrl,
@@ -258,7 +258,7 @@ class ConsentFormModel extends Equatable {
       headerDescription,
       footerDescription,
       acceptConsentText,
-      acceptText,
+      submitText,
       cancelText,
       linkToPolicyText,
       linkToPolicyUrl,

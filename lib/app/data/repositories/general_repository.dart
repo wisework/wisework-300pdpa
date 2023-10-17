@@ -11,6 +11,18 @@ class GeneralRepository {
 
   final GeneralApi _api;
 
+  ResultFuture<String> generateShortUrl(
+    String longUrl,
+  ) async {
+    try {
+      final result = await _api.generateShortUrl(longUrl);
+
+      return Right(result);
+    } on ApiException catch (error) {
+      return Left(ApiFailure.fromException(error));
+    }
+  }
+
   ResultFuture<String> uploadConsentImage(
     File file,
     String fileName,

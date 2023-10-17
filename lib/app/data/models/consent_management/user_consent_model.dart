@@ -1,126 +1,142 @@
-// ignore_for_file: public_member_api_docs, sort_constructors_first
-import 'dart:convert';
-
 import 'package:equatable/equatable.dart';
-
+import 'package:pdpa/app/data/models/etc/user_input_field.dart';
+import 'package:pdpa/app/data/models/etc/user_input_option.dart';
 import 'package:pdpa/app/shared/utils/typedef.dart';
 
 class UserConsentModel extends Equatable {
   const UserConsentModel({
     required this.id,
-    required this.inputFields,
+    required this.consentFormId,
+    required this.mandatoryFields,
+    required this.customFields,
     required this.purposes,
     required this.isAcceptConsent,
-    required this.consentFormId,
     required this.createdBy,
     required this.createdDate,
     required this.updatedBy,
     required this.updatedDate,
-    required this.companyId,
   });
 
-  UserConsentModel.empty()
-      : this(
-          id: '',
-          inputFields: [],
-          purposes: [],
-          isAcceptConsent: false,
-          consentFormId: '',
-          createdBy: '',
-          createdDate: DateTime.fromMillisecondsSinceEpoch(0),
-          updatedBy: '',
-          updatedDate: DateTime.fromMillisecondsSinceEpoch(0),
-          companyId: '',
-        );
-
   final String id;
-  final List<String> inputFields;
-  final List<String> purposes;
-  final bool isAcceptConsent;
   final String consentFormId;
+  final List<UserInputField> mandatoryFields;
+  final List<UserInputField> customFields;
+  final List<UserInputOption> purposes;
+  final bool isAcceptConsent;
   final String createdBy;
   final DateTime createdDate;
   final String updatedBy;
   final DateTime updatedDate;
-  final String companyId;
+
+  UserConsentModel.empty()
+      : this(
+          id: '',
+          consentFormId: '',
+          mandatoryFields: [],
+          customFields: [],
+          purposes: [],
+          isAcceptConsent: false,
+          createdBy: '',
+          createdDate: DateTime.fromMillisecondsSinceEpoch(0),
+          updatedBy: '',
+          updatedDate: DateTime.fromMillisecondsSinceEpoch(0),
+        );
 
   UserConsentModel.fromMap(DataMap map)
       : this(
           id: map['id'] as String,
-          inputFields: List<String>.from(map['inputFields'] as List<dynamic>),
-          purposes: List<String>.from(map['purposes'] as List<dynamic>),
-          isAcceptConsent: map['isAcceptConsent'] as bool,
           consentFormId: map['consentFormId'] as String,
+          mandatoryFields: List<UserInputField>.from(
+            (map['mandatoryFields'] as List<dynamic>).map<UserInputField>(
+              (item) => UserInputField.fromMap(item as DataMap),
+            ),
+          ),
+          customFields: List<UserInputField>.from(
+            (map['customFields'] as List<dynamic>).map<UserInputField>(
+              (item) => UserInputField.fromMap(item as DataMap),
+            ),
+          ),
+          purposes: List<UserInputOption>.from(
+            (map['purposes'] as List<dynamic>).map<UserInputOption>(
+              (item) => UserInputOption.fromMap(item as DataMap),
+            ),
+          ),
+          isAcceptConsent: map['isAcceptConsent'] as bool,
           createdBy: map['createdBy'] as String,
           createdDate: DateTime.parse(map['createdDate'] as String),
           updatedBy: map['updatedBy'] as String,
           updatedDate: DateTime.parse(map['updatedDate'] as String),
-          companyId: map['companyId'] as String,
         );
 
   DataMap toMap() => {
-        'id': id,
-        'inputFields': inputFields,
-        'purposes': purposes,
-        'isAcceptConsent': isAcceptConsent,
         'consentFormId': consentFormId,
+        'mandatoryFields': mandatoryFields.map((item) => item.toMap()).toList(),
+        'customFields': customFields.map((item) => item.toMap()).toList(),
+        'purposes': purposes.map((item) => item.toMap()).toList(),
+        'isAcceptConsent': isAcceptConsent,
         'createdBy': createdBy,
         'createdDate': createdDate.toIso8601String(),
         'updatedBy': updatedBy,
         'updatedDate': updatedDate.toIso8601String(),
-        'companyId': companyId,
       };
 
-  factory UserConsentModel.fromJson(String source) =>
-      UserConsentModel.fromMap(json.decode(source) as DataMap);
-
-  String toJson() => json.encode(toMap());
-
   factory UserConsentModel.fromDocument(FirebaseDocument document) {
-    Map<String, dynamic> response = document.data()!;
+    DataMap response = document.data()!;
     response['id'] = document.id;
     return UserConsentModel.fromMap(response);
   }
 
   UserConsentModel copyWith({
     String? id,
-    List<String>? inputFields,
-    List<String>? purposes,
-    bool? isAcceptConsent,
     String? consentFormId,
+    List<UserInputField>? mandatoryFields,
+    List<UserInputField>? customFields,
+    List<UserInputOption>? purposes,
+    bool? isAcceptConsent,
     String? createdBy,
     DateTime? createdDate,
     String? updatedBy,
     DateTime? updatedDate,
-    String? companyId,
   }) {
     return UserConsentModel(
       id: id ?? this.id,
-      inputFields: inputFields ?? this.inputFields,
+      consentFormId: consentFormId ?? this.consentFormId,
+      mandatoryFields: mandatoryFields ?? this.mandatoryFields,
+      customFields: customFields ?? this.customFields,
       purposes: purposes ?? this.purposes,
       isAcceptConsent: isAcceptConsent ?? this.isAcceptConsent,
-      consentFormId: consentFormId ?? this.consentFormId,
       createdBy: createdBy ?? this.createdBy,
       createdDate: createdDate ?? this.createdDate,
       updatedBy: updatedBy ?? this.updatedBy,
       updatedDate: updatedDate ?? this.updatedDate,
-      companyId: companyId ?? this.companyId,
     );
   }
+
+  UserConsentModel setCreate(String email, DateTime date) => copyWith(
+        createdBy: email,
+        createdDate: date,
+        updatedBy: email,
+        updatedDate: date,
+      );
+
+  UserConsentModel setUpdate(String email, DateTime date) => copyWith(
+        updatedBy: email,
+        updatedDate: date,
+      );
 
   @override
   List<Object> get props {
     return [
       id,
-      inputFields,
+      consentFormId,
+      mandatoryFields,
+      customFields,
       purposes,
       isAcceptConsent,
-      consentFormId,
       createdBy,
       createdDate,
       updatedBy,
       updatedDate,
-      companyId,
     ];
   }
 }

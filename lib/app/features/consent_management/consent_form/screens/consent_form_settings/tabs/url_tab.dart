@@ -1,20 +1,57 @@
+import 'dart:ui' as ui;
+
+import 'package:bot_toast/bot_toast.dart';
+import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/rendering.dart';
+import 'package:flutter/services.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:image_gallery_saver/image_gallery_saver.dart';
 import 'package:ionicons/ionicons.dart';
 import 'package:pdpa/app/config/config.dart';
 import 'package:pdpa/app/data/models/consent_management/consent_form_model.dart';
+import 'package:pdpa/app/features/consent_management/consent_form/cubit/current_consent_form_settings/current_consent_form_settings_cubit.dart';
+import 'package:pdpa/app/shared/utils/functions.dart';
 import 'package:pdpa/app/shared/widgets/customs/custom_button.dart';
 import 'package:pdpa/app/shared/widgets/customs/custom_container.dart';
 import 'package:pdpa/app/shared/widgets/customs/custom_icon_button.dart';
 import 'package:pdpa/app/shared/widgets/customs/custom_text_field.dart';
 import 'package:qr_flutter/qr_flutter.dart';
 
-class UrlTab extends StatelessWidget {
+class UrlTab extends StatefulWidget {
   const UrlTab({
     super.key,
     required this.consentForm,
+    required this.companyId,
   });
 
   final ConsentFormModel consentForm;
+  final String companyId;
+
+  @override
+  State<UrlTab> createState() => _UrlTabState();
+}
+
+class _UrlTabState extends State<UrlTab> {
+  final GlobalKey qrCodeKey = GlobalKey();
+
+  Future<bool> _downloadQrCode() async {
+    final boundary =
+        qrCodeKey.currentContext?.findRenderObject() as RenderRepaintBoundary?;
+    final qrCodeImage = await boundary?.toImage();
+
+    if (qrCodeImage != null) {
+      final byteData = await qrCodeImage.toByteData(
+        format: ui.ImageByteFormat.png,
+      );
+      final bytes = byteData!.buffer.asUint8List();
+
+      await ImageGallerySaver.saveImage(bytes);
+
+      return true;
+    }
+    return false;
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -51,7 +88,7 @@ class UrlTab extends StatelessWidget {
               Expanded(
                 child: CustomTextField(
                   controller: TextEditingController(
-                    text: consentForm.consentFormUrl,
+                    text: widget.consentForm.consentFormUrl,
                   ),
                   readOnly: true,
                 ),
@@ -59,7 +96,26 @@ class UrlTab extends StatelessWidget {
               Padding(
                 padding: const EdgeInsets.only(left: 10.0),
                 child: CustomIconButton(
-                  onPressed: () {},
+                  onPressed: () {
+                    Clipboard.setData(
+                      ClipboardData(text: widget.consentForm.consentFormUrl),
+                    );
+
+                    BotToast.showText(
+                      text: 'URL Copied',
+                      contentColor: Theme.of(context)
+                          .colorScheme
+                          .secondary
+                          .withOpacity(0.75),
+                      borderRadius: BorderRadius.circular(8.0),
+                      textStyle: Theme.of(context)
+                          .textTheme
+                          .bodyMedium!
+                          .copyWith(
+                              color: Theme.of(context).colorScheme.onPrimary),
+                      duration: UiConfig.toastDuration,
+                    );
+                  },
                   icon: Ionicons.copy_outline,
                   iconColor: Theme.of(context).colorScheme.primary,
                   backgroundColor: Theme.of(context).colorScheme.onBackground,
@@ -81,6 +137,16 @@ class UrlTab extends StatelessWidget {
                       color: Theme.of(context).colorScheme.primary,
                       decoration: TextDecoration.underline,
                       decorationColor: Theme.of(context).colorScheme.primary),
+                  recognizer: TapGestureRecognizer()
+                    ..onTap = () {
+                      final url = UtilFunctions.getUserConsentForm(
+                        widget.consentForm.id,
+                        widget.companyId,
+                      );
+                      final cubit =
+                          context.read<CurrentConsentFormSettingsCubit>();
+                      cubit.generateConsentFormUrl(url);
+                    },
                 ),
                 TextSpan(
                   text: ' to regenerate a new one.',
@@ -108,23 +174,47 @@ class UrlTab extends StatelessWidget {
             ],
           ),
           const SizedBox(height: UiConfig.lineSpacing),
-          QrImageView(
-            data: consentForm.consentFormUrl,
-            version: QrVersions.auto,
-            size: 220.0,
-            // embeddedImage: const AssetImage(
-            //   'assets/images/wisework-logo.png',
-            // ),
-            // embeddedImageStyle: const QrEmbeddedImageStyle(
-            //   size: Size(120.0, 0),
-            // ),
-          ),
+          _buildQrImageView(widget.consentForm.consentFormUrl),
           const SizedBox(height: UiConfig.lineSpacing),
           ConstrainedBox(
             constraints: const BoxConstraints(maxWidth: 220.0),
             child: CustomButton(
               height: 40.0,
-              onPressed: () {},
+              onPressed: () async {
+                await _downloadQrCode().then((value) {
+                  if (value) {
+                    BotToast.showText(
+                      text: 'QR code has been downloaded',
+                      contentColor: Theme.of(context)
+                          .colorScheme
+                          .secondary
+                          .withOpacity(0.75),
+                      borderRadius: BorderRadius.circular(8.0),
+                      textStyle: Theme.of(context)
+                          .textTheme
+                          .bodyMedium!
+                          .copyWith(
+                              color: Theme.of(context).colorScheme.onPrimary),
+                      duration: UiConfig.toastDuration,
+                    );
+                  } else {
+                    BotToast.showText(
+                      text: 'Failed to download QR code',
+                      contentColor: Theme.of(context)
+                          .colorScheme
+                          .secondary
+                          .withOpacity(0.75),
+                      borderRadius: BorderRadius.circular(8.0),
+                      textStyle: Theme.of(context)
+                          .textTheme
+                          .bodyMedium!
+                          .copyWith(
+                              color: Theme.of(context).colorScheme.onPrimary),
+                      duration: UiConfig.toastDuration,
+                    );
+                  }
+                });
+              },
               buttonType: CustomButtonType.outlined,
               child: Row(
                 mainAxisSize: MainAxisSize.min,
@@ -146,6 +236,18 @@ class UrlTab extends StatelessWidget {
             ),
           ),
         ],
+      ),
+    );
+  }
+
+  RepaintBoundary _buildQrImageView(String url) {
+    return RepaintBoundary(
+      key: qrCodeKey,
+      child: QrImageView(
+        data: url,
+        size: 220.0,
+        backgroundColor: Colors.white,
+        version: QrVersions.auto,
       ),
     );
   }

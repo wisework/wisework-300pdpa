@@ -90,6 +90,21 @@ class CurrentConsentFormSettingsCubit
     ));
   }
 
+  Future<void> generateConsentFormUrl(String longUrl) async {
+    final result = await _generalRepository.generateShortUrl(longUrl);
+
+    result.fold(
+      (failure) {},
+      (shortUrl) {
+        final updated = state.consentForm.copyWith(
+          consentFormUrl: shortUrl,
+        );
+
+        emit(state.copyWith(consentForm: updated));
+      },
+    );
+  }
+
   Future<void> uploadConsentImage(
     File file,
     String fileName,

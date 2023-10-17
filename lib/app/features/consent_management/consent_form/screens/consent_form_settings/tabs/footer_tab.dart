@@ -76,9 +76,9 @@ class _FooterTabState extends State<FooterTab> {
       text: widget.consentForm.linkToPolicyUrl,
     );
 
-    if (widget.consentForm.acceptText.isNotEmpty) {
+    if (widget.consentForm.submitText.isNotEmpty) {
       acceptTextController = TextEditingController(
-        text: widget.consentForm.acceptText.first.text,
+        text: widget.consentForm.submitText.first.text,
       );
     } else {
       acceptTextController = TextEditingController();
@@ -220,7 +220,7 @@ class _FooterTabState extends State<FooterTab> {
             hintText: 'Enter accept text',
             onChanged: (value) {
               final updated = widget.consentForm.copyWith(
-                acceptText: [
+                submitText: [
                   LocalizedModel(language: 'en-US', text: value),
                 ],
               );
