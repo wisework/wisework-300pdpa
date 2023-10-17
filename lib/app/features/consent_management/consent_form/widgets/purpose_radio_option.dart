@@ -12,10 +12,12 @@ class PurposeRadioOption extends StatefulWidget {
     super.key,
     required this.purpose,
     required this.consentTheme,
+    this.onChanged,
   });
 
   final PurposeModel purpose;
   final ConsentThemeModel consentTheme;
+  final Function(bool value)? onChanged;
 
   @override
   State<PurposeRadioOption> createState() => _PurposeRadioOptionState();
@@ -28,7 +30,7 @@ class _PurposeRadioOptionState extends State<PurposeRadioOption> {
   Widget build(BuildContext context) {
     return CustomContainer(
       margin: EdgeInsets.zero,
-      color: Theme.of(context).colorScheme.background.withOpacity(0.5),
+      color: Theme.of(context).colorScheme.onBackground,
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: <Widget>[
@@ -50,6 +52,10 @@ class _PurposeRadioOptionState extends State<PurposeRadioOption> {
                         setState(() {
                           isAgree = value;
                         });
+
+                        if (widget.onChanged != null) {
+                          widget.onChanged!(value);
+                        }
                       }
                     },
                     activeColor: widget.consentTheme.actionButtonColor,
@@ -73,6 +79,10 @@ class _PurposeRadioOptionState extends State<PurposeRadioOption> {
                         setState(() {
                           isAgree = value;
                         });
+
+                        if (widget.onChanged != null) {
+                          widget.onChanged!(value);
+                        }
                       }
                     },
                     activeColor: widget.consentTheme.actionButtonColor,

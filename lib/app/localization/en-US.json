@@ -135,6 +135,7 @@
         },
         "etc": {
             "fieldCannotEmpty": "Field cannot be empty",
+            "pleaseEnterValidEmail": "Please enter a valid email address",
             "active": "Active",
             "configuration": "Configuration",
             "updateInfo": "Update Info",

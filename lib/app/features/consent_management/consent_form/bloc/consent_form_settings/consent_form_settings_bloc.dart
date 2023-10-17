@@ -123,7 +123,7 @@ class ConsentFormSettingsBloc
       GotConsentFormSettings(
         gotConsentForm,
         gotCustomFields,
-        gotPurposeCategories,
+        gotPurposeCategories..sort((a, b) => a.priority.compareTo(b.priority)),
         gotPurposes,
         gotConsentThemes
           ..sort((a, b) => b.updatedDate.compareTo(a.updatedDate)),
@@ -180,7 +180,7 @@ class ConsentFormSettingsBloc
         GotConsentFormSettings(
           event.consentForm,
           customFields,
-          purposeCategories,
+          purposeCategories..sort((a, b) => a.priority.compareTo(b.priority)),
           purposes,
           consentThemes..sort((a, b) => b.updatedDate.compareTo(a.updatedDate)),
           consentThemes.firstWhere(

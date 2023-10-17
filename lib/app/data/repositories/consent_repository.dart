@@ -1,6 +1,7 @@
 import 'package:dartz/dartz.dart';
 import 'package:pdpa/app/data/models/consent_management/consent_form_model.dart';
 import 'package:pdpa/app/data/models/consent_management/consent_theme_model.dart';
+import 'package:pdpa/app/data/models/consent_management/user_consent_model.dart';
 import 'package:pdpa/app/services/apis/consent_api.dart';
 import 'package:pdpa/app/shared/errors/exceptions.dart';
 import 'package:pdpa/app/shared/errors/failure.dart';
@@ -126,6 +127,60 @@ class ConsentRepository {
   ) async {
     try {
       await _api.deleteConsentTheme(consentThemeId, companyId);
+
+      return const Right(null);
+    } on ApiException catch (error) {
+      return Left(ApiFailure.fromException(error));
+    }
+  }
+
+  //? User Consent
+  ResultFuture<List<UserConsentModel>> getUserConsents(String companyId) async {
+    try {
+      final result = await _api.getUserConsents(companyId);
+
+      return Right(result);
+    } on ApiException catch (error) {
+      return Left(ApiFailure.fromException(error));
+    }
+  }
+
+  ResultFuture<UserConsentModel> getUserConsentById(
+    String userConsentId,
+    String companyId,
+  ) async {
+    try {
+      final result = await _api.getUserConsentById(userConsentId, companyId);
+
+      if (result != null) return Right(result);
+
+      return const Left(
+        ApiFailure(message: 'Consent Form not found', statusCode: 404),
+      );
+    } on ApiException catch (error) {
+      return Left(ApiFailure.fromException(error));
+    }
+  }
+
+  ResultFuture<UserConsentModel> createUserConsent(
+    UserConsentModel userConsent,
+    String companyId,
+  ) async {
+    try {
+      final result = await _api.createUserConsent(userConsent, companyId);
+
+      return Right(result);
+    } on ApiException catch (error) {
+      return Left(ApiFailure.fromException(error));
+    }
+  }
+
+  ResultVoid updateUserConsent(
+    UserConsentModel userConsent,
+    String companyId,
+  ) async {
+    try {
+      await _api.updateUserConsent(userConsent, companyId);
 
       return const Right(null);
     } on ApiException catch (error) {

@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_animate/flutter_animate.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
 import 'package:pdpa/app/config/config.dart';
@@ -7,6 +6,7 @@ import 'package:pdpa/app/data/models/authentication/user_model.dart';
 import 'package:pdpa/app/features/authentication/bloc/sign_in/sign_in_bloc.dart';
 import 'package:pdpa/app/features/authentication/routes/authentication_route.dart';
 import 'package:pdpa/app/features/general/routes/general_route.dart';
+import 'package:pdpa/app/shared/widgets/wise_work_shimmer.dart';
 
 class SplashScreen extends StatefulWidget {
   const SplashScreen({super.key});
@@ -66,26 +66,10 @@ class _SplashScreenState extends State<SplashScreen> {
               }
             });
           },
-          child: _buildWiseWorkLogo(),
+          child: const WiseWorkShimmer(),
         ),
       ),
       backgroundColor: Theme.of(context).colorScheme.onBackground,
     );
-  }
-
-  Widget _buildWiseWorkLogo() {
-    final logo = SizedBox(
-      width: 180.0,
-      child: Image.asset(
-        'assets/images/wisework-logo.png',
-        fit: BoxFit.contain,
-      ),
-    );
-
-    return logo
-        .animate(onPlay: (controller) => controller.repeat())
-        .shimmer(duration: 1200.ms, color: Colors.white.withOpacity(0.5))
-        .animate()
-        .fadeIn(duration: 1200.ms, curve: Curves.easeOutQuad);
   }
 }

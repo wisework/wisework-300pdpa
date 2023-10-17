@@ -1,17 +1,20 @@
 import 'package:equatable/equatable.dart';
+import 'package:flutter/services.dart';
 
 import 'package:pdpa/app/shared/utils/constants.dart';
 import 'package:pdpa/app/shared/utils/typedef.dart';
 
 import 'localized_model.dart';
 
-class PurposeCategoryModel extends Equatable {
-  const PurposeCategoryModel({
+class MandatoryFieldModel extends Equatable {
+  const MandatoryFieldModel({
     required this.id,
     required this.title,
-    required this.description,
-    required this.purposes,
-    required this.priority,
+    required this.hintText,
+    required this.inputType,
+    this.lengthLimit,
+    required this.minLines,
+    required this.maxLines,
     required this.status,
     required this.createdBy,
     required this.createdDate,
@@ -21,22 +24,26 @@ class PurposeCategoryModel extends Equatable {
 
   final String id;
   final List<LocalizedModel> title;
-  final List<LocalizedModel> description;
-  final List<String> purposes;
-  final int priority;
+  final List<LocalizedModel> hintText;
+  final TextInputType inputType;
+  final int? lengthLimit;
+  final int minLines;
+  final int maxLines;
   final ActiveStatus status;
   final String createdBy;
   final DateTime createdDate;
   final String updatedBy;
   final DateTime updatedDate;
 
-  PurposeCategoryModel.empty()
+  MandatoryFieldModel.empty()
       : this(
           id: '',
           title: [],
-          description: [],
-          purposes: [],
-          priority: 0,
+          hintText: [],
+          inputType: TextInputType.text,
+          lengthLimit: null,
+          minLines: 1,
+          maxLines: 1,
           status: ActiveStatus.active,
           createdBy: '',
           createdDate: DateTime.fromMillisecondsSinceEpoch(0),
@@ -44,7 +51,7 @@ class PurposeCategoryModel extends Equatable {
           updatedDate: DateTime.fromMillisecondsSinceEpoch(0),
         );
 
-  PurposeCategoryModel.fromMap(DataMap map)
+  MandatoryFieldModel.fromMap(DataMap map)
       : this(
           id: map['id'] as String,
           title: List<LocalizedModel>.from(
@@ -52,13 +59,17 @@ class PurposeCategoryModel extends Equatable {
               (item) => LocalizedModel.fromMap(item as DataMap),
             ),
           ),
-          description: List<LocalizedModel>.from(
-            (map['description'] as List<dynamic>).map<LocalizedModel>(
+          hintText: List<LocalizedModel>.from(
+            (map['hintText'] as List<dynamic>).map<LocalizedModel>(
               (item) => LocalizedModel.fromMap(item as DataMap),
             ),
           ),
-          purposes: List<String>.from(map['purposes'] as List<dynamic>),
-          priority: map['priority'] as int,
+          inputType: TextInputType.values[map['inputType'] as int],
+          lengthLimit: (map['lengthLimit'] as String).isNotEmpty
+              ? int.parse(map['lengthLimit'] as String)
+              : null,
+          minLines: map['minLines'] as int,
+          maxLines: map['maxLines'] as int,
           status: ActiveStatus.values[map['status'] as int],
           createdBy: map['createdBy'] as String,
           createdDate: DateTime.parse(map['createdDate'] as String),
@@ -68,9 +79,11 @@ class PurposeCategoryModel extends Equatable {
 
   DataMap toMap() => {
         'title': title.map((item) => item.toMap()).toList(),
-        'description': description.map((item) => item.toMap()).toList(),
-        'purposes': purposes,
-        'priority': priority,
+        'hintText': hintText.map((item) => item.toMap()).toList(),
+        'inputType': inputType.index,
+        'lengthLimit': lengthLimit != null ? lengthLimit.toString() : '',
+        'minLines': minLines,
+        'maxLines': maxLines,
         'status': status.index,
         'createdBy': createdBy,
         'createdDate': createdDate.toIso8601String(),
@@ -78,30 +91,34 @@ class PurposeCategoryModel extends Equatable {
         'updatedDate': updatedDate.toIso8601String(),
       };
 
-  factory PurposeCategoryModel.fromDocument(FirebaseDocument document) {
+  factory MandatoryFieldModel.fromDocument(FirebaseDocument document) {
     DataMap response = document.data()!;
     response['id'] = document.id;
-    return PurposeCategoryModel.fromMap(response);
+    return MandatoryFieldModel.fromMap(response);
   }
 
-  PurposeCategoryModel copyWith({
+  MandatoryFieldModel copyWith({
     String? id,
     List<LocalizedModel>? title,
-    List<LocalizedModel>? description,
-    List<String>? purposes,
-    int? priority,
+    List<LocalizedModel>? hintText,
+    TextInputType? inputType,
+    int? lengthLimit,
+    int? minLines,
+    int? maxLines,
     ActiveStatus? status,
     String? createdBy,
     DateTime? createdDate,
     String? updatedBy,
     DateTime? updatedDate,
   }) {
-    return PurposeCategoryModel(
+    return MandatoryFieldModel(
       id: id ?? this.id,
       title: title ?? this.title,
-      description: description ?? this.description,
-      purposes: purposes ?? this.purposes,
-      priority: priority ?? this.priority,
+      hintText: hintText ?? this.hintText,
+      inputType: inputType ?? this.inputType,
+      lengthLimit: lengthLimit ?? this.lengthLimit,
+      minLines: minLines ?? this.minLines,
+      maxLines: maxLines ?? this.maxLines,
       status: status ?? this.status,
       createdBy: createdBy ?? this.createdBy,
       createdDate: createdDate ?? this.createdDate,
@@ -110,26 +127,28 @@ class PurposeCategoryModel extends Equatable {
     );
   }
 
-  PurposeCategoryModel setCreate(String email, DateTime date) => copyWith(
+  MandatoryFieldModel setCreate(String email, DateTime date) => copyWith(
         createdBy: email,
         createdDate: date,
         updatedBy: email,
         updatedDate: date,
       );
 
-  PurposeCategoryModel setUpdate(String email, DateTime date) => copyWith(
+  MandatoryFieldModel setUpdate(String email, DateTime date) => copyWith(
         updatedBy: email,
         updatedDate: date,
       );
 
   @override
-  List<Object> get props {
+  List<Object?> get props {
     return [
       id,
       title,
-      description,
-      purposes,
-      priority,
+      hintText,
+      inputType,
+      lengthLimit,
+      minLines,
+      maxLines,
       status,
       createdBy,
       createdDate,

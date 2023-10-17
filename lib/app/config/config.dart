@@ -2,6 +2,9 @@ class AppConfig {
   static const String appName = 'PDPA Management Platform';
   static const String webClientId =
       '336013362570-eno456l69gfsf0ulk6porsffvrg8hhhu.apps.googleusercontent.com';
+  static const String baseUrl = 'https://pdpa-300.web.app';
+  static const String accessTokenBitly =
+      '1a4228869e688dba97d940375d04122e2341ec40';
 }
 
 class UiConfig {
