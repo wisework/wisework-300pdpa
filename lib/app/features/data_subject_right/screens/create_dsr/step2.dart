@@ -118,45 +118,48 @@ class _DSRStep2ScreenState extends State<DSRStep2Screen> {
         ),
         Visibility(
           visible: checkboxValue1 == true,
-          child: Column(
-            children: [
-              const Row(
-                children: [
-                  TitleRequiredText(
-                    text: 'ไฟล์สำเนา ',
-                    required: true,
-                  ),
-                ],
-              ),
-              const SizedBox(height: UiConfig.textSpacing),
-              Row(
-                children: [
-                  Container(
-                    height: 50,
-                    width: 280,
-                    decoration: BoxDecoration(
-                      border: Border.all(color: Colors.grey, width: 1.7),
-                      color: Colors.grey[200],
-                      borderRadius: BorderRadius.circular(8.0),
+          child: Padding(
+            padding: const EdgeInsets.only(left : 50.0 , right: 50),
+            child: Column(
+              children: [
+                const Row(
+                  children: [
+                    TitleRequiredText(
+                      text: 'ไฟล์สำเนา ',
+                      required: true,
                     ),
-                    padding: const EdgeInsets.symmetric(horizontal: 10),
-                    child: TextFormField(
-                      enabled: false,
-                      decoration: const InputDecoration(
-                        hintText: 'ไม่ได้เลือกไฟล์',
-                        border: InputBorder.none,
+                  ],
+                ),
+                const SizedBox(height: UiConfig.textSpacing),
+                Row(
+                  children: [
+                    Container(
+                      height: 50,
+                      width: 280,
+                      decoration: BoxDecoration(
+                        border: Border.all(color: Colors.grey, width: 1.7),
+                        color: Colors.grey[200],
+                        borderRadius: BorderRadius.circular(8.0),
+                      ),
+                      padding: const EdgeInsets.symmetric(horizontal: 10),
+                      child: TextFormField(
+                        enabled: false,
+                        decoration: const InputDecoration(
+                          hintText: 'ไม่ได้เลือกไฟล์',
+                          border: InputBorder.none,
+                        ),
                       ),
                     ),
-                  ),
-                  const SizedBox(width: UiConfig.textSpacing),
-                  IconButton.filled(
-                    onPressed: () {},
-                    icon: const Icon(Icons.upload),
-                    color: Theme.of(context).colorScheme.onPrimary,
-                  )
-                ],
-              ),
-            ],
+                    const SizedBox(width: UiConfig.textSpacing),
+                    IconButton.filled(
+                      onPressed: () {},
+                      icon: const Icon(Icons.upload),
+                      color: Theme.of(context).colorScheme.onPrimary,
+                    )
+                  ],
+                ),
+              ],
+            ),
           ),
         ),
       ],
@@ -188,82 +191,85 @@ class _DSRStep2ScreenState extends State<DSRStep2Screen> {
         ),
         Visibility(
           visible: checkboxValue2 == true,
-          child: Column(
-            children: [
-              const Row(
-                children: [
-                  TitleRequiredText(
-                    text: 'ประเภทเอกสาร ',
-                    required: true,
-                  ),
-                ],
-              ),
-              const SizedBox(height: UiConfig.textSpacing),
-              Row(
-                children: [
-                  SizedBox(
-                    height: 50,
-                    width: 280,
-                    child: TextFormField(
-                        decoration: InputDecoration(
-                      hintText: "ประเภทเอกสาร",
-                      fillColor: Colors.white,
-                      focusedBorder: OutlineInputBorder(
-                        borderRadius: BorderRadius.circular(10.0),
-                        borderSide: const BorderSide(
-                          color: Colors.blue,
+          child: Padding(
+            padding: const EdgeInsets.only(left : 50.0 , right: 50),
+            child: Column(
+              children: [
+                const Row(
+                  children: [
+                    TitleRequiredText(
+                      text: 'ประเภทเอกสาร ',
+                      required: true,
+                    ),
+                  ],
+                ),
+                const SizedBox(height: UiConfig.textSpacing),
+                Row(
+                  children: [
+                    SizedBox(
+                      height: 50,
+                      width: 280,
+                      child: TextFormField(
+                          decoration: InputDecoration(
+                        hintText: "ประเภทเอกสาร",
+                        fillColor: Colors.white,
+                        focusedBorder: OutlineInputBorder(
+                          borderRadius: BorderRadius.circular(10.0),
+                          borderSide: const BorderSide(
+                            color: Colors.blue,
+                          ),
+                        ),
+                        enabledBorder: OutlineInputBorder(
+                          borderRadius: BorderRadius.circular(10.0),
+                          borderSide: const BorderSide(
+                            color: Colors.grey,
+                            width: 1.7,
+                          ),
+                        ),
+                      )),
+                    ),
+                  ],
+                ),
+                const SizedBox(height: UiConfig.lineSpacing),
+                const Row(
+                  children: [
+                    TitleRequiredText(
+                      text: 'ไฟล์สำเนา ',
+                      required: true,
+                    ),
+                  ],
+                ),
+                const SizedBox(height: UiConfig.textSpacing),
+                Row(
+                  children: [
+                    Container(
+                      height: 50,
+                      width: 280,
+                      decoration: BoxDecoration(
+                        border: Border.all(color: Colors.grey, width: 1.7),
+                        color: Colors.grey[200],
+                        borderRadius: BorderRadius.circular(8.0),
+                      ),
+                      padding: const EdgeInsets.symmetric(horizontal: 10),
+                      child: TextFormField(
+                        enabled: false,
+                        decoration: const InputDecoration(
+                          hintText: 'ไม่ได้เลือกไฟล์',
+                          border: InputBorder.none,
                         ),
                       ),
-                      enabledBorder: OutlineInputBorder(
-                        borderRadius: BorderRadius.circular(10.0),
-                        borderSide: const BorderSide(
-                          color: Colors.grey,
-                          width: 1.7,
-                        ),
-                      ),
-                    )),
-                  ),
-                ],
-              ),
-              const SizedBox(height: UiConfig.lineSpacing),
-              const Row(
-                children: [
-                  TitleRequiredText(
-                    text: 'ไฟล์สำเนา ',
-                    required: true,
-                  ),
-                ],
-              ),
-              const SizedBox(height: UiConfig.textSpacing),
-              Row(
-                children: [
-                  Container(
-                    height: 50,
-                    width: 280,
-                    decoration: BoxDecoration(
-                      border: Border.all(color: Colors.grey, width: 1.7),
-                      color: Colors.grey[200],
-                      borderRadius: BorderRadius.circular(8.0),
                     ),
-                    padding: const EdgeInsets.symmetric(horizontal: 10),
-                    child: TextFormField(
-                      enabled: false,
-                      decoration: const InputDecoration(
-                        hintText: 'ไม่ได้เลือกไฟล์',
-                        border: InputBorder.none,
-                      ),
+                    const SizedBox(width: UiConfig.textSpacing),
+                    IconButton.filled(
+                      onPressed: () {},
+                      icon: const Icon(Icons.upload),
+                      color: Theme.of(context).colorScheme.onPrimary,
                     ),
-                  ),
-                  const SizedBox(width: UiConfig.textSpacing),
-                  IconButton.filled(
-                    onPressed: () {},
-                    icon: const Icon(Icons.upload),
-                    color: Theme.of(context).colorScheme.onPrimary,
-                  ),
-                  
-                ],
-              ),
-            ],
+                    
+                  ],
+                ),
+              ],
+            ),
           ),
         ),
       ],
