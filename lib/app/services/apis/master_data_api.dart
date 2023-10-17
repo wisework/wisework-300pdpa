@@ -4,6 +4,8 @@ import 'package:pdpa/app/data/models/master_data/purpose_category_model.dart';
 import 'package:pdpa/app/data/models/master_data/purpose_model.dart';
 import 'package:pdpa/app/data/models/master_data/reason_type_model.dart';
 import 'package:pdpa/app/data/models/master_data/reject_type_model.dart';
+import 'package:pdpa/app/data/models/master_data/request_reason_template_model.dart';
+import 'package:pdpa/app/data/models/master_data/request_reject_template_model.dart';
 import 'package:pdpa/app/data/models/master_data/request_type_model.dart';
 
 class MasterDataApi {
@@ -287,8 +289,7 @@ class MasterDataApi {
     RejectTypeModel rejectType,
     String companyId,
   ) async {
-    final ref =
-        _firestore.collection('Companies/$companyId/RejectTypes').doc();
+    final ref = _firestore.collection('Companies/$companyId/RejectTypes').doc();
     final created = rejectType.copyWith(rejectTypeId: ref.id);
 
     await ref.set(created.toMap());
@@ -348,8 +349,7 @@ class MasterDataApi {
     ReasonTypeModel reasonType,
     String companyId,
   ) async {
-    final ref =
-        _firestore.collection('Companies/$companyId/ReasonTypes').doc();
+    final ref = _firestore.collection('Companies/$companyId/ReasonTypes').doc();
     final created = reasonType.copyWith(reasonTypeId: ref.id);
 
     await ref.set(created.toMap());
@@ -375,6 +375,136 @@ class MasterDataApi {
       await _firestore
           .collection('Companies/$companyId/ReasonTypes')
           .doc(reasonTypeId)
+          .delete();
+    }
+  }
+
+  //? Request Reason Template
+  Future<List<RequestReasonTemplateModel>> getRequestReasonTemplates(
+      String companyId) async {
+    final result = await _firestore
+        .collection('Companies/$companyId/RequestReasonTemplates')
+        .get();
+
+    List<RequestReasonTemplateModel> requestReasonTemplates = [];
+    for (var document in result.docs) {
+      requestReasonTemplates
+          .add(RequestReasonTemplateModel.fromDocument(document));
+    }
+
+    return requestReasonTemplates;
+  }
+
+  Future<RequestReasonTemplateModel?> getRequestReasonTemplateById(
+    String requestReasonId,
+    String companyId,
+  ) async {
+    final result = await _firestore
+        .collection('Companies/$companyId/RequestReasonTemplates')
+        .doc(requestReasonId)
+        .get();
+
+    if (!result.exists) return null;
+    return RequestReasonTemplateModel.fromDocument(result);
+  }
+
+  Future<RequestReasonTemplateModel> createRequestReasonTemplate(
+    RequestReasonTemplateModel requestReason,
+    String companyId,
+  ) async {
+    final ref = _firestore
+        .collection('Companies/$companyId/RequestReasonTemplates')
+        .doc();
+    final created = requestReason.copyWith(requestReasonTemplateId: ref.id);
+
+    await ref.set(created.toMap());
+
+    return created;
+  }
+
+  Future<void> updateRequestReasonTemplate(
+    RequestReasonTemplateModel requestReason,
+    String companyId,
+  ) async {
+    await _firestore
+        .collection('Companies/$companyId/RequestReasonTemplates')
+        .doc(requestReason.requestReasonTemplateId)
+        .set(requestReason.toMap());
+  }
+
+  Future<void> deleteRequestReasonTemplate(
+    String requestReasonId,
+    String companyId,
+  ) async {
+    if (requestReasonId.isNotEmpty) {
+      await _firestore
+          .collection('Companies/$companyId/RequestReasonTemplates')
+          .doc(requestReasonId)
+          .delete();
+    }
+  }
+
+   //? Request Reject Template
+  Future<List<RequestRejectTemplateModel>> getRequestRejectTemplates(
+      String companyId) async {
+    final result = await _firestore
+        .collection('Companies/$companyId/RequestRejectTemplates')
+        .get();
+
+    List<RequestRejectTemplateModel> requestRejectTemplates = [];
+    for (var document in result.docs) {
+      requestRejectTemplates
+          .add(RequestRejectTemplateModel.fromDocument(document));
+    }
+
+    return requestRejectTemplates;
+  }
+
+  Future<RequestRejectTemplateModel?> getRequestRejectTemplateById(
+    String requestRejectId,
+    String companyId,
+  ) async {
+    final result = await _firestore
+        .collection('Companies/$companyId/RequestRejectTemplates')
+        .doc(requestRejectId)
+        .get();
+
+    if (!result.exists) return null;
+    return RequestRejectTemplateModel.fromDocument(result);
+  }
+
+  Future<RequestRejectTemplateModel> createRequestRejectTemplate(
+    RequestRejectTemplateModel requestReject,
+    String companyId,
+  ) async {
+    final ref = _firestore
+        .collection('Companies/$companyId/RequestRejectTemplates')
+        .doc();
+    final created = requestReject.copyWith(requestRejectTemplateId: ref.id);
+
+    await ref.set(created.toMap());
+
+    return created;
+  }
+
+  Future<void> updateRequestRejectTemplate(
+    RequestRejectTemplateModel requestReject,
+    String companyId,
+  ) async {
+    await _firestore
+        .collection('Companies/$companyId/RequestRejectTemplates')
+        .doc(requestReject.requestRejectTemplateId)
+        .set(requestReject.toMap());
+  }
+
+  Future<void> deleteRequestRejectTemplate(
+    String requestRejectId,
+    String companyId,
+  ) async {
+    if (requestRejectId.isNotEmpty) {
+      await _firestore
+          .collection('Companies/$companyId/RequestRejectTemplates')
+          .doc(requestRejectId)
           .delete();
     }
   }
