@@ -73,7 +73,7 @@ class _DSRStratScreenState extends State<DSRStratScreen> {
               width: double.infinity,
               height: 50,
                 onPressed: () {
-                  context.push(DataSubjectRightRouter.step2.path);
+                  context.push(DataSubjectRightRouter.step1.path);
                 },
                 child: Text(
                   'กรอกแบบคำร้อง',

@@ -2,8 +2,11 @@ import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:ionicons/ionicons.dart';
 import 'package:pdpa/app/config/config.dart';
+import 'package:pdpa/app/features/data_subject_right/routes/data_subject_right_route.dart';
+import 'package:pdpa/app/shared/widgets/customs/custom_button.dart';
 import 'package:pdpa/app/shared/widgets/customs/custom_icon_button.dart';
 import 'package:pdpa/app/shared/widgets/templates/pdpa_app_bar.dart';
+import 'package:pdpa/app/shared/widgets/title_required_text.dart';
 
 class DSRStep2Screen extends StatefulWidget {
   const DSRStep2Screen({super.key});
@@ -22,12 +25,13 @@ class _DSRStep2ScreenState extends State<DSRStep2Screen> {
         leadingIcon: _buildPopButton(),
         title: const Text('แบบฟอร์มขอใช้สิทธิ์ตามกฏหมาย'),
       ),
-      body: Container(
-        padding: const EdgeInsets.symmetric(horizontal: 20),
-        decoration: BoxDecoration(
-          color: Theme.of(context).colorScheme.onBackground,
-        ),
-        child: SingleChildScrollView(
+      body: SingleChildScrollView(
+        child: Container(
+          
+          padding: const EdgeInsets.symmetric(horizontal: 20),
+          decoration: BoxDecoration(
+            color: Theme.of(context).colorScheme.onBackground,
+          ),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             mainAxisAlignment: MainAxisAlignment.start,
@@ -57,7 +61,22 @@ class _DSRStep2ScreenState extends State<DSRStep2Screen> {
                     .outlineVariant
                     .withOpacity(0.5),
               ),
-              _checkOtherFile()
+              _checkOtherFile(),
+              const SizedBox(height: UiConfig.lineSpacing),
+              CustomButton(
+              width: double.infinity,
+              height: 50,
+              onPressed: () {
+                context.push(DataSubjectRightRouter.step3.path);
+              },
+              child: Text(
+                'ถัดไป',
+                style: Theme.of(context)
+                    .textTheme
+                    .titleMedium
+                    ?.copyWith(color: Theme.of(context).colorScheme.onPrimary),
+              ),
+            ),
             ],
           ),
         ),
@@ -101,21 +120,11 @@ class _DSRStep2ScreenState extends State<DSRStep2Screen> {
           visible: checkboxValue1 == true,
           child: Column(
             children: [
-              Row(
+              const Row(
                 children: [
-                  Text(
-                    'ไฟล์สำเนา ',
-                    textAlign: TextAlign.left,
-                    style: Theme.of(context).textTheme.bodySmall?.copyWith(
-                        color: Theme.of(context).colorScheme.onSurface),
-                  ),
-                  Text(
-                    '*',
-                    textAlign: TextAlign.left,
-                    style: Theme.of(context)
-                        .textTheme
-                        .bodySmall
-                        ?.copyWith(color: Theme.of(context).colorScheme.error),
+                  TitleRequiredText(
+                    text: 'ไฟล์สำเนา ',
+                    required: true,
                   ),
                 ],
               ),
@@ -181,21 +190,11 @@ class _DSRStep2ScreenState extends State<DSRStep2Screen> {
           visible: checkboxValue2 == true,
           child: Column(
             children: [
-              Row(
+              const Row(
                 children: [
-                  Text(
-                    'ประเภทเอกสาร ',
-                    textAlign: TextAlign.left,
-                    style: Theme.of(context).textTheme.bodySmall?.copyWith(
-                        color: Theme.of(context).colorScheme.onSurface),
-                  ),
-                  Text(
-                    '*',
-                    textAlign: TextAlign.left,
-                    style: Theme.of(context)
-                        .textTheme
-                        .bodySmall
-                        ?.copyWith(color: Theme.of(context).colorScheme.error),
+                  TitleRequiredText(
+                    text: 'ประเภทเอกสาร ',
+                    required: true,
                   ),
                 ],
               ),
@@ -227,21 +226,11 @@ class _DSRStep2ScreenState extends State<DSRStep2Screen> {
                 ],
               ),
               const SizedBox(height: UiConfig.lineSpacing),
-              Row(
+              const Row(
                 children: [
-                  Text(
-                    'ไฟล์สำเนา ',
-                    textAlign: TextAlign.left,
-                    style: Theme.of(context).textTheme.bodySmall?.copyWith(
-                        color: Theme.of(context).colorScheme.onSurface),
-                  ),
-                  Text(
-                    '*',
-                    textAlign: TextAlign.left,
-                    style: Theme.of(context)
-                        .textTheme
-                        .bodySmall
-                        ?.copyWith(color: Theme.of(context).colorScheme.error),
+                  TitleRequiredText(
+                    text: 'ไฟล์สำเนา ',
+                    required: true,
                   ),
                 ],
               ),
@@ -270,7 +259,8 @@ class _DSRStep2ScreenState extends State<DSRStep2Screen> {
                     onPressed: () {},
                     icon: const Icon(Icons.upload),
                     color: Theme.of(context).colorScheme.onPrimary,
-                  )
+                  ),
+                  
                 ],
               ),
             ],
