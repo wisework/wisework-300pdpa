@@ -3,7 +3,10 @@ import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:ionicons/ionicons.dart';
 import 'package:pdpa/app/config/config.dart';
+import 'package:pdpa/app/data/models/data_subject_right/data_subject_right_request_model.dart';
+import 'package:pdpa/app/data/models/master_data/localized_model.dart';
 import 'package:pdpa/app/features/data_subject_right/routes/data_subject_right_route.dart';
+import 'package:pdpa/app/features/data_subject_right/widgets/data_subject_right_item_card.dart';
 import 'package:pdpa/app/shared/drawers/pdpa_drawer.dart';
 import 'package:pdpa/app/shared/widgets/customs/custom_container.dart';
 import 'package:pdpa/app/shared/widgets/customs/custom_icon_button.dart';
@@ -85,6 +88,32 @@ class _DSRScreenState extends State<DSRScreen> {
           _scaffoldKey.currentState?.closeDrawer();
         },
       ),
+    );
+  }
+
+  DataSubjectRightItemCard _buildItemCard(
+    BuildContext context, {
+    required DataSubjectRightRequestModel dsrRequest,
+  }) {
+    const language = 'en-US';
+    final description = dsrRequest.dataRequester.firstWhere(
+      (item) => item.language == language,
+      orElse: LocalizedModel.empty,
+    );
+    final requestCode = dsrRequest.processRequests.firstWhere(
+      (item) => item.language == language,
+      orElse: LocalizedModel.empty,
+    );
+
+    return DataSubjectRightItemCard(
+      title: description.text,
+      subtitle: requestCode.text,
+      date: dsrRequest.requestExpirationDate.toString(),
+      onTap: () {
+        // context.push(
+        //   DataSubjectRightRouter
+        // );
+      },
     );
   }
 }
