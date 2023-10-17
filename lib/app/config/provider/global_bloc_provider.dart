@@ -2,8 +2,12 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:pdpa/app/features/authentication/bloc/sign_in/sign_in_bloc.dart';
 import 'package:pdpa/app/features/consent_management/consent_form/bloc/consent_form/consent_form_bloc.dart';
 import 'package:pdpa/app/features/consent_management/consent_form/bloc/consent_form_settings/consent_form_settings_bloc.dart';
+
 import 'package:pdpa/app/features/consent_management/consent_form/bloc/edit_consent_form/edit_consent_form_bloc.dart';
 import 'package:pdpa/app/features/consent_management/consent_form/cubit/current_consent_form_detail/current_consent_form_detail_cubit.dart';
+
+import 'package:pdpa/app/features/consent_management/consent_form/bloc/user_consent_form/user_consent_form_bloc.dart';
+
 import 'package:pdpa/app/features/consent_management/consent_form/cubit/current_consent_form_settings/current_consent_form_settings_cubit.dart';
 import 'package:pdpa/app/features/master_data/bloc/consent/custom_field/custom_field_bloc.dart';
 import 'package:pdpa/app/features/master_data/bloc/consent/purpose/purpose_bloc.dart';
@@ -36,6 +40,9 @@ class GlobalBlocProvider {
       ),
       BlocProvider<CurrentConsentFormDetailCubit>(
         create: (context) => serviceLocator<CurrentConsentFormDetailCubit>(),
+      ),
+      BlocProvider<UserConsentFormBloc>(
+        create: (context) => serviceLocator<UserConsentFormBloc>(),
       ),
       BlocProvider<PurposeBloc>(
         create: (context) => serviceLocator<PurposeBloc>(),

@@ -201,7 +201,7 @@ class ConsentThemeModel extends Equatable {
       };
 
   factory ConsentThemeModel.fromDocument(FirebaseDocument document) {
-    Map<String, dynamic> response = document.data()!;
+    DataMap response = document.data()!;
     response['id'] = document.id;
     return ConsentThemeModel.fromMap(response);
   }

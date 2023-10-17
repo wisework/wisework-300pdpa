@@ -1,5 +1,6 @@
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
+import 'package:pdpa/app/shared/utils/constants.dart';
 
 class CustomTextField extends StatefulWidget {
   const CustomTextField({
@@ -37,6 +38,9 @@ class _CustomTextFieldState extends State<CustomTextField> {
   String? _validateInput(String? value) {
     if (value == null || value.isEmpty) {
       return widget.errorText ?? tr('masterData.etc.fieldCannotEmpty');
+    } else if (widget.keyboardType == TextInputType.emailAddress &&
+        !emailRegex.hasMatch(value)) {
+      return widget.errorText ?? tr('masterData.etc.pleaseEnterValidEmail');
     }
     return null;
   }
@@ -119,9 +123,10 @@ class _CustomTextFieldState extends State<CustomTextField> {
               child: widget.suffix,
             )
           : null,
-      filled: widget.readOnly,
-      fillColor:
-          widget.readOnly ? Theme.of(context).colorScheme.tertiary : null,
+      filled: true,
+      fillColor: widget.readOnly
+          ? Theme.of(context).colorScheme.tertiary
+          : Theme.of(context).colorScheme.onBackground,
       errorBorder: OutlineInputBorder(
         borderRadius: BorderRadius.circular(8.0),
         borderSide: BorderSide(

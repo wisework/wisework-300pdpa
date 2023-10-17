@@ -15,6 +15,7 @@ import 'package:pdpa/app/features/master_data/widgets/configuration_info.dart';
 import 'package:pdpa/app/injection.dart';
 import 'package:pdpa/app/shared/utils/constants.dart';
 import 'package:pdpa/app/shared/widgets/customs/custom_container.dart';
+import 'package:pdpa/app/shared/widgets/customs/custom_dropdown_button.dart';
 import 'package:pdpa/app/shared/widgets/customs/custom_icon_button.dart';
 import 'package:pdpa/app/shared/widgets/customs/custom_switch_button.dart';
 import 'package:pdpa/app/shared/widgets/customs/custom_text_field.dart';
@@ -169,12 +170,12 @@ class _EditCustomFieldViewState extends State<EditCustomFieldView> {
 
   late TextEditingController titleController;
   late TextEditingController hintTextController;
-  late TextEditingController inputTypeController;
   late TextEditingController lenghtLimitController;
   late TextEditingController minLineController;
   late TextEditingController maxLineController;
 
-  late int typeSelected;
+  late int inputTypeSelected;
+
   int? lenghtLimit;
   late bool isActivated;
 
@@ -183,6 +184,7 @@ class _EditCustomFieldViewState extends State<EditCustomFieldView> {
   @override
   void initState() {
     super.initState();
+
     _initialData();
   }
 
@@ -190,7 +192,6 @@ class _EditCustomFieldViewState extends State<EditCustomFieldView> {
   void dispose() {
     titleController.dispose();
     hintTextController.dispose();
-    inputTypeController.dispose();
     lenghtLimitController.dispose();
     minLineController.dispose();
     maxLineController.dispose();
@@ -200,13 +201,14 @@ class _EditCustomFieldViewState extends State<EditCustomFieldView> {
 
   void _initialData() {
     customfield = widget.initialCustomField;
+
     titleController = TextEditingController();
     hintTextController = TextEditingController();
-    inputTypeController = TextEditingController();
     lenghtLimitController = TextEditingController();
     minLineController = TextEditingController();
     maxLineController = TextEditingController();
 
+    inputTypeSelected = 0;
     isActivated = true;
 
     if (customfield != CustomFieldModel.empty()) {
@@ -218,11 +220,6 @@ class _EditCustomFieldViewState extends State<EditCustomFieldView> {
       if (customfield.hintText.isNotEmpty) {
         hintTextController = TextEditingController(
           text: customfield.hintText.first.text,
-        );
-      }
-      if (customfield.inputType != 0) {
-        inputTypeController = TextEditingController(
-          text: customfield.inputType.toString(),
         );
       }
       if (customfield.lengthLimit != 0) {
@@ -241,6 +238,7 @@ class _EditCustomFieldViewState extends State<EditCustomFieldView> {
         );
       }
 
+      inputTypeSelected = customfield.inputType.index;
       isActivated = customfield.status == ActiveStatus.active;
     }
   }
@@ -273,12 +271,14 @@ class _EditCustomFieldViewState extends State<EditCustomFieldView> {
     );
   }
 
-  void _setInputType(String? value) {
+  void _setInputType(int? value) {
     if (value != null) {
       setState(() {
-        typeSelected = int.parse(value);
+        inputTypeSelected = value;
 
-        customfield = customfield.copyWith(inputType: typeSelected);
+        customfield = customfield.copyWith(
+          inputType: TextInputType.values[value],
+        );
       });
     }
   }
@@ -322,7 +322,7 @@ class _EditCustomFieldViewState extends State<EditCustomFieldView> {
   void _saveCustomField() {
     if (_formKey.currentState!.validate()) {
       if (widget.isNewCustomField) {
-        customfield = customfield.toCreated(
+        customfield = customfield.setCreate(
           widget.currentUser.email,
           DateTime.now(),
         );
@@ -331,7 +331,7 @@ class _EditCustomFieldViewState extends State<EditCustomFieldView> {
               companyId: widget.currentUser.currentCompany,
             ));
       } else {
-        customfield = customfield.toUpdated(
+        customfield = customfield.setUpdate(
           widget.currentUser.email,
           DateTime.now(),
         );
@@ -437,12 +437,20 @@ class _EditCustomFieldViewState extends State<EditCustomFieldView> {
             text: tr('masterData.cm.customfields.inputtype'),
             required: true,
           ),
-          CustomTextField(
-            controller: inputTypeController,
-            hintText: tr('masterData.cm.customfields.inputtypehint'), //!
-            onChanged: _setInputType,
-            required: true,
-            keyboardType: TextInputType.number,
+          CustomDropdownButton<int>(
+            value: inputTypeSelected,
+            items: customInputTypeNames.keys.map(
+              (inputType) {
+                return DropdownMenuItem(
+                  value: inputType.index,
+                  child: Text(
+                    customInputTypeNames[inputType].toString(),
+                    style: Theme.of(context).textTheme.bodyMedium,
+                  ),
+                );
+              },
+            ).toList(),
+            onSelected: _setInputType,
           ),
           const SizedBox(height: UiConfig.lineSpacing),
           TitleRequiredText(

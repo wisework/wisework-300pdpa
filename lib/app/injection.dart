@@ -7,6 +7,7 @@ import 'package:pdpa/app/features/consent_management/consent_form/bloc/consent_f
 import 'package:pdpa/app/features/consent_management/consent_form/bloc/consent_form_detail/consent_form_detail_bloc.dart';
 import 'package:pdpa/app/features/consent_management/consent_form/bloc/edit_consent_form/edit_consent_form_bloc.dart';
 import 'package:pdpa/app/features/consent_management/consent_form/cubit/current_consent_form_detail/current_consent_form_detail_cubit.dart';
+import 'package:pdpa/app/features/consent_management/consent_form/bloc/user_consent_form/user_consent_form_bloc.dart';
 
 import 'config/config.dart';
 import 'data/repositories/authentication_repository.dart';
@@ -112,6 +113,12 @@ Future<void> _consentManagement() async {
     )
     ..registerFactory(
       () => ConsentFormSettingsBloc(
+        consentRepository: serviceLocator(),
+        masterDataRepository: serviceLocator(),
+      ),
+    )
+    ..registerFactory(
+      () => UserConsentFormBloc(
         consentRepository: serviceLocator(),
         masterDataRepository: serviceLocator(),
       ),

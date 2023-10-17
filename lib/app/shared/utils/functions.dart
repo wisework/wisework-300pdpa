@@ -1,8 +1,7 @@
-// import 'package:flutter/material.dart';
-// import 'package:image_picker/image_picker.dart';
 import 'dart:io';
 
 import 'package:path/path.dart';
+import 'package:pdpa/app/config/config.dart';
 import 'package:pdpa/app/data/models/authentication/company_model.dart';
 import 'package:pdpa/app/data/models/master_data/custom_field_model.dart';
 import 'package:pdpa/app/data/models/master_data/purpose_category_model.dart';
@@ -19,6 +18,11 @@ class UtilFunctions {
       if (company.id == currentCompanyId) return company;
     }
     return CompanyModel.empty();
+  }
+
+  static String getUserConsentForm(String consentId, String companyId) {
+    final fragment = 'companies/$companyId/consent-form/$consentId/form';
+    return '${AppConfig.baseUrl}/#/$fragment';
   }
 
   static List<CustomFieldModel> filterCustomFieldsByIds(
@@ -43,9 +47,15 @@ class UtilFunctions {
     List<PurposeModel> purposes,
     List<String> purposeIds,
   ) {
-    return purposes
-        .where((category) => purposeIds.contains(category.id))
-        .toList();
+    List<PurposeModel> purposeFiltered = [];
+
+    for (String id in purposeIds) {
+      final purpose = purposes.where((purpose) => purpose.id == id).firstOrNull;
+
+      if (purpose != null) purposeFiltered.add(purpose);
+    }
+
+    return purposeFiltered;
   }
 
   // static Color getColorFromString(String source) {
@@ -84,9 +94,3 @@ class UtilFunctions {
     return [company, consent, folder].join('/');
   }
 }
-
-// class GeneralFunctions {
-//   static XFile pickImage(){
-
-//   }
-// }
