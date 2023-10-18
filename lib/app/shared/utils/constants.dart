@@ -26,13 +26,8 @@ final Map<TextInputType, String> customInputTypeNames = {
   TextInputType.multiline: 'Multiline',
   TextInputType.number: 'Number',
   TextInputType.phone: 'Phone',
-  // TextInputType.datetime: 'Datetime',
   TextInputType.emailAddress: 'Email Address',
   TextInputType.url: 'URL',
-  // TextInputType.visiblePassword: 'Visible Password',
-  // TextInputType.name: 'Name',
-  // TextInputType.streetAddress: 'Street Address',
-  // TextInputType.none: 'None',
 };
 
 final emailRegex = RegExp(r'^[\w-]+(\.[\w-]+)*@[\w-]+(\.[\w-]+)+$');
@@ -42,3 +37,7 @@ List<String> periodUnits = ['Day', 'Month', 'Year'];
 final datetimeFormatter = DateFormat('dd-MM-yyyy HH:mm:ss');
 
 enum ConsentFormImageType { logo, header, body }
+
+enum RequestVerifyingStatus { pass, fail, none }
+
+enum ConsiderRequestStatus { pass, fail, none }

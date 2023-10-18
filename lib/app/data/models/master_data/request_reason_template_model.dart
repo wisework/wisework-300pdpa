@@ -39,7 +39,8 @@ class RequestReasonTemplateModel extends Equatable {
       : this(
           requestReasonTemplateId: map['requestReasonTemplateId'] as String,
           requestTypeId: map['requestTypeId'] as String,
-          reasonTypesId: List<String>.from(map['reasonTypesId'] as List<dynamic>),
+          reasonTypesId:
+              List<String>.from(map['reasonTypesId'] as List<dynamic>),
           status: ActiveStatus.values[map['status'] as int],
           createdBy: map['createdBy'] as String,
           createdDate: DateTime.parse(map['createdDate'] as String),

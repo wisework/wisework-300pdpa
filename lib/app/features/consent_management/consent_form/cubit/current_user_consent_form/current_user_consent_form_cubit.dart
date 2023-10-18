@@ -3,8 +3,8 @@ import 'package:bloc/bloc.dart';
 import 'package:equatable/equatable.dart';
 import 'package:pdpa/app/data/models/consent_management/consent_form_model.dart';
 import 'package:pdpa/app/data/models/consent_management/user_consent_model.dart';
-import 'package:pdpa/app/data/models/etc/user_input_field.dart';
-import 'package:pdpa/app/data/models/etc/user_input_option.dart';
+import 'package:pdpa/app/data/models/etc/user_input_text.dart';
+import 'package:pdpa/app/data/models/etc/user_input_purpose.dart';
 import 'package:pdpa/app/data/models/master_data/purpose_category_model.dart';
 
 part 'current_user_consent_form_state.dart';
@@ -20,17 +20,17 @@ class CurrentUserConsentFormCubit extends Cubit<CurrentUserConsentFormState> {
     List<PurposeCategoryModel> purposeCategories,
   ) async {
     final customFieldValues = consentForm.customFields
-        .map((id) => UserInputField(id: id, value: ''))
+        .map((id) => UserInputText(id: id, text: ''))
         .toList();
 
-    List<UserInputOption> purposeValues = [];
+    List<UserInputPurpose> purposeValues = [];
     for (PurposeCategoryModel category in purposeCategories) {
       final values = category.purposes
           .map(
-            (id) => UserInputOption(
+            (id) => UserInputPurpose(
               id: id,
-              parentId: category.id,
               value: true,
+              purposeCategoryId: category.id,
             ),
           )
           .toList();

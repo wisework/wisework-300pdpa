@@ -23,7 +23,7 @@ class RequestRejectTemplateModel extends Equatable {
   final String updatedBy;
   final DateTime updatedDate;
 
-   RequestRejectTemplateModel.empty()
+  RequestRejectTemplateModel.empty()
       : this(
           requestRejectTemplateId: '',
           requestTypeId: '',
@@ -39,7 +39,8 @@ class RequestRejectTemplateModel extends Equatable {
       : this(
           requestRejectTemplateId: map['requestRejectTemplateId'] as String,
           requestTypeId: map['requestTypeId'] as String,
-          rejectTypesId: List<String>.from(map['rejectTypesId'] as List<dynamic>),
+          rejectTypesId:
+              List<String>.from(map['rejectTypesId'] as List<dynamic>),
           status: ActiveStatus.values[map['status'] as int],
           createdBy: map['createdBy'] as String,
           createdDate: DateTime.parse(map['createdDate'] as String),

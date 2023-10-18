@@ -146,6 +146,12 @@ class ConsentFormModel extends Equatable {
           updatedDate: DateTime.parse(map['updatedDate'] as String),
         );
 
+  factory ConsentFormModel.fromDocument(FirebaseDocument document) {
+    DataMap response = document.data()!;
+    response['id'] = document.id;
+    return ConsentFormModel.fromMap(response);
+  }
+
   DataMap toMap() => {
         'title': title.map((item) => item.toMap()).toList(),
         'description': description.map((item) => item.toMap()).toList(),
@@ -174,12 +180,6 @@ class ConsentFormModel extends Equatable {
         'updatedBy': updatedBy,
         'updatedDate': updatedDate.toIso8601String(),
       };
-
-  factory ConsentFormModel.fromDocument(FirebaseDocument document) {
-    DataMap response = document.data()!;
-    response['id'] = document.id;
-    return ConsentFormModel.fromMap(response);
-  }
 
   ConsentFormModel copyWith({
     String? id,

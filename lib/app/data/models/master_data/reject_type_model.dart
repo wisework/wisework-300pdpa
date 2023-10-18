@@ -24,7 +24,7 @@ class RejectTypeModel extends Equatable {
   final String updatedBy;
   final DateTime updatedDate;
 
- RejectTypeModel.empty()
+  RejectTypeModel.empty()
       : this(
           rejectTypeId: '',
           rejectCode: '',
