@@ -119,7 +119,7 @@ class _SelectRequestViewState extends State<SelectRequestView> {
     RequestReasonTemplateModel(
       requestReasonTemplateId: '1',
       requestTypeId: 'ID:1',
-      reasonTypeId: const [
+      reasonTypesId: const [
         'อยู่ในระหว่างการตรวจสอบตามที่เจ้าของข้อมูลส่วนบุคคลร้องขอให้บริษัทแก้ไขข้อมูลส่วนบุคคล',
         'ข้อมูลส่วนบุคคลหมดความจำเป็นในการเก็บรักษาไว้ตามวัตถุประสงค์ในการประมวลผลแต่เจ้าของข้อมูลส่วนบุคคลมีความจำเป็นต้องขอให้เก็บรักษาไว้เพื่อใช้ในการก่อตั้งสิทธิเรียกร้องตามกฎหมายการปฏิบัติตามหรือการใช้สิทธิเรียกร้องตามกฎหมาย',
         'เหตุผลอื่นๆ (โปรดระบุ)'
@@ -133,7 +133,7 @@ class _SelectRequestViewState extends State<SelectRequestView> {
     RequestReasonTemplateModel(
       requestReasonTemplateId: '2',
       requestTypeId: 'ID:2',
-      reasonTypeId: const [
+      reasonTypesId: const [
         'อยู่ในระหว่างการตรวจสอบตามที่เจ้าของข้อมูลส่วนบุคคลร้องขอให้บริษัทแก้ไขข้อมูลส่วนบุคคล',
         'ข้อมูลส่วนบุคคลหมดความจำเป็นในการเก็บรักษาไว้ตามวัตถุประสงค์ในการประมวลผลแต่เจ้าของข้อมูลส่วนบุคคลมีความจำเป็นต้องขอให้เก็บรักษาไว้เพื่อใช้ในการก่อตั้งสิทธิเรียกร้องตามกฎหมายการปฏิบัติตามหรือการใช้สิทธิเรียกร้องตามกฎหมาย',
         'เหตุผลอื่นๆ (โปรดระบุ)'
@@ -263,7 +263,7 @@ class _SelectRequestViewState extends State<SelectRequestView> {
                   ),
                   const SizedBox(width: UiConfig.textLineSpacing),
                   _buildExpandedContainer(
-                      context, requestReason.reasonTypeId), //? Reasons Id
+                      context, requestReason.reasonTypesId), //? Reasons Id
                 ],
               ),
             ),
