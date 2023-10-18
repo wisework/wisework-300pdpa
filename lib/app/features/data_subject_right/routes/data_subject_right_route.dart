@@ -13,49 +13,49 @@ import 'package:pdpa/app/features/data_subject_right/screens/data_subject_right_
 class DataSubjectRightRouter {
   static final GoRoute dsr = GoRoute(
     path: '/dsr',
-    builder: (context, _) => const DSRScreen(),
+    builder: (context, _) => const DataSubjectRightScreen(),
   );
-  static final GoRoute start = GoRoute(
-    path: '/dsr/start',
-    builder: (context, _) => const DSRStratScreen(),
+  static final GoRoute intro = GoRoute(
+    path: '/dsr/request/intro',
+    builder: (context, _) => const RequestIntroScreen(),
   );
-  static final GoRoute step1 = GoRoute(
-    path: '/dsr/step1',
-    builder: (context, _) => const DSRStep1Screen(),
+  static final GoRoute stepOne = GoRoute(
+    path: '/dsr/request/stepone',
+    builder: (context, _) => const RequestDataRequesterScreen(),
   );
-  static final GoRoute step2 = GoRoute(
-    path: '/dsr/step2',
-    builder: (context, _) => const DSRStep2Screen(),
+  static final GoRoute stepTwo = GoRoute(
+    path: '/dsr/request/steptwo',
+    builder: (context, _) => const RequestPowerVerificationScreen(),
   );
-  static final GoRoute step3 = GoRoute(
-    path: '/dsr/step3',
-    builder: (context, _) => const DSRStep3Screen(),
+  static final GoRoute stepThree = GoRoute(
+    path: '/dsr/request/stepthree',
+    builder: (context, _) => const RequestDataOwnerScreen(),
   );
-  static final GoRoute step4 = GoRoute(
-    path: '/dsr/step4',
-    builder: (context, _) => const DSRStep4Screen(),
+  static final GoRoute stepFour = GoRoute(
+    path: '/dsr/request/stepfour',
+    builder: (context, _) => const RequestIdentityVerificaiotnScreen(),
   );
-  static final GoRoute step5 = GoRoute(
-    path: '/dsr/step5',
-    builder: (context, _) => const DSRStep5Screen(),
+  static final GoRoute stepFive = GoRoute(
+    path: '/dsr/request/stepfive',
+    builder: (context, _) => const RequestSelectRequestScreen(),
   );
-  static final GoRoute step6 = GoRoute(
-    path: '/dsr/step6',
-    builder: (context, _) => const DSRStep6Screen(),
+  static final GoRoute stepSix = GoRoute(
+    path: '/dsr/request/stepsix',
+    builder: (context, _) => const RequestConditionScreen(),
   );
-  static final GoRoute step7 = GoRoute(
-    path: '/dsr/step7',
-    builder: (context, _) => const DSRStep7Screen(),
+  static final GoRoute stepSeven = GoRoute(
+    path: '/dsr/request/stepseven',
+    builder: (context, _) => const RequestAcceptTermScreen(),
   );
   static final List<GoRoute> routes = <GoRoute>[
     dsr,
-    start,
-    step1,
-    step2,
-    step3,
-    step4,
-    step5,
-    step6,
-    step7,
+    intro,
+    stepOne,
+    stepTwo,
+    stepThree,
+    stepFour,
+    stepFive,
+    stepSix,
+    stepSeven,
   ];
 }

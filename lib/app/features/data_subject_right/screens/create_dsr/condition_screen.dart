@@ -4,106 +4,111 @@ import 'package:ionicons/ionicons.dart';
 import 'package:pdpa/app/config/config.dart';
 import 'package:pdpa/app/features/data_subject_right/routes/data_subject_right_route.dart';
 import 'package:pdpa/app/shared/widgets/customs/custom_button.dart';
+import 'package:pdpa/app/shared/widgets/customs/custom_container.dart';
 import 'package:pdpa/app/shared/widgets/customs/custom_icon_button.dart';
 import 'package:pdpa/app/shared/widgets/templates/pdpa_app_bar.dart';
-import 'package:pdpa/app/shared/widgets/title_required_text.dart';
 
-class DSRStep6Screen extends StatefulWidget {
-  const DSRStep6Screen({super.key});
+class RequestConditionScreen extends StatefulWidget {
+  const RequestConditionScreen({super.key});
 
   @override
-  State<DSRStep6Screen> createState() => _DSRStep6ScreenState();
+  State<RequestConditionScreen> createState() => _RequestConditionScreenState();
 }
 
-class _DSRStep6ScreenState extends State<DSRStep6Screen> {
+class _RequestConditionScreenState extends State<RequestConditionScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: PdpaAppBar(
-        leadingIcon: _buildPopButton(),
-        title: const Text('แบบฟอร์มขอใช้สิทธิ์ตามกฏหมาย'),
-      ),
-      body: Container(
-        decoration: BoxDecoration(
-          color: Theme.of(context).colorScheme.onBackground,
+        leadingIcon: CustomIconButton(
+          onPressed: () {
+            context.pop();
+          },
+          icon: Ionicons.chevron_back_outline,
+          iconColor: Theme.of(context).colorScheme.primary,
+          backgroundColor: Theme.of(context).colorScheme.onBackground,
         ),
-        padding: const EdgeInsets.all(UiConfig.defaultPaddingSpacing),
-        child: _buildStep6Form(context),
+        title: Text(
+          'แบบฟอร์มขอใช้สิทธิ์ตามกฏหมาย', //!
+          style: Theme.of(context).textTheme.titleLarge,
+        ),
       ),
+      body: _buildStepSixForm(context),
     );
   }
 
-  CustomIconButton _buildPopButton() {
-    return CustomIconButton(
-      onPressed: () => context.pop(),
-      icon: Ionicons.chevron_back_outline,
-      iconColor: Theme.of(context).colorScheme.primary,
-      backgroundColor: Theme.of(context).colorScheme.onBackground,
-    );
-  }
-
-  Form _buildStep6Form(BuildContext context) {
-    return Form(
-      child: SingleChildScrollView(
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: <Widget>[
-            Text(
-              'ข้อสงวนสิทธิของผู้ควบคุมข้อมูล',
-              style: Theme.of(context)
-                  .textTheme
-                  .titleMedium
-                  ?.copyWith(color: Theme.of(context).colorScheme.primary),
-            ),
-            const SizedBox(height: UiConfig.lineSpacing),
-            const Row(
+  Widget _buildStepSixForm(BuildContext context) {
+    return SingleChildScrollView(
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          CustomContainer(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              mainAxisAlignment: MainAxisAlignment.start,
               children: <Widget>[
+                const SizedBox(height: UiConfig.lineSpacing),
                 Text(
-                  'บริษัทขอเรียนแจ้งให้ท่านทราบว่า เพื่อให้เป็นไปตามกฎหมายที่\nเกี่ยวข้องบริษัทอาจจำเป็นต้องปฏิเสธคำร้องขอของท่าน\n ในบางกรณี ซึ่งรวมถึงแต่ไม่จำกัดเพียงกรณีดังต่อไปนี้',
+                  'ข้อสงวนสิทธิของผู้ควบคุมข้อมูล', //!
+                  style: Theme.of(context)
+                      .textTheme
+                      .titleMedium
+                      ?.copyWith(color: Theme.of(context).colorScheme.primary),
+                ),
+                const SizedBox(height: UiConfig.lineSpacing),
+                Row(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: <Widget>[
+                    Expanded(
+                      child: Text(
+                        "บริษัทขอเรียนแจ้งให้ท่านทราบว่า เพื่อให้เป็นไปตามกฎหมายที่"
+                        "เกี่ยวข้องบริษัทอาจจำเป็นต้องปฏิเสธคำร้องขอของท่าน "
+                        "ในบางกรณี ซึ่งรวมถึงแต่ไม่จำกัดเพียงกรณีดังต่อไปนี้", //!
+                        textAlign: TextAlign.left,
+                        style: Theme.of(context).textTheme.bodySmall?.copyWith(
+                            color: Theme.of(context).colorScheme.onSurface),
+                      ),
+                    ),
+                  ],
+                ),
+                const SizedBox(height: UiConfig.lineSpacing),
+                Row(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: <Widget>[
+                    Expanded(
+                      child: Text(
+                        "1. ท่านไม่สามารถแสดงให้เห็นอย่างชัดเจนได้ว่าผู้ยื่นคำร้อง"
+                        "เป็นเจ้าของข้อมูลส่วนบุคคลหรือมีอำนาจในการยื่นคำร้องขอดังกล่าว\n"
+                        "2. คำร้องขอดังกล่าวไม่สมเหตุสมผล เช่น กรณีที่ผู้ร้อง\n"
+                        "ขอไม่มีสิทธิในการขอเข้าถึงข้อมูลส่วนบุคคลหรือไม่มีข้อมูลส่วนบุคคลนั้นอยู่ที่บริษัท เป็นต้น\n"
+                        "3. คำร้องขอดังกล่าวเป็นคำร้องขอฟุ่มเฟือย เช่น เป็นคำร้อง"
+                        "ขอที่มีลักษณะเดียวกัน หรือ มีเนื้อหาเดียวกันซ้ำ ๆ กันโดยไม่มีเหตุอันสมควร\n"
+                        "4. การเก็บรักษาข้อมูลส่วนบุคคลนั้นเป็นไปเพื่อการก่อตั้งสิทธิเรียกร้องตามกฎหมาย "
+                        "การปฏิบัติตามกฎหมายการใช้สิทธิเรียกร้องตามกฎหมาย หรือการยกขึ้นต่อสู้"
+                        "สิทธิเรียกร้องตามกฎหมาย\n", //!
+                        textAlign: TextAlign.left,
+                        style: Theme.of(context).textTheme.bodySmall?.copyWith(
+                            color: Theme.of(context).colorScheme.onSurface),
+                      ),
+                    ),
+                  ],
+                ),
+                const SizedBox(height: UiConfig.lineSpacing),
+                CustomButton(
+                  height: 40.0,
+                  onPressed: () {
+                    context.push(DataSubjectRightRouter.stepSeven.path);
+                  },
+                  child: Text(
+                    'ถัดไป', //!
+                    style: Theme.of(context).textTheme.titleMedium?.copyWith(
+                        color: Theme.of(context).colorScheme.onPrimary),
+                  ),
                 ),
               ],
             ),
-            const Text(
-              '1. ท่านไม่สามารถแสดงให้เห็นอย่างชัดเจนได้ว่าผู้ยื่นคำร้อง\nเป็นเจ้าของข้อมูลส่วนบุคคลหรือมีอำนาจใน\nการยื่นคำร้องขอดังกล่าว',
-            ),
-            const Text(
-              '2. คำร้องขอดังกล่าวไม่สมเหตุสมผล เช่น กรณีที่ผู้ร้อง\nขอไม่มีสิทธิในการขอเข้าถึงข้อมูลส่วนบุคคลหรือ\nไม่มีข้อมูลส่วนบุคคลนั้นอยู่ที่บริษัท เป็นต้น',
-            ),
-            const Text(
-              '3. คำร้องขอดังกล่าวเป็นคำร้องขอฟุ่มเฟือย เช่น เป็นคำร้อง\nขอที่มีลักษณะเดียวกัน หรือ มีเนื้อหาเดียวกัน\nซ้ำ ๆ กันโดยไม่มีเหตุอันสมควร',
-            ),
-            const Text(
-              '4. การเก็บรักษาข้อมูลส่วนบุคคลนั้นเป็นไป\nเพื่อการก่อตั้งสิทธิเรียกร้องตามกฎหมาย การปฏิบัติตามกฎหมาย\nการใช้สิทธิเรียกร้องตามกฎหมาย หรือการยกขึ้นต่อสู้\nสิทธิเรียกร้องตามกฎหมาย',
-            ),
-            const Text(
-              '5. การดำเนินการดังกล่าวกระทบในด้านลบต่อ\nสิทธิเสรีภาพของบุคคลอื่น',
-            ),
-            const Text(
-              '6. การประมวลผลข้อมูลนั้นมีความจำเป็นในการปฏิบัติ\nหน้าที่ตามสัญญาระหว่างเจ้าของข้อมูลส่วนบุคคลกับบริษัท ',
-            ),
-            const Text(
-              '7. การประมวลผลข้อมูลมีความจำเป็นเพื่อประโยชน์โดย\nชอบด้วยกฎหมายของบริษัท',
-            ),
-            const Text(
-              '8. กรณีอื่นๆตามกฎหมายที่เกี่ยวข้องกำหนดโดยปกติ\nท่านจะไม่เสียค่าใช้จ่ายในการดำเนินการตามคำร้อง\nขอของท่านอย่างไรก็ดีหากปรากฏอย่างชัดเจนว่า\nคำร้องขอของท่านเป็นคำร้องขอที่ไม่สมเหตุสมผลหรือคำร้อง\nขอฟุ่มเฟือยบริษัทอาจคิดค่าใช้จ่ายในการ\nดำเนินการแก่ท่านตามสมควร',
-            ),
-            const SizedBox(height: UiConfig.lineSpacing),
-            CustomButton(
-              width: double.infinity,
-              height: 50,
-              onPressed: () {
-                context.push(DataSubjectRightRouter.step7.path);
-              },
-              child: Text(
-                'ถัดไป',
-                style: Theme.of(context)
-                    .textTheme
-                    .titleMedium
-                    ?.copyWith(color: Theme.of(context).colorScheme.onPrimary),
-              ),
-            ),
-          ],
-        ),
+          ),
+        ],
       ),
     );
   }
