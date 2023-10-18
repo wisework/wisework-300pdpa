@@ -131,7 +131,7 @@ class _DSRStep5ScreenState extends State<DSRStep5Screen> {
           title: Transform.translate(
             offset: const Offset(-16, 0),
             child: Text("ระงับการประมวลผลข้อมูล",
-                style: checkboxValue2 == false
+                style: checkboxValue1 == false
                     ? Theme.of(context).textTheme.bodySmall?.copyWith()
                     : Theme.of(context).textTheme.bodySmall?.copyWith(
                         color: Theme.of(context).colorScheme.primary)),
@@ -139,157 +139,154 @@ class _DSRStep5ScreenState extends State<DSRStep5Screen> {
         ),
         Visibility(
           visible: checkboxValue1 == true,
-          child: Padding(
-            padding: const EdgeInsets.only(left: 50.0, right: 50, top: 10),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start, // กำหนดให้ชิดซ้าย
-              children: [
-                Text(
-                  'ข้อมูลและรายละเอียดการดำเนินการ',
-                  style: Theme.of(context).textTheme.titleMedium?.copyWith(
-                      color: Theme.of(context).colorScheme.primary),
-                ),
-                const SizedBox(height: UiConfig.lineSpacing),
-                const TitleRequiredText(
-                  text: 'ข้อมูลส่วนบุคคล',
-                  required: true,
-                ),
-                const CustomTextField(
-                  hintText: 'กรอกข้อมูลส่วนบุคคล',
-                  required: true,
-                ),
-                const SizedBox(height: UiConfig.lineSpacing),
-                const TitleRequiredText(
-                  text: 'สถานที่พบเจอ',
-                ),
-                const CustomTextField(
-                  hintText: 'กรอกสถานที่พบเจอ',
-                ),
-                const SizedBox(height: UiConfig.lineSpacing),
-                const TitleRequiredText(
-                  text: 'การดำเนินการ',
-                  required: true,
-                ),
-                ListTile(
-                  title: Text('ลบ',
-                      style: Theme.of(context).textTheme.bodyMedium),
-                  leading: Radio(
-                    value: 1,
-                    groupValue: selectedRadioTile,
-                    onChanged: (val) {
-                      setSelectedRadioTile(val!);
-                    },
-                  ),
-                  onTap: () {
-                    setSelectedRadioTile(1);
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start, // กำหนดให้ชิดซ้าย
+            children: [
+              Text(
+                'ข้อมูลและรายละเอียดการดำเนินการ',
+                style: Theme.of(context).textTheme.titleMedium?.copyWith(
+                    color: Theme.of(context).colorScheme.primary),
+              ),
+              const SizedBox(height: UiConfig.lineSpacing),
+              const TitleRequiredText(
+                text: 'ข้อมูลส่วนบุคคล',
+                required: true,
+              ),
+              const CustomTextField(
+                hintText: 'กรอกข้อมูลส่วนบุคคล',
+                required: true,
+              ),
+              const SizedBox(height: UiConfig.lineSpacing),
+              const TitleRequiredText(
+                text: 'สถานที่พบเจอ',
+              ),
+              const CustomTextField(
+                hintText: 'กรอกสถานที่พบเจอ',
+              ),
+              const SizedBox(height: UiConfig.lineSpacing),
+              const TitleRequiredText(
+                text: 'การดำเนินการ',
+                required: true,
+              ),
+              ListTile(
+                title: Text('ลบ',
+                    style: Theme.of(context).textTheme.bodyMedium),
+                leading: Radio(
+                  value: 1,
+                  groupValue: selectedRadioTile,
+                  onChanged: (val) {
+                    setSelectedRadioTile(val!);
                   },
                 ),
-                Divider(
-                  color: Theme.of(context)
-                      .colorScheme
-                      .outlineVariant
-                      .withOpacity(0.5),
-                ),
-                ListTile(
-                  title: Text('ไม่ทำลาย',
-                      style: Theme.of(context).textTheme.bodyMedium),
-                  leading: Radio(
-                    value: 2,
-                    groupValue: selectedRadioTile,
-                    onChanged: (val) {
-                      setSelectedRadioTile(val!);
-                    },
-                  ),
-                  onTap: () {
-                    setSelectedRadioTile(2);
+                onTap: () {
+                  setSelectedRadioTile(1);
+                },
+              ),
+              Divider(
+                color: Theme.of(context)
+                    .colorScheme
+                    .outlineVariant
+                    .withOpacity(0.5),
+              ),
+              ListTile(
+                title: Text('ไม่ทำลาย',
+                    style: Theme.of(context).textTheme.bodyMedium),
+                leading: Radio(
+                  value: 2,
+                  groupValue: selectedRadioTile,
+                  onChanged: (val) {
+                    setSelectedRadioTile(val!);
                   },
                 ),
-                Divider(
-                  color: Theme.of(context)
-                      .colorScheme
-                      .outlineVariant
-                      .withOpacity(0.5),
-                ),
-                ListTile(
-                  title: Text('ทำให้ไม่สามารถระบุตัวตน',
-                      style: Theme.of(context).textTheme.bodyMedium),
-                  leading: Radio(
-                    value: 3,
-                    groupValue: selectedRadioTile,
-                    onChanged: (val) {
-                      setSelectedRadioTile(val!);
-                    },
-                  ),
-                  onTap: () {
-                    setSelectedRadioTile(3);
+                onTap: () {
+                  setSelectedRadioTile(2);
+                },
+              ),
+              Divider(
+                color: Theme.of(context)
+                    .colorScheme
+                    .outlineVariant
+                    .withOpacity(0.5),
+              ),
+              ListTile(
+                title: Text('ทำให้ไม่สามารถระบุตัวตน',
+                    style: Theme.of(context).textTheme.bodyMedium),
+                leading: Radio(
+                  value: 3,
+                  groupValue: selectedRadioTile,
+                  onChanged: (val) {
+                    setSelectedRadioTile(val!);
                   },
                 ),
-                const SizedBox(height: UiConfig.lineSpacing),
-                Text(
-                  'เหตุผลประกอบคำร้อง',
-                  style: Theme.of(context).textTheme.titleMedium?.copyWith(
-                      color: Theme.of(context).colorScheme.primary),
-                ),
-                Column(
-                  children: choices.keys.map((String choice) {
-                    return choice == 'เหตุผลอื่นๆ โปรดระบุ'
-                        ? Column(
-                            children: [
-                              CheckboxListTile(
-                                controlAffinity:
-                                    ListTileControlAffinity.leading,
-                                contentPadding: const EdgeInsets.only(
-                                    top: 0, left: 0, right: 16, bottom: 0),
-                                title: Text(choice , style: Theme.of(context).textTheme.bodyMedium),
-                                value: choices[choice]!,
-                                onChanged: (bool? value) {
-                                  setState(() {
-                                    choices[choice] = value!;
-                                  });
-                                },
-                              ),
-                              if (choices[choice]!)
-                                Padding(
-                                  padding: const EdgeInsets.only(left: 16.0),
-                                  child: Column(
-                                    crossAxisAlignment:
-                                        CrossAxisAlignment.start,
-                                    children: [
-                                      const TitleRequiredText(
-                                        text: 'เหตุผล',
-                                        required: true,
+                onTap: () {
+                  setSelectedRadioTile(3);
+                },
+              ),
+              const SizedBox(height: UiConfig.lineSpacing),
+              Text(
+                'เหตุผลประกอบคำร้อง',
+                style: Theme.of(context).textTheme.titleMedium?.copyWith(
+                    color: Theme.of(context).colorScheme.primary),
+              ),
+              Column(
+                children: choices.keys.map((String choice) {
+                  return choice == 'เหตุผลอื่นๆ โปรดระบุ'
+                      ? Column(
+                          children: [
+                            CheckboxListTile(
+                              controlAffinity:
+                                  ListTileControlAffinity.leading,
+                              contentPadding: const EdgeInsets.only(
+                                  top: 0, left: 0, right: 16, bottom: 0),
+                              title: Text(choice , style: Theme.of(context).textTheme.bodyMedium),
+                              value: choices[choice]!,
+                              onChanged: (bool? value) {
+                                setState(() {
+                                  choices[choice] = value!;
+                                });
+                              },
+                            ),
+                            if (choices[choice]!)
+                              Padding(
+                                padding: const EdgeInsets.only(left: 16.0),
+                                child: Column(
+                                  crossAxisAlignment:
+                                      CrossAxisAlignment.start,
+                                  children: [
+                                    const TitleRequiredText(
+                                      text: 'เหตุผล',
+                                      required: true,
+                                    ),
+                                    TextField(
+                                      onChanged: (value) {
+                                        setState(() {
+                                          otherReason = value;
+                                        });
+                                      },
+                                      decoration: const InputDecoration(
+                                        hintText: 'เหตุผล',
                                       ),
-                                      TextField(
-                                        onChanged: (value) {
-                                          setState(() {
-                                            otherReason = value;
-                                          });
-                                        },
-                                        decoration: const InputDecoration(
-                                          hintText: 'เหตุผล',
-                                        ),
-                                      ),
-                                    ],
-                                  ),
+                                    ),
+                                  ],
                                 ),
-                            ],
-                          )
-                        : CheckboxListTile(
-                            controlAffinity: ListTileControlAffinity.leading,
-                            contentPadding: const EdgeInsets.only(
-                                top: 0, left: 0, right: 16, bottom: 0),
-                            title: Text(choice , style: Theme.of(context).textTheme.bodyMedium),
-                            value: choices[choice]!,
-                            onChanged: (bool? value) {
-                              setState(() {
-                                choices[choice] = value!;
-                              });
-                            },
-                          );
-                  }).toList(),
-                )
-              ],
-            ),
+                              ),
+                          ],
+                        )
+                      : CheckboxListTile(
+                          controlAffinity: ListTileControlAffinity.leading,
+                          contentPadding: const EdgeInsets.only(
+                              top: 0, left: 0, right: 16, bottom: 0),
+                          title: Text(choice , style: Theme.of(context).textTheme.bodyMedium),
+                          value: choices[choice]!,
+                          onChanged: (bool? value) {
+                            setState(() {
+                              choices[choice] = value!;
+                            });
+                          },
+                        );
+                }).toList(),
+              )
+            ],
           ),
         ),
       ],
