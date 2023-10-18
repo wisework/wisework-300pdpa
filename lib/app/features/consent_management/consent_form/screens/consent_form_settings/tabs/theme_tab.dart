@@ -1,8 +1,12 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:go_router/go_router.dart';
 import 'package:ionicons/ionicons.dart';
 import 'package:pdpa/app/config/config.dart';
 import 'package:pdpa/app/data/models/consent_management/consent_form_model.dart';
 import 'package:pdpa/app/data/models/consent_management/consent_theme_model.dart';
+import 'package:pdpa/app/features/consent_management/consent_form/cubit/current_consent_form_settings/current_consent_form_settings_cubit.dart';
+import 'package:pdpa/app/features/consent_management/consent_form/routes/consent_form_route.dart';
 import 'package:pdpa/app/features/consent_management/consent_form/screens/consent_form_settings/widgets/consent_theme_tile.dart';
 import 'package:pdpa/app/shared/widgets/customs/custom_container.dart';
 import 'package:pdpa/app/shared/widgets/material_ink_well.dart';
@@ -65,6 +69,11 @@ class ThemeTab extends StatelessWidget {
           itemBuilder: (context, index) => ConsentThemeTile(
             consentTheme: consentThemes[index],
             selectedValue: consentForm.consentThemeId,
+            onChanged: (value) {
+              context
+                  .read<CurrentConsentFormSettingsCubit>()
+                  .setConsentTheme(consentThemes[index]);
+            },
           ),
           separatorBuilder: (context, _) => const SizedBox(
             height: UiConfig.lineSpacing,
@@ -77,7 +86,9 @@ class ThemeTab extends StatelessWidget {
 
   MaterialInkWell _buildNewThemeBUtton(BuildContext context) {
     return MaterialInkWell(
-      onTap: () {},
+      onTap: () {
+        context.push(ConsentFormRoute.createConsentTheme.path);
+      },
       child: Padding(
         padding: const EdgeInsets.all(8.0),
         child: Row(

@@ -14,7 +14,7 @@ class PurposeBloc extends Bloc<PurposeEvent, PurposeState> {
   })  : _masterDataRepository = masterDataRepository,
         super(const PurposeInitial()) {
     on<GetPurposesEvent>(_getPurposesHandler);
-    on<UpdatePurposeEvent>(_updatePurposeHandler);
+    on<UpdatePurposesEvent>(_updatePurposesHandler);
   }
 
   final MasterDataRepository _masterDataRepository;
@@ -40,8 +40,8 @@ class PurposeBloc extends Bloc<PurposeEvent, PurposeState> {
     );
   }
 
-  Future<void> _updatePurposeHandler(
-    UpdatePurposeEvent event,
+  Future<void> _updatePurposesHandler(
+    UpdatePurposesEvent event,
     Emitter<PurposeState> emit,
   ) async {
     if (state is GotPurposes) {

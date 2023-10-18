@@ -4,6 +4,8 @@ import 'package:pdpa/app/data/models/master_data/purpose_category_model.dart';
 import 'package:pdpa/app/data/models/master_data/purpose_model.dart';
 import 'package:pdpa/app/data/models/master_data/reason_type_model.dart';
 import 'package:pdpa/app/data/models/master_data/reject_type_model.dart';
+import 'package:pdpa/app/data/models/master_data/request_reason_template_model.dart';
+import 'package:pdpa/app/data/models/master_data/request_reject_template_model.dart';
 import 'package:pdpa/app/data/models/master_data/request_type_model.dart';
 import 'package:pdpa/app/services/apis/master_data_api.dart';
 import 'package:pdpa/app/shared/errors/exceptions.dart';
@@ -222,17 +224,6 @@ class MasterDataRepository {
     }
   }
 
-  //! //? Customfield
-  // ResultFuture<List<CustomFieldModel>> getCustomfield(String companyId) async {
-  //   try {
-  //     final result = await _api.getCustomFields(companyId);
-
-  //     return Right(result);
-  //   } on ApiException catch (error) {
-  //     return Left(ApiFailure.fromException(error));
-  //   }
-  // }
-
   //? Request Type
   ResultFuture<List<RequestTypeModel>> getRequestTypes(
     String companyId,
@@ -440,5 +431,142 @@ class MasterDataRepository {
     }
   }
 
+//? Request Reason Template
+  ResultFuture<List<RequestReasonTemplateModel>> getRequestReasonTemplates(
+    String companyId,
+  ) async {
+    try {
+      final result = await _api.getRequestReasonTemplates(companyId);
+
+      return Right(result);
+    } on ApiException catch (error) {
+      return Left(ApiFailure.fromException(error));
+    }
+  }
+
+  ResultFuture<RequestReasonTemplateModel> getRequestReasonTemplateById(
+    String requestReasonId,
+    String companyId,
+  ) async {
+    try {
+      final result = await _api.getRequestReasonTemplateById(requestReasonId, companyId);
+
+      if (result != null) return Right(result);
+
+      return const Left(
+        ApiFailure(message: 'Reason Type not found', statusCode: 404),
+      );
+    } on ApiException catch (error) {
+      return Left(ApiFailure.fromException(error));
+    }
+  }
+
+  ResultFuture<RequestReasonTemplateModel> createRequestReasonTemplate(
+    RequestReasonTemplateModel requestReason,
+    String companyId,
+  ) async {
+    try {
+      final result = await _api.createRequestReasonTemplate(requestReason, companyId);
+
+      return Right(result);
+    } on ApiException catch (error) {
+      return Left(ApiFailure.fromException(error));
+    }
+  }
+
+  ResultVoid updateRequestReasonTemplate(
+    RequestReasonTemplateModel requestReason,
+    String companyId,
+  ) async {
+    try {
+      await _api.updateRequestReasonTemplate(requestReason, companyId);
+
+      return const Right(null);
+    } on ApiException catch (error) {
+      return Left(ApiFailure.fromException(error));
+    }
+  }
+
+  ResultVoid deleteRequestReasonTemplate(
+    String requestReasonId,
+    String companyId,
+  ) async {
+    try {
+      await _api.deleteRequestReasonTemplate(requestReasonId, companyId);
+
+      return const Right(null);
+    } on ApiException catch (error) {
+      return Left(ApiFailure.fromException(error));
+    }
+  }
+
+//? Request Reject Template
+  ResultFuture<List<RequestRejectTemplateModel>> getRequestRejectTemplates(
+    String companyId,
+  ) async {
+    try {
+      final result = await _api.getRequestRejectTemplates(companyId);
+
+      return Right(result);
+    } on ApiException catch (error) {
+      return Left(ApiFailure.fromException(error));
+    }
+  }
+
+  ResultFuture<RequestRejectTemplateModel> getRequestRejectTemplateById(
+    String requestRejectId,
+    String companyId,
+  ) async {
+    try {
+      final result = await _api.getRequestRejectTemplateById(requestRejectId, companyId);
+
+      if (result != null) return Right(result);
+
+      return const Left(
+        ApiFailure(message: 'Reason Type not found', statusCode: 404),
+      );
+    } on ApiException catch (error) {
+      return Left(ApiFailure.fromException(error));
+    }
+  }
+
+  ResultFuture<RequestRejectTemplateModel> createRequestRejectTemplate(
+    RequestRejectTemplateModel requestReject,
+    String companyId,
+  ) async {
+    try {
+      final result = await _api.createRequestRejectTemplate(requestReject, companyId);
+
+      return Right(result);
+    } on ApiException catch (error) {
+      return Left(ApiFailure.fromException(error));
+    }
+  }
+
+  ResultVoid updateRequestRejectTemplate(
+    RequestRejectTemplateModel requestReject,
+    String companyId,
+  ) async {
+    try {
+      await _api.updateRequestRejectTemplate(requestReject, companyId);
+
+      return const Right(null);
+    } on ApiException catch (error) {
+      return Left(ApiFailure.fromException(error));
+    }
+  }
+
+  ResultVoid deleteRequestRejectTemplate(
+    String requestRejectId,
+    String companyId,
+  ) async {
+    try {
+      await _api.deleteRequestRejectTemplate(requestRejectId, companyId);
+
+      return const Right(null);
+    } on ApiException catch (error) {
+      return Left(ApiFailure.fromException(error));
+    }
+  }
 
 }

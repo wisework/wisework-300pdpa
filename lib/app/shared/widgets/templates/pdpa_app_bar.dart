@@ -28,10 +28,7 @@ class PdpaAppBar extends StatelessWidget implements PreferredSizeWidget {
       automaticallyImplyLeading: false,
       title: Row(
         children: <Widget>[
-          Visibility(
-            visible: leadingIcon != null,
-            child: leadingIcon!,
-          ),
+          if (leadingIcon != null) leadingIcon!,
           SizedBox(width: titleSpacing),
           title,
         ],
