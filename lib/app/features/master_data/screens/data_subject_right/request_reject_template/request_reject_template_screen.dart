@@ -1,14 +1,46 @@
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
 import 'package:ionicons/ionicons.dart';
 import 'package:pdpa/app/config/config.dart';
+import 'package:pdpa/app/data/models/master_data/request_reject_template_model.dart';
+import 'package:pdpa/app/features/authentication/bloc/sign_in/sign_in_bloc.dart';
+import 'package:pdpa/app/features/master_data/bloc/data_subject_right/request_reject_tp/request_reject_tp_bloc.dart';
 import 'package:pdpa/app/features/master_data/routes/master_data_route.dart';
+import 'package:pdpa/app/features/master_data/widgets/master_data_item_card.dart';
 import 'package:pdpa/app/shared/widgets/customs/custom_icon_button.dart';
 import 'package:pdpa/app/shared/widgets/templates/pdpa_app_bar.dart';
 
-class RequestRejectTemplateScreen extends StatelessWidget {
+class RequestRejectTemplateScreen extends StatefulWidget {
   const RequestRejectTemplateScreen({super.key});
+
+  @override
+  State<RequestRejectTemplateScreen> createState() =>
+      _RequestRejectTemplateScreenState();
+}
+
+class _RequestRejectTemplateScreenState
+    extends State<RequestRejectTemplateScreen> {
+  void _initialData() {
+    final bloc = context.read<SignInBloc>();
+
+    String companyId = '';
+    if (bloc.state is SignedInUser) {
+      companyId = (bloc.state as SignedInUser).user.currentCompany;
+    }
+
+    context
+        .read<RequestRejectTpBloc>()
+        .add(GetRequestRejectTpEvent(companyId: companyId));
+  }
+
+  @override
+  void initState() {
+    super.initState();
+
+    _initialData();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -20,7 +52,8 @@ class RequestRejectTemplateView extends StatefulWidget {
   const RequestRejectTemplateView({super.key});
 
   @override
-  State<RequestRejectTemplateView> createState() => _RequestRejectTemplateViewState();
+  State<RequestRejectTemplateView> createState() =>
+      _RequestRejectTemplateViewState();
 }
 
 class _RequestRejectTemplateViewState extends State<RequestRejectTemplateView> {
@@ -50,15 +83,32 @@ class _RequestRejectTemplateViewState extends State<RequestRejectTemplateView> {
               decoration: BoxDecoration(
                 color: Theme.of(context).colorScheme.onBackground,
               ),
-              // child: ListView.builder(
-              //   itemCount: purposes.length,
-              //   itemBuilder: (context, index) {
-              //     return _buildItemCard(
-              //       context,
-              //       purpose: purposes[index],
-              //     );
-              //   },
-              // ),
+              child: BlocBuilder<RequestRejectTpBloc, RequestRejectTpState>(
+                builder: (context, state) {
+                  if (state is GotRequestRejects) {
+                    return ListView.builder(
+                      itemCount: state.requestRejects.length,
+                      itemBuilder: (context, index) {
+                        return _buildItemCard(
+                          context,
+                          requestReason: state.requestRejects[index],
+                        );
+                      },
+                    );
+                  }
+                  if (state is RequestRejectError) {
+                    return Center(
+                      child: Text(
+                        state.message,
+                        style: Theme.of(context).textTheme.bodyMedium,
+                      ),
+                    );
+                  }
+                  return const Center(
+                    child: CircularProgressIndicator(),
+                  );
+                },
+              ),
             ),
           ),
         ],
@@ -72,24 +122,22 @@ class _RequestRejectTemplateViewState extends State<RequestRejectTemplateView> {
     );
   }
 
-  // MasterDataItemCard _buildItemCard(
-  //   BuildContext context, {
-  //   required PurposeModel purpose,
-  // }) {
-  //   const language = 'en-US';
-  //   final description = purpose.description.firstWhere(
-  //     (item) => item.language == language,
-  //     orElse: LocalizedText.empty,
-  //   );
-  //   final warningDescription = purpose.warningDescription.firstWhere(
-  //     (item) => item.language == language,
-  //     orElse: LocalizedText.empty,
-  //   );
+  MasterDataItemCard _buildItemCard(
+    BuildContext context, {
+    required RequestRejectTemplateModel requestReason,
+  }) {
+    final description = requestReason.requestTypeId;
 
-  //   return MasterDataItemCard(
-  //     title: description.text,
-  //     subtitle: warningDescription.text,
-  //     status: purpose.status,
-  //   );
-  // }
+    return MasterDataItemCard(
+      title: description,
+      subtitle: '',
+      status: requestReason.status,
+      onTap: () {
+        context.push(
+          MasterDataRoute.editRequestType.path
+              .replaceFirst(':id', requestReason.requestRejectTemplateId),
+        );
+      },
+    );
+  }
 }

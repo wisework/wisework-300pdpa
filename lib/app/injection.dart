@@ -4,6 +4,10 @@ import 'package:firebase_storage/firebase_storage.dart';
 import 'package:get_it/get_it.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 import 'package:pdpa/app/features/consent_management/consent_form/bloc/user_consent_form/user_consent_form_bloc.dart';
+import 'package:pdpa/app/features/master_data/bloc/data_subject_right/edit_request_reason_tp/edit_request_reason_tp_bloc.dart';
+import 'package:pdpa/app/features/master_data/bloc/data_subject_right/edit_request_reject_tp/edit_request_reject_tp_bloc.dart';
+import 'package:pdpa/app/features/master_data/bloc/data_subject_right/request_reason_tp/request_reason_tp_bloc.dart';
+import 'package:pdpa/app/features/master_data/bloc/data_subject_right/request_reject_tp/request_reject_tp_bloc.dart';
 
 import 'config/config.dart';
 import 'data/repositories/authentication_repository.dart';
@@ -182,6 +186,26 @@ Future<void> _masterData() async {
     )
     ..registerFactory(
       () => EditReasonTypeBloc(
+        masterDataRepository: serviceLocator(),
+      ),
+    )
+     ..registerFactory(
+      () => RequestReasonTpBloc(
+        masterDataRepository: serviceLocator(),
+      ),
+    )
+    ..registerFactory(
+      () => EditRequestReasonTpBloc(
+        masterDataRepository: serviceLocator(),
+      ),
+    )
+     ..registerFactory(
+      () => RequestRejectTpBloc(
+        masterDataRepository: serviceLocator(),
+      ),
+    )
+    ..registerFactory(
+      () => EditRequestRejectTpBloc(
         masterDataRepository: serviceLocator(),
       ),
     )

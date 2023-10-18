@@ -129,8 +129,8 @@
                 "edit": "Edit Request Reasons",
                 "requesttype" : "Request Type",
                 "chooserequesttype" : "Choose Request Type",
-                "rejecttype" : "Reasons Type",
-                "chooserejecttype" : "Choose Reasons Type"
+                "reasontype" : "Reasons Type",
+                "choosereasontype" : "Choose Reasons Type"
             }
         },
         "etc": {

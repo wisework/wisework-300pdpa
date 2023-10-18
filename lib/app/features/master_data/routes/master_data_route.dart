@@ -144,12 +144,16 @@ class MasterDataRoute {
 
   static final GoRoute createRequestReason = GoRoute(
     path: '/master-data/requestreason/create',
-    builder: (context, _) => const EditRequestReasonTemplateScreen(),
+    builder: (context, _) => const EditRequestReasonTemplateScreen(
+      requestReasonId: '',
+    ),
   );
 
   static final GoRoute editRequestReason = GoRoute(
     path: '/master-data/requestreason/edit',
-    builder: (context, _) => const EditRequestReasonTemplateScreen(),
+    builder: (context, state) => EditRequestReasonTemplateScreen(
+      requestReasonId: state.pathParameters['id'] ?? '',
+    ),
   );
 
   //? Request Reject
@@ -160,12 +164,16 @@ class MasterDataRoute {
 
   static final GoRoute createRequestReject = GoRoute(
     path: '/master-data/requestreject/create',
-    builder: (context, _) => const EditRequestRejectTemplateScreen(),
+    builder: (context, _) => const EditRequestRejectTemplateScreen(
+      requestRejectId: '',
+    ),
   );
 
   static final GoRoute editRequestReject = GoRoute(
     path: '/master-data/requestreject/edit',
-    builder: (context, _) => const EditRequestRejectTemplateScreen(),
+    builder: (context, state) => EditRequestRejectTemplateScreen(
+      requestRejectId: state.pathParameters['id'] ?? '',
+    ),
   );
 
   static final List<GoRoute> routes = <GoRoute>[
