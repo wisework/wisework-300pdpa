@@ -4,275 +4,241 @@ import 'package:ionicons/ionicons.dart';
 import 'package:pdpa/app/config/config.dart';
 import 'package:pdpa/app/features/data_subject_right/routes/data_subject_right_route.dart';
 import 'package:pdpa/app/shared/widgets/customs/custom_button.dart';
+import 'package:pdpa/app/shared/widgets/customs/custom_checkbox.dart';
+import 'package:pdpa/app/shared/widgets/customs/custom_container.dart';
 import 'package:pdpa/app/shared/widgets/customs/custom_icon_button.dart';
+import 'package:pdpa/app/shared/widgets/customs/custom_text_field.dart';
+import 'package:pdpa/app/shared/widgets/expanded_container.dart';
+import 'package:pdpa/app/shared/widgets/material_ink_well.dart';
 import 'package:pdpa/app/shared/widgets/templates/pdpa_app_bar.dart';
 import 'package:pdpa/app/shared/widgets/title_required_text.dart';
 
-class DSRStep2Screen extends StatefulWidget {
-  const DSRStep2Screen({super.key});
+class RequestPowerVerificationScreen extends StatefulWidget {
+  const RequestPowerVerificationScreen({super.key});
 
   @override
-  State<DSRStep2Screen> createState() => _DSRStep2ScreenState();
+  State<RequestPowerVerificationScreen> createState() =>
+      _RequestPowerVerificationScreenState();
 }
 
-class _DSRStep2ScreenState extends State<DSRStep2Screen> {
-  bool? checkboxValue1 = false;
-  bool? checkboxValue2 = false;
+class _RequestPowerVerificationScreenState
+    extends State<RequestPowerVerificationScreen> {
+  @override
+  Widget build(BuildContext context) {
+    return const PowerVerificationView();
+  }
+}
+
+class PowerVerificationView extends StatefulWidget {
+  const PowerVerificationView({super.key});
+
+  @override
+  State<PowerVerificationView> createState() => _PowerVerificationViewState();
+}
+
+class _PowerVerificationViewState extends State<PowerVerificationView> {
+  bool isExpanded = false;
+
+  void _setExpand() {
+    setState(() {
+      isExpanded = !isExpanded;
+    });
+  }
+
+  List<String> power = [
+    'หนังสือมอบอำนาจ',
+    'อื่นๆ ถ้ามี (โปรดระบุ)',
+  ];
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: PdpaAppBar(
-        leadingIcon: _buildPopButton(),
-        title: const Text('แบบฟอร์มขอใช้สิทธิ์ตามกฏหมาย'),
-      ),
-      body: SingleChildScrollView(
-        child: Container(
-          
-          padding: const EdgeInsets.symmetric(horizontal: 20),
-          decoration: BoxDecoration(
-            color: Theme.of(context).colorScheme.onBackground,
-          ),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            mainAxisAlignment: MainAxisAlignment.start,
-            children: [
-              const SizedBox(height: UiConfig.lineSpacing),
-              Text(
-                'เอกสารพิสูจน์อำนาจดำเนินการแทน',
-                textAlign: TextAlign.left,
-                style: Theme.of(context)
-                    .textTheme
-                    .titleLarge
-                    ?.copyWith(color: Theme.of(context).colorScheme.primary),
-              ),
-              const SizedBox(height: UiConfig.lineSpacing),
-              Text(
-                'ทั้งนี้ข้าพเจ้าได้แนบเอกสารดังต่อไปนี้เพื่อการตรวจสอบอำนาจตัวตนและถิ่นที่อยู่ของผู้ยื่นคำร้องและเจ้าของข้อมูลส่วนบุคคลเพื่อให้บริษัทสามารถดำเนินการตามสิทธิที่ร้องขอได้อย่างถูกต้อง',
-                textAlign: TextAlign.left,
-                style: Theme.of(context)
-                    .textTheme
-                    .bodySmall
-                    ?.copyWith(color: Theme.of(context).colorScheme.onSurface),
-              ),
-              _checkfile(),
-              Divider(
-                color: Theme.of(context)
-                    .colorScheme
-                    .outlineVariant
-                    .withOpacity(0.5),
-              ),
-              _checkOtherFile(),
-              const SizedBox(height: UiConfig.lineSpacing),
-              CustomButton(
-              width: double.infinity,
-              height: 50,
-              onPressed: () {
-                context.push(DataSubjectRightRouter.step3.path);
-              },
-              child: Text(
-                'ถัดไป',
-                style: Theme.of(context)
-                    .textTheme
-                    .titleMedium
-                    ?.copyWith(color: Theme.of(context).colorScheme.onPrimary),
-              ),
-            ),
-            ],
-          ),
+        leadingIcon: CustomIconButton(
+          onPressed: () {
+            context.pop();
+          },
+          icon: Ionicons.chevron_back_outline,
+          iconColor: Theme.of(context).colorScheme.primary,
+          backgroundColor: Theme.of(context).colorScheme.onBackground,
+        ),
+        title: Text(
+          'แบบฟอร์มขอใช้สิทธิ์ตามกฏหมาย', //!
+          style: Theme.of(context).textTheme.titleLarge,
         ),
       ),
+      body: _buildPowerVerificationForm(context),
     );
   }
 
-  CustomIconButton _buildPopButton() {
-    return CustomIconButton(
-      onPressed: () => context.pop(),
-      icon: Ionicons.chevron_back_outline,
-      iconColor: Theme.of(context).colorScheme.primary,
-      backgroundColor: Theme.of(context).colorScheme.onBackground,
-    );
-  }
-
-  _checkfile() {
-    return Column(
-      children: [
-        CheckboxListTile(
-          side: const BorderSide(color: Color(0xff2684FF)),
-          controlAffinity: ListTileControlAffinity.leading,
-          value: checkboxValue1,
-          onChanged: (bool? value) {
-            if (value != checkboxValue1) {
-              setState(() {
-                checkboxValue1 = value;
-              });
-            }
-          },
-          title: Transform.translate(
-            offset: const Offset(-16, 0),
-            child: Text("หนังสือมอบอำนาจ",
-                style: checkboxValue1 == false
-                    ? Theme.of(context).textTheme.bodySmall?.copyWith()
-                    : Theme.of(context).textTheme.bodySmall?.copyWith(
-                        color: Theme.of(context).colorScheme.primary)),
-          ),
-        ),
-        Visibility(
-          visible: checkboxValue1 == true,
-          child: Padding(
-            padding: const EdgeInsets.only(left : 50.0 , right: 50),
+  //? Content
+  Widget _buildPowerVerificationForm(BuildContext context) {
+    return SingleChildScrollView(
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          const SizedBox(height: UiConfig.lineSpacing),
+          CustomContainer(
             child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              mainAxisAlignment: MainAxisAlignment.start,
               children: [
-                const Row(
-                  children: [
-                    TitleRequiredText(
-                      text: 'ไฟล์สำเนา ',
-                      required: true,
-                    ),
-                  ],
-                ),
-                const SizedBox(height: UiConfig.textSpacing),
-                Row(
-                  children: [
-                    Container(
-                      height: 50,
-                      width: 280,
-                      decoration: BoxDecoration(
-                        border: Border.all(color: Colors.grey, width: 1.7),
-                        color: Colors.grey[200],
-                        borderRadius: BorderRadius.circular(8.0),
-                      ),
-                      padding: const EdgeInsets.symmetric(horizontal: 10),
-                      child: TextFormField(
-                        enabled: false,
-                        decoration: const InputDecoration(
-                          hintText: 'ไม่ได้เลือกไฟล์',
-                          border: InputBorder.none,
-                        ),
-                      ),
-                    ),
-                    const SizedBox(width: UiConfig.textSpacing),
-                    IconButton.filled(
-                      onPressed: () {},
-                      icon: const Icon(Icons.upload),
-                      color: Theme.of(context).colorScheme.onPrimary,
-                    )
-                  ],
-                ),
-              ],
-            ),
-          ),
-        ),
-      ],
-    );
-  }
-
-  _checkOtherFile() {
-    return Column(
-      children: [
-        CheckboxListTile(
-          side: const BorderSide(color: Color(0xff2684FF)),
-          controlAffinity: ListTileControlAffinity.leading,
-          value: checkboxValue2,
-          onChanged: (bool? value) {
-            if (value != checkboxValue2) {
-              setState(() {
-                checkboxValue2 = value;
-              });
-            }
-          },
-          title: Transform.translate(
-            offset: const Offset(-16, 0),
-            child: Text("อื่นๆ ถ้ามี(โปรดระบุ)",
-                style: checkboxValue2 == false
-                    ? Theme.of(context).textTheme.bodySmall?.copyWith()
-                    : Theme.of(context).textTheme.bodySmall?.copyWith(
-                        color: Theme.of(context).colorScheme.primary)),
-          ),
-        ),
-        Visibility(
-          visible: checkboxValue2 == true,
-          child: Padding(
-            padding: const EdgeInsets.only(left : 50.0 , right: 50),
-            child: Column(
-              children: [
-                const Row(
-                  children: [
-                    TitleRequiredText(
-                      text: 'ประเภทเอกสาร ',
-                      required: true,
-                    ),
-                  ],
-                ),
-                const SizedBox(height: UiConfig.textSpacing),
-                Row(
-                  children: [
-                    SizedBox(
-                      height: 50,
-                      width: 280,
-                      child: TextFormField(
-                          decoration: InputDecoration(
-                        hintText: "ประเภทเอกสาร",
-                        fillColor: Colors.white,
-                        focusedBorder: OutlineInputBorder(
-                          borderRadius: BorderRadius.circular(10.0),
-                          borderSide: const BorderSide(
-                            color: Colors.blue,
-                          ),
-                        ),
-                        enabledBorder: OutlineInputBorder(
-                          borderRadius: BorderRadius.circular(10.0),
-                          borderSide: const BorderSide(
-                            color: Colors.grey,
-                            width: 1.7,
-                          ),
-                        ),
-                      )),
-                    ),
-                  ],
+                const SizedBox(height: UiConfig.lineSpacing),
+                Text(
+                  'เอกสารพิสูจน์อำนาจดำเนินการแทน', //!
+                  textAlign: TextAlign.left,
+                  style: Theme.of(context)
+                      .textTheme
+                      .titleLarge
+                      ?.copyWith(color: Theme.of(context).colorScheme.primary),
                 ),
                 const SizedBox(height: UiConfig.lineSpacing),
-                const Row(
-                  children: [
-                    TitleRequiredText(
-                      text: 'ไฟล์สำเนา ',
-                      required: true,
-                    ),
-                  ],
+                Text(
+                  'ทั้งนี้ข้าพเจ้าได้แนบเอกสารดังต่อไปนี้เพื่อการตรวจสอบอำนาจตัวตนและถิ่นที่อยู่ของผู้ยื่นคำร้องและเจ้าของข้อมูลส่วนบุคคลเพื่อให้บริษัทสามารถดำเนินการตามสิทธิที่ร้องขอได้อย่างถูกต้อง', //!
+                  textAlign: TextAlign.left,
+                  style: Theme.of(context).textTheme.bodySmall?.copyWith(
+                      color: Theme.of(context).colorScheme.onSurface),
                 ),
-                const SizedBox(height: UiConfig.textSpacing),
-                Row(
-                  children: [
-                    Container(
-                      height: 50,
-                      width: 280,
-                      decoration: BoxDecoration(
-                        border: Border.all(color: Colors.grey, width: 1.7),
-                        color: Colors.grey[200],
-                        borderRadius: BorderRadius.circular(8.0),
-                      ),
-                      padding: const EdgeInsets.symmetric(horizontal: 10),
-                      child: TextFormField(
-                        enabled: false,
-                        decoration: const InputDecoration(
-                          hintText: 'ไม่ได้เลือกไฟล์',
-                          border: InputBorder.none,
-                        ),
-                      ),
-                    ),
-                    const SizedBox(width: UiConfig.textSpacing),
-                    IconButton.filled(
-                      onPressed: () {},
-                      icon: const Icon(Icons.upload),
-                      color: Theme.of(context).colorScheme.onPrimary,
-                    ),
-                    
-                  ],
+                const SizedBox(height: UiConfig.lineSpacing),
+                Column(
+                  children: power
+                      .map((menu) => Padding(
+                            padding: const EdgeInsets.only(
+                              bottom: UiConfig.lineGap,
+                            ),
+                            child: _buildCheckBoxTile(context, menu),
+                          ))
+                      .toList(),
+                ),
+                const SizedBox(height: UiConfig.lineSpacing),
+                CustomButton(
+                  height: 40.0,
+                  onPressed: () {
+                    context.push(DataSubjectRightRouter.stepThree.path);
+                  },
+                  child: Text(
+                    'ถัดไป', //!
+                    style: Theme.of(context).textTheme.titleMedium?.copyWith(
+                        color: Theme.of(context).colorScheme.onPrimary),
+                  ),
                 ),
               ],
             ),
           ),
+        ],
+      ),
+    );
+  }
+
+  //? Checkbox List
+  Widget _buildCheckBoxTile(BuildContext context, String name) {
+    return Column(
+      children: [
+        Row(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            CustomCheckBox(
+              value: isExpanded,
+              onChanged: (bool? value) {
+                _setExpand();
+              },
+            ),
+            const SizedBox(width: UiConfig.actionSpacing),
+            Expanded(
+              child: Column(
+                mainAxisSize: MainAxisSize.min,
+                mainAxisAlignment: MainAxisAlignment.center,
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: <Widget>[
+                  MaterialInkWell(
+                    borderRadius: BorderRadius.circular(4.0),
+                    onTap: _setExpand,
+                    child: Padding(
+                      padding: const EdgeInsets.symmetric(vertical: 12.0),
+                      child: Text(
+                        name, //!
+                        style: isExpanded == false
+                            ? Theme.of(context).textTheme.bodyMedium?.copyWith()
+                            : Theme.of(context).textTheme.bodyMedium?.copyWith(
+                                color: Theme.of(context).colorScheme.primary),
+                      ),
+                    ),
+                  ),
+                  const SizedBox(width: UiConfig.textLineSpacing),
+                  _buildExpandedContainer(context, name),
+                ],
+              ),
+            ),
+          ],
         ),
       ],
+    );
+  }
+
+  //? Expanded Children
+  ExpandedContainer _buildExpandedContainer(BuildContext context, String name) {
+    return ExpandedContainer(
+      expand: isExpanded,
+      duration: const Duration(milliseconds: 400),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: <Widget>[
+          Visibility(
+              visible: name.contains('อื่นๆ ถ้ามี (โปรดระบุ)'),
+              child: const Column(
+                children: [
+                  Row(
+                    children: <Widget>[
+                      TitleRequiredText(
+                        text: 'ประเภทเอกสาร',
+                        required: true, //!
+                      ),
+                    ],
+                  ),
+                  SizedBox(height: UiConfig.lineSpacing),
+                  Row(
+                    children: [
+                      Expanded(
+                        child: CustomTextField(
+                          hintText: 'ระบุประเภทเอกสาร',
+                        ),
+                      ),
+                    ],
+                  ),
+                  SizedBox(height: UiConfig.lineSpacing),
+                ],
+              )),
+          const Row(
+            children: <Widget>[
+              TitleRequiredText(
+                text: 'ไฟล์สำเนา',
+                required: true, //!
+              ),
+            ],
+          ),
+          const SizedBox(height: UiConfig.lineSpacing),
+          Row(
+            children: <Widget>[
+              const Expanded(
+                child: CustomTextField(
+                  hintText: 'ไม่ได้เลือกไฟล์',
+                  readOnly: true,
+                ),
+              ),
+              Padding(
+                padding: const EdgeInsets.only(left: 10.0),
+                child: CustomIconButton(
+                  onPressed: () {},
+                  icon: Ionicons.cloud_upload,
+                  iconColor: Theme.of(context).colorScheme.primary,
+                  backgroundColor: Theme.of(context).colorScheme.onBackground,
+                ),
+              ),
+            ],
+          ),
+          const SizedBox(height: UiConfig.lineSpacing),
+        ],
+      ),
     );
   }
 }

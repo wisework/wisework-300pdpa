@@ -4,17 +4,18 @@ import 'package:ionicons/ionicons.dart';
 import 'package:pdpa/app/config/config.dart';
 import 'package:pdpa/app/features/data_subject_right/routes/data_subject_right_route.dart';
 import 'package:pdpa/app/shared/widgets/customs/custom_button.dart';
+import 'package:pdpa/app/shared/widgets/customs/custom_container.dart';
 import 'package:pdpa/app/shared/widgets/customs/custom_icon_button.dart';
 import 'package:pdpa/app/shared/widgets/templates/pdpa_app_bar.dart';
 
-class DSRStratScreen extends StatefulWidget {
-  const DSRStratScreen({super.key});
+class RequestIntroScreen extends StatefulWidget {
+  const RequestIntroScreen({super.key});
 
   @override
-  State<DSRStratScreen> createState() => _DSRStratScreenState();
+  State<RequestIntroScreen> createState() => _RequestIntroScreenState();
 }
 
-class _DSRStratScreenState extends State<DSRStratScreen> {
+class _RequestIntroScreenState extends State<RequestIntroScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -22,11 +23,8 @@ class _DSRStratScreenState extends State<DSRStratScreen> {
         leadingIcon: _buildPopButton(),
         title: const Text('แบบฟอร์มขอใช้สิทธิ์ตามกฏหมาย'),
       ),
-      body: Container(
-        decoration: BoxDecoration(
-          color: Theme.of(context).colorScheme.onBackground,
-        ),
-        padding: const EdgeInsets.only(left: 50, right: 50, top: 20),
+      body: CustomContainer(
+        margin: const EdgeInsets.all(0),
         child: Column(
           children: [
             Container(
@@ -70,10 +68,10 @@ class _DSRStratScreenState extends State<DSRStratScreen> {
             ),
             const SizedBox(height: UiConfig.lineSpacing),
             CustomButton(
-              width: double.infinity,
-              height: 50,
+                width: double.infinity,
+                height: 50,
                 onPressed: () {
-                  context.push(DataSubjectRightRouter.step1.path);
+                  context.pushReplacement(DataSubjectRightRouter.stepOne.path);
                 },
                 child: Text(
                   'กรอกแบบคำร้อง',
