@@ -1,12 +1,13 @@
 import 'package:go_router/go_router.dart';
-import 'package:pdpa/app/features/data_subject_right/screens/create_dsr/start_screen.dart';
-import 'package:pdpa/app/features/data_subject_right/screens/create_dsr/step1.dart';
-import 'package:pdpa/app/features/data_subject_right/screens/create_dsr/step2.dart';
-import 'package:pdpa/app/features/data_subject_right/screens/create_dsr/step3.dart';
-import 'package:pdpa/app/features/data_subject_right/screens/create_dsr/step4.dart';
-import 'package:pdpa/app/features/data_subject_right/screens/create_dsr/step5.dart';
-import 'package:pdpa/app/features/data_subject_right/screens/create_dsr/step6.dart';
-import 'package:pdpa/app/features/data_subject_right/screens/create_dsr/step7.dart';
+import 'package:pdpa/app/features/data_subject_right/screens/create_dsr/accepte_term_screen.dart';
+import 'package:pdpa/app/features/data_subject_right/screens/create_dsr/condition_screen.dart';
+import 'package:pdpa/app/features/data_subject_right/screens/create_dsr/data_owner_screen.dart';
+import 'package:pdpa/app/features/data_subject_right/screens/create_dsr/data_requester_screen.dart';
+import 'package:pdpa/app/features/data_subject_right/screens/create_dsr/identity_verification_screen.dart';
+import 'package:pdpa/app/features/data_subject_right/screens/create_dsr/intro_screen.dart';
+import 'package:pdpa/app/features/data_subject_right/screens/create_dsr/power_verification_screen.dart';
+import 'package:pdpa/app/features/data_subject_right/screens/create_dsr/select_request_screen.dart';
+
 import 'package:pdpa/app/features/data_subject_right/screens/data_subject_right_screen.dart';
 
 class DataSubjectRightRouter {
