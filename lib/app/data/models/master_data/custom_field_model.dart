@@ -1,4 +1,5 @@
 import 'package:equatable/equatable.dart';
+import 'package:flutter/services.dart';
 
 import 'package:pdpa/app/shared/utils/constants.dart';
 import 'package:pdpa/app/shared/utils/typedef.dart';
@@ -24,7 +25,7 @@ class CustomFieldModel extends Equatable {
   final String id;
   final List<LocalizedModel> title;
   final List<LocalizedModel> hintText;
-  final String inputType;
+  final TextInputType inputType;
   final int? lengthLimit;
   final int minLines;
   final int maxLines;
@@ -39,7 +40,7 @@ class CustomFieldModel extends Equatable {
           id: '',
           title: [],
           hintText: [],
-          inputType: '',
+          inputType: TextInputType.text,
           lengthLimit: null,
           minLines: 1,
           maxLines: 1,
@@ -63,7 +64,7 @@ class CustomFieldModel extends Equatable {
               (item) => LocalizedModel.fromMap(item as DataMap),
             ),
           ),
-          inputType: map['inputType'] as String,
+          inputType: TextInputType.values[map['inputType'] as int],
           lengthLimit: (map['lengthLimit'] as String).isNotEmpty
               ? int.parse(map['lengthLimit'] as String)
               : null,
@@ -79,7 +80,7 @@ class CustomFieldModel extends Equatable {
   DataMap toMap() => {
         'title': title.map((item) => item.toMap()).toList(),
         'hintText': hintText.map((item) => item.toMap()).toList(),
-        'inputType': inputType,
+        'inputType': inputType.index,
         'lengthLimit': lengthLimit != null ? lengthLimit.toString() : '',
         'minLines': minLines,
         'maxLines': maxLines,
@@ -100,7 +101,7 @@ class CustomFieldModel extends Equatable {
     String? id,
     List<LocalizedModel>? title,
     List<LocalizedModel>? hintText,
-    String? inputType,
+    TextInputType? inputType,
     int? lengthLimit,
     int? minLines,
     int? maxLines,
@@ -126,14 +127,14 @@ class CustomFieldModel extends Equatable {
     );
   }
 
-  CustomFieldModel toCreated(String email, DateTime date) => copyWith(
+  CustomFieldModel setCreate(String email, DateTime date) => copyWith(
         createdBy: email,
         createdDate: date,
         updatedBy: email,
         updatedDate: date,
       );
 
-  CustomFieldModel toUpdated(String email, DateTime date) => copyWith(
+  CustomFieldModel setUpdate(String email, DateTime date) => copyWith(
         updatedBy: email,
         updatedDate: date,
       );

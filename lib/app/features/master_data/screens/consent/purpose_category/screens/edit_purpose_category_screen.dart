@@ -293,7 +293,7 @@ class _EditPurposeCategoryViewState extends State<EditPurposeCategoryView> {
     if (_formKey.currentState!.validate()) {
       print('pass1');
       if (widget.isNewPurposeCategory) {
-        purposeCategory = purposeCategory.toCreated(
+        purposeCategory = purposeCategory.setCreate(
           widget.currentUser.email,
           DateTime.now(),
         );
@@ -305,7 +305,7 @@ class _EditPurposeCategoryViewState extends State<EditPurposeCategoryView> {
               companyId: widget.currentUser.currentCompany,
             ));
       } else {
-        purposeCategory = purposeCategory.toUpdated(
+        purposeCategory = purposeCategory.setUpdate(
           widget.currentUser.email,
           DateTime.now(),
         );

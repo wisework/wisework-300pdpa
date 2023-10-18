@@ -201,7 +201,7 @@ class ConsentThemeModel extends Equatable {
       };
 
   factory ConsentThemeModel.fromDocument(FirebaseDocument document) {
-    Map<String, dynamic> response = document.data()!;
+    DataMap response = document.data()!;
     response['id'] = document.id;
     return ConsentThemeModel.fromMap(response);
   }
@@ -252,6 +252,18 @@ class ConsentThemeModel extends Equatable {
       updatedDate: updatedDate ?? this.updatedDate,
     );
   }
+
+  ConsentThemeModel setCreate(String email, DateTime date) => copyWith(
+        createdBy: email,
+        createdDate: date,
+        updatedBy: email,
+        updatedDate: date,
+      );
+
+  ConsentThemeModel setUpdate(String email, DateTime date) => copyWith(
+        updatedBy: email,
+        updatedDate: date,
+      );
 
   @override
   List<Object> get props {

@@ -6,7 +6,7 @@ class RequestRejectTemplateModel extends Equatable {
   const RequestRejectTemplateModel({
     required this.requestRejectTemplateId,
     required this.requestTypeId,
-    required this.rejectTypeId,
+    required this.rejectTypesId,
     required this.status,
     required this.createdBy,
     required this.createdDate,
@@ -16,7 +16,7 @@ class RequestRejectTemplateModel extends Equatable {
 
   final String requestRejectTemplateId;
   final String requestTypeId;
-  final List<String> rejectTypeId;
+  final List<String> rejectTypesId;
   final ActiveStatus status;
   final String createdBy;
   final DateTime createdDate;
@@ -27,7 +27,7 @@ class RequestRejectTemplateModel extends Equatable {
       : this(
           requestRejectTemplateId: '',
           requestTypeId: '',
-          rejectTypeId: [],
+          rejectTypesId: [],
           status: ActiveStatus.active,
           createdBy: '',
           createdDate: DateTime.fromMillisecondsSinceEpoch(0),
@@ -39,7 +39,7 @@ class RequestRejectTemplateModel extends Equatable {
       : this(
           requestRejectTemplateId: map['requestRejectTemplateId'] as String,
           requestTypeId: map['requestTypeId'] as String,
-          rejectTypeId: List<String>.from(map['rejectTypeId'] as List<dynamic>),
+          rejectTypesId: List<String>.from(map['rejectTypesId'] as List<dynamic>),
           status: ActiveStatus.values[map['status'] as int],
           createdBy: map['createdBy'] as String,
           createdDate: DateTime.parse(map['createdDate'] as String),
@@ -49,7 +49,7 @@ class RequestRejectTemplateModel extends Equatable {
 
   DataMap toMap() => {
         'requestTypeId': requestTypeId,
-        'rejectTypeId': rejectTypeId,
+        'rejectTypesId': rejectTypesId,
         'status': status.index,
         'createdBy': createdBy,
         'createdDate': createdDate.toIso8601String(),
@@ -66,7 +66,7 @@ class RequestRejectTemplateModel extends Equatable {
   RequestRejectTemplateModel copyWith({
     String? requestRejectTemplateId,
     String? requestTypeId,
-    List<String>? rejectTypeId,
+    List<String>? rejectTypesId,
     ActiveStatus? status,
     String? createdBy,
     DateTime? createdDate,
@@ -77,7 +77,7 @@ class RequestRejectTemplateModel extends Equatable {
       requestRejectTemplateId:
           requestRejectTemplateId ?? this.requestRejectTemplateId,
       requestTypeId: requestTypeId ?? this.requestTypeId,
-      rejectTypeId: rejectTypeId ?? this.rejectTypeId,
+      rejectTypesId: rejectTypesId ?? this.rejectTypesId,
       status: status ?? this.status,
       createdBy: createdBy ?? this.createdBy,
       createdDate: createdDate ?? this.createdDate,
@@ -103,7 +103,7 @@ class RequestRejectTemplateModel extends Equatable {
     return [
       requestRejectTemplateId,
       requestTypeId,
-      rejectTypeId,
+      rejectTypesId,
       status,
       createdBy,
       createdDate,

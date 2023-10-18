@@ -37,7 +37,7 @@ class GotConsentFormSettings extends ConsentFormSettingsState {
     this.purposeCategories,
     this.purposes,
     this.consentThemes,
-    this.currentConsentTheme,
+    this.consentTheme,
   );
 
   final ConsentFormModel consentForm;
@@ -45,15 +45,54 @@ class GotConsentFormSettings extends ConsentFormSettingsState {
   final List<PurposeCategoryModel> purposeCategories;
   final List<PurposeModel> purposes;
   final List<ConsentThemeModel> consentThemes;
-  final ConsentThemeModel currentConsentTheme;
+  final ConsentThemeModel consentTheme;
 
   @override
-  List<Object> get props => [
-        consentForm,
-        customFields,
-        purposeCategories,
-        purposes,
-        consentThemes,
-        currentConsentTheme,
-      ];
+  List<Object> get props {
+    return [
+      consentForm,
+      customFields,
+      purposeCategories,
+      purposes,
+      consentThemes,
+      consentTheme,
+    ];
+  }
+}
+
+class UpdatingConsentFormSettings extends ConsentFormSettingsState {
+  const UpdatingConsentFormSettings();
+
+  @override
+  List<Object> get props => [];
+}
+
+class UpdatedConsentFormSettings extends ConsentFormSettingsState {
+  const UpdatedConsentFormSettings(
+    this.consentForm,
+    this.customFields,
+    this.purposeCategories,
+    this.purposes,
+    this.consentThemes,
+    this.consentTheme,
+  );
+
+  final ConsentFormModel consentForm;
+  final List<CustomFieldModel> customFields;
+  final List<PurposeCategoryModel> purposeCategories;
+  final List<PurposeModel> purposes;
+  final List<ConsentThemeModel> consentThemes;
+  final ConsentThemeModel consentTheme;
+
+  @override
+  List<Object> get props {
+    return [
+      consentForm,
+      customFields,
+      purposeCategories,
+      purposes,
+      consentThemes,
+      consentTheme,
+    ];
+  }
 }

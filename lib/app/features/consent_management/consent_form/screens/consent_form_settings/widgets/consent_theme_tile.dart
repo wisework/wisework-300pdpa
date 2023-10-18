@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
 import 'package:ionicons/ionicons.dart';
 import 'package:pdpa/app/config/config.dart';
 import 'package:pdpa/app/data/models/consent_management/consent_theme_model.dart';
+import 'package:pdpa/app/features/consent_management/consent_form/routes/consent_form_route.dart';
 import 'package:pdpa/app/shared/widgets/customs/custom_button.dart';
 import 'package:pdpa/app/shared/widgets/customs/custom_checkbox.dart';
 import 'package:pdpa/app/shared/widgets/customs/custom_container.dart';
@@ -15,10 +17,12 @@ class ConsentThemeTile extends StatefulWidget {
     super.key,
     required this.consentTheme,
     required this.selectedValue,
+    required this.onChanged,
   });
 
   final ConsentThemeModel consentTheme;
   final String selectedValue;
+  final Function(String? value) onChanged;
 
   @override
   State<ConsentThemeTile> createState() => _ConsentThemeTileState();
@@ -43,7 +47,7 @@ class _ConsentThemeTileState extends State<ConsentThemeTile> {
           child: CustomRadioButton(
             value: widget.consentTheme.id,
             selected: widget.selectedValue,
-            onChanged: (value) {},
+            onChanged: widget.onChanged,
           ),
         ),
         const SizedBox(width: UiConfig.actionSpacing),
@@ -72,14 +76,24 @@ class _ConsentThemeTileState extends State<ConsentThemeTile> {
                   ),
                   const SizedBox(width: UiConfig.textLineSpacing),
                   CustomIconButton(
-                    onPressed: () {},
+                    onPressed: () {
+                      context.push(
+                        ConsentFormRoute.editConsentTheme.path
+                            .replaceFirst(':id', widget.consentTheme.id),
+                      );
+                    },
                     icon: Ionicons.pencil_outline,
                     iconColor: Theme.of(context).colorScheme.primary,
                     backgroundColor: Theme.of(context).colorScheme.onBackground,
                   ),
                   const SizedBox(width: UiConfig.textLineSpacing),
                   CustomIconButton(
-                    onPressed: () {},
+                    onPressed: () {
+                      context.push(
+                        ConsentFormRoute.copyConsentTheme.path
+                            .replaceFirst(':id', widget.consentTheme.id),
+                      );
+                    },
                     icon: Ionicons.copy_outline,
                     iconColor: Theme.of(context).colorScheme.primary,
                     backgroundColor: Theme.of(context).colorScheme.onBackground,
@@ -108,10 +122,11 @@ class _ConsentThemeTileState extends State<ConsentThemeTile> {
       duration: const Duration(milliseconds: 400),
       child: Container(
         padding: const EdgeInsets.all(UiConfig.defaultPaddingSpacing),
-        color: Theme.of(context).colorScheme.background,
+        color: widget.consentTheme.backgroundColor,
         margin: const EdgeInsets.symmetric(vertical: UiConfig.textLineSpacing),
         child: CustomContainer(
           margin: EdgeInsets.zero,
+          color: widget.consentTheme.bodyBackgroundColor,
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: <Widget>[

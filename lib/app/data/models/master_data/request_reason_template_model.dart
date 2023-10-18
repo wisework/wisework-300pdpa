@@ -6,7 +6,7 @@ class RequestReasonTemplateModel extends Equatable {
   const RequestReasonTemplateModel({
     required this.requestReasonTemplateId,
     required this.requestTypeId,
-    required this.reasonTypeId,
+    required this.reasonTypesId,
     required this.status,
     required this.createdBy,
     required this.createdDate,
@@ -16,7 +16,7 @@ class RequestReasonTemplateModel extends Equatable {
 
   final String requestReasonTemplateId;
   final String requestTypeId;
-  final List<String> reasonTypeId;
+  final List<String> reasonTypesId;
   final ActiveStatus status;
   final String createdBy;
   final DateTime createdDate;
@@ -27,7 +27,7 @@ class RequestReasonTemplateModel extends Equatable {
       : this(
           requestReasonTemplateId: '',
           requestTypeId: '',
-          reasonTypeId: [],
+          reasonTypesId: [],
           status: ActiveStatus.active,
           createdBy: '',
           createdDate: DateTime.fromMillisecondsSinceEpoch(0),
@@ -39,7 +39,7 @@ class RequestReasonTemplateModel extends Equatable {
       : this(
           requestReasonTemplateId: map['requestReasonTemplateId'] as String,
           requestTypeId: map['requestTypeId'] as String,
-          reasonTypeId: List<String>.from(map['reasonTypeId'] as List<dynamic>),
+          reasonTypesId: List<String>.from(map['reasonTypesId'] as List<dynamic>),
           status: ActiveStatus.values[map['status'] as int],
           createdBy: map['createdBy'] as String,
           createdDate: DateTime.parse(map['createdDate'] as String),
@@ -49,7 +49,7 @@ class RequestReasonTemplateModel extends Equatable {
 
   DataMap toMap() => {
         'requestTypeId': requestTypeId,
-        'reasonTypeId': reasonTypeId,
+        'reasonTypesId': reasonTypesId,
         'status': status.index,
         'createdBy': createdBy,
         'createdDate': createdDate.toIso8601String(),
@@ -66,7 +66,7 @@ class RequestReasonTemplateModel extends Equatable {
   RequestReasonTemplateModel copyWith({
     String? requestReasonTemplateId,
     String? requestTypeId,
-    List<String>? reasonTypeId,
+    List<String>? reasonTypesId,
     ActiveStatus? status,
     String? createdBy,
     DateTime? createdDate,
@@ -77,7 +77,7 @@ class RequestReasonTemplateModel extends Equatable {
       requestReasonTemplateId:
           requestReasonTemplateId ?? this.requestReasonTemplateId,
       requestTypeId: requestTypeId ?? this.requestTypeId,
-      reasonTypeId: reasonTypeId ?? this.reasonTypeId,
+      reasonTypesId: reasonTypesId ?? this.reasonTypesId,
       status: status ?? this.status,
       createdBy: createdBy ?? this.createdBy,
       createdDate: createdDate ?? this.createdDate,
@@ -103,7 +103,7 @@ class RequestReasonTemplateModel extends Equatable {
     return [
       requestReasonTemplateId,
       requestTypeId,
-      reasonTypeId,
+      reasonTypesId,
       status,
       createdBy,
       createdDate,
