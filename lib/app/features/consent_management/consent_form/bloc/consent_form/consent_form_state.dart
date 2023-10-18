@@ -33,21 +33,15 @@ class GettingConsentForms extends ConsentFormState {
 class GotConsentForms extends ConsentFormState {
   const GotConsentForms(
     this.consentForms,
-  );
-
-  final List<ConsentFormModel> consentForms;
-
-  @override
-  List<Object> get props => [consentForms];
-}
-
-class GotPurposeCategories extends ConsentFormState {
-  const GotPurposeCategories(
     this.purposeCategories,
   );
 
+  final List<ConsentFormModel> consentForms;
   final List<PurposeCategoryModel> purposeCategories;
 
   @override
-  List<Object> get props => [purposeCategories];
+  List<Object> get props => [
+        consentForms,
+        purposeCategories,
+      ];
 }

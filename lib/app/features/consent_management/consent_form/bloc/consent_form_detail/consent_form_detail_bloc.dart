@@ -98,8 +98,6 @@ class ConsentFormDetailBloc
                   (purpose) => gotPurposes.add(purpose),
                 );
               }
-
-              print(gotPurposes.length);
             },
           );
         }
@@ -121,7 +119,7 @@ class ConsentFormDetailBloc
       GotConsentFormDetail(
         gotConsentForm,
         gotCustomFields,
-        gotPurposeCategories,
+        gotPurposeCategories..sort((a, b) => b.priority.compareTo(a.priority)),
         gotPurposes,
         gotConsentThemes
           ..sort((a, b) => b.updatedDate.compareTo(a.updatedDate)),

@@ -196,7 +196,7 @@ class _ConsentInfoTabState extends State<ConsentInfoTab> {
     return ListView.separated(
       shrinkWrap: true,
       physics: const NeverScrollableScrollPhysics(),
-      itemCount: purposeFiltered.length - 1,
+      itemCount: purposeFiltered.length,
       itemBuilder: (_, index) {
         final description = purposeFiltered[index].description.firstWhere(
               (item) => item.language == language,
@@ -350,77 +350,3 @@ class _ConsentInfoTabState extends State<ConsentInfoTab> {
     );
   }
 }
-
-
-// class PurposeInfo extends StatelessWidget {
-//   PurposeInfo({
-//     super.key,
-//     required this.purpose,
-//     required this.purposeCategory,
-//   });
-
-//   final List<PurposeModel> purpose;
-//   final PurposeCategoryModel purposeCategory;
-
-//   final purposeFiltered = UtilFunctions.filterPurposeByIds(
-//     purpose,
-//     purposeCategory.purposes,
-//   );
-
-//   @override
-//   Widget build(BuildContext context) {
-//     const language = 'en-US';
-//     return ListView.builder(
-//       shrinkWrap: true,
-//       physics: const NeverScrollableScrollPhysics(),
-//       itemCount: purpose.length,
-//       itemBuilder: (_, index) {
-//         final description = purpose[index].description.firstWhere(
-//               (item) => item.language == language,
-//               orElse: LocalizedModel.empty,
-//             );
-
-//         return Padding(
-//           padding: const EdgeInsets.only(left: 20.0),
-//           child: Column(
-//             crossAxisAlignment: CrossAxisAlignment.start,
-//             children: <Widget>[
-//               Row(
-//                 crossAxisAlignment: CrossAxisAlignment.start,
-//                 children: <Widget>[
-//                   Expanded(
-//                     child: Text(
-//                       description.text,
-//                       style: Theme.of(context).textTheme.labelLarge?.copyWith(
-//                             height: 1.8,
-//                             color: Theme.of(context).colorScheme.secondary,
-//                           ),
-//                     ),
-//                   ),
-//                   Padding(
-//                     padding: const EdgeInsets.only(left: 30.0),
-//                     child: Text(
-//                       "${purpose[index].retentionPeriod} ${purpose[index].periodUnit}",
-//                       style: Theme.of(context).textTheme.labelLarge?.copyWith(
-//                             color: Theme.of(context).colorScheme.secondary,
-//                           ),
-//                     ),
-//                   ),
-//                 ],
-//               ),
-//               Padding(
-//                 padding: const EdgeInsets.symmetric(vertical: 8.0),
-//                 child: Divider(
-//                   color: Theme.of(context)
-//                       .colorScheme
-//                       .outlineVariant
-//                       .withOpacity(0.5),
-//                 ),
-//               ),
-//             ],
-//           ),
-//         );
-//       },
-//     );
-//   }
-// }

@@ -35,14 +35,36 @@ class ConsentFormBloc extends Bloc<ConsentFormEvent, ConsentFormState> {
 
     emit(const GettingConsentForms());
 
+    final List<String> allPurposeCategories = [];
+    List<PurposeCategoryModel> gotPurposeCategories = [];
+
     final result = await _consentRepository.getConsentForms(event.companyId);
 
-    result.fold((failure) => emit(ConsentFormError(failure.errorMessage)),
-        (consentForms) async {
+    await result.fold((failure) {
+      emit(ConsentFormError(failure.errorMessage));
+      return;
+    }, (consentForms) async {
+      allPurposeCategories
+          .addAll(consentForms.expand((form) => form.purposeCategories));
+
+      for (String purposeCategoryId in allPurposeCategories) {
+        final result = await _masterDataRepository.getPurposeCategoryById(
+          purposeCategoryId,
+          event.companyId,
+        );
+
+        result.fold(
+          (failure) => emit(ConsentFormError(failure.errorMessage)),
+          (purposeCategory) => gotPurposeCategories.add(purposeCategory),
+        );
+      }
+
       emit(
         GotConsentForms(
-          consentForms..sort((a, b) => b.updatedDate.compareTo(a.updatedDate)),
-        ),
+            consentForms
+              ..sort((a, b) => b.updatedDate.compareTo(a.updatedDate)),
+            gotPurposeCategories
+              ..sort((a, b) => b.priority.compareTo(a.priority))),
       );
     });
   }
@@ -55,6 +77,7 @@ class ConsentFormBloc extends Bloc<ConsentFormEvent, ConsentFormState> {
       final consentForms = (state as GotConsentForms).consentForms;
 
       List<ConsentFormModel> updated = [];
+      List<PurposeCategoryModel> purposeCategories = [];
 
       switch (event.updateType) {
         case UpdateType.created:
@@ -76,8 +99,9 @@ class ConsentFormBloc extends Bloc<ConsentFormEvent, ConsentFormState> {
 
       emit(
         GotConsentForms(
-          updated..sort((a, b) => b.updatedDate.compareTo(a.updatedDate)),
-        ),
+            updated..sort((a, b) => b.updatedDate.compareTo(a.updatedDate)),
+            purposeCategories
+              ..sort((a, b) => b.priority.compareTo(a.priority))),
       );
     }
   }

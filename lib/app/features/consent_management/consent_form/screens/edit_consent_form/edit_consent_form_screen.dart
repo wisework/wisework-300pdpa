@@ -14,6 +14,8 @@ import 'package:pdpa/app/data/models/master_data/purpose_model.dart';
 import 'package:pdpa/app/features/authentication/bloc/sign_in/sign_in_bloc.dart';
 import 'package:pdpa/app/features/consent_management/consent_form/bloc/consent_form/consent_form_bloc.dart';
 import 'package:pdpa/app/features/consent_management/consent_form/bloc/edit_consent_form/edit_consent_form_bloc.dart';
+import 'package:pdpa/app/features/consent_management/consent_form/cubit/choose_purpose_category/choose_purpose_category_cubit.dart';
+import 'package:pdpa/app/features/consent_management/consent_form/routes/consent_form_route.dart';
 import 'package:pdpa/app/features/consent_management/consent_form/screens/edit_consent_form/widgets/ReorderPurposeCategory.dart';
 
 import 'package:pdpa/app/injection.dart';
@@ -161,8 +163,6 @@ class _EditConsentFormViewState extends State<EditConsentFormView> {
   late TextEditingController titleController;
   late TextEditingController descriptionController;
 
-  // late bool isActivated;
-
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
 
   @override
@@ -185,8 +185,6 @@ class _EditConsentFormViewState extends State<EditConsentFormView> {
 
     titleController = TextEditingController();
     descriptionController = TextEditingController();
-
-    // isActivated = true;
 
     if (consentForm != ConsentFormModel.empty()) {
       if (consentForm.description.isNotEmpty) {
@@ -356,20 +354,36 @@ class _EditConsentFormViewState extends State<EditConsentFormView> {
                                 (item) => item.language == language,
                                 orElse: LocalizedModel.empty,
                               );
-                              return Row(
-                                mainAxisAlignment:
-                                    MainAxisAlignment.spaceBetween,
-                                children: <Widget>[
-                                  Text(
-                                    title.text,
-                                    style:
-                                        Theme.of(context).textTheme.bodyMedium,
-                                  ),
-                                  CustomSwitchButton(
-                                    value: true,
-                                    onChanged: (value) => {},
-                                  ),
-                                ],
+                              return BlocBuilder<ChoosePurposeCategoryCubit,
+                                  ChoosePurposeCategoryCubitState>(
+                                builder: (context, state) {
+                                  return Row(
+                                    mainAxisAlignment:
+                                        MainAxisAlignment.spaceBetween,
+                                    children: <Widget>[
+                                      Text(
+                                        title.text,
+                                        style: Theme.of(context)
+                                            .textTheme
+                                            .bodyMedium,
+                                      ),
+                                      CustomSwitchButton(
+                                        value: state.customFieldSelected
+                                            .contains(
+                                                widget.customfields[index]),
+                                        onChanged: (value) => {
+                                          print(state.customFieldSelected),
+                                          print(widget.customfields[1]),
+                                          context
+                                              .read<
+                                                  ChoosePurposeCategoryCubit>()
+                                              .customFieldSelected(
+                                                  widget.customfields[index])
+                                        },
+                                      ),
+                                    ],
+                                  );
+                                },
                               );
                             }),
                       ],
@@ -402,7 +416,10 @@ class _EditConsentFormViewState extends State<EditConsentFormView> {
                           width: double.infinity,
                           height: 50.0,
                           child: OutlinedButton(
-                            onPressed: () async {},
+                            onPressed: () async {
+                              context.push(
+                                  ConsentFormRoute.choosePurposeCategory.path);
+                            },
                             style: ButtonStyle(
                                 side: MaterialStateProperty.all<BorderSide>(
                                     BorderSide(

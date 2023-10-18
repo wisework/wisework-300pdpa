@@ -52,26 +52,6 @@ class EditConsentFormBloc
       gotCustomFields = customField;
     });
 
-    final resultPurposeCategory =
-        await _masterDataRepository.getPurposeCategories(
-      event.companyId,
-    );
-    resultPurposeCategory
-        .fold((failure) => emit(EditConsentFormError(failure.errorMessage)),
-            (purposeCategory) {
-      gotPurposeCategories = purposeCategory;
-    });
-
-    final resultPurpose = await _masterDataRepository.getPurposes(
-      event.companyId,
-    );
-
-    resultPurpose
-        .fold((failure) => emit(EditConsentFormError(failure.errorMessage)),
-            (purpose) {
-      gotPurposes = purpose;
-    });
-
     if (event.consentFormId.isEmpty) {
       emit(
         GotCurrentConsentForm(
@@ -106,9 +86,12 @@ class EditConsentFormBloc
           );
 
           result.fold(
-            (failure) => emit(EditConsentFormError(failure.errorMessage)),
-            (customField) => gotCustomFields.add(customField),
-          );
+              (failure) => emit(EditConsentFormError(failure.errorMessage)),
+              (customField) {
+            if (!gotCustomFields.contains(customField)) {
+              gotCustomFields.add(customField);
+            }
+          });
         }
 
         for (String purposeCategoryId in consentForm.purposeCategories) {
@@ -148,7 +131,7 @@ class EditConsentFormBloc
       GotCurrentConsentForm(
         gotConsentForm,
         gotCustomFields,
-        gotPurposeCategories,
+        gotPurposeCategories..sort((a, b) => b.priority.compareTo(a.priority)),
         gotPurposes,
       ),
     );

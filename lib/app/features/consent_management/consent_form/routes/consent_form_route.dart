@@ -5,32 +5,38 @@ import 'package:pdpa/app/features/consent_management/consent_form/screens/consen
 import 'package:pdpa/app/features/consent_management/consent_form/screens/consent_form_settings/screens/edit_consent_theme_screen.dart';
 
 import 'package:pdpa/app/features/consent_management/consent_form/screens/edit_consent_form/edit_consent_form_screen.dart';
+import 'package:pdpa/app/features/consent_management/consent_form/screens/edit_consent_form/screens/choose_pupose_category_screen.dart';
 
 import 'package:pdpa/app/features/consent_management/consent_form/screens/user_consent_form_screen.dart';
 
 class ConsentFormRoute {
   static final GoRoute consentForm = GoRoute(
-    path: '/consent-management/consent-form',
+    path: '/consent-form',
     builder: (context, _) => const ConsentFormScreen(),
   );
 
   static final GoRoute createConsentForm = GoRoute(
-    path: '/consent-management/consent-form/create',
+    path: '/consent-form/create',
     builder: (context, _) => const EditConsentFormScreen(consentFormId: ''),
   );
 
   static final GoRoute consentFormDetail = GoRoute(
-    path: '/consent-management/consent-form/:id/detail',
+    path: '/consent-form/:id/detail',
     builder: (context, state) => DetailConsentFormScreen(
       consentFormId: state.pathParameters['id'] ?? '',
     ),
   );
 
   static final GoRoute editConsentForm = GoRoute(
-    path: '/consent-management/consent-form/:id/edit',
+    path: '/consent-form/:id/edit',
     builder: (context, state) => EditConsentFormScreen(
       consentFormId: state.pathParameters['id'] ?? '',
     ),
+  );
+
+  static final GoRoute choosePurposeCategory = GoRoute(
+    path: '/consent-form/create/choose-purpose-category',
+    builder: (context, _) => const ChoosePurposeCategoryScreen(),
   );
 
   // static final GoRoute consentFormSettings = GoRoute(
@@ -82,6 +88,7 @@ class ConsentFormRoute {
     createConsentForm,
     consentFormDetail,
     editConsentForm,
+    choosePurposeCategory,
     consentFormSettings,
     createConsentTheme,
     editConsentTheme,

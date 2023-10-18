@@ -22,18 +22,17 @@ class _ReorderPurposeCategoryState extends State<ReorderPurposeCategory> {
   @override
   Widget build(BuildContext context) {
     final List<PurposeCategoryModel> purposeCategory = widget.purposeCategory;
-    final purposeCategoryFiltered = UtilFunctions.filterPurposeCategoriesByIds(
+    final purposeFiltered = UtilFunctions.filterPurposeCategoriesByIds(
       purposeCategory,
       widget.consentForm.purposeCategories,
     );
-
     if (purposeCategory.isNotEmpty) {
       return ReorderableListView.builder(
           shrinkWrap: true,
           // buildDefaultDragHandles: false,
           itemBuilder: (BuildContext context, int index) {
             const language = "en-US";
-            final title = purposeCategoryFiltered[index].title.firstWhere(
+            final title = purposeFiltered[index].title.firstWhere(
                   (item) => item.language == language,
                   orElse: LocalizedModel.empty,
                 );
@@ -42,17 +41,16 @@ class _ReorderPurposeCategoryState extends State<ReorderPurposeCategory> {
               title: Text(title.text),
             );
           },
-          itemCount: purposeCategoryFiltered.length - 2,
+          itemCount: purposeFiltered.length,
           onReorder: (int oldIndex, int newIndex) {
             setState(() {
-              print(oldIndex);
               if (oldIndex < newIndex) {
                 newIndex -= 1;
               }
-              print(newIndex);
+
               final PurposeCategoryModel item =
-                  purposeCategoryFiltered.removeAt(oldIndex);
-              purposeCategoryFiltered.insert(newIndex, item);
+                  purposeCategory.removeAt(oldIndex);
+              purposeCategory.insert(newIndex, item);
             });
           });
     }
