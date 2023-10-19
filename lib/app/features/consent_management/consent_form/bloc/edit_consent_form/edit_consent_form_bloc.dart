@@ -3,6 +3,7 @@ import 'package:bloc/bloc.dart';
 import 'package:equatable/equatable.dart';
 import 'package:pdpa/app/data/models/consent_management/consent_form_model.dart';
 import 'package:pdpa/app/data/models/master_data/custom_field_model.dart';
+import 'package:pdpa/app/data/models/master_data/localized_model.dart';
 import 'package:pdpa/app/data/models/master_data/purpose_category_model.dart';
 import 'package:pdpa/app/data/models/master_data/purpose_model.dart';
 import 'package:pdpa/app/data/repositories/consent_repository.dart';
@@ -39,6 +40,7 @@ class EditConsentFormBloc
     emit(const GetingCurrentConsentForm());
 
     ConsentFormModel gotConsentForm = ConsentFormModel.empty();
+
     List<CustomFieldModel> gotCustomFields = [];
     List<PurposeCategoryModel> gotPurposeCategories = [];
     List<PurposeModel> gotPurposes = [];
@@ -148,17 +150,70 @@ class EditConsentFormBloc
 
     emit(const CreatingCurrentConsentForm());
 
+    final ConsentFormModel consentForm;
+
+    List<LocalizedModel> acceptConsentText = [
+      const LocalizedModel(language: 'en-US', text: 'Accept consent')
+    ];
+    List<LocalizedModel> cancelText = [
+      const LocalizedModel(language: 'en-US', text: 'Cancel')
+    ];
+    List<LocalizedModel> description = [
+      const LocalizedModel(language: 'en-US', text: '')
+    ];
+    List<LocalizedModel> footerDescription = [
+      const LocalizedModel(language: 'en-US', text: '')
+    ];
+    List<LocalizedModel> headerDescription = [
+      const LocalizedModel(language: 'en-US', text: '')
+    ];
+    List<LocalizedModel> headerText = [
+      const LocalizedModel(language: 'en-US', text: 'Header')
+    ];
+    List<LocalizedModel> linkToPolicyText = [
+      const LocalizedModel(language: 'en-US', text: 'Link to policy')
+    ];
+    List<LocalizedModel> submitText = [
+      const LocalizedModel(language: 'en-US', text: 'Submit')
+    ];
+
+    consentForm = ConsentFormModel(
+      id: event.consentForm.id,
+      title: event.consentForm.title,
+      description: event.consentForm.description,
+      purposeCategories: event.consentForm.purposeCategories,
+      customFields: event.consentForm.customFields,
+      headerText: headerText,
+      headerDescription: headerDescription,
+      footerDescription: footerDescription,
+      acceptConsentText: acceptConsentText,
+      submitText: submitText,
+      cancelText: cancelText,
+      linkToPolicyText: linkToPolicyText,
+      linkToPolicyUrl: event.consentForm.linkToPolicyUrl,
+      consentFormUrl: event.consentForm.consentFormUrl,
+      consentThemeId: event.consentForm.consentThemeId,
+      logoImage: event.consentForm.logoImage,
+      headerBackgroundImage: event.consentForm.headerBackgroundImage,
+      bodyBackgroundImage: event.consentForm.bodyBackgroundImage,
+      status: event.consentForm.status,
+      createdBy: event.consentForm.createdBy,
+      createdDate: event.consentForm.createdDate,
+      updatedBy: event.consentForm.updatedBy,
+      updatedDate: event.consentForm.updatedDate,
+    );
+
     final result = await _consentRepository.createConsentForm(
-      event.consentForm,
+      consentForm,
       event.companyId,
     );
 
     await Future.delayed(const Duration(milliseconds: 800));
 
-    result.fold(
-      (failure) => emit(EditConsentFormError(failure.errorMessage)),
-      (purpose) => emit(CreatedCurrentConsentForm(purpose)),
-    );
+    result.fold((failure) => emit(EditConsentFormError(failure.errorMessage)),
+        (consentForm) {
+      emit(CreatedCurrentConsentForm(consentForm));
+    });
   }
 
   Future<void> _updateCurrentConsentFormHandler(

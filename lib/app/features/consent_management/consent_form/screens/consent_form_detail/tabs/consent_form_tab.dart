@@ -267,20 +267,6 @@ class _ConsentFormTabState extends State<ConsentFormTab> {
                       style: Theme.of(context).textTheme.titleLarge?.copyWith(
                           color: Theme.of(context).colorScheme.onSurface)),
                 ),
-                // CustomButton(
-                //     onPressed: () {
-                //       print("---------------consentForm----------------");
-                //       print(widget.consentForm);
-                //       print("-----------------customFields--------------");
-                //       print(widget.customFields);
-                //       print("-------------purposeCategories------------------");
-                //       print(widget.purposeCategories);
-                //       print("------------purposes-------------------");
-                //       print(widget.purposes);
-                //       print("------------consentTheme-------------------");
-                //       print(widget.consentTheme);
-                //     },
-                //     child: Text("aaaaa"))
                 SingleChildScrollView(
                   child: ConsentFormPreview(
                     consentForm: widget.consentForm,

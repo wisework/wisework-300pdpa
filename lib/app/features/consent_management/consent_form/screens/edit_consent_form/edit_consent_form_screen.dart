@@ -14,11 +14,13 @@ import 'package:pdpa/app/data/models/master_data/purpose_model.dart';
 import 'package:pdpa/app/features/authentication/bloc/sign_in/sign_in_bloc.dart';
 import 'package:pdpa/app/features/consent_management/consent_form/bloc/consent_form/consent_form_bloc.dart';
 import 'package:pdpa/app/features/consent_management/consent_form/bloc/edit_consent_form/edit_consent_form_bloc.dart';
+import 'package:pdpa/app/features/consent_management/consent_form/cubit/current_consent_form_settings/current_consent_form_settings_cubit.dart';
 import 'package:pdpa/app/features/consent_management/consent_form/routes/consent_form_route.dart';
 import 'package:pdpa/app/features/consent_management/consent_form/screens/edit_consent_form/widgets/ReorderPurposeCategory.dart';
 
 import 'package:pdpa/app/injection.dart';
 import 'package:pdpa/app/shared/utils/constants.dart';
+import 'package:pdpa/app/shared/utils/functions.dart';
 import 'package:pdpa/app/shared/widgets/customs/custom_container.dart';
 import 'package:pdpa/app/shared/widgets/customs/custom_icon_button.dart';
 import 'package:pdpa/app/shared/widgets/customs/custom_switch_button.dart';
@@ -190,7 +192,7 @@ class _EditConsentFormViewState extends State<EditConsentFormView> {
     customFieldList = consentForm.customFields;
 
     if (consentForm != ConsentFormModel.empty()) {
-      if (consentForm.description.isNotEmpty) {
+      if (consentForm.title.isNotEmpty) {
         titleController = TextEditingController(
           text: consentForm.title.first.text,
         );
@@ -232,10 +234,20 @@ class _EditConsentFormViewState extends State<EditConsentFormView> {
   void _savePurpose() {
     if (_formKey.currentState!.validate()) {
       if (widget.isNewConsentForm) {
-        // consentForm = consentForm.toCreated(
-        //   widget.currentUser.email,
-        //   DateTime.now(),
-        // );
+        consentForm = consentForm.setCreate(
+          widget.currentUser.email,
+          DateTime.now(),
+        );
+
+        final url = UtilFunctions.getUserConsentForm(
+          consentForm.id,
+          widget.currentUser.currentCompany,
+        );
+
+        // final cubit = context.read<CurrentConsentFormSettingsCubit>();
+        // cubit.generateConsentFormUrl(url);
+
+        consentForm = consentForm.setUrl(url);
 
         context.read<EditConsentFormBloc>().add(
               CreateCurrentConsentFormEvent(
@@ -244,10 +256,10 @@ class _EditConsentFormViewState extends State<EditConsentFormView> {
               ),
             );
       } else {
-        // consentForm = consentForm.toUpdated(
-        //   widget.currentUser.email,
-        //   DateTime.now(),
-        // );
+        consentForm = consentForm.setUpdate(
+          widget.currentUser.email,
+          DateTime.now(),
+        );
 
         context.read<EditConsentFormBloc>().add(
               UpdateCurrentConsentFormEvent(
@@ -312,10 +324,10 @@ class _EditConsentFormViewState extends State<EditConsentFormView> {
                           required: true,
                         ),
                         CustomTextField(
-                          controller: descriptionController,
+                          controller: titleController,
                           hintText:
                               tr('consentManagement.cf.consentForms.title'),
-                          onChanged: _setDescription,
+                          onChanged: _setTitleController,
                           required: true,
                         ),
                         const SizedBox(height: UiConfig.lineSpacing),
@@ -324,10 +336,10 @@ class _EditConsentFormViewState extends State<EditConsentFormView> {
                               'consentManagement.cf.consentForms.description'),
                         ),
                         CustomTextField(
-                          controller: titleController,
+                          controller: descriptionController,
                           hintText: tr(
                               'consentManagement.cf.consentForms.description'),
-                          onChanged: _setTitleController,
+                          onChanged: _setDescription,
                         ),
                       ],
                     ),

@@ -283,6 +283,7 @@ class _PurposeCategoryTileState extends State<PurposeCategoryTile> {
                                         .colorScheme
                                         .secondary),
                                 onChanged: (_) {
+                                  print(widget.purposeCategories);
                                   setState(() {
                                     if (widget.purposeCategories
                                         .contains(widget.purposeCategory.id)) {
@@ -384,6 +385,10 @@ class PurposeTile extends StatelessWidget {
           style: Theme.of(context).textTheme.labelLarge?.copyWith(
                 color: Theme.of(context).colorScheme.secondary,
               ),
+        ),
+        Divider(
+          color: Theme.of(context).colorScheme.outline,
+          thickness: 0.3,
         ),
       ],
     );
