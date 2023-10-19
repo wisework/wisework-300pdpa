@@ -8,10 +8,12 @@ class MasterDataListTile extends StatelessWidget {
     super.key,
     required this.title,
     required this.onTap,
+    required this.trail,
   });
 
   final String title;
   final VoidCallback onTap;
+  final bool trail;
 
   @override
   Widget build(BuildContext context) {
@@ -32,9 +34,12 @@ class MasterDataListTile extends StatelessWidget {
                       title,
                       style: Theme.of(context).textTheme.bodyMedium,
                     ),
-                    Icon(
-                      Ionicons.chevron_forward_outline,
-                      color: Theme.of(context).colorScheme.onSurface,
+                    Visibility(
+                      visible: trail,
+                      child: Icon(
+                        Ionicons.chevron_forward_outline,
+                        color: Theme.of(context).colorScheme.onSurface,
+                      ),
                     ),
                   ],
                 ),

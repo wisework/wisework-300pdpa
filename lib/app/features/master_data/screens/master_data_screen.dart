@@ -65,18 +65,21 @@ class MasterDataScreen extends StatelessWidget {
           ),
           const SizedBox(height: UiConfig.lineSpacing),
           MasterDataListTile(
+            trail: true,
             title: tr('masterData.cm.customfields.list'),
             onTap: () {
               context.push(MasterDataRoute.customFields.path);
             },
           ),
           MasterDataListTile(
+            trail: true,
             title: tr('masterData.cm.purpose.list'),
             onTap: () {
               context.push(MasterDataRoute.purposes.path);
             },
           ),
           MasterDataListTile(
+            trail: true,
             title: tr('masterData.cm.purposeCategory.list'),
             onTap: () {
               context.push(MasterDataRoute.purposesCategories.path);
@@ -101,30 +104,35 @@ class MasterDataScreen extends StatelessWidget {
           ),
           const SizedBox(height: UiConfig.lineSpacing),
           MasterDataListTile(
+            trail: true,
             title: tr('masterData.dsr.request.list'),
             onTap: () {
               context.push(MasterDataRoute.requestType.path);
             },
           ),
           MasterDataListTile(
+            trail: true,
             title: tr('masterData.dsr.rejections.list'),
             onTap: () {
               context.push(MasterDataRoute.rejectType.path);
             },
           ),
           MasterDataListTile(
+            trail: true,
             title: tr('masterData.dsr.reason.list'),
             onTap: () {
               context.push(MasterDataRoute.reasonType.path);
             },
           ),
           MasterDataListTile(
+            trail: true,
             title: tr('masterData.dsr.requestrejects.list'),
             onTap: () {
               context.push(MasterDataRoute.requestReject.path);
             },
           ),
           MasterDataListTile(
+            trail: true,
             title: tr('masterData.dsr.requestreasons.list'),
             onTap: () {
               context.push(MasterDataRoute.requestReason.path);
