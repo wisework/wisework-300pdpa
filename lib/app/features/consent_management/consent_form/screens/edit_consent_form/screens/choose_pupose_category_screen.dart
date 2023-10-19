@@ -1,4 +1,5 @@
 import 'package:bot_toast/bot_toast.dart';
+import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
@@ -110,7 +111,7 @@ class _ChoosePurposeCategoryViewState extends State<ChoosePurposeCategoryView> {
           backgroundColor: Theme.of(context).colorScheme.onBackground,
         ),
         title: Text(
-          "Choose purpose category",
+          tr("consentManagement.consentForm.choosePurposeCategory"),
           style: Theme.of(context).textTheme.titleLarge,
         ),
       ),

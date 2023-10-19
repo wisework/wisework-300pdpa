@@ -1,4 +1,5 @@
 import 'package:bot_toast/bot_toast.dart';
+import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
@@ -73,7 +74,7 @@ class _ConsentFormSettingScreenState extends State<ConsentFormSettingScreen> {
       listener: (context, state) {
         if (state is UpdatedConsentFormSettings) {
           BotToast.showText(
-            text: 'Update successfully', //!
+            text: tr('consentManagement.consentForm.consentFormsetting.updateSuccess'), //!
             contentColor:
                 Theme.of(context).colorScheme.secondary.withOpacity(0.75),
             borderRadius: BorderRadius.circular(8.0),
@@ -186,7 +187,7 @@ class _ConsentFormSettingViewState extends State<ConsentFormSettingView> {
             backgroundColor: Theme.of(context).colorScheme.onBackground,
           ),
           title: Text(
-            'Consent Form Settings', //!
+            tr('consentManagement.consentForm.consentFormsetting.consentFormSettings'), //!
             style: Theme.of(context).textTheme.titleLarge,
           ),
           actions: [
@@ -284,12 +285,12 @@ class _ConsentFormSettingViewState extends State<ConsentFormSettingView> {
 
   TabBar _buildTabBar(BuildContext context) {
     return TabBar(
-      tabs: const [
-        Tab(text: 'URL'), //!
-        Tab(text: 'Header'), //!
-        Tab(text: 'Body'), //!
-        Tab(text: 'Footer'), //!
-        Tab(text: 'Theme'), //!
+      tabs:  [
+        Tab(text: tr('consentManagement.consentForm.consentFormsetting.url')), //!
+        Tab(text: tr('consentManagement.consentForm.consentFormsetting.header')), //!
+        Tab(text: tr('consentManagement.consentForm.consentFormsetting.body')), //!
+        Tab(text: tr('consentManagement.consentForm.consentFormsetting.footer')), //!
+        Tab(text: tr('consentManagement.consentForm.consentFormsetting.theme')), //!
       ],
       indicatorColor: Theme.of(context).colorScheme.primary,
       indicatorSize: TabBarIndicatorSize.tab,

@@ -1,3 +1,4 @@
+import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:pdpa/app/config/config.dart';
@@ -123,7 +124,7 @@ class _ConsentInfoTabState extends State<ConsentInfoTab> {
         Padding(
           padding: const EdgeInsets.only(bottom: 8.0),
           child: Text(
-            "วัตถุประสงค์",
+            tr("consentManagement.consentForm.consentFormDetails.Purposes"),
             style: Theme.of(context).textTheme.bodyMedium?.copyWith(
                   color: Theme.of(context).colorScheme.surfaceTint,
                 ),
@@ -177,7 +178,7 @@ class _ConsentInfoTabState extends State<ConsentInfoTab> {
                 padding: const EdgeInsets.all(20.0),
                 child: Center(
                   child: Text(
-                    "No purposes added.",
+                    tr("consentManagement.consentForm.noPurposesAdded"),
                     style: Theme.of(context).textTheme.labelLarge?.copyWith(
                         color: Theme.of(context).colorScheme.onSurface),
                   ),
@@ -258,7 +259,7 @@ class _ConsentInfoTabState extends State<ConsentInfoTab> {
         Padding(
           padding: const EdgeInsets.only(bottom: 8.0),
           child: Text(
-            "ข้อมูลที่จัดเก็บ",
+            tr("consentManagement.consentForm.consentFormDetails.storedInformation"),
             style: Theme.of(context).textTheme.bodyMedium?.copyWith(
                   color: Theme.of(context).colorScheme.surfaceTint,
                 ),
@@ -307,7 +308,7 @@ class _ConsentInfoTabState extends State<ConsentInfoTab> {
                 padding: const EdgeInsets.all(20.0),
                 child: Center(
                   child: Text(
-                    "No input fields added.",
+                    tr("consentManagement.consentForm.noInputFieldsAdded"),
                     style: Theme.of(context).textTheme.labelLarge?.copyWith(
                         color: Theme.of(context).colorScheme.onSurface),
                   ),

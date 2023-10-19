@@ -1,5 +1,6 @@
 import 'dart:ui' as ui;
 import 'package:bot_toast/bot_toast.dart';
+import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:flutter/services.dart';
@@ -70,14 +71,14 @@ class _ConsentFormTabState extends State<ConsentFormTab> {
               children: <Widget>[
                 Padding(
                   padding: const EdgeInsets.only(bottom: 10.0),
-                  child: Text("แชร์ลิงค์แบบฟอร์ม",
+                  child: Text(tr("consentManagement.consentForm.consentFormDetails.form.shareLinkForm"),
                       style: Theme.of(context).textTheme.titleLarge?.copyWith(
                           color: Theme.of(context).colorScheme.onSurface)),
                 ),
                 Padding(
                   padding: const EdgeInsets.only(bottom: 10.0),
                   child: Text(
-                      "สามารถใช้แบบฟอร์มนี้ในการเก็บข้อมูลจากผู้ใช้งานด้วยการเปิดลิงค์ หรือ การแสกน QR Code",
+                      tr("consentManagement.consentForm.consentFormDetails.form.descriptionShare"),
                       style: Theme.of(context).textTheme.labelLarge?.copyWith(
                           color: Theme.of(context).colorScheme.onSurface)),
                 ),
@@ -262,7 +263,7 @@ class _ConsentFormTabState extends State<ConsentFormTab> {
               children: <Widget>[
                 Padding(
                   padding: const EdgeInsets.only(bottom: 10.0),
-                  child: Text("ตัวอย่างแบบฟอร์ม",
+                  child: Text(tr("consentManagement.consentForm.formExample"),
                       style: Theme.of(context).textTheme.titleLarge?.copyWith(
                           color: Theme.of(context).colorScheme.onSurface)),
                 ),

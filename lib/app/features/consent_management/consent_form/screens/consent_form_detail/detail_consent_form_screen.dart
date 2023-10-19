@@ -1,3 +1,4 @@
+import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
@@ -122,7 +123,7 @@ class _ConsentFormDetailViewState extends State<ConsentFormDetailView> {
             backgroundColor: Theme.of(context).colorScheme.onBackground,
           ),
           title: Text(
-            'Consent Form',
+            tr('consentManagement.consentForm.consentForms'),
             style: Theme.of(context).textTheme.titleLarge,
           ),
           actions: [
@@ -152,9 +153,9 @@ class _ConsentFormDetailViewState extends State<ConsentFormDetailView> {
             ),
           ],
           bottom: TabBar(
-            tabs: const [
-              Tab(text: 'information'),
-              Tab(text: 'form'),
+            tabs:  [
+              Tab(text: tr('consentManagement.consentForm.consentFormDetails.information')),
+              Tab(text: tr('consentManagement.consentForm.consentFormDetails.filter.form')),
             ],
             // isScrollable: true,
             indicatorColor: Theme.of(context).colorScheme.primary,

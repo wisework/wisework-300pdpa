@@ -74,7 +74,7 @@ class _ConsentFormViewState extends State<ConsentFormView> {
           backgroundColor: Theme.of(context).colorScheme.onBackground,
         ),
         title: Text(
-          tr('consentManagement.cf.consentForms.consentForms'),
+          tr('consentManagement.consentForm.consentForms'),
           style: Theme.of(context).textTheme.titleLarge,
         ),
         actions: [
@@ -192,7 +192,7 @@ class _ConsentFormViewState extends State<ConsentFormView> {
             ),
             child: Center(
               child: Text(
-                "ทั้งหมด",
+                tr("consentManagement.listage.filter.all"),
                 style: Theme.of(context).textTheme.bodySmall,
               ),
             ),
@@ -211,7 +211,7 @@ class _ConsentFormViewState extends State<ConsentFormView> {
               borderRadius: BorderRadius.circular(10.0),
             ),
             child: Text(
-              "ปัญหา",
+              tr("consentManagement.listage.filter.problem"),
               style: Theme.of(context).textTheme.bodySmall,
             ),
           ),
@@ -230,7 +230,7 @@ class _ConsentFormViewState extends State<ConsentFormView> {
               text: TextSpan(
             children: [
               TextSpan(
-                  text: "วันที่",
+                  text: tr("consentManagement.listage.filter.date"),
                   style: Theme.of(context).textTheme.bodyMedium),
               WidgetSpan(
                 child: Icon(
