@@ -23,7 +23,7 @@ class RequestRejectTemplateModel extends Equatable {
   final String updatedBy;
   final DateTime updatedDate;
 
-   RequestRejectTemplateModel.empty()
+  RequestRejectTemplateModel.empty()
       : this(
           requestRejectTemplateId: '',
           requestTypeId: '',
@@ -39,13 +39,20 @@ class RequestRejectTemplateModel extends Equatable {
       : this(
           requestRejectTemplateId: map['requestRejectTemplateId'] as String,
           requestTypeId: map['requestTypeId'] as String,
-          rejectTypesId: List<String>.from(map['rejectTypesId'] as List<dynamic>),
+          rejectTypesId:
+              List<String>.from(map['rejectTypesId'] as List<dynamic>),
           status: ActiveStatus.values[map['status'] as int],
           createdBy: map['createdBy'] as String,
           createdDate: DateTime.parse(map['createdDate'] as String),
           updatedBy: map['updatedBy'] as String,
           updatedDate: DateTime.parse(map['updatedDate'] as String),
         );
+
+  factory RequestRejectTemplateModel.fromDocument(FirebaseDocument document) {
+    DataMap response = document.data()!;
+    response['id'] = document.id;
+    return RequestRejectTemplateModel.fromMap(response);
+  }
 
   DataMap toMap() => {
         'requestTypeId': requestTypeId,
@@ -56,12 +63,6 @@ class RequestRejectTemplateModel extends Equatable {
         'updatedBy': updatedBy,
         'updatedDate': updatedDate.toIso8601String(),
       };
-
-  factory RequestRejectTemplateModel.fromDocument(FirebaseDocument document) {
-    DataMap response = document.data()!;
-    response['id'] = document.id;
-    return RequestRejectTemplateModel.fromMap(response);
-  }
 
   RequestRejectTemplateModel copyWith({
     String? requestRejectTemplateId,
