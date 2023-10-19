@@ -3,6 +3,7 @@ import 'dart:io';
 import 'package:path/path.dart';
 import 'package:pdpa/app/config/config.dart';
 import 'package:pdpa/app/data/models/authentication/company_model.dart';
+import 'package:pdpa/app/data/models/data_subject_right/data_subject_right_model.dart';
 import 'package:pdpa/app/data/models/master_data/custom_field_model.dart';
 import 'package:pdpa/app/data/models/master_data/purpose_category_model.dart';
 import 'package:pdpa/app/data/models/master_data/purpose_model.dart';
@@ -10,6 +11,7 @@ import 'package:pdpa/app/data/models/master_data/purpose_model.dart';
 import 'constants.dart';
 
 class UtilFunctions {
+  //? Company
   static CompanyModel getCurrentCompany(
     List<CompanyModel> companies,
     String currentCompanyId,
@@ -20,11 +22,13 @@ class UtilFunctions {
     return CompanyModel.empty();
   }
 
+  //? User Consent Form
   static String getUserConsentForm(String consentId, String companyId) {
     final fragment = 'companies/$companyId/consent-form/$consentId/form';
     return '${AppConfig.baseUrl}/#/$fragment';
   }
 
+  //? Custom Field
   static List<CustomFieldModel> filterCustomFieldsByIds(
     List<CustomFieldModel> customFields,
     List<String> customFieldsIds,
@@ -34,6 +38,7 @@ class UtilFunctions {
         .toList();
   }
 
+  //? Purpose Category
   static List<PurposeCategoryModel> filterPurposeCategoriesByIds(
     List<PurposeCategoryModel> purposeCategories,
     List<String> purposeCategoryIds,
@@ -43,6 +48,7 @@ class UtilFunctions {
         .toList();
   }
 
+  //? Purpose
   static List<PurposeModel> filterPurposeByIds(
     List<PurposeModel> purposes,
     List<String> purposeIds,
@@ -58,14 +64,70 @@ class UtilFunctions {
     return purposeFiltered;
   }
 
-  // static Color getColorFromString(String source) {
-  //   return Color(int.parse(source, radix: 16));
-  // }
+  //? Data Subject Right
+  static RequestProcessStatus getRequestProcessStatus(
+    DataSubjectRightModel dataSubjectRight,
+  ) {
+    final isNewRequested = dataSubjectRight.lastSeenBy.isEmpty;
+    final isRequestFormVerified = dataSubjectRight.requestFormVerified;
+    final isVerifying =
+        dataSubjectRight.requestVerifyingStatus == RequestVerifyingStatus.none;
+    final isConsidering = dataSubjectRight.processRequests.any((process) =>
+        process.considerRequestStatus == ConsiderRequestStatus.none);
+    final isProofFileUploading = dataSubjectRight.processRequests
+        .any((process) => process.proofOfActionFile.isEmpty);
+    final isProofTextWriting = dataSubjectRight.processRequests
+        .any((process) => process.proofOfActionText.isEmpty);
+    final isProofFileUploaded = dataSubjectRight.processRequests
+        .where((process) =>
+            process.considerRequestStatus == ConsiderRequestStatus.pass)
+        .any((process) => process.proofOfActionFile.isEmpty);
+    final isProofTextWritten = dataSubjectRight.processRequests
+        .where((process) =>
+            process.considerRequestStatus == ConsiderRequestStatus.pass)
+        .any((process) => process.proofOfActionText.isEmpty);
+    final isDone = dataSubjectRight.resultRequest;
 
-  // static String getHexFromColor(Color color) {
-  //   return color.toString().split('(0x')[1].split(')')[0];
-  // }
+    RequestProcessStatus status = RequestProcessStatus.newRequest;
+    if (isNewRequested) {
+      return status;
+    }
 
+    if (!isRequestFormVerified && !isNewRequested) {
+      status = RequestProcessStatus.pending;
+    } else if (isRequestFormVerified && isDone && !isNewRequested) {
+      status = RequestProcessStatus.rejected;
+    }
+
+    if (isVerifying && !isNewRequested && isRequestFormVerified) {
+      status = RequestProcessStatus.verifying;
+    } else if (isConsidering &&
+        !isNewRequested &&
+        isRequestFormVerified &&
+        !isVerifying) {
+      status = RequestProcessStatus.considering;
+    } else if ((isProofFileUploading || isProofTextWriting) &&
+        !isNewRequested &&
+        isRequestFormVerified &&
+        !isVerifying &&
+        !isConsidering) {
+      status = RequestProcessStatus.inProgress;
+    }
+
+    if (isDone &&
+        !isNewRequested &&
+        isRequestFormVerified &&
+        !isVerifying &&
+        !isConsidering &&
+        !isProofFileUploaded &&
+        !isProofTextWritten) {
+      status = RequestProcessStatus.completed;
+    }
+
+    return status;
+  }
+
+  //? Upload File
   static String getUniqueFileName(File file) {
     final fileName = DateTime.now().millisecondsSinceEpoch.toString();
     final fileExtension = extension(file.path);

@@ -20,7 +20,8 @@ class PdpaAppBar extends StatelessWidget implements PreferredSizeWidget {
   final PreferredSizeWidget? bottom;
 
   @override
-  Size get preferredSize => Size.fromHeight(appBarHeight);
+  Size get preferredSize =>
+      Size.fromHeight(bottom != null ? 100 : appBarHeight);
 
   @override
   Widget build(BuildContext context) {

@@ -1,15 +1,51 @@
 import 'package:go_router/go_router.dart';
+import 'package:pdpa/app/features/consent_management/consent_form/screens/consent_form_detail/detail_consent_form_screen.dart';
+import 'package:pdpa/app/features/consent_management/consent_form/screens/consent_form_screen.dart';
 import 'package:pdpa/app/features/consent_management/consent_form/screens/consent_form_settings/consent_form_settings_screen.dart';
 import 'package:pdpa/app/features/consent_management/consent_form/screens/consent_form_settings/screens/edit_consent_theme_screen.dart';
+
+import 'package:pdpa/app/features/consent_management/consent_form/screens/edit_consent_form/edit_consent_form_screen.dart';
+import 'package:pdpa/app/features/consent_management/consent_form/screens/edit_consent_form/screens/choose_pupose_category_screen.dart';
+
 import 'package:pdpa/app/features/consent_management/consent_form/screens/user_consent_form_screen.dart';
 
 class ConsentFormRoute {
-  static final GoRoute consentFormDetail = GoRoute(
-    path: '/consent-form-detail',
+  static final GoRoute consentForm = GoRoute(
+    path: '/consent-form',
+    builder: (context, _) => const ConsentFormScreen(),
   );
 
   static final GoRoute createConsentForm = GoRoute(
-    path: '/consent-form-detail',
+    path: '/consent-form/create',
+    builder: (context, _) => const EditConsentFormScreen(consentFormId: ''),
+  );
+
+  static final GoRoute consentFormDetail = GoRoute(
+    path: '/consent-form/:id/detail',
+    builder: (context, state) => DetailConsentFormScreen(
+      consentFormId: state.pathParameters['id'] ?? '',
+    ),
+  );
+
+  static final GoRoute editConsentForm = GoRoute(
+    path: '/consent-form/:id/edit',
+    builder: (context, state) => EditConsentFormScreen(
+      consentFormId: state.pathParameters['id'] ?? '',
+    ),
+  );
+
+  static final GoRoute editChoosePurposeCategory = GoRoute(
+    path: '/consent-form/create/:id/choose-purpose-category',
+    builder: (context, state) => ChoosePurposeCategoryScreen(
+      consentFormId: state.pathParameters['id'] ?? '',
+    ),
+  );
+
+  static final GoRoute choosePurposeCategory = GoRoute(
+    path: '/consent-form/create/choose-purpose-category',
+    builder: (context, state) => const ChoosePurposeCategoryScreen(
+      consentFormId: '',
+    ),
   );
 
   // static final GoRoute consentFormSettings = GoRoute(
@@ -57,8 +93,12 @@ class ConsentFormRoute {
   );
 
   static final List<GoRoute> routes = <GoRoute>[
-    // consentFormDetail,
-    // createConsentForm,
+    consentForm,
+    createConsentForm,
+    consentFormDetail,
+    editConsentForm,
+    editChoosePurposeCategory,
+    choosePurposeCategory,
     consentFormSettings,
     createConsentTheme,
     editConsentTheme,

@@ -3,11 +3,22 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:get_it/get_it.dart';
 import 'package:google_sign_in/google_sign_in.dart';
+import 'package:pdpa/app/data/repositories/data_subject_right_repository.dart';
+import 'package:pdpa/app/features/consent_management/consent_form/bloc/choose_purpose_category/choose_purpose_category_bloc.dart';
+import 'package:pdpa/app/features/consent_management/consent_form/bloc/consent_form/consent_form_bloc.dart';
+import 'package:pdpa/app/features/consent_management/consent_form/bloc/consent_form_detail/consent_form_detail_bloc.dart';
+import 'package:pdpa/app/features/consent_management/consent_form/bloc/edit_consent_form/edit_consent_form_bloc.dart';
+import 'package:pdpa/app/features/consent_management/consent_form/cubit/choose_purpose_category/choose_purpose_category_cubit.dart';
+import 'package:pdpa/app/features/consent_management/consent_form/cubit/current_consent_form_detail/current_consent_form_detail_cubit.dart';
 import 'package:pdpa/app/features/consent_management/consent_form/bloc/user_consent_form/user_consent_form_bloc.dart';
+import 'package:pdpa/app/features/consent_management/user_consent/bloc/user_consent/user_consent_bloc.dart';
+import 'package:pdpa/app/features/consent_management/user_consent/bloc/user_consent_detail/user_consent_detail_bloc.dart';
+import 'package:pdpa/app/features/data_subject_right/bloc/data_subject_right/data_subject_right_bloc.dart';
 import 'package:pdpa/app/features/master_data/bloc/data_subject_right/edit_request_reason_tp/edit_request_reason_tp_bloc.dart';
 import 'package:pdpa/app/features/master_data/bloc/data_subject_right/edit_request_reject_tp/edit_request_reject_tp_bloc.dart';
 import 'package:pdpa/app/features/master_data/bloc/data_subject_right/request_reason_tp/request_reason_tp_bloc.dart';
 import 'package:pdpa/app/features/master_data/bloc/data_subject_right/request_reject_tp/request_reject_tp_bloc.dart';
+import 'package:pdpa/app/services/apis/data_subject_right_api.dart';
 
 import 'config/config.dart';
 import 'data/repositories/authentication_repository.dart';
@@ -54,6 +65,7 @@ Future<void> initLocator() async {
 
   await _authentication();
   await _consentManagement();
+  await _dataSubjectRight();
   await _masterData();
   await _other();
 }
@@ -91,6 +103,36 @@ Future<void> _consentManagement() async {
   serviceLocator
     //? App logic
     ..registerFactory(
+      () => ConsentFormBloc(
+        consentRepository: serviceLocator(),
+        masterDataRepository: serviceLocator(),
+      ),
+    )
+    ..registerFactory(
+      () => EditConsentFormBloc(
+        consentRepository: serviceLocator(),
+        masterDataRepository: serviceLocator(),
+      ),
+    )
+    ..registerFactory(
+      () => ChoosePurposeCategoryCubit(),
+    )
+    ..registerFactory(
+      () => ChoosePurposeCategoryBloc(
+        consentRepository: serviceLocator(),
+        masterDataRepository: serviceLocator(),
+      ),
+    )
+    ..registerFactory(
+      () => ConsentFormDetailBloc(
+        consentRepository: serviceLocator(),
+        masterDataRepository: serviceLocator(),
+      ),
+    )
+    ..registerFactory(
+      () => CurrentConsentFormDetailCubit(),
+    )
+    ..registerFactory(
       () => ConsentFormSettingsBloc(
         consentRepository: serviceLocator(),
         masterDataRepository: serviceLocator(),
@@ -98,6 +140,18 @@ Future<void> _consentManagement() async {
     )
     ..registerFactory(
       () => UserConsentFormBloc(
+        consentRepository: serviceLocator(),
+        masterDataRepository: serviceLocator(),
+      ),
+    )
+    ..registerFactory(
+      () => UserConsentBloc(
+        consentRepository: serviceLocator(),
+        masterDataRepository: serviceLocator(),
+      ),
+    )
+    ..registerFactory(
+      () => UserConsentDetailBloc(
         consentRepository: serviceLocator(),
         masterDataRepository: serviceLocator(),
       ),
@@ -121,6 +175,28 @@ Future<void> _consentManagement() async {
     //? APIs
     ..registerLazySingleton(
       () => ConsentApi(
+        serviceLocator(),
+      ),
+    );
+}
+
+Future<void> _dataSubjectRight() async {
+  serviceLocator
+    //? App logic
+    ..registerFactory(
+      () => DataSubjectRightBloc(
+        dataSubjectRightRepository: serviceLocator(),
+      ),
+    )
+    //? Repositories
+    ..registerLazySingleton(
+      () => DataSubjectRightRepository(
+        serviceLocator(),
+      ),
+    )
+    //? APIs
+    ..registerLazySingleton(
+      () => DataSubjectRightApi(
         serviceLocator(),
       ),
     );
@@ -189,7 +265,7 @@ Future<void> _masterData() async {
         masterDataRepository: serviceLocator(),
       ),
     )
-     ..registerFactory(
+    ..registerFactory(
       () => RequestReasonTpBloc(
         masterDataRepository: serviceLocator(),
       ),
@@ -199,7 +275,7 @@ Future<void> _masterData() async {
         masterDataRepository: serviceLocator(),
       ),
     )
-     ..registerFactory(
+    ..registerFactory(
       () => RequestRejectTpBloc(
         masterDataRepository: serviceLocator(),
       ),

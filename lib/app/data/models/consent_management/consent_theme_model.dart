@@ -141,6 +141,12 @@ class ConsentThemeModel extends Equatable {
           updatedDate: DateTime.parse(map['updatedDate'] as String),
         );
 
+  factory ConsentThemeModel.fromDocument(FirebaseDocument document) {
+    DataMap response = document.data()!;
+    response['id'] = document.id;
+    return ConsentThemeModel.fromMap(response);
+  }
+
   DataMap toMap() => {
         'id': id,
         'title': title,
@@ -199,12 +205,6 @@ class ConsentThemeModel extends Equatable {
         'updatedBy': updatedBy,
         'updatedDate': updatedDate.toIso8601String(),
       };
-
-  factory ConsentThemeModel.fromDocument(FirebaseDocument document) {
-    DataMap response = document.data()!;
-    response['id'] = document.id;
-    return ConsentThemeModel.fromMap(response);
-  }
 
   ConsentThemeModel copyWith({
     String? id,

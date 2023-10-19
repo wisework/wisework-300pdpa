@@ -1,6 +1,6 @@
 import 'package:equatable/equatable.dart';
-import 'package:pdpa/app/data/models/etc/user_input_field.dart';
-import 'package:pdpa/app/data/models/etc/user_input_option.dart';
+import 'package:pdpa/app/data/models/etc/user_input_text.dart';
+import 'package:pdpa/app/data/models/etc/user_input_purpose.dart';
 import 'package:pdpa/app/shared/utils/typedef.dart';
 
 class UserConsentModel extends Equatable {
@@ -19,9 +19,9 @@ class UserConsentModel extends Equatable {
 
   final String id;
   final String consentFormId;
-  final List<UserInputField> mandatoryFields;
-  final List<UserInputField> customFields;
-  final List<UserInputOption> purposes;
+  final List<UserInputText> mandatoryFields;
+  final List<UserInputText> customFields;
+  final List<UserInputPurpose> purposes;
   final bool isAcceptConsent;
   final String createdBy;
   final DateTime createdDate;
@@ -46,20 +46,19 @@ class UserConsentModel extends Equatable {
       : this(
           id: map['id'] as String,
           consentFormId: map['consentFormId'] as String,
-          mandatoryFields: List<UserInputField>.from(
-            (map['mandatoryFields'] as List<dynamic>).map<UserInputField>(
-              (item) => UserInputField.fromMap(item as DataMap),
-            ),
+          mandatoryFields: List<UserInputText>.from(
+            (map['mandatoryFields'] as DataMap).entries.map<UserInputText>(
+                (item) => UserInputText.fromMap(
+                    {'id': item.key, 'text': item.value})),
           ),
-          customFields: List<UserInputField>.from(
-            (map['customFields'] as List<dynamic>).map<UserInputField>(
-              (item) => UserInputField.fromMap(item as DataMap),
-            ),
+          customFields: List<UserInputText>.from(
+            (map['customFields'] as DataMap).entries.map<UserInputText>(
+                (item) => UserInputText.fromMap(
+                    {'id': item.key, 'text': item.value})),
           ),
-          purposes: List<UserInputOption>.from(
-            (map['purposes'] as List<dynamic>).map<UserInputOption>(
-              (item) => UserInputOption.fromMap(item as DataMap),
-            ),
+          purposes: List<UserInputPurpose>.from(
+            (map['purposes'] as DataMap).entries.map<UserInputPurpose>((item) =>
+                UserInputPurpose.fromMap({'id': item.key, ...item.value})),
           ),
           isAcceptConsent: map['isAcceptConsent'] as bool,
           createdBy: map['createdBy'] as String,
@@ -68,11 +67,26 @@ class UserConsentModel extends Equatable {
           updatedDate: DateTime.parse(map['updatedDate'] as String),
         );
 
+  factory UserConsentModel.fromDocument(FirebaseDocument document) {
+    DataMap response = document.data()!;
+    response['id'] = document.id;
+    return UserConsentModel.fromMap(response);
+  }
+
   DataMap toMap() => {
         'consentFormId': consentFormId,
-        'mandatoryFields': mandatoryFields.map((item) => item.toMap()).toList(),
-        'customFields': customFields.map((item) => item.toMap()).toList(),
-        'purposes': purposes.map((item) => item.toMap()).toList(),
+        'mandatoryFields': mandatoryFields.fold(
+          {},
+          (map, userInputField) => map..addAll(userInputField.toMap()),
+        ),
+        'customFields': customFields.fold(
+          {},
+          (map, userInputField) => map..addAll(userInputField.toMap()),
+        ),
+        'purposes': purposes.fold(
+          {},
+          (map, userInputOption) => map..addAll(userInputOption.toMap()),
+        ),
         'isAcceptConsent': isAcceptConsent,
         'createdBy': createdBy,
         'createdDate': createdDate.toIso8601String(),
@@ -80,18 +94,12 @@ class UserConsentModel extends Equatable {
         'updatedDate': updatedDate.toIso8601String(),
       };
 
-  factory UserConsentModel.fromDocument(FirebaseDocument document) {
-    DataMap response = document.data()!;
-    response['id'] = document.id;
-    return UserConsentModel.fromMap(response);
-  }
-
   UserConsentModel copyWith({
     String? id,
     String? consentFormId,
-    List<UserInputField>? mandatoryFields,
-    List<UserInputField>? customFields,
-    List<UserInputOption>? purposes,
+    List<UserInputText>? mandatoryFields,
+    List<UserInputText>? customFields,
+    List<UserInputPurpose>? purposes,
     bool? isAcceptConsent,
     String? createdBy,
     DateTime? createdDate,

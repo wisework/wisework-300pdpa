@@ -8,18 +8,19 @@ import 'package:pdpa/app/config/config.dart';
 import 'package:pdpa/app/data/models/authentication/user_model.dart';
 import 'package:pdpa/app/data/models/master_data/reason_type_model.dart';
 import 'package:pdpa/app/data/models/master_data/request_reason_template_model.dart';
-import 'package:pdpa/app/data/models/master_data/request_type_model.dart';
 import 'package:pdpa/app/features/authentication/bloc/sign_in/sign_in_bloc.dart';
 import 'package:pdpa/app/features/master_data/bloc/data_subject_right/edit_request_reason_tp/edit_request_reason_tp_bloc.dart';
 import 'package:pdpa/app/features/master_data/bloc/data_subject_right/reason_type/reason_type_bloc.dart';
 import 'package:pdpa/app/features/master_data/bloc/data_subject_right/request_reason_tp/request_reason_tp_bloc.dart';
 import 'package:pdpa/app/features/master_data/bloc/data_subject_right/request_type/request_type_bloc.dart';
 import 'package:pdpa/app/features/master_data/widgets/configuration_info.dart';
+import 'package:pdpa/app/features/master_data/widgets/master_data_list_tile.dart';
 import 'package:pdpa/app/injection.dart';
 import 'package:pdpa/app/shared/utils/constants.dart';
 import 'package:pdpa/app/shared/widgets/customs/custom_container.dart';
 import 'package:pdpa/app/shared/widgets/customs/custom_icon_button.dart';
 import 'package:pdpa/app/shared/widgets/customs/custom_switch_button.dart';
+import 'package:pdpa/app/shared/widgets/material_ink_well.dart';
 import 'package:pdpa/app/shared/widgets/screens/error_message_screen.dart';
 import 'package:pdpa/app/shared/widgets/screens/loading_screen.dart';
 import 'package:pdpa/app/shared/widgets/templates/pdpa_app_bar.dart';
@@ -139,6 +140,7 @@ class _EditRequestReasonTemplateScreenState
         },
         builder: (context, state) {
           if (state is GotCurrentRequestReasonTp) {
+            print('Got');
             return EditRequestReasonTemplateView(
               initialRequestReason: state.requestReasonTp,
               currentUser: currentUser,
@@ -146,6 +148,7 @@ class _EditRequestReasonTemplateScreenState
             );
           }
           if (state is UpdatedCurrentRequestReasonTp) {
+            print('Update');
             return EditRequestReasonTemplateView(
               initialRequestReason: state.requestReasonTp,
               currentUser: currentUser,
@@ -184,9 +187,8 @@ class _EditRequestReasonTemplateViewState
     extends State<EditRequestReasonTemplateView> {
   late RequestReasonTemplateModel requestReason;
 
-  late List<RequestTypeModel> requestTypeList;
-  late List<ReasonTypeModel> reasonTypeList;
-  // late List<RequestTypeModel> purposeList;
+  late String requestType;
+  late List<ReasonTypeModel> reasonTypes;
 
   late bool isActivated;
 
@@ -206,8 +208,7 @@ class _EditRequestReasonTemplateViewState
   void _initialData() {
     requestReason = widget.initialRequestReason;
 
-    requestTypeList = [];
-    reasonTypeList = [];
+    reasonTypes = [];
     isActivated = true;
 
     if (requestReason != RequestReasonTemplateModel.empty()) {
@@ -225,9 +226,9 @@ class _EditRequestReasonTemplateViewState
 
   void _setReasonTypeList(List<String>? value) {
     setState(() {
-      final reasonTypeList = value;
+      final reasonTypesList = value;
       print(value);
-      requestReason = requestReason.copyWith(reasonTypesId: reasonTypeList);
+      requestReason = requestReason.copyWith(reasonTypesId: reasonTypesList);
     });
   }
 
@@ -245,7 +246,7 @@ class _EditRequestReasonTemplateViewState
     if (_formKey.currentState!.validate()) {
       print('pass1');
       if (widget.isNewRequestReason) {
-        requestReason = requestReason.toCreated(
+        requestReason = requestReason.setCreate(
           widget.currentUser.email,
           DateTime.now(),
         );
@@ -257,7 +258,7 @@ class _EditRequestReasonTemplateViewState
               companyId: widget.currentUser.currentCompany,
             ));
       } else {
-        requestReason = requestReason.toUpdated(
+        requestReason = requestReason.setUpdate(
           widget.currentUser.email,
           DateTime.now(),
         );
@@ -314,13 +315,75 @@ class _EditRequestReasonTemplateViewState
             crossAxisAlignment: CrossAxisAlignment.start,
             children: <Widget>[
               const SizedBox(height: UiConfig.lineSpacing),
-              CustomContainer(
-                child: _buildRequestReasonForm(context),
+              BlocBuilder<RequestTypeBloc, RequestTypeState>(
+                builder: (context, state) {
+                  if (state is GotRequestTypes) {
+                    final requestName = state.requestTypes.where((id) =>
+                        requestReason.requestTypeId.contains(id.requestTypeId));
+
+                    final requestNamefilter = requestName
+                        .map((e) => e.description.first.text)
+                        .toString();
+
+                    return _buildRequestType(context, requestNamefilter, state);
+                  }
+                  if (state is RequestTypeError) {
+                    return Center(
+                      child: Text(
+                        state.message,
+                        style: Theme.of(context).textTheme.bodyMedium,
+                      ),
+                    );
+                  }
+                  return const Center(
+                    child: CircularProgressIndicator(),
+                  );
+                },
               ),
               const SizedBox(height: UiConfig.lineSpacing),
-              const SizedBox(height: UiConfig.lineSpacing),
-              CustomContainer(
-                child: _buildChooseReasonsForm(context),
+              BlocBuilder<ReasonTypeBloc, ReasonTypeState>(
+                builder: (context, state) {
+                  if (state is GotReasonTypes) {
+                    return CustomContainer(
+                      child: Column(
+                        mainAxisSize: MainAxisSize.min,
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: <Widget>[
+                          const SizedBox(height: UiConfig.lineSpacing),
+                          Row(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Text(
+                                tr('masterData.dsr.requestreasons.reasontype'),
+                                style: Theme.of(context).textTheme.titleLarge,
+                              ),
+                            ],
+                          ),
+                          const SizedBox(height: UiConfig.lineSpacing),
+                          Visibility(
+                            visible: requestReason.reasonTypesId.isNotEmpty,
+                            child: _buildReasonTypeList(context, state),
+                          ),
+                          Visibility(
+                            visible: requestReason.reasonTypesId.isEmpty,
+                            child: _buildAddReasonBottomSheet(context, state),
+                          ),
+                        ],
+                      ),
+                    );
+                  }
+                  if (state is ReasonTypeError) {
+                    return Center(
+                      child: Text(
+                        state.message,
+                        style: Theme.of(context).textTheme.bodyMedium,
+                      ),
+                    );
+                  }
+                  return const Center(
+                    child: CircularProgressIndicator(),
+                  );
+                },
               ),
               const SizedBox(height: UiConfig.lineSpacing),
               Visibility(
@@ -336,122 +399,260 @@ class _EditRequestReasonTemplateViewState
     );
   }
 
-  Column _buildRequestReasonForm(BuildContext context) {
-    return (Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        Row(
-          children: <Widget>[
-            Text(
-              tr('masterData.dsr.requestreasons.requesttype.create'),
-              style: Theme.of(context).textTheme.titleLarge,
-            )
-          ],
-        ),
-        const SizedBox(height: UiConfig.lineSpacing),
-        SizedBox(
-          width: double.infinity,
-          child: ElevatedButton(
-            onPressed: () {
-              showModalBottomSheet<void>(
+  CustomContainer _buildRequestType(
+      BuildContext context, String requestNamefilter, GotRequestTypes state) {
+    return CustomContainer(
+      child: Column(
+        mainAxisSize: MainAxisSize.min,
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: <Widget>[
+          const SizedBox(height: UiConfig.lineSpacing),
+          Row(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: <Widget>[
+              Text(
+                tr('masterData.dsr.requestreasons.requesttype.create'),
+                style: Theme.of(context).textTheme.titleLarge,
+              )
+            ],
+          ),
+          const SizedBox(height: UiConfig.lineSpacing),
+          MasterDataListTile(
+            trail: true,
+            title: requestNamefilter != '()'
+                ? requestNamefilter
+                : 'Choose Request Type',
+            onTap: () async {
+              //? Open ModalBottomSheet to add Purposes selected
+              await showModalBottomSheet(
+                backgroundColor: Theme.of(context).colorScheme.onBackground,
+                useSafeArea: true,
+                isScrollControlled: true, //* required for min/max child size
+
                 context: context,
-                builder: (BuildContext context) {
-                  return Container(
-                    height: 500,
-                    color: Colors.white,
-                    child: Center(
-                      child: Column(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        mainAxisSize: MainAxisSize.min,
-                        children: <Widget>[
-                          const Text('Modal BottomSheet'),
-                          ElevatedButton(
-                            child: const Text('Close BottomSheet'),
-                            onPressed: () => Navigator.pop(context),
-                          ),
-                        ],
-                      ),
+                builder: (ctx) {
+                  return CustomContainer(
+                    child: Column(
+                      children: [
+                        const SizedBox(height: UiConfig.lineSpacing),
+                        const Text('Request Types'),
+                        const SizedBox(height: UiConfig.lineSpacing),
+                        ListView.builder(
+                          shrinkWrap: true,
+                          physics: const NeverScrollableScrollPhysics(),
+                          itemCount: state.requestTypes.length,
+                          itemBuilder: (_, index) {
+                            return Builder(builder: (context) {
+                              final item = state.requestTypes[index];
+
+                              if (state.requestTypes.isEmpty) {
+                                return const Text('No Data');
+                              }
+                              return MasterDataListTile(
+                                trail: false,
+                                title: state
+                                    .requestTypes[index].description.first.text,
+                                onTap: () {
+                                  setState(
+                                    () {
+                                      // requestReason.requestTypeId =
+                                      //     item.requestTypeId;
+                                      _setRequestType(item.requestTypeId);
+
+                                      context.pop();
+                                    },
+                                  );
+                                },
+                              );
+                            });
+                          },
+                        ),
+                        const SizedBox(height: UiConfig.lineSpacing),
+                        _buildNewRequestButton(context),
+                        const SizedBox(height: UiConfig.lineSpacing),
+                      ],
                     ),
                   );
                 },
               );
             },
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.start,
-              children: [
-                Text(
-                  tr('masterData.dsr.requestreasons.chooserequesttype.create'),
-                  style: Theme.of(context).textTheme.bodyMedium,
-                ),
-              ],
-            ),
           ),
-        )
-      ],
-    ));
+        ],
+      ),
+    );
   }
 
-  Column _buildChooseReasonsForm(BuildContext context) {
-    return (Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
+  Column _buildReasonTypeList(BuildContext context, GotReasonTypes state) {
+    final reasonName = state.reasonTypes
+        .where((id) => requestReason.reasonTypesId.contains(id.reasonTypeId))
+        .toList();
+
+    return Column(
+      mainAxisSize: MainAxisSize.min,
       children: <Widget>[
-        Column(
-          children: <Widget>[
-            Text(
-              tr('masterData.dsr.requestreasons.reasontype'),
-              style: Theme.of(context).textTheme.titleLarge,
-            )
-          ],
-        ),
-        const SizedBox(height: UiConfig.lineSpacing),
-        Text(
-          'เพิ่มตัวเลือกการปฏิเสธที่อนุญาตในประเภทคำร้องนี้',
-          style: Theme.of(context).textTheme.bodySmall,
-        ),
-        const SizedBox(height: UiConfig.lineSpacing),
-        SizedBox(
-          width: double.infinity,
-          child: ElevatedButton(
-            onPressed: () {
-              showModalBottomSheet<void>(
-                context: context,
-                builder: (BuildContext context) {
-                  return Container(
-                    height: 500,
-                    color: Colors.white,
-                    child: Center(
-                      child: Column(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        mainAxisSize: MainAxisSize.min,
-                        children: <Widget>[
-                          const Text('Modal BottomSheet'),
-                          ElevatedButton(
-                            child: const Text('Close BottomSheet'),
-                            onPressed: () => Navigator.pop(context),
-                          ),
-                        ],
-                      ),
-                    ),
-                  );
-                },
-              );
-            },
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.start,
-              children: [
-                Text(
-                  tr('masterData.dsr.requestreasons.choosereasontype'),
+        ListView.separated(
+          shrinkWrap: true,
+          itemCount: reasonName.length,
+          itemBuilder: (context, index) => Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: <Widget>[
+              Expanded(
+                child: Text(
+                  reasonName[index].description.first.text,
                   style: Theme.of(context).textTheme.bodyMedium,
                 ),
-              ],
-            ),
+              ),
+              const SizedBox(width: UiConfig.textLineSpacing),
+              CustomIconButton(
+                onPressed: () {
+                  //? Delete purpose from seleted
+                  setState(() {
+                    requestReason.reasonTypesId
+                        .remove(reasonName[index].reasonTypeId);
+                    _setReasonTypeList(requestReason.reasonTypesId);
+                  });
+                },
+                icon: Ionicons.close,
+                iconColor: Theme.of(context).colorScheme.primary,
+                backgroundColor: Theme.of(context).colorScheme.onBackground,
+              ),
+            ],
           ),
-        )
+          separatorBuilder: (context, _) => Divider(
+            color:
+                Theme.of(context).colorScheme.outlineVariant.withOpacity(0.5),
+          ),
+        ),
+        const SizedBox(height: UiConfig.lineSpacing),
+        _buildAddReasonBottomSheet(context, state),
       ],
-    ));
+    );
   }
 
- 
+  MaterialInkWell _buildAddReasonBottomSheet(
+      BuildContext context, GotReasonTypes state) {
+    return MaterialInkWell(
+      onTap: () async {
+        //? Open ModalBottomSheet to add Purposes selected
+        await showModalBottomSheet(
+          backgroundColor: Theme.of(context).colorScheme.onBackground,
+          useSafeArea: true,
+          isScrollControlled: true, //* required for min/max child size
+          context: context,
+          builder: (ctx) {
+            return SingleChildScrollView(
+              child: CustomContainer(
+                child: Column(
+                  children: [
+                    const SizedBox(height: UiConfig.lineSpacing),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        const Text('Reason Types'),
+                        CustomIconButton(
+                          icon: Ionicons.close,
+                          onPressed: () {
+                            context.pop();
+                          },
+                        )
+                      ],
+                    ),
+                    const SizedBox(height: UiConfig.lineSpacing),
+                    ListView.builder(
+                      shrinkWrap: true,
+                      itemCount: state.reasonTypes.length,
+                      itemBuilder: (_, index) {
+                        return Builder(builder: (context) {
+                          final item = state.reasonTypes[index];
+
+                          if (state.reasonTypes.isEmpty) {
+                            return const Text('No Data');
+                          }
+                          return CheckboxListTile(
+                            controlAffinity: ListTileControlAffinity.leading,
+                            title: Text(state
+                                .reasonTypes[index].description.first.text),
+                            value: false,
+                            onChanged: (newValue) {
+                              setState(() {
+                                if (newValue!) {
+                                  requestReason.reasonTypesId
+                                      .add(item.reasonTypeId);
+                                  _setReasonTypeList(
+                                      requestReason.reasonTypesId);
+                                } else {
+                                  requestReason.reasonTypesId
+                                      .remove(item.reasonTypeId);
+                                  _setReasonTypeList(
+                                      requestReason.reasonTypesId);
+                                }
+                              });
+                            },
+                          );
+                        });
+                      },
+                    ),
+                    const SizedBox(height: UiConfig.lineSpacing),
+                    _buildNewRequestButton(context),
+                    const SizedBox(height: UiConfig.lineSpacing),
+                  ],
+                ),
+              ),
+            );
+          },
+        );
+      },
+      child: Padding(
+        padding: const EdgeInsets.all(8.0),
+        child: Row(
+          children: <Widget>[
+            Padding(
+              padding: const EdgeInsets.only(bottom: 2.0),
+              child: Icon(
+                Ionicons.add,
+                color: Theme.of(context).colorScheme.primary,
+              ),
+            ),
+            const SizedBox(width: UiConfig.actionSpacing + 11),
+            Expanded(
+              child: Text(
+                'Add Reason',
+                style: Theme.of(context).textTheme.bodyMedium,
+              ),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+
+  MaterialInkWell _buildNewRequestButton(BuildContext context) {
+    return MaterialInkWell(
+      onTap: () {},
+      child: Padding(
+        padding: const EdgeInsets.all(8.0),
+        child: Row(
+          children: <Widget>[
+            Padding(
+              padding: const EdgeInsets.only(bottom: 2.0),
+              child: Icon(
+                Ionicons.add,
+                color: Theme.of(context).colorScheme.primary,
+              ),
+            ),
+            const SizedBox(width: UiConfig.actionSpacing + 11),
+            Expanded(
+              child: Text(
+                'New Request Type',
+                style: Theme.of(context).textTheme.bodyMedium,
+              ),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+
   CustomIconButton _buildPopButton(RequestReasonTemplateModel requestReasonTp) {
     return CustomIconButton(
       onPressed: _goBackAndUpdate,

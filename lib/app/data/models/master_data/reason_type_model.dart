@@ -56,6 +56,12 @@ class ReasonTypeModel extends Equatable {
           updatedDate: DateTime.parse(map['updatedDate'] as String),
         );
 
+  factory ReasonTypeModel.fromDocument(FirebaseDocument document) {
+    DataMap response = document.data()!;
+    response['id'] = document.id;
+    return ReasonTypeModel.fromMap(response);
+  }
+
   DataMap toMap() => {
         'reasonTypeId': reasonTypeId,
         'reasonCode': reasonCode,
@@ -67,12 +73,6 @@ class ReasonTypeModel extends Equatable {
         'updatedBy': updatedBy,
         'updatedDate': updatedDate.toIso8601String(),
       };
-
-  factory ReasonTypeModel.fromDocument(FirebaseDocument document) {
-    DataMap response = document.data()!;
-    response['id'] = document.id;
-    return ReasonTypeModel.fromMap(response);
-  }
 
   ReasonTypeModel copyWith({
     String? reasonTypeId,
@@ -100,14 +100,14 @@ class ReasonTypeModel extends Equatable {
     );
   }
 
-  ReasonTypeModel toCreated(String email, DateTime date) => copyWith(
+  ReasonTypeModel setCreate(String email, DateTime date) => copyWith(
         createdBy: email,
         createdDate: date,
         updatedBy: email,
         updatedDate: date,
       );
 
-  ReasonTypeModel toUpdated(String email, DateTime date) => copyWith(
+  ReasonTypeModel setUpdate(String email, DateTime date) => copyWith(
         updatedBy: email,
         updatedDate: date,
       );

@@ -1,7 +1,7 @@
 {
     "app": {
         "name": "PDPA Management Platform",
-        "changeLang": "เปลี่ยนภาษา",
+        "language": "ภาษา",
         "features": {
             "consentmanagement": "Consent Management",
             "consentforms": "Consent Forms",
@@ -9,7 +9,8 @@
             "datasubjectright": "Data Subject Right",
             "masterdata": "Master Data",
             "setting": "Setting"
-        }
+        },
+        "search": "ค้นหา"
     },
     "auth": {
         "signIn": {
@@ -274,6 +275,20 @@
         "step7": {
             "title": "การรับทราบและยินยอม",
             "subtitle": "ท่านได้อ่านและเข้าใจเนื้อหาของคำร้องขอฉบับนี้อย่างละเอียดแล้ว และยืนยันว่าข้อมูลต่าง ๆ ที่ได้แจ้งให้แก่บริษัททราบนั้นเป็นความจริง ถูกต้องท่านเข้าใจดีว่าการตรวจสอบเพื่อยืนยัน อำนาจตัวตนและถิ่นที่อยู่นั้นเป็นการจำเป็นอย่างยิ่งเพื่อพิจารณาดำเนินการตามสิทธิที่ท่านร้องขอหากท่านให้ข้อมูลที่ผิดพลาดด้วยเจตนาทุจริตท่านอาจถูกดำเนินคดีตามกฎหมายได้ และบริษัทอาจขอข้อมูลเพิ่มเติมจากท่านเพื่อการตรวจสอบดังกล่าวเพื่อให้การดำเนินการตามคำร้องของท่านเป็นไปอย่างถูกต้องครบถ้วนต่อไป"
+        }
+    },
+    "consentManagement": {
+        "cf": {
+            "consentForms": {
+                "consentForms": "ข้อมูลแบบฟอร์ม",
+                "create": "Edit consent form",
+                "edit": "Create consent form",
+                "title": "Title",
+                "description": "Description",
+                "detail": "รายละเอียดแบบฟอร์มความยินยอม",
+                "consentFormInfo" : "ข้อมูลขวัตถุ-ประสงค์",
+                "form" : "แบบฟอร์ม"
+            }           
         }
     }
 }
