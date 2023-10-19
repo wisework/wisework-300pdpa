@@ -48,19 +48,19 @@ class ConsentFormRoute {
     ),
   );
 
-  // static final GoRoute consentFormSettings = GoRoute(
-  //   path: '/consent-forms/:id/settings',
-  //   builder: (context, state) => ConsentFormSettingScreen(
-  //     consentFormId: state.pathParameters['id'] ?? 'a3otPSo80xnoMlX4zhIA',
-  //   ),
-  // );
-
   static final GoRoute consentFormSettings = GoRoute(
-    path: '/consent-forms/a3otPSo80xnoMlX4zhIA/settings',
-    builder: (context, state) => const ConsentFormSettingScreen(
-      consentFormId: 'a3otPSo80xnoMlX4zhIA',
+    path: '/consent-forms/:id/settings',
+    builder: (context, state) => ConsentFormSettingScreen(
+      consentFormId: state.pathParameters['id'] ?? 'a3otPSo80xnoMlX4zhIA',
     ),
   );
+
+  // static final GoRoute consentFormSettings = GoRoute(
+  //   path: '/consent-forms/a3otPSo80xnoMlX4zhIA/settings',
+  //   builder: (context, state) => const ConsentFormSettingScreen(
+  //     consentFormId: 'a3otPSo80xnoMlX4zhIA',
+  //   ),
+  // );
 
   static final GoRoute createConsentTheme = GoRoute(
     path: '/consent-forms/settings/consent-themes/create',

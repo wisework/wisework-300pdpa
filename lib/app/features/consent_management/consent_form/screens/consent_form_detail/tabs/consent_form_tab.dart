@@ -13,6 +13,7 @@ import 'package:pdpa/app/data/models/master_data/purpose_category_model.dart';
 import 'package:pdpa/app/data/models/master_data/purpose_model.dart';
 
 import 'package:pdpa/app/features/consent_management/consent_form/widgets/consent_form_preview.dart';
+import 'package:pdpa/app/shared/widgets/customs/custom_button.dart';
 
 import 'package:pdpa/app/shared/widgets/customs/custom_container.dart';
 
@@ -266,6 +267,20 @@ class _ConsentFormTabState extends State<ConsentFormTab> {
                       style: Theme.of(context).textTheme.titleLarge?.copyWith(
                           color: Theme.of(context).colorScheme.onSurface)),
                 ),
+                // CustomButton(
+                //     onPressed: () {
+                //       print("---------------consentForm----------------");
+                //       print(widget.consentForm);
+                //       print("-----------------customFields--------------");
+                //       print(widget.customFields);
+                //       print("-------------purposeCategories------------------");
+                //       print(widget.purposeCategories);
+                //       print("------------purposes-------------------");
+                //       print(widget.purposes);
+                //       print("------------consentTheme-------------------");
+                //       print(widget.consentTheme);
+                //     },
+                //     child: Text("aaaaa"))
                 SingleChildScrollView(
                   child: ConsentFormPreview(
                     consentForm: widget.consentForm,
