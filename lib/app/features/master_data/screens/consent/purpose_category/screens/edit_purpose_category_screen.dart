@@ -274,7 +274,6 @@ class _EditPurposeCategoryViewState extends State<EditPurposeCategoryView> {
   void _setPurpose(List<String>? value) {
     setState(() {
       final purposes = value;
-      print(value);
       purposeCategory = purposeCategory.copyWith(purposes: purposes);
     });
   }
@@ -291,7 +290,6 @@ class _EditPurposeCategoryViewState extends State<EditPurposeCategoryView> {
 
   void _savePurposeCategory() {
     if (_formKey.currentState!.validate()) {
-      print('pass1');
       if (widget.isNewPurposeCategory) {
         purposeCategory = purposeCategory.setCreate(
           widget.currentUser.email,
@@ -309,7 +307,7 @@ class _EditPurposeCategoryViewState extends State<EditPurposeCategoryView> {
           widget.currentUser.email,
           DateTime.now(),
         );
-        print('pass2');
+
         context
             .read<EditPurposeCategoryBloc>()
             .add(UpdateCurrentPurposeCategoryEvent(

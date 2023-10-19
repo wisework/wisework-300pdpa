@@ -25,7 +25,9 @@ class CustomFieldModel extends Equatable {
   final String id;
   final List<LocalizedModel> title;
   final List<LocalizedModel> hintText;
+
   final TextInputType inputType;
+
   final int? lengthLimit;
   final int minLines;
   final int maxLines;
