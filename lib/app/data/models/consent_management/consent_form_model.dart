@@ -249,7 +249,6 @@ class ConsentFormModel extends Equatable {
   @override
   List<Object> get props {
     return [
-      id,
       title,
       description,
       purposeCategories,
