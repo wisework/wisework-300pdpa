@@ -6,7 +6,7 @@ import 'package:pdpa/app/features/general/routes/general_route.dart';
 import 'package:pdpa/app/features/master_data/routes/master_data_route.dart';
 import 'package:pdpa/app/shared/drawers/models/drawer_menu_models.dart';
 
-final List<DrawerMenuModel> drawerMenu = [
+final List<DrawerMenuModel> drawerMenuPreset = [
   DrawerMenuModel(
     value: 'home',
     title: 'Home',

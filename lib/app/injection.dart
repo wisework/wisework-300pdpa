@@ -4,6 +4,7 @@ import 'package:firebase_storage/firebase_storage.dart';
 import 'package:get_it/get_it.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 import 'package:pdpa/app/data/repositories/data_subject_right_repository.dart';
+import 'package:pdpa/app/features/authentication/bloc/sign_up_company/sign_up_company_bloc.dart';
 import 'package:pdpa/app/features/consent_management/consent_form/bloc/choose_purpose_category/choose_purpose_category_bloc.dart';
 import 'package:pdpa/app/features/consent_management/consent_form/bloc/consent_form/consent_form_bloc.dart';
 import 'package:pdpa/app/features/consent_management/consent_form/bloc/consent_form_detail/consent_form_detail_bloc.dart';
@@ -83,6 +84,12 @@ Future<void> _authentication() async {
     ..registerFactory(
       () => InvitationBloc(
         authenticationRepository: serviceLocator(),
+      ),
+    )
+    ..registerFactory(
+      () => SignUpCompanyBloc(
+        authenticationRepository: serviceLocator(),
+        masterDataRepository: serviceLocator(),
       ),
     )
     //? Repositories

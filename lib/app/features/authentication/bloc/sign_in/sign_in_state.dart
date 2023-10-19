@@ -14,6 +14,15 @@ class SignInInitial extends SignInState {
   List<Object> get props => [];
 }
 
+class SignInError extends SignInState {
+  const SignInError(this.message);
+
+  final String message;
+
+  @override
+  List<Object> get props => [message];
+}
+
 class SignedInUser extends SignInState {
   const SignedInUser(
     this.user,
@@ -25,15 +34,6 @@ class SignedInUser extends SignInState {
 
   @override
   List<Object> get props => [user, companies];
-}
-
-class SignInError extends SignInState {
-  const SignInError(this.message);
-
-  final String message;
-
-  @override
-  List<Object> get props => [message];
 }
 
 class SigningInWithGoogle extends SignInState {

@@ -137,4 +137,15 @@ class AuthenticationApi {
 
     throw const ApiException(message: 'Companies not found', statusCode: 404);
   }
+
+  Future<CompanyModel> createCompany(
+    CompanyModel company,
+  ) async {
+    final ref = _firestore.collection('Companies').doc();
+    final created = company.copyWith(id: ref.id);
+
+    await ref.set(created.toMap());
+
+    return created;
+  }
 }

@@ -55,7 +55,7 @@ class _SignInScreenState extends State<SignInScreen> {
     );
 
     if (user.companies.isEmpty || user.currentCompany.isEmpty) {
-      context.pushReplacement(AuthenticationRoute.acceptInvite.path);
+      context.pushReplacement(AuthenticationRoute.signUpCompany.path);
     } else {
       context.pushReplacement(GeneralRoute.home.path);
     }
