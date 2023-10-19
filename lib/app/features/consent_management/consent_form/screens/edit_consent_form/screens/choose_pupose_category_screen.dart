@@ -1,9 +1,7 @@
-import 'package:bot_toast/bot_toast.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
 import 'package:ionicons/ionicons.dart';
-import 'package:pdpa/app/config/config.dart';
 import 'package:pdpa/app/data/models/authentication/user_model.dart';
 import 'package:pdpa/app/data/models/consent_management/consent_form_model.dart';
 import 'package:pdpa/app/data/models/master_data/localized_model.dart';
@@ -16,7 +14,6 @@ import 'package:pdpa/app/injection.dart';
 import 'package:pdpa/app/shared/widgets/customs/custom_container.dart';
 import 'package:pdpa/app/shared/widgets/customs/custom_icon_button.dart';
 import 'package:pdpa/app/shared/widgets/expanded_container.dart';
-import 'package:pdpa/app/shared/widgets/screens/error_message_screen.dart';
 import 'package:pdpa/app/shared/widgets/screens/loading_screen.dart';
 import 'package:pdpa/app/shared/widgets/templates/pdpa_app_bar.dart';
 
@@ -114,7 +111,7 @@ class _ChoosePurposeCategoryViewState extends State<ChoosePurposeCategoryView> {
           style: Theme.of(context).textTheme.titleLarge,
         ),
       ),
-      body: widget.purposeCategories != null
+      body: widget.purposeCategories.isNotEmpty
           ? SingleChildScrollView(
               child: Column(
                 children: [

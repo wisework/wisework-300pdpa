@@ -12,6 +12,7 @@ import 'package:pdpa/app/features/consent_management/consent_form/cubit/choose_p
 import 'package:pdpa/app/features/consent_management/consent_form/cubit/current_consent_form_detail/current_consent_form_detail_cubit.dart';
 import 'package:pdpa/app/features/consent_management/consent_form/bloc/user_consent_form/user_consent_form_bloc.dart';
 import 'package:pdpa/app/features/data_subject_right/bloc/data_subject_right/data_subject_right_bloc.dart';
+import 'package:pdpa/app/features/data_subject_right/bloc/user_data_subject_right_form/user_data_subject_right_form_bloc.dart';
 import 'package:pdpa/app/features/master_data/bloc/data_subject_right/edit_request_reason_tp/edit_request_reason_tp_bloc.dart';
 import 'package:pdpa/app/features/master_data/bloc/data_subject_right/edit_request_reject_tp/edit_request_reject_tp_bloc.dart';
 import 'package:pdpa/app/features/master_data/bloc/data_subject_right/request_reason_tp/request_reason_tp_bloc.dart';
@@ -28,6 +29,7 @@ import 'features/authentication/bloc/sign_in/sign_in_bloc.dart';
 import 'features/consent_management/consent_form/bloc/consent_form_settings/consent_form_settings_bloc.dart';
 import 'features/consent_management/consent_form/bloc/edit_consent_theme/edit_consent_theme_bloc.dart';
 import 'features/consent_management/consent_form/cubit/current_consent_form_settings/current_consent_form_settings_cubit.dart';
+import 'features/data_subject_right/bloc/edit_data_subject_right/edit_data_subject_right_bloc.dart';
 import 'features/master_data/bloc/consent/custom_field/custom_field_bloc.dart';
 import 'features/master_data/bloc/consent/edit_custom_field/bloc/edit_custom_field_bloc.dart';
 import 'features/master_data/bloc/consent/edit_purpose/edit_purpose_bloc.dart';
@@ -172,6 +174,18 @@ Future<void> _dataSubjectRight() async {
     ..registerFactory(
       () => DataSubjectRightBloc(
         dataSubjectRightRepository: serviceLocator(),
+      ),
+    )
+    ..registerFactory(
+      () => EditDataSubjectRightBloc(
+        dataSubjectRightRepository: serviceLocator(),
+        masterDataRepository: serviceLocator(),
+      ),
+    )
+    ..registerFactory(
+      () => UserDataSubjectRightFormBloc(
+        dataSubjectRightRepository: serviceLocator(),
+        masterDataRepository: serviceLocator(),
       ),
     )
     //? Repositories
