@@ -3,6 +3,7 @@ import 'package:pdpa/app/config/config.dart';
 import 'package:pdpa/app/data/models/consent_management/consent_form_model.dart';
 import 'package:pdpa/app/data/models/consent_management/consent_theme_model.dart';
 import 'package:pdpa/app/data/models/master_data/custom_field_model.dart';
+import 'package:pdpa/app/data/models/master_data/mandatory_field_model.dart';
 import 'package:pdpa/app/data/models/master_data/purpose_category_model.dart';
 import 'package:pdpa/app/data/models/master_data/purpose_model.dart';
 import 'package:pdpa/app/shared/utils/functions.dart';
@@ -17,28 +18,35 @@ class ConsentFormPreview extends StatefulWidget {
   const ConsentFormPreview({
     super.key,
     required this.consentForm,
-    required this.customFields,
+    required this.mandatoryFields,
     required this.purposeCategories,
     required this.purposes,
+    required this.customFields,
     required this.consentTheme,
-    this.onCustomFieldChanged,
+    this.onMandatoryFieldChanged,
     this.onPurposeChanged,
+    this.onCustomFieldChanged,
     this.onConsentAccepted,
     this.onSubmitted,
     this.isVerifyRequired = false,
   });
 
   final ConsentFormModel consentForm;
-  final List<CustomFieldModel> customFields;
+  final List<MandatoryFieldModel> mandatoryFields;
   final List<PurposeCategoryModel> purposeCategories;
   final List<PurposeModel> purposes;
+  final List<CustomFieldModel> customFields;
   final ConsentThemeModel consentTheme;
-  final Function(String customFieldId, String value)? onCustomFieldChanged;
+  final Function(
+    String mandatoryFieldId,
+    String value,
+  )? onMandatoryFieldChanged;
   final Function(
     String purposeId,
     String categoryId,
     bool value,
   )? onPurposeChanged;
+  final Function(String customFieldId, String value)? onCustomFieldChanged;
   final Function(bool value)? onConsentAccepted;
   final VoidCallback? onSubmitted;
   final bool isVerifyRequired;
@@ -138,7 +146,7 @@ class _ConsentFormPreviewState extends State<ConsentFormPreview> {
               alignment: Alignment.centerLeft,
               child: _buildHeaderDescription(context),
             ),
-            _buildCustomFieldSection(context),
+            _buildMandatoryFieldSection(context),
             _buildPurposeCategorySection(context),
             _buildFooterDescription(context),
             AcceptConsentCheckbox(
@@ -207,14 +215,14 @@ class _ConsentFormPreviewState extends State<ConsentFormPreview> {
     );
   }
 
-  Visibility _buildCustomFieldSection(BuildContext context) {
-    final customFieldFiltered = UtilFunctions.filterCustomFieldsByIds(
-      widget.customFields,
-      widget.consentForm.customFields,
+  Visibility _buildMandatoryFieldSection(BuildContext context) {
+    final mandatoryFieldFiltered = UtilFunctions.filterMandatoryFieldsByIds(
+      widget.mandatoryFields,
+      widget.consentForm.mandatoryFields,
     );
 
     return Visibility(
-      visible: customFieldFiltered.isNotEmpty,
+      visible: mandatoryFieldFiltered.isNotEmpty,
       child: Column(
         mainAxisSize: MainAxisSize.min,
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -222,10 +230,10 @@ class _ConsentFormPreviewState extends State<ConsentFormPreview> {
           ListView.separated(
             physics: const NeverScrollableScrollPhysics(),
             shrinkWrap: true,
-            itemCount: customFieldFiltered.length,
-            itemBuilder: (context, index) => _buildCustomField(
+            itemCount: mandatoryFieldFiltered.length,
+            itemBuilder: (context, index) => _buildMandatoryField(
               context,
-              customField: customFieldFiltered[index],
+              mandatoryField: mandatoryFieldFiltered[index],
             ),
             separatorBuilder: (context, _) => const SizedBox(
               height: UiConfig.lineSpacing,
@@ -237,22 +245,22 @@ class _ConsentFormPreviewState extends State<ConsentFormPreview> {
     );
   }
 
-  Column _buildCustomField(
+  Column _buildMandatoryField(
     BuildContext context, {
-    required CustomFieldModel customField,
+    required MandatoryFieldModel mandatoryField,
   }) {
     return Column(
       mainAxisSize: MainAxisSize.min,
       children: <Widget>[
         TitleRequiredText(
-          text: customField.title.first.text,
+          text: mandatoryField.title.first.text,
         ),
         CustomTextField(
-          hintText: customField.hintText.first.text,
-          keyboardType: customField.inputType,
+          hintText: mandatoryField.hintText.first.text,
+          keyboardType: mandatoryField.inputType,
           onChanged: (value) {
-            if (widget.onCustomFieldChanged != null) {
-              widget.onCustomFieldChanged!(customField.id, value);
+            if (widget.onMandatoryFieldChanged != null) {
+              widget.onMandatoryFieldChanged!(mandatoryField.id, value);
             }
           },
           required: widget.isVerifyRequired,
@@ -396,6 +404,60 @@ class _ConsentFormPreviewState extends State<ConsentFormPreview> {
       ),
     );
   }
+
+  /*Visibility _buildCustomFieldSection(BuildContext context) {
+    final customFieldFiltered = UtilFunctions.filterCustomFieldsByIds(
+      widget.customFields,
+      widget.consentForm.customFields,
+    );
+
+    return Visibility(
+      visible: customFieldFiltered.isNotEmpty,
+      child: Column(
+        mainAxisSize: MainAxisSize.min,
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: <Widget>[
+          ListView.separated(
+            physics: const NeverScrollableScrollPhysics(),
+            shrinkWrap: true,
+            itemCount: customFieldFiltered.length,
+            itemBuilder: (context, index) => _buildCustomField(
+              context,
+              customField: customFieldFiltered[index],
+            ),
+            separatorBuilder: (context, _) => const SizedBox(
+              height: UiConfig.lineSpacing,
+            ),
+          ),
+          const SizedBox(height: UiConfig.lineSpacing)
+        ],
+      ),
+    );
+  }
+
+  Column _buildCustomField(
+    BuildContext context, {
+    required CustomFieldModel customField,
+  }) {
+    return Column(
+      mainAxisSize: MainAxisSize.min,
+      children: <Widget>[
+        TitleRequiredText(
+          text: customField.title.first.text,
+        ),
+        CustomTextField(
+          hintText: customField.hintText.first.text,
+          keyboardType: customField.inputType,
+          onChanged: (value) {
+            if (widget.onCustomFieldChanged != null) {
+              widget.onCustomFieldChanged!(customField.id, value);
+            }
+          },
+          required: widget.isVerifyRequired,
+        ),
+      ],
+    );
+  }*/
 
   Padding _buidActionButton(BuildContext context) {
     return Padding(

@@ -8,8 +8,8 @@ class UserConsentModel extends Equatable {
     required this.id,
     required this.consentFormId,
     required this.mandatoryFields,
-    required this.customFields,
     required this.purposes,
+    required this.customFields,
     required this.isAcceptConsent,
     required this.createdBy,
     required this.createdDate,
@@ -20,8 +20,8 @@ class UserConsentModel extends Equatable {
   final String id;
   final String consentFormId;
   final List<UserInputText> mandatoryFields;
-  final List<UserInputText> customFields;
   final List<UserInputPurpose> purposes;
+  final List<UserInputText> customFields;
   final bool isAcceptConsent;
   final String createdBy;
   final DateTime createdDate;
@@ -33,8 +33,8 @@ class UserConsentModel extends Equatable {
           id: '',
           consentFormId: '',
           mandatoryFields: [],
-          customFields: [],
           purposes: [],
+          customFields: [],
           isAcceptConsent: false,
           createdBy: '',
           createdDate: DateTime.fromMillisecondsSinceEpoch(0),
@@ -51,14 +51,14 @@ class UserConsentModel extends Equatable {
                 (item) => UserInputText.fromMap(
                     {'id': item.key, 'text': item.value})),
           ),
+          purposes: List<UserInputPurpose>.from(
+            (map['purposes'] as DataMap).entries.map<UserInputPurpose>((item) =>
+                UserInputPurpose.fromMap({'id': item.key, ...item.value})),
+          ),
           customFields: List<UserInputText>.from(
             (map['customFields'] as DataMap).entries.map<UserInputText>(
                 (item) => UserInputText.fromMap(
                     {'id': item.key, 'text': item.value})),
-          ),
-          purposes: List<UserInputPurpose>.from(
-            (map['purposes'] as DataMap).entries.map<UserInputPurpose>((item) =>
-                UserInputPurpose.fromMap({'id': item.key, ...item.value})),
           ),
           isAcceptConsent: map['isAcceptConsent'] as bool,
           createdBy: map['createdBy'] as String,
@@ -79,13 +79,13 @@ class UserConsentModel extends Equatable {
           {},
           (map, userInputField) => map..addAll(userInputField.toMap()),
         ),
-        'customFields': customFields.fold(
-          {},
-          (map, userInputField) => map..addAll(userInputField.toMap()),
-        ),
         'purposes': purposes.fold(
           {},
           (map, userInputOption) => map..addAll(userInputOption.toMap()),
+        ),
+        'customFields': customFields.fold(
+          {},
+          (map, userInputField) => map..addAll(userInputField.toMap()),
         ),
         'isAcceptConsent': isAcceptConsent,
         'createdBy': createdBy,
@@ -98,8 +98,8 @@ class UserConsentModel extends Equatable {
     String? id,
     String? consentFormId,
     List<UserInputText>? mandatoryFields,
-    List<UserInputText>? customFields,
     List<UserInputPurpose>? purposes,
+    List<UserInputText>? customFields,
     bool? isAcceptConsent,
     String? createdBy,
     DateTime? createdDate,
@@ -110,8 +110,8 @@ class UserConsentModel extends Equatable {
       id: id ?? this.id,
       consentFormId: consentFormId ?? this.consentFormId,
       mandatoryFields: mandatoryFields ?? this.mandatoryFields,
-      customFields: customFields ?? this.customFields,
       purposes: purposes ?? this.purposes,
+      customFields: customFields ?? this.customFields,
       isAcceptConsent: isAcceptConsent ?? this.isAcceptConsent,
       createdBy: createdBy ?? this.createdBy,
       createdDate: createdDate ?? this.createdDate,
@@ -138,8 +138,8 @@ class UserConsentModel extends Equatable {
       id,
       consentFormId,
       mandatoryFields,
-      customFields,
       purposes,
+      customFields,
       isAcceptConsent,
       createdBy,
       createdDate,

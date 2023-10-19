@@ -5,6 +5,7 @@ import 'package:pdpa/app/config/config.dart';
 import 'package:pdpa/app/data/models/authentication/company_model.dart';
 import 'package:pdpa/app/data/models/data_subject_right/data_subject_right_model.dart';
 import 'package:pdpa/app/data/models/master_data/custom_field_model.dart';
+import 'package:pdpa/app/data/models/master_data/mandatory_field_model.dart';
 import 'package:pdpa/app/data/models/master_data/purpose_category_model.dart';
 import 'package:pdpa/app/data/models/master_data/purpose_model.dart';
 
@@ -28,13 +29,13 @@ class UtilFunctions {
     return '${AppConfig.baseUrl}/#/$fragment';
   }
 
-  //? Custom Field
-  static List<CustomFieldModel> filterCustomFieldsByIds(
-    List<CustomFieldModel> customFields,
-    List<String> customFieldsIds,
+  //? Mandatory Field
+  static List<MandatoryFieldModel> filterMandatoryFieldsByIds(
+    List<MandatoryFieldModel> mandatoryFields,
+    List<String> mandatoryFieldIds,
   ) {
-    return customFields
-        .where((category) => customFieldsIds.contains(category.id))
+    return mandatoryFields
+        .where((category) => mandatoryFieldIds.contains(category.id))
         .toList();
   }
 
@@ -62,6 +63,16 @@ class UtilFunctions {
     }
 
     return purposeFiltered;
+  }
+
+  //? Custom Field
+  static List<CustomFieldModel> filterCustomFieldsByIds(
+    List<CustomFieldModel> customFields,
+    List<String> customFieldIds,
+  ) {
+    return customFields
+        .where((category) => customFieldIds.contains(category.id))
+        .toList();
   }
 
   //? Data Subject Right

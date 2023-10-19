@@ -4,6 +4,7 @@ import 'package:equatable/equatable.dart';
 import 'package:pdpa/app/data/models/consent_management/consent_form_model.dart';
 import 'package:pdpa/app/data/models/consent_management/consent_theme_model.dart';
 import 'package:pdpa/app/data/models/master_data/custom_field_model.dart';
+import 'package:pdpa/app/data/models/master_data/mandatory_field_model.dart';
 import 'package:pdpa/app/data/models/master_data/purpose_category_model.dart';
 import 'package:pdpa/app/data/models/master_data/purpose_model.dart';
 import 'package:pdpa/app/data/repositories/consent_repository.dart';
@@ -50,8 +51,9 @@ class ConsentFormSettingsBloc
     );
 
     ConsentFormModel gotConsentForm = ConsentFormModel.empty();
-    List<CustomFieldModel> gotCustomFields = [];
+    List<MandatoryFieldModel> gotMandatoryFields = [];
     List<PurposeCategoryModel> gotPurposeCategories = [];
+    List<CustomFieldModel> gotCustomFields = [];
     List<PurposeModel> gotPurposes = [];
     List<ConsentThemeModel> gotConsentThemes = [];
 
@@ -63,21 +65,19 @@ class ConsentFormSettingsBloc
       (consentForm) async {
         gotConsentForm = consentForm;
 
-        for (String customFieldId in consentForm.customFields) {
-          print(consentForm.customFields);
-          final result = await _masterDataRepository.getCustomFieldById(
-            customFieldId,
+        for (String mandatoryFieldId in consentForm.mandatoryFields) {
+          final result = await _masterDataRepository.getMandatoryFieldById(
+            mandatoryFieldId,
             event.companyId,
           );
 
           result.fold(
             (failure) => emit(ConsentFormSettingsError(failure.errorMessage)),
-            (customField) => gotCustomFields.add(customField),
+            (mandatoryField) => gotMandatoryFields.add(mandatoryField),
           );
         }
 
         for (String purposeCategoryId in consentForm.purposeCategories) {
-          print(consentForm.purposeCategories);
           final result = await _masterDataRepository.getPurposeCategoryById(
             purposeCategoryId,
             event.companyId,
@@ -108,6 +108,18 @@ class ConsentFormSettingsBloc
           );
         }
 
+        for (String customFieldId in consentForm.customFields) {
+          final result = await _masterDataRepository.getCustomFieldById(
+            customFieldId,
+            event.companyId,
+          );
+
+          result.fold(
+            (failure) => emit(ConsentFormSettingsError(failure.errorMessage)),
+            (customField) => gotCustomFields.add(customField),
+          );
+        }
+
         final result = await _consentRepository.getConsentThemes(
           event.companyId,
         );
@@ -124,9 +136,10 @@ class ConsentFormSettingsBloc
     emit(
       GotConsentFormSettings(
         gotConsentForm,
-        gotCustomFields,
+        gotMandatoryFields..sort((a, b) => a.priority.compareTo(b.priority)),
         gotPurposeCategories..sort((a, b) => a.priority.compareTo(b.priority)),
         gotPurposes,
+        gotCustomFields,
         gotConsentThemes
           ..sort((a, b) => b.updatedDate.compareTo(a.updatedDate)),
         gotConsentThemes.firstWhere(
@@ -146,24 +159,27 @@ class ConsentFormSettingsBloc
       return;
     }
 
-    List<CustomFieldModel> customFields = [];
+    List<MandatoryFieldModel> mandatoryFields = [];
     List<PurposeCategoryModel> purposeCategories = [];
     List<PurposeModel> purposes = [];
+    List<CustomFieldModel> customFields = [];
     List<ConsentThemeModel> consentThemes = [];
 
     if (state is GotConsentFormSettings) {
       final settings = state as GotConsentFormSettings;
 
-      customFields = settings.customFields;
+      mandatoryFields = settings.mandatoryFields;
       purposeCategories = settings.purposeCategories;
       purposes = settings.purposes;
+      customFields = settings.customFields;
       consentThemes = settings.consentThemes;
     } else if (state is UpdatedConsentFormSettings) {
       final settings = state as UpdatedConsentFormSettings;
 
-      customFields = settings.customFields;
+      mandatoryFields = settings.mandatoryFields;
       purposeCategories = settings.purposeCategories;
       purposes = settings.purposes;
+      customFields = settings.customFields;
       consentThemes = settings.consentThemes;
     }
 
@@ -181,9 +197,10 @@ class ConsentFormSettingsBloc
       (_) => emit(
         GotConsentFormSettings(
           event.consentForm,
-          customFields,
+          mandatoryFields..sort((a, b) => a.priority.compareTo(b.priority)),
           purposeCategories..sort((a, b) => a.priority.compareTo(b.priority)),
           purposes,
+          customFields,
           consentThemes..sort((a, b) => b.updatedDate.compareTo(a.updatedDate)),
           consentThemes.firstWhere(
             (theme) => theme.id == event.consentForm.consentThemeId,
@@ -199,9 +216,10 @@ class ConsentFormSettingsBloc
     Emitter<ConsentFormSettingsState> emit,
   ) async {
     ConsentFormModel consentForm = ConsentFormModel.empty();
-    List<CustomFieldModel> customFields = [];
+    List<MandatoryFieldModel> mandatoryFields = [];
     List<PurposeCategoryModel> purposeCategories = [];
     List<PurposeModel> purposes = [];
+    List<CustomFieldModel> customFields = [];
     List<ConsentThemeModel> consentThemes = [];
     ConsentThemeModel consentTheme = ConsentThemeModel.initial();
 
@@ -209,18 +227,20 @@ class ConsentFormSettingsBloc
       final settings = state as GotConsentFormSettings;
 
       consentForm = settings.consentForm;
-      customFields = settings.customFields;
+      mandatoryFields = settings.mandatoryFields;
       purposeCategories = settings.purposeCategories;
       purposes = settings.purposes;
+      customFields = settings.customFields;
       consentThemes = settings.consentThemes;
       consentTheme = settings.consentTheme;
     } else if (state is UpdatedConsentFormSettings) {
       final settings = state as UpdatedConsentFormSettings;
 
       consentForm = settings.consentForm;
-      customFields = settings.customFields;
+      mandatoryFields = settings.mandatoryFields;
       purposeCategories = settings.purposeCategories;
       purposes = settings.purposes;
+      customFields = settings.customFields;
       consentThemes = settings.consentThemes;
       consentTheme = settings.consentTheme;
     }
@@ -259,9 +279,10 @@ class ConsentFormSettingsBloc
     emit(
       GotConsentFormSettings(
         consentForm,
-        customFields,
-        purposeCategories,
+        mandatoryFields..sort((a, b) => a.priority.compareTo(b.priority)),
+        purposeCategories..sort((a, b) => a.priority.compareTo(b.priority)),
         purposes,
+        customFields,
         updated..sort((a, b) => b.updatedDate.compareTo(a.updatedDate)),
         consentTheme,
       ),

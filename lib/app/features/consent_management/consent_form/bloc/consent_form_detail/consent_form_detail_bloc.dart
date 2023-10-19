@@ -3,6 +3,7 @@ import 'package:equatable/equatable.dart';
 import 'package:pdpa/app/data/models/consent_management/consent_form_model.dart';
 import 'package:pdpa/app/data/models/consent_management/consent_theme_model.dart';
 import 'package:pdpa/app/data/models/master_data/custom_field_model.dart';
+import 'package:pdpa/app/data/models/master_data/mandatory_field_model.dart';
 import 'package:pdpa/app/data/models/master_data/purpose_category_model.dart';
 import 'package:pdpa/app/data/models/master_data/purpose_model.dart';
 import 'package:pdpa/app/data/repositories/consent_repository.dart';
@@ -46,9 +47,10 @@ class ConsentFormDetailBloc
     );
 
     ConsentFormModel gotConsentForm = ConsentFormModel.empty();
-    List<CustomFieldModel> gotCustomFields = [];
+    List<MandatoryFieldModel> gotMandatoryFields = [];
     List<PurposeCategoryModel> gotPurposeCategories = [];
     List<PurposeModel> gotPurposes = [];
+    List<CustomFieldModel> gotCustomFields = [];
     List<ConsentThemeModel> gotConsentThemes = [];
 
     await result.fold(
@@ -59,15 +61,15 @@ class ConsentFormDetailBloc
       (consentForm) async {
         gotConsentForm = consentForm;
 
-        for (String customFieldId in consentForm.customFields) {
-          final result = await _masterDataRepository.getCustomFieldById(
-            customFieldId,
+        for (String mandatoryFieldId in consentForm.mandatoryFields) {
+          final result = await _masterDataRepository.getMandatoryFieldById(
+            mandatoryFieldId,
             event.companyId,
           );
 
           result.fold(
             (failure) => emit(ConsentFormDetailError(failure.errorMessage)),
-            (customField) => gotCustomFields.add(customField),
+            (mandatoryField) => gotMandatoryFields.add(mandatoryField),
           );
         }
 
@@ -102,6 +104,18 @@ class ConsentFormDetailBloc
           );
         }
 
+        for (String customFieldId in consentForm.customFields) {
+          final result = await _masterDataRepository.getCustomFieldById(
+            customFieldId,
+            event.companyId,
+          );
+
+          result.fold(
+            (failure) => emit(ConsentFormDetailError(failure.errorMessage)),
+            (customField) => gotCustomFields.add(customField),
+          );
+        }
+
         final result = await _consentRepository.getConsentThemes(
           event.companyId,
         );
@@ -118,9 +132,10 @@ class ConsentFormDetailBloc
     emit(
       GotConsentFormDetail(
         gotConsentForm,
-        gotCustomFields,
+        gotMandatoryFields,
         gotPurposeCategories..sort((a, b) => b.priority.compareTo(a.priority)),
         gotPurposes,
+        gotCustomFields,
         gotConsentThemes
           ..sort((a, b) => b.updatedDate.compareTo(a.updatedDate)),
         gotConsentThemes.firstWhere(
