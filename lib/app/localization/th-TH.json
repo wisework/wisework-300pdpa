@@ -31,6 +31,79 @@
             "tagline": "What you are looking for today"
         }
     },
+    "consentManagement": {
+        "Listpage": {
+            "search": "ค้นหา",
+            "filter": {
+                "all": "ทั้งหมด",
+                "recents": "ล่าสุด",
+                "problem": "ปัญหา",
+                "date": "วันที่"
+            }
+        },
+        "consentForm": {
+            "createForm": {
+                "create": "สร้างแบบฟอร์มคำยินยอม",
+                "section": "ข้อมูลแบบฟอร์มคำขอ",
+                "title": "ชื่อ",
+                "description": "คำอธิบาย",
+                "address": "ที่อยู่",
+                "telNumber": "เบอร์โทรศัพท์",
+                "nameSurename": "ชื่อ-นามสกุล",
+                "email": "อีเมล",
+                "idCardNumber": "เลขบัตรประจำตัวประชาชน",
+                "purpose": "วัตถุประสงค์",
+                "purposeOfDC": "วัตถุประสงค์ในการเก็บข้อมูล",
+                "selectPurposeCategory": "เลือกหมวดหมู่วัตถุประสงค์"
+            },
+            "consentFormDetails": {
+                "filter": {
+                    "informationPurpose": "ข้อมูล-วัตถุประสงค์",
+                    "form": "แบบฟอร์ม"
+                },
+                "title": "รายละเอียดแบบฟอร์มยินยอม",
+                "id": "id",
+                "storedInformation": "ข้อมูลที่จัดเก็บ",
+                "Purposes": "วัตถุประสงค์",
+                "form": {
+                    "form": "แบบฟอร์ม",
+                    "shareLinkForm": "แชร์ลิงค์แบบฟอร์ม",
+                    "descriptionShare": "สามารถใช้แบบฟอร์มนี้ในการเก็บข้อมูลจากผู้ใช้งานด้วยการเปิดลิงค์ หรือ การแสกน QR Code",
+                    "formExample": "ตัวอย่างแบบฟอร์ม",
+                    "telNumber": "เบอร์โทรศัพท์",
+                    "nameSurename": "ชื่อ-นามสกุล",
+                    "email": "อีเมล",
+                    "idCardNumber": "เลขบัตรประจำตัวประชาชน"
+                }
+            }
+        },
+        "userConsent": {
+            "createForm": {
+                "create": "Create Consent Form",
+                "section": "Request Form Information",
+                "title": "Title",
+                "description": "Description",
+                "address": "Address",
+                "telNumber": "Telephone number",
+                "nameSurename": "Name-Surname",
+                "email": "Email",
+                "identificationNumber": "Identification Number",
+                "purpose": "Purpose",
+                "purposeOfDC": "Purpose of data collection",
+                "selectPurposeCategory": "Select purpose category"
+            },
+            "consentFormDetails": {
+                "filter": {
+                    "informationPurpose": "ข้อมูล-วัตถุประสงค์",
+                    "form": "แบบฟอร์ม"
+                },
+                "title": "รายละเอียดแบบฟอร์มยินยอม",
+                "id": "id",
+                "storedInformation": "ข้อมูลที่จัดเก็บ",
+                "Purposes": "วัตถุประสงค์"
+            }
+        }
+    },
     "masterData": {
         "cm": {
             "consents": "Consents",
@@ -86,51 +159,51 @@
                 "list": "Requests",
                 "create": "Create Request Type",
                 "edit": "Edit Request Type",
-                "requestcode" : "Request Code",
-                "requestcodeHint" : "Request Code",
-                "description" : "Request Description",
-                "descriptionHint" : "Request Description"
+                "requestcode": "Request Code",
+                "requestcodeHint": "Request Code",
+                "description": "Request Description",
+                "descriptionHint": "Request Description"
             },
             "rejections": {
                 "title": "Reject Type",
                 "list": "Rejections",
                 "create": "Create Reject Type",
                 "edit": "Edit Reject Type",
-                "rejectcode" : "Reject Code",
-                "rejectcodeHint" : "Reject Code",
-                "description" : "Reject Description",
-                "descriptionHint" : "Reject Description"
+                "rejectcode": "Reject Code",
+                "rejectcodeHint": "Reject Code",
+                "description": "Reject Description",
+                "descriptionHint": "Reject Description"
             },
             "reason": {
                 "title": "Reason Type",
                 "list": "Reasons",
                 "create": "Create Reason Type",
                 "edit": "Edit Reason Type",
-                "reasoncode" : "Reason Code",
-                "reasoncodeHint" : "Enter Code",
-                "description" : "Description",
-                "descriptionHint" : "Enter Description",
-                "needmoreinformation" : "Need more information"
+                "reasoncode": "Reason Code",
+                "reasoncodeHint": "Enter Code",
+                "description": "Description",
+                "descriptionHint": "Enter Description",
+                "needmoreinformation": "Need more information"
             },
             "requestrejects": {
                 "title": "Request Rejects",
                 "list": "List of Request Rejects",
                 "create": "Create Request Rejects",
                 "edit": "Edit Request Rejects",
-                "requesttype" : "Request Type",
-                "chooserequesttype" : "Choose Request Type",
-                "rejecttype" : "Rejects Type",
-                "chooserejecttype" : "Choose Rejects Type"
+                "requesttype": "Request Type",
+                "chooserequesttype": "Choose Request Type",
+                "rejecttype": "Rejects Type",
+                "chooserejecttype": "Choose Rejects Type"
             },
             "requestreasons": {
                 "title": "Request Reasons",
                 "list": "List of Request Reasons",
                 "create": "Create Request Reasons",
                 "edit": "Edit Request Reasons",
-                "requesttype" : "Request Type",
-                "chooserequesttype" : "Choose Request Type",
-                "rejecttype" : "Reasons Type",
-                "chooserejecttype" : "Choose Reasons Type"
+                "requesttype": "Request Type",
+                "chooserequesttype": "Choose Request Type",
+                "rejecttype": "Reasons Type",
+                "chooserejecttype": "Choose Reasons Type"
             }
         },
         "etc": {
@@ -139,7 +212,68 @@
             "active": "Active",
             "configuration": "Configuration",
             "updateInfo": "Update Info",
-            "delete" : "Delete"
+            "delete": "Delete"
+        }
+    },
+    "dataSubjectRight": {
+        "datasubjectright": "Data Subject Right",
+        "namesurename": "ชื่อ-นานสกุล",
+        "address": "ที่อยู่",
+        "email": "อีเมล",
+        "telnumber": "เบอร์ติดต่อ",
+        "Listpage": {
+            "filter": {
+                "all": "ทั้งหมด",
+                "recents": "ล่าสุด",
+                "duesoon": "Due soon"
+            }
+        },
+        "step1": {
+            "areYouTheDs": "ท่านเป็นเจ้าของข้อมูลหรือไม่",
+            "applicantDs": "ผู้ยื่นคำร้องเป็นบุคคลเดียวกับเจ้าของข้อมูล",
+            "ApplicantAds": "ผู้ยื่นคำร้องเป็นตัวแทนเจ้าของข้อมูล",
+            "ApplicantInformation": "ข้อมูลของผู้ยื่นคำขอ",
+            "namesurename": "ชื่อ-นานสกุล",
+            "address": "ที่อยู่",
+            "email": "อีเมล",
+            "telnumber": "เบอร์ติดต่อ"
+        },
+        "step2": {
+            "title": "เอกสารพิสูจน์อำนาจดำเนินการแทน",
+            "subtitle": "ทั้งนี้ข้าพเจ้าได้แนบเอกสารดังต่อไปนี้เพื่อการตรวจสอบอำนาจตัวตนและถิ่นที่อยู่ของผู้ยื่นคำร้องและเจ้าของข้อมูลส่วนบุคคลเพื่อให้บริษัทสามารถดำเนินการตามสิทธิที่ร้องขอได้อย่างถูกต้อง",
+            "powerOfAttorney": "หนังสือมอบอำนาจ",
+            "other": "อื่นๆ ถ้ามี (โปรดระบุ)",
+            "documentType": "ประเภทเอกสาร",
+            "copyFile": "ไฟล์สำเนา"
+        },
+        "step3": {
+            "namesurename": "ชื่อ-นานสกุล",
+            "address": "ที่อยู่",
+            "email": "อีเมล",
+            "telnumber": "เบอร์ติดต่อ"
+        },
+        "step4": {
+            "title": "เอกสารพิสูจน์ตัวตนและ/หรือพิสูจน์ถิ่นที่อยู่เจ้าของข้อมูล",
+            "subtitle": "ข้าพเจ้าได้แนบเอกสารดังต่อไปนี้เพื่อการตรวจสอบตัวตนและที่อยู่ของผู้ยื่นคำร้องเพื่อให้บริษัทฯสามารถดำเนินการตามสิทธิที่ร้องขอได้อย่างถูกต้อง",
+            "copyOfIdentificationCare": "สำเนาบัตรประจำตัวประชาชน(กรณีสัญชาติไทย)",
+            "copyOfPassport": "สำเนาพาสปอร์ต (กรณีต่างชาติ)",
+            "copyOfHouseRegistration": "สำเนาทะเบียนบ้าน",
+            "other": "อื่นๆ ถ้ามี (โปรดระบุ)",
+            "documentType": "ประเภทเอกสาร",
+            "copyFile": "ไฟล์สำเนา"
+        },
+        "step5": {
+            "title": "ต้องการยื่นคำร้องขอเพื่อจุดประสงค์ดังต่อไปนี้",
+            "ApplicantAds": "Applicant is the agent of the data subject."
+        },
+        "step6": {
+            "title": "ข้อสงวนสิทธิของผู้ควบคุมข้อมูล",
+            "subtitle": "บริษัทขอเรียนแจ้งให้ท่านทราบว่า เพื่อให้เป็นไปตามกฎหมายที่เกี่ยวข้อง บริษัทอาจจำเป็นต้องปฏิเสธคำร้องขอของท่าน ในบางกรณี ซึ่งรวมถึงแต่ไม่จำกัดเพียงกรณีดังต่อไปนี้",
+            "decription": "1)ท่านไม่สามารถแสดงให้เห็นอย่างชัดเจนได้ว่าผู้ยื่นคำร้องเป็นเจ้าของข้อมูลส่วนบุคคลหรือมีอำนาจในการยื่นคำร้องขอดังกล่าว2)คำร้องขอดังกล่าวไม่สมเหตุสมผล เช่น กรณีที่ผู้ร้องขอไม่มีสิทธิในการขอเข้าถึงข้อมูลส่วนบุคคล หรือไม่มีข้อมูลส่วนบุคคลนั้นอยู่ที่บริษัท เป็นต้น3)คำร้องขอดังกล่าวเป็นคำร้องขอฟุ่มเฟือย เช่น เป็นคำร้องขอที่มีลักษณะเดียวกัน หรือ มีเนื้อหาเดียวกันซ้ำ ๆ กันโดยไม่มีเหตุอันสมควร4)การเก็บรักษาข้อมูลส่วนบุคคลนั้นเป็นไปเพื่อการก่อตั้งสิทธิเรียกร้องตามกฎหมาย การปฏิบัติตามกฎหมาย การใช้สิทธิเรียกร้องตามกฎหมาย หรือการยกขึ้นต่อสู้สิทธิเรียกร้องตามกฎหมาย5)การดำเนินการดังกล่าวกระทบในด้านลบต่อสิทธิเสรีภาพของบุคคลอื่น6)การประมวลผลข้อมูลนั้นมีความจำเป็นในการปฏิบัติหน้าที่ตามสัญญาระหว่างเจ้าของข้อมูลส่วนบุคคลกับบริษัท7)การประมวลผลข้อมูลมีความจำเป็นเพื่อประโยชน์โดยชอบด้วยกฎหมายของบริษัท8)กรณีอื่นๆตามกฎหมายที่เกี่ยวข้องกำหนดโดยปกติท่านจะไม่เสียค่าใช้จ่ายในการดำเนินการตามคำร้องขอของท่านอย่างไรก็ดีหากปรากฏอย่างชัดเจนว่าคำร้องขอของท่านเป็นคำร้องขอที่ไม่สมเหตุสมผลหรือคำร้องขอฟุ่มเฟือยบริษัทอาจคิดค่าใช้จ่ายในการดำเนินการแก่ท่านตามสมควร"
+        },
+        "step7": {
+            "title": "การรับทราบและยินยอม",
+            "subtitle": "ท่านได้อ่านและเข้าใจเนื้อหาของคำร้องขอฉบับนี้อย่างละเอียดแล้ว และยืนยันว่าข้อมูลต่าง ๆ ที่ได้แจ้งให้แก่บริษัททราบนั้นเป็นความจริง ถูกต้องท่านเข้าใจดีว่าการตรวจสอบเพื่อยืนยัน อำนาจตัวตนและถิ่นที่อยู่นั้นเป็นการจำเป็นอย่างยิ่งเพื่อพิจารณาดำเนินการตามสิทธิที่ท่านร้องขอหากท่านให้ข้อมูลที่ผิดพลาดด้วยเจตนาทุจริตท่านอาจถูกดำเนินคดีตามกฎหมายได้ และบริษัทอาจขอข้อมูลเพิ่มเติมจากท่านเพื่อการตรวจสอบดังกล่าวเพื่อให้การดำเนินการตามคำร้องของท่านเป็นไปอย่างถูกต้องครบถ้วนต่อไป"
         }
     }
 }

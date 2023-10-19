@@ -31,6 +31,79 @@
             "tagline": "What you are looking for today"
         }
     },
+    "consentManagement": {
+        "Listpage": {
+            "search": "Search",
+            "filter": {
+                "all": "All",
+                "recents": "Recents",
+                "problem": "Problem",
+                "date": "Date"
+            }
+        },
+        "consentForm": {
+            "createForm": {
+                "create": "Create Consent Form",
+                "section": "Request Form Information",
+                "title": "Title",
+                "description": "Description",
+                "address": "Address",
+                "telNumber": "Telephone number",
+                "nameSurename": "Name-Surname",
+                "email": "Email",
+                "idCardNumber": "ID Card Number",
+                "purpose": "Purpose",
+                "purposeOfDC": "Purpose of data collection",
+                "selectPurposeCategory": "Select purpose category"
+            },
+            "consentFormDetails": {
+                "filter": {
+                    "informationPurpose": "Information-Purpose",
+                    "form": "Form"
+                },
+                "title": "Consent Form Details",
+                "id": "ID",
+                "storedInformation": "Stored information",
+                "Purposes": "Purpose",
+                "form": {
+                    "form": "Form",
+                    "shareLinkForm": "Share link form",
+                    "descriptionShare": "This form can be used to collect information from users by Open the link or scan the QR Code.",
+                    "formExample": "Form example",
+                    "telNumber": "Telephone number",
+                    "nameSurename": "Name-Surname",
+                    "email": "Email",
+                    "idCardNumber": "ID Card Number"
+                }
+            }
+        },
+        "userConsent": {
+            "createForm": {
+                "create": "Create Consent Form",
+                "section": "Request Form Information",
+                "title": "Title",
+                "description": "Description",
+                "address": "Address",
+                "telNumber": "Telephone number",
+                "nameSurename": "Name-Surname",
+                "email": "Email",
+                "identificationNumber": "Identification Number",
+                "purpose": "Purpose",
+                "purposeOfDC": "Purpose of data collection",
+                "selectPurposeCategory": "Select purpose category"
+            },
+            "consentFormDetails": {
+                "filter": {
+                    "informationPurpose": "ข้อมูล-วัตถุประสงค์",
+                    "form": "แบบฟอร์ม"
+                },
+                "title": "รายละเอียดแบบฟอร์มยินยอม",
+                "id": "id",
+                "storedInformation": "ข้อมูลที่จัดเก็บ",
+                "Purposes": "วัตถุประสงค์"
+            }
+        }
+    },
     "masterData": {
         "cm": {
             "consents": "Consents",
@@ -86,51 +159,51 @@
                 "list": "Requests",
                 "create": "Create Request Type",
                 "edit": "Edit Request Type",
-                "requestcode" : "Request Code",
-                "requestcodeHint" : "Request Code",
-                "description" : "Request Description",
-                "descriptionHint" : "Request Description"
+                "requestcode": "Request Code",
+                "requestcodeHint": "Request Code",
+                "description": "Request Description",
+                "descriptionHint": "Request Description"
             },
             "rejections": {
                 "title": "Reject Type",
                 "list": "Rejections",
                 "create": "Create Reject Type",
                 "edit": "Edit Reject Type",
-                "rejectcode" : "Reject Code",
-                "rejectcodeHint" : "Reject Code",
-                "description" : "Reject Description",
-                "descriptionHint" : "Reject Description"
+                "rejectcode": "Reject Code",
+                "rejectcodeHint": "Reject Code",
+                "description": "Reject Description",
+                "descriptionHint": "Reject Description"
             },
             "reason": {
                 "title": "Reason Type",
                 "list": "Reasons",
                 "create": "Create Reason Type",
                 "edit": "Edit Reason Type",
-                "reasoncode" : "Reason Code",
-                "reasoncodeHint" : "Enter Code",
-                "description" : "Description",
-                "descriptionHint" : "Enter Description",
-                "needmoreinformation" : "Need more information"
+                "reasoncode": "Reason Code",
+                "reasoncodeHint": "Enter Code",
+                "description": "Description",
+                "descriptionHint": "Enter Description",
+                "needmoreinformation": "Need more information"
             },
             "requestrejects": {
                 "title": "Request Rejects",
                 "list": "Request rejects",
                 "create": "Create Request Rejects",
                 "edit": "Edit Request Rejects",
-                "requesttype" : "Request Type",
-                "chooserequesttype" : "Choose Request Type",
-                "rejecttype" : "Rejects Type",
-                "chooserejecttype" : "Choose Rejects Type"
+                "requesttype": "Request Type",
+                "chooserequesttype": "Choose Request Type",
+                "rejecttype": "Rejects Type",
+                "chooserejecttype": "Choose Rejects Type"
             },
             "requestreasons": {
                 "title": "Request Reasons",
                 "list": "Request reasons",
                 "create": "Create Request Reasons",
                 "edit": "Edit Request Reasons",
-                "requesttype" : "Request Type",
-                "chooserequesttype" : "Choose Request Type",
-                "reasontype" : "Reasons Type",
-                "choosereasontype" : "Choose Reasons Type"
+                "requesttype": "Request Type",
+                "chooserequesttype": "Choose Request Type",
+                "reasontype": "Reasons Type",
+                "choosereasontype": "Choose Reasons Type"
             }
         },
         "etc": {
@@ -139,7 +212,68 @@
             "active": "Active",
             "configuration": "Configuration",
             "updateInfo": "Update Info",
-            "delete" : "Delete"
+            "delete": "Delete"
+        }
+    },
+    "dataSubjectRight": {
+        "datasubjectright": "Data Subject Right",
+        "namesurename": "Name-Surname",
+        "address": "Address",
+        "email": "Email",
+        "telnumber": "Telephone number",
+        "Listpage": {
+            "filter": {
+                "all": "All",
+                "recents": "Recents",
+                "duesoon": "Due soon"
+            }
+        },
+        "step1": {
+            "areYouTheDs": "Are you the data subject?",
+            "applicantDs": "Applicant is the data subject",
+            "ApplicantAds": "Applicant is the agent of the data subject.",
+            "ApplicantInformation": "Applicant information",
+            "nameSurename": "Name-Surname",
+            "address": "Address",
+            "email": "Email",
+            "telNumber": "Telephone number"
+        },
+        "step2": {
+            "title": "",
+            "subtitle": "I hereby attach the following documents for the purpose of verification of power, identity and residency of the applicant and the data subject in order for the Company to proceed the exercise of rights accurately.",
+            "powerOfAttorney": "Power of attorney",
+            "other": "Other (If any, please specify)",
+            "documentType": "Document type",
+            "copyFile": "Copy file"
+        },
+        "step3": {
+            "namesurename": "Name-Surname",
+            "address": "Address",
+            "email": "Email",
+            "telnumber": "Telephone number"
+        },
+        "step4": {
+            "title": "Documents for verification of identity and/or residency",
+            "subtitle": "I hereby attach the following documents for the purpose of verification of power, identity and residency of the applicant and the data subject in order for the Company to proceed the exercise of rights accurately.",
+            "copyOfIdentificationCare": "Copy of identification care (for Thai nationality)",
+            "copyOfPassport": "Copy of passport (for foreigner)",
+            "copyOfHouseRegistration": "Copy of house registration ",
+            "other": "Other (If any, please specify)",
+            "documentType": "Document type",
+            "copyFile": "Copy file"
+        },
+        "step5": {
+            "applicantDs": "Applicant is the data subject",
+            "ApplicantAds": "Applicant is the agent of the data subject."
+        },
+        "step6": {
+            "title": "Data Controller disclaimer",
+            "subtitle": "In order to comply with the relevant laws, the Company may have to deny your request in some cases including but not limited to the following cases where:",
+            "decription": "1)You are not able to clearly verify that the applicant is the data subject or authorized to submit the request.2)Your request is unreasonable, e.g., the applicant may not have the right to delete personal data or the Company does not have such personal data.3)Such request is redundant, e.g., such request is repeatedly submitted or duplicated without reasonable reason.4)Retention of such personal data is for establishing legal claims, legal compliance, exercise of legal rights or defenses.5)Proceeding your request may adversely affect and harm rights and freedom of other people.6)Processing of such personal data is necessary for performance of contracts between the data subject and the Company.7)Processing of such personal data is necessary for legitimate interests of the Company.8)Other cases prescribed by the relevant law. In general, you will not be charged for the process in relation to the request. However, if your request is manifestly unreasonable or redundant, the Company may charge a processing fee at a reasonable cost."
+        },
+        "step7": {
+            "title": "Acknowledgment and Acceptance is require",
+            "subtitle": "The applicant has read and understood this form thoroughly. The applicant confirms that the information provided to the Company is true and accurate. The applicant understands that the verification of authorization, identification and residency is necessary for processing your request. Providing false information with bad faith may result in legal prosecution. In order to properly proceed with your request, the Company may request for additional information from you for verification purpose."
         }
     }
 }
