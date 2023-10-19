@@ -33,6 +33,8 @@ class RequestReasonTpBloc
     final result =
         await _masterDataRepository.getRequestReasonTemplates(event.companyId);
 
+    await Future.delayed(const Duration(milliseconds: 800));
+
     result.fold(
       (failure) => emit(RequestReasonError(failure.errorMessage)),
       (requestReasons) => emit(GotRequestReasons(
@@ -75,6 +77,8 @@ class RequestReasonTpBloc
               .toList();
           break;
       }
+
+      await Future.delayed(const Duration(milliseconds: 800));
 
       emit(
         GotRequestReasons(

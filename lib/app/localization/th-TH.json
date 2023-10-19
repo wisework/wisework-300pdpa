@@ -1,7 +1,7 @@
 {
     "app": {
         "name": "PDPA Management Platform",
-        "changeLang": "เปลี่ยนภาษา",
+        "language": "ภาษา",
         "features": {
             "consentmanagement": "Consent Management",
             "consentforms": "Consent Forms",
