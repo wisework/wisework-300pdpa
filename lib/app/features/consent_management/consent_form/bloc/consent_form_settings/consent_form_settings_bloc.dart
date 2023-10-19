@@ -64,6 +64,7 @@ class ConsentFormSettingsBloc
         gotConsentForm = consentForm;
 
         for (String customFieldId in consentForm.customFields) {
+          print(consentForm.customFields);
           final result = await _masterDataRepository.getCustomFieldById(
             customFieldId,
             event.companyId,
@@ -76,6 +77,7 @@ class ConsentFormSettingsBloc
         }
 
         for (String purposeCategoryId in consentForm.purposeCategories) {
+          print(consentForm.purposeCategories);
           final result = await _masterDataRepository.getPurposeCategoryById(
             purposeCategoryId,
             event.companyId,

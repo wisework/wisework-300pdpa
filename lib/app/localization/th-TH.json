@@ -9,7 +9,8 @@
             "datasubjectright": "Data Subject Right",
             "masterdata": "Master Data",
             "setting": "Setting"
-        }
+        },
+        "search": "ค้นหา"
     },
     "auth": {
         "signIn": {
@@ -140,6 +141,20 @@
             "configuration": "Configuration",
             "updateInfo": "Update Info",
             "delete" : "Delete"
+        }
+    },
+    "consentManagement": {
+        "cf": {
+            "consentForms": {
+                "consentForms": "ข้อมูลแบบฟอร์ม",
+                "create": "Edit consent form",
+                "edit": "Create consent form",
+                "title": "Title",
+                "description": "Description",
+                "detail": "รายละเอียดแบบฟอร์มความยินยอม",
+                "consentFormInfo" : "ข้อมูลขวัตถุ-ประสงค์",
+                "form" : "แบบฟอร์ม"
+            }           
         }
     }
 }

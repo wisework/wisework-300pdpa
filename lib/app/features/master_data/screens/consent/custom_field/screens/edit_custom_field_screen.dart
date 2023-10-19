@@ -175,6 +175,7 @@ class _EditCustomFieldViewState extends State<EditCustomFieldView> {
   late TextEditingController maxLineController;
 
   late int inputTypeSelected;
+
   int? lenghtLimit;
   late bool isActivated;
 
