@@ -14,6 +14,8 @@ import 'package:pdpa/app/features/master_data/bloc/consent/purpose/purpose_bloc.
 import 'package:pdpa/app/features/master_data/bloc/consent/purpose_category/purpose_category_bloc.dart';
 import 'package:pdpa/app/features/master_data/bloc/data_subject_right/reason_type/reason_type_bloc.dart';
 import 'package:pdpa/app/features/master_data/bloc/data_subject_right/reject_type/reject_type_bloc.dart';
+import 'package:pdpa/app/features/master_data/bloc/data_subject_right/request_reason_tp/request_reason_tp_bloc.dart';
+import 'package:pdpa/app/features/master_data/bloc/data_subject_right/request_reject_tp/request_reject_tp_bloc.dart';
 import 'package:pdpa/app/features/master_data/bloc/data_subject_right/request_type/request_type_bloc.dart';
 import 'package:pdpa/app/injection.dart';
 import 'package:pdpa/app/shared/drawers/bloc/drawer_bloc.dart';
@@ -64,6 +66,12 @@ class GlobalBlocProvider {
       ),
       BlocProvider<ReasonTypeBloc>(
         create: (context) => serviceLocator<ReasonTypeBloc>(),
+      ),
+      BlocProvider<RequestReasonTpBloc>(
+        create: (context) => serviceLocator<RequestReasonTpBloc>(),
+      ),
+      BlocProvider<RequestRejectTpBloc>(
+        create: (context) => serviceLocator<RequestRejectTpBloc>(),
       ),
     ];
   }
