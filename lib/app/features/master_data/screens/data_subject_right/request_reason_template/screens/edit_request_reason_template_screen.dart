@@ -246,7 +246,7 @@ class _EditRequestReasonTemplateViewState
     if (_formKey.currentState!.validate()) {
       print('pass1');
       if (widget.isNewRequestReason) {
-        requestReason = requestReason.toCreated(
+        requestReason = requestReason.setCreate(
           widget.currentUser.email,
           DateTime.now(),
         );
@@ -258,7 +258,7 @@ class _EditRequestReasonTemplateViewState
               companyId: widget.currentUser.currentCompany,
             ));
       } else {
-        requestReason = requestReason.toUpdated(
+        requestReason = requestReason.setUpdate(
           widget.currentUser.email,
           DateTime.now(),
         );

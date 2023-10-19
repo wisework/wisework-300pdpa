@@ -233,7 +233,7 @@ class _DataRequesterViewState extends State<DataRequesterView> {
           CustomButton(
             height: 40.0,
             onPressed: () {
-              context.push(DataSubjectRightRouter.stepTwo.path);
+              context.push(DataSubjectRightRoute.stepTwo.path);
             },
             child: Text(
               'ถัดไป', //!

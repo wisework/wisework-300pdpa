@@ -71,7 +71,7 @@ class _RequestIntroScreenState extends State<RequestIntroScreen> {
                 width: double.infinity,
                 height: 50,
                 onPressed: () {
-                  context.pushReplacement(DataSubjectRightRouter.stepOne.path);
+                  context.pushReplacement(DataSubjectRightRoute.stepOne.path);
                 },
                 child: Text(
                   'กรอกแบบคำร้อง',

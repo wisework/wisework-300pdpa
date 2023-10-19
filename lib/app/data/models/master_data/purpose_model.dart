@@ -66,6 +66,12 @@ class PurposeModel extends Equatable {
           updatedDate: DateTime.parse(map['updatedDate'] as String),
         );
 
+  factory PurposeModel.fromDocument(FirebaseDocument document) {
+    DataMap response = document.data()!;
+    response['id'] = document.id;
+    return PurposeModel.fromMap(response);
+  }
+
   DataMap toMap() => {
         'description': description.map((item) => item.toMap()).toList(),
         'warningDescription':
@@ -78,12 +84,6 @@ class PurposeModel extends Equatable {
         'updatedBy': updatedBy,
         'updatedDate': updatedDate.toIso8601String(),
       };
-
-  factory PurposeModel.fromDocument(FirebaseDocument document) {
-    DataMap response = document.data()!;
-    response['id'] = document.id;
-    return PurposeModel.fromMap(response);
-  }
 
   PurposeModel copyWith({
     String? id,

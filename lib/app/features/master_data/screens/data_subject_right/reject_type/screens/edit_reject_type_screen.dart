@@ -80,8 +80,7 @@ class _EditRejectTypeScreenState extends State<EditRejectTypeScreen> {
             );
 
             context.read<RejectTypeBloc>().add(UpdateRejectTypeEvent(
-                rejectType: state.rejectType,
-                updateType: UpdateType.created));
+                rejectType: state.rejectType, updateType: UpdateType.created));
 
             context.pop();
           }
@@ -244,7 +243,7 @@ class _EditRejectTypeViewState extends State<EditRejectTypeView> {
   void _saveRejectType() {
     if (_formKey.currentState!.validate()) {
       if (widget.isNewRejectType) {
-        rejectType = rejectType.toCreated(
+        rejectType = rejectType.setCreate(
           widget.currentUser.email,
           DateTime.now(),
         );
@@ -253,7 +252,7 @@ class _EditRejectTypeViewState extends State<EditRejectTypeView> {
               companyId: widget.currentUser.currentCompany,
             ));
       } else {
-        rejectType = rejectType.toUpdated(
+        rejectType = rejectType.setUpdate(
           widget.currentUser.email,
           DateTime.now(),
         );
@@ -310,8 +309,7 @@ class _EditRejectTypeViewState extends State<EditRejectTypeView> {
             const SizedBox(height: UiConfig.lineSpacing),
             Visibility(
               visible: widget.initialRejectType != RejectTypeModel.empty(),
-              child:
-                  _buildConfigurationInfo(context, widget.initialRejectType),
+              child: _buildConfigurationInfo(context, widget.initialRejectType),
             ),
           ],
         ),

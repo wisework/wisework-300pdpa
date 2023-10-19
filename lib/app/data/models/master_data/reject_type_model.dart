@@ -24,7 +24,7 @@ class RejectTypeModel extends Equatable {
   final String updatedBy;
   final DateTime updatedDate;
 
- RejectTypeModel.empty()
+  RejectTypeModel.empty()
       : this(
           rejectTypeId: '',
           rejectCode: '',
@@ -52,6 +52,12 @@ class RejectTypeModel extends Equatable {
           updatedDate: DateTime.parse(map['updatedDate'] as String),
         );
 
+  factory RejectTypeModel.fromDocument(FirebaseDocument document) {
+    DataMap response = document.data()!;
+    response['id'] = document.id;
+    return RejectTypeModel.fromMap(response);
+  }
+
   DataMap toMap() => {
         'rejectTypeId': rejectTypeId,
         'rejectCode': rejectCode,
@@ -62,12 +68,6 @@ class RejectTypeModel extends Equatable {
         'updatedBy': updatedBy,
         'updatedDate': updatedDate.toIso8601String(),
       };
-
-  factory RejectTypeModel.fromDocument(FirebaseDocument document) {
-    DataMap response = document.data()!;
-    response['id'] = document.id;
-    return RejectTypeModel.fromMap(response);
-  }
 
   RejectTypeModel copyWith({
     String? rejectTypeId,
@@ -91,17 +91,18 @@ class RejectTypeModel extends Equatable {
     );
   }
 
-  RejectTypeModel toCreated(String email, DateTime date) => copyWith(
+  RejectTypeModel setCreate(String email, DateTime date) => copyWith(
         createdBy: email,
         createdDate: date,
         updatedBy: email,
         updatedDate: date,
       );
 
-  RejectTypeModel toUpdated(String email, DateTime date) => copyWith(
+  RejectTypeModel setUpdate(String email, DateTime date) => copyWith(
         updatedBy: email,
         updatedDate: date,
       );
+
   @override
   List<Object> get props {
     return [

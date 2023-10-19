@@ -4,8 +4,8 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:pdpa/app/config/config.dart';
 import 'package:pdpa/app/data/models/consent_management/consent_form_model.dart';
 import 'package:pdpa/app/data/models/consent_management/consent_theme_model.dart';
-import 'package:pdpa/app/data/models/etc/user_input_field.dart';
-import 'package:pdpa/app/data/models/etc/user_input_option.dart';
+import 'package:pdpa/app/data/models/etc/user_input_text.dart';
+import 'package:pdpa/app/data/models/etc/user_input_purpose.dart';
 import 'package:pdpa/app/data/models/master_data/custom_field_model.dart';
 import 'package:pdpa/app/data/models/master_data/purpose_category_model.dart';
 import 'package:pdpa/app/data/models/master_data/purpose_model.dart';
@@ -221,14 +221,14 @@ class _UserConsentFormViewState extends State<UserConsentFormView> {
           purposes: widget.purposes,
           consentTheme: widget.consentTheme,
           onCustomFieldChanged: (customFieldId, value) {
-            List<UserInputField> customFields = [];
+            List<UserInputText> customFields = [];
 
-            for (UserInputField customField in userConsent.customFields) {
+            for (UserInputText customField in userConsent.customFields) {
               if (customField.id == customFieldId) {
                 customFields.add(
-                  UserInputField(
+                  UserInputText(
                     id: customField.id,
-                    value: value,
+                    text: value,
                   ),
                 );
               } else {
@@ -241,14 +241,14 @@ class _UserConsentFormViewState extends State<UserConsentFormView> {
             );
           },
           onPurposeChanged: (purposeId, categoryId, value) {
-            List<UserInputOption> purposes = [];
+            List<UserInputPurpose> purposes = [];
 
-            for (UserInputOption purpose in userConsent.purposes) {
+            for (UserInputPurpose purpose in userConsent.purposes) {
               if (purpose.id == purposeId) {
                 purposes.add(
-                  UserInputOption(
+                  UserInputPurpose(
                     id: purpose.id,
-                    parentId: categoryId,
+                    purposeCategoryId: categoryId,
                     value: value,
                   ),
                 );

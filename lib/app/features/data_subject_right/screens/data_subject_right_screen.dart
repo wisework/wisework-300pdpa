@@ -4,14 +4,13 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
 import 'package:ionicons/ionicons.dart';
 import 'package:pdpa/app/config/config.dart';
-import 'package:pdpa/app/data/models/data_subject_right/data_subject_right_request_model.dart';
-import 'package:pdpa/app/data/models/master_data/localized_model.dart';
+import 'package:pdpa/app/data/models/data_subject_right/data_subject_right_model.dart';
 import 'package:pdpa/app/features/authentication/bloc/sign_in/sign_in_bloc.dart';
+import 'package:pdpa/app/features/data_subject_right/bloc/data_subject_right/data_subject_right_bloc.dart';
 import 'package:pdpa/app/features/data_subject_right/routes/data_subject_right_route.dart';
-import 'package:pdpa/app/features/data_subject_right/widgets/data_subject_right_item_card.dart';
-import 'package:pdpa/app/features/master_data/bloc/consent/purpose/purpose_bloc.dart';
+import 'package:pdpa/app/features/data_subject_right/widgets/data_subject_right_card.dart';
 import 'package:pdpa/app/shared/drawers/pdpa_drawer.dart';
-import 'package:pdpa/app/shared/utils/constants.dart';
+import 'package:pdpa/app/shared/utils/functions.dart';
 import 'package:pdpa/app/shared/widgets/customs/custom_icon_button.dart';
 import 'package:pdpa/app/shared/widgets/templates/pdpa_app_bar.dart';
 
@@ -38,7 +37,9 @@ class _DataSubjectRightScreenState extends State<DataSubjectRightScreen> {
       companyId = (bloc.state as SignedInUser).user.currentCompany;
     }
 
-    context.read<PurposeBloc>().add(GetPurposesEvent(companyId: companyId));
+    context
+        .read<DataSubjectRightBloc>()
+        .add(GetDataSubjectRightsEvent(companyId: companyId));
   }
 
   @override
@@ -59,58 +60,6 @@ class _DataSubjectRightViewState extends State<DataSubjectRightView> {
 
   @override
   Widget build(BuildContext context) {
-    final dsrMock = [
-      DataSubjectRightRequestModel(
-        id: '1',
-        dataRequester: const [
-          LocalizedModel(language: 'en-US', text: 'Test1'),
-        ],
-        dataOwner: const [],
-        isDataOwner: true,
-        powerVerifications: const [],
-        identityVerifications: const [],
-        processRequests: const [
-          LocalizedModel(language: 'en-US', text: 'Inprogess'),
-        ],
-        requestExpirationDate: DateTime.now(),
-        notifyEmail: const [],
-        requestFormVerified: true,
-        verifyRequest: const [],
-        resultRequest: true,
-        verifyReason: '',
-        lastSeenBy: '',
-        status: ActiveStatus.active,
-        createdBy: '',
-        createdDate: DateTime.now(),
-        updatedBy: '',
-        updatedDate: DateTime.now(),
-      ),
-      DataSubjectRightRequestModel(
-        id: '2',
-        dataRequester: const [
-          LocalizedModel(language: 'en-US', text: 'Test2'),
-        ],
-        dataOwner: const [],
-        isDataOwner: true,
-        powerVerifications: const [],
-        identityVerifications: const [],
-        processRequests: const [
-          LocalizedModel(language: 'en-US', text: 'Inprogess'),
-        ],
-        requestExpirationDate: DateTime.now(),
-        notifyEmail: const [],
-        requestFormVerified: true,
-        verifyRequest: const [],
-        resultRequest: true,
-        verifyReason: '',
-        lastSeenBy: '',
-        status: ActiveStatus.active,
-        createdBy: '',
-        createdDate: DateTime.now(),
-        updatedBy: '',
-        updatedDate: DateTime.now(),
-      ),
-    ];
     return Scaffold(
       key: _scaffoldKey,
       appBar: PdpaAppBar(
@@ -126,18 +75,16 @@ class _DataSubjectRightViewState extends State<DataSubjectRightView> {
           tr('app.features.datasubjectright'),
           style: Theme.of(context).textTheme.titleLarge,
         ),
-        // appBarHeight: 100,
         actions: [
           CustomIconButton(
             onPressed: () {},
-            icon: Ionicons.link,
+            icon: Ionicons.link_outline,
             iconColor: Theme.of(context).colorScheme.primary,
             backgroundColor: Theme.of(context).colorScheme.onBackground,
           ),
-          const SizedBox(width: UiConfig.lineSpacing),
           CustomIconButton(
             onPressed: () {},
-            icon: Ionicons.search,
+            icon: Ionicons.search_outline,
             iconColor: Theme.of(context).colorScheme.primary,
             backgroundColor: Theme.of(context).colorScheme.onBackground,
           ),
@@ -153,18 +100,20 @@ class _DataSubjectRightViewState extends State<DataSubjectRightView> {
               decoration: BoxDecoration(
                 color: Theme.of(context).colorScheme.onBackground,
               ),
-              child: BlocBuilder<PurposeBloc, PurposeState>(
+              child: BlocBuilder<DataSubjectRightBloc, DataSubjectRightState>(
                 builder: (context, state) {
-                  if (state is GotPurposes) {
+                  if (state is GotDataSubjectRights) {
                     return ListView.builder(
-                      itemCount: dsrMock.length,
+                      itemCount: state.dataSubjectRights.length,
                       itemBuilder: (context, index) {
-                        return _buildItemCard(context,
-                            dsrRequest: dsrMock[index]);
+                        return _buildDataSubjectRightCard(
+                          context,
+                          dataSubjectRight: state.dataSubjectRights[index],
+                        );
                       },
                     );
                   }
-                  if (state is PurposeError) {
+                  if (state is DataSubjectRightError) {
                     return Center(
                       child: Text(
                         state.message,
@@ -183,7 +132,7 @@ class _DataSubjectRightViewState extends State<DataSubjectRightView> {
       ),
       floatingActionButton: FloatingActionButton(
         onPressed: () {
-          context.push(DataSubjectRightRouter.intro.path);
+          context.push(DataSubjectRightRoute.createDataSubjectRight.path);
         },
         child: const Icon(Icons.add),
       ),
@@ -195,28 +144,21 @@ class _DataSubjectRightViewState extends State<DataSubjectRightView> {
     );
   }
 
-  DataSubjectRightItemCard _buildItemCard(
+  DataSubjectRightCard _buildDataSubjectRightCard(
     BuildContext context, {
-    required DataSubjectRightRequestModel dsrRequest,
+    required DataSubjectRightModel dataSubjectRight,
   }) {
-    const language = 'en-US';
-    final description = dsrRequest.dataRequester.firstWhere(
-      (item) => item.language == language,
-      orElse: LocalizedModel.empty,
-    );
-    final requestCode = dsrRequest.processRequests.firstWhere(
-      (item) => item.language == language,
-      orElse: LocalizedModel.empty,
-    );
-
-    return DataSubjectRightItemCard(
-      title: description.text,
-      subtitle: requestCode.text,
-      date: dsrRequest.requestExpirationDate.toString(),
+    final requests = ['เพิกถอนความยินยอม', 'ลบข้อมูลส่วนบุคคล'];
+    return DataSubjectRightCard(
+      title: dataSubjectRight.dataRequester.first.text,
+      subtitle: requests,
+      date: dataSubjectRight.updatedDate,
+      status: UtilFunctions.getRequestProcessStatus(dataSubjectRight),
       onTap: () {
-        // context.push(
-        //   DataSubjectRightRouter
-        // );
+        context.push(
+          DataSubjectRightRoute.editDataSubjectRight.path
+              .replaceFirst(':id', dataSubjectRight.id),
+        );
       },
     );
   }

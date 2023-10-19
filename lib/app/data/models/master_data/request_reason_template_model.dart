@@ -35,6 +35,12 @@ class RequestReasonTemplateModel extends Equatable {
           updatedDate: DateTime.fromMillisecondsSinceEpoch(0),
         );
 
+  factory RequestReasonTemplateModel.fromDocument(FirebaseDocument document) {
+    DataMap response = document.data()!;
+    response['id'] = document.id;
+    return RequestReasonTemplateModel.fromMap(response);
+  }
+
   RequestReasonTemplateModel.fromMap(DataMap map)
       : this(
           requestReasonTemplateId: map['requestReasonTemplateId'] as String,
@@ -59,12 +65,6 @@ class RequestReasonTemplateModel extends Equatable {
         'updatedDate': updatedDate.toIso8601String(),
       };
 
-  factory RequestReasonTemplateModel.fromDocument(FirebaseDocument document) {
-    DataMap response = document.data()!;
-    response['id'] = document.id;
-    return RequestReasonTemplateModel.fromMap(response);
-  }
-
   RequestReasonTemplateModel copyWith({
     String? requestReasonTemplateId,
     String? requestTypeId,
@@ -88,14 +88,14 @@ class RequestReasonTemplateModel extends Equatable {
     );
   }
 
-  RequestReasonTemplateModel toCreated(String email, DateTime date) => copyWith(
+  RequestReasonTemplateModel setCreate(String email, DateTime date) => copyWith(
         createdBy: email,
         createdDate: date,
         updatedBy: email,
         updatedDate: date,
       );
 
-  RequestReasonTemplateModel toUpdated(String email, DateTime date) => copyWith(
+  RequestReasonTemplateModel setUpdate(String email, DateTime date) => copyWith(
         updatedBy: email,
         updatedDate: date,
       );

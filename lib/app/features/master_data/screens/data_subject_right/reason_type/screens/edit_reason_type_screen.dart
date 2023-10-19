@@ -205,7 +205,7 @@ class _EditReasonTypeViewState extends State<EditReasonTypeView> {
           text: reasonType.description.first.text,
         );
       }
-    
+
       isNeedInfo = reasonType.requiredInputReasonText;
 
       isActivated = reasonType.status == ActiveStatus.active;
@@ -259,7 +259,7 @@ class _EditReasonTypeViewState extends State<EditReasonTypeView> {
   void _saveReasonType() {
     if (_formKey.currentState!.validate()) {
       if (widget.isNewReasonType) {
-        reasonType = reasonType.toCreated(
+        reasonType = reasonType.setCreate(
           widget.currentUser.email,
           DateTime.now(),
         );
@@ -268,7 +268,7 @@ class _EditReasonTypeViewState extends State<EditReasonTypeView> {
               companyId: widget.currentUser.currentCompany,
             ));
       } else {
-        reasonType = reasonType.toUpdated(
+        reasonType = reasonType.setUpdate(
           widget.currentUser.email,
           DateTime.now(),
         );

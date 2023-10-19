@@ -114,7 +114,7 @@ class _PowerVerificationViewState extends State<PowerVerificationView> {
                 CustomButton(
                   height: 40.0,
                   onPressed: () {
-                    context.push(DataSubjectRightRouter.stepThree.path);
+                    context.push(DataSubjectRightRoute.stepThree.path);
                   },
                   child: Text(
                     'ถัดไป', //!
