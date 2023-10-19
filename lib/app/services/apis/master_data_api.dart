@@ -1,5 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:pdpa/app/data/models/master_data/custom_field_model.dart';
+import 'package:pdpa/app/data/models/master_data/mandatory_field_model.dart';
 import 'package:pdpa/app/data/models/master_data/purpose_category_model.dart';
 import 'package:pdpa/app/data/models/master_data/purpose_model.dart';
 import 'package:pdpa/app/data/models/master_data/reason_type_model.dart';
@@ -12,6 +13,70 @@ class MasterDataApi {
   const MasterDataApi(this._firestore);
 
   final FirebaseFirestore _firestore;
+
+  //? Mandatory Field
+  Future<List<MandatoryFieldModel>> getMandatoryFields(
+    String companyId,
+  ) async {
+    final result = await _firestore
+        .collection('Companies/$companyId/MandatoryFields')
+        .get();
+
+    List<MandatoryFieldModel> mandatoryFields = [];
+    for (var document in result.docs) {
+      mandatoryFields.add(MandatoryFieldModel.fromDocument(document));
+    }
+
+    return mandatoryFields;
+  }
+
+  Future<MandatoryFieldModel?> getMandatoryFieldById(
+    String mandatoryFieldId,
+    String companyId,
+  ) async {
+    final result = await _firestore
+        .collection('Companies/$companyId/MandatoryFields')
+        .doc(mandatoryFieldId)
+        .get();
+
+    if (!result.exists) return null;
+    return MandatoryFieldModel.fromDocument(result);
+  }
+
+  Future<MandatoryFieldModel> createMandatoryField(
+    MandatoryFieldModel mandatoryField,
+    String companyId,
+  ) async {
+    final ref =
+        _firestore.collection('Companies/$companyId/MandatoryFields').doc();
+    final created = mandatoryField.copyWith(id: ref.id);
+
+    await ref.set(created.toMap());
+
+    return created;
+  }
+
+  Future<void> updateMandatoryField(
+    MandatoryFieldModel mandatoryField,
+    String companyId,
+  ) async {
+    await _firestore
+        .collection('Companies/$companyId/MandatoryFields')
+        .doc(mandatoryField.id)
+        .set(mandatoryField.toMap());
+  }
+
+  Future<void> deleteMandatoryField(
+    String mandatoryFieldId,
+    String companyId,
+  ) async {
+    if (mandatoryFieldId.isNotEmpty) {
+      await _firestore
+          .collection('Companies/$companyId/MandatoryFields')
+          .doc(mandatoryFieldId)
+          .delete();
+    }
+  }
 
   //? Custom Field
   Future<List<CustomFieldModel>> getCustomFields(String companyId) async {
@@ -444,7 +509,7 @@ class MasterDataApi {
     }
   }
 
-   //? Request Reject Template
+  //? Request Reject Template
   Future<List<RequestRejectTemplateModel>> getRequestRejectTemplates(
       String companyId) async {
     final result = await _firestore

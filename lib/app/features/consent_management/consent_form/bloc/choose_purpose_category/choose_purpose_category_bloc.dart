@@ -1,3 +1,4 @@
+// ignore: depend_on_referenced_packages
 import 'package:bloc/bloc.dart';
 import 'package:equatable/equatable.dart';
 import 'package:pdpa/app/data/models/consent_management/consent_form_model.dart';
@@ -34,7 +35,7 @@ class ChoosePurposeCategoryBloc
 
     emit(const GetingCurrentPurposeCategory());
 
-    ConsentFormModel gotConsentForm = ConsentFormModel.empty();
+    // ConsentFormModel gotConsentForm = ConsentFormModel.empty();
     final List<String> allPurpose = [];
     final List<PurposeModel> gotPurpose = [];
 

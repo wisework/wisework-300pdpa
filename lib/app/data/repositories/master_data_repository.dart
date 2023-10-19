@@ -1,5 +1,6 @@
 import 'package:dartz/dartz.dart';
 import 'package:pdpa/app/data/models/master_data/custom_field_model.dart';
+import 'package:pdpa/app/data/models/master_data/mandatory_field_model.dart';
 import 'package:pdpa/app/data/models/master_data/purpose_category_model.dart';
 import 'package:pdpa/app/data/models/master_data/purpose_model.dart';
 import 'package:pdpa/app/data/models/master_data/reason_type_model.dart';
@@ -16,6 +17,78 @@ class MasterDataRepository {
   const MasterDataRepository(this._api);
 
   final MasterDataApi _api;
+
+  //? Mandatory Field
+  ResultFuture<List<MandatoryFieldModel>> getMandatoryFields(
+    String companyId,
+  ) async {
+    try {
+      final result = await _api.getMandatoryFields(companyId);
+
+      return Right(result);
+    } on ApiException catch (error) {
+      return Left(ApiFailure.fromException(error));
+    }
+  }
+
+  ResultFuture<MandatoryFieldModel> getMandatoryFieldById(
+    String mandatoryFieldId,
+    String companyId,
+  ) async {
+    try {
+      final result = await _api.getMandatoryFieldById(
+        mandatoryFieldId,
+        companyId,
+      );
+
+      if (result != null) return Right(result);
+
+      return const Left(
+        ApiFailure(message: 'Mandatory field not found', statusCode: 404),
+      );
+    } on ApiException catch (error) {
+      return Left(ApiFailure.fromException(error));
+    }
+  }
+
+  ResultFuture<MandatoryFieldModel> createMandatoryField(
+    MandatoryFieldModel mandatoryField,
+    String companyId,
+  ) async {
+    try {
+      final result = await _api.createMandatoryField(mandatoryField, companyId);
+
+      return Right(result);
+    } on ApiException catch (error) {
+      return Left(ApiFailure.fromException(error));
+    }
+  }
+
+  ResultVoid updateMandatoryField(
+    MandatoryFieldModel mandatoryField,
+    String companyId,
+  ) async {
+    try {
+      await _api.updateMandatoryField(mandatoryField, companyId);
+
+      return const Right(null);
+    } on ApiException catch (error) {
+      return Left(ApiFailure.fromException(error));
+    }
+  }
+
+  ResultVoid deleteMandatoryField(
+    String mandatoryFieldId,
+    String companyId,
+  ) async {
+    try {
+      await _api.deleteMandatoryField(mandatoryFieldId, companyId);
+
+      return const Right(null);
+    } on ApiException catch (error) {
+      return Left(ApiFailure.fromException(error));
+    }
+  }
 
   //? Custom Field
   ResultFuture<List<CustomFieldModel>> getCustomFields(
@@ -40,7 +113,7 @@ class MasterDataRepository {
       if (result != null) return Right(result);
 
       return const Left(
-        ApiFailure(message: 'CustomField not found', statusCode: 404),
+        ApiFailure(message: 'Custom field not found', statusCode: 404),
       );
     } on ApiException catch (error) {
       return Left(ApiFailure.fromException(error));
@@ -247,7 +320,7 @@ class MasterDataRepository {
       if (result != null) return Right(result);
 
       return const Left(
-        ApiFailure(message: 'Request Type not found', statusCode: 404),
+        ApiFailure(message: 'Request type not found', statusCode: 404),
       );
     } on ApiException catch (error) {
       return Left(ApiFailure.fromException(error));
@@ -316,7 +389,7 @@ class MasterDataRepository {
       if (result != null) return Right(result);
 
       return const Left(
-        ApiFailure(message: 'Reject Type not found', statusCode: 404),
+        ApiFailure(message: 'Reject type not found', statusCode: 404),
       );
     } on ApiException catch (error) {
       return Left(ApiFailure.fromException(error));
@@ -385,7 +458,7 @@ class MasterDataRepository {
       if (result != null) return Right(result);
 
       return const Left(
-        ApiFailure(message: 'Reason Type not found', statusCode: 404),
+        ApiFailure(message: 'Reason type not found', statusCode: 404),
       );
     } on ApiException catch (error) {
       return Left(ApiFailure.fromException(error));
@@ -449,12 +522,13 @@ class MasterDataRepository {
     String companyId,
   ) async {
     try {
-      final result = await _api.getRequestReasonTemplateById(requestReasonId, companyId);
+      final result =
+          await _api.getRequestReasonTemplateById(requestReasonId, companyId);
 
       if (result != null) return Right(result);
 
       return const Left(
-        ApiFailure(message: 'Reason Type not found', statusCode: 404),
+        ApiFailure(message: 'Reason type not found', statusCode: 404),
       );
     } on ApiException catch (error) {
       return Left(ApiFailure.fromException(error));
@@ -466,7 +540,8 @@ class MasterDataRepository {
     String companyId,
   ) async {
     try {
-      final result = await _api.createRequestReasonTemplate(requestReason, companyId);
+      final result =
+          await _api.createRequestReasonTemplate(requestReason, companyId);
 
       return Right(result);
     } on ApiException catch (error) {
@@ -518,12 +593,13 @@ class MasterDataRepository {
     String companyId,
   ) async {
     try {
-      final result = await _api.getRequestRejectTemplateById(requestRejectId, companyId);
+      final result =
+          await _api.getRequestRejectTemplateById(requestRejectId, companyId);
 
       if (result != null) return Right(result);
 
       return const Left(
-        ApiFailure(message: 'Reason Type not found', statusCode: 404),
+        ApiFailure(message: 'Reason type not found', statusCode: 404),
       );
     } on ApiException catch (error) {
       return Left(ApiFailure.fromException(error));
@@ -535,7 +611,8 @@ class MasterDataRepository {
     String companyId,
   ) async {
     try {
-      final result = await _api.createRequestRejectTemplate(requestReject, companyId);
+      final result =
+          await _api.createRequestRejectTemplate(requestReject, companyId);
 
       return Right(result);
     } on ApiException catch (error) {
@@ -568,5 +645,4 @@ class MasterDataRepository {
       return Left(ApiFailure.fromException(error));
     }
   }
-
 }
