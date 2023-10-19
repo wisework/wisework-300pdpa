@@ -34,14 +34,14 @@ class ChoosePurposeCategoryCubit
     }
   }
 
-  void customFieldSelected(CustomFieldModel customFieldModel) {
+  void customFieldSelected(CustomFieldModel customField) {
     final customFieldSelected =
         state.customFieldSelected.map((template) => template).toList();
-    if (customFieldSelected.contains(customFieldModel)) {
-      customFieldSelected.remove(customFieldModel);
+    if (customFieldSelected.contains(customField)) {
+      customFieldSelected.remove(customField);
       emit(state.copyWith(customFieldSelected: customFieldSelected));
     } else {
-      customFieldSelected.add(customFieldModel);
+      customFieldSelected.add(customField);
       emit(state.copyWith(customFieldSelected: customFieldSelected));
     }
   }

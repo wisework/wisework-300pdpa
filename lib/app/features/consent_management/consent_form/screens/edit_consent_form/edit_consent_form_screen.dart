@@ -165,6 +165,8 @@ class _EditConsentFormViewState extends State<EditConsentFormView> {
 
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
 
+  List<String> customFieldList = [];
+
   @override
   void initState() {
     super.initState();
@@ -185,6 +187,8 @@ class _EditConsentFormViewState extends State<EditConsentFormView> {
 
     titleController = TextEditingController();
     descriptionController = TextEditingController();
+
+    customFieldList = consentForm.customFields;
 
     if (consentForm != ConsentFormModel.empty()) {
       if (consentForm.description.isNotEmpty) {
@@ -354,36 +358,34 @@ class _EditConsentFormViewState extends State<EditConsentFormView> {
                                 (item) => item.language == language,
                                 orElse: LocalizedModel.empty,
                               );
-                              return BlocBuilder<ChoosePurposeCategoryCubit,
-                                  ChoosePurposeCategoryCubitState>(
-                                builder: (context, state) {
-                                  return Row(
-                                    mainAxisAlignment:
-                                        MainAxisAlignment.spaceBetween,
-                                    children: <Widget>[
-                                      Text(
-                                        title.text,
-                                        style: Theme.of(context)
-                                            .textTheme
-                                            .bodyMedium,
-                                      ),
-                                      CustomSwitchButton(
-                                        value: state.customFieldSelected
-                                            .contains(
-                                                widget.customfields[index]),
-                                        onChanged: (value) => {
-                                          print(state.customFieldSelected),
-                                          print(widget.customfields[1]),
-                                          context
-                                              .read<
-                                                  ChoosePurposeCategoryCubit>()
-                                              .customFieldSelected(
-                                                  widget.customfields[index])
-                                        },
-                                      ),
-                                    ],
-                                  );
-                                },
+                              return Row(
+                                mainAxisAlignment:
+                                    MainAxisAlignment.spaceBetween,
+                                children: <Widget>[
+                                  Text(
+                                    title.text,
+                                    style:
+                                        Theme.of(context).textTheme.bodyMedium,
+                                  ),
+                                  CustomSwitchButton(
+                                    value: customFieldList.contains(
+                                        widget.customfields[index].id),
+                                    onChanged: (value) => {
+                                      setState(() {
+                                        if (customFieldList.contains(
+                                            widget.customfields[index].id)) {
+                                          customFieldList.removeWhere((item) =>
+                                              item ==
+                                              widget.customfields[index].id);
+                                        } else {
+                                          customFieldList.add(
+                                              widget.customfields[index].id);
+                                        }
+                                        print(customFieldList);
+                                      })
+                                    },
+                                  ),
+                                ],
                               );
                             }),
                       ],
@@ -417,8 +419,14 @@ class _EditConsentFormViewState extends State<EditConsentFormView> {
                           height: 50.0,
                           child: OutlinedButton(
                             onPressed: () async {
-                              context.push(
-                                  ConsentFormRoute.choosePurposeCategory.path);
+                              if (consentForm.id.isNotEmpty) {
+                                context.push(ConsentFormRoute
+                                    .editChoosePurposeCategory.path
+                                    .replaceFirst(':id', consentForm.id));
+                              } else {
+                                context.push(ConsentFormRoute
+                                    .choosePurposeCategory.path);
+                              }
                             },
                             style: ButtonStyle(
                                 side: MaterialStateProperty.all<BorderSide>(

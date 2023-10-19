@@ -5,6 +5,7 @@ import 'package:go_router/go_router.dart';
 import 'package:ionicons/ionicons.dart';
 import 'package:pdpa/app/config/config.dart';
 import 'package:pdpa/app/data/models/authentication/user_model.dart';
+import 'package:pdpa/app/data/models/consent_management/consent_form_model.dart';
 import 'package:pdpa/app/data/models/master_data/localized_model.dart';
 import 'package:pdpa/app/data/models/master_data/purpose_category_model.dart';
 import 'package:pdpa/app/data/models/master_data/purpose_model.dart';
@@ -20,9 +21,9 @@ import 'package:pdpa/app/shared/widgets/screens/loading_screen.dart';
 import 'package:pdpa/app/shared/widgets/templates/pdpa_app_bar.dart';
 
 class ChoosePurposeCategoryScreen extends StatefulWidget {
-  const ChoosePurposeCategoryScreen({
-    super.key,
-  });
+  const ChoosePurposeCategoryScreen({super.key, required this.consentFormId});
+
+  final String consentFormId;
 
   @override
   State<ChoosePurposeCategoryScreen> createState() =>
@@ -51,10 +52,10 @@ class _ChoosePurposeCategoryScreenState
 
   @override
   Widget build(BuildContext context) {
-    const language = "en-US";
     return BlocProvider<ChoosePurposeCategoryBloc>(
       create: (context) => serviceLocator<ChoosePurposeCategoryBloc>()
         ..add(GetCurrentAllPurposeCategoryEvent(
+          consentFormId: widget.consentFormId,
           companyId: currentUser.currentCompany,
         )),
       child: BlocBuilder<ChoosePurposeCategoryBloc, ChoosePurposeCategoryState>(
@@ -63,11 +64,12 @@ class _ChoosePurposeCategoryScreenState
             return ChoosePurposeCategoryView(
               purposeCategories: state.purposeCategories,
               purposes: state.purposes,
+              consentForm: state.consentform,
             );
           }
-          if (state is ChoosePurposeCategoryError) {
-            return ErrorMessageScreen(message: state.message);
-          }
+          // if (state is ChoosePurposeCategoryError) {
+          //   return ErrorMessageScreen(message: state.message);
+          // }
           return const LoadingScreen();
         },
       ),
@@ -78,10 +80,12 @@ class _ChoosePurposeCategoryScreenState
 class ChoosePurposeCategoryView extends StatefulWidget {
   const ChoosePurposeCategoryView({
     super.key,
+    required this.consentForm,
     required this.purposeCategories,
     required this.purposes,
   });
 
+  final ConsentFormModel consentForm;
   final List<PurposeCategoryModel> purposeCategories;
   final List<PurposeModel> purposes;
 
@@ -130,6 +134,8 @@ class _ChoosePurposeCategoryViewState extends State<ChoosePurposeCategoryView> {
                             return PurposeCategoryTile(
                               purposeCategory: widget.purposeCategories[index],
                               purposes: widget.purposes,
+                              purposeCategories:
+                                  widget.consentForm.purposeCategories,
                             );
                           },
                         ),
@@ -213,20 +219,27 @@ class _ChoosePurposeCategoryViewState extends State<ChoosePurposeCategoryView> {
   }
 }
 
-class PurposeCategoryTile extends StatelessWidget {
-  const PurposeCategoryTile({
-    Key? key,
-    required this.purposeCategory,
-    required this.purposes,
-  }) : super(key: key);
+class PurposeCategoryTile extends StatefulWidget {
+  const PurposeCategoryTile(
+      {Key? key,
+      required this.purposeCategory,
+      required this.purposes,
+      required this.purposeCategories})
+      : super(key: key);
 
+  final List<String> purposeCategories;
   final PurposeCategoryModel purposeCategory;
   final List<PurposeModel> purposes;
 
   @override
+  State<PurposeCategoryTile> createState() => _PurposeCategoryTileState();
+}
+
+class _PurposeCategoryTileState extends State<PurposeCategoryTile> {
+  @override
   Widget build(BuildContext context) {
     const language = 'en-US';
-    final title = purposeCategory.title
+    final title = widget.purposeCategory.title
         .firstWhere(
           (item) => item.language == language,
           orElse: LocalizedModel.empty,
@@ -238,7 +251,7 @@ class PurposeCategoryTile extends StatelessWidget {
           onPressed: () {
             context
                 .read<ChoosePurposeCategoryCubit>()
-                .choosePurposeCategoryExpanded(purposeCategory.id);
+                .choosePurposeCategoryExpanded(widget.purposeCategory.id);
           },
           style: ButtonStyle(
               shape: MaterialStateProperty.all<RoundedRectangleBorder>(
@@ -266,18 +279,25 @@ class PurposeCategoryTile extends StatelessWidget {
                         Row(
                           children: <Widget>[
                             Checkbox(
-                                value: state.purposeCategorySelected
-                                    .contains(purposeCategory),
+                                value: widget.purposeCategories
+                                    .contains(widget.purposeCategory.id),
                                 side: BorderSide(
                                     color: Theme.of(context)
                                         .colorScheme
                                         .secondary),
                                 onChanged: (_) {
-                                  print(state.purposeCategorySelected);
-                                  context
-                                      .read<ChoosePurposeCategoryCubit>()
-                                      .choosePurposeCategorySelected(
-                                          purposeCategory);
+                                  setState(() {
+                                    if (widget.purposeCategories
+                                        .contains(widget.purposeCategory.id)) {
+                                      widget.purposeCategories.removeWhere(
+                                          (item) =>
+                                              item ==
+                                              widget.purposeCategory.id);
+                                    } else {
+                                      widget.purposeCategories
+                                          .add(widget.purposeCategory.id);
+                                    }
+                                  });
                                 }),
                             Expanded(
                               child: Padding(
@@ -297,7 +317,7 @@ class PurposeCategoryTile extends StatelessWidget {
                               ),
                             ),
                             Icon(
-                              state.expandId != purposeCategory.id
+                              state.expandId != widget.purposeCategory.id
                                   ? Icons.arrow_drop_down
                                   : Icons.arrow_drop_up,
                               size: 24,
@@ -306,14 +326,14 @@ class PurposeCategoryTile extends StatelessWidget {
                           ],
                         ),
                         ExpandedContainer(
-                          expand: state.expandId == purposeCategory.id,
+                          expand: state.expandId == widget.purposeCategory.id,
                           child: Padding(
                             padding: EdgeInsets.only(
                               left: 47.0,
-                              top: purposeCategory.purposes.isNotEmpty
+                              top: widget.purposeCategory.purposes.isNotEmpty
                                   ? 10.0
                                   : 0,
-                              bottom: purposeCategory.purposes.isNotEmpty
+                              bottom: widget.purposeCategory.purposes.isNotEmpty
                                   ? 10.0
                                   : 0,
                             ),
@@ -322,10 +342,11 @@ class PurposeCategoryTile extends StatelessWidget {
                                 ListView.builder(
                                   shrinkWrap: true,
                                   physics: const NeverScrollableScrollPhysics(),
-                                  itemCount: purposeCategory.purposes.length,
+                                  itemCount:
+                                      widget.purposeCategory.purposes.length,
                                   itemBuilder: (_, index) {
                                     return PurposeTile(
-                                      purpose: purposes[index],
+                                      purpose: widget.purposes[index],
                                     );
                                   },
                                 ),
@@ -361,10 +382,12 @@ class PurposeTile extends StatelessWidget {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: <Widget>[
-        Text(description,
-            style: Theme.of(context).textTheme.labelLarge?.copyWith(
-                  color: Theme.of(context).colorScheme.secondary,
-                )),
+        Text(
+          description,
+          style: Theme.of(context).textTheme.labelLarge?.copyWith(
+                color: Theme.of(context).colorScheme.secondary,
+              ),
+        ),
       ],
     );
   }

@@ -34,9 +34,18 @@ class ConsentFormRoute {
     ),
   );
 
+  static final GoRoute editChoosePurposeCategory = GoRoute(
+    path: '/consent-form/create/:id/choose-purpose-category',
+    builder: (context, state) => ChoosePurposeCategoryScreen(
+      consentFormId: state.pathParameters['id'] ?? '',
+    ),
+  );
+
   static final GoRoute choosePurposeCategory = GoRoute(
     path: '/consent-form/create/choose-purpose-category',
-    builder: (context, _) => const ChoosePurposeCategoryScreen(),
+    builder: (context, state) => const ChoosePurposeCategoryScreen(
+      consentFormId: '',
+    ),
   );
 
   // static final GoRoute consentFormSettings = GoRoute(
@@ -88,6 +97,7 @@ class ConsentFormRoute {
     createConsentForm,
     consentFormDetail,
     editConsentForm,
+    editChoosePurposeCategory,
     choosePurposeCategory,
     consentFormSettings,
     createConsentTheme,

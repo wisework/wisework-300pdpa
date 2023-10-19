@@ -25,8 +25,10 @@ class GotCurrentPurposeCategory extends ChoosePurposeCategoryState {
   const GotCurrentPurposeCategory(
     this.purposeCategories,
     this.purposes,
+    this.consentform,
   );
 
+  final ConsentFormModel consentform;
   final List<PurposeCategoryModel> purposeCategories;
   final List<PurposeModel> purposes;
 
@@ -34,6 +36,7 @@ class GotCurrentPurposeCategory extends ChoosePurposeCategoryState {
   List<Object> get props => [
         purposeCategories,
         purposes,
+        consentform,
       ];
 }
 

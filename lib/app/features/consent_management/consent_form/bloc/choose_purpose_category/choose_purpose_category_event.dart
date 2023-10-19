@@ -9,9 +9,11 @@ abstract class ChoosePurposeCategoryEvent extends Equatable {
 
 class GetCurrentAllPurposeCategoryEvent extends ChoosePurposeCategoryEvent {
   const GetCurrentAllPurposeCategoryEvent({
+    required this.consentFormId,
     required this.companyId,
   });
 
+  final String consentFormId;
   final String companyId;
 
   @override

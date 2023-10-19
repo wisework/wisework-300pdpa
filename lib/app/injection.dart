@@ -109,6 +109,7 @@ Future<void> _consentManagement() async {
     )
     ..registerFactory(
       () => ChoosePurposeCategoryBloc(
+        consentRepository: serviceLocator(),
         masterDataRepository: serviceLocator(),
       ),
     )
