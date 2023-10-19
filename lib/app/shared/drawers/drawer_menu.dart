@@ -1,5 +1,6 @@
 import 'package:ionicons/ionicons.dart';
 import 'package:pdpa/app/features/consent_management/consent_form/routes/consent_form_route.dart';
+import 'package:pdpa/app/features/consent_management/user_consent/routes/user_consent_route.dart';
 import 'package:pdpa/app/features/data_subject_right/routes/data_subject_right_route.dart';
 import 'package:pdpa/app/features/general/routes/general_route.dart';
 import 'package:pdpa/app/features/master_data/routes/master_data_route.dart';
@@ -29,7 +30,7 @@ final List<DrawerMenuModel> drawerMenu = [
         value: 'user_consents',
         title: 'User Consents',
         icon: Ionicons.people_outline,
-        route: GeneralRoute.home,
+        route: UserConsentRoute.userConsentScreen,
         parent: 'consent_management',
       ),
     ],
@@ -50,6 +51,6 @@ final List<DrawerMenuModel> drawerMenu = [
     value: 'settings',
     title: 'Settings',
     icon: Ionicons.settings_outline,
-    route: ConsentFormRoute.consentFormSettings,
+    route: GeneralRoute.setting,
   ),
 ];
