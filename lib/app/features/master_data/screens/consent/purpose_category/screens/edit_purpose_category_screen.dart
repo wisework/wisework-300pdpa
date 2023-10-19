@@ -551,46 +551,48 @@ class _EditPurposeCategoryViewState extends State<EditPurposeCategoryView> {
           context: context,
           builder: (ctx) {
             return CustomContainer(
-              child: Column(
-                children: [
-                  const SizedBox(height: UiConfig.lineSpacing),
-                  const Text('Purpose List'),
-                  const SizedBox(height: UiConfig.lineSpacing),
-                  ListView.builder(
-                    shrinkWrap: true,
-                    physics: const NeverScrollableScrollPhysics(),
-                    itemCount: state.purposes.length,
-                    itemBuilder: (_, index) {
-                      return Builder(builder: (context) {
+              child: SingleChildScrollView(
+                child: Column(
+                  children: [
+                    const SizedBox(height: UiConfig.lineSpacing),
+                    const Text('Purpose List'),
+                    const SizedBox(height: UiConfig.lineSpacing),
+                    ListView.builder(
+                      shrinkWrap: true,
+                      physics: const NeverScrollableScrollPhysics(),
+                      itemCount: state.purposes.length,
+                      itemBuilder: (_, index) {
                         final item = state.purposes[index];
+                        bool checklist =
+                            purposeCategory.purposes.contains(item.id);
 
                         if (state.purposes.isEmpty) {
                           return const Text('No Data');
                         }
+
                         return CheckboxListTile(
                           controlAffinity: ListTileControlAffinity.leading,
                           title: Text(
                               state.purposes[index].description.first.text),
-                          value: false,
-                          onChanged: (newValue) {
+                          value: checklist,
+                          onChanged: (bool? newValue) {
                             setState(() {
                               if (newValue!) {
                                 purposeCategory.purposes.add(item.id);
-                                _setPurpose(purposeCategory.purposes);
                               } else {
                                 purposeCategory.purposes.remove(item.id);
-                                _setPurpose(purposeCategory.purposes);
                               }
+                              _setPurpose(purposeCategory.purposes);
                             });
                           },
                         );
-                      });
-                    },
-                  ),
-                  const SizedBox(height: UiConfig.lineSpacing),
-                  _buildNewPurposeButton(context),
-                  const SizedBox(height: UiConfig.lineSpacing),
-                ],
+                      },
+                    ),
+                    const SizedBox(height: UiConfig.lineSpacing),
+                    _buildNewPurposeButton(context),
+                    const SizedBox(height: UiConfig.lineSpacing),
+                  ],
+                ),
               ),
             );
           },
