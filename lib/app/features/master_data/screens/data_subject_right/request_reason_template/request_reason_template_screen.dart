@@ -15,6 +15,8 @@ import 'package:pdpa/app/shared/widgets/templates/pdpa_app_bar.dart';
 class RequestReasonTemplateScreen extends StatefulWidget {
   const RequestReasonTemplateScreen({super.key});
 
+  
+
   @override
   State<RequestReasonTemplateScreen> createState() =>
       _RequestReasonTemplateScreenState();
@@ -22,6 +24,13 @@ class RequestReasonTemplateScreen extends StatefulWidget {
 
 class _RequestReasonTemplateScreenState
     extends State<RequestReasonTemplateScreen> {
+  @override
+  void initState() {
+    super.initState();
+
+    _initialData();
+  }
+
   void _initialData() {
     final bloc = context.read<SignInBloc>();
 
@@ -33,13 +42,6 @@ class _RequestReasonTemplateScreenState
     context
         .read<RequestReasonTpBloc>()
         .add(GetRequestReasonTpEvent(companyId: companyId));
-  }
-
-  @override
-  void initState() {
-    super.initState();
-
-    _initialData();
   }
 
   @override
@@ -126,15 +128,54 @@ class _RequestReasonTemplateViewState extends State<RequestReasonTemplateView> {
     BuildContext context, {
     required RequestReasonTemplateModel requestReason,
   }) {
-    final description = requestReason.requestTypeId;
+    final requestId = requestReason.requestTypeId;
 
+    // final requestName = requestId.description.firstWhere(
+    //   (item) => item.language == language,
+    //   orElse: LocalizedModel.empty,
+    // );
+    // BlocBuilder<RequestTypeBloc, RequestTypeState>(
+    //   builder: (context, state) {
+    //     if (state is GotRequestTypes) {
+    //       final requestName = state.requestTypes.where(
+    //           (id) => requestReason.requestTypeId.contains(id.requestTypeId));
+    //       print(requestName);
+    //       final requestNamefilter =
+    //           requestName.map((e) => e.description.first.text).toString();
+    //       print(requestNamefilter);
+
+    //       return MasterDataItemCard(
+    //         title: requestNamefilter,
+    //         subtitle: '',
+    //         status: requestReason.status,
+    //         onTap: () {
+    //           context.push(
+    //             MasterDataRoute.editRequestReason.path
+    //                 .replaceFirst(':id', requestReason.requestReasonTemplateId),
+    //           );
+    //         },
+    //       );
+    //     }
+    //     if (state is RequestTypeError) {
+    //       return Center(
+    //         child: Text(
+    //           state.message,
+    //           style: Theme.of(context).textTheme.bodyMedium,
+    //         ),
+    //       );
+    //     }
+    //     return const Center(
+    //       child: CircularProgressIndicator(),
+    //     );
+    //   },
+    // );
     return MasterDataItemCard(
-      title: description,
+      title: requestId,
       subtitle: '',
       status: requestReason.status,
       onTap: () {
         context.push(
-          MasterDataRoute.editRequestType.path
+          MasterDataRoute.editRequestReason.path
               .replaceFirst(':id', requestReason.requestReasonTemplateId),
         );
       },

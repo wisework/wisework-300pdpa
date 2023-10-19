@@ -55,6 +55,7 @@ class RequestReasonTemplateModel extends Equatable {
         );
 
   DataMap toMap() => {
+        'requestReasonTemplateId': requestReasonTemplateId,
         'requestTypeId': requestTypeId,
         'reasonTypesId': reasonTypesId,
         'status': status.index,
