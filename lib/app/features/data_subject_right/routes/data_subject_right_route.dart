@@ -9,11 +9,24 @@ import 'package:pdpa/app/features/data_subject_right/screens/create_dsr/power_ve
 import 'package:pdpa/app/features/data_subject_right/screens/create_dsr/select_request_screen.dart';
 
 import 'package:pdpa/app/features/data_subject_right/screens/data_subject_right_screen.dart';
+import 'package:pdpa/app/features/data_subject_right/screens/edit_data_subject_right/edit_data_subject_right_screen.dart';
 
-class DataSubjectRightRouter {
-  static final GoRoute dsr = GoRoute(
-    path: '/dsr',
+class DataSubjectRightRoute {
+  static final GoRoute dataSubjectRight = GoRoute(
+    path: '/data-subject-rights',
     builder: (context, _) => const DataSubjectRightScreen(),
+  );
+  static final GoRoute createDataSubjectRight = GoRoute(
+    path: '/data-subject-rights/create',
+    builder: (context, _) => const EditDataSubjectRight(
+      dataSubjectRightId: '',
+    ),
+  );
+  static final GoRoute editDataSubjectRight = GoRoute(
+    path: '/data-subject-rights/:id/edit',
+    builder: (context, state) => EditDataSubjectRight(
+      dataSubjectRightId: state.pathParameters['id'] ?? '',
+    ),
   );
   static final GoRoute intro = GoRoute(
     path: '/dsr/request/intro',
@@ -48,7 +61,9 @@ class DataSubjectRightRouter {
     builder: (context, _) => const RequestAcceptTermScreen(),
   );
   static final List<GoRoute> routes = <GoRoute>[
-    dsr,
+    dataSubjectRight,
+    createDataSubjectRight,
+    editDataSubjectRight,
     intro,
     stepOne,
     stepTwo,

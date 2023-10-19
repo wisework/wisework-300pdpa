@@ -1,19 +1,23 @@
 import 'package:flutter/material.dart';
 import 'package:pdpa/app/config/config.dart';
+import 'package:pdpa/app/features/data_subject_right/widgets/data_subject_right_status.dart';
+import 'package:pdpa/app/shared/utils/constants.dart';
 import 'package:pdpa/app/shared/widgets/material_ink_well.dart';
 
-class DataSubjectRightItemCard extends StatelessWidget {
-  const DataSubjectRightItemCard({
+class DataSubjectRightCard extends StatelessWidget {
+  const DataSubjectRightCard({
     super.key,
     required this.title,
     required this.subtitle,
     required this.date,
+    required this.status,
     required this.onTap,
   });
 
   final String title;
-  final String subtitle;
-  final String date;
+  final List<String> subtitle;
+  final DateTime date;
+  final RequestProcessStatus status;
   final VoidCallback onTap;
 
   @override
@@ -26,7 +30,6 @@ class DataSubjectRightItemCard extends StatelessWidget {
           child: Padding(
             padding: const EdgeInsets.all(UiConfig.defaultPaddingSpacing),
             child: Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
               crossAxisAlignment: CrossAxisAlignment.start,
               children: <Widget>[
                 Expanded(
@@ -37,6 +40,7 @@ class DataSubjectRightItemCard extends StatelessWidget {
                       Text(
                         title,
                         style: Theme.of(context).textTheme.titleMedium,
+                        overflow: TextOverflow.ellipsis,
                       ),
                       Visibility(
                         visible: subtitle.isNotEmpty,
@@ -44,18 +48,34 @@ class DataSubjectRightItemCard extends StatelessWidget {
                           padding: const EdgeInsets.only(
                             top: UiConfig.textLineSpacing,
                           ),
-                          child: Text(
-                            subtitle,
-                            style: Theme.of(context).textTheme.bodySmall,
+                          child: ListView.separated(
+                            physics: const NeverScrollableScrollPhysics(),
+                            shrinkWrap: true,
+                            itemCount: subtitle.length,
+                            itemBuilder: (context, index) => Text(
+                              subtitle[index],
+                              style: Theme.of(context).textTheme.bodySmall,
+                              overflow: TextOverflow.ellipsis,
+                            ),
+                            separatorBuilder: (context, _) => const SizedBox(
+                              height: UiConfig.textLineSpacing,
+                            ),
                           ),
                         ),
                       ),
                     ],
                   ),
                 ),
-                Text(
-                  date,
-                  style: Theme.of(context).textTheme.titleMedium,
+                Column(
+                  mainAxisSize: MainAxisSize.min,
+                  children: <Widget>[
+                    DataSubjectRightStatus(status: status),
+                    const SizedBox(height: UiConfig.textLineSpacing),
+                    Text(
+                      dateFormatter.format(date),
+                      style: Theme.of(context).textTheme.bodySmall,
+                    ),
+                  ],
                 ),
               ],
             ),

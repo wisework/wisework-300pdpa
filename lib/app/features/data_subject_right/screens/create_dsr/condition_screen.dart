@@ -97,7 +97,7 @@ class _RequestConditionScreenState extends State<RequestConditionScreen> {
                 CustomButton(
                   height: 40.0,
                   onPressed: () {
-                    context.push(DataSubjectRightRouter.stepSeven.path);
+                    context.push(DataSubjectRightRoute.stepSeven.path);
                   },
                   child: Text(
                     'ถัดไป', //!

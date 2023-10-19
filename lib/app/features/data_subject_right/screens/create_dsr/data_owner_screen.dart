@@ -146,7 +146,7 @@ class _DataOwnerViewState extends State<DataOwnerView> {
           CustomButton(
             height: 40.0,
             onPressed: () {
-              context.push(DataSubjectRightRouter.stepFour.path);
+              context.push(DataSubjectRightRoute.stepFour.path);
             },
             child: Text(
               'ถัดไป', //!

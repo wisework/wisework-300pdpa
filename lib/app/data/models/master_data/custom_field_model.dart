@@ -77,6 +77,12 @@ class CustomFieldModel extends Equatable {
           updatedDate: DateTime.parse(map['updatedDate'] as String),
         );
 
+  factory CustomFieldModel.fromDocument(FirebaseDocument document) {
+    DataMap response = document.data()!;
+    response['id'] = document.id;
+    return CustomFieldModel.fromMap(response);
+  }
+
   DataMap toMap() => {
         'title': title.map((item) => item.toMap()).toList(),
         'hintText': hintText.map((item) => item.toMap()).toList(),
@@ -90,12 +96,6 @@ class CustomFieldModel extends Equatable {
         'updatedBy': updatedBy,
         'updatedDate': updatedDate.toIso8601String(),
       };
-
-  factory CustomFieldModel.fromDocument(FirebaseDocument document) {
-    DataMap response = document.data()!;
-    response['id'] = document.id;
-    return CustomFieldModel.fromMap(response);
-  }
 
   CustomFieldModel copyWith({
     String? id,

@@ -209,7 +209,7 @@ class _SelectRequestViewState extends State<SelectRequestView> {
                   CustomButton(
                     height: 40.0,
                     onPressed: () {
-                      context.push(DataSubjectRightRouter.stepSix.path);
+                      context.push(DataSubjectRightRoute.stepSix.path);
                     },
                     child: Text(
                       'ถัดไป', //!

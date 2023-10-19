@@ -34,6 +34,8 @@ final emailRegex = RegExp(r'^[\w-]+(\.[\w-]+)*@[\w-]+(\.[\w-]+)+$');
 
 List<String> periodUnits = ['Day', 'Month', 'Year'];
 
+final dateFormatter = DateFormat('dd-MM-yyyy');
+final timeFormatter = DateFormat('HH:mm:ss');
 final datetimeFormatter = DateFormat('dd-MM-yyyy HH:mm:ss');
 
 enum ConsentFormImageType { logo, header, body }
@@ -41,3 +43,13 @@ enum ConsentFormImageType { logo, header, body }
 enum RequestVerifyingStatus { pass, fail, none }
 
 enum ConsiderRequestStatus { pass, fail, none }
+
+enum RequestProcessStatus {
+  newRequest,
+  pending,
+  rejected,
+  verifying,
+  considering,
+  inProgress,
+  completed,
+}

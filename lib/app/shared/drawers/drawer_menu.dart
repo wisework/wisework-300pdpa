@@ -38,7 +38,7 @@ final List<DrawerMenuModel> drawerMenu = [
     value: 'data_subject_right',
     title: 'Data Subject Right',
     icon: Ionicons.shield_checkmark_outline,
-    route: DataSubjectRightRouter.dsr,
+    route: DataSubjectRightRoute.dataSubjectRight,
   ),
   DrawerMenuModel(
     value: 'master_data',

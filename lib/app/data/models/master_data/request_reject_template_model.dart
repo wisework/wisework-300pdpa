@@ -48,6 +48,12 @@ class RequestRejectTemplateModel extends Equatable {
           updatedDate: DateTime.parse(map['updatedDate'] as String),
         );
 
+  factory RequestRejectTemplateModel.fromDocument(FirebaseDocument document) {
+    DataMap response = document.data()!;
+    response['id'] = document.id;
+    return RequestRejectTemplateModel.fromMap(response);
+  }
+
   DataMap toMap() => {
         'requestTypeId': requestTypeId,
         'rejectTypesId': rejectTypesId,
@@ -57,12 +63,6 @@ class RequestRejectTemplateModel extends Equatable {
         'updatedBy': updatedBy,
         'updatedDate': updatedDate.toIso8601String(),
       };
-
-  factory RequestRejectTemplateModel.fromDocument(FirebaseDocument document) {
-    DataMap response = document.data()!;
-    response['id'] = document.id;
-    return RequestRejectTemplateModel.fromMap(response);
-  }
 
   RequestRejectTemplateModel copyWith({
     String? requestRejectTemplateId,

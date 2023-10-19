@@ -16,7 +16,7 @@ class GlobalRouter {
         ...GeneralRoute.routes,
         ...ConsentFormRoute.routes,
         ...MasterDataRoute.routes,
-        ...DataSubjectRightRouter.routes
+        ...DataSubjectRightRoute.routes
       ],
     );
   }

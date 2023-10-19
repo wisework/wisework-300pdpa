@@ -104,7 +104,7 @@ class _RequestAcceptTermScreenState extends State<RequestAcceptTermScreen> {
         if (isChecked) {
           return CustomIconButton(
             onPressed: () {
-              context.go(DataSubjectRightRouter.dsr.path);
+              context.go(DataSubjectRightRoute.dataSubjectRight.path);
             },
             icon: Ionicons.save_outline,
             iconColor: Theme.of(context).colorScheme.primary,

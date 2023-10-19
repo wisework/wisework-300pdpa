@@ -1,9 +1,16 @@
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:go_router/go_router.dart';
 import 'package:ionicons/ionicons.dart';
+import 'package:pdpa/app/config/config.dart';
+import 'package:pdpa/app/data/models/data_subject_right/data_subject_right_model.dart';
 import 'package:pdpa/app/features/authentication/bloc/sign_in/sign_in_bloc.dart';
+import 'package:pdpa/app/features/data_subject_right/bloc/data_subject_right/data_subject_right_bloc.dart';
+import 'package:pdpa/app/features/data_subject_right/routes/data_subject_right_route.dart';
+import 'package:pdpa/app/features/data_subject_right/widgets/data_subject_right_card.dart';
 import 'package:pdpa/app/shared/drawers/pdpa_drawer.dart';
+import 'package:pdpa/app/shared/utils/functions.dart';
 import 'package:pdpa/app/shared/widgets/customs/custom_icon_button.dart';
 import 'package:pdpa/app/shared/widgets/templates/pdpa_app_bar.dart';
 
@@ -30,7 +37,9 @@ class _DataSubjectRightScreenState extends State<DataSubjectRightScreen> {
       companyId = (bloc.state as SignedInUser).user.currentCompany;
     }
 
-    debugPrint(companyId);
+    context
+        .read<DataSubjectRightBloc>()
+        .add(GetDataSubjectRightsEvent(companyId: companyId));
   }
 
   @override
@@ -81,149 +90,6 @@ class _DataSubjectRightViewState extends State<DataSubjectRightView> {
           ),
         ],
       ),
-      body: const SingleChildScrollView(
-        child: Column(
-          children: <Widget>[],
-        ),
-      ),
-      drawer: PdpaDrawer(
-        onClosed: () {
-          _scaffoldKey.currentState?.closeDrawer();
-        },
-      ),
-    );
-  }
-}
-
-/*
-class DSRScreen extends StatefulWidget {
-  const DSRScreen({super.key});
-
-  @override
-  State<DataSubjectRightScreen> createState() => _DataSubjectRightScreenState();
-}
-
-class _DataSubjectRightScreenState extends State<DataSubjectRightScreen> {
-  @override
-  void initState() {
-    super.initState();
-
-    _initialData();
-  }
-
-  void _initialData() {
-    final bloc = context.read<SignInBloc>();
-
-    String companyId = '';
-    if (bloc.state is SignedInUser) {
-      companyId = (bloc.state as SignedInUser).user.currentCompany;
-    }
-
-    context.read<PurposeBloc>().add(GetPurposesEvent(companyId: companyId));
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    return const DataSubjectRightView();
-  }
-}
-
-class DataSubjectRightView extends StatefulWidget {
-  const DataSubjectRightView({super.key});
-
-  @override
-  State<DataSubjectRightView> createState() => _DataSubjectRightViewState();
-}
-
-class _DataSubjectRightViewState extends State<DataSubjectRightView> {
-  final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
-
-  @override
-  Widget build(BuildContext context) {
-    final dsrMock = [
-      DataSubjectRightRequestModel(
-        id: '1',
-        dataRequester: const [
-          LocalizedModel(language: 'en-US', text: 'Test1'),
-        ],
-        dataOwner: const [],
-        isDataOwner: true,
-        powerVerifications: const [],
-        identityVerifications: const [],
-        processRequests: const [
-          LocalizedModel(language: 'en-US', text: 'Inprogess'),
-        ],
-        requestExpirationDate: DateTime.now(),
-        notifyEmail: const [],
-        requestFormVerified: true,
-        verifyRequest: const [],
-        resultRequest: true,
-        verifyReason: '',
-        lastSeenBy: '',
-        status: ActiveStatus.active,
-        createdBy: '',
-        createdDate: DateTime.now(),
-        updatedBy: '',
-        updatedDate: DateTime.now(),
-      ),
-      DataSubjectRightRequestModel(
-        id: '2',
-        dataRequester: const [
-          LocalizedModel(language: 'en-US', text: 'Test2'),
-        ],
-        dataOwner: const [],
-        isDataOwner: true,
-        powerVerifications: const [],
-        identityVerifications: const [],
-        processRequests: const [
-          LocalizedModel(language: 'en-US', text: 'Inprogess'),
-        ],
-        requestExpirationDate: DateTime.now(),
-        notifyEmail: const [],
-        requestFormVerified: true,
-        verifyRequest: const [],
-        resultRequest: true,
-        verifyReason: '',
-        lastSeenBy: '',
-        status: ActiveStatus.active,
-        createdBy: '',
-        createdDate: DateTime.now(),
-        updatedBy: '',
-        updatedDate: DateTime.now(),
-      ),
-    ];
-    return Scaffold(
-      key: _scaffoldKey,
-      appBar: PdpaAppBar(
-        leadingIcon: CustomIconButton(
-          onPressed: () {
-            _scaffoldKey.currentState?.openDrawer();
-          },
-          icon: Ionicons.menu_outline,
-          iconColor: Theme.of(context).colorScheme.primary,
-          backgroundColor: Theme.of(context).colorScheme.onBackground,
-        ),
-        title: Text(
-          tr('app.features.datasubjectright'),
-          style: Theme.of(context).textTheme.titleLarge,
-        ),
-        // appBarHeight: 100,
-        actions: [
-          CustomIconButton(
-            onPressed: () {},
-            icon: Ionicons.link,
-            iconColor: Theme.of(context).colorScheme.primary,
-            backgroundColor: Theme.of(context).colorScheme.onBackground,
-          ),
-          const SizedBox(width: UiConfig.lineSpacing),
-          CustomIconButton(
-            onPressed: () {},
-            icon: Ionicons.search,
-            iconColor: Theme.of(context).colorScheme.primary,
-            backgroundColor: Theme.of(context).colorScheme.onBackground,
-          ),
-        ],
-      ),
       body: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: <Widget>[
@@ -234,18 +100,20 @@ class _DataSubjectRightViewState extends State<DataSubjectRightView> {
               decoration: BoxDecoration(
                 color: Theme.of(context).colorScheme.onBackground,
               ),
-              child: BlocBuilder<PurposeBloc, PurposeState>(
+              child: BlocBuilder<DataSubjectRightBloc, DataSubjectRightState>(
                 builder: (context, state) {
-                  if (state is GotPurposes) {
+                  if (state is GotDataSubjectRights) {
                     return ListView.builder(
-                      itemCount: dsrMock.length,
+                      itemCount: state.dataSubjectRights.length,
                       itemBuilder: (context, index) {
-                        return _buildItemCard(context,
-                            dsrRequest: dsrMock[index]);
+                        return _buildDataSubjectRightCard(
+                          context,
+                          dataSubjectRight: state.dataSubjectRights[index],
+                        );
                       },
                     );
                   }
-                  if (state is PurposeError) {
+                  if (state is DataSubjectRightError) {
                     return Center(
                       child: Text(
                         state.message,
@@ -264,7 +132,7 @@ class _DataSubjectRightViewState extends State<DataSubjectRightView> {
       ),
       floatingActionButton: FloatingActionButton(
         onPressed: () {
-          context.push(DataSubjectRightRouter.intro.path);
+          context.push(DataSubjectRightRoute.createDataSubjectRight.path);
         },
         child: const Icon(Icons.add),
       ),
@@ -276,30 +144,22 @@ class _DataSubjectRightViewState extends State<DataSubjectRightView> {
     );
   }
 
-  DataSubjectRightItemCard _buildItemCard(
+  DataSubjectRightCard _buildDataSubjectRightCard(
     BuildContext context, {
-    required DataSubjectRightRequestModel dsrRequest,
+    required DataSubjectRightModel dataSubjectRight,
   }) {
-    const language = 'en-US';
-    final description = dsrRequest.dataRequester.firstWhere(
-      (item) => item.language == language,
-      orElse: LocalizedModel.empty,
-    );
-    final requestCode = dsrRequest.processRequests.firstWhere(
-      (item) => item.language == language,
-      orElse: LocalizedModel.empty,
-    );
-
-    return DataSubjectRightItemCard(
-      title: description.text,
-      subtitle: requestCode.text,
-      date: dsrRequest.requestExpirationDate.toString(),
+    final requests = ['เพิกถอนความยินยอม', 'ลบข้อมูลส่วนบุคคล'];
+    return DataSubjectRightCard(
+      title: dataSubjectRight.dataRequester.first.text,
+      subtitle: requests,
+      date: dataSubjectRight.updatedDate,
+      status: UtilFunctions.getRequestProcessStatus(dataSubjectRight),
       onTap: () {
-        // context.push(
-        //   DataSubjectRightRouter
-        // );
+        context.push(
+          DataSubjectRightRoute.editDataSubjectRight.path
+              .replaceFirst(':id', dataSubjectRight.id),
+        );
       },
     );
   }
 }
-*/

@@ -116,7 +116,7 @@ class _IdentityVerificationViewState extends State<IdentityVerificationView> {
                 CustomButton(
                   height: 40.0,
                   onPressed: () {
-                    context.push(DataSubjectRightRouter.stepFive.path);
+                    context.push(DataSubjectRightRoute.stepFive.path);
                   },
                   child: Text(
                     'ถัดไป', //!

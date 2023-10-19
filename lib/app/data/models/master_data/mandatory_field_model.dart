@@ -15,6 +15,7 @@ class MandatoryFieldModel extends Equatable {
     this.lengthLimit,
     required this.minLines,
     required this.maxLines,
+    required this.priority,
     required this.status,
     required this.createdBy,
     required this.createdDate,
@@ -29,6 +30,7 @@ class MandatoryFieldModel extends Equatable {
   final int? lengthLimit;
   final int minLines;
   final int maxLines;
+  final int priority;
   final ActiveStatus status;
   final String createdBy;
   final DateTime createdDate;
@@ -44,6 +46,7 @@ class MandatoryFieldModel extends Equatable {
           lengthLimit: null,
           minLines: 1,
           maxLines: 1,
+          priority: 0,
           status: ActiveStatus.active,
           createdBy: '',
           createdDate: DateTime.fromMillisecondsSinceEpoch(0),
@@ -70,12 +73,19 @@ class MandatoryFieldModel extends Equatable {
               : null,
           minLines: map['minLines'] as int,
           maxLines: map['maxLines'] as int,
+          priority: map['priority'] as int,
           status: ActiveStatus.values[map['status'] as int],
           createdBy: map['createdBy'] as String,
           createdDate: DateTime.parse(map['createdDate'] as String),
           updatedBy: map['updatedBy'] as String,
           updatedDate: DateTime.parse(map['updatedDate'] as String),
         );
+
+  factory MandatoryFieldModel.fromDocument(FirebaseDocument document) {
+    DataMap response = document.data()!;
+    response['id'] = document.id;
+    return MandatoryFieldModel.fromMap(response);
+  }
 
   DataMap toMap() => {
         'title': title.map((item) => item.toMap()).toList(),
@@ -84,18 +94,13 @@ class MandatoryFieldModel extends Equatable {
         'lengthLimit': lengthLimit != null ? lengthLimit.toString() : '',
         'minLines': minLines,
         'maxLines': maxLines,
+        'priority': priority,
         'status': status.index,
         'createdBy': createdBy,
         'createdDate': createdDate.toIso8601String(),
         'updatedBy': updatedBy,
         'updatedDate': updatedDate.toIso8601String(),
       };
-
-  factory MandatoryFieldModel.fromDocument(FirebaseDocument document) {
-    DataMap response = document.data()!;
-    response['id'] = document.id;
-    return MandatoryFieldModel.fromMap(response);
-  }
 
   MandatoryFieldModel copyWith({
     String? id,
@@ -105,6 +110,7 @@ class MandatoryFieldModel extends Equatable {
     int? lengthLimit,
     int? minLines,
     int? maxLines,
+    int? priority,
     ActiveStatus? status,
     String? createdBy,
     DateTime? createdDate,
@@ -119,6 +125,7 @@ class MandatoryFieldModel extends Equatable {
       lengthLimit: lengthLimit ?? this.lengthLimit,
       minLines: minLines ?? this.minLines,
       maxLines: maxLines ?? this.maxLines,
+      priority: priority ?? this.priority,
       status: status ?? this.status,
       createdBy: createdBy ?? this.createdBy,
       createdDate: createdDate ?? this.createdDate,
@@ -149,6 +156,7 @@ class MandatoryFieldModel extends Equatable {
       lengthLimit,
       minLines,
       maxLines,
+      priority,
       status,
       createdBy,
       createdDate,
