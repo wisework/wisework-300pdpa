@@ -60,7 +60,7 @@ class _PurposeCategoryViewState extends State<PurposeCategoryView> {
     PurposeCategoryModel(
         id: '1',
         title: const [
-          LocalizedModel(language: 'en-US', text: 'Test1'),
+          LocalizedModel(language: 'en-US', text: 'Test1'), 
           LocalizedModel(language: 'en-US', text: 'Test1'),
         ],
         description: const [
@@ -105,7 +105,7 @@ class _PurposeCategoryViewState extends State<PurposeCategoryView> {
           backgroundColor: Theme.of(context).colorScheme.onBackground,
         ),
         title: Text(
-          tr('masterData.cm.purposeCategory.list'),
+          tr('masterData.cm.purposeCategory.list'), //!
           style: Theme.of(context).textTheme.titleLarge,
         ),
       ),

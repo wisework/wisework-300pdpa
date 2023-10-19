@@ -43,7 +43,7 @@ class ThemeTab extends StatelessWidget {
           Row(
             children: <Widget>[
               Text(
-                'Themes',
+                'Themes', //!
                 style: Theme.of(context).textTheme.titleMedium,
               ),
             ],
@@ -103,7 +103,7 @@ class ThemeTab extends StatelessWidget {
             const SizedBox(width: UiConfig.actionSpacing + 11),
             Expanded(
               child: Text(
-                'New theme',
+                'New theme', //!
                 style: Theme.of(context).textTheme.bodyMedium,
               ),
             ),

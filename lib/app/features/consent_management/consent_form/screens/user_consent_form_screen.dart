@@ -55,7 +55,7 @@ class _UserConsentFormScreenState extends State<UserConsentFormScreen> {
       listener: (context, state) {
         if (state is SubmittedUserConsentForm) {
           BotToast.showText(
-            text: 'Submit successfully',
+            text: 'Submit successfully', //!
             contentColor:
                 Theme.of(context).colorScheme.secondary.withOpacity(0.75),
             borderRadius: BorderRadius.circular(8.0),
@@ -134,7 +134,7 @@ class _UserConsentFormScreenState extends State<UserConsentFormScreen> {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: <Widget>[
                   Text(
-                    'I have collected your consent from filling out the form',
+                    'I have collected your consent from filling out the form', //!
                     style: Theme.of(context).textTheme.bodyMedium,
                   ),
                   const SizedBox(height: UiConfig.lineGap),
@@ -156,7 +156,7 @@ class _UserConsentFormScreenState extends State<UserConsentFormScreen> {
                         context.read<UserConsentFormBloc>().add(event);
                       },
                       child: Text(
-                        'Fill out the form again',
+                        'Fill out the form again', //!
                         style: Theme.of(context).textTheme.bodyMedium?.copyWith(
                             color: Theme.of(context).colorScheme.onPrimary),
                       ),
@@ -269,7 +269,7 @@ class _UserConsentFormViewState extends State<UserConsentFormView> {
           onSubmitted: () {
             if (!userConsent.isAcceptConsent) {
               BotToast.showText(
-                text: 'Please accept consent',
+                text: 'Please accept consent', //!
                 contentColor:
                     Theme.of(context).colorScheme.secondary.withOpacity(0.75),
                 borderRadius: BorderRadius.circular(8.0),

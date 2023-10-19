@@ -133,7 +133,7 @@ class _ConsentThemeTileState extends State<ConsentThemeTile> {
               Align(
                 alignment: Alignment.center,
                 child: Text(
-                  'Data Collection',
+                  'Data Collection', //!
                   style: Theme.of(context)
                       .textTheme
                       .bodyMedium
@@ -142,7 +142,7 @@ class _ConsentThemeTileState extends State<ConsentThemeTile> {
               ),
               const SizedBox(height: UiConfig.lineSpacing),
               Text(
-                'This consent form outlines the terms and conditions for the collection.',
+                'This consent form outlines the terms and conditions for the collection.', //!
                 style: Theme.of(context)
                     .textTheme
                     .bodyMedium
@@ -166,7 +166,7 @@ class _ConsentThemeTileState extends State<ConsentThemeTile> {
                   const SizedBox(width: UiConfig.actionSpacing),
                   Expanded(
                     child: Text(
-                      'The primary purpose of collecting your personal data',
+                      'The primary purpose of collecting your personal data', //!
                       style: Theme.of(context).textTheme.bodyMedium?.copyWith(
                           color: widget.consentTheme.categoryTitleTextColor),
                     ),
@@ -184,7 +184,7 @@ class _ConsentThemeTileState extends State<ConsentThemeTile> {
                   const SizedBox(width: UiConfig.actionSpacing),
                   Expanded(
                     child: Text(
-                      'I accept: Consent to Personal Data Use for Property Insights and Analysis Purposes.',
+                      'I accept: Consent to Personal Data Use for Property Insights and Analysis Purposes.', //!
                       style: Theme.of(context)
                           .textTheme
                           .bodyMedium
@@ -200,7 +200,7 @@ class _ConsentThemeTileState extends State<ConsentThemeTile> {
                 buttonColor: widget.consentTheme.submitButtonColor,
                 splashColor: widget.consentTheme.submitTextColor,
                 child: Text(
-                  'Submit',
+                  'Submit', //!
                   style: Theme.of(context)
                       .textTheme
                       .bodyMedium
@@ -214,7 +214,7 @@ class _ConsentThemeTileState extends State<ConsentThemeTile> {
                 buttonColor: widget.consentTheme.cancelButtonColor,
                 splashColor: widget.consentTheme.cancelTextColor,
                 child: Text(
-                  'Cancel',
+                  'Cancel', //!
                   style: Theme.of(context)
                       .textTheme
                       .bodyMedium

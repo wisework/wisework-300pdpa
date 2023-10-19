@@ -69,7 +69,7 @@ class _EditPurposeScreenState extends State<EditPurposeScreen> {
         listener: (context, state) {
           if (state is CreatedCurrentPurpose) {
             BotToast.showText(
-              text: 'Create successfully',
+              text: 'Create successfully', //!
               contentColor:
                   Theme.of(context).colorScheme.secondary.withOpacity(0.75),
               borderRadius: BorderRadius.circular(8.0),
@@ -88,7 +88,7 @@ class _EditPurposeScreenState extends State<EditPurposeScreen> {
 
           if (state is UpdatedCurrentPurpose) {
             BotToast.showText(
-              text: 'Update successfully',
+              text: 'Update successfully', //!
               contentColor:
                   Theme.of(context).colorScheme.secondary.withOpacity(0.75),
               borderRadius: BorderRadius.circular(8.0),
@@ -102,7 +102,7 @@ class _EditPurposeScreenState extends State<EditPurposeScreen> {
 
           if (state is DeletedCurrentPurpose) {
             BotToast.showText(
-              text: 'Delete successfully',
+              text: 'Delete successfully', //!
               contentColor:
                   Theme.of(context).colorScheme.secondary.withOpacity(0.75),
               borderRadius: BorderRadius.circular(8.0),
@@ -330,8 +330,8 @@ class _EditPurposeViewState extends State<EditPurposeView> {
         leadingIcon: _buildPopButton(widget.initialPurpose),
         title: Text(
           widget.isNewPurpose
-              ? tr('masterData.cm.purpose.create')
-              : tr('masterData.cm.purpose.edit'),
+              ? tr('masterData.cm.purpose.create') //!
+              : tr('masterData.cm.purpose.edit'), //!
           style: Theme.of(context).textTheme.titleLarge,
         ),
         actions: [
@@ -393,46 +393,46 @@ class _EditPurposeViewState extends State<EditPurposeView> {
           Row(
             children: <Widget>[
               Text(
-                tr('masterData.cm.purpose.list'),
+                tr('masterData.cm.purpose.list'), //!
                 style: Theme.of(context).textTheme.titleLarge,
               ),
             ],
           ),
           const SizedBox(height: UiConfig.lineSpacing),
           TitleRequiredText(
-            text: tr('masterData.cm.purpose.description'),
+            text: tr('masterData.cm.purpose.description'), //!
             required: true,
           ),
           CustomTextField(
             controller: descriptionController,
-            hintText: tr('masterData.cm.purpose.descriptionHint'),
+            hintText: tr('masterData.cm.purpose.descriptionHint'), //!
             onChanged: _setDescription,
             required: true,
           ),
           const SizedBox(height: UiConfig.lineSpacing),
           TitleRequiredText(
-            text: tr('masterData.cm.purpose.warningDescription'),
+            text: tr('masterData.cm.purpose.warningDescription'), //!
           ),
           CustomTextField(
             controller: warningDescriptionController,
-            hintText: tr('masterData.cm.purpose.warningDescriptionHint'),
+            hintText: tr('masterData.cm.purpose.warningDescriptionHint'), //!
             onChanged: _setWarningDescription,
           ),
           const SizedBox(height: UiConfig.lineSpacing),
           TitleRequiredText(
-            text: tr('masterData.cm.purpose.retentionPeriod'),
+            text: tr('masterData.cm.purpose.retentionPeriod'), //!
             required: true,
           ),
           CustomTextField(
             controller: retentionPeriodController,
-            hintText: tr('masterData.cm.purpose.retentionPeriodHint'),
+            hintText: tr('masterData.cm.purpose.retentionPeriodHint'), //!
             keyboardType: TextInputType.number,
             onChanged: _setRetentionPeriod,
             required: true,
           ),
           const SizedBox(height: UiConfig.lineSpacing),
           TitleRequiredText(
-            text: tr('masterData.cm.purpose.periodUnit'),
+            text: tr('masterData.cm.purpose.periodUnit'), //!
           ),
           CustomDropdownButton<String>(
             value: unitSelected,

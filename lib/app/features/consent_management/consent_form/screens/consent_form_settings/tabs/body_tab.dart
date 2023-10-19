@@ -62,7 +62,7 @@ class _BodyTabState extends State<BodyTab> {
           Row(
             children: <Widget>[
               Text(
-                'Background',
+                'Background', //!
                 style: Theme.of(context).textTheme.titleMedium,
               ),
             ],
@@ -105,7 +105,7 @@ class _BodyTabState extends State<BodyTab> {
               Row(
                 children: <Widget>[
                   Text(
-                    'Recently used',
+                    'Recently used', //!
                     style: Theme.of(context).textTheme.titleMedium,
                   ),
                 ],

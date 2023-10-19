@@ -79,7 +79,7 @@ class _EditPurposeCategoryScreenState extends State<EditPurposeCategoryScreen> {
         listener: (context, state) {
           if (state is CreatedCurrentPurposeCategory) {
             BotToast.showText(
-              text: 'Create successfully',
+              text: 'Create successfully', //!
               contentColor:
                   Theme.of(context).colorScheme.secondary.withOpacity(0.75),
               borderRadius: BorderRadius.circular(8.0),
@@ -99,7 +99,7 @@ class _EditPurposeCategoryScreenState extends State<EditPurposeCategoryScreen> {
 
           if (state is UpdatedCurrentPurposeCategory) {
             BotToast.showText(
-              text: 'Update successfully',
+              text: 'Update successfully', //!
               contentColor:
                   Theme.of(context).colorScheme.secondary.withOpacity(0.75),
               borderRadius: BorderRadius.circular(8.0),
@@ -113,7 +113,7 @@ class _EditPurposeCategoryScreenState extends State<EditPurposeCategoryScreen> {
 
           if (state is DeletedCurrentPurposeCategory) {
             BotToast.showText(
-              text: 'Delete successfully',
+              text: 'Delete successfully', //!
               contentColor:
                   Theme.of(context).colorScheme.secondary.withOpacity(0.75),
               borderRadius: BorderRadius.circular(8.0),
@@ -345,9 +345,9 @@ class _EditPurposeCategoryViewState extends State<EditPurposeCategoryView> {
         leadingIcon: _buildPopButton(widget.initialPurposeCategory),
         title: Text(
           widget.isNewPurposeCategory
-              ? tr('masterData.cm.purposeCategory.create')
-              : tr('masterData.cm.purposeCategory.edit'),
-          style: Theme.of(context).textTheme.titleLarge,
+              ? tr('masterData.cm.purposeCategory.create') //!
+              : tr('masterData.cm.purposeCategory.edit'), //!
+          style: Theme.of(context).textTheme.titleLarge, 
         ),
         actions: [
           _buildSaveButton(),
@@ -383,45 +383,45 @@ class _EditPurposeCategoryViewState extends State<EditPurposeCategoryView> {
           Row(
             children: <Widget>[
               Text(
-                tr('masterData.cm.purposeCategory.list'),
+                tr('masterData.cm.purposeCategory.list'), //!
                 style: Theme.of(context).textTheme.titleLarge,
               ),
             ],
           ),
           const SizedBox(height: UiConfig.lineSpacing),
           TitleRequiredText(
-            text: tr('masterData.cm.purposeCategory.titlform'),
+            text: tr('masterData.cm.purposeCategory.titlform'), //!
             required: true,
           ),
           CustomTextField(
             controller: titleController,
-            hintText: tr('masterData.cm.purposeCategory.titleformHint'),
+            hintText: tr('masterData.cm.purposeCategory.titleformHint'), //!
             onChanged: _setTitle,
             required: true,
           ),
           const SizedBox(height: UiConfig.lineSpacing),
           TitleRequiredText(
-            text: tr('masterData.cm.purposeCategory.description'),
+            text: tr('masterData.cm.purposeCategory.description'), //!
           ),
           CustomTextField(
             controller: descriptionController,
-            hintText: tr('masterData.cm.purposeCategory.descriptionHint'),
+            hintText: tr('masterData.cm.purposeCategory.descriptionHint'), //!
             onChanged: _setDescription,
           ),
           const SizedBox(height: UiConfig.lineSpacing),
           TitleRequiredText(
-            text: tr('masterData.cm.purposeCategory.priority'),
+            text: tr('masterData.cm.purposeCategory.priority'), //!
             required: true,
           ),
           CustomTextField(
             controller: priorityController,
-            hintText: tr('masterData.cm.purposeCategory.priorityHint'),
+            hintText: tr('masterData.cm.purposeCategory.priorityHint'), //!
             onChanged: _setPriority,
             required: true,
           ),
           const SizedBox(height: UiConfig.lineSpacing),
           TitleRequiredText(
-            text: tr('masterData.cm.purposeCategory.purposes'),
+            text: tr('masterData.cm.purposeCategory.purposes'), //!
           ),
           const SizedBox(height: UiConfig.lineSpacing),
           BlocBuilder<PurposeBloc, PurposeState>(

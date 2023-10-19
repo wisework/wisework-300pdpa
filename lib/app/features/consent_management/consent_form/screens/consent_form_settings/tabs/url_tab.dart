@@ -77,7 +77,7 @@ class _UrlTabState extends State<UrlTab> {
           Row(
             children: <Widget>[
               Text(
-                'URL ลิงค์แบบฟอร์ม',
+                'URL ลิงค์แบบฟอร์ม', //!
                 style: Theme.of(context).textTheme.titleMedium,
               ),
             ],
@@ -102,7 +102,7 @@ class _UrlTabState extends State<UrlTab> {
                     );
 
                     BotToast.showText(
-                      text: 'URL Copied',
+                      text: 'URL Copied', //!
                       contentColor: Theme.of(context)
                           .colorScheme
                           .secondary
@@ -128,11 +128,11 @@ class _UrlTabState extends State<UrlTab> {
             text: TextSpan(
               children: [
                 TextSpan(
-                  text: 'If you have a problem with URL, Click ',
+                  text: 'If you have a problem with URL, Click ', //!
                   style: Theme.of(context).textTheme.bodySmall,
                 ),
                 TextSpan(
-                  text: 'here',
+                  text: 'here', //!
                   style: Theme.of(context).textTheme.bodySmall?.copyWith(
                       color: Theme.of(context).colorScheme.primary,
                       decoration: TextDecoration.underline,
@@ -149,7 +149,7 @@ class _UrlTabState extends State<UrlTab> {
                     },
                 ),
                 TextSpan(
-                  text: ' to regenerate a new one.',
+                  text: ' to regenerate a new one.', //!
                   style: Theme.of(context).textTheme.bodySmall,
                 ),
               ],
@@ -168,7 +168,7 @@ class _UrlTabState extends State<UrlTab> {
           Row(
             children: <Widget>[
               Text(
-                'QR Code ลิงค์แบบฟอร์ม',
+                'QR Code ลิงค์แบบฟอร์ม', //!
                 style: Theme.of(context).textTheme.titleMedium,
               ),
             ],
@@ -184,7 +184,7 @@ class _UrlTabState extends State<UrlTab> {
                 await _downloadQrCode().then((value) {
                   if (value) {
                     BotToast.showText(
-                      text: 'QR code has been downloaded',
+                      text: 'QR code has been downloaded', //!
                       contentColor: Theme.of(context)
                           .colorScheme
                           .secondary
@@ -199,7 +199,7 @@ class _UrlTabState extends State<UrlTab> {
                     );
                   } else {
                     BotToast.showText(
-                      text: 'Failed to download QR code',
+                      text: 'Failed to download QR code', //!
                       contentColor: Theme.of(context)
                           .colorScheme
                           .secondary
@@ -227,7 +227,7 @@ class _UrlTabState extends State<UrlTab> {
                     ),
                   ),
                   Text(
-                    'Download',
+                    'Download', //!
                     style: Theme.of(context).textTheme.bodyMedium?.copyWith(
                         color: Theme.of(context).colorScheme.primary),
                   ),

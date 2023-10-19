@@ -73,7 +73,7 @@ class _ConsentFormSettingScreenState extends State<ConsentFormSettingScreen> {
       listener: (context, state) {
         if (state is UpdatedConsentFormSettings) {
           BotToast.showText(
-            text: 'Update successfully',
+            text: 'Update successfully', //!
             contentColor:
                 Theme.of(context).colorScheme.secondary.withOpacity(0.75),
             borderRadius: BorderRadius.circular(8.0),
@@ -186,7 +186,7 @@ class _ConsentFormSettingViewState extends State<ConsentFormSettingView> {
             backgroundColor: Theme.of(context).colorScheme.onBackground,
           ),
           title: Text(
-            'Consent Form Settings',
+            'Consent Form Settings', //!
             style: Theme.of(context).textTheme.titleLarge,
           ),
           actions: [
@@ -285,11 +285,11 @@ class _ConsentFormSettingViewState extends State<ConsentFormSettingView> {
   TabBar _buildTabBar(BuildContext context) {
     return TabBar(
       tabs: const [
-        Tab(text: 'URL'),
-        Tab(text: 'Header'),
-        Tab(text: 'Body'),
-        Tab(text: 'Footer'),
-        Tab(text: 'Theme'),
+        Tab(text: 'URL'), //!
+        Tab(text: 'Header'), //!
+        Tab(text: 'Body'), //!
+        Tab(text: 'Footer'), //!
+        Tab(text: 'Theme'), //!
       ],
       indicatorColor: Theme.of(context).colorScheme.primary,
       indicatorSize: TabBarIndicatorSize.tab,

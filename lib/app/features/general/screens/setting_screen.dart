@@ -81,7 +81,7 @@ class _SettingViewState extends State<SettingView> {
           backgroundColor: Theme.of(context).colorScheme.onBackground,
         ),
         title: Text(
-          tr('app.features.setting'),
+          tr('app.features.setting'), //!
           style: Theme.of(context).textTheme.titleLarge,
         ),
       ),
@@ -97,7 +97,7 @@ class _SettingViewState extends State<SettingView> {
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: <Widget>[
                       Text(
-                        tr('masterData.etc.active'),
+                        tr('masterData.etc.active'), //!
                         style: Theme.of(context).textTheme.bodyMedium,
                       ),
                       CustomSwitchButton(

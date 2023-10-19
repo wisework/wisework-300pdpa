@@ -66,7 +66,7 @@ class _PurposeViewState extends State<PurposeView> {
           backgroundColor: Theme.of(context).colorScheme.onBackground,
         ),
         title: Text(
-          tr('masterData.cm.purpose.list'),
+          tr('masterData.cm.purpose.list'), //!
           style: Theme.of(context).textTheme.titleLarge,
         ),
       ),

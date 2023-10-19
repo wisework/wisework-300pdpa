@@ -119,7 +119,7 @@ class _HeaderTabState extends State<HeaderTab> {
           Row(
             children: <Widget>[
               Text(
-                'Logo',
+                'Logo', //!
                 style: Theme.of(context).textTheme.titleMedium,
               ),
             ],
@@ -162,7 +162,7 @@ class _HeaderTabState extends State<HeaderTab> {
               Row(
                 children: <Widget>[
                   Text(
-                    'Recently used',
+                    'Recently used', //!
                     style: Theme.of(context).textTheme.titleMedium,
                   ),
                 ],
@@ -199,18 +199,18 @@ class _HeaderTabState extends State<HeaderTab> {
           Row(
             children: <Widget>[
               Text(
-                'Header',
+                'Header', //!
                 style: Theme.of(context).textTheme.titleMedium,
               ),
             ],
           ),
           const SizedBox(height: UiConfig.lineSpacing),
-          const TitleRequiredText(
-            text: 'Header Text',
+          const TitleRequiredText( 
+            text: 'Header Text', //!
           ),
           CustomTextField(
             controller: headerTextController,
-            hintText: 'Enter header text',
+            hintText: 'Enter header text', //!
             onChanged: (value) {
               final updated = widget.consentForm.copyWith(
                 headerText: [
@@ -224,10 +224,10 @@ class _HeaderTabState extends State<HeaderTab> {
             },
           ),
           const SizedBox(height: UiConfig.lineSpacing),
-          const TitleRequiredText(text: 'Description'),
+          const TitleRequiredText(text: 'Description'), //!
           CustomTextField(
             controller: headerDescriptionController,
-            hintText: 'Enter description',
+            hintText: 'Enter description', //!
             onChanged: (value) {
               final updated = widget.consentForm.copyWith(
                 headerDescription: [
@@ -255,7 +255,7 @@ class _HeaderTabState extends State<HeaderTab> {
           Row(
             children: <Widget>[
               Text(
-                'Background',
+                'Background', //!
                 style: Theme.of(context).textTheme.titleMedium,
               ),
             ],
@@ -298,7 +298,7 @@ class _HeaderTabState extends State<HeaderTab> {
               Row(
                 children: <Widget>[
                   Text(
-                    'Recently used',
+                    'Recently used', //!
                     style: Theme.of(context).textTheme.titleMedium,
                   ),
                 ],

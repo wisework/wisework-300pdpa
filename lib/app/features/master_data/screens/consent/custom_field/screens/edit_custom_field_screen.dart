@@ -69,7 +69,7 @@ class _EditCustomFieldScreenState extends State<EditCustomFieldScreen> {
         listener: (context, state) {
           if (state is CreatedCurrentCustomField) {
             BotToast.showText(
-              text: 'Create successfully',
+              text: 'Create successfully', //!
               contentColor:
                   Theme.of(context).colorScheme.secondary.withOpacity(0.75),
               borderRadius: BorderRadius.circular(8.0),
@@ -89,7 +89,7 @@ class _EditCustomFieldScreenState extends State<EditCustomFieldScreen> {
 
           if (state is UpdatedCurrentCustomField) {
             BotToast.showText(
-              text: 'Update successfully',
+              text: 'Update successfully', //!
               contentColor:
                   Theme.of(context).colorScheme.secondary.withOpacity(0.75),
               borderRadius: BorderRadius.circular(8.0),
@@ -103,7 +103,7 @@ class _EditCustomFieldScreenState extends State<EditCustomFieldScreen> {
 
           if (state is DeletedCurrentCustomField) {
             BotToast.showText(
-              text: 'Delete successfully',
+              text: 'Delete successfully', //!
               contentColor:
                   Theme.of(context).colorScheme.secondary.withOpacity(0.75),
               borderRadius: BorderRadius.circular(8.0),
@@ -369,8 +369,8 @@ class _EditCustomFieldViewState extends State<EditCustomFieldView> {
         leadingIcon: _buildPopButton(widget.initialCustomField),
         title: Text(
           widget.isNewCustomField
-              ? tr('masterData.cm.customfields.create')
-              : tr('masterData.cm.customfields.edit'),
+              ? tr('masterData.cm.customfields.create') //!
+              : tr('masterData.cm.customfields.edit'), //!
           style: Theme.of(context).textTheme.titleLarge,
         ),
         actions: [
@@ -406,7 +406,7 @@ class _EditCustomFieldViewState extends State<EditCustomFieldView> {
           Row(
             children: <Widget>[
               Text(
-                tr('masterData.cm.customfields.title'),
+                tr('masterData.cm.customfields.title'), //!
                 style: Theme.of(context).textTheme.titleLarge,
               ),
             ],
@@ -424,7 +424,7 @@ class _EditCustomFieldViewState extends State<EditCustomFieldView> {
           ),
           const SizedBox(height: UiConfig.lineSpacing),
           TitleRequiredText(
-            text: tr('masterData.cm.customfields.hinttext'),
+            text: tr('masterData.cm.customfields.hinttext'), //!
             required: true,
           ),
           CustomTextField(
@@ -434,7 +434,7 @@ class _EditCustomFieldViewState extends State<EditCustomFieldView> {
           ),
           const SizedBox(height: UiConfig.lineSpacing),
           TitleRequiredText(
-            text: tr('masterData.cm.customfields.inputtype'),
+            text: tr('masterData.cm.customfields.inputtype'), //!
             required: true,
           ),
           CustomDropdownButton<int>(
@@ -454,7 +454,7 @@ class _EditCustomFieldViewState extends State<EditCustomFieldView> {
           ),
           const SizedBox(height: UiConfig.lineSpacing),
           TitleRequiredText(
-            text: tr('masterData.cm.customfields.lenghtlimit'),
+            text: tr('masterData.cm.customfields.lenghtlimit'), //!
           ),
           CustomTextField(
             controller: lenghtLimitController,
@@ -464,7 +464,7 @@ class _EditCustomFieldViewState extends State<EditCustomFieldView> {
           ),
           const SizedBox(height: UiConfig.lineSpacing),
           TitleRequiredText(
-            text: tr('masterData.cm.customfields.maxline'),
+            text: tr('masterData.cm.customfields.maxline'), //!
             required: true,
           ),
           CustomTextField(
@@ -476,7 +476,7 @@ class _EditCustomFieldViewState extends State<EditCustomFieldView> {
           ),
           const SizedBox(height: UiConfig.lineSpacing),
           TitleRequiredText(
-            text: tr('masterData.cm.customfields.minline'),
+            text: tr('masterData.cm.customfields.minline'), //!
             required: true,
           ),
           CustomTextField(
@@ -532,7 +532,7 @@ class _EditCustomFieldViewState extends State<EditCustomFieldView> {
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: <Widget>[
                 Text(
-                  tr('masterData.etc.active'),
+                  tr('masterData.etc.active'), //!
                   style: Theme.of(context).textTheme.bodyMedium,
                 ),
                 CustomSwitchButton(

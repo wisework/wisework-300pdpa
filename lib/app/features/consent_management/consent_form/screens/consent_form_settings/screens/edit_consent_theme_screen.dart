@@ -71,7 +71,7 @@ class _EditConsentThemeScreenState extends State<EditConsentThemeScreen> {
         listener: (context, state) {
           if (state is CreatedCurrentConsentTheme) {
             BotToast.showText(
-              text: 'Create successfully',
+              text: 'Create successfully', //!
               contentColor:
                   Theme.of(context).colorScheme.secondary.withOpacity(0.75),
               borderRadius: BorderRadius.circular(8.0),
@@ -93,7 +93,7 @@ class _EditConsentThemeScreenState extends State<EditConsentThemeScreen> {
 
           if (state is UpdatedCurrentConsentTheme) {
             BotToast.showText(
-              text: 'Update successfully',
+              text: 'Update successfully', //!
               contentColor:
                   Theme.of(context).colorScheme.secondary.withOpacity(0.75),
               borderRadius: BorderRadius.circular(8.0),
@@ -107,7 +107,7 @@ class _EditConsentThemeScreenState extends State<EditConsentThemeScreen> {
 
           if (state is DeletedCurrentConsentTheme) {
             BotToast.showText(
-              text: 'Delete successfully',
+              text: 'Delete successfully', //!
               contentColor:
                   Theme.of(context).colorScheme.secondary.withOpacity(0.75),
               borderRadius: BorderRadius.circular(8.0),
@@ -270,7 +270,7 @@ class _EditConsentThemeViewState extends State<EditConsentThemeView> {
       appBar: PdpaAppBar(
         leadingIcon: _buildPopButton(widget.initialConsentTheme),
         title: Text(
-          widget.isNewConsentTheme ? 'New consent theme' : 'Edit consent theme',
+          widget.isNewConsentTheme ? 'New consent theme'  : 'Edit consent theme', //!
           style: Theme.of(context).textTheme.titleLarge,
         ),
         actions: [
@@ -338,18 +338,18 @@ class _EditConsentThemeViewState extends State<EditConsentThemeView> {
           Row(
             children: <Widget>[
               Text(
-                'Consent Theme Infomation',
+                'Consent Theme Infomation', //!
                 style: Theme.of(context).textTheme.titleMedium,
               ),
             ],
           ),
           const SizedBox(height: UiConfig.lineSpacing),
           const TitleRequiredText(
-            text: 'Title',
+            text: 'Title', //!
           ),
           CustomTextField(
             controller: titleController,
-            hintText: 'Enter consent theme title',
+            hintText: 'Enter consent theme title', //!
             onChanged: _setThemeTitle,
           ),
         ],
@@ -364,7 +364,7 @@ class _EditConsentThemeViewState extends State<EditConsentThemeView> {
           Row(
             children: <Widget>[
               Text(
-                'Header',
+                'Header', //!
                 style: Theme.of(context).textTheme.titleMedium,
               ),
             ],
@@ -374,7 +374,7 @@ class _EditConsentThemeViewState extends State<EditConsentThemeView> {
             children: <Widget>[
               Expanded(
                 child: Text(
-                  'Header text color',
+                  'Header text color', //!
                   style: Theme.of(context).textTheme.bodyMedium,
                 ),
               ),
@@ -395,7 +395,7 @@ class _EditConsentThemeViewState extends State<EditConsentThemeView> {
             children: <Widget>[
               Expanded(
                 child: Text(
-                  'Header background color',
+                  'Header background color', //!
                   style: Theme.of(context).textTheme.bodyMedium,
                 ),
               ),
@@ -423,7 +423,7 @@ class _EditConsentThemeViewState extends State<EditConsentThemeView> {
           Row(
             children: <Widget>[
               Text(
-                'Body',
+                'Body', //!
                 style: Theme.of(context).textTheme.titleMedium,
               ),
             ],
@@ -433,7 +433,7 @@ class _EditConsentThemeViewState extends State<EditConsentThemeView> {
             children: <Widget>[
               Expanded(
                 child: Text(
-                  'Form text color',
+                  'Form text color', //!
                   style: Theme.of(context).textTheme.bodyMedium,
                 ),
               ),
@@ -454,7 +454,7 @@ class _EditConsentThemeViewState extends State<EditConsentThemeView> {
             children: <Widget>[
               Expanded(
                 child: Text(
-                  'Action button color',
+                  'Action button color', //!
                   style: Theme.of(context).textTheme.bodyMedium,
                 ),
               ),
@@ -475,7 +475,7 @@ class _EditConsentThemeViewState extends State<EditConsentThemeView> {
             children: <Widget>[
               Expanded(
                 child: Text(
-                  'Category icon color',
+                  'Category icon color', //!
                   style: Theme.of(context).textTheme.bodyMedium,
                 ),
               ),
@@ -496,7 +496,7 @@ class _EditConsentThemeViewState extends State<EditConsentThemeView> {
             children: <Widget>[
               Expanded(
                 child: Text(
-                  'Category title text color',
+                  'Category title text color', //!
                   style: Theme.of(context).textTheme.bodyMedium,
                 ),
               ),
@@ -517,7 +517,7 @@ class _EditConsentThemeViewState extends State<EditConsentThemeView> {
             children: <Widget>[
               Expanded(
                 child: Text(
-                  'Body background color',
+                  'Body background color', //!
                   style: Theme.of(context).textTheme.bodyMedium,
                 ),
               ),
@@ -538,7 +538,7 @@ class _EditConsentThemeViewState extends State<EditConsentThemeView> {
             children: <Widget>[
               Expanded(
                 child: Text(
-                  'Background color',
+                  'Background color', //!
                   style: Theme.of(context).textTheme.bodyMedium,
                 ),
               ),
@@ -566,7 +566,7 @@ class _EditConsentThemeViewState extends State<EditConsentThemeView> {
           Row(
             children: <Widget>[
               Text(
-                'Footer',
+                'Footer', //!
                 style: Theme.of(context).textTheme.titleMedium,
               ),
             ],
@@ -576,7 +576,7 @@ class _EditConsentThemeViewState extends State<EditConsentThemeView> {
             children: <Widget>[
               Expanded(
                 child: Text(
-                  'Link to policy text color',
+                  'Link to policy text color', //!
                   style: Theme.of(context).textTheme.bodyMedium,
                 ),
               ),
@@ -597,7 +597,7 @@ class _EditConsentThemeViewState extends State<EditConsentThemeView> {
             children: <Widget>[
               Expanded(
                 child: Text(
-                  'Submit button color',
+                  'Submit button color', //!
                   style: Theme.of(context).textTheme.bodyMedium,
                 ),
               ),
@@ -618,7 +618,7 @@ class _EditConsentThemeViewState extends State<EditConsentThemeView> {
             children: <Widget>[
               Expanded(
                 child: Text(
-                  'Submit text color',
+                  'Submit text color', //!
                   style: Theme.of(context).textTheme.bodyMedium,
                 ),
               ),
@@ -639,7 +639,7 @@ class _EditConsentThemeViewState extends State<EditConsentThemeView> {
             children: <Widget>[
               Expanded(
                 child: Text(
-                  'Cancel button color',
+                  'Cancel button color', //!
                   style: Theme.of(context).textTheme.bodyMedium,
                 ),
               ),
@@ -660,7 +660,7 @@ class _EditConsentThemeViewState extends State<EditConsentThemeView> {
             children: <Widget>[
               Expanded(
                 child: Text(
-                  'Cancel text color',
+                  'Cancel text color', //!
                   style: Theme.of(context).textTheme.bodyMedium,
                 ),
               ),
