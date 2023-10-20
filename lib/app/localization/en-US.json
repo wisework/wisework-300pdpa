@@ -18,7 +18,8 @@
             "userconsents": "User Consents",
             "datasubjectright": "Data Subject Right",
             "masterdata": "Master Data",
-            "setting": "Setting"
+            "setting": "Setting",
+            "createNewConsentForm": "Create New Consent Form"
         },
         "search": "Search"
     },
@@ -48,9 +49,9 @@
         "home": {
             "hello": "Hello",
             "tagline": "What you are looking for today",
-            "explore" : "Explore",
+            "explore": "Explore",
             "recentlyUsed": "Recently used",
-            "thisDataIsNotStored." : "This data is not stored."
+            "thisDataIsNotStored.": "This data is not stored."
         }
     },
     "consentManagement": {
@@ -273,8 +274,8 @@
                 "priority": "Priority",
                 "priorityHint": "Enter Priority",
                 "purposes": "Purposes",
-                "purposeList" : "Purpose List",
-                "noData" : "No Data"
+                "purposeList": "Purpose List",
+                "noData": "No Data"
             }
         },
         "dsr": {
@@ -335,7 +336,6 @@
                 "createDataSubjectRight": "Create Data Subject Right",
                 "editDataSubjectRight": "Edit Data Subject Right"
             }
-           
         },
         "etc": {
             "fieldCannotEmpty": "Field cannot be empty",

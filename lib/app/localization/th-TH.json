@@ -18,7 +18,8 @@
             "userconsents": "ความยินยอมของผู้ใช้",
             "datasubjectright": "สิทธิของเจ้าของข้อมูล",
             "masterdata": "ข้อมูลหลัก",
-            "setting": "การตั้งค่า"
+            "setting": "การตั้งค่า",
+            "createNewConsentForm": "สร้างแบบฟอร์มยินยอมใหม่"
         },
         "search": "ค้นหา"
     },
