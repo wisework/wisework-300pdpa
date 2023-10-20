@@ -279,46 +279,65 @@ class _ConsentFormViewState extends State<ConsentFormView> {
           },
           child: Padding(
             padding: const EdgeInsets.all(UiConfig.defaultPaddingSpacing),
-            child: Column(
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
               crossAxisAlignment: CrossAxisAlignment.start,
               children: <Widget>[
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: <Widget>[
-                    Text(
-                      title,
-                      style: Theme.of(context).textTheme.bodyMedium,
-                    ),
-                    Padding(
-                      padding: const EdgeInsets.only(left: 40.0),
-                      child: Text(
-                        dateConsentForm,
-                        style: Theme.of(context).textTheme.bodySmall,
+                Expanded(
+                  child: Column(
+                    mainAxisSize: MainAxisSize.min,
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: <Widget>[
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Expanded(
+                            child: Text(
+                              title,
+                              style: Theme.of(context).textTheme.titleMedium,
+                              maxLines: 3,
+                            ),
+                          ),
+                          Text(
+                            dateConsentForm,
+                            style: Theme.of(context).textTheme.bodySmall,
+                          ),
+                        ],
                       ),
-                    ),
-                  ],
-                ),
-                ListView.builder(
-                  shrinkWrap: true,
-                  physics: const NeverScrollableScrollPhysics(),
-                  itemCount: purposeCategoryFiltered.length,
-                  itemBuilder: (_, index) {
-                    final titlePurpose = purposeCategoryFiltered[index]
-                        .title
-                        .firstWhere(
-                          (item) => item.language == language,
-                          orElse: () => const LocalizedModel.empty(),
-                        )
-                        .text;
-                    return Padding(
-                      padding: const EdgeInsets.only(top: UiConfig.textSpacing),
-                      child: Text(
-                        titlePurpose,
-                        style: Theme.of(context).textTheme.bodySmall,
+                      Visibility(
+                        visible: purposeCategoryFiltered.isNotEmpty,
+                        child: Padding(
+                          padding: const EdgeInsets.only(
+                            top: UiConfig.textLineSpacing,
+                          ),
+                          child: ListView.builder(
+                            shrinkWrap: true,
+                            physics: const NeverScrollableScrollPhysics(),
+                            itemCount: purposeCategoryFiltered.length,
+                            itemBuilder: (_, index) {
+                              final titlePurpose =
+                                  purposeCategoryFiltered[index]
+                                      .title
+                                      .firstWhere(
+                                        (item) => item.language == language,
+                                        orElse: LocalizedModel.empty,
+                                      )
+                                      .text;
+                              return Padding(
+                                padding: const EdgeInsets.only(
+                                    top: UiConfig.textSpacing),
+                                child: Text(
+                                  titlePurpose,
+                                  style: Theme.of(context).textTheme.bodySmall,
+                                ),
+                              );
+                            },
+                          ),
+                        ),
                       ),
-                    );
-                  },
+                    ],
+                  ),
                 ),
               ],
             ),

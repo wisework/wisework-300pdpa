@@ -254,6 +254,9 @@ class ConsentFormModel extends Equatable {
         updatedDate: date,
       );
 
+  ConsentFormModel setUrl(String consentFormUrl) =>
+      copyWith(consentFormUrl: consentFormUrl);
+
   @override
   List<Object> get props {
     return [

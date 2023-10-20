@@ -53,10 +53,12 @@ class ConsentFormBloc extends Bloc<ConsentFormEvent, ConsentFormState> {
           event.companyId,
         );
 
-        result.fold(
-          (failure) => emit(ConsentFormError(failure.errorMessage)),
-          (purposeCategory) => gotPurposeCategories.add(purposeCategory),
-        );
+        result.fold((failure) => emit(ConsentFormError(failure.errorMessage)),
+            (purposeCategory) {
+          if (!gotPurposeCategories.contains(purposeCategory)) {
+            gotPurposeCategories.add(purposeCategory);
+          }
+        });
       }
 
       emit(

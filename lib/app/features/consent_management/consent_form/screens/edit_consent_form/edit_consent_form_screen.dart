@@ -9,16 +9,19 @@ import 'package:pdpa/app/data/models/authentication/user_model.dart';
 import 'package:pdpa/app/data/models/consent_management/consent_form_model.dart';
 import 'package:pdpa/app/data/models/master_data/custom_field_model.dart';
 import 'package:pdpa/app/data/models/master_data/localized_model.dart';
+import 'package:pdpa/app/data/models/master_data/mandatory_field_model.dart';
 import 'package:pdpa/app/data/models/master_data/purpose_category_model.dart';
 import 'package:pdpa/app/data/models/master_data/purpose_model.dart';
 import 'package:pdpa/app/features/authentication/bloc/sign_in/sign_in_bloc.dart';
 import 'package:pdpa/app/features/consent_management/consent_form/bloc/consent_form/consent_form_bloc.dart';
 import 'package:pdpa/app/features/consent_management/consent_form/bloc/edit_consent_form/edit_consent_form_bloc.dart';
+import 'package:pdpa/app/features/consent_management/consent_form/cubit/current_consent_form_settings/current_consent_form_settings_cubit.dart';
 import 'package:pdpa/app/features/consent_management/consent_form/routes/consent_form_route.dart';
 import 'package:pdpa/app/features/consent_management/consent_form/screens/edit_consent_form/widgets/ReorderPurposeCategory.dart';
 
 import 'package:pdpa/app/injection.dart';
 import 'package:pdpa/app/shared/utils/constants.dart';
+import 'package:pdpa/app/shared/utils/functions.dart';
 import 'package:pdpa/app/shared/widgets/customs/custom_container.dart';
 import 'package:pdpa/app/shared/widgets/customs/custom_icon_button.dart';
 import 'package:pdpa/app/shared/widgets/customs/custom_switch_button.dart';
@@ -111,18 +114,21 @@ class _EditConsentFormScreenState extends State<EditConsentFormScreen> {
               initialConsentForm: state.consentForm,
               currentUser: currentUser,
               isNewConsentForm: widget.consentFormId.isEmpty,
-              customfields: state.customFields,
+              mandatoryFields: state.mandatoryField,
               purposeCategories: state.purposeCategories,
               purposes: state.purposes,
             );
           }
-          // if (state is UpdatedCurrentConsentForm) {
-          //   return EditConsentFormView(
-          //     initialConsentForm: state.consentForm,
-          //     currentUser: currentUser,
-          //     isNewConsentForm: widget.consentFormId.isEmpty,
-          //   );
-          // }
+          if (state is UpdatedCurrentConsentForm) {
+            return EditConsentFormView(
+              initialConsentForm: state.consentForm,
+              currentUser: currentUser,
+              isNewConsentForm: widget.consentFormId.isEmpty,
+              mandatoryFields: state.mandatoryFields,
+              purposeCategories: state.purposeCategories,
+              purposes: state.purposes,
+            );
+          }
           if (state is EditConsentFormError) {
             return ErrorMessageScreen(message: state.message);
           }
@@ -140,13 +146,13 @@ class EditConsentFormView extends StatefulWidget {
     required this.initialConsentForm,
     required this.currentUser,
     required this.isNewConsentForm,
-    required this.customfields,
+    required this.mandatoryFields,
     required this.purposeCategories,
     required this.purposes,
   });
 
   final ConsentFormModel initialConsentForm;
-  final List<CustomFieldModel> customfields;
+  final List<MandatoryFieldModel> mandatoryFields;
   final List<PurposeCategoryModel> purposeCategories;
   final List<PurposeModel> purposes;
   final UserModel currentUser;
@@ -164,7 +170,7 @@ class _EditConsentFormViewState extends State<EditConsentFormView> {
 
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
 
-  List<String> customFieldList = [];
+  List<String> mandatoryFieldList = [];
 
   @override
   void initState() {
@@ -187,10 +193,10 @@ class _EditConsentFormViewState extends State<EditConsentFormView> {
     titleController = TextEditingController();
     descriptionController = TextEditingController();
 
-    customFieldList = consentForm.customFields;
+    mandatoryFieldList = consentForm.mandatoryFields;
 
     if (consentForm != ConsentFormModel.empty()) {
-      if (consentForm.description.isNotEmpty) {
+      if (consentForm.title.isNotEmpty) {
         titleController = TextEditingController(
           text: consentForm.title.first.text,
         );
@@ -232,10 +238,20 @@ class _EditConsentFormViewState extends State<EditConsentFormView> {
   void _savePurpose() {
     if (_formKey.currentState!.validate()) {
       if (widget.isNewConsentForm) {
-        // consentForm = consentForm.toCreated(
-        //   widget.currentUser.email,
-        //   DateTime.now(),
-        // );
+        consentForm = consentForm.setCreate(
+          widget.currentUser.email,
+          DateTime.now(),
+        );
+
+        final url = UtilFunctions.getUserConsentForm(
+          consentForm.id,
+          widget.currentUser.currentCompany,
+        );
+
+        // final cubit = context.read<CurrentConsentFormSettingsCubit>();
+        // cubit.generateConsentFormUrl(url);
+
+        consentForm = consentForm.setUrl(url);
 
         context.read<EditConsentFormBloc>().add(
               CreateCurrentConsentFormEvent(
@@ -244,10 +260,10 @@ class _EditConsentFormViewState extends State<EditConsentFormView> {
               ),
             );
       } else {
-        // consentForm = consentForm.toUpdated(
-        //   widget.currentUser.email,
-        //   DateTime.now(),
-        // );
+        consentForm = consentForm.setUpdate(
+          widget.currentUser.email,
+          DateTime.now(),
+        );
 
         context.read<EditConsentFormBloc>().add(
               UpdateCurrentConsentFormEvent(
@@ -312,7 +328,7 @@ class _EditConsentFormViewState extends State<EditConsentFormView> {
                           required: true,
                         ),
                         CustomTextField(
-                          controller: descriptionController,
+                          controller: titleController,
                           hintText:
                               tr('consentManagement.consentForm.createForm.title'),
                           onChanged: _setDescription,
@@ -324,7 +340,7 @@ class _EditConsentFormViewState extends State<EditConsentFormView> {
                               'consentManagement.consentForm.createForm.description'),
                         ),
                         CustomTextField(
-                          controller: titleController,
+                          controller: descriptionController,
                           hintText: tr(
                               'consentManagement.consentForm.createForm.description'),
                           onChanged: _setTitleController,
@@ -349,11 +365,11 @@ class _EditConsentFormViewState extends State<EditConsentFormView> {
                         ListView.builder(
                             shrinkWrap: true,
                             physics: const NeverScrollableScrollPhysics(),
-                            itemCount: widget.customfields.length,
+                            itemCount: widget.mandatoryFields.length,
                             itemBuilder: (_, index) {
                               const language = "en-US";
-                              final title =
-                                  widget.customfields[index].title.firstWhere(
+                              final title = widget.mandatoryFields[index].title
+                                  .firstWhere(
                                 (item) => item.language == language,
                                 orElse: () => const LocalizedModel.empty(),
                               );
@@ -367,20 +383,21 @@ class _EditConsentFormViewState extends State<EditConsentFormView> {
                                         Theme.of(context).textTheme.bodyMedium,
                                   ),
                                   CustomSwitchButton(
-                                    value: customFieldList.contains(
-                                        widget.customfields[index].id),
+                                    value: mandatoryFieldList.contains(
+                                        widget.mandatoryFields[index].id),
                                     onChanged: (value) => {
                                       setState(() {
-                                        if (customFieldList.contains(
-                                            widget.customfields[index].id)) {
-                                          customFieldList.removeWhere((item) =>
-                                              item ==
-                                              widget.customfields[index].id);
+                                        if (mandatoryFieldList.contains(
+                                            widget.mandatoryFields[index].id)) {
+                                          mandatoryFieldList.removeWhere(
+                                              (item) =>
+                                                  item ==
+                                                  widget.mandatoryFields[index]
+                                                      .id);
                                         } else {
-                                          customFieldList.add(
-                                              widget.customfields[index].id);
+                                          mandatoryFieldList.add(
+                                              widget.mandatoryFields[index].id);
                                         }
-                                        print(customFieldList);
                                       })
                                     },
                                   ),

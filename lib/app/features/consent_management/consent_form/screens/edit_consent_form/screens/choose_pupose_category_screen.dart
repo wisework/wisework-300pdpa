@@ -61,9 +61,10 @@ class _ChoosePurposeCategoryScreenState
         builder: (context, state) {
           if (state is GotCurrentPurposeCategory) {
             return ChoosePurposeCategoryView(
-              purposeCategories: state.purposeCategories,
+              initialpurposeCategories: state.purposeCategories,
               purposes: state.purposes,
               consentForm: state.consentform,
+              isNewPurposeCategory: state.purposeCategories.isEmpty,
             );
           }
           // if (state is ChoosePurposeCategoryError) {
@@ -80,13 +81,15 @@ class ChoosePurposeCategoryView extends StatefulWidget {
   const ChoosePurposeCategoryView({
     super.key,
     required this.consentForm,
-    required this.purposeCategories,
+    required this.initialpurposeCategories,
     required this.purposes,
+    required this.isNewPurposeCategory,
   });
 
   final ConsentFormModel consentForm;
-  final List<PurposeCategoryModel> purposeCategories;
+  final List<PurposeCategoryModel> initialpurposeCategories;
   final List<PurposeModel> purposes;
+  final bool isNewPurposeCategory;
 
   @override
   State<ChoosePurposeCategoryView> createState() =>
@@ -94,7 +97,22 @@ class ChoosePurposeCategoryView extends StatefulWidget {
 }
 
 class _ChoosePurposeCategoryViewState extends State<ChoosePurposeCategoryView> {
-  void _savePurpose() {}
+  late List<PurposeCategoryModel> purposeCategory;
+
+  late List<String> purposeCategories;
+
+  @override
+  void initState() {
+    super.initState();
+
+    _initialData();
+  }
+
+  void _initialData() {
+    purposeCategory = widget.initialpurposeCategories;
+
+    purposeCategories = widget.consentForm.purposeCategories;
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -102,7 +120,9 @@ class _ChoosePurposeCategoryViewState extends State<ChoosePurposeCategoryView> {
       appBar: PdpaAppBar(
         leadingIcon: CustomIconButton(
           onPressed: () {
-            context.pop();
+            print(purposeCategories);
+
+            // context.pop();
           },
           icon: Ionicons.chevron_back_outline,
           iconColor: Theme.of(context).colorScheme.primary,
@@ -113,7 +133,7 @@ class _ChoosePurposeCategoryViewState extends State<ChoosePurposeCategoryView> {
           style: Theme.of(context).textTheme.titleLarge,
         ),
       ),
-      body: widget.purposeCategories.isNotEmpty
+      body: purposeCategory.isNotEmpty
           ? SingleChildScrollView(
               child: Column(
                 children: [
@@ -128,13 +148,174 @@ class _ChoosePurposeCategoryViewState extends State<ChoosePurposeCategoryView> {
                         ListView.builder(
                           shrinkWrap: true,
                           physics: const NeverScrollableScrollPhysics(),
-                          itemCount: widget.purposeCategories.length,
+                          itemCount: purposeCategory.length,
                           itemBuilder: (_, index) {
-                            return PurposeCategoryTile(
-                              purposeCategory: widget.purposeCategories[index],
-                              purposes: widget.purposes,
-                              purposeCategories:
-                                  widget.consentForm.purposeCategories,
+                            const language = 'en-US';
+                            final title = purposeCategory[index]
+                                .title
+                                .firstWhere(
+                                  (item) => item.language == language,
+                                  orElse: LocalizedModel.empty,
+                                )
+                                .text;
+                            return SizedBox(
+                              width: double.infinity,
+                              child: TextButton(
+                                  onPressed: () {
+                                    context
+                                        .read<ChoosePurposeCategoryCubit>()
+                                        .choosePurposeCategoryExpanded(
+                                            purposeCategory[index].id);
+                                  },
+                                  style: ButtonStyle(
+                                      shape: MaterialStateProperty.all<
+                                          RoundedRectangleBorder>(
+                                    RoundedRectangleBorder(
+                                      borderRadius: BorderRadius.circular(0.0),
+                                    ),
+                                  )),
+                                  child: Padding(
+                                    padding: const EdgeInsets.symmetric(
+                                        horizontal: 10.0),
+                                    child: Container(
+                                        padding: const EdgeInsets.symmetric(
+                                            vertical: 10.0),
+                                        decoration: BoxDecoration(
+                                          border: Border(
+                                            bottom: BorderSide(
+                                              width: 0.3,
+                                              color: Theme.of(context)
+                                                  .colorScheme
+                                                  .outline,
+                                            ),
+                                          ),
+                                        ),
+                                        child: BlocBuilder<
+                                            ChoosePurposeCategoryCubit,
+                                            ChoosePurposeCategoryCubitState>(
+                                          builder: (context, state) {
+                                            return Column(
+                                              children: <Widget>[
+                                                Row(
+                                                  children: <Widget>[
+                                                    Checkbox(
+                                                        value: purposeCategories
+                                                            .contains(
+                                                                purposeCategory[
+                                                                        index]
+                                                                    .id),
+                                                        side: BorderSide(
+                                                            color: Theme.of(
+                                                                    context)
+                                                                .colorScheme
+                                                                .secondary),
+                                                        onChanged: (_) {
+                                                          setState(() {
+                                                            if (purposeCategories
+                                                                .contains(
+                                                              purposeCategory[
+                                                                      index]
+                                                                  .id,
+                                                            )) {
+                                                              purposeCategories
+                                                                  .removeWhere((item) =>
+                                                                      item ==
+                                                                      purposeCategory[
+                                                                              index]
+                                                                          .id);
+                                                            } else {
+                                                              purposeCategories.add(
+                                                                  purposeCategory[
+                                                                          index]
+                                                                      .id);
+                                                            }
+                                                          });
+                                                        }),
+                                                    Expanded(
+                                                      child: Padding(
+                                                        padding:
+                                                            const EdgeInsets
+                                                                .symmetric(
+                                                                horizontal:
+                                                                    15.0),
+                                                        child: Text(
+                                                          title,
+                                                          style:
+                                                              Theme.of(context)
+                                                                  .textTheme
+                                                                  .bodySmall
+                                                                  ?.copyWith(
+                                                                    color: Theme.of(
+                                                                            context)
+                                                                        .colorScheme
+                                                                        .secondary,
+                                                                  ),
+                                                        ),
+                                                      ),
+                                                    ),
+                                                    Icon(
+                                                      state.expandId !=
+                                                              purposeCategory[
+                                                                      index]
+                                                                  .id
+                                                          ? Icons
+                                                              .arrow_drop_down
+                                                          : Icons.arrow_drop_up,
+                                                      size: 24,
+                                                      color: Theme.of(context)
+                                                          .colorScheme
+                                                          .secondary,
+                                                    )
+                                                  ],
+                                                ),
+                                                ExpandedContainer(
+                                                  expand: state.expandId ==
+                                                      purposeCategory[index].id,
+                                                  child: Padding(
+                                                    padding: EdgeInsets.only(
+                                                      left: 47.0,
+                                                      top:
+                                                          purposeCategory[index]
+                                                                  .purposes
+                                                                  .isNotEmpty
+                                                              ? 10.0
+                                                              : 0,
+                                                      bottom:
+                                                          purposeCategory[index]
+                                                                  .purposes
+                                                                  .isNotEmpty
+                                                              ? 10.0
+                                                              : 0,
+                                                    ),
+                                                    child: Column(
+                                                      children: <Widget>[
+                                                        ListView.builder(
+                                                          shrinkWrap: true,
+                                                          physics:
+                                                              const NeverScrollableScrollPhysics(),
+                                                          itemCount:
+                                                              purposeCategory[
+                                                                      index]
+                                                                  .purposes
+                                                                  .length,
+                                                          itemBuilder:
+                                                              (_, index) {
+                                                            return PurposeTile(
+                                                              purpose: widget
+                                                                      .purposes[
+                                                                  index],
+                                                            );
+                                                          },
+                                                        ),
+                                                      ],
+                                                    ),
+                                                  ),
+                                                ),
+                                              ],
+                                            );
+                                          },
+                                        )),
+                                  )),
                             );
                           },
                         ),
@@ -386,6 +567,10 @@ class PurposeTile extends StatelessWidget {
           style: Theme.of(context).textTheme.labelLarge?.copyWith(
                 color: Theme.of(context).colorScheme.secondary,
               ),
+        ),
+        Divider(
+          color: Theme.of(context).colorScheme.outline,
+          thickness: 0.3,
         ),
       ],
     );
