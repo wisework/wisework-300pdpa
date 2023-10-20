@@ -4,16 +4,17 @@ import 'package:pdpa/app/features/consent_management/user_consent/screens/user_c
 
 class UserConsentRoute {
   static final GoRoute userConsentScreen = GoRoute(
-    path: '/userconsent',
+    path: '/user-consents',
     builder: (context, state) => const UserConsentScreen(),
   );
 
   static final GoRoute userConsentDetail = GoRoute(
-    path: '/userconsent/:id/detail',
-    builder: (context, state) => DetailUserConsentScreen(
+    path: '/user-consents/:id/detail',
+    builder: (context, state) => UserConsentDetailScreen(
       userConsentId: state.pathParameters['id'] ?? '',
     ),
   );
+
   static final List<GoRoute> routes = <GoRoute>[
     userConsentScreen,
     userConsentDetail

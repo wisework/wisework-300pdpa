@@ -19,7 +19,7 @@ class CurrentUserConsentFormCubit extends Cubit<CurrentUserConsentFormState> {
     ConsentFormModel consentForm,
     List<PurposeCategoryModel> purposeCategories,
   ) async {
-    final customFieldValues = consentForm.customFields
+    final mandatoryFieldValues = consentForm.mandatoryFields
         .map((id) => UserInputText(id: id, text: ''))
         .toList();
 
@@ -37,10 +37,15 @@ class CurrentUserConsentFormCubit extends Cubit<CurrentUserConsentFormState> {
       purposeValues.addAll(values);
     }
 
+    final customFieldValues = consentForm.customFields
+        .map((id) => UserInputText(id: id, text: ''))
+        .toList();
+
     final updated = state.userConsent.copyWith(
       consentFormId: consentForm.id,
-      customFields: customFieldValues,
+      mandatoryFields: mandatoryFieldValues,
       purposes: purposeValues,
+      customFields: customFieldValues,
     );
 
     emit(state.copyWith(userConsent: updated));

@@ -517,6 +517,27 @@ class _EditConsentThemeViewState extends State<EditConsentThemeView> {
             children: <Widget>[
               Expanded(
                 child: Text(
+                  'Category content background color',
+                  style: Theme.of(context).textTheme.bodyMedium,
+                ),
+              ),
+              ColorPickerButton(
+                initialColor: consentTheme.categoryContentBackgroundColor,
+                onColorChanged: (color) {
+                  setState(() {
+                    consentTheme = consentTheme.copyWith(
+                      categoryContentBackgroundColor: color,
+                    );
+                  });
+                },
+              ),
+            ],
+          ),
+          const SizedBox(height: UiConfig.lineSpacing),
+          Row(
+            children: <Widget>[
+              Expanded(
+                child: Text(
                   'Body background color',
                   style: Theme.of(context).textTheme.bodyMedium,
                 ),

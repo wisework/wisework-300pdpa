@@ -14,9 +14,9 @@ class AuthenticationRepository {
   //? Authentication
   ResultFuture<UserModel> signInWithGoogle() async {
     try {
-      final user = await _api.signInWithGoogle();
+      final result = await _api.signInWithGoogle();
 
-      return Right(user);
+      return Right(result);
     } on ApiException catch (error) {
       return Left(ApiFailure.fromException(error));
     } catch (error) {
@@ -44,9 +44,9 @@ class AuthenticationRepository {
   //? User
   ResultFuture<UserModel> getCurrentUser() async {
     try {
-      final user = await _api.getCurrentUser();
+      final result = await _api.getCurrentUser();
 
-      return Right(user);
+      return Right(result);
     } on ApiException catch (error) {
       return Left(ApiFailure.fromException(error));
     }
@@ -54,9 +54,9 @@ class AuthenticationRepository {
 
   ResultFuture<UserModel> updateCurrentUser(UserModel user) async {
     try {
-      final userUpdated = await _api.updateCurrentUser(user);
+      final result = await _api.updateCurrentUser(user);
 
-      return Right(userUpdated);
+      return Right(result);
     } on ApiException catch (error) {
       return Left(ApiFailure.fromException(error));
     }
@@ -67,9 +67,9 @@ class AuthenticationRepository {
     List<String> companyIds,
   ) async {
     try {
-      final companies = await _api.getUserCompanies(companyIds);
+      final result = await _api.getUserCompanies(companyIds);
 
-      return Right(companies);
+      return Right(result);
     } on ApiException catch (error) {
       return Left(ApiFailure.fromException(error));
     }
@@ -77,9 +77,19 @@ class AuthenticationRepository {
 
   ResultFuture<CompanyModel> getCompanyById(String companyId) async {
     try {
-      final company = await _api.getCompanyById(companyId);
+      final result = await _api.getCompanyById(companyId);
 
-      return Right(company);
+      return Right(result);
+    } on ApiException catch (error) {
+      return Left(ApiFailure.fromException(error));
+    }
+  }
+
+  ResultFuture<CompanyModel> createCompany(CompanyModel company) async {
+    try {
+      final result = await _api.createCompany(company);
+
+      return Right(result);
     } on ApiException catch (error) {
       return Left(ApiFailure.fromException(error));
     }

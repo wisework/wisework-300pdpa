@@ -14,6 +14,7 @@ class ConsentThemeModel extends Equatable {
     required this.formTextColor,
     required this.categoryIconColor,
     required this.categoryTitleTextColor,
+    required this.categoryContentBackgroundColor,
     required this.actionButtonColor,
     required this.linkToPolicyTextColor,
     required this.submitButtonColor,
@@ -35,6 +36,7 @@ class ConsentThemeModel extends Equatable {
   final Color formTextColor;
   final Color categoryIconColor;
   final Color categoryTitleTextColor;
+  final Color categoryContentBackgroundColor;
   final Color actionButtonColor;
   final Color linkToPolicyTextColor;
   final Color submitButtonColor;
@@ -57,6 +59,7 @@ class ConsentThemeModel extends Equatable {
           formTextColor: Colors.transparent,
           categoryIconColor: Colors.transparent,
           categoryTitleTextColor: Colors.transparent,
+          categoryContentBackgroundColor: Colors.transparent,
           actionButtonColor: Colors.transparent,
           linkToPolicyTextColor: Colors.transparent,
           submitButtonColor: Colors.transparent,
@@ -80,6 +83,7 @@ class ConsentThemeModel extends Equatable {
           formTextColor: const Color(0xFF000000),
           categoryIconColor: const Color(0xFF0172E6),
           categoryTitleTextColor: const Color(0xFF3A9FFD),
+          categoryContentBackgroundColor: const Color(0xFFF2F9FF),
           actionButtonColor: const Color(0xFF0172E6),
           linkToPolicyTextColor: const Color(0xFF3A9FFD),
           submitButtonColor: const Color(0xFF0172E6),
@@ -116,6 +120,9 @@ class ConsentThemeModel extends Equatable {
           ),
           categoryTitleTextColor: Color(
             int.parse('0x${map['categoryTitleTextColor'] as String}'),
+          ),
+          categoryContentBackgroundColor: Color(
+            int.parse('0x${map['categoryContentBackgroundColor'] as String}'),
           ),
           actionButtonColor: Color(
             int.parse('0x${map['actionButtonColor'] as String}'),
@@ -176,6 +183,10 @@ class ConsentThemeModel extends Equatable {
             .toRadixString(16)
             .toUpperCase()
             .padLeft(8, '0'),
+        'categoryContentBackgroundColor': categoryContentBackgroundColor.value
+            .toRadixString(16)
+            .toUpperCase()
+            .padLeft(8, '0'),
         'actionButtonColor': actionButtonColor.value
             .toRadixString(16)
             .toUpperCase()
@@ -216,6 +227,7 @@ class ConsentThemeModel extends Equatable {
     Color? formTextColor,
     Color? categoryIconColor,
     Color? categoryTitleTextColor,
+    Color? categoryContentBackgroundColor,
     Color? actionButtonColor,
     Color? linkToPolicyTextColor,
     Color? submitButtonColor,
@@ -239,6 +251,8 @@ class ConsentThemeModel extends Equatable {
       categoryIconColor: categoryIconColor ?? this.categoryIconColor,
       categoryTitleTextColor:
           categoryTitleTextColor ?? this.categoryTitleTextColor,
+      categoryContentBackgroundColor:
+          categoryContentBackgroundColor ?? this.categoryContentBackgroundColor,
       actionButtonColor: actionButtonColor ?? this.actionButtonColor,
       linkToPolicyTextColor:
           linkToPolicyTextColor ?? this.linkToPolicyTextColor,
@@ -277,6 +291,7 @@ class ConsentThemeModel extends Equatable {
       formTextColor,
       categoryIconColor,
       categoryTitleTextColor,
+      categoryContentBackgroundColor,
       actionButtonColor,
       linkToPolicyTextColor,
       submitButtonColor,

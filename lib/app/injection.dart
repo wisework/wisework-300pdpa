@@ -4,6 +4,7 @@ import 'package:firebase_storage/firebase_storage.dart';
 import 'package:get_it/get_it.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 import 'package:pdpa/app/data/repositories/data_subject_right_repository.dart';
+import 'package:pdpa/app/features/authentication/bloc/sign_up_company/sign_up_company_bloc.dart';
 import 'package:pdpa/app/features/consent_management/consent_form/bloc/choose_purpose_category/choose_purpose_category_bloc.dart';
 import 'package:pdpa/app/features/consent_management/consent_form/bloc/consent_form/consent_form_bloc.dart';
 import 'package:pdpa/app/features/consent_management/consent_form/bloc/consent_form_detail/consent_form_detail_bloc.dart';
@@ -14,6 +15,8 @@ import 'package:pdpa/app/features/consent_management/consent_form/bloc/user_cons
 import 'package:pdpa/app/features/consent_management/user_consent/bloc/user_consent/user_consent_bloc.dart';
 import 'package:pdpa/app/features/consent_management/user_consent/bloc/user_consent_detail/user_consent_detail_bloc.dart';
 import 'package:pdpa/app/features/data_subject_right/bloc/data_subject_right/data_subject_right_bloc.dart';
+import 'package:pdpa/app/features/data_subject_right/bloc/user_data_subject_right_form/user_data_subject_right_form_bloc.dart';
+import 'package:pdpa/app/features/general/cubit/setting_cubit.dart';
 import 'package:pdpa/app/features/master_data/bloc/data_subject_right/edit_request_reason_tp/edit_request_reason_tp_bloc.dart';
 import 'package:pdpa/app/features/master_data/bloc/data_subject_right/edit_request_reject_tp/edit_request_reject_tp_bloc.dart';
 import 'package:pdpa/app/features/master_data/bloc/data_subject_right/request_reason_tp/request_reason_tp_bloc.dart';
@@ -30,6 +33,7 @@ import 'features/authentication/bloc/sign_in/sign_in_bloc.dart';
 import 'features/consent_management/consent_form/bloc/consent_form_settings/consent_form_settings_bloc.dart';
 import 'features/consent_management/consent_form/bloc/edit_consent_theme/edit_consent_theme_bloc.dart';
 import 'features/consent_management/consent_form/cubit/current_consent_form_settings/current_consent_form_settings_cubit.dart';
+import 'features/data_subject_right/bloc/edit_data_subject_right/edit_data_subject_right_bloc.dart';
 import 'features/master_data/bloc/consent/custom_field/custom_field_bloc.dart';
 import 'features/master_data/bloc/consent/edit_custom_field/bloc/edit_custom_field_bloc.dart';
 import 'features/master_data/bloc/consent/edit_purpose/edit_purpose_bloc.dart';
@@ -81,6 +85,12 @@ Future<void> _authentication() async {
     ..registerFactory(
       () => InvitationBloc(
         authenticationRepository: serviceLocator(),
+      ),
+    )
+    ..registerFactory(
+      () => SignUpCompanyBloc(
+        authenticationRepository: serviceLocator(),
+        masterDataRepository: serviceLocator(),
       ),
     )
     //? Repositories
@@ -186,6 +196,18 @@ Future<void> _dataSubjectRight() async {
     ..registerFactory(
       () => DataSubjectRightBloc(
         dataSubjectRightRepository: serviceLocator(),
+      ),
+    )
+    ..registerFactory(
+      () => EditDataSubjectRightBloc(
+        dataSubjectRightRepository: serviceLocator(),
+        masterDataRepository: serviceLocator(),
+      ),
+    )
+    ..registerFactory(
+      () => UserDataSubjectRightFormBloc(
+        dataSubjectRightRepository: serviceLocator(),
+        masterDataRepository: serviceLocator(),
       ),
     )
     //? Repositories
@@ -325,6 +347,12 @@ Future<void> _other() async {
     ..registerLazySingleton(
       () => GeneralApi(
         serviceLocator(),
+      ),
+    )
+    //? APIs
+    ..registerLazySingleton(
+      () => SettingCubit(
+        authenticationRepository: serviceLocator(),
       ),
     );
 }

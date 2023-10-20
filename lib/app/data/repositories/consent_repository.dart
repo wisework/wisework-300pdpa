@@ -33,7 +33,7 @@ class ConsentRepository {
       if (result != null) return Right(result);
 
       return const Left(
-        ApiFailure(message: 'Consent Form not found', statusCode: 404),
+        ApiFailure(message: 'Consent form not found', statusCode: 404),
       );
     } on ApiException catch (error) {
       return Left(ApiFailure.fromException(error));
@@ -155,7 +155,7 @@ class ConsentRepository {
       if (result != null) return Right(result);
 
       return const Left(
-        ApiFailure(message: 'Consent Form not found', statusCode: 404),
+        ApiFailure(message: 'User consent not found', statusCode: 404),
       );
     } on ApiException catch (error) {
       return Left(ApiFailure.fromException(error));

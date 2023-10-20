@@ -12,12 +12,16 @@ class PurposeRadioOption extends StatefulWidget {
     super.key,
     required this.purpose,
     required this.consentTheme,
+    this.initialValue,
     this.onChanged,
+    this.isReadOnly = false,
   });
 
   final PurposeModel purpose;
   final ConsentThemeModel consentTheme;
+  final bool? initialValue;
   final Function(bool value)? onChanged;
+  final bool isReadOnly;
 
   @override
   State<PurposeRadioOption> createState() => _PurposeRadioOptionState();
@@ -27,10 +31,19 @@ class _PurposeRadioOptionState extends State<PurposeRadioOption> {
   bool isAgree = true;
 
   @override
+  void initState() {
+    super.initState();
+
+    if (widget.initialValue != null) {
+      isAgree = widget.initialValue!;
+    }
+  }
+
+  @override
   Widget build(BuildContext context) {
     return CustomContainer(
       margin: EdgeInsets.zero,
-      color: Theme.of(context).colorScheme.onBackground,
+      color: widget.consentTheme.categoryContentBackgroundColor,
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: <Widget>[
@@ -48,7 +61,7 @@ class _PurposeRadioOptionState extends State<PurposeRadioOption> {
                     value: true,
                     selected: isAgree,
                     onChanged: (value) {
-                      if (value != null) {
+                      if (value != null && !widget.isReadOnly) {
                         setState(() {
                           isAgree = value;
                         });
@@ -75,7 +88,7 @@ class _PurposeRadioOptionState extends State<PurposeRadioOption> {
                     value: false,
                     selected: isAgree,
                     onChanged: (value) {
-                      if (value != null) {
+                      if (value != null && !widget.isReadOnly) {
                         setState(() {
                           isAgree = value;
                         });

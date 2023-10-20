@@ -24,6 +24,14 @@
             "tagline2": "We're thrilled to have you on board.",
             "enterCode": "Enter invite code",
             "continueButton": "Continue"
+        },
+        "signUpCompany": {
+            "title": "Sign up your company",
+            "hello": "Hello",
+            "tagline1": "Thank you for choosing our app!",
+            "tagline2": "We're thrilled to have you on board.",
+            "enterCompanyName": "Enter your company name",
+            "signUpButton": "Sign Up"
         }
     },
     "general": {

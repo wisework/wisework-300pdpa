@@ -11,6 +11,8 @@ import 'package:pdpa/app/features/consent_management/consent_form/bloc/user_cons
 import 'package:pdpa/app/features/consent_management/consent_form/cubit/current_consent_form_settings/current_consent_form_settings_cubit.dart';
 import 'package:pdpa/app/features/consent_management/user_consent/bloc/user_consent/user_consent_bloc.dart';
 import 'package:pdpa/app/features/data_subject_right/bloc/data_subject_right/data_subject_right_bloc.dart';
+import 'package:pdpa/app/features/data_subject_right/bloc/user_data_subject_right_form/user_data_subject_right_form_bloc.dart';
+import 'package:pdpa/app/features/general/cubit/setting_cubit.dart';
 import 'package:pdpa/app/features/master_data/bloc/consent/custom_field/custom_field_bloc.dart';
 import 'package:pdpa/app/features/master_data/bloc/consent/purpose/purpose_bloc.dart';
 import 'package:pdpa/app/features/master_data/bloc/consent/purpose_category/purpose_category_bloc.dart';
@@ -21,7 +23,7 @@ import 'package:pdpa/app/features/master_data/bloc/data_subject_right/request_re
 import 'package:pdpa/app/features/master_data/bloc/data_subject_right/request_type/request_type_bloc.dart';
 import 'package:pdpa/app/injection.dart';
 import 'package:pdpa/app/shared/drawers/bloc/drawer_bloc.dart';
-import 'package:pdpa/app/shared/drawers/drawer_menu.dart';
+import 'package:pdpa/app/data/presets/drawer_menu_preset.dart';
 
 class GlobalBlocProvider {
   static List<BlocProvider> get providers {
@@ -31,7 +33,7 @@ class GlobalBlocProvider {
       ),
       BlocProvider<DrawerBloc>(
         create: (context) => serviceLocator<DrawerBloc>()
-          ..add(SelectMenuDrawerEvent(menu: drawerMenu.first)),
+          ..add(SelectMenuDrawerEvent(menu: drawerMenuPreset.first)),
       ),
       BlocProvider<ConsentFormBloc>(
         create: (context) => serviceLocator<ConsentFormBloc>(),
@@ -80,6 +82,12 @@ class GlobalBlocProvider {
       ),
       BlocProvider<DataSubjectRightBloc>(
         create: (context) => serviceLocator<DataSubjectRightBloc>(),
+      ),
+      BlocProvider<UserDataSubjectRightFormBloc>(
+        create: (context) => serviceLocator<UserDataSubjectRightFormBloc>(),
+      ),
+      BlocProvider<SettingCubit>(
+        create: (context) => serviceLocator<SettingCubit>(),
       ),
     ];
   }

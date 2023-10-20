@@ -2,23 +2,25 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
 import 'package:ionicons/ionicons.dart';
-import 'package:pdpa/app/config/config.dart';
 import 'package:pdpa/app/data/models/authentication/user_model.dart';
+import 'package:pdpa/app/data/models/consent_management/consent_form_model.dart';
+import 'package:pdpa/app/data/models/consent_management/consent_theme_model.dart';
 import 'package:pdpa/app/data/models/consent_management/user_consent_model.dart';
 import 'package:pdpa/app/data/models/master_data/custom_field_model.dart';
+import 'package:pdpa/app/data/models/master_data/mandatory_field_model.dart';
 import 'package:pdpa/app/data/models/master_data/purpose_category_model.dart';
 import 'package:pdpa/app/data/models/master_data/purpose_model.dart';
 import 'package:pdpa/app/features/authentication/bloc/sign_in/sign_in_bloc.dart';
+import 'package:pdpa/app/features/consent_management/consent_form/widgets/consent_form_preview.dart';
 import 'package:pdpa/app/features/consent_management/user_consent/bloc/user_consent_detail/user_consent_detail_bloc.dart';
 import 'package:pdpa/app/injection.dart';
-import 'package:pdpa/app/shared/widgets/customs/custom_container.dart';
 import 'package:pdpa/app/shared/widgets/customs/custom_icon_button.dart';
 import 'package:pdpa/app/shared/widgets/screens/error_message_screen.dart';
 import 'package:pdpa/app/shared/widgets/screens/loading_screen.dart';
 import 'package:pdpa/app/shared/widgets/templates/pdpa_app_bar.dart';
 
-class DetailUserConsentScreen extends StatefulWidget {
-  const DetailUserConsentScreen({
+class UserConsentDetailScreen extends StatefulWidget {
+  const UserConsentDetailScreen({
     super.key,
     required this.userConsentId,
   });
@@ -26,11 +28,11 @@ class DetailUserConsentScreen extends StatefulWidget {
   final String userConsentId;
 
   @override
-  State<DetailUserConsentScreen> createState() =>
-      _DetailUserConsentScreenState();
+  State<UserConsentDetailScreen> createState() =>
+      _UserConsentDetailScreenState();
 }
 
-class _DetailUserConsentScreenState extends State<DetailUserConsentScreen> {
+class _UserConsentDetailScreenState extends State<UserConsentDetailScreen> {
   late UserModel currentUser;
 
   @override
@@ -54,19 +56,22 @@ class _DetailUserConsentScreenState extends State<DetailUserConsentScreen> {
     return BlocProvider<UserConsentDetailBloc>(
       create: (context) => serviceLocator<UserConsentDetailBloc>()
         ..add(
-          GetUserConsentFormEvent(
-            consentFormId: widget.userConsentId,
+          GetUserConsentFormDetailEvent(
+            userConsentId: widget.userConsentId,
             companyId: currentUser.currentCompany,
           ),
         ),
       child: BlocBuilder<UserConsentDetailBloc, UserConsentDetailState>(
         builder: (context, state) {
           if (state is GotUserConsentDetail) {
-            return DetailUserConsentView(
-              userConsent: state.userConsent,
-              customFields: state.customFields,
+            return UserConsentDetailView(
+              consentForm: state.consentForm,
+              mandatoryFields: state.mandatoryFields,
               purposeCategories: state.purposeCategories,
               purposes: state.purposes,
+              customFields: state.customFields,
+              consentTheme: state.consentTheme,
+              userConsent: state.userConsent,
             );
           }
           if (state is UserConsentDetailError) {
@@ -80,25 +85,31 @@ class _DetailUserConsentScreenState extends State<DetailUserConsentScreen> {
   }
 }
 
-class DetailUserConsentView extends StatefulWidget {
-  const DetailUserConsentView({
+class UserConsentDetailView extends StatefulWidget {
+  const UserConsentDetailView({
     super.key,
-    required this.userConsent,
-    required this.customFields,
+    required this.consentForm,
+    required this.mandatoryFields,
     required this.purposeCategories,
     required this.purposes,
+    required this.customFields,
+    required this.consentTheme,
+    required this.userConsent,
   });
 
-  final UserConsentModel userConsent;
-  final List<CustomFieldModel> customFields;
+  final ConsentFormModel consentForm;
+  final List<MandatoryFieldModel> mandatoryFields;
   final List<PurposeCategoryModel> purposeCategories;
   final List<PurposeModel> purposes;
+  final List<CustomFieldModel> customFields;
+  final ConsentThemeModel consentTheme;
+  final UserConsentModel userConsent;
 
   @override
-  State<DetailUserConsentView> createState() => _DetailUserConsentViewState();
+  State<UserConsentDetailView> createState() => _UserConsentDetailViewState();
 }
 
-class _DetailUserConsentViewState extends State<DetailUserConsentView> {
+class _UserConsentDetailViewState extends State<UserConsentDetailView> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -117,35 +128,15 @@ class _DetailUserConsentViewState extends State<DetailUserConsentView> {
         ),
       ),
       body: SingleChildScrollView(
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: <Widget>[
-            const SizedBox(height: UiConfig.lineSpacing),
-            CustomContainer(
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: <Widget>[
-                  Row(
-                    children: <Widget>[
-                      Text(
-                        widget.userConsent.consentFormId,
-                        style: Theme.of(context).textTheme.titleLarge,
-                      ),
-                    ],
-                  ),
-                  const SizedBox(height: UiConfig.lineSpacing),
-                  Divider(
-                    color: Theme.of(context)
-                        .colorScheme
-                        .outlineVariant
-                        .withOpacity(0.5),
-                  ),
-                  const SizedBox(height: UiConfig.lineSpacing),
-                ],
-              ),
-            ),
-            const SizedBox(height: UiConfig.lineSpacing),
-          ],
+        child: ConsentFormPreview(
+          consentForm: widget.consentForm,
+          mandatoryFields: widget.mandatoryFields,
+          purposeCategories: widget.purposeCategories,
+          purposes: widget.purposes,
+          customFields: widget.customFields,
+          consentTheme: widget.consentTheme,
+          userConsent: widget.userConsent,
+          isReadOnly: true,
         ),
       ),
     );

@@ -4,7 +4,6 @@ import 'package:google_sign_in/google_sign_in.dart';
 import 'package:pdpa/app/data/models/authentication/company_model.dart';
 import 'package:pdpa/app/data/models/authentication/user_model.dart';
 import 'package:pdpa/app/shared/errors/exceptions.dart';
-import 'package:pdpa/app/shared/utils/constants.dart';
 
 class AuthenticationApi {
   const AuthenticationApi(
@@ -56,12 +55,12 @@ class AuthenticationApi {
             firstName: firstName,
             lastName: lastName,
             email: userCredential.user!.email,
-            role: UserRoles.viewer,
+            roles: [],
             defaultLanguage: 'en-US',
             isEmailVerified: userCredential.user!.emailVerified,
-            createdBy: 'Google Sign In',
+            createdBy: '',
             createdDate: DateTime.now(),
-            updatedBy: 'Google Sign In',
+            updatedBy: '',
             updatedDate: DateTime.now(),
           );
 
@@ -136,5 +135,16 @@ class AuthenticationApi {
     }
 
     throw const ApiException(message: 'Companies not found', statusCode: 404);
+  }
+
+  Future<CompanyModel> createCompany(
+    CompanyModel company,
+  ) async {
+    final ref = _firestore.collection('Companies').doc();
+    final created = company.copyWith(id: ref.id);
+
+    await ref.set(created.toMap());
+
+    return created;
   }
 }

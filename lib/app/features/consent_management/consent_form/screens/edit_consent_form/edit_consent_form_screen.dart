@@ -14,7 +14,6 @@ import 'package:pdpa/app/data/models/master_data/purpose_model.dart';
 import 'package:pdpa/app/features/authentication/bloc/sign_in/sign_in_bloc.dart';
 import 'package:pdpa/app/features/consent_management/consent_form/bloc/consent_form/consent_form_bloc.dart';
 import 'package:pdpa/app/features/consent_management/consent_form/bloc/edit_consent_form/edit_consent_form_bloc.dart';
-import 'package:pdpa/app/features/consent_management/consent_form/cubit/choose_purpose_category/choose_purpose_category_cubit.dart';
 import 'package:pdpa/app/features/consent_management/consent_form/routes/consent_form_route.dart';
 import 'package:pdpa/app/features/consent_management/consent_form/screens/edit_consent_form/widgets/ReorderPurposeCategory.dart';
 
@@ -356,7 +355,7 @@ class _EditConsentFormViewState extends State<EditConsentFormView> {
                               final title =
                                   widget.customfields[index].title.firstWhere(
                                 (item) => item.language == language,
-                                orElse: LocalizedModel.empty,
+                                orElse: () => const LocalizedModel.empty(),
                               );
                               return Row(
                                 mainAxisAlignment:

@@ -2,6 +2,7 @@
 import 'package:bloc/bloc.dart';
 import 'package:equatable/equatable.dart';
 import 'package:pdpa/app/data/models/consent_management/user_consent_model.dart';
+import 'package:pdpa/app/data/models/master_data/mandatory_field_model.dart';
 import 'package:pdpa/app/data/repositories/consent_repository.dart';
 import 'package:pdpa/app/data/repositories/master_data_repository.dart';
 import 'package:pdpa/app/shared/utils/constants.dart';
@@ -34,11 +35,27 @@ class UserConsentBloc extends Bloc<UserConsentEvent, UserConsentState> {
 
     final result = await _consentRepository.getUserConsents(event.companyId);
 
-    result.fold(
-      (failure) => emit(UserConsentError(failure.errorMessage)),
-      (customfields) => emit(GotUserConsents(
-        customfields..sort((a, b) => b.updatedDate.compareTo(a.updatedDate)),
-      )),
+    await result.fold(
+      (failure) {
+        emit(UserConsentError(failure.errorMessage));
+        return;
+      },
+      (userConsent) async {
+        final result = await _masterDataRepository.getMandatoryFields(
+          event.companyId,
+        );
+
+        result.fold(
+          (failure) => emit(UserConsentError(failure.errorMessage)),
+          (mandatoryFields) => emit(
+            GotUserConsents(
+              userConsent
+                ..sort((a, b) => b.updatedDate.compareTo(a.updatedDate)),
+              mandatoryFields..sort((a, b) => a.priority.compareTo(b.priority)),
+            ),
+          ),
+        );
+      },
     );
   }
 }

@@ -12,12 +12,16 @@ class AcceptConsentCheckbox extends StatefulWidget {
     super.key,
     required this.consentForm,
     required this.consentTheme,
+    this.initialValue,
     this.onChanged,
+    this.isReadOnly = false,
   });
 
   final ConsentFormModel consentForm;
   final ConsentThemeModel consentTheme;
+  final bool? initialValue;
   final Function(bool value)? onChanged;
+  final bool isReadOnly;
 
   @override
   State<AcceptConsentCheckbox> createState() => _AcceptConsentCheckboxState();
@@ -26,7 +30,18 @@ class AcceptConsentCheckbox extends StatefulWidget {
 class _AcceptConsentCheckboxState extends State<AcceptConsentCheckbox> {
   bool isChecked = false;
 
+  @override
+  void initState() {
+    super.initState();
+
+    if (widget.initialValue != null) {
+      isChecked = widget.initialValue!;
+    }
+  }
+
   void _onChanged(bool value) {
+    if (widget.isReadOnly) return;
+
     setState(() {
       isChecked = value;
     });

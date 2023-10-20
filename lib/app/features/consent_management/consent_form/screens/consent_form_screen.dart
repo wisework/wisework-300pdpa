@@ -10,7 +10,6 @@ import 'package:pdpa/app/data/models/master_data/purpose_category_model.dart';
 import 'package:pdpa/app/features/authentication/bloc/sign_in/sign_in_bloc.dart';
 import 'package:pdpa/app/features/consent_management/consent_form/bloc/consent_form/consent_form_bloc.dart';
 import 'package:pdpa/app/features/consent_management/consent_form/routes/consent_form_route.dart';
-import 'package:pdpa/app/features/master_data/bloc/consent/purpose_category/purpose_category_bloc.dart';
 import 'package:pdpa/app/shared/drawers/pdpa_drawer.dart';
 import 'package:pdpa/app/shared/utils/functions.dart';
 import 'package:pdpa/app/shared/widgets/customs/custom_icon_button.dart';
@@ -256,7 +255,7 @@ class _ConsentFormViewState extends State<ConsentFormView> {
     final title = consentForm.title
         .firstWhere(
           (item) => item.language == language,
-          orElse: LocalizedModel.empty,
+          orElse: () => const LocalizedModel.empty(),
         )
         .text;
 
@@ -309,7 +308,7 @@ class _ConsentFormViewState extends State<ConsentFormView> {
                         .title
                         .firstWhere(
                           (item) => item.language == language,
-                          orElse: LocalizedModel.empty,
+                          orElse: () => const LocalizedModel.empty(),
                         )
                         .text;
                     return Padding(
