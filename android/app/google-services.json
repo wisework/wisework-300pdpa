@@ -7,14 +7,54 @@
   "client": [
     {
       "client_info": {
-        "mobilesdk_app_id": "1:336013362570:android:9eead6d2e6f9b32d2ff473",
+        "mobilesdk_app_id": "1:336013362570:android:24f97568997e24352ff473",
         "android_client_info": {
-          "package_name": "com.example.pdpa"
+          "package_name": "com.wisework.pdpa"
         }
       },
       "oauth_client": [
         {
-          "client_id": "336013362570-htrjhkj42837oct4nkp8sqlla5ckifds.apps.googleusercontent.com",
+          "client_id": "336013362570-6qolleeoightummmtje585cilvbmo6bl.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.wisework.pdpa",
+            "certificate_hash": "e544452e21838ca230769c6d05a69d6b36737f08"
+          }
+        },
+        {
+          "client_id": "336013362570-ihl32tqslu814ttn4n6i5t66eq30q72t.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.wisework.pdpa",
+            "certificate_hash": "53d76600bfd284ff7512d5974bb2d83d66c7e944"
+          }
+        },
+        {
+          "client_id": "336013362570-jtvchvp6su1t2sq2vu9kk4qkuge5m27s.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.wisework.pdpa",
+            "certificate_hash": "4e6f6cb21aa0c0cd99dae1a79e6cebb5ee143484"
+          }
+        },
+        {
+          "client_id": "336013362570-r8cub0ht4khn98mqvbd0dqv72cuq592j.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.wisework.pdpa",
+            "certificate_hash": "1f8a4b3e18630d686934023e98741ad74f251ded"
+          }
+        },
+        {
+          "client_id": "336013362570-sgu33jph6e6sqn0cfcf9gootvvf1lebh.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.wisework.pdpa",
+            "certificate_hash": "8e8ad9b4854340459e557cd21d7553847dc1616c"
+          }
+        },
+        {
+          "client_id": "336013362570-eno456l69gfsf0ulk6porsffvrg8hhhu.apps.googleusercontent.com",
           "client_type": 3
         }
       ],
@@ -27,8 +67,15 @@
         "appinvite_service": {
           "other_platform_oauth_client": [
             {
-              "client_id": "336013362570-htrjhkj42837oct4nkp8sqlla5ckifds.apps.googleusercontent.com",
+              "client_id": "336013362570-eno456l69gfsf0ulk6porsffvrg8hhhu.apps.googleusercontent.com",
               "client_type": 3
+            },
+            {
+              "client_id": "336013362570-69f5kgj7lt21kpue9reb6ri9cfdjs5h6.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.example.pdpa.RunnerTests"
+              }
             }
           ]
         }

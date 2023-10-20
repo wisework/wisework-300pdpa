@@ -13,7 +13,7 @@
 	<key>PLIST_VERSION</key>
 	<string>1</string>
 	<key>BUNDLE_ID</key>
-	<string>com.example.pdpa.RunnerTests</string>
+	<string>com.wisework.pdpa</string>
 	<key>PROJECT_ID</key>
 	<string>pdpa-300</string>
 	<key>STORAGE_BUCKET</key>
