@@ -304,6 +304,8 @@ class _ChoosePurposeCategoryViewState extends State<ChoosePurposeCategoryView> {
                                                   ],
                                                 ),
                                                 ExpandedContainer(
+                                                  duration: const Duration(
+                                                      milliseconds: 400),
                                                   expand: state.expandId ==
                                                       purposeCategory[index].id,
                                                   child: Padding(
