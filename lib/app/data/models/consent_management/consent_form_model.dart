@@ -9,6 +9,7 @@ class ConsentFormModel extends Equatable {
     required this.id,
     required this.title,
     required this.description,
+    required this.mandatoryFields,
     required this.purposeCategories,
     required this.customFields,
     required this.headerText,
@@ -34,6 +35,7 @@ class ConsentFormModel extends Equatable {
   final String id;
   final List<LocalizedModel> title;
   final List<LocalizedModel> description;
+  final List<String> mandatoryFields;
   final List<String> purposeCategories;
   final List<String> customFields;
   final List<LocalizedModel> headerText;
@@ -60,6 +62,7 @@ class ConsentFormModel extends Equatable {
           id: '',
           title: [],
           description: [],
+          mandatoryFields: [],
           purposeCategories: [],
           customFields: [],
           headerText: [],
@@ -95,6 +98,8 @@ class ConsentFormModel extends Equatable {
               (item) => LocalizedModel.fromMap(item as DataMap),
             ),
           ),
+          mandatoryFields:
+              List<String>.from(map['mandatoryFields'] as List<dynamic>),
           purposeCategories:
               List<String>.from(map['purposeCategories'] as List<dynamic>),
           customFields: List<String>.from(map['customFields'] as List<dynamic>),
@@ -155,6 +160,7 @@ class ConsentFormModel extends Equatable {
   DataMap toMap() => {
         'title': title.map((item) => item.toMap()).toList(),
         'description': description.map((item) => item.toMap()).toList(),
+        'mandatoryFields': mandatoryFields,
         'purposeCategories': purposeCategories,
         'customFields': customFields,
         'headerText': headerText.map((item) => item.toMap()).toList(),
@@ -185,6 +191,7 @@ class ConsentFormModel extends Equatable {
     String? id,
     List<LocalizedModel>? title,
     List<LocalizedModel>? description,
+    List<String>? mandatoryFields,
     List<String>? purposeCategories,
     List<String>? customFields,
     List<LocalizedModel>? headerText,
@@ -210,6 +217,7 @@ class ConsentFormModel extends Equatable {
       id: id ?? this.id,
       title: title ?? this.title,
       description: description ?? this.description,
+      mandatoryFields: mandatoryFields ?? this.mandatoryFields,
       purposeCategories: purposeCategories ?? this.purposeCategories,
       customFields: customFields ?? this.customFields,
       headerText: headerText ?? this.headerText,
@@ -254,6 +262,7 @@ class ConsentFormModel extends Equatable {
     return [
       title,
       description,
+      mandatoryFields,
       purposeCategories,
       customFields,
       headerText,

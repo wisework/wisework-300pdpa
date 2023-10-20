@@ -10,6 +10,12 @@ class UserInputText extends Equatable {
   final String id;
   final String text;
 
+  const UserInputText.empty()
+      : this(
+          id: '',
+          text: '',
+        );
+
   UserInputText.fromMap(DataMap map)
       : this(
           id: map['id'] as String,

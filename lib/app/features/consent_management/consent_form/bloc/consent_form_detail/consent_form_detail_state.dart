@@ -33,26 +33,29 @@ class GettingConsentFormDetail extends ConsentFormDetailState {
 class GotConsentFormDetail extends ConsentFormDetailState {
   const GotConsentFormDetail(
     this.consentForm,
-    this.customFields,
+    this.mandatoryFields,
     this.purposeCategories,
     this.purposes,
+    this.customFields,
     this.consentThemes,
     this.consentTheme,
   );
 
   final ConsentFormModel consentForm;
-  final List<CustomFieldModel> customFields;
+  final List<MandatoryFieldModel> mandatoryFields;
   final List<PurposeCategoryModel> purposeCategories;
   final List<PurposeModel> purposes;
+  final List<CustomFieldModel> customFields;
   final List<ConsentThemeModel> consentThemes;
   final ConsentThemeModel consentTheme;
 
   @override
   List<Object> get props => [
         consentForm,
-        customFields,
+        mandatoryFields,
         purposeCategories,
         purposes,
+        customFields,
         consentThemes,
         consentTheme,
       ];

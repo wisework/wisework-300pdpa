@@ -7,7 +7,7 @@ import 'package:pdpa/app/data/models/authentication/company_model.dart';
 import 'package:pdpa/app/data/models/authentication/user_model.dart';
 import 'package:pdpa/app/features/authentication/bloc/sign_in/sign_in_bloc.dart';
 import 'package:pdpa/app/features/authentication/routes/authentication_route.dart';
-import 'package:pdpa/app/shared/drawers/drawer_menu.dart';
+import 'package:pdpa/app/data/presets/drawer_menu_preset.dart';
 import 'package:pdpa/app/shared/utils/functions.dart';
 import 'package:pdpa/app/shared/widgets/customs/custom_icon_button.dart';
 
@@ -59,7 +59,7 @@ class _PdpaDrawerState extends State<PdpaDrawer> {
                         vertical: UiConfig.lineGap,
                       ),
                       child: Column(
-                        children: drawerMenu
+                        children: drawerMenuPreset
                             .map((menu) => Padding(
                                   padding: const EdgeInsets.only(
                                     bottom: UiConfig.lineGap,
@@ -145,8 +145,10 @@ class _PdpaDrawerState extends State<PdpaDrawer> {
                 style: Theme.of(context).textTheme.titleMedium,
               ),
               Text(
-                '${user.role.name[0].toUpperCase()}'
-                '${user.role.name.substring(1)}',
+                UtilFunctions.getUserCompanyRole(
+                  user.roles,
+                  user.currentCompany,
+                ),
                 style: Theme.of(context).textTheme.labelMedium,
                 overflow: TextOverflow.ellipsis,
                 maxLines: 1,

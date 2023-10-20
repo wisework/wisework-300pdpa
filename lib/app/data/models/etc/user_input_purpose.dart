@@ -12,6 +12,13 @@ class UserInputPurpose extends Equatable {
   final bool value;
   final String purposeCategoryId;
 
+  const UserInputPurpose.empty()
+      : this(
+          id: '',
+          value: true,
+          purposeCategoryId: '',
+        );
+
   UserInputPurpose.fromMap(DataMap map)
       : this(
           id: map['id'] as String,

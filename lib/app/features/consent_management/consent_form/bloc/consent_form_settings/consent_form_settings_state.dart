@@ -33,17 +33,19 @@ class GettingConsentFormSettings extends ConsentFormSettingsState {
 class GotConsentFormSettings extends ConsentFormSettingsState {
   const GotConsentFormSettings(
     this.consentForm,
-    this.customFields,
+    this.mandatoryFields,
     this.purposeCategories,
     this.purposes,
+    this.customFields,
     this.consentThemes,
     this.consentTheme,
   );
 
   final ConsentFormModel consentForm;
-  final List<CustomFieldModel> customFields;
+  final List<MandatoryFieldModel> mandatoryFields;
   final List<PurposeCategoryModel> purposeCategories;
   final List<PurposeModel> purposes;
+  final List<CustomFieldModel> customFields;
   final List<ConsentThemeModel> consentThemes;
   final ConsentThemeModel consentTheme;
 
@@ -51,9 +53,10 @@ class GotConsentFormSettings extends ConsentFormSettingsState {
   List<Object> get props {
     return [
       consentForm,
-      customFields,
+      mandatoryFields,
       purposeCategories,
       purposes,
+      customFields,
       consentThemes,
       consentTheme,
     ];
@@ -70,17 +73,19 @@ class UpdatingConsentFormSettings extends ConsentFormSettingsState {
 class UpdatedConsentFormSettings extends ConsentFormSettingsState {
   const UpdatedConsentFormSettings(
     this.consentForm,
-    this.customFields,
+    this.mandatoryFields,
     this.purposeCategories,
     this.purposes,
+    this.customFields,
     this.consentThemes,
     this.consentTheme,
   );
 
   final ConsentFormModel consentForm;
-  final List<CustomFieldModel> customFields;
+  final List<MandatoryFieldModel> mandatoryFields;
   final List<PurposeCategoryModel> purposeCategories;
   final List<PurposeModel> purposes;
+  final List<CustomFieldModel> customFields;
   final List<ConsentThemeModel> consentThemes;
   final ConsentThemeModel consentTheme;
 
@@ -88,9 +93,10 @@ class UpdatedConsentFormSettings extends ConsentFormSettingsState {
   List<Object> get props {
     return [
       consentForm,
-      customFields,
+      mandatoryFields,
       purposeCategories,
       purposes,
+      customFields,
       consentThemes,
       consentTheme,
     ];

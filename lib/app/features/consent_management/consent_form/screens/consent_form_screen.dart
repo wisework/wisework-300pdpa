@@ -255,7 +255,7 @@ class _ConsentFormViewState extends State<ConsentFormView> {
     final title = consentForm.title
         .firstWhere(
           (item) => item.language == language,
-          orElse: LocalizedModel.empty,
+          orElse: () => const LocalizedModel.empty(),
         )
         .text;
 

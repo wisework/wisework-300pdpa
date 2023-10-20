@@ -370,7 +370,7 @@ class _EditConsentFormViewState extends State<EditConsentFormView> {
                               final title =
                                   widget.customfields[index].title.firstWhere(
                                 (item) => item.language == language,
-                                orElse: LocalizedModel.empty,
+                                orElse: () => const LocalizedModel.empty(),
                               );
                               return Row(
                                 mainAxisAlignment:

@@ -45,3 +45,5 @@ app.*.map.json
 
 # Ignore public folder for hosting
 public/**
+key.properties
+app/upload-keystore.jks
