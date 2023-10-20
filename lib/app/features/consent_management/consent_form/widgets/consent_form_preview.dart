@@ -31,6 +31,7 @@ class ConsentFormPreview extends StatefulWidget {
     this.onConsentAccepted,
     this.onSubmitted,
     this.isVerifyRequired = false,
+    this.isShowActionButton = true,
     this.isReadOnly = false,
   });
 
@@ -54,6 +55,7 @@ class ConsentFormPreview extends StatefulWidget {
   final Function(bool value)? onConsentAccepted;
   final VoidCallback? onSubmitted;
   final bool isVerifyRequired;
+  final bool isShowActionButton;
   final bool isReadOnly;
 
   @override
@@ -82,7 +84,13 @@ class _ConsentFormPreviewState extends State<ConsentFormPreview> {
               child: _buildHeaderImage(),
             ),
             _buildConsentForm(context),
-            _buidActionButton(context),
+            Visibility(
+              visible: widget.isShowActionButton,
+              child: Padding(
+                padding: const EdgeInsets.only(top: UiConfig.lineGap),
+                child: _buidActionButton(context),
+              ),
+            ),
           ],
         ),
       ),
@@ -167,7 +175,6 @@ class _ConsentFormPreviewState extends State<ConsentFormPreview> {
               },
               isReadOnly: widget.isReadOnly,
             ),
-            const SizedBox(height: UiConfig.lineGap),
           ],
         ),
       ),
