@@ -10,6 +10,7 @@ import 'package:pdpa/app/features/authentication/bloc/sign_in/sign_in_bloc.dart'
 import 'package:pdpa/app/features/master_data/bloc/consent/custom_field/custom_field_bloc.dart';
 import 'package:pdpa/app/features/master_data/routes/master_data_route.dart';
 import 'package:pdpa/app/features/master_data/widgets/master_data_item_card.dart';
+import 'package:pdpa/app/shared/utils/constants.dart';
 import 'package:pdpa/app/shared/widgets/customs/custom_icon_button.dart';
 import 'package:pdpa/app/shared/widgets/templates/pdpa_app_bar.dart';
 
@@ -130,14 +131,10 @@ class _CustomFieldViewState extends State<CustomFieldView> {
       (item) => item.language == language,
       orElse: () => const LocalizedModel.empty(),
     );
-    final hintText = customfield.hintText.firstWhere(
-      (item) => item.language == language,
-      orElse: () => const LocalizedModel.empty(),
-    );
 
     return MasterDataItemCard(
       title: title.text,
-      subtitle: hintText.text,
+      subtitle: customInputTypeNames[customfield.inputType].toString(),
       status: customfield.status,
       onTap: () {
         context.push(

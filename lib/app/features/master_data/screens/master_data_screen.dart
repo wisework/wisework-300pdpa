@@ -12,6 +12,7 @@ import 'package:pdpa/app/shared/widgets/templates/pdpa_app_bar.dart';
 
 class MasterDataScreen extends StatelessWidget {
   MasterDataScreen({super.key});
+
   final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
 
   @override
@@ -36,6 +37,8 @@ class MasterDataScreen extends StatelessWidget {
         child: Column(
           children: <Widget>[
             const SizedBox(height: UiConfig.lineSpacing),
+            _buildMandatorySection(context),
+            const SizedBox(height: UiConfig.lineSpacing),
             _buildConsentSection(context),
             const SizedBox(height: UiConfig.lineSpacing),
             _buildDataSubjectRightSection(context),
@@ -47,6 +50,31 @@ class MasterDataScreen extends StatelessWidget {
         onClosed: () {
           _scaffoldKey.currentState?.closeDrawer();
         },
+      ),
+    );
+  }
+
+  CustomContainer _buildMandatorySection(BuildContext context) {
+    return CustomContainer(
+      child: Column(
+        children: <Widget>[
+          Row(
+            children: <Widget>[
+              Text(
+                tr('masterData.main.mandatories'),
+                style: Theme.of(context).textTheme.titleLarge,
+              ),
+            ],
+          ),
+          const SizedBox(height: UiConfig.lineSpacing),
+          MasterDataListTile(
+            trail: true,
+            title: tr('masterData.main.mandatoryFields.list'),
+            onTap: () {
+              context.push(MasterDataRoute.mandatoryFields.path);
+            },
+          ),
+        ],
       ),
     );
   }

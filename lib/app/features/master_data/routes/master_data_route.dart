@@ -9,6 +9,7 @@ import 'package:pdpa/app/features/master_data/screens/data_subject_right/reject_
 import 'package:pdpa/app/features/master_data/screens/data_subject_right/request_reason_template/screens/edit_request_reason_template_screen.dart';
 import 'package:pdpa/app/features/master_data/screens/data_subject_right/request_reject_template/screens/edit_request_reject_template_screen.dart';
 import 'package:pdpa/app/features/master_data/screens/data_subject_right/request_type/screens/edit_request_type_screen.dart';
+import 'package:pdpa/app/features/master_data/screens/mandatory/mandatory_field_screen.dart';
 import 'package:pdpa/app/features/master_data/screens/master_data_screen.dart';
 import 'package:pdpa/app/features/master_data/screens/consent/purpose/purpose_screen.dart';
 import 'package:pdpa/app/features/master_data/screens/consent/purpose/edit_purpose_screen.dart';
@@ -19,7 +20,13 @@ class MasterDataRoute {
     builder: (context, _) => MasterDataScreen(),
   );
 
-  //? CustomField
+  //? Mandatory Field
+  static final GoRoute mandatoryFields = GoRoute(
+    path: '/master-data/mandatory-fields',
+    builder: (context, _) => const MandatoryFieldScreen(),
+  );
+
+  //? Custom Field
   static final GoRoute customFields = GoRoute(
     path: '/master-data/custom-fields',
     builder: (context, _) => const CustomFieldScreen(),
@@ -178,6 +185,8 @@ class MasterDataRoute {
 
   static final List<GoRoute> routes = <GoRoute>[
     masterData,
+    //mandatory
+    mandatoryFields,
     //consent
     customFields,
     createCustomField,
