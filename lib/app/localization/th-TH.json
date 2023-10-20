@@ -196,17 +196,17 @@
                 "storedInformation": "ข้อมูลที่จัดเก็บ",
                 "Purposes": "วัตถุประสงค์",
                 "edit": {
-                    "submitSuccess": "Submit successfully",
-                    "decription": "I have collected your consent from filling out the form",
-                    "fillOutTheFormAgain": "Fill out the form again",
-                    "pleaseAcceptConsent": "Please accept consent"
+                    "submitSuccess": "ส่งสำเร็จ",
+                    "decription": "ฉันได้รวบรวมความยินยอมของคุณจากการกรอกแบบฟอร์ม",
+                    "fillOutTheFormAgain": "กรอกแบบฟอร์มอีกครั้ง",
+                    "pleaseAcceptConsent": "กรุณายอมรับความยินยอม"
                 }
             }
         }
     },
     "masterData": {
         "cm": {
-            "consents": "Consents",
+            "consents": "ความยินยอม",
             "customfields": {
                 "title": "Custom Field",
                 "list": "Custom Fields",
@@ -226,28 +226,28 @@
                 "minlinehint": "Enter Min Line"
             },
             "purpose": {
-                "title": "Purpose",
-                "list": "Purposes",
-                "create": "Create Purpose",
-                "edit": "Edit Purpose",
-                "description": "Description",
-                "descriptionHint": "Enter description",
-                "warningDescription": "Warning Description",
-                "warningDescriptionHint": "Enter warning description",
+                "title": "วัตถุประสงค์",
+                "list": "วัตถุประสงค์",
+                "create": "สร้างวัตถุประสงค์",
+                "edit": "แก้ไขวัตถุประสงค์",
+                "description": "คำอธิบาย",
+                "descriptionHint": "ป้อนคำอธิบาย",
+                "warningDescription": "คำอธิบายคำเตือน",
+                "warningDescriptionHint": "ป้อนคำอธิบายคำเตือน",
                 "retentionPeriod": "Retention Period",
                 "retentionPeriodHint": "Enter retention period",
                 "periodUnit": "Period Unit"
             },
             "purposeCategory": {
-                "title": "Purpose Category",
-                "list": "Purpose Categories",
-                "create": "Create Purpose Category",
-                "edit": "Edit Purpose Category",
-                "titlform": "Edit Purpose Category",
-                "titleformHint": "Edit Purpose Category",
-                "description": "Edit Purpose Category",
-                "descriptionHint": "Edit Purpose Category",
-                "priority": "Edit Purpose Category",
+                "title": "หมวดหมู่วัตถุประสงค์",
+                "list": "หมวดหมู่วัตถุประสงค์",
+                "create": "สร้างหมวดหมู่วัตถุประสงค์",
+                "edit": "แก้ไขหมวดหมู่วัตถุประสงค์",
+                "titlform": "แก้ไขหมวดหมู่วัตถุประสงค์",
+                "titleformHint": "แก้ไขหมวดหมู่วัตถุประสงค์",
+                "description": "แก้ไขหมวดหมู่วัตถุประสงค์",
+                "descriptionHint": "แก้ไขหมวดหมู่วัตถุประสงค์",
+                "priority": "แก้ไขหมวดหมู่วัตถุประสงค์",
                 "priorityHint": "Edit Purpose Category",
                 "purposes": "Edit Purpose Category"
             }
@@ -255,30 +255,30 @@
         "dsr": {
             "datasubjectright": "Data Subject Right",
             "request": {
-                "title": "Request Types",
-                "list": "Requests",
-                "create": "Create Request Type",
-                "edit": "Edit Request Type",
+                "title": "ประเภทคำขอ",
+                "list": "คำขอ",
+                "create": "สร้างประเภทคำขอ",
+                "edit": "แก้ไขประเภทคำขอ",
                 "requestcode": "Request Code",
                 "requestcodeHint": "Request Code",
                 "description": "Request Description",
                 "descriptionHint": "Request Description"
             },
             "rejections": {
-                "title": "Reject Type",
-                "list": "Rejections",
-                "create": "Create Reject Type",
-                "edit": "Edit Reject Type",
+                "title": "ประเภทการปฏิเสธ",
+                "list": "การปฏิเสธ",
+                "create": "สร้างประเภทการปฏิเสธ",
+                "edit": "แก้ไขประเภทการปฏิเสธ",
                 "rejectcode": "Reject Code",
                 "rejectcodeHint": "Reject Code",
                 "description": "Reject Description",
                 "descriptionHint": "Reject Description"
             },
             "reason": {
-                "title": "Reason Type",
-                "list": "Reasons",
-                "create": "Create Reason Type",
-                "edit": "Edit Reason Type",
+                "title": "ประเภทเหตุผล",
+                "list": "เหตุผล",
+                "create": "สร้างประเภทเหตุผล",
+                "edit": "แก้ไขประเภทเหตุผล",
                 "reasoncode": "Reason Code",
                 "reasoncodeHint": "Enter Code",
                 "description": "Description",
@@ -286,9 +286,9 @@
                 "needmoreinformation": "Need more information"
             },
             "requestrejects": {
-                "title": "Request Rejects",
-                "list": "List of Request Rejects",
-                "create": "Create Request Rejects",
+                "title": "คำขอถูกปฏิเสธ",
+                "list": "รายการคำขอปฏิเสธ",
+                "create": "สร้างคำขอปฏิเสธ",
                 "edit": "Edit Request Rejects",
                 "requesttype": "Request Type",
                 "chooserequesttype": "Choose Request Type",
@@ -296,23 +296,23 @@
                 "chooserejecttype": "Choose Rejects Type"
             },
             "requestreasons": {
-                "title": "Request Reasons",
-                "list": "List of Request Reasons",
-                "create": "Create Request Reasons",
-                "edit": "Edit Request Reasons",
-                "requesttype": "Request Type",
-                "chooserequesttype": "Choose Request Type",
-                "rejecttype": "Reasons Type",
-                "chooserejecttype": "Choose Reasons Type"
+                "title": "คำขอเหตุผล",
+                "list": "รายการเหตุผลในการขอ",
+                "create": "สร้างเหตุผลของคำขอ",
+                "edit": "แก้ไขเหตุผลคำขอ",
+                "requesttype": "ประเภทคำขอ",
+                "chooserequesttype": "เลือกประเภทคำขอ",
+                "rejecttype": "ประเภทเหตุผล",
+                "chooserejecttype": "เลือกประเภทเหตุผล"
             }
         },
         "etc": {
-            "fieldCannotEmpty": "Field cannot be empty",
-            "pleaseEnterValidEmail": "Please enter a valid email address",
+            "fieldCannotEmpty": "ช่องต้องไม่เว้นว่าง",
+            "pleaseEnterValidEmail": "กรุณาใส่อีเมล์ที่ถูกต้อง",
             "active": "Active",
-            "configuration": "Configuration",
-            "updateInfo": "Update Info",
-            "delete": "Delete"
+            "configuration": "การกำหนดค่า",
+            "updateInfo": "อัพเดตข้อมูล",
+            "delete": "ลบ"
         }
     },
     "dataSubjectRight": {
