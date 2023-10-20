@@ -21,6 +21,7 @@ import 'package:pdpa/app/shared/widgets/customs/custom_container.dart';
 import 'package:pdpa/app/shared/widgets/customs/custom_icon_button.dart';
 import 'package:pdpa/app/shared/widgets/material_ink_well.dart';
 import 'package:pdpa/app/shared/widgets/templates/pdpa_app_bar.dart';
+import 'dart:math';
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});
@@ -164,7 +165,7 @@ class _HomeScreenState extends State<HomeScreen> {
             return state.consentForms.isNotEmpty
                 ? ListView.builder(
                     shrinkWrap: true,
-                    itemCount: state.consentForms.length,
+                    itemCount: min(3, state.consentForms.length),
                     itemBuilder: (context, index) {
                       return _buildItemCard(
                         context,
