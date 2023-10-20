@@ -136,6 +136,7 @@ class _UserConsentDetailViewState extends State<UserConsentDetailView> {
           customFields: widget.customFields,
           consentTheme: widget.consentTheme,
           userConsent: widget.userConsent,
+          isShowActionButton: false,
           isReadOnly: true,
         ),
       ),

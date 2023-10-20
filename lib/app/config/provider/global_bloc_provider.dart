@@ -20,6 +20,7 @@ import 'package:pdpa/app/features/master_data/bloc/data_subject_right/reject_typ
 import 'package:pdpa/app/features/master_data/bloc/data_subject_right/request_reason_tp/request_reason_tp_bloc.dart';
 import 'package:pdpa/app/features/master_data/bloc/data_subject_right/request_reject_tp/request_reject_tp_bloc.dart';
 import 'package:pdpa/app/features/master_data/bloc/data_subject_right/request_type/request_type_bloc.dart';
+import 'package:pdpa/app/features/master_data/bloc/mandatory/mandatory_field/mandatory_field_bloc.dart';
 import 'package:pdpa/app/injection.dart';
 import 'package:pdpa/app/shared/drawers/bloc/drawer_bloc.dart';
 import 'package:pdpa/app/data/presets/drawer_menu_preset.dart';
@@ -54,6 +55,9 @@ class GlobalBlocProvider {
       ),
       BlocProvider<UserConsentBloc>(
         create: (context) => serviceLocator<UserConsentBloc>(),
+      ),
+      BlocProvider<MandatoryFieldBloc>(
+        create: (context) => serviceLocator<MandatoryFieldBloc>(),
       ),
       BlocProvider<PurposeBloc>(
         create: (context) => serviceLocator<PurposeBloc>(),

@@ -20,6 +20,7 @@ import 'package:pdpa/app/features/master_data/bloc/data_subject_right/edit_reque
 import 'package:pdpa/app/features/master_data/bloc/data_subject_right/edit_request_reject_tp/edit_request_reject_tp_bloc.dart';
 import 'package:pdpa/app/features/master_data/bloc/data_subject_right/request_reason_tp/request_reason_tp_bloc.dart';
 import 'package:pdpa/app/features/master_data/bloc/data_subject_right/request_reject_tp/request_reject_tp_bloc.dart';
+import 'package:pdpa/app/features/master_data/bloc/mandatory/mandatory_field/mandatory_field_bloc.dart';
 import 'package:pdpa/app/services/apis/data_subject_right_api.dart';
 
 import 'config/config.dart';
@@ -226,6 +227,11 @@ Future<void> _dataSubjectRight() async {
 Future<void> _masterData() async {
   serviceLocator
     //? App logic
+    ..registerFactory(
+      () => MandatoryFieldBloc(
+        masterDataRepository: serviceLocator(),
+      ),
+    )
     ..registerFactory(
       () => PurposeBloc(
         masterDataRepository: serviceLocator(),
