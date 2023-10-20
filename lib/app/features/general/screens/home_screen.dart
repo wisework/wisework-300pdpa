@@ -8,12 +8,17 @@ import 'package:pdpa/app/config/config.dart';
 import 'package:pdpa/app/data/models/consent_management/user_consent_model.dart';
 import 'package:pdpa/app/data/models/etc/user_input_text.dart';
 import 'package:pdpa/app/features/authentication/bloc/sign_in/sign_in_bloc.dart';
+import 'package:pdpa/app/features/consent_management/consent_form/bloc/consent_form/consent_form_bloc.dart';
+import 'package:pdpa/app/features/consent_management/consent_form/routes/consent_form_route.dart';
 import 'package:pdpa/app/features/consent_management/user_consent/bloc/user_consent/user_consent_bloc.dart';
 import 'package:pdpa/app/features/consent_management/user_consent/routes/user_consent_route.dart';
+import 'package:pdpa/app/shared/drawers/models/drawer_menu_models.dart';
 import 'package:pdpa/app/shared/drawers/pdpa_drawer.dart';
+import 'package:pdpa/app/shared/widgets/customs/custom_button.dart';
 import 'package:pdpa/app/shared/widgets/customs/custom_icon_button.dart';
 import 'package:pdpa/app/shared/widgets/material_ink_well.dart';
 import 'package:pdpa/app/shared/widgets/templates/pdpa_app_bar.dart';
+import 'dart:math';
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});
@@ -122,6 +127,82 @@ class _HomeScreenState extends State<HomeScreen> {
       drawer: PdpaDrawer(
         onClosed: () {
           _scaffoldKey.currentState?.closeDrawer();
+        },
+      ),
+    );
+  }
+
+  Container _buildRecent(BuildContext context) {
+    return Container(
+      height: 300,
+      padding: const EdgeInsets.all(UiConfig.defaultPaddingSpacing),
+      decoration: BoxDecoration(
+        color: Theme.of(context).colorScheme.onBackground,
+      ),
+      child: BlocBuilder<ConsentFormBloc, ConsentFormState>(
+        builder: (context, state) {
+          if (state is GotConsentForms) {
+            return state.consentForms.isNotEmpty
+                ? ListView.builder(
+                    shrinkWrap: true,
+                    itemCount: min(3, state.consentForms.length),
+                    itemBuilder: (context, index) {
+                      return _buildItemCard(
+                        context,
+                        consentForm: state.consentForms[index],
+                        purposeCategory: state.purposeCategories,
+                      );
+                    },
+                  )
+                : Column(
+                    children: [
+                      Row(
+                        crossAxisAlignment: CrossAxisAlignment.center,
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          Text(tr('no data')), //!
+                        ],
+                      ),
+                      const SizedBox(
+                        height: UiConfig.defaultPaddingSpacing,
+                      ),
+                      CustomButton(
+                        height: 40.0,
+                        onPressed: () {
+                          _selectMenuDrawer(
+                            DrawerMenuModel(
+                              value: 'consent_forms',
+                              title: 'Consent Forms',
+                              icon: Ionicons.clipboard_outline,
+                              route: ConsentFormRoute.consentForm,
+                              parent: 'consent_management',
+                            ),
+                          );
+                        },
+                        child: Text(
+                          tr('create new consent form'),
+                          style: Theme.of(context)
+                              .textTheme
+                              .titleMedium
+                              ?.copyWith(
+                                  color:
+                                      Theme.of(context).colorScheme.onPrimary),
+                        ),
+                      )
+                    ],
+                  );
+          }
+          if (state is ConsentFormError) {
+            return Center(
+              child: Text(
+                state.message,
+                style: Theme.of(context).textTheme.bodyMedium,
+              ),
+            );
+          }
+          return const Center(
+            child: CircularProgressIndicator(),
+          );
         },
       ),
     );
