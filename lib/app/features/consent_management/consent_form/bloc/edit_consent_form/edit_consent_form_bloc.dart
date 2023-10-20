@@ -4,6 +4,7 @@ import 'package:equatable/equatable.dart';
 import 'package:pdpa/app/data/models/consent_management/consent_form_model.dart';
 import 'package:pdpa/app/data/models/master_data/custom_field_model.dart';
 import 'package:pdpa/app/data/models/master_data/localized_model.dart';
+import 'package:pdpa/app/data/models/master_data/mandatory_field_model.dart';
 import 'package:pdpa/app/data/models/master_data/purpose_category_model.dart';
 import 'package:pdpa/app/data/models/master_data/purpose_model.dart';
 import 'package:pdpa/app/data/repositories/consent_repository.dart';
@@ -41,24 +42,25 @@ class EditConsentFormBloc
 
     ConsentFormModel gotConsentForm = ConsentFormModel.empty();
 
-    List<CustomFieldModel> gotCustomFields = [];
+    List<MandatoryFieldModel> gotMandatoryFields = [];
     List<PurposeCategoryModel> gotPurposeCategories = [];
     List<PurposeModel> gotPurposes = [];
 
-    final resultCustomfield = await _masterDataRepository.getCustomFields(
+    final resultCustomfield = await _masterDataRepository.getMandatoryFields(
       event.companyId,
     );
     resultCustomfield
         .fold((failure) => emit(EditConsentFormError(failure.errorMessage)),
-            (customField) {
-      gotCustomFields = customField;
+            (mandatoryField) {
+      gotMandatoryFields = mandatoryField;
     });
 
     if (event.consentFormId.isEmpty) {
       emit(
         GotCurrentConsentForm(
           ConsentFormModel.empty(),
-          gotCustomFields,
+          gotMandatoryFields
+            ..sort(((a, b) => b.priority.compareTo(a.priority))),
           const [],
           const [],
         ),
@@ -81,17 +83,17 @@ class EditConsentFormBloc
       (consentForm) async {
         gotConsentForm = consentForm;
 
-        for (String customFieldId in consentForm.customFields) {
-          final result = await _masterDataRepository.getCustomFieldById(
+        for (String customFieldId in consentForm.mandatoryFields) {
+          final result = await _masterDataRepository.getMandatoryFieldById(
             customFieldId,
             event.companyId,
           );
 
           result.fold(
               (failure) => emit(EditConsentFormError(failure.errorMessage)),
-              (customField) {
-            if (!gotCustomFields.contains(customField)) {
-              gotCustomFields.add(customField);
+              (mandatoryField) {
+            if (!gotMandatoryFields.contains(mandatoryField)) {
+              gotMandatoryFields.add(mandatoryField);
             }
           });
         }
@@ -132,7 +134,7 @@ class EditConsentFormBloc
     emit(
       GotCurrentConsentForm(
         gotConsentForm,
-        gotCustomFields,
+        gotMandatoryFields..sort((a, b) => b.priority.compareTo(a.priority)),
         gotPurposeCategories..sort((a, b) => b.priority.compareTo(a.priority)),
         gotPurposes,
       ),
@@ -198,6 +200,7 @@ class EditConsentFormBloc
       createdDate: event.consentForm.createdDate,
       updatedBy: event.consentForm.updatedBy,
       updatedDate: event.consentForm.updatedDate,
+      mandatoryFields: event.consentForm.mandatoryFields,
     );
 
     final result = await _consentRepository.createConsentForm(
