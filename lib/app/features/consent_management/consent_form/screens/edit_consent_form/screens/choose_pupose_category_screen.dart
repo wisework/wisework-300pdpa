@@ -92,8 +92,6 @@ class ChoosePurposeCategoryView extends StatefulWidget {
 }
 
 class _ChoosePurposeCategoryViewState extends State<ChoosePurposeCategoryView> {
-  void _savePurpose() {}
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -323,6 +321,7 @@ class _PurposeCategoryTileState extends State<PurposeCategoryTile> {
                           ],
                         ),
                         ExpandedContainer(
+                          duration: const Duration(milliseconds: 400),
                           expand: state.expandId == widget.purposeCategory.id,
                           child: Padding(
                             padding: EdgeInsets.only(

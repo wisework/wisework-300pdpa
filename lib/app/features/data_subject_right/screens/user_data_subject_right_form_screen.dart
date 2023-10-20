@@ -165,7 +165,7 @@ class UserDataSubjectRightView extends StatefulWidget {
 class _UserDataSubjectRightViewState extends State<UserDataSubjectRightView> {
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
+    return const Scaffold(
       body: SingleChildScrollView(
         child: Column(
           children: <Widget>[],

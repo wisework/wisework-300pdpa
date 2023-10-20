@@ -380,7 +380,6 @@ class _EditConsentFormViewState extends State<EditConsentFormView> {
                                           customFieldList.add(
                                               widget.customfields[index].id);
                                         }
-                                        print(customFieldList);
                                       })
                                     },
                                   ),
