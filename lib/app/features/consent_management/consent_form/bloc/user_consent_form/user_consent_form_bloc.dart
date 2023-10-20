@@ -33,8 +33,8 @@ class UserConsentFormBloc
     GetUserConsentFormEvent event,
     Emitter<UserConsentFormState> emit,
   ) async {
-    if (event.consentId.isEmpty) {
-      emit(const UserConsentFormError('Required consent ID'));
+    if (event.consentFormId.isEmpty) {
+      emit(const UserConsentFormError('Required consent form ID'));
       return;
     }
     if (event.companyId.isEmpty) {
@@ -44,17 +44,17 @@ class UserConsentFormBloc
 
     emit(const GettingUserConsentForm());
 
-    final result = await _consentRepository.getConsentFormById(
-      event.consentId,
-      event.companyId,
-    );
-
     ConsentFormModel gotConsentForm = ConsentFormModel.empty();
     List<MandatoryFieldModel> gotMandatoryFields = [];
     List<PurposeCategoryModel> gotPurposeCategories = [];
     List<PurposeModel> gotPurposes = [];
     List<CustomFieldModel> gotCustomFields = [];
     ConsentThemeModel gotConsentTheme = ConsentThemeModel.initial();
+
+    final result = await _consentRepository.getConsentFormById(
+      event.consentFormId,
+      event.companyId,
+    );
 
     await result.fold(
       (failure) {

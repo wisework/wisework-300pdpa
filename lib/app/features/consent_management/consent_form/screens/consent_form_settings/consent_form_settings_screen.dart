@@ -63,7 +63,7 @@ class _ConsentFormSettingScreenState extends State<ConsentFormSettingScreen> {
   void _getConsentFormSettings() {
     final bloc = context.read<ConsentFormSettingsBloc>();
     bloc.add(GetConsentFormSettingsEvent(
-      consentId: widget.consentFormId,
+      consentFormId: widget.consentFormId,
       companyId: currentUser.currentCompany,
     ));
   }

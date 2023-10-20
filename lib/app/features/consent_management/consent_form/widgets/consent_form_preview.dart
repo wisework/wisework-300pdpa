@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:pdpa/app/config/config.dart';
 import 'package:pdpa/app/data/models/consent_management/consent_form_model.dart';
 import 'package:pdpa/app/data/models/consent_management/consent_theme_model.dart';
+import 'package:pdpa/app/data/models/consent_management/user_consent_model.dart';
 import 'package:pdpa/app/data/models/master_data/custom_field_model.dart';
 import 'package:pdpa/app/data/models/master_data/mandatory_field_model.dart';
 import 'package:pdpa/app/data/models/master_data/purpose_category_model.dart';
@@ -23,12 +24,14 @@ class ConsentFormPreview extends StatefulWidget {
     required this.purposes,
     required this.customFields,
     required this.consentTheme,
+    this.userConsent,
     this.onMandatoryFieldChanged,
     this.onPurposeChanged,
     this.onCustomFieldChanged,
     this.onConsentAccepted,
     this.onSubmitted,
     this.isVerifyRequired = false,
+    this.isReadOnly = false,
   });
 
   final ConsentFormModel consentForm;
@@ -37,6 +40,7 @@ class ConsentFormPreview extends StatefulWidget {
   final List<PurposeModel> purposes;
   final List<CustomFieldModel> customFields;
   final ConsentThemeModel consentTheme;
+  final UserConsentModel? userConsent;
   final Function(
     String mandatoryFieldId,
     String value,
@@ -50,6 +54,7 @@ class ConsentFormPreview extends StatefulWidget {
   final Function(bool value)? onConsentAccepted;
   final VoidCallback? onSubmitted;
   final bool isVerifyRequired;
+  final bool isReadOnly;
 
   @override
   State<ConsentFormPreview> createState() => _ConsentFormPreviewState();
@@ -152,11 +157,15 @@ class _ConsentFormPreviewState extends State<ConsentFormPreview> {
             AcceptConsentCheckbox(
               consentForm: widget.consentForm,
               consentTheme: widget.consentTheme,
+              initialValue: widget.userConsent != null
+                  ? widget.userConsent!.isAcceptConsent
+                  : null,
               onChanged: (value) {
                 if (widget.onConsentAccepted != null) {
                   widget.onConsentAccepted!(value);
                 }
               },
+              isReadOnly: widget.isReadOnly,
             ),
             const SizedBox(height: UiConfig.lineGap),
           ],
@@ -254,16 +263,24 @@ class _ConsentFormPreviewState extends State<ConsentFormPreview> {
       children: <Widget>[
         TitleRequiredText(
           text: mandatoryField.title.first.text,
+          required: true,
         ),
         CustomTextField(
+          initialValue: widget.userConsent != null
+              ? UtilFunctions.getValueFromUserInputText(
+                  widget.userConsent!.mandatoryFields,
+                  mandatoryField.id,
+                )
+              : null,
           hintText: mandatoryField.hintText.first.text,
           keyboardType: mandatoryField.inputType,
           onChanged: (value) {
-            if (widget.onMandatoryFieldChanged != null) {
+            if (widget.onMandatoryFieldChanged != null && !widget.isReadOnly) {
               widget.onMandatoryFieldChanged!(mandatoryField.id, value);
             }
           },
-          required: widget.isVerifyRequired,
+          readOnly: widget.isReadOnly,
+          required: true,
         ),
       ],
     );
@@ -385,8 +402,14 @@ class _ConsentFormPreviewState extends State<ConsentFormPreview> {
             itemBuilder: (context, index) => PurposeRadioOption(
               purpose: purposeFiltered[index],
               consentTheme: widget.consentTheme,
+              initialValue: widget.userConsent != null
+                  ? UtilFunctions.getValueFromUserInputPurpose(
+                      widget.userConsent!.purposes,
+                      purposeFiltered[index].id,
+                    )
+                  : null,
               onChanged: (value) {
-                if (widget.onPurposeChanged != null) {
+                if (widget.onPurposeChanged != null && !widget.isReadOnly) {
                   widget.onPurposeChanged!(
                     purposeFiltered[index].id,
                     purposeCategory.id,
@@ -394,6 +417,7 @@ class _ConsentFormPreviewState extends State<ConsentFormPreview> {
                   );
                 }
               },
+              isReadOnly: widget.isReadOnly,
             ),
             separatorBuilder: (context, _) => const SizedBox(
               height: UiConfig.lineSpacing,
@@ -466,46 +490,28 @@ class _ConsentFormPreviewState extends State<ConsentFormPreview> {
         right: UiConfig.defaultPaddingSpacing,
         bottom: UiConfig.defaultPaddingSpacing,
       ),
-      child: Column(
-        children: <Widget>[
-          CustomButton(
-            height: 40.0,
-            onPressed: () {
-              if (widget.onSubmitted != null) {
-                if (widget.isVerifyRequired) {
-                  if (_formKey.currentState!.validate()) {
-                    widget.onSubmitted!();
-                  }
-                } else {
-                  widget.onSubmitted!();
-                }
+      child: CustomButton(
+        height: 40.0,
+        onPressed: () {
+          if (widget.onSubmitted != null && !widget.isReadOnly) {
+            if (widget.isVerifyRequired) {
+              if (_formKey.currentState!.validate()) {
+                widget.onSubmitted!();
               }
-            },
-            buttonColor: widget.consentTheme.submitButtonColor,
-            splashColor: widget.consentTheme.submitTextColor,
-            child: Text(
-              widget.consentForm.submitText.first.text,
-              style: Theme.of(context)
-                  .textTheme
-                  .bodyMedium
-                  ?.copyWith(color: widget.consentTheme.submitTextColor),
-            ),
-          ),
-          // const SizedBox(height: UiConfig.lineGap),
-          // CustomButton(
-          //   height: 40.0,
-          //   onPressed: () {},
-          //   buttonColor: widget.consentTheme.cancelButtonColor,
-          //   splashColor: widget.consentTheme.cancelTextColor,
-          //   child: Text(
-          //     widget.consentForm.cancelText.first.text,
-          //     style: Theme.of(context)
-          //         .textTheme
-          //         .bodyMedium
-          //         ?.copyWith(color: widget.consentTheme.cancelTextColor),
-          //   ),
-          // ),
-        ],
+            } else {
+              widget.onSubmitted!();
+            }
+          }
+        },
+        buttonColor: widget.consentTheme.submitButtonColor,
+        splashColor: widget.consentTheme.submitTextColor,
+        child: Text(
+          widget.consentForm.submitText.first.text,
+          style: Theme.of(context)
+              .textTheme
+              .bodyMedium
+              ?.copyWith(color: widget.consentTheme.submitTextColor),
+        ),
       ),
     );
   }

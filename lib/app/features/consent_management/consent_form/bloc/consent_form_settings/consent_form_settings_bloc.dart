@@ -34,8 +34,8 @@ class ConsentFormSettingsBloc
     GetConsentFormSettingsEvent event,
     Emitter<ConsentFormSettingsState> emit,
   ) async {
-    if (event.consentId.isEmpty) {
-      emit(const ConsentFormSettingsError('Required consent ID'));
+    if (event.consentFormId.isEmpty) {
+      emit(const ConsentFormSettingsError('Required consent form ID'));
       return;
     }
     if (event.companyId.isEmpty) {
@@ -46,7 +46,7 @@ class ConsentFormSettingsBloc
     emit(const GettingConsentFormSettings());
 
     final result = await _consentRepository.getConsentFormById(
-      event.consentId,
+      event.consentFormId,
       event.companyId,
     );
 

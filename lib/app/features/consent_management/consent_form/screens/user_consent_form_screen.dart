@@ -45,7 +45,7 @@ class _UserConsentFormScreenState extends State<UserConsentFormScreen> {
   void _getUserConsentForm() {
     final bloc = context.read<UserConsentFormBloc>();
     bloc.add(GetUserConsentFormEvent(
-      consentId: widget.consentFormId,
+      consentFormId: widget.consentFormId,
       companyId: widget.companyId,
     ));
   }
@@ -152,7 +152,7 @@ class _UserConsentFormScreenState extends State<UserConsentFormScreen> {
                       height: 40.0,
                       onPressed: () {
                         final event = GetUserConsentFormEvent(
-                          consentId: consentForm.id,
+                          consentFormId: consentForm.id,
                           companyId: widget.companyId,
                         );
                         context.read<UserConsentFormBloc>().add(event);

@@ -59,7 +59,7 @@ class _DetailConsentFormScreenState extends State<DetailConsentFormScreen> {
       create: (context) => serviceLocator<ConsentFormDetailBloc>()
         ..add(
           GetConsentFormEvent(
-            consentId: widget.consentFormId,
+            consentFormId: widget.consentFormId,
             companyId: currentUser.currentCompany,
           ),
         ),

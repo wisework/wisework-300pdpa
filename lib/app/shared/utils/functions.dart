@@ -4,6 +4,8 @@ import 'package:path/path.dart';
 import 'package:pdpa/app/config/config.dart';
 import 'package:pdpa/app/data/models/authentication/company_model.dart';
 import 'package:pdpa/app/data/models/data_subject_right/data_subject_right_model.dart';
+import 'package:pdpa/app/data/models/etc/user_input_purpose.dart';
+import 'package:pdpa/app/data/models/etc/user_input_text.dart';
 import 'package:pdpa/app/data/models/master_data/custom_field_model.dart';
 import 'package:pdpa/app/data/models/master_data/mandatory_field_model.dart';
 import 'package:pdpa/app/data/models/master_data/purpose_category_model.dart';
@@ -27,6 +29,30 @@ class UtilFunctions {
   static String getUserConsentForm(String consentId, String companyId) {
     final fragment = 'companies/$companyId/consent-forms/$consentId/form';
     return '${AppConfig.baseUrl}/#/$fragment';
+  }
+
+  static String getValueFromUserInputText(
+    List<UserInputText> userInputs,
+    String mapId,
+  ) {
+    final result = userInputs.firstWhere(
+      (input) => input.id == mapId,
+      orElse: UserInputText.empty,
+    );
+
+    return result.text;
+  }
+
+  static bool getValueFromUserInputPurpose(
+    List<UserInputPurpose> userInputs,
+    String mapId,
+  ) {
+    final result = userInputs.firstWhere(
+      (input) => input.id == mapId,
+      orElse: UserInputPurpose.empty,
+    );
+
+    return result.value;
   }
 
   //? Mandatory Field
