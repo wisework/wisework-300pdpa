@@ -217,12 +217,12 @@
     },
     "masterData": {
         "main": {
-            "mandatories": "Mandatories",
+            "mandatories": "ข้อบังคับ",
             "mandatoryFields": {
-                "title": "Mandatory Field",
-                "list": "Mandatory Fields",
-                "edit": "Edit Mandatory Field",
-                "create": "Create Mandatory Field"
+                "title": "ช่องกรอกข้อบังคับ",
+                "list": "ช่องกรอกข้อบังคับ",
+                "edit": "แก้ไขช่องกรอกข้อบังคับ",
+                "create": "สร้างข้อบังคับ"
             }
         },
         "cm": {
@@ -330,6 +330,7 @@
                 "createDataSubjectRight": "สร้างสิทธิของเจ้าของข้อมูล",
                 "editDataSubjectRight": "แก้ไขสิทธิของเจ้าของข้อมูล"
             }
+           
         },
         "etc": {
             "fieldCannotEmpty": "ช่องต้องไม่เว้นว่าง",

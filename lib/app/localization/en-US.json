@@ -5,12 +5,12 @@
         "day": "Day",
         "month": "Month",
         "year": "Year",
-        "text" : "Text",
-        "multiline" : "Multiline",
-        "number" : "Number",
-        "phone" : "Phone",
-        "emailAddress" : "Email Address",
-        "url" : "URL",
+        "text": "Text",
+        "multiline": "Multiline",
+        "number": "Number",
+        "phone": "Phone",
+        "emailAddress": "Email Address",
+        "url": "URL",
         "features": {
             "home": "Home",
             "consentmanagement": "Consent Management",
@@ -330,6 +330,7 @@
                 "createDataSubjectRight": "Create Data Subject Right",
                 "editDataSubjectRight": "Edit Data Subject Right"
             }
+           
         },
         "etc": {
             "fieldCannotEmpty": "Field cannot be empty",
