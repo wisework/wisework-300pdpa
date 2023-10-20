@@ -12,8 +12,7 @@ import 'package:pdpa/app/features/consent_management/consent_form/cubit/current_
 import 'package:pdpa/app/features/consent_management/user_consent/bloc/user_consent/user_consent_bloc.dart';
 import 'package:pdpa/app/features/data_subject_right/bloc/data_subject_right/data_subject_right_bloc.dart';
 import 'package:pdpa/app/features/data_subject_right/bloc/user_data_subject_right_form/user_data_subject_right_form_bloc.dart';
-import 'package:pdpa/app/features/general/bloc/setting/setting_bloc.dart';
-import 'package:pdpa/app/features/general/cubit/setting_cubit.dart';
+import 'package:pdpa/app/features/general/bloc/app_settings/app_settings_bloc.dart';
 import 'package:pdpa/app/features/master_data/bloc/consent/custom_field/custom_field_bloc.dart';
 import 'package:pdpa/app/features/master_data/bloc/consent/purpose/purpose_bloc.dart';
 import 'package:pdpa/app/features/master_data/bloc/consent/purpose_category/purpose_category_bloc.dart';
@@ -37,6 +36,9 @@ class GlobalBlocProvider {
       BlocProvider<DrawerBloc>(
         create: (context) => serviceLocator<DrawerBloc>()
           ..add(SelectMenuDrawerEvent(menu: drawerMenuPreset.first)),
+      ),
+      BlocProvider<AppSettingsBloc>(
+        create: (context) => serviceLocator<AppSettingsBloc>(),
       ),
       BlocProvider<ConsentFormBloc>(
         create: (context) => serviceLocator<ConsentFormBloc>(),
@@ -91,12 +93,6 @@ class GlobalBlocProvider {
       ),
       BlocProvider<UserDataSubjectRightFormBloc>(
         create: (context) => serviceLocator<UserDataSubjectRightFormBloc>(),
-      ),
-      BlocProvider<SettingCubit>(
-        create: (context) => serviceLocator<SettingCubit>(),
-      ),
-      BlocProvider<SettingBloc>(
-        create: (context) => serviceLocator<SettingBloc>(),
       ),
       BlocProvider<PurposeCategoryCubit>(
         create: (context) => serviceLocator<PurposeCategoryCubit>(),

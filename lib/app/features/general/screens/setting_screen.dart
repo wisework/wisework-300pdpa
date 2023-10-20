@@ -5,8 +5,9 @@ import 'package:ionicons/ionicons.dart';
 import 'package:pdpa/app/config/config.dart';
 import 'package:pdpa/app/data/models/authentication/user_model.dart';
 import 'package:pdpa/app/features/authentication/bloc/sign_in/sign_in_bloc.dart';
-import 'package:pdpa/app/features/general/cubit/setting_cubit.dart';
+import 'package:pdpa/app/features/general/bloc/app_settings/app_settings_bloc.dart';
 import 'package:pdpa/app/shared/drawers/pdpa_drawer.dart';
+import 'package:pdpa/app/shared/utils/constants.dart';
 import 'package:pdpa/app/shared/widgets/customs/custom_container.dart';
 import 'package:pdpa/app/shared/widgets/customs/custom_dropdown_button.dart';
 import 'package:pdpa/app/shared/widgets/customs/custom_icon_button.dart';
@@ -40,25 +41,20 @@ class _SettingScreenState extends State<SettingScreen> {
 
   @override
   Widget build(BuildContext context) {
-    final cubit = context.read<SettingCubit>();
-    print(cubit.state.localDevice);
     return SettingView(
-      local: cubit,
       currentUser: currentUser,
     );
   }
 }
 
-// ignore: must_be_immutable
 class SettingView extends StatefulWidget {
-  SettingView({
+  const SettingView({
     super.key,
-    required this.local,
     required this.currentUser,
   });
 
-  SettingCubit local;
-  UserModel currentUser;
+  final UserModel currentUser;
+
   @override
   State<SettingView> createState() => _SettingViewState();
 }
@@ -66,28 +62,34 @@ class SettingView extends StatefulWidget {
 class _SettingViewState extends State<SettingView> {
   final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
 
-  final language = ['en-US', 'th-TH'];
+  late String currentLanguage;
+
   @override
   void initState() {
     super.initState();
+
+    currentLanguage = widget.currentUser.defaultLanguage;
   }
 
-  void _setInputType(String? value) {
-    if (value != null) {
-      widget.local.setLocalDevice(value);
+  void _setCurrentLanguage(String? value) {
+    if (value != null && value != currentLanguage) {
+      currentLanguage = value;
 
-      if (widget.local.state.localDevice == 'th-TH') {
-        EasyLocalization.of(context)?.setLocale(const Locale('th', 'TH'));
-      } else {
-        EasyLocalization.of(context)?.setLocale(const Locale('en', 'US'));
-      }
+      final locales = value.split('-');
+      EasyLocalization.of(context)?.setLocale(
+        Locale(locales.first, locales.last),
+      );
+
+      final setDeviceLanguage = SetDeviceLanguageEvent(
+        language: value,
+        user: widget.currentUser.copyWith(defaultLanguage: value),
+      );
+      context.read<AppSettingsBloc>().add(setDeviceLanguage);
     }
   }
 
   @override
   Widget build(BuildContext context) {
-    print(widget.currentUser.defaultLanguage);
-    print(context.supportedLocales);
     return Scaffold(
       key: _scaffoldKey,
       appBar: PdpaAppBar(
@@ -108,58 +110,8 @@ class _SettingViewState extends State<SettingView> {
         child: Column(
           children: <Widget>[
             const SizedBox(height: UiConfig.lineSpacing),
-            CustomContainer(
-              child: BlocBuilder<SignInBloc, SignInState>(
-                builder: (context, state) {
-                  if (state is SignedInUser) {
-                    return Column(
-                      children: <Widget>[
-                        const SizedBox(height: UiConfig.lineSpacing),
-                        Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                          children: <Widget>[
-                            Text(
-                              tr('app.language'),
-                              style: Theme.of(context).textTheme.bodyMedium,
-                            ),
-                            SizedBox(
-                              width: 120,
-                              child: CustomDropdownButton<String>(
-                                value: state.user.defaultLanguage,
-                                items: language.map(
-                                  (e) {
-                                    return DropdownMenuItem(
-                                      value: e,
-                                      child: Text(
-                                        e,
-                                        style: Theme.of(context)
-                                            .textTheme
-                                            .bodyMedium,
-                                      ),
-                                    );
-                                  },
-                                ).toList(),
-                                onSelected: _setInputType,
-                              ),
-                            ),
-                          ],
-                        ),
-                        Divider(
-                          color: Theme.of(context)
-                              .colorScheme
-                              .outlineVariant
-                              .withOpacity(0.5),
-                        ),
-                        const SizedBox(height: UiConfig.lineSpacing),
-                      ],
-                    );
-                  }
-                  return const Center(
-                    child: CircularProgressIndicator(),
-                  );
-                },
-              ),
-            ),
+            _buildGeneralSection(),
+            const SizedBox(height: UiConfig.lineSpacing),
           ],
         ),
       ),
@@ -167,6 +119,48 @@ class _SettingViewState extends State<SettingView> {
         onClosed: () {
           _scaffoldKey.currentState?.closeDrawer();
         },
+      ),
+    );
+  }
+
+  CustomContainer _buildGeneralSection() {
+    return CustomContainer(
+      child: Column(
+        children: <Widget>[
+          const SizedBox(height: UiConfig.lineSpacing),
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: <Widget>[
+              Text(
+                tr('app.language'),
+                style: Theme.of(context).textTheme.bodyMedium,
+              ),
+              SizedBox(
+                width: 120,
+                child: CustomDropdownButton<String>(
+                  value: currentLanguage,
+                  items: languages.map(
+                    (language) {
+                      return DropdownMenuItem(
+                        value: language,
+                        child: Text(
+                          language,
+                          style: Theme.of(context).textTheme.bodyMedium,
+                        ),
+                      );
+                    },
+                  ).toList(),
+                  onSelected: _setCurrentLanguage,
+                ),
+              ),
+            ],
+          ),
+          Divider(
+            color:
+                Theme.of(context).colorScheme.outlineVariant.withOpacity(0.5),
+          ),
+          const SizedBox(height: UiConfig.lineSpacing),
+        ],
       ),
     );
   }

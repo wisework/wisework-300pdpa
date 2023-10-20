@@ -7,6 +7,7 @@ import 'package:pdpa/app/config/config.dart';
 import 'package:pdpa/app/features/authentication/bloc/invitation/invitation_bloc.dart';
 import 'package:pdpa/app/features/authentication/bloc/sign_in/sign_in_bloc.dart';
 import 'package:pdpa/app/features/authentication/routes/authentication_route.dart';
+import 'package:pdpa/app/features/general/bloc/app_settings/app_settings_bloc.dart';
 import 'package:pdpa/app/features/general/routes/general_route.dart';
 import 'package:pdpa/app/injection.dart';
 import 'package:pdpa/app/shared/widgets/customs/custom_button.dart';
@@ -55,11 +56,17 @@ class _AcceptInviteViewState extends State<AcceptInviteView> {
     if (bloc.state is SignedInUser) {
       final signedIn = bloc.state as SignedInUser;
 
-      context.read<InvitationBloc>().add(VerifyInviteCodeEvent(
-            inviteCode: inviteCodeController.text,
-            user: signedIn.user,
-            companies: signedIn.companies,
-          ));
+      final initialAppSettings = InitialAppSettingsEvent(
+        user: signedIn.user,
+      );
+      context.read<AppSettingsBloc>().add(initialAppSettings);
+
+      final verifyInviteCode = VerifyInviteCodeEvent(
+        inviteCode: inviteCodeController.text,
+        user: signedIn.user,
+        companies: signedIn.companies,
+      );
+      context.read<InvitationBloc>().add(verifyInviteCode);
     }
   }
 
