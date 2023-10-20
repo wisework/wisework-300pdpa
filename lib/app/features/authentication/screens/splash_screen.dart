@@ -5,6 +5,7 @@ import 'package:pdpa/app/config/config.dart';
 import 'package:pdpa/app/data/models/authentication/user_model.dart';
 import 'package:pdpa/app/features/authentication/bloc/sign_in/sign_in_bloc.dart';
 import 'package:pdpa/app/features/authentication/routes/authentication_route.dart';
+import 'package:pdpa/app/features/general/bloc/app_settings/app_settings_bloc.dart';
 import 'package:pdpa/app/features/general/routes/general_route.dart';
 import 'package:pdpa/app/shared/widgets/wise_work_shimmer.dart';
 
@@ -40,6 +41,9 @@ class _SplashScreenState extends State<SplashScreen> {
         duration: UiConfig.toastDuration,
       ),
     );
+
+    final event = InitialAppSettingsEvent(user: user);
+    context.read<AppSettingsBloc>().add(event);
 
     if (user.companies.isEmpty || user.currentCompany.isEmpty) {
       context.pushReplacement(AuthenticationRoute.signUpCompany.path);

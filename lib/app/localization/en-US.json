@@ -1,7 +1,7 @@
 {
     "app": {
         "name": "PDPA Management Platform",
-        "language": "language",
+        "language": "Language",
         "features": {
             "consentmanagement": "Consent Management",
             "consentforms": "Consent Forms",
@@ -41,6 +41,15 @@
         }
     },
     "masterData": {
+        "main": {
+            "mandatories": "Mandatories",
+            "mandatoryFields": {
+                "title": "Mandatory Field",
+                "list": "Mandatory Fields",
+                "edit": "Edit Mandatory Field",
+                "create": "Create Mandatory Field"
+            }
+        },
         "cm": {
             "consents": "Consents",
             "customfields": {

@@ -54,7 +54,7 @@ class DefaultFirebaseOptions {
 
   static const FirebaseOptions android = FirebaseOptions(
     apiKey: 'AIzaSyBoGbY7Zwl-z-wNxbYYbRvP-sCb2iLihRQ',
-    appId: '1:336013362570:android:9eead6d2e6f9b32d2ff473',
+    appId: '1:336013362570:android:24f97568997e24352ff473',
     messagingSenderId: '336013362570',
     projectId: 'pdpa-300',
     storageBucket: 'pdpa-300.appspot.com',
@@ -62,23 +62,23 @@ class DefaultFirebaseOptions {
 
   static const FirebaseOptions ios = FirebaseOptions(
     apiKey: 'AIzaSyD25P8p8nJ6DrEKJvxzii3IsT-_jLE7NEo',
-    appId: '1:336013362570:ios:fc463a9512139b362ff473',
+    appId: '1:336013362570:ios:624079a4a9437dc52ff473',
     messagingSenderId: '336013362570',
     projectId: 'pdpa-300',
     storageBucket: 'pdpa-300.appspot.com',
-    iosClientId:
-        '336013362570-ickapb6iln7mrakn143obpnh38dldqhq.apps.googleusercontent.com',
-    iosBundleId: 'com.example.pdpa',
+    androidClientId: '336013362570-3kckn0n8n0fln2gtjpkh5bpog1qqi5qs.apps.googleusercontent.com',
+    iosClientId: '336013362570-8gpsr2rgat43e3fbumgnn0t1n4a1lndt.apps.googleusercontent.com',
+    iosBundleId: 'com.wisework.pdpa',
   );
 
   static const FirebaseOptions macos = FirebaseOptions(
     apiKey: 'AIzaSyD25P8p8nJ6DrEKJvxzii3IsT-_jLE7NEo',
-    appId: '1:336013362570:ios:16823715cbccceee2ff473',
+    appId: '1:336013362570:ios:624079a4a9437dc52ff473',
     messagingSenderId: '336013362570',
     projectId: 'pdpa-300',
     storageBucket: 'pdpa-300.appspot.com',
-    iosClientId:
-        '336013362570-69f5kgj7lt21kpue9reb6ri9cfdjs5h6.apps.googleusercontent.com',
+    androidClientId: '336013362570-3kckn0n8n0fln2gtjpkh5bpog1qqi5qs.apps.googleusercontent.com',
+    iosClientId: '336013362570-8gpsr2rgat43e3fbumgnn0t1n4a1lndt.apps.googleusercontent.com',
     iosBundleId: 'com.wisework.pdpa',
   );
 }

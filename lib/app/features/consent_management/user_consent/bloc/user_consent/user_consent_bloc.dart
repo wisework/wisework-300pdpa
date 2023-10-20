@@ -1,6 +1,7 @@
 // ignore: depend_on_referenced_packages
 import 'package:bloc/bloc.dart';
 import 'package:equatable/equatable.dart';
+import 'package:pdpa/app/data/models/consent_management/consent_form_model.dart';
 import 'package:pdpa/app/data/models/consent_management/user_consent_model.dart';
 import 'package:pdpa/app/data/models/master_data/mandatory_field_model.dart';
 import 'package:pdpa/app/data/repositories/consent_repository.dart';
@@ -40,7 +41,20 @@ class UserConsentBloc extends Bloc<UserConsentEvent, UserConsentState> {
         emit(UserConsentError(failure.errorMessage));
         return;
       },
-      (userConsent) async {
+      (userConsents) async {
+        List<ConsentFormModel> gotConsentForms = [];
+        for (UserConsentModel userConsent in userConsents) {
+          final result = await _consentRepository.getConsentFormById(
+            userConsent.consentFormId,
+            event.companyId,
+          );
+
+          result.fold(
+            (failure) => emit(UserConsentError(failure.errorMessage)),
+            (consentForm) => gotConsentForms.add(consentForm),
+          );
+        }
+
         final result = await _masterDataRepository.getMandatoryFields(
           event.companyId,
         );
@@ -49,8 +63,9 @@ class UserConsentBloc extends Bloc<UserConsentEvent, UserConsentState> {
           (failure) => emit(UserConsentError(failure.errorMessage)),
           (mandatoryFields) => emit(
             GotUserConsents(
-              userConsent
+              userConsents
                 ..sort((a, b) => b.updatedDate.compareTo(a.updatedDate)),
+              gotConsentForms,
               mandatoryFields..sort((a, b) => a.priority.compareTo(b.priority)),
             ),
           ),

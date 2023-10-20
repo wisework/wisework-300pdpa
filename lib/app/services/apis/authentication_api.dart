@@ -103,10 +103,9 @@ class AuthenticationApi {
 
   Future<UserModel> updateCurrentUser(UserModel user) async {
     final updated = user.copyWith(
-      updatedBy: user.uid,
+      updatedBy: user.email,
       updatedDate: DateTime.now(),
     );
-
     await _firestore.collection('Users').doc(updated.id).set(updated.toMap());
 
     return updated;

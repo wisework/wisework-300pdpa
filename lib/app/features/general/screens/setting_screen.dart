@@ -1,11 +1,16 @@
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:ionicons/ionicons.dart';
 import 'package:pdpa/app/config/config.dart';
+import 'package:pdpa/app/data/models/authentication/user_model.dart';
+import 'package:pdpa/app/features/authentication/bloc/sign_in/sign_in_bloc.dart';
+import 'package:pdpa/app/features/general/bloc/app_settings/app_settings_bloc.dart';
 import 'package:pdpa/app/shared/drawers/pdpa_drawer.dart';
+import 'package:pdpa/app/shared/utils/constants.dart';
 import 'package:pdpa/app/shared/widgets/customs/custom_container.dart';
+import 'package:pdpa/app/shared/widgets/customs/custom_dropdown_button.dart';
 import 'package:pdpa/app/shared/widgets/customs/custom_icon_button.dart';
-import 'package:pdpa/app/shared/widgets/customs/custom_switch_button.dart';
 import 'package:pdpa/app/shared/widgets/templates/pdpa_app_bar.dart';
 
 class SettingScreen extends StatefulWidget {
@@ -16,23 +21,8 @@ class SettingScreen extends StatefulWidget {
 }
 
 class _SettingScreenState extends State<SettingScreen> {
-  @override
-  Widget build(BuildContext context) {
-    return const SettingView();
-  }
-}
+  late UserModel currentUser;
 
-class SettingView extends StatefulWidget {
-  const SettingView({super.key});
-
-  @override
-  State<SettingView> createState() => _SettingViewState();
-}
-
-class _SettingViewState extends State<SettingView> {
-    bool isEnglish = true;
-
-  final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
   @override
   void initState() {
     super.initState();
@@ -41,31 +31,62 @@ class _SettingViewState extends State<SettingView> {
   }
 
   void _initialData() {
-
-    // if (context.deviceLocale.toString() == 'en_US') {
-    //   isActivated = true;
-    // } else {
-    //   isActivated = false;
-    // }
-  }
- void toggleLocale() {
-    if (isEnglish) {
-      EasyLocalization.of(context)?.setLocale(const Locale('th', 'TH'));
+    final bloc = context.read<SignInBloc>();
+    if (bloc.state is SignedInUser) {
+      currentUser = (bloc.state as SignedInUser).user;
     } else {
-      EasyLocalization.of(context)?.setLocale(const Locale('en', 'US'));
+      currentUser = UserModel.empty();
     }
-    setState(() {
-      isEnglish = !isEnglish;
-    });
   }
-  // void toggleLocale() {
-  //   if (EasyLocalization.of(context)?.locale == Locale('en', 'US')) {
-  //     EasyLocalization.of(context)?.setLocale(Locale('th', 'TH'));
-  //   } else {
-  //     EasyLocalization.of(context)?.setLocale(Locale('en', 'US'));
-  //   }
-  //   setState(() {}); // Rebuild the UI to reflect the new locale
-  // }
+
+  @override
+  Widget build(BuildContext context) {
+    return SettingView(
+      currentUser: currentUser,
+    );
+  }
+}
+
+class SettingView extends StatefulWidget {
+  const SettingView({
+    super.key,
+    required this.currentUser,
+  });
+
+  final UserModel currentUser;
+
+  @override
+  State<SettingView> createState() => _SettingViewState();
+}
+
+class _SettingViewState extends State<SettingView> {
+  final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
+
+  late String currentLanguage;
+
+  @override
+  void initState() {
+    super.initState();
+
+    currentLanguage = widget.currentUser.defaultLanguage;
+  }
+
+  void _setCurrentLanguage(String? value) {
+    if (value != null && value != currentLanguage) {
+      currentLanguage = value;
+
+      final locales = value.split('-');
+      EasyLocalization.of(context)?.setLocale(
+        Locale(locales.first, locales.last),
+      );
+
+      final setDeviceLanguage = SetDeviceLanguageEvent(
+        language: value,
+        user: widget.currentUser.copyWith(defaultLanguage: value),
+      );
+      context.read<AppSettingsBloc>().add(setDeviceLanguage);
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -89,35 +110,8 @@ class _SettingViewState extends State<SettingView> {
         child: Column(
           children: <Widget>[
             const SizedBox(height: UiConfig.lineSpacing),
-            CustomContainer(
-              child: Column(
-                children: <Widget>[
-                  const SizedBox(height: UiConfig.lineSpacing),
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: <Widget>[
-                      Text(
-                        tr('masterData.etc.active'),
-                        style: Theme.of(context).textTheme.bodyMedium,
-                      ),
-                      CustomSwitchButton(
-                        value: isEnglish,
-                        onChanged: (value) {
-                          toggleLocale();
-                        },
-                      ),
-                    ],
-                  ),
-                  Divider(
-                    color: Theme.of(context)
-                        .colorScheme
-                        .outlineVariant
-                        .withOpacity(0.5),
-                  ),
-                  const SizedBox(height: UiConfig.lineSpacing),
-                ],
-              ),
-            ),
+            _buildGeneralSection(),
+            const SizedBox(height: UiConfig.lineSpacing),
           ],
         ),
       ),
@@ -125,6 +119,48 @@ class _SettingViewState extends State<SettingView> {
         onClosed: () {
           _scaffoldKey.currentState?.closeDrawer();
         },
+      ),
+    );
+  }
+
+  CustomContainer _buildGeneralSection() {
+    return CustomContainer(
+      child: Column(
+        children: <Widget>[
+          const SizedBox(height: UiConfig.lineSpacing),
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: <Widget>[
+              Text(
+                tr('app.language'),
+                style: Theme.of(context).textTheme.bodyMedium,
+              ),
+              SizedBox(
+                width: 120,
+                child: CustomDropdownButton<String>(
+                  value: currentLanguage,
+                  items: languages.map(
+                    (language) {
+                      return DropdownMenuItem(
+                        value: language,
+                        child: Text(
+                          language,
+                          style: Theme.of(context).textTheme.bodyMedium,
+                        ),
+                      );
+                    },
+                  ).toList(),
+                  onSelected: _setCurrentLanguage,
+                ),
+              ),
+            ],
+          ),
+          Divider(
+            color:
+                Theme.of(context).colorScheme.outlineVariant.withOpacity(0.5),
+          ),
+          const SizedBox(height: UiConfig.lineSpacing),
+        ],
       ),
     );
   }
