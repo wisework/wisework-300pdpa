@@ -93,13 +93,13 @@ class _ConsentFormViewState extends State<ConsentFormView> {
                   WidgetSpan(
                       child: Icon(
                     Icons.search_rounded,
-                    size: 18,
+                    size: 16,
                     color: Theme.of(context).colorScheme.onPrimary,
                   )),
                   const WidgetSpan(child: SizedBox(width: 4.0)),
                   TextSpan(
                     text: tr('app.search'),
-                    style: Theme.of(context).textTheme.titleMedium?.copyWith(
+                    style: Theme.of(context).textTheme.bodySmall?.copyWith(
                         color: Theme.of(context).colorScheme.onPrimary),
                   ),
                 ]),

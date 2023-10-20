@@ -45,3 +45,16 @@ class UpdateCurrentConsentFormEvent extends EditConsentFormEvent {
   @override
   List<Object> get props => [consentForm, companyId];
 }
+
+class UpdatePurposeCategoriesEvent extends EditConsentFormEvent {
+  const UpdatePurposeCategoriesEvent({
+    required this.purposeCategory,
+    required this.updateType,
+  });
+
+  final List<PurposeCategoryModel> purposeCategory;
+  final UpdateType updateType;
+
+  @override
+  List<Object> get props => [purposeCategory, updateType];
+}

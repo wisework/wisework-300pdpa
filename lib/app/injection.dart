@@ -12,6 +12,7 @@ import 'package:pdpa/app/features/consent_management/consent_form/bloc/edit_cons
 import 'package:pdpa/app/features/consent_management/consent_form/cubit/choose_purpose_category/choose_purpose_category_cubit.dart';
 import 'package:pdpa/app/features/consent_management/consent_form/cubit/current_consent_form_detail/current_consent_form_detail_cubit.dart';
 import 'package:pdpa/app/features/consent_management/consent_form/bloc/user_consent_form/user_consent_form_bloc.dart';
+import 'package:pdpa/app/features/consent_management/consent_form/cubit/current_edit_consent_form/current_edit_consent_form_cubit.dart';
 import 'package:pdpa/app/features/consent_management/user_consent/bloc/user_consent/user_consent_bloc.dart';
 import 'package:pdpa/app/features/consent_management/user_consent/bloc/user_consent_detail/user_consent_detail_bloc.dart';
 import 'package:pdpa/app/features/data_subject_right/bloc/data_subject_right/data_subject_right_bloc.dart';
@@ -122,6 +123,9 @@ Future<void> _consentManagement() async {
         consentRepository: serviceLocator(),
         masterDataRepository: serviceLocator(),
       ),
+    )
+    ..registerFactory(
+      () => CurrentEditConsentFormCubit(),
     )
     ..registerFactory(
       () => ChoosePurposeCategoryCubit(),

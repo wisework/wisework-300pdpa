@@ -81,6 +81,15 @@ class ConsentFormBloc extends Bloc<ConsentFormEvent, ConsentFormState> {
       List<ConsentFormModel> updated = [];
       List<PurposeCategoryModel> purposeCategories = [];
 
+      if (state is GotConsentForms) {
+        final settings = state as GotConsentForms;
+        purposeCategories = settings.purposeCategories;
+      } else if (state is UpdateConsentFormEvent) {
+        final settings = state as UpdateConsentFormEvent;
+
+        purposeCategories = settings.purposeCategories;
+      }
+
       switch (event.updateType) {
         case UpdateType.created:
           updated = consentForms.map((consentForm) => consentForm).toList()

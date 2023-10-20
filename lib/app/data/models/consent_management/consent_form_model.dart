@@ -257,6 +257,9 @@ class ConsentFormModel extends Equatable {
   ConsentFormModel setUrl(String consentFormUrl) =>
       copyWith(consentFormUrl: consentFormUrl);
 
+  ConsentFormModel setPurposeCategory(List<String> purposeCategoryList) =>
+      copyWith(purposeCategories: purposeCategoryList);
+
   @override
   List<Object> get props {
     return [
