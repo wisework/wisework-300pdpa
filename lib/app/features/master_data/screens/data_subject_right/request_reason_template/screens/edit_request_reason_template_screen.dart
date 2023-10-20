@@ -421,7 +421,7 @@ class _EditRequestReasonTemplateViewState
             trail: true,
             title: requestNamefilter != '()'
                 ? requestNamefilter
-                : 'Choose Request Type',
+                : tr('masterData.dsr.requestreasons.chooserequesttype'),
             onTap: () async {
               //? Open ModalBottomSheet to add Purposes selected
               await showModalBottomSheet(

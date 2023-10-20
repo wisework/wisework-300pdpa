@@ -116,7 +116,7 @@ class _SettingViewState extends State<SettingView> {
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: <Widget>[
                       Text(
-                        tr('masterData.etc.active'), //!
+                        tr('app.language'), //!
                         style: Theme.of(context).textTheme.bodyMedium,
                       ),
                       SizedBox(

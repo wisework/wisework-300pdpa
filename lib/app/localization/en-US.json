@@ -1,8 +1,9 @@
 {
     "app": {
         "name": "PDPA Management Platform",
-        "language": "language",
+        "language": "Language",
         "features": {
+            "home": "Home",
             "consentmanagement": "Consent Management",
             "consentforms": "Consent Forms",
             "userconsents": "User Consents",
@@ -304,6 +305,10 @@
                 "chooserequesttype": "Choose Request Type",
                 "reasontype": "Reasons Type",
                 "choosereasontype": "Choose Reasons Type"
+            },
+            "dataSubjectRight": {
+                "createDataSubjectRight" : "Create Data Subject Right",
+                "editDataSubjectRight" : "Edit Data Subject Right"
             }
         },
         "etc": {
@@ -374,20 +379,6 @@
         "step7": {
             "title": "Acknowledgment and Acceptance is require",
             "subtitle": "The applicant has read and understood this form thoroughly. The applicant confirms that the information provided to the Company is true and accurate. The applicant understands that the verification of authorization, identification and residency is necessary for processing your request. Providing false information with bad faith may result in legal prosecution. In order to properly proceed with your request, the Company may request for additional information from you for verification purpose."
-        }
-    },
-    "consentManagement1": {
-        "cf": {
-            "consentForms": {
-                "consentForms": "ข้อมูลแบบฟอร์ม",
-                "create": "Edit consent form",
-                "edit": "Create consent form",
-                "title": "Title",
-                "description": "Description",
-                "detail": "รายละเอียดแบบฟอร์มความยินยอม",
-                "consentFormInfo": "ข้อมูลขวัตถุ-ประสงค์",
-                "form": "แบบฟอร์ม"
-            }
         }
     }
 }

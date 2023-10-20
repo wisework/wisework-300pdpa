@@ -2,13 +2,17 @@
     "app": {
         "name": "PDPA Management Platform",
         "language": "ภาษา",
+        "day": "วันที่",
+        "month": "เดือน",
+        "year": "ปี",
         "features": {
-            "consentmanagement": "Consent Management",
-            "consentforms": "Consent Forms",
+            "home": "หน้าหลัก",
+            "consentmanagement": "ระบบบริหารจัดการข้อมูลส่วนบุคคล",
+            "consentforms": "เอกสารแสดงความยินยอม",
             "userconsents": "ความยินยอมของผู้ใช้",
-            "datasubjectright": "Data Subject Right",
-            "masterdata": "Master Data",
-            "setting": "Setting"
+            "datasubjectright": "สิทธิของเจ้าของข้อมูล",
+            "masterdata": "ข้อมูลหลัก",
+            "setting": "การตั้งค่า"
         },
         "search": "ค้นหา"
     },
@@ -36,8 +40,8 @@
     },
     "general": {
         "home": {
-            "hello": "Hello",
-            "tagline": "What you are looking for today"
+            "hello": "สวัสดี",
+            "tagline": "สิ่งที่คุณกำลังมองหาในวันนี้"
         }
     },
     "consentManagement": {
@@ -208,22 +212,22 @@
         "cm": {
             "consents": "ความยินยอม",
             "customfields": {
-                "title": "Custom Field",
-                "list": "Custom Fields",
-                "edit": "Edit Custom Fields",
-                "create": "Create Custom Fields",
-                "formtitle": "Title",
-                "formtitlehint": "Enter Title",
-                "hinttext": "Hint Text",
-                "hinttexthint": "Enter Hint Text",
-                "inputtype": "Input Type",
-                "inputtypehint": "Choose Input Type",
-                "lenghtlimit": "Lenght Limit",
-                "lenghtlimithint": "Enter Lenght Limit",
-                "maxline": "Max Line",
-                "maxlinehint": "Enter Max Line",
-                "minline": "Min Line",
-                "minlinehint": "Enter Min Line"
+                "title": "ฟิลด์ที่กำหนดเอง",
+                "list": "ฟิลด์ที่กำหนดเอง",
+                "edit": "แก้ไขฟิลด์ที่กำหนดเอง",
+                "create": "สร้างฟิลด์ที่กำหนดเอง",
+                "formtitle": "ชื่อ",
+                "formtitlehint": "ป้อนชื่อเรื่อง",
+                "hinttext": "ข้อความคำแนะนำ",
+                "hinttexthint": "ป้อนข้อความคำแนะนำ",
+                "inputtype": "ประเภทอินพุต",
+                "inputtypehint": "เลือกประเภทอินพุต",
+                "lenghtlimit": "ขีดจำกัดความยาว",
+                "lenghtlimithint": "ป้อนขีดจำกัดความยาว",
+                "maxline": "สูงสุดกี่บรรทัด",
+                "maxlinehint": "กรอกสูงสุดกี่บรรทัด",
+                "minline": "ต่ำสุดกี่บรรทัด",
+                "minlinehint": "กรอกต่ำสุดกี่บรรทัด"
             },
             "purpose": {
                 "title": "วัตถุประสงค์",
@@ -234,66 +238,66 @@
                 "descriptionHint": "ป้อนคำอธิบาย",
                 "warningDescription": "คำอธิบายคำเตือน",
                 "warningDescriptionHint": "ป้อนคำอธิบายคำเตือน",
-                "retentionPeriod": "Retention Period",
-                "retentionPeriodHint": "Enter retention period",
-                "periodUnit": "Period Unit"
+                "retentionPeriod": "ระยะเวลาการจัดเก็บ",
+                "retentionPeriodHint": "กรอกระยะเวลาการจัดเก็บ",
+                "periodUnit": "หน่วยระยะเวลา"
             },
             "purposeCategory": {
                 "title": "หมวดหมู่วัตถุประสงค์",
                 "list": "หมวดหมู่วัตถุประสงค์",
                 "create": "สร้างหมวดหมู่วัตถุประสงค์",
                 "edit": "แก้ไขหมวดหมู่วัตถุประสงค์",
-                "titlform": "แก้ไขหมวดหมู่วัตถุประสงค์",
-                "titleformHint": "แก้ไขหมวดหมู่วัตถุประสงค์",
-                "description": "แก้ไขหมวดหมู่วัตถุประสงค์",
-                "descriptionHint": "แก้ไขหมวดหมู่วัตถุประสงค์",
-                "priority": "แก้ไขหมวดหมู่วัตถุประสงค์",
-                "priorityHint": "Edit Purpose Category",
-                "purposes": "Edit Purpose Category"
+                "titlform": "ชื่อ",
+                "titleformHint": "ป้อนชื่อ",
+                "description": "คำอธิบาย",
+                "descriptionHint": "ป้อนคำอธิบาย",
+                "priority": "ระดับความสำคัญ",
+                "priorityHint": "กรอกระดับความสำคัญ",
+                "purposes": "วัตถุประสงค์"
             }
         },
         "dsr": {
-            "datasubjectright": "Data Subject Right",
+            "datasubjectright": "สิทธิของเจ้าของข้อมูล",
             "request": {
                 "title": "ประเภทคำขอ",
                 "list": "คำขอ",
                 "create": "สร้างประเภทคำขอ",
                 "edit": "แก้ไขประเภทคำขอ",
-                "requestcode": "Request Code",
-                "requestcodeHint": "Request Code",
-                "description": "Request Description",
-                "descriptionHint": "Request Description"
+                "requestcode": "รหัสคำขอ",
+                "requestcodeHint": "รหัสคำขอ",
+                "description": "คำอธิบายคำขอ",
+                "descriptionHint": "คำอธิบายคำขอ"
             },
             "rejections": {
                 "title": "ประเภทการปฏิเสธ",
                 "list": "การปฏิเสธ",
                 "create": "สร้างประเภทการปฏิเสธ",
                 "edit": "แก้ไขประเภทการปฏิเสธ",
-                "rejectcode": "Reject Code",
-                "rejectcodeHint": "Reject Code",
-                "description": "Reject Description",
-                "descriptionHint": "Reject Description"
+                "rejectcode": "รหัสการปฏิเสธ",
+                "rejectcodeHint": "รหัสการปฏิเสธ",
+                "description": "คำอธิบายการปฏิเสธ",
+                "descriptionHint": "คำอธิบายการปฏิเสธ"
             },
             "reason": {
                 "title": "ประเภทเหตุผล",
                 "list": "เหตุผล",
                 "create": "สร้างประเภทเหตุผล",
                 "edit": "แก้ไขประเภทเหตุผล",
-                "reasoncode": "Reason Code",
-                "reasoncodeHint": "Enter Code",
-                "description": "Description",
-                "descriptionHint": "Enter Description",
-                "needmoreinformation": "Need more information"
+                "reasoncode": "รหัสเหตุผล",
+                "reasoncodeHint": "ป้อนรหัส",
+                "description": "คำอธิบาย",
+                "descriptionHint": "ป้อนคำอธิบาย",
+                "needmoreinformation": "ต้องการข้อมูลเพิ่มเติม"
             },
             "requestrejects": {
                 "title": "คำขอถูกปฏิเสธ",
                 "list": "รายการคำขอปฏิเสธ",
                 "create": "สร้างคำขอปฏิเสธ",
-                "edit": "Edit Request Rejects",
-                "requesttype": "Request Type",
-                "chooserequesttype": "Choose Request Type",
-                "rejecttype": "Rejects Type",
-                "chooserejecttype": "Choose Rejects Type"
+                "edit": "แก้ไขคำขอปฏิเสธ",
+                "requesttype": "ประเภทคำขอ",
+                "chooserequesttype": "เลือกประเภทคำขอ",
+                "rejecttype": "ประเภทคำขอปฏิเสธ",
+                "chooserejecttype": "เลือกประเภทการปฏิเสธ"
             },
             "requestreasons": {
                 "title": "คำขอเหตุผล",
@@ -302,14 +306,14 @@
                 "edit": "แก้ไขเหตุผลคำขอ",
                 "requesttype": "ประเภทคำขอ",
                 "chooserequesttype": "เลือกประเภทคำขอ",
-                "rejecttype": "ประเภทเหตุผล",
+                "reasontype": "ประเภทเหตุผล",
                 "chooserejecttype": "เลือกประเภทเหตุผล"
             }
         },
         "etc": {
             "fieldCannotEmpty": "ช่องต้องไม่เว้นว่าง",
             "pleaseEnterValidEmail": "กรุณาใส่อีเมล์ที่ถูกต้อง",
-            "active": "Active",
+            "active": "ใช้งาน",
             "configuration": "การกำหนดค่า",
             "updateInfo": "อัพเดตข้อมูล",
             "delete": "ลบ"
@@ -374,20 +378,6 @@
         "step7": {
             "title": "การรับทราบและยินยอม",
             "subtitle": "ท่านได้อ่านและเข้าใจเนื้อหาของคำร้องขอฉบับนี้อย่างละเอียดแล้ว และยืนยันว่าข้อมูลต่าง ๆ ที่ได้แจ้งให้แก่บริษัททราบนั้นเป็นความจริง ถูกต้องท่านเข้าใจดีว่าการตรวจสอบเพื่อยืนยัน อำนาจตัวตนและถิ่นที่อยู่นั้นเป็นการจำเป็นอย่างยิ่งเพื่อพิจารณาดำเนินการตามสิทธิที่ท่านร้องขอหากท่านให้ข้อมูลที่ผิดพลาดด้วยเจตนาทุจริตท่านอาจถูกดำเนินคดีตามกฎหมายได้ และบริษัทอาจขอข้อมูลเพิ่มเติมจากท่านเพื่อการตรวจสอบดังกล่าวเพื่อให้การดำเนินการตามคำร้องของท่านเป็นไปอย่างถูกต้องครบถ้วนต่อไป"
-        }
-    },
-    "consentManagement1": {
-        "cf": {
-            "consentForms": {
-                "consentForms": "ข้อมูลแบบฟอร์ม",
-                "create": "Edit consent form",
-                "edit": "Create consent form",
-                "title": "Title",
-                "description": "Description",
-                "detail": "รายละเอียดแบบฟอร์มความยินยอม",
-                "consentFormInfo": "ข้อมูลขวัตถุ-ประสงค์",
-                "form": "แบบฟอร์ม"
-            }
         }
     }
 }
