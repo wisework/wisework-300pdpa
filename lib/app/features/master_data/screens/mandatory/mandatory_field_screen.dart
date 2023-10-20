@@ -11,6 +11,7 @@ import 'package:pdpa/app/features/authentication/bloc/sign_in/sign_in_bloc.dart'
 import 'package:pdpa/app/features/master_data/bloc/mandatory/mandatory_field/mandatory_field_bloc.dart';
 import 'package:pdpa/app/features/master_data/widgets/master_data_item_card.dart';
 import 'package:pdpa/app/shared/widgets/customs/custom_icon_button.dart';
+import 'package:pdpa/app/shared/widgets/screens/example_screen.dart';
 import 'package:pdpa/app/shared/widgets/templates/pdpa_app_bar.dart';
 
 class MandatoryFieldScreen extends StatefulWidget {
@@ -177,16 +178,23 @@ class _MandatoryFieldViewState extends State<MandatoryFieldView> {
                       );
                     }
 
-                    return ListView.builder(
-                      itemCount: mandatoryFields.length,
-                      itemBuilder: (context, index) {
-                        return _buildItemCard(
-                          context,
-                          key: mandatoryFields[index].id,
-                          mandatoryField: mandatoryFields[index],
-                        );
-                      },
-                    );
+                    return state.mandatoryFields.isNotEmpty
+                        ? ListView.builder(
+                            itemCount: mandatoryFields.length,
+                            itemBuilder: (context, index) {
+                              return _buildItemCard(
+                                context,
+                                key: mandatoryFields[index].id,
+                                mandatoryField: mandatoryFields[index],
+                              );
+                            },
+                          )
+                        : ExampleScreen(
+                            headderText: tr('masterData.main.mandatories'),
+                            buttonText: tr('masterData.main.create'),
+                            descriptionText: tr('masterData.main.create'),
+                          
+                            onPress: () {});
                   }
                   if (state is MandatoryFieldError) {
                     return Center(

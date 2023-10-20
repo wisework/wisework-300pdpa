@@ -12,6 +12,7 @@ import 'package:pdpa/app/features/master_data/routes/master_data_route.dart';
 import 'package:pdpa/app/features/master_data/widgets/master_data_item_card.dart';
 import 'package:pdpa/app/shared/utils/constants.dart';
 import 'package:pdpa/app/shared/widgets/customs/custom_icon_button.dart';
+import 'package:pdpa/app/shared/widgets/screens/example_screen.dart';
 import 'package:pdpa/app/shared/widgets/templates/pdpa_app_bar.dart';
 
 class PurposeCategoryScreen extends StatefulWidget {
@@ -60,7 +61,7 @@ class _PurposeCategoryViewState extends State<PurposeCategoryView> {
     PurposeCategoryModel(
         id: '1',
         title: const [
-          LocalizedModel(language: 'en-US', text: 'Test1'), 
+          LocalizedModel(language: 'en-US', text: 'Test1'),
           LocalizedModel(language: 'en-US', text: 'Test1'),
         ],
         description: const [
@@ -122,15 +123,28 @@ class _PurposeCategoryViewState extends State<PurposeCategoryView> {
               child: BlocBuilder<PurposeCategoryBloc, PurposeCategoryState>(
                 builder: (context, state) {
                   if (state is GotPurposeCategories) {
-                    return ListView.builder(
-                      itemCount: state.purposeCategories.length,
-                      itemBuilder: (context, index) {
-                        return _buildItemCard(
-                          context,
-                          purposeCategory: state.purposeCategories[index],
-                        );
-                      },
-                    );
+                    return state.purposeCategories.isNotEmpty
+                        ? ListView.builder(
+                            itemCount: state.purposeCategories.length,
+                            itemBuilder: (context, index) {
+                              return _buildItemCard(
+                                context,
+                                purposeCategory: state.purposeCategories[index],
+                              );
+                            },
+                          )
+                        : ExampleScreen(
+                            headderText:
+                                tr('masterData.cm.purposeCategory.list'),
+                            buttonText:
+                                tr('masterData.cm.purposeCategory.create'),
+                            descriptionText:
+                                tr('masterData.cm.purposeCategory.create'),
+                           
+                            onPress: () {
+                              context.push(
+                                  MasterDataRoute.createPurposeCategory.path);
+                            });
                   }
                   if (state is PurposeCategoryError) {
                     return Center(

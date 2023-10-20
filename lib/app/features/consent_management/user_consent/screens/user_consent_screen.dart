@@ -8,11 +8,13 @@ import 'package:pdpa/app/data/models/consent_management/consent_form_model.dart'
 import 'package:pdpa/app/data/models/consent_management/user_consent_model.dart';
 import 'package:pdpa/app/data/models/etc/user_input_text.dart';
 import 'package:pdpa/app/features/authentication/bloc/sign_in/sign_in_bloc.dart';
+import 'package:pdpa/app/features/consent_management/consent_form/routes/consent_form_route.dart';
 import 'package:pdpa/app/features/consent_management/user_consent/bloc/user_consent/user_consent_bloc.dart';
 import 'package:pdpa/app/features/consent_management/user_consent/routes/user_consent_route.dart';
 import 'package:pdpa/app/shared/drawers/pdpa_drawer.dart';
 import 'package:pdpa/app/shared/widgets/customs/custom_icon_button.dart';
 import 'package:pdpa/app/shared/widgets/material_ink_well.dart';
+import 'package:pdpa/app/shared/widgets/screens/example_screen.dart';
 import 'package:pdpa/app/shared/widgets/templates/pdpa_app_bar.dart';
 
 class UserConsentScreen extends StatefulWidget {
@@ -90,22 +92,36 @@ class _UserConsentViewState extends State<UserConsentView> {
               child: BlocBuilder<UserConsentBloc, UserConsentState>(
                 builder: (context, state) {
                   if (state is GotUserConsents) {
-                    return ListView.builder(
-                      itemCount: state.userConsents.length,
-                      itemBuilder: (context, index) {
-                        return _buildItemCard(
-                          context,
-                          userConsent: state.userConsents[index],
-                          consentForm: state.consentForms.firstWhere(
-                            (role) =>
-                                role.id ==
-                                state.userConsents[index].consentFormId,
-                            orElse: () => ConsentFormModel.empty(),
-                          ),
-                          mandatorySelected: state.mandatoryFields.first.id,
-                        );
-                      },
-                    );
+                    return state.userConsents.isNotEmpty
+                        ? ListView.builder(
+                            itemCount: state.userConsents.length,
+                            itemBuilder: (context, index) {
+                              return _buildItemCard(
+                                context,
+                                userConsent: state.userConsents[index],
+                                consentForm: state.consentForms.firstWhere(
+                                  (role) =>
+                                      role.id ==
+                                      state.userConsents[index].consentFormId,
+                                  orElse: () => ConsentFormModel.empty(),
+                                ),
+                                mandatorySelected:
+                                    state.mandatoryFields.first.id,
+                              );
+                            },
+                          )
+                        : ExampleScreen(
+                            headderText: tr(
+                                'consentManagement.userConsent.userConsents'),
+                            buttonText:
+                                tr('consentManagement.userConsent.createForm.create'),
+                            descriptionText:
+                                tr('consentManagement.userConsent.createForm.create'),
+                           
+                            onPress: () {
+                              context.push(
+                                  ConsentFormRoute.createConsentForm.path);
+                            });
                   }
                   if (state is UserConsentError) {
                     return Center(

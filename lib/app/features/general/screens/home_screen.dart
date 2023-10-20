@@ -312,7 +312,7 @@ class _HomeScreenState extends State<HomeScreen> {
                         String currentCardTitle = cardTitles[index];
                         return GestureDetector(
                           onTap: () {
-                            if (currentCardTitle == 'Consent Forms') {
+                            if (currentCardTitle == tr("app.features.consentforms")) {
                               _selectMenuDrawer(
                                 DrawerMenuModel(
                                   value: 'consent_forms',
@@ -322,7 +322,7 @@ class _HomeScreenState extends State<HomeScreen> {
                                   parent: 'consent_management',
                                 ),
                               );
-                            } else if (currentCardTitle == 'User Consent') {
+                            }  if (currentCardTitle == tr("app.features.userconsents")) {
                               _selectMenuDrawer(
                                 DrawerMenuModel(
                                   value: 'user_consents',
@@ -332,7 +332,7 @@ class _HomeScreenState extends State<HomeScreen> {
                                   parent: 'consent_management',
                                 ),
                               );
-                            } else if (currentCardTitle == 'Master Data') {
+                            }  if (currentCardTitle == tr("app.features.masterdata")) {
                               _selectMenuDrawer(
                                 DrawerMenuModel(
                                   value: 'master_data',
@@ -344,9 +344,9 @@ class _HomeScreenState extends State<HomeScreen> {
                             }
                           },
                           child: Container(
-                            // width: 160,
-                            // height: 200,
-                            // alignment: Alignment.center,
+                            width: 200,
+                            height: 200,
+                            alignment: Alignment.center,
                             // color: Theme.of(context).colorScheme.outline,
                             padding: const EdgeInsets.all(
                                 UiConfig.defaultPaddingSpacing),
@@ -372,13 +372,16 @@ class _HomeScreenState extends State<HomeScreen> {
                               children: [
                                 Icon(
                                   icons[index],
-                                  size: 20,
+                                  size: 30,
                                 ),
                                 const SizedBox(height: 20.0),
-                                Text(
-                                  cardTitles[index],
-                                  style:
-                                      Theme.of(context).textTheme.titleMedium,
+                                Expanded(
+                                  child: Text(
+                                    cardTitles[index],
+                                    style:
+                                        Theme.of(context).textTheme.titleMedium,
+                                    textAlign: TextAlign.center,
+                                  ),
                                 ),
                               ],
                             ),
@@ -442,7 +445,9 @@ class _HomeScreenState extends State<HomeScreen> {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: <Widget>[
                     Text(
-                      title.isNotEmpty ? title : tr('general.home.thisDataIsNotStored'),
+                      title.isNotEmpty
+                          ? title
+                          : tr('general.home.thisDataIsNotStored'),
                       style: Theme.of(context).textTheme.bodyMedium,
                     ),
                     Padding(
