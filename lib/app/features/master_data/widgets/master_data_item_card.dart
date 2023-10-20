@@ -9,56 +9,25 @@ class MasterDataItemCard extends StatelessWidget {
     required this.title,
     required this.subtitle,
     required this.status,
-    required this.onTap,
+    this.onTap,
   });
 
   final String title;
   final String subtitle;
   final ActiveStatus status;
-  final VoidCallback onTap;
+  final VoidCallback? onTap;
 
   @override
   Widget build(BuildContext context) {
     return Column(
       mainAxisSize: MainAxisSize.min,
       children: <Widget>[
-        MaterialInkWell(
-          onTap: onTap,
-          child: Padding(
-            padding: const EdgeInsets.all(UiConfig.defaultPaddingSpacing),
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: <Widget>[
-                Expanded(
-                  child: Column(
-                    mainAxisSize: MainAxisSize.min,
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: <Widget>[
-                      Text(
-                        title,
-                        style: Theme.of(context).textTheme.titleMedium,
-                      ),
-                      Visibility(
-                        visible: subtitle.isNotEmpty,
-                        child: Padding(
-                          padding: const EdgeInsets.only(
-                            top: UiConfig.textLineSpacing,
-                          ),
-                          child: Text(
-                            subtitle,
-                            style: Theme.of(context).textTheme.bodySmall,
-                          ),
-                        ),
-                      ),
-                    ],
-                  ),
-                ),
-                _buildCardStatus(context),
-              ],
-            ),
-          ),
-        ),
+        onTap != null
+            ? MaterialInkWell(
+                onTap: onTap!,
+                child: _buildCardContent(context),
+              )
+            : _buildCardContent(context),
         Padding(
           padding: const EdgeInsets.symmetric(
             horizontal: UiConfig.defaultPaddingSpacing,
@@ -69,6 +38,43 @@ class MasterDataItemCard extends StatelessWidget {
           ),
         ),
       ],
+    );
+  }
+
+  Padding _buildCardContent(BuildContext context) {
+    return Padding(
+      padding: const EdgeInsets.all(UiConfig.defaultPaddingSpacing),
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: <Widget>[
+          Expanded(
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: <Widget>[
+                Text(
+                  title,
+                  style: Theme.of(context).textTheme.titleMedium,
+                ),
+                Visibility(
+                  visible: subtitle.isNotEmpty,
+                  child: Padding(
+                    padding: const EdgeInsets.only(
+                      top: UiConfig.textLineSpacing,
+                    ),
+                    child: Text(
+                      subtitle,
+                      style: Theme.of(context).textTheme.bodySmall,
+                    ),
+                  ),
+                ),
+              ],
+            ),
+          ),
+          _buildCardStatus(context),
+        ],
+      ),
     );
   }
 

@@ -158,12 +158,12 @@ class _MandatoryFieldViewState extends State<MandatoryFieldView> {
                         itemBuilder: (context, index) {
                           return _buildItemCard(
                             context,
-                            key: mandatoryFields[index].id,
                             mandatoryField: mandatoryFields[index],
                           );
                         },
                         itemCount: mandatoryFields.length,
                         onReorder: _setPriority,
+                        buildDefaultDragHandles: false,
                         physics: const NeverScrollableScrollPhysics(),
                         shrinkWrap: true,
                       );
@@ -174,7 +174,6 @@ class _MandatoryFieldViewState extends State<MandatoryFieldView> {
                       itemBuilder: (context, index) {
                         return _buildItemCard(
                           context,
-                          key: mandatoryFields[index].id,
                           mandatoryField: mandatoryFields[index],
                         );
                       },
@@ -200,9 +199,8 @@ class _MandatoryFieldViewState extends State<MandatoryFieldView> {
     );
   }
 
-  Padding _buildItemCard(
+  Row _buildItemCard(
     BuildContext context, {
-    required String key,
     required MandatoryFieldModel mandatoryField,
   }) {
     const language = 'en-US';
@@ -211,17 +209,32 @@ class _MandatoryFieldViewState extends State<MandatoryFieldView> {
       orElse: () => const LocalizedModel.empty(),
     );
 
-    return Padding(
-      key: ValueKey(key),
-      padding: EdgeInsets.only(
-        right: isEditable ? UiConfig.actionSpacing * 4 : 0,
-      ),
-      child: MasterDataItemCard(
-        title: title.text,
-        subtitle: customInputTypeNames[mandatoryField.inputType].toString(),
-        status: mandatoryField.status,
-        onTap: () {},
-      ),
+    return Row(
+      key: ValueKey(mandatoryField.id),
+      children: <Widget>[
+        Expanded(
+          child: MasterDataItemCard(
+            title: title.text,
+            subtitle: customInputTypeNames[mandatoryField.inputType].toString(),
+            status: mandatoryField.status,
+          ),
+        ),
+        Visibility(
+          visible: isEditable,
+          child: Padding(
+            padding: const EdgeInsets.symmetric(
+              horizontal: UiConfig.actionSpacing,
+            ),
+            child: ReorderableDragStartListener(
+              index: mandatoryFields.indexOf(mandatoryField),
+              child: Icon(
+                Ionicons.reorder_three_outline,
+                color: Theme.of(context).colorScheme.primary,
+              ),
+            ),
+          ),
+        ),
+      ],
     );
   }
 }
