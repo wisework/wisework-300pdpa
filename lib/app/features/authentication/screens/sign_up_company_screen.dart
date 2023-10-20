@@ -5,7 +5,6 @@ import 'package:go_router/go_router.dart';
 import 'package:ionicons/ionicons.dart';
 import 'package:pdpa/app/config/config.dart';
 import 'package:pdpa/app/data/models/authentication/company_model.dart';
-import 'package:pdpa/app/data/presets/mandatory_field_preset.dart';
 import 'package:pdpa/app/features/authentication/bloc/sign_in/sign_in_bloc.dart';
 import 'package:pdpa/app/features/authentication/bloc/sign_up_company/sign_up_company_bloc.dart';
 import 'package:pdpa/app/features/authentication/routes/authentication_route.dart';
@@ -69,10 +68,6 @@ class _SignUpCompanyViewState extends State<SignUpCompanyView> {
           company: company
               .copyWith(name: companyNameController.text)
               .setCreate(signedIn.user.email, DateTime.now()),
-          mandatoryFields: mandatoryFieldPreset
-              .map((field) =>
-                  field.setCreate(signedIn.user.email, DateTime.now()))
-              .toList(),
         );
         context.read<SignUpCompanyBloc>().add(event);
       }
