@@ -181,6 +181,15 @@ class _EditCustomFieldViewState extends State<EditCustomFieldView> {
 
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
 
+  final Map<TextInputType, String> customInputTypeNames = {
+    TextInputType.text: tr('app.text'),
+    TextInputType.multiline: tr('app.multiline'),
+    TextInputType.number: tr('app.number'),
+    TextInputType.phone: tr('app.phone'),
+    TextInputType.emailAddress: tr('app.emailAddress'),
+    TextInputType.url: tr('app.url'),
+  };
+
   @override
   void initState() {
     super.initState();
@@ -532,7 +541,7 @@ class _EditCustomFieldViewState extends State<EditCustomFieldView> {
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: <Widget>[
                 Text(
-                  tr('masterData.etc.active'), //!
+                  tr('masterData.cm.purposeCategory.active'), //!
                   style: Theme.of(context).textTheme.bodyMedium,
                 ),
                 CustomSwitchButton(

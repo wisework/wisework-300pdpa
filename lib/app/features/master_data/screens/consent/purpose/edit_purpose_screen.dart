@@ -466,7 +466,7 @@ class _EditPurposeViewState extends State<EditPurposeView> {
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: <Widget>[
                 Text(
-                  tr('masterData.etc.active'),
+                  tr('masterData.cm.purposeCategory.active'),
                   style: Theme.of(context).textTheme.bodyMedium,
                 ),
                 CustomSwitchButton(

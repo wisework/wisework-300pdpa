@@ -1,8 +1,9 @@
+// ignore: depend_on_referenced_packages
 import 'package:bloc/bloc.dart';
 import 'package:equatable/equatable.dart';
 import 'package:pdpa/app/data/models/consent_management/consent_form_model.dart';
 import 'package:pdpa/app/data/models/master_data/purpose_category_model.dart';
-import 'package:pdpa/app/features/master_data/bloc/consent/purpose_category/purpose_category_bloc.dart';
+
 
 part 'current_edit_consent_form_state.dart';
 

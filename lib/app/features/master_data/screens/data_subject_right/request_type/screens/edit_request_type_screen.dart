@@ -400,7 +400,7 @@ class _EditRequestTypeViewState extends State<EditRequestTypeView> {
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: <Widget>[
                 Text(
-                  tr('masterData.etc.active'),
+                  tr('masterData.cm.purposeCategory.active'),
                   style: Theme.of(context).textTheme.bodyMedium,
                 ),
                 CustomSwitchButton(

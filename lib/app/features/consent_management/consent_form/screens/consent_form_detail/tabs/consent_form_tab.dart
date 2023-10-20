@@ -6,19 +6,14 @@ import 'package:flutter/rendering.dart';
 import 'package:flutter/services.dart';
 import 'package:image_gallery_saver/image_gallery_saver.dart';
 import 'package:pdpa/app/config/config.dart';
-
 import 'package:pdpa/app/data/models/consent_management/consent_form_model.dart';
 import 'package:pdpa/app/data/models/consent_management/consent_theme_model.dart';
 import 'package:pdpa/app/data/models/master_data/custom_field_model.dart';
 import 'package:pdpa/app/data/models/master_data/mandatory_field_model.dart';
 import 'package:pdpa/app/data/models/master_data/purpose_category_model.dart';
 import 'package:pdpa/app/data/models/master_data/purpose_model.dart';
-
 import 'package:pdpa/app/features/consent_management/consent_form/widgets/consent_form_preview.dart';
-import 'package:pdpa/app/shared/widgets/customs/custom_button.dart';
-
 import 'package:pdpa/app/shared/widgets/customs/custom_container.dart';
-
 import 'package:qr_flutter/qr_flutter.dart';
 
 class ConsentFormTab extends StatefulWidget {
@@ -75,14 +70,17 @@ class _ConsentFormTabState extends State<ConsentFormTab> {
               children: <Widget>[
                 Padding(
                   padding: const EdgeInsets.only(bottom: 10.0),
-                  child: Text(tr("consentManagement.consentForm.consentFormDetails.form.shareLinkForm"),
+                  child: Text(
+                      tr(
+                          "consentManagement.consentForm.consentFormDetails.form.shareLinkForm"),
                       style: Theme.of(context).textTheme.titleLarge?.copyWith(
                           color: Theme.of(context).colorScheme.onSurface)),
                 ),
                 Padding(
                   padding: const EdgeInsets.only(bottom: 10.0),
                   child: Text(
-                      tr("consentManagement.consentForm.consentFormDetails.form.descriptionShare"),
+                      tr(
+                          "consentManagement.consentForm.consentFormDetails.form.descriptionShare"),
                       style: Theme.of(context).textTheme.labelLarge?.copyWith(
                           color: Theme.of(context).colorScheme.onSurface)),
                 ),

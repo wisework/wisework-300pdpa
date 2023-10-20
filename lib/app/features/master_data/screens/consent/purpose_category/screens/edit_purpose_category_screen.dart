@@ -80,7 +80,7 @@ class _EditPurposeCategoryScreenState extends State<EditPurposeCategoryScreen> {
         listener: (context, state) {
           if (state is CreatedCurrentPurposeCategory) {
             BotToast.showText(
-              text: 'Create successfully', //!
+              text: tr('masterData.cm.purposeCategory.createSuccess'), //!
               contentColor:
                   Theme.of(context).colorScheme.secondary.withOpacity(0.75),
               borderRadius: BorderRadius.circular(8.0),
@@ -100,7 +100,7 @@ class _EditPurposeCategoryScreenState extends State<EditPurposeCategoryScreen> {
 
           if (state is UpdatedCurrentPurposeCategory) {
             BotToast.showText(
-              text: 'Update successfully', //!
+              text: tr('masterData.cm.purposeCategory.updateSuccess'), //!
               contentColor:
                   Theme.of(context).colorScheme.secondary.withOpacity(0.75),
               borderRadius: BorderRadius.circular(8.0),
@@ -114,7 +114,7 @@ class _EditPurposeCategoryScreenState extends State<EditPurposeCategoryScreen> {
 
           if (state is DeletedCurrentPurposeCategory) {
             BotToast.showText(
-              text: 'Delete successfully', //!
+              text: tr('masterData.cm.purposeCategory.deleteSuccess'), //!
               contentColor:
                   Theme.of(context).colorScheme.secondary.withOpacity(0.75),
               borderRadius: BorderRadius.circular(8.0),
@@ -557,7 +557,7 @@ class _EditPurposeCategoryViewState extends State<EditPurposeCategoryView> {
                       onTap: () {
                         context.push(MasterDataRoute.createPurpose.path);
                       },
-                      text: 'Add new Purpose', //!
+                      text: 'masterData.cm.purposeCategory.addnewPurpose', //!
                     ),
                     const SizedBox(height: UiConfig.lineSpacing),
                   ],
@@ -567,7 +567,7 @@ class _EditPurposeCategoryViewState extends State<EditPurposeCategoryView> {
           },
         );
       },
-      text: 'Add Purpose', //!
+      text: tr('masterData.cm.purposeCategory.addPurpose'), //!
     );
   }
 
@@ -610,7 +610,7 @@ class _EditPurposeCategoryViewState extends State<EditPurposeCategoryView> {
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: <Widget>[
                 Text(
-                  tr('masterData.etc.active'),
+                  tr('masterData.cm.purposeCategory.active'),
                   style: Theme.of(context).textTheme.bodyMedium,
                 ),
                 CustomSwitchButton(

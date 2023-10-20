@@ -73,9 +73,9 @@
             "createForm": {
                 "create": "Create Consent Form",
                 "edit": "Edit consent form",
-                "section": "Request Form Information",
+                "section": "Request form information",
                 "title": "Title",
-                "hinttitle": "Enter Title",
+                "hinttitle": "Enter title",
                 "description": "Description",
                 "address": "Address",
                 "telNumber": "Telephone number",
@@ -87,7 +87,7 @@
                 "selectPurposeCategory": "Select purpose category"
             },
             "consentFormDetails": {
-                "title": "Consent Form Details",
+                "title": "Consent form details",
                 "id": "ID",
                 "storedInformation": "Stored information",
                 "Purposes": "Purpose",
@@ -104,7 +104,7 @@
                     "telNumber": "Telephone number",
                     "nameSurename": "Name-Surname",
                     "email": "Email",
-                    "idCardNumber": "ID Card Number"
+                    "idCardNumber": "ID card number"
                 }
             },
             "consentFormsetting": {
@@ -122,7 +122,7 @@
                 "deleteSuccess": "Delete successfully",
                 "newConsentTheme": "New consent theme",
                 "editConsentTheme": "Edit consent theme",
-                "consentThemeInfomation": "Consent Theme Infomation",
+                "consentThemeInfomation": "Consent theme infomation",
                 "enterConsentThemeTitle": "Enter consent theme title",
                 "headerTextColor": "Header text color",
                 "headerBackgroundColor": "Header background color",
@@ -186,7 +186,7 @@
             }
         },
         "userConsent": {
-            "userConsents": "User Consents",
+            "userConsents": "User consents",
             "createForm": {
                 "create": "Create Consent Form",
                 "section": "Request Form Information",
@@ -223,114 +223,122 @@
         "main": {
             "mandatories": "Mandatories",
             "mandatoryFields": {
-                "title": "Mandatory Field",
-                "list": "Mandatory Fields",
-                "edit": "Edit Mandatory Field",
-                "create": "Create Mandatory Field"
+                "title": "Mandatory field",
+                "list": "Mandatory fields",
+                "edit": "Edit mandatory field",
+                "create": "Create mandatory field"
             }
         },
         "cm": {
             "consents": "Consents",
             "customfields": {
-                "title": "Custom Field",
-                "list": "Custom Fields",
-                "edit": "Edit Custom Fields",
-                "create": "Create Custom Fields",
+                "title": "Custom field",
+                "list": "Custom fields",
+                "edit": "Edit Custom fields",
+                "create": "Create custom fields",
                 "formtitle": "Title",
-                "formtitlehint": "Enter Title",
-                "hinttext": "Hint Text",
-                "hinttexthint": "Enter Hint Text",
-                "inputtype": "Input Type",
-                "inputtypehint": "Choose Input Type",
-                "lenghtlimit": "Lenght Limit",
-                "lenghtlimithint": "Enter Lenght Limit",
-                "maxline": "Max Line",
-                "maxlinehint": "Enter Max Line",
-                "minline": "Min Line",
-                "minlinehint": "Enter Min Line"
+                "formtitlehint": "Enter title",
+                "hinttext": "Hint text",
+                "hinttexthint": "Enter hint text",
+                "inputtype": "Input type",
+                "inputtypehint": "Choose input type",
+                "lenghtlimit": "Lenght limit",
+                "lenghtlimithint": "Enter lenght limit",
+                "maxline": "Max line",
+                "maxlinehint": "Enter max line",
+                "minline": "Min line",
+                "minlinehint": "Enter min line"
             },
             "purpose": {
                 "title": "Purpose",
                 "list": "Purposes",
-                "create": "Create Purpose",
-                "edit": "Edit Purpose",
+                "create": "Create purpose",
+                "edit": "Edit purpose",
                 "description": "Description",
                 "descriptionHint": "Enter description",
-                "warningDescription": "Warning Description",
+                "warningDescription": "Warning description",
                 "warningDescriptionHint": "Enter warning description",
-                "retentionPeriod": "Retention Period",
+                "retentionPeriod": "Retention period",
                 "retentionPeriodHint": "Enter retention period",
-                "periodUnit": "Period Unit"
+                "periodUnit": "Period unit"
             },
             "purposeCategory": {
-                "title": "Purpose Category",
-                "list": "Purpose Categories",
-                "create": "Create Purpose Category",
-                "edit": "Edit Purpose Category",
+                "title": "Purpose category",
+                "list": "Purpose categories",
+                "create": "Create purpose category",
+                "edit": "Edit purpose category",
                 "titlform": "Title",
                 "titleformHint": "Enter title",
                 "description": "Description",
                 "descriptionHint": "Enter description",
                 "priority": "Priority",
-                "priorityHint": "Enter Priority",
+                "priorityHint": "Enter priority",
                 "purposes": "Purposes",
-                "purposeList": "Purpose List",
-                "noData": "No Data"
+                "purposeList": "Purpose list",
+                "noData": "No data",
+                "addPurpose" : "Add purpose",
+                "addObjectiveCategory" : "Add objective category",
+                "createSuccess" : "Create successfully",
+                "updateSuccess" : "Update successfully",
+                "deleteSuccess" : "Delete successfully",
+                "active": "Active",
+                "addnewPurpose" : "Add new Purpose"
             }
         },
         "dsr": {
             "datasubjectright": "Data Subject Right",
             "request": {
-                "title": "Request Types",
+                "title": "Request types",
                 "list": "Requests",
-                "create": "Create Request Type",
-                "edit": "Edit Request Type",
-                "requestcode": "Request Code",
-                "requestcodeHint": "Request Code",
-                "description": "Request Description",
-                "descriptionHint": "Request Description"
+                "create": "Create request type",
+                "edit": "Edit request type",
+                "requestcode": "Request code",
+                "requestcodeHint": "Request code",
+                "description": "Request description",
+                "descriptionHint": "Request description"
             },
             "rejections": {
-                "title": "Reject Type",
+                "title": "Reject type",
                 "list": "Rejections",
-                "create": "Create Reject Type",
-                "edit": "Edit Reject Type",
-                "rejectcode": "Reject Code",
-                "rejectcodeHint": "Reject Code",
-                "description": "Reject Description",
-                "descriptionHint": "Reject Description"
+                "create": "Create teject type",
+                "edit": "Edit Reject type",
+                "rejectcode": "Reject code",
+                "rejectcodeHint": "Reject code",
+                "description": "Reject description",
+                "descriptionHint": "Reject description"
             },
             "reason": {
-                "title": "Reason Type",
+                "title": "Reason type",
                 "list": "Reasons",
-                "create": "Create Reason Type",
-                "edit": "Edit Reason Type",
-                "reasoncode": "Reason Code",
-                "reasoncodeHint": "Enter Code",
+                "create": "Create reason type",
+                "edit": "Edit Reason type",
+                "reasoncode": "Reason code",
+                "reasoncodeHint": "Enter code",
                 "description": "Description",
-                "descriptionHint": "Enter Description",
+                "descriptionHint": "Enter description",
                 "needmoreinformation": "Need more information"
             },
             "requestrejects": {
-                "title": "Request Rejects",
+                "title": "Request rejects",
                 "list": "Request rejects",
-                "create": "Create Request Rejects",
-                "edit": "Edit Request Rejects",
+                "create": "Create request rejects",
+                "edit": "Edit request rejects",
                 "requesttype": "Request Type",
-                "chooserequesttype": "Choose Request Type",
-                "rejecttype": "Rejects Type",
-                "chooserejecttype": "Choose Rejects Type"
+                "chooserequesttype": "Choose request type",
+                "rejecttype": "Rejects type",
+                "chooserejecttype": "Choose rejects type",
+                "add" : "Added a decline option allowed to this request type."
             },
             "requestreasons": {
-                "title": "Request Reasons",
+                "title": "Request reasons",
                 "list": "Request reasons",
-                "create": "Create Request Reasons",
-                "edit": "Edit Request Reasons",
-                "requesttype": "Request Type",
-                "chooserequesttype": "Choose Request Type",
+                "create": "Create request reasons",
+                "edit": "Edit request reasons",
+                "requesttype": "Request type",
+                "chooserequesttype": "Choose request type",
                 "reasontype": "Reasons Type",
-                "choosereasontype": "Choose Reasons Type",
-                "addReason": "Add Reason"
+                "choosereasontype": "Choose reasons type",
+                "addReason": "Add reason"
             },
             "dataSubjectRight": {
                 "createDataSubjectRight": "Create Data Subject Right",

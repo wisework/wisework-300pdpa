@@ -172,78 +172,78 @@ class _ConsentFormViewState extends State<ConsentFormView> {
     );
   }
 
-  Wrap _sortButtonGroup(BuildContext context) {
-    return Wrap(
-      direction: Axis.horizontal,
-      crossAxisAlignment: WrapCrossAlignment.center,
-      children: <Widget>[
-        IconButton(
-          onPressed: () {},
-          padding: EdgeInsets.zero,
-          icon: Container(
-            padding: const EdgeInsets.symmetric(
-              vertical: 6.0,
-              horizontal: 12.0,
-            ),
-            decoration: BoxDecoration(
-              color: Theme.of(context).colorScheme.surface,
-              borderRadius: BorderRadius.circular(10.0),
-            ),
-            child: Center(
-              child: Text(
-                tr("consentManagement.listage.filter.all"),
-                style: Theme.of(context).textTheme.bodySmall,
-              ),
-            ),
-          ),
-        ),
-        IconButton(
-          onPressed: () {},
-          padding: EdgeInsets.zero,
-          icon: Container(
-            padding: const EdgeInsets.symmetric(
-              vertical: 6.0,
-              horizontal: 12.0,
-            ),
-            decoration: BoxDecoration(
-              color: Theme.of(context).colorScheme.surface,
-              borderRadius: BorderRadius.circular(10.0),
-            ),
-            child: Text(
-              tr("consentManagement.listage.filter.problem"),
-              style: Theme.of(context).textTheme.bodySmall,
-            ),
-          ),
-        ),
-      ],
-    );
-  }
+  // Wrap _sortButtonGroup(BuildContext context) {
+  //   return Wrap(
+  //     direction: Axis.horizontal,
+  //     crossAxisAlignment: WrapCrossAlignment.center,
+  //     children: <Widget>[
+  //       IconButton(
+  //         onPressed: () {},
+  //         padding: EdgeInsets.zero,
+  //         icon: Container(
+  //           padding: const EdgeInsets.symmetric(
+  //             vertical: 6.0,
+  //             horizontal: 12.0,
+  //           ),
+  //           decoration: BoxDecoration(
+  //             color: Theme.of(context).colorScheme.surface,
+  //             borderRadius: BorderRadius.circular(10.0),
+  //           ),
+  //           child: Center(
+  //             child: Text(
+  //               tr("consentManagement.listage.filter.all"),
+  //               style: Theme.of(context).textTheme.bodySmall,
+  //             ),
+  //           ),
+  //         ),
+  //       ),
+  //       IconButton(
+  //         onPressed: () {},
+  //         padding: EdgeInsets.zero,
+  //         icon: Container(
+  //           padding: const EdgeInsets.symmetric(
+  //             vertical: 6.0,
+  //             horizontal: 12.0,
+  //           ),
+  //           decoration: BoxDecoration(
+  //             color: Theme.of(context).colorScheme.surface,
+  //             borderRadius: BorderRadius.circular(10.0),
+  //           ),
+  //           child: Text(
+  //             tr("consentManagement.listage.filter.problem"),
+  //             style: Theme.of(context).textTheme.bodySmall,
+  //           ),
+  //         ),
+  //       ),
+  //     ],
+  //   );
+  // }
 
-  IconButton _sortByDateButton(BuildContext context) {
-    return IconButton(
-      onPressed: () {},
-      padding: EdgeInsets.zero,
-      icon: Column(
-        children: [
-          RichText(
-              text: TextSpan(
-            children: [
-              TextSpan(
-                  text: tr("consentManagement.listage.filter.date"),
-                  style: Theme.of(context).textTheme.bodyMedium),
-              WidgetSpan(
-                child: Icon(
-                  Icons.arrow_drop_down,
-                  size: 20,
-                  color: Theme.of(context).colorScheme.secondary,
-                ),
-              ),
-            ],
-          )),
-        ],
-      ),
-    );
-  }
+  // IconButton _sortByDateButton(BuildContext context) {
+  //   return IconButton(
+  //     onPressed: () {},
+  //     padding: EdgeInsets.zero,
+  //     icon: Column(
+  //       children: [
+  //         RichText(
+  //             text: TextSpan(
+  //           children: [
+  //             TextSpan(
+  //                 text: tr("consentManagement.listage.filter.date"),
+  //                 style: Theme.of(context).textTheme.bodyMedium),
+  //             WidgetSpan(
+  //               child: Icon(
+  //                 Icons.arrow_drop_down,
+  //                 size: 20,
+  //                 color: Theme.of(context).colorScheme.secondary,
+  //               ),
+  //             ),
+  //           ],
+  //         )),
+  //       ],
+  //     ),
+  //   );
+  // }
 
   _buildItemCard(
     BuildContext context, {
