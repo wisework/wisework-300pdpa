@@ -1,3 +1,4 @@
+// ignore: depend_on_referenced_packages
 import 'package:bloc/bloc.dart';
 import 'package:equatable/equatable.dart';
 import 'package:pdpa/app/data/models/master_data/request_reject_template_model.dart';
@@ -11,7 +12,7 @@ class EditRequestRejectTpBloc
   EditRequestRejectTpBloc({
     required MasterDataRepository masterDataRepository,
   })  : _masterDataRepository = masterDataRepository,
-        super(EditRequestRejectTpInitial()) {
+        super(const EditRequestRejectTpInitial()) {
     on<GetCurrentRequestRejectTpEvent>(_getCurrentRequestRejectTpHandler);
     on<CreateCurrentRequestRejectTpEvent>(_createCurrentRequestRejectTpHandler);
     on<UpdateCurrentRequestRejectTpEvent>(_updateCurrentRequestRejectTpHandler);

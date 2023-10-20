@@ -222,14 +222,27 @@ class _ConsentFormTabState extends State<ConsentFormTab> {
                           padding: const EdgeInsets.only(left: 5.0),
                           child: IconButton(
                             onPressed: () {
-                              if (widget
-                                  .consentForm.linkToPolicyUrl.isNotEmpty) {
-                                Clipboard.setData(ClipboardData(
-                                    text: widget.consentForm.consentFormUrl));
-                                BotToast.showText(text: "URL copied");
-                              } else {
-                                BotToast.showText(text: "URL copy fail");
-                              }
+                              Clipboard.setData(
+                                ClipboardData(
+                                    text: widget.consentForm.consentFormUrl),
+                              );
+
+                              BotToast.showText(
+                                text: 'URL Copied',
+                                contentColor: Theme.of(context)
+                                    .colorScheme
+                                    .secondary
+                                    .withOpacity(0.75),
+                                borderRadius: BorderRadius.circular(8.0),
+                                textStyle: Theme.of(context)
+                                    .textTheme
+                                    .bodyMedium!
+                                    .copyWith(
+                                        color: Theme.of(context)
+                                            .colorScheme
+                                            .onPrimary),
+                                duration: UiConfig.toastDuration,
+                              );
                             },
                             icon: Padding(
                               padding:
