@@ -347,7 +347,7 @@ Column _buildItemCard(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: <Widget>[
                   Text(
-                    title.isNotEmpty ? title : 'This data is not stored.',
+                    title.isNotEmpty ? title : tr('general.home.thisDataIsNotStored'),
                     style: Theme.of(context).textTheme.bodyMedium,
                   ),
                   Padding(
