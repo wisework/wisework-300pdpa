@@ -10,10 +10,12 @@ import 'package:pdpa/app/data/models/master_data/purpose_category_model.dart';
 import 'package:pdpa/app/features/authentication/bloc/sign_in/sign_in_bloc.dart';
 import 'package:pdpa/app/features/consent_management/consent_form/bloc/consent_form/consent_form_bloc.dart';
 import 'package:pdpa/app/features/consent_management/consent_form/routes/consent_form_route.dart';
+
 import 'package:pdpa/app/shared/drawers/pdpa_drawer.dart';
 import 'package:pdpa/app/shared/utils/functions.dart';
 import 'package:pdpa/app/shared/widgets/customs/custom_icon_button.dart';
 import 'package:pdpa/app/shared/widgets/material_ink_well.dart';
+import 'package:pdpa/app/shared/widgets/screens/example_screen.dart';
 import 'package:pdpa/app/shared/widgets/templates/pdpa_app_bar.dart';
 
 class ConsentFormScreen extends StatefulWidget {
@@ -59,6 +61,7 @@ class ConsentFormView extends StatefulWidget {
 
 class _ConsentFormViewState extends State<ConsentFormView> {
   final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -129,22 +132,37 @@ class _ConsentFormViewState extends State<ConsentFormView> {
           const SizedBox(height: UiConfig.lineSpacing),
           Expanded(
             child: Container(
-              width: double.infinity,
-              color: Theme.of(context).colorScheme.onPrimary,
+              padding: const EdgeInsets.all(UiConfig.defaultPaddingSpacing),
+              decoration: BoxDecoration(
+                color: Theme.of(context).colorScheme.onBackground,
+              ),
               child: BlocBuilder<ConsentFormBloc, ConsentFormState>(
                 builder: (context, state) {
                   if (state is GotConsentForms) {
-                    return ListView.builder(
-                      shrinkWrap: true,
-                      itemCount: state.consentForms.length,
-                      itemBuilder: (context, index) {
-                        return _buildItemCard(
-                          context,
-                          consentForm: state.consentForms[index],
-                          purposeCategory: state.purposeCategories,
-                        );
-                      },
-                    );
+                    return state.consentForms.isNotEmpty
+                        ? ListView.builder(
+                            shrinkWrap: true,
+                            itemCount: state.consentForms.length,
+                            itemBuilder: (context, index) {
+                              return _buildItemCard(
+                                context,
+                                consentForm: state.consentForms[index],
+                                purposeCategory: state.purposeCategories,
+                              );
+                            },
+                          )
+                        : ExampleScreen(
+                            headderText: tr(
+                                'consentManagement.consentForm.consentForms'),
+                            buttonText: tr(
+                                'consentManagement.consentForm.createForm.create'),
+                            descriptionText: tr(
+                                'consentManagement.consentForm.createForm.create'),
+                            
+                            onPress: () {
+                              context.push(
+                                  ConsentFormRoute.createConsentForm.path);
+                            });
                   }
                   if (state is ConsentFormError) {
                     return Center(
