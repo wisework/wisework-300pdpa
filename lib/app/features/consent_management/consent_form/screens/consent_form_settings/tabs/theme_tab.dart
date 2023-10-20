@@ -1,3 +1,4 @@
+import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
@@ -43,7 +44,7 @@ class ThemeTab extends StatelessWidget {
           Row(
             children: <Widget>[
               Text(
-                'Themes',
+                tr('consentManagement.consentForm.themetab.themes'), //!
                 style: Theme.of(context).textTheme.titleMedium,
               ),
             ],
@@ -103,7 +104,7 @@ class ThemeTab extends StatelessWidget {
             const SizedBox(width: UiConfig.actionSpacing + 11),
             Expanded(
               child: Text(
-                'New theme',
+                tr('consentManagement.consentForm.themetab.newTheme'), //!
                 style: Theme.of(context).textTheme.bodyMedium,
               ),
             ),

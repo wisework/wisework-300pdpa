@@ -1,4 +1,5 @@
 import 'package:bot_toast/bot_toast.dart';
+import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
@@ -211,8 +212,8 @@ class _EditDataSubjectRightViewState extends State<EditDataSubjectRightView> {
         leadingIcon: _buildPopButton(),
         title: Text(
           widget.isNewDataSubjectRight
-              ? 'Create Data Subject Right'
-              : 'Edit Data Subject Right',
+              ? tr('masterData.dsr.dataSubjectRight.createDataSubjectRight')
+              : 'masterData.dsr.dataSubjectRight.editDataSubjectRight',
           style: Theme.of(context).textTheme.titleLarge,
         ),
         actions: [

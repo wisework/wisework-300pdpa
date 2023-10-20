@@ -1,4 +1,5 @@
 import 'package:bot_toast/bot_toast.dart';
+import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:pdpa/app/config/config.dart';
@@ -56,7 +57,7 @@ class _UserConsentFormScreenState extends State<UserConsentFormScreen> {
       listener: (context, state) {
         if (state is SubmittedUserConsentForm) {
           BotToast.showText(
-            text: 'Submit successfully',
+            text: tr('consentManagement.userConsent.consentFormDetails.edit.submitSuccess'),//!
             contentColor:
                 Theme.of(context).colorScheme.secondary.withOpacity(0.75),
             borderRadius: BorderRadius.circular(8.0),
@@ -136,7 +137,7 @@ class _UserConsentFormScreenState extends State<UserConsentFormScreen> {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: <Widget>[
                   Text(
-                    'I have collected your consent from filling out the form',
+                    tr('consentManagement.userConsent.consentFormDetails.edit.decription'), //!
                     style: Theme.of(context).textTheme.bodyMedium,
                   ),
                   const SizedBox(height: UiConfig.lineGap),
@@ -158,7 +159,7 @@ class _UserConsentFormScreenState extends State<UserConsentFormScreen> {
                         context.read<UserConsentFormBloc>().add(event);
                       },
                       child: Text(
-                        'Fill out the form again',
+                        tr('consentManagement.userConsent.consentFormDetails.edit.fillOutTheFormAgain'), //!
                         style: Theme.of(context).textTheme.bodyMedium?.copyWith(
                             color: Theme.of(context).colorScheme.onPrimary),
                       ),
@@ -274,7 +275,7 @@ class _UserConsentFormViewState extends State<UserConsentFormView> {
           onSubmitted: () {
             if (!userConsent.isAcceptConsent) {
               BotToast.showText(
-                text: 'Please accept consent',
+                text: tr('consentManagement.userConsent.consentFormDetails.edit.pleaseAcceptConsent'), //!
                 contentColor:
                     Theme.of(context).colorScheme.secondary.withOpacity(0.75),
                 borderRadius: BorderRadius.circular(8.0),

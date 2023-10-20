@@ -135,7 +135,7 @@ class _HomeScreenState extends State<HomeScreen> {
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: <Widget>[
                         Text(
-                          'Recently used',
+                          tr('general.home.recentlyUsed'),
                           style: Theme.of(context).textTheme.titleMedium,
                         ),
                         _buildRecent(context),
@@ -191,7 +191,7 @@ class _HomeScreenState extends State<HomeScreen> {
                         crossAxisAlignment: CrossAxisAlignment.center,
                         mainAxisAlignment: MainAxisAlignment.center,
                         children: [
-                          Text(tr('no data')), //!
+                          Text(tr('masterData.cm.purposeCategory.noData')), //!
                         ],
                       ),
                       const SizedBox(
@@ -203,7 +203,7 @@ class _HomeScreenState extends State<HomeScreen> {
                           _selectMenuDrawer(
                             DrawerMenuModel(
                               value: 'consent_forms',
-                              title: 'Consent Forms',
+                              title: tr('app.features.consentforms'),
                               icon: Ionicons.clipboard_outline,
                               route: ConsentFormRoute.consentForm,
                               parent: 'consent_management',
@@ -211,7 +211,7 @@ class _HomeScreenState extends State<HomeScreen> {
                           );
                         },
                         child: Text(
-                          tr('create new consent form'),
+                          tr('app.features.createNewConsentForm'),
                           style: Theme.of(context)
                               .textTheme
                               .titleMedium
@@ -297,9 +297,9 @@ class _HomeScreenState extends State<HomeScreen> {
 
   BlocBuilder _buildExplore(BuildContext context) {
     final List<String> cardTitles = [
-      "Consent Forms",
-      "User Consent",
-      "Master Data"
+      tr("app.features.consentforms"),
+      tr("app.features.userconsents"),
+      tr("app.features.masterdata")
     ];
     final List<IconData> icons = [
       Ionicons.clipboard_outline,
@@ -316,7 +316,7 @@ class _HomeScreenState extends State<HomeScreen> {
                   mainAxisAlignment: MainAxisAlignment.start,
                   children: [
                     Text(
-                      'Explore',
+                      tr('general.home.explore'),
                       style: Theme.of(context).textTheme.titleMedium,
                     ),
                   ],
@@ -332,7 +332,8 @@ class _HomeScreenState extends State<HomeScreen> {
                         String currentCardTitle = cardTitles[index];
                         return GestureDetector(
                           onTap: () {
-                            if (currentCardTitle == 'Consent Forms') {
+                            if (currentCardTitle ==
+                                tr("app.features.consentforms")) {
                               _selectMenuDrawer(
                                 DrawerMenuModel(
                                   value: 'consent_forms',
@@ -342,7 +343,9 @@ class _HomeScreenState extends State<HomeScreen> {
                                   parent: 'consent_management',
                                 ),
                               );
-                            } else if (currentCardTitle == 'User Consent') {
+                            }
+                            if (currentCardTitle ==
+                                tr("app.features.userconsents")) {
                               _selectMenuDrawer(
                                 DrawerMenuModel(
                                   value: 'user_consents',
@@ -352,7 +355,9 @@ class _HomeScreenState extends State<HomeScreen> {
                                   parent: 'consent_management',
                                 ),
                               );
-                            } else if (currentCardTitle == 'Master Data') {
+                            }
+                            if (currentCardTitle ==
+                                tr("app.features.masterdata")) {
                               _selectMenuDrawer(
                                 DrawerMenuModel(
                                   value: 'master_data',
@@ -364,6 +369,10 @@ class _HomeScreenState extends State<HomeScreen> {
                             }
                           },
                           child: Container(
+                            width: 200,
+                            height: 200,
+                            alignment: Alignment.center,
+                            // color: Theme.of(context).colorScheme.outline,
                             padding: const EdgeInsets.all(
                               UiConfig.defaultPaddingSpacing,
                             ),
@@ -393,9 +402,13 @@ class _HomeScreenState extends State<HomeScreen> {
                                   size: 30.0,
                                 ),
                                 const SizedBox(height: 20.0),
-                                Text(
-                                  cardTitles[index],
-                                  style: Theme.of(context).textTheme.bodySmall,
+                                Expanded(
+                                  child: Text(
+                                    cardTitles[index],
+                                    style:
+                                        Theme.of(context).textTheme.titleMedium,
+                                    textAlign: TextAlign.center,
+                                  ),
                                 ),
                               ],
                             ),
@@ -459,7 +472,9 @@ class _HomeScreenState extends State<HomeScreen> {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: <Widget>[
                     Text(
-                      title.isNotEmpty ? title : 'This data is not stored.',
+                      title.isNotEmpty
+                          ? title
+                          : tr('general.home.thisDataIsNotStored'),
                       style: Theme.of(context).textTheme.bodyMedium,
                     ),
                     Padding(

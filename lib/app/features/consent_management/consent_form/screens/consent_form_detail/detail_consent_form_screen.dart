@@ -1,3 +1,4 @@
+import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
@@ -17,7 +18,6 @@ import 'package:pdpa/app/features/consent_management/consent_form/screens/consen
 import 'package:pdpa/app/features/consent_management/consent_form/screens/consent_form_detail/tabs/consent_info_tab.dart';
 import 'package:pdpa/app/injection.dart';
 import 'package:pdpa/app/shared/widgets/customs/custom_icon_button.dart';
-import 'package:pdpa/app/shared/widgets/screens/error_message_screen.dart';
 import 'package:pdpa/app/shared/widgets/screens/loading_screen.dart';
 import 'package:pdpa/app/shared/widgets/templates/pdpa_app_bar.dart';
 
@@ -126,7 +126,7 @@ class _ConsentFormDetailViewState extends State<ConsentFormDetailView> {
             backgroundColor: Theme.of(context).colorScheme.onBackground,
           ),
           title: Text(
-            'Consent Form',
+            tr('consentManagement.consentForm.consentForms'),
             style: Theme.of(context).textTheme.titleLarge,
           ),
           actions: [
@@ -156,9 +156,13 @@ class _ConsentFormDetailViewState extends State<ConsentFormDetailView> {
             ),
           ],
           bottom: TabBar(
-            tabs: const [
-              Tab(text: 'Information'),
-              Tab(text: 'Form'),
+            tabs: [
+              Tab(
+                  text: tr(
+                      'consentManagement.consentForm.consentFormDetails.information')),
+              Tab(
+                  text: tr(
+                      'consentManagement.consentForm.consentFormDetails.filter.form')),
             ],
             // isScrollable: true,
             indicatorColor: Theme.of(context).colorScheme.primary,

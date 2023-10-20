@@ -1,3 +1,4 @@
+import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:ionicons/ionicons.dart';
@@ -133,7 +134,7 @@ class _ConsentThemeTileState extends State<ConsentThemeTile> {
               Align(
                 alignment: Alignment.center,
                 child: Text(
-                  'Data Collection',
+                  tr('consentManagement.consentForm.consentThemeTile.dataCollection'), //!
                   style: Theme.of(context)
                       .textTheme
                       .bodyMedium
@@ -142,7 +143,7 @@ class _ConsentThemeTileState extends State<ConsentThemeTile> {
               ),
               const SizedBox(height: UiConfig.lineSpacing),
               Text(
-                'This consent form outlines the terms and conditions for the collection.',
+                tr('consentManagement.consentForm.consentThemeTile.decription'), //!
                 style: Theme.of(context)
                     .textTheme
                     .bodyMedium
@@ -166,7 +167,7 @@ class _ConsentThemeTileState extends State<ConsentThemeTile> {
                   const SizedBox(width: UiConfig.actionSpacing),
                   Expanded(
                     child: Text(
-                      'The primary purpose of collecting your personal data',
+                      tr('consentManagement.consentForm.consentThemeTile.decription2'), //!
                       style: Theme.of(context).textTheme.bodyMedium?.copyWith(
                           color: widget.consentTheme.categoryTitleTextColor),
                     ),
@@ -184,7 +185,7 @@ class _ConsentThemeTileState extends State<ConsentThemeTile> {
                   const SizedBox(width: UiConfig.actionSpacing),
                   Expanded(
                     child: Text(
-                      'I accept: Consent to Personal Data Use for Property Insights and Analysis Purposes.',
+                      tr('consentManagement.consentForm.consentThemeTile.decription3'), //!
                       style: Theme.of(context)
                           .textTheme
                           .bodyMedium
@@ -200,7 +201,7 @@ class _ConsentThemeTileState extends State<ConsentThemeTile> {
                 buttonColor: widget.consentTheme.submitButtonColor,
                 splashColor: widget.consentTheme.submitTextColor,
                 child: Text(
-                  'Submit',
+                  tr('consentManagement.consentForm.consentThemeTile.submit'), //!
                   style: Theme.of(context)
                       .textTheme
                       .bodyMedium
@@ -214,7 +215,7 @@ class _ConsentThemeTileState extends State<ConsentThemeTile> {
                 buttonColor: widget.consentTheme.cancelButtonColor,
                 splashColor: widget.consentTheme.cancelTextColor,
                 child: Text(
-                  'Cancel',
+                  tr('consentManagement.consentForm.consentThemeTile.cancel'), //!
                   style: Theme.of(context)
                       .textTheme
                       .bodyMedium

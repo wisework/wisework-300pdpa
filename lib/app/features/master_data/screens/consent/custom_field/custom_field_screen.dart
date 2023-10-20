@@ -10,8 +10,8 @@ import 'package:pdpa/app/features/authentication/bloc/sign_in/sign_in_bloc.dart'
 import 'package:pdpa/app/features/master_data/bloc/consent/custom_field/custom_field_bloc.dart';
 import 'package:pdpa/app/features/master_data/routes/master_data_route.dart';
 import 'package:pdpa/app/features/master_data/widgets/master_data_item_card.dart';
-import 'package:pdpa/app/shared/utils/constants.dart';
 import 'package:pdpa/app/shared/widgets/customs/custom_icon_button.dart';
+import 'package:pdpa/app/shared/widgets/screens/example_screen.dart';
 import 'package:pdpa/app/shared/widgets/templates/pdpa_app_bar.dart';
 
 class CustomFieldScreen extends StatefulWidget {
@@ -56,6 +56,15 @@ class CustomFieldView extends StatefulWidget {
 }
 
 class _CustomFieldViewState extends State<CustomFieldView> {
+  final Map<TextInputType, String> customInputTypeNames = {
+    TextInputType.text: tr('app.text'),
+    TextInputType.multiline: tr('app.multiline'),
+    TextInputType.number: tr('app.number'),
+    TextInputType.phone: tr('app.phone'),
+    TextInputType.emailAddress: tr('app.emailAddress'),
+    TextInputType.url: tr('app.url'),
+  };
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -69,7 +78,7 @@ class _CustomFieldViewState extends State<CustomFieldView> {
           backgroundColor: Theme.of(context).colorScheme.onBackground,
         ),
         title: Text(
-          tr('masterData.cm.customfields.list'),
+          tr('masterData.cm.customfields.list'), //!
           style: Theme.of(context).textTheme.titleLarge,
         ),
       ),
@@ -86,15 +95,26 @@ class _CustomFieldViewState extends State<CustomFieldView> {
               child: BlocBuilder<CustomFieldBloc, CustomFieldState>(
                 builder: (context, state) {
                   if (state is GotCustomFields) {
-                    return ListView.builder(
-                      itemCount: state.customfields.length,
-                      itemBuilder: (context, index) {
-                        return _buildItemCard(
-                          context,
-                          customfield: state.customfields[index],
-                        );
-                      },
-                    );
+                    return state.customfields.isNotEmpty
+                        ? ListView.builder(
+                            itemCount: state.customfields.length,
+                            itemBuilder: (context, index) {
+                              return _buildItemCard(
+                                context,
+                                customfield: state.customfields[index],
+                              );
+                            },
+                          )
+                        : ExampleScreen(
+                            headderText: tr('masterData.cm.customfields.list'),
+                            buttonText: tr('masterData.cm.customfields.create'),
+                            descriptionText:
+                                tr('masterData.cm.customfields.create'),
+                           
+                            onPress: () {
+                              context
+                                  .push(MasterDataRoute.createCustomField.path);
+                            });
                   }
                   if (state is CustomfieldError) {
                     return Center(

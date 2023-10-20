@@ -2,13 +2,24 @@
     "app": {
         "name": "PDPA Management Platform",
         "language": "Language",
+        "day": "Day",
+        "month": "Month",
+        "year": "Year",
+        "text": "Text",
+        "multiline": "Multiline",
+        "number": "Number",
+        "phone": "Phone",
+        "emailAddress": "Email Address",
+        "url": "URL",
         "features": {
+            "home": "Home",
             "consentmanagement": "Consent Management",
             "consentforms": "Consent Forms",
             "userconsents": "User Consents",
             "datasubjectright": "Data Subject Right",
             "masterdata": "Master Data",
-            "setting": "Setting"
+            "setting": "Setting",
+            "createNewConsentForm": "Create New Consent Form"
         },
         "search": "Search"
     },
@@ -38,141 +49,372 @@
         "home": {
             "welcome": "Welcome",
             "hello": "Hello",
-            "tagline": "What you are looking for today"
+            "tagline": "What you are looking for today",
+            "explore": "Explore",
+            "recentlyUsed": "Recently used",
+            "thisDataIsNotStored.": "This data is not stored."
+        }
+    },
+    "consentManagement": {
+        "listage": {
+            "search": "Search",
+            "filter": {
+                "all": "All",
+                "recents": "Recents",
+                "problem": "Problem",
+                "date": "Date"
+            }
+        },
+        "consentForm": {
+            "consentForms": "Consent Forms",
+            "choosePurposeCategory": "Choose purpose category",
+            "formExample": "Form example",
+            "noPurposesAdded": "No purposes added.",
+            "noInputFieldsAdded": "No input fields added.",
+            "createForm": {
+                "create": "Create Consent Form",
+                "edit": "Edit consent form",
+                "section": "Request form information",
+                "title": "Title",
+                "hinttitle": "Enter title",
+                "description": "Description",
+                "address": "Address",
+                "telNumber": "Telephone number",
+                "nameSurename": "Name-Surname",
+                "email": "Email",
+                "idCardNumber": "ID Card Number",
+                "purpose": "Purpose",
+                "purposeOfDC": "Purpose of data collection",
+                "selectPurposeCategory": "Select purpose category"
+            },
+            "consentFormDetails": {
+                "title": "Consent form details",
+                "id": "ID",
+                "storedInformation": "Stored information",
+                "Purposes": "Purpose",
+                "information": "Information",
+                "filter": {
+                    "informationPurpose": "Information-Purpose",
+                    "form": "Form"
+                },
+                "form": {
+                    "form": "Form",
+                    "shareLinkForm": "Share link form",
+                    "descriptionShare": "This form can be used to collect information from users by Open the link or scan the QR Code.",
+                    "formExample": "Form example",
+                    "telNumber": "Telephone number",
+                    "nameSurename": "Name-Surname",
+                    "email": "Email",
+                    "idCardNumber": "ID card number"
+                }
+            },
+            "consentFormsetting": {
+                "updateSuccess": "Update successfully",
+                "consentFormSettings": "Consent Form Settings",
+                "url": "URL",
+                "header": "Header",
+                "body": "Body",
+                "footer": "Footer",
+                "theme": "Theme"
+            },
+            "editConsentTheme": {
+                "createSuccess": "Create successfully",
+                "updateSuccess": "Update successfully",
+                "deleteSuccess": "Delete successfully",
+                "newConsentTheme": "New consent theme",
+                "editConsentTheme": "Edit consent theme",
+                "consentThemeInfomation": "Consent theme infomation",
+                "enterConsentThemeTitle": "Enter consent theme title",
+                "headerTextColor": "Header text color",
+                "headerBackgroundColor": "Header background color",
+                "formTextColor": "Form text color",
+                "actionButtonColor": "Action button color",
+                "categoryIconColor": "Category icon color",
+                "categoryTitleTextColor": "Category title text color",
+                "bodyBackgroundColor": "Body background color",
+                "backgroundColor": "Background color",
+                "linkToPolicyTextColor": "Link to policy text color",
+                "submitButtonColor": "Submit button color",
+                "submitTextColor": "Submit text color",
+                "cancelButtonColor": "Cancel button color",
+                "cancelTextColor": "Cancel text color"
+            },
+            "bodytab": {
+                "background": "Background",
+                "recentlyUsed": "Recently used"
+            },
+            "footertab": {
+                "enterFooterDescription": "Enter footer description",
+                "acceptance": "Acceptance",
+                "acceptConsentText": "Accept Consent Text",
+                "enterAcceptConsentText": "Enter accept consent text",
+                "linkToPolicyText": "Link To Policy Text",
+                "enterLinkToPolicyText": "Enter link to policy text",
+                "linkToPolicyURL": "Link To Policy URL",
+                "enterLinkToPolicyURL": "Enter link to policy URL",
+                "acceptText": "Accept Text",
+                "enterAcceptText": "Enter accept text",
+                "cancelText": "Cancel Text",
+                "enterCancelText": "Enter cancel text"
+            },
+            "headertab": {
+                "loGo": "Logo",
+                "headerText": "Header Text",
+                "enterHeaderText": "Enter header text"
+            },
+            "themetab": {
+                "themes": "Themes",
+                "newTheme": "New theme"
+            },
+            "urltab": {
+                "formLinkURL": "Form link URL",
+                "urlCopied": "URL Copied",
+                "description": "If you have a problem with URL, Click",
+                "here": "here",
+                "toRegenerateANewOne.": "to regenerate a new one.",
+                "qrCodeFormLink": "QR Code form link",
+                "qrCodeHasBeenDownloaded": "QR code has been downloaded",
+                "failedToDownloadQrCode": "Failed to download QR code",
+                "download": "Download"
+            },
+            "consentThemeTile": {
+                "dataCollection": "Data Collection",
+                "decription": "This consent form outlines the terms and conditions for the collection.",
+                "decription2": "The primary purpose of collecting your personal data",
+                "decription3": "I accept: Consent to Personal Data Use for Property Insights and Analysis Purposes.",
+                "submit": "Submit",
+                "cancel": "Cancel"
+            }
+        },
+        "userConsent": {
+            "userConsents": "User consents",
+            "createForm": {
+                "create": "Create Consent Form",
+                "section": "Request Form Information",
+                "title": "Title",
+                "description": "Description",
+                "address": "Address",
+                "telNumber": "Telephone number",
+                "nameSurename": "Name-Surname",
+                "email": "Email",
+                "identificationNumber": "Identification Number",
+                "purpose": "Purpose",
+                "purposeOfDC": "Purpose of data collection",
+                "selectPurposeCategory": "Select purpose category"
+            },
+            "consentFormDetails": {
+                "filter": {
+                    "informationPurpose": "Information-Purpose",
+                    "form": "Form"
+                },
+                "title": "Consent Form Details",
+                "id": "id",
+                "storedInformation": "Stored information",
+                "Purposes": "Purpose",
+                "edit": {
+                    "submitSuccess": "Submit successfully",
+                    "decription": "I have collected your consent from filling out the form",
+                    "fillOutTheFormAgain": "Fill out the form again",
+                    "pleaseAcceptConsent": "Please accept consent"
+                }
+            }
         }
     },
     "masterData": {
         "main": {
             "mandatories": "Mandatories",
             "mandatoryFields": {
-                "title": "Mandatory Field",
-                "list": "Mandatory Fields",
-                "edit": "Edit Mandatory Field",
-                "create": "Create Mandatory Field"
+                "title": "Mandatory field",
+                "list": "Mandatory fields",
+                "edit": "Edit mandatory field",
+                "create": "Create mandatory field"
             }
         },
         "cm": {
             "consents": "Consents",
             "customfields": {
-                "title": "Custom Field",
-                "list": "Custom Fields",
-                "edit": "Edit Custom Fields",
-                "create": "Create Custom Fields",
+                "title": "Custom field",
+                "list": "Custom fields",
+                "edit": "Edit Custom fields",
+                "create": "Create custom fields",
                 "formtitle": "Title",
-                "formtitlehint": "Enter Title",
-                "hinttext": "Hint Text",
-                "hinttexthint": "Enter Hint Text",
-                "inputtype": "Input Type",
-                "inputtypehint": "Choose Input Type",
-                "lenghtlimit": "Lenght Limit",
-                "lenghtlimithint": "Enter Lenght Limit",
-                "maxline": "Max Line",
-                "maxlinehint": "Enter Max Line",
-                "minline": "Min Line",
-                "minlinehint": "Enter Min Line"
+                "formtitlehint": "Enter title",
+                "hinttext": "Hint text",
+                "hinttexthint": "Enter hint text",
+                "inputtype": "Input type",
+                "inputtypehint": "Choose input type",
+                "lenghtlimit": "Lenght limit",
+                "lenghtlimithint": "Enter lenght limit",
+                "maxline": "Max line",
+                "maxlinehint": "Enter max line",
+                "minline": "Min line",
+                "minlinehint": "Enter min line"
             },
             "purpose": {
                 "title": "Purpose",
                 "list": "Purposes",
-                "create": "Create Purpose",
-                "edit": "Edit Purpose",
+                "create": "Create purpose",
+                "edit": "Edit purpose",
                 "description": "Description",
                 "descriptionHint": "Enter description",
-                "warningDescription": "Warning Description",
+                "warningDescription": "Warning description",
                 "warningDescriptionHint": "Enter warning description",
-                "retentionPeriod": "Retention Period",
+                "retentionPeriod": "Retention period",
                 "retentionPeriodHint": "Enter retention period",
-                "periodUnit": "Period Unit"
+                "periodUnit": "Period unit"
             },
             "purposeCategory": {
-                "title": "Purpose Category",
-                "list": "Purpose Categories",
-                "create": "Create Purpose Category",
-                "edit": "Edit Purpose Category",
+                "title": "Purpose category",
+                "list": "Purpose categories",
+                "create": "Create purpose category",
+                "edit": "Edit purpose category",
                 "titlform": "Title",
                 "titleformHint": "Enter title",
                 "description": "Description",
                 "descriptionHint": "Enter description",
                 "priority": "Priority",
-                "priorityHint": "Enter Priority",
-                "purposes": "Purposes"
+                "priorityHint": "Enter priority",
+                "purposes": "Purposes",
+                "purposeList": "Purpose list",
+                "noData": "No data",
+                "addPurpose" : "Add purpose",
+                "addObjectiveCategory" : "Add objective category",
+                "createSuccess" : "Create successfully",
+                "updateSuccess" : "Update successfully",
+                "deleteSuccess" : "Delete successfully",
+                "active": "Active",
+                "addnewPurpose" : "Add new Purpose"
             }
         },
         "dsr": {
             "datasubjectright": "Data Subject Right",
             "request": {
-                "title": "Request Types",
+                "title": "Request types",
                 "list": "Requests",
-                "create": "Create Request Type",
-                "edit": "Edit Request Type",
-                "requestcode" : "Request Code",
-                "requestcodeHint" : "Request Code",
-                "description" : "Request Description",
-                "descriptionHint" : "Request Description"
+                "create": "Create request type",
+                "edit": "Edit request type",
+                "requestcode": "Request code",
+                "requestcodeHint": "Request code",
+                "description": "Request description",
+                "descriptionHint": "Request description"
             },
             "rejections": {
-                "title": "Reject Type",
+                "title": "Reject type",
                 "list": "Rejections",
-                "create": "Create Reject Type",
-                "edit": "Edit Reject Type",
-                "rejectcode" : "Reject Code",
-                "rejectcodeHint" : "Reject Code",
-                "description" : "Reject Description",
-                "descriptionHint" : "Reject Description"
+                "create": "Create teject type",
+                "edit": "Edit Reject type",
+                "rejectcode": "Reject code",
+                "rejectcodeHint": "Reject code",
+                "description": "Reject description",
+                "descriptionHint": "Reject description"
             },
             "reason": {
-                "title": "Reason Type",
+                "title": "Reason type",
                 "list": "Reasons",
-                "create": "Create Reason Type",
-                "edit": "Edit Reason Type",
-                "reasoncode" : "Reason Code",
-                "reasoncodeHint" : "Enter Code",
-                "description" : "Description",
-                "descriptionHint" : "Enter Description",
-                "needmoreinformation" : "Need more information"
+                "create": "Create reason type",
+                "edit": "Edit Reason type",
+                "reasoncode": "Reason code",
+                "reasoncodeHint": "Enter code",
+                "description": "Description",
+                "descriptionHint": "Enter description",
+                "needmoreinformation": "Need more information"
             },
             "requestrejects": {
-                "title": "Request Rejects",
+                "title": "Request rejects",
                 "list": "Request rejects",
-                "create": "Create Request Rejects",
-                "edit": "Edit Request Rejects",
-                "requesttype" : "Request Type",
-                "chooserequesttype" : "Choose Request Type",
-                "rejecttype" : "Rejects Type",
-                "chooserejecttype" : "Choose Rejects Type"
+                "create": "Create request rejects",
+                "edit": "Edit request rejects",
+                "requesttype": "Request Type",
+                "chooserequesttype": "Choose request type",
+                "rejecttype": "Rejects type",
+                "chooserejecttype": "Choose rejects type",
+                "add" : "Added a decline option allowed to this request type."
             },
             "requestreasons": {
-                "title": "Request Reasons",
+                "title": "Request reasons",
                 "list": "Request reasons",
-                "create": "Create Request Reasons",
-                "edit": "Edit Request Reasons",
-                "requesttype" : "Request Type",
-                "chooserequesttype" : "Choose Request Type",
-                "reasontype" : "Reasons Type",
-                "choosereasontype" : "Choose Reasons Type"
+                "create": "Create request reasons",
+                "edit": "Edit request reasons",
+                "requesttype": "Request type",
+                "chooserequesttype": "Choose request type",
+                "reasontype": "Reasons Type",
+                "choosereasontype": "Choose reasons type",
+                "addReason": "Add reason"
+            },
+            "dataSubjectRight": {
+                "createDataSubjectRight": "Create Data Subject Right",
+                "editDataSubjectRight": "Edit Data Subject Right"
             }
         },
         "etc": {
             "fieldCannotEmpty": "Field cannot be empty",
             "pleaseEnterValidEmail": "Please enter a valid email address",
             "active": "Active",
+            "inactive": "Inactive",
             "configuration": "Configuration",
             "updateInfo": "Update Info",
-            "delete" : "Delete"
+            "delete": "Delete"
         }
     },
-    "consentManagement": {
-        "cf": {
-            "consentForms": {
-                "consentForms": "ข้อมูลแบบฟอร์ม",
-                "create": "Edit consent form",
-                "edit": "Create consent form",
-                "title": "Title",
-                "description": "Description",
-                "detail": "รายละเอียดแบบฟอร์มความยินยอม",
-                "consentFormInfo" : "ข้อมูลขวัตถุ-ประสงค์",
-                "form" : "แบบฟอร์ม"
-            }           
+    "dataSubjectRight": {
+        "datasubjectright": "Data Subject Right",
+        "namesurename": "Name-Surname",
+        "address": "Address",
+        "email": "Email",
+        "telnumber": "Telephone number",
+        "Listpage": {
+            "filter": {
+                "all": "All",
+                "recents": "Recents",
+                "duesoon": "Due soon"
+            }
+        },
+        "step1": {
+            "areYouTheDs": "Are you the data subject?",
+            "applicantDs": "Applicant is the data subject",
+            "ApplicantAds": "Applicant is the agent of the data subject.",
+            "ApplicantInformation": "Applicant information",
+            "nameSurename": "Name-Surname",
+            "address": "Address",
+            "email": "Email",
+            "telNumber": "Telephone number"
+        },
+        "step2": {
+            "title": "",
+            "subtitle": "I hereby attach the following documents for the purpose of verification of power, identity and residency of the applicant and the data subject in order for the Company to proceed the exercise of rights accurately.",
+            "powerOfAttorney": "Power of attorney",
+            "other": "Other (If any, please specify)",
+            "documentType": "Document type",
+            "copyFile": "Copy file"
+        },
+        "step3": {
+            "namesurename": "Name-Surname",
+            "address": "Address",
+            "email": "Email",
+            "telnumber": "Telephone number"
+        },
+        "step4": {
+            "title": "Documents for verification of identity and/or residency",
+            "subtitle": "I hereby attach the following documents for the purpose of verification of power, identity and residency of the applicant and the data subject in order for the Company to proceed the exercise of rights accurately.",
+            "copyOfIdentificationCare": "Copy of identification care (for Thai nationality)",
+            "copyOfPassport": "Copy of passport (for foreigner)",
+            "copyOfHouseRegistration": "Copy of house registration ",
+            "other": "Other (If any, please specify)",
+            "documentType": "Document type",
+            "copyFile": "Copy file"
+        },
+        "step5": {
+            "applicantDs": "Applicant is the data subject",
+            "ApplicantAds": "Applicant is the agent of the data subject."
+        },
+        "step6": {
+            "title": "Data Controller disclaimer",
+            "subtitle": "In order to comply with the relevant laws, the Company may have to deny your request in some cases including but not limited to the following cases where:",
+            "decription": "1)You are not able to clearly verify that the applicant is the data subject or authorized to submit the request.2)Your request is unreasonable, e.g., the applicant may not have the right to delete personal data or the Company does not have such personal data.3)Such request is redundant, e.g., such request is repeatedly submitted or duplicated without reasonable reason.4)Retention of such personal data is for establishing legal claims, legal compliance, exercise of legal rights or defenses.5)Proceeding your request may adversely affect and harm rights and freedom of other people.6)Processing of such personal data is necessary for performance of contracts between the data subject and the Company.7)Processing of such personal data is necessary for legitimate interests of the Company.8)Other cases prescribed by the relevant law. In general, you will not be charged for the process in relation to the request. However, if your request is manifestly unreasonable or redundant, the Company may charge a processing fee at a reasonable cost."
+        },
+        "step7": {
+            "title": "Acknowledgment and Acceptance is require",
+            "subtitle": "The applicant has read and understood this form thoroughly. The applicant confirms that the information provided to the Company is true and accurate. The applicant understands that the verification of authorization, identification and residency is necessary for processing your request. Providing false information with bad faith may result in legal prosecution. In order to properly proceed with your request, the Company may request for additional information from you for verification purpose."
         }
     }
 }

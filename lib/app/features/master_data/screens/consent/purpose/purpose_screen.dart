@@ -11,6 +11,7 @@ import 'package:pdpa/app/features/master_data/routes/master_data_route.dart';
 import 'package:pdpa/app/features/master_data/widgets/master_data_item_card.dart';
 import 'package:pdpa/app/data/models/master_data/localized_model.dart';
 import 'package:pdpa/app/shared/widgets/customs/custom_icon_button.dart';
+import 'package:pdpa/app/shared/widgets/screens/example_screen.dart';
 import 'package:pdpa/app/shared/widgets/templates/pdpa_app_bar.dart';
 
 class PurposeScreen extends StatefulWidget {
@@ -66,7 +67,7 @@ class _PurposeViewState extends State<PurposeView> {
           backgroundColor: Theme.of(context).colorScheme.onBackground,
         ),
         title: Text(
-          tr('masterData.cm.purpose.list'),
+          tr('masterData.cm.purpose.list'), //!
           style: Theme.of(context).textTheme.titleLarge,
         ),
       ),
@@ -83,15 +84,24 @@ class _PurposeViewState extends State<PurposeView> {
               child: BlocBuilder<PurposeBloc, PurposeState>(
                 builder: (context, state) {
                   if (state is GotPurposes) {
-                    return ListView.builder(
-                      itemCount: state.purposes.length,
-                      itemBuilder: (context, index) {
-                        return _buildItemCard(
-                          context,
-                          purpose: state.purposes[index],
-                        );
-                      },
-                    );
+                    return state.purposes.isNotEmpty
+                        ? ListView.builder(
+                            itemCount: state.purposes.length,
+                            itemBuilder: (context, index) {
+                              return _buildItemCard(
+                                context,
+                                purpose: state.purposes[index],
+                              );
+                            },
+                          )
+                        : ExampleScreen(
+                            headderText: tr('masterData.cm.purpose.list'),
+                            buttonText: tr('masterData.cm.purpose.create'),
+                            descriptionText: tr('masterData.cm.purpose.create'),
+                           
+                            onPress: () {
+                              context.push(MasterDataRoute.createPurpose.path);
+                            });
                   }
                   if (state is PurposeError) {
                     return Center(

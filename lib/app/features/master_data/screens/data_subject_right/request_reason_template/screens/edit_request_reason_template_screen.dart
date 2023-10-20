@@ -418,7 +418,7 @@ class _EditRequestReasonTemplateViewState
             trail: true,
             title: requestNamefilter != '()'
                 ? requestNamefilter
-                : 'Choose Request Type',
+                : tr('masterData.dsr.requestreasons.chooserequesttype'),
             onTap: () async {
               //? Open ModalBottomSheet to add Purposes selected
               await showModalBottomSheet(
@@ -613,7 +613,7 @@ class _EditRequestReasonTemplateViewState
             const SizedBox(width: UiConfig.actionSpacing + 11),
             Expanded(
               child: Text(
-                'Add Reason',
+                tr('masterData.dsr.requestreasons.addReason'),
                 style: Theme.of(context).textTheme.bodyMedium,
               ),
             ),
@@ -689,7 +689,7 @@ class _EditRequestReasonTemplateViewState
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: <Widget>[
                 Text(
-                  tr('masterData.etc.active'),
+                  tr('masterData.cm.purposeCategory.active'),
                   style: Theme.of(context).textTheme.bodyMedium,
                 ),
                 CustomSwitchButton(

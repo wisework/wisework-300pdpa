@@ -1,6 +1,7 @@
 import 'dart:ui' as ui;
 
 import 'package:bot_toast/bot_toast.dart';
+import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
@@ -77,7 +78,7 @@ class _UrlTabState extends State<UrlTab> {
           Row(
             children: <Widget>[
               Text(
-                'URL ลิงค์แบบฟอร์ม',
+                tr('consentManagement.consentForm.urltab.formLinkURL'), //!
                 style: Theme.of(context).textTheme.titleMedium,
               ),
             ],
@@ -102,7 +103,7 @@ class _UrlTabState extends State<UrlTab> {
                     );
 
                     BotToast.showText(
-                      text: 'URL Copied',
+                      text: tr('consentManagement.consentForm.urltab.urlCopied'), //!
                       contentColor: Theme.of(context)
                           .colorScheme
                           .secondary
@@ -128,11 +129,11 @@ class _UrlTabState extends State<UrlTab> {
             text: TextSpan(
               children: [
                 TextSpan(
-                  text: 'If you have a problem with URL, Click ',
+                  text: tr('consentManagement.consentForm.urltab.description'), //!
                   style: Theme.of(context).textTheme.bodySmall,
                 ),
                 TextSpan(
-                  text: 'here',
+                  text: tr('consentManagement.consentForm.urltab.here'), //!
                   style: Theme.of(context).textTheme.bodySmall?.copyWith(
                       color: Theme.of(context).colorScheme.primary,
                       decoration: TextDecoration.underline,
@@ -149,7 +150,7 @@ class _UrlTabState extends State<UrlTab> {
                     },
                 ),
                 TextSpan(
-                  text: ' to regenerate a new one.',
+                  text: tr(' consentManagement.consentForm.urltab.toRegenerateANewOne'), //!
                   style: Theme.of(context).textTheme.bodySmall,
                 ),
               ],
@@ -168,7 +169,7 @@ class _UrlTabState extends State<UrlTab> {
           Row(
             children: <Widget>[
               Text(
-                'QR Code ลิงค์แบบฟอร์ม',
+                tr('consentManagement.consentForm.urltab.qrCodeFormLink'), //!
                 style: Theme.of(context).textTheme.titleMedium,
               ),
             ],
@@ -184,7 +185,7 @@ class _UrlTabState extends State<UrlTab> {
                 await _downloadQrCode().then((value) {
                   if (value) {
                     BotToast.showText(
-                      text: 'QR code has been downloaded',
+                      text: tr('consentManagement.consentForm.urltab.qrCodeHasBeenDownloaded'), //!
                       contentColor: Theme.of(context)
                           .colorScheme
                           .secondary
@@ -199,7 +200,7 @@ class _UrlTabState extends State<UrlTab> {
                     );
                   } else {
                     BotToast.showText(
-                      text: 'Failed to download QR code',
+                      text: tr('consentManagement.consentForm.urltab.failedToDownloadQrCode'), //!
                       contentColor: Theme.of(context)
                           .colorScheme
                           .secondary
@@ -227,7 +228,7 @@ class _UrlTabState extends State<UrlTab> {
                     ),
                   ),
                   Text(
-                    'Download',
+                    tr('consentManagement.consentForm.urltab.Download'), //!
                     style: Theme.of(context).textTheme.bodyMedium?.copyWith(
                         color: Theme.of(context).colorScheme.primary),
                   ),
