@@ -142,7 +142,7 @@ class _ReasonTypeViewState extends State<ReasonTypeView> {
     const language = 'en-US';
     final description = reasontype.description.firstWhere(
       (item) => item.language == language,
-      orElse: LocalizedModel.empty,
+      orElse: () => const LocalizedModel.empty(),
     );
 
     final reasoncode = reasontype.reasonCode;

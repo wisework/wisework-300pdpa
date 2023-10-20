@@ -8,6 +8,7 @@ import 'package:pdpa/app/data/models/authentication/user_model.dart';
 import 'package:pdpa/app/data/models/consent_management/consent_form_model.dart';
 import 'package:pdpa/app/data/models/consent_management/consent_theme_model.dart';
 import 'package:pdpa/app/data/models/master_data/custom_field_model.dart';
+import 'package:pdpa/app/data/models/master_data/mandatory_field_model.dart';
 import 'package:pdpa/app/data/models/master_data/purpose_category_model.dart';
 import 'package:pdpa/app/data/models/master_data/purpose_model.dart';
 import 'package:pdpa/app/features/authentication/bloc/sign_in/sign_in_bloc.dart';
@@ -62,7 +63,7 @@ class _ConsentFormSettingScreenState extends State<ConsentFormSettingScreen> {
   void _getConsentFormSettings() {
     final bloc = context.read<ConsentFormSettingsBloc>();
     bloc.add(GetConsentFormSettingsEvent(
-      consentId: widget.consentFormId,
+      consentFormId: widget.consentFormId,
       companyId: currentUser.currentCompany,
     ));
   }
@@ -89,9 +90,10 @@ class _ConsentFormSettingScreenState extends State<ConsentFormSettingScreen> {
         if (state is GotConsentFormSettings) {
           return ConsentFormSettingView(
             consentForm: state.consentForm,
-            customFields: state.customFields,
+            mandatoryFields: state.mandatoryFields,
             purposeCategories: state.purposeCategories,
             purposes: state.purposes,
+            customFields: state.customFields,
             consentThemes: state.consentThemes,
             consentTheme: state.consentTheme,
             currentUser: currentUser,
@@ -100,9 +102,10 @@ class _ConsentFormSettingScreenState extends State<ConsentFormSettingScreen> {
         if (state is UpdatedConsentFormSettings) {
           return ConsentFormSettingView(
             consentForm: state.consentForm,
-            customFields: state.customFields,
+            mandatoryFields: state.mandatoryFields,
             purposeCategories: state.purposeCategories,
             purposes: state.purposes,
+            customFields: state.customFields,
             consentThemes: state.consentThemes,
             consentTheme: state.consentTheme,
             currentUser: currentUser,
@@ -121,18 +124,20 @@ class ConsentFormSettingView extends StatefulWidget {
   const ConsentFormSettingView({
     super.key,
     required this.consentForm,
-    required this.customFields,
+    required this.mandatoryFields,
     required this.purposeCategories,
     required this.purposes,
+    required this.customFields,
     required this.consentThemes,
     required this.consentTheme,
     required this.currentUser,
   });
 
   final ConsentFormModel consentForm;
-  final List<CustomFieldModel> customFields;
+  final List<MandatoryFieldModel> mandatoryFields;
   final List<PurposeCategoryModel> purposeCategories;
   final List<PurposeModel> purposes;
+  final List<CustomFieldModel> customFields;
   final List<ConsentThemeModel> consentThemes;
   final ConsentThemeModel consentTheme;
   final UserModel currentUser;
@@ -257,9 +262,10 @@ class _ConsentFormSettingViewState extends State<ConsentFormSettingView> {
         child: SingleChildScrollView(
           child: ConsentFormPreview(
             consentForm: consentForm,
-            customFields: widget.customFields,
+            mandatoryFields: widget.mandatoryFields,
             purposeCategories: widget.purposeCategories,
             purposes: widget.purposes,
+            customFields: widget.customFields,
             consentTheme: consentTheme,
           ),
         ),

@@ -239,7 +239,7 @@ class _PurposeCategoryTileState extends State<PurposeCategoryTile> {
     final title = widget.purposeCategory.title
         .firstWhere(
           (item) => item.language == language,
-          orElse: LocalizedModel.empty,
+          orElse: () => const LocalizedModel.empty(),
         )
         .text;
     return SizedBox(
@@ -373,7 +373,7 @@ class PurposeTile extends StatelessWidget {
     final description = purpose.description
         .firstWhere(
           (item) => item.language == "en-US",
-          orElse: LocalizedModel.empty,
+          orElse: () => const LocalizedModel.empty(),
         )
         .text;
     return Column(

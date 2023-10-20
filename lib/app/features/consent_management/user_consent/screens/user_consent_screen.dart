@@ -5,6 +5,7 @@ import 'package:go_router/go_router.dart';
 import 'package:ionicons/ionicons.dart';
 import 'package:pdpa/app/config/config.dart';
 import 'package:pdpa/app/data/models/consent_management/user_consent_model.dart';
+import 'package:pdpa/app/data/models/etc/user_input_text.dart';
 import 'package:pdpa/app/features/authentication/bloc/sign_in/sign_in_bloc.dart';
 import 'package:pdpa/app/features/consent_management/user_consent/bloc/user_consent/user_consent_bloc.dart';
 import 'package:pdpa/app/features/consent_management/user_consent/routes/user_consent_route.dart';
@@ -74,14 +75,6 @@ class _UserConsentViewState extends State<UserConsentView> {
           tr('app.features.userconsents'),
           style: Theme.of(context).textTheme.titleLarge,
         ),
-        actions: [
-          CustomIconButton(
-            onPressed: () {},
-            icon: Ionicons.search,
-            iconColor: Theme.of(context).colorScheme.primary,
-            backgroundColor: Theme.of(context).colorScheme.onBackground,
-          ),
-        ],
       ),
       body: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -101,7 +94,8 @@ class _UserConsentViewState extends State<UserConsentView> {
                       itemBuilder: (context, index) {
                         return _buildItemCard(
                           context,
-                          state.userConsents[index],
+                          userConsent: state.userConsents[index],
+                          mandatorySelected: state.mandatoryFields.first.id,
                         );
                       },
                     );
@@ -132,10 +126,16 @@ class _UserConsentViewState extends State<UserConsentView> {
   }
 
   Column _buildItemCard(
-    BuildContext context,
-    UserConsentModel userConsent,
-  ) {
-    final title = userConsent.customFields.first.text;
+    BuildContext context, {
+    required UserConsentModel userConsent,
+    required String mandatorySelected,
+  }) {
+    final title = userConsent.mandatoryFields
+        .firstWhere(
+          (mandatoryField) => mandatoryField.id == mandatorySelected,
+          orElse: () => const UserInputText.empty(),
+        )
+        .text;
 
     final dateConsentForm =
         DateFormat("dd.MM.yy").format(userConsent.updatedDate);
@@ -147,7 +147,7 @@ class _UserConsentViewState extends State<UserConsentView> {
           onTap: () {
             context.push(
               UserConsentRoute.userConsentDetail.path
-                  .replaceFirst(':id', userConsent.consentFormId),
+                  .replaceFirst(':id', userConsent.id),
             );
           },
           child: Padding(
@@ -160,7 +160,7 @@ class _UserConsentViewState extends State<UserConsentView> {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: <Widget>[
                     Text(
-                      title,
+                      title.isNotEmpty ? title : 'This data is not stored.',
                       style: Theme.of(context).textTheme.bodyMedium,
                     ),
                     Padding(

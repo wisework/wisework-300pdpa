@@ -3,6 +3,7 @@ import 'package:bloc/bloc.dart';
 import 'package:equatable/equatable.dart';
 import 'package:pdpa/app/data/models/authentication/company_model.dart';
 import 'package:pdpa/app/data/models/authentication/user_model.dart';
+import 'package:pdpa/app/data/models/etc/user_company_role.dart';
 import 'package:pdpa/app/data/repositories/authentication_repository.dart';
 import 'package:pdpa/app/shared/utils/constants.dart';
 
@@ -48,7 +49,8 @@ class InvitationBloc extends Bloc<InvitationEvent, InvitationState> {
         }
 
         final updated = event.user.copyWith(
-          role: UserRoles.editor,
+          roles: event.user.roles.map((role) => role).toList()
+            ..add(UserCompanyRole(id: company.id, role: UserRoles.owner)),
           companies: companyIds,
           currentCompany: event.inviteCode,
         );

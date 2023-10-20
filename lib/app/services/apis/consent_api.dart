@@ -150,7 +150,7 @@ class ConsentApi {
   ) async {
     final ref =
         _firestore.collection('Companies/$companyId/UserConsents').doc();
-    final created = userConsent.copyWith(consentFormId: ref.id);
+    final created = userConsent.copyWith(id: ref.id);
 
     await ref.set(created.toMap());
 

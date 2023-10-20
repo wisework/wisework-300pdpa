@@ -6,6 +6,7 @@ class CustomTextField extends StatefulWidget {
   const CustomTextField({
     super.key,
     this.controller,
+    this.initialValue,
     this.hintText,
     this.suffix,
     this.keyboardType = TextInputType.text,
@@ -19,6 +20,7 @@ class CustomTextField extends StatefulWidget {
   });
 
   final TextEditingController? controller;
+  final String? initialValue;
   final String? hintText;
   final Widget? suffix;
   final TextInputType keyboardType;
@@ -47,7 +49,7 @@ class _CustomTextFieldState extends State<CustomTextField> {
 
   @override
   Widget build(BuildContext context) {
-    return widget.required
+    return widget.required || widget.initialValue != null
         ? _buildTextFormField(context)
         : _buildTextField(context);
   }
@@ -56,6 +58,7 @@ class _CustomTextFieldState extends State<CustomTextField> {
     return widget.maxLines != null
         ? TextFormField(
             controller: widget.controller,
+            initialValue: widget.initialValue,
             decoration: _buildInputDecoration(context),
             keyboardType: widget.keyboardType,
             maxLines: widget.maxLines,
@@ -68,6 +71,7 @@ class _CustomTextFieldState extends State<CustomTextField> {
           )
         : TextFormField(
             controller: widget.controller,
+            initialValue: widget.initialValue,
             decoration: _buildInputDecoration(context),
             keyboardType: widget.keyboardType,
             minLines: widget.minLines ?? 1,

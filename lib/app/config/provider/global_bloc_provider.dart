@@ -22,7 +22,7 @@ import 'package:pdpa/app/features/master_data/bloc/data_subject_right/request_re
 import 'package:pdpa/app/features/master_data/bloc/data_subject_right/request_type/request_type_bloc.dart';
 import 'package:pdpa/app/injection.dart';
 import 'package:pdpa/app/shared/drawers/bloc/drawer_bloc.dart';
-import 'package:pdpa/app/shared/drawers/drawer_menu.dart';
+import 'package:pdpa/app/data/presets/drawer_menu_preset.dart';
 
 class GlobalBlocProvider {
   static List<BlocProvider> get providers {
@@ -32,7 +32,7 @@ class GlobalBlocProvider {
       ),
       BlocProvider<DrawerBloc>(
         create: (context) => serviceLocator<DrawerBloc>()
-          ..add(SelectMenuDrawerEvent(menu: drawerMenu.first)),
+          ..add(SelectMenuDrawerEvent(menu: drawerMenuPreset.first)),
       ),
       BlocProvider<ConsentFormBloc>(
         create: (context) => serviceLocator<ConsentFormBloc>(),
