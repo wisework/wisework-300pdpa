@@ -124,13 +124,14 @@ class _FooterTabState extends State<FooterTab> {
             ],
           ),
           const SizedBox(height: UiConfig.lineSpacing),
-           TitleRequiredText(
+          TitleRequiredText(
             text: tr('consentManagement.createForm.description'), //!
             required: true,
           ),
           CustomTextField(
             controller: footerDescriptionController,
-            hintText: tr('consentManagement.consentForm.footertab.enterFooterDescription'), //!
+            hintText: tr(
+                'consentManagement.consentForm.footertab.enterFooterDescription'), //!
             onChanged: (value) {
               final updated = widget.consentForm.copyWith(
                 footerDescription: [
@@ -163,13 +164,15 @@ class _FooterTabState extends State<FooterTab> {
             ],
           ),
           const SizedBox(height: UiConfig.lineSpacing),
-           TitleRequiredText(
-            text: tr('consentManagement.consentForm.footertab.acceptConsentText'), //!
+          TitleRequiredText(
+            text: tr(
+                'consentManagement.consentForm.footertab.acceptConsentText'), //!
             required: true,
           ),
           CustomTextField(
             controller: acceptConsentTextController,
-            hintText: tr('consentManagement.consentForm.footertab.enterAcceptConsentText'), //!
+            hintText: tr(
+                'consentManagement.consentForm.footertab.enterAcceptConsentText'), //!
             onChanged: (value) {
               final updated = widget.consentForm.copyWith(
                 acceptConsentText: [
@@ -183,10 +186,13 @@ class _FooterTabState extends State<FooterTab> {
             },
           ),
           const SizedBox(height: UiConfig.lineSpacing),
-           TitleRequiredText(text: tr('consentManagement.consentForm.footertab.linkToPolicyText')), //!
+          TitleRequiredText(
+              text: tr(
+                  'consentManagement.consentForm.footertab.linkToPolicyText')), //!
           CustomTextField(
             controller: linkToPolicyTextController,
-            hintText: tr('consentManagement.consentForm.footertab.enterLinkToPolicyText'), //!
+            hintText: tr(
+                'consentManagement.consentForm.footertab.enterLinkToPolicyText'), //!
             onChanged: (value) {
               final updated = widget.consentForm.copyWith(
                 linkToPolicyText: [
@@ -200,10 +206,13 @@ class _FooterTabState extends State<FooterTab> {
             },
           ),
           const SizedBox(height: UiConfig.lineSpacing),
-           TitleRequiredText(text: tr('consentManagement.consentForm.footertab.linkToPolicyURL')), //!
+          TitleRequiredText(
+              text: tr(
+                  'consentManagement.consentForm.footertab.linkToPolicyURL')), //!
           CustomTextField(
             controller: linkToPolicyUrlController,
-            hintText: tr('consentManagement.consentForm.footertab.enterLinkToPolicyURL'), //!
+            hintText: tr(
+                'consentManagement.consentForm.footertab.enterLinkToPolicyURL'), //!
             onChanged: (value) {
               final updated = widget.consentForm.copyWith(
                 linkToPolicyUrl: value,
@@ -215,10 +224,13 @@ class _FooterTabState extends State<FooterTab> {
             },
           ),
           const SizedBox(height: UiConfig.lineSpacing),
-           TitleRequiredText(text: tr('consentManagement.consentForm.footertab.acceptText')), //!
+          TitleRequiredText(
+              text:
+                  tr('consentManagement.consentForm.footertab.acceptText')), //!
           CustomTextField(
             controller: acceptTextController,
-            hintText: tr('consentManagement.consentForm.footertab.enterAcceptText'), //!
+            hintText: tr(
+                'consentManagement.consentForm.footertab.enterAcceptText'), //!
             onChanged: (value) {
               final updated = widget.consentForm.copyWith(
                 submitText: [
@@ -231,23 +243,26 @@ class _FooterTabState extends State<FooterTab> {
                   .setConsentForm(updated);
             },
           ),
-          const SizedBox(height: UiConfig.lineSpacing),
-           TitleRequiredText(text: tr('consentManagement.consentForm.footertab.cancelText')), //!
-          CustomTextField(
-            controller: cancelTextController,
-            hintText: tr('consentManagement.consentForm.footertab.enterCancelText'), //!
-            onChanged: (value) {
-              final updated = widget.consentForm.copyWith(
-                cancelText: [
-                  LocalizedModel(language: 'en-US', text: value),
-                ],
-              );
+          // const SizedBox(height: UiConfig.lineSpacing),
+          // TitleRequiredText(
+          //     text:
+          //         tr('consentManagement.consentForm.footertab.cancelText')), //!
+          // CustomTextField(
+          //   controller: cancelTextController,
+          //   hintText: tr(
+          //       'consentManagement.consentForm.footertab.enterCancelText'), //!
+          //   onChanged: (value) {
+          //     final updated = widget.consentForm.copyWith(
+          //       cancelText: [
+          //         LocalizedModel(language: 'en-US', text: value),
+          //       ],
+          //     );
 
-              context
-                  .read<CurrentConsentFormSettingsCubit>()
-                  .setConsentForm(updated);
-            },
-          ),
+          //     context
+          //         .read<CurrentConsentFormSettingsCubit>()
+          //         .setConsentForm(updated);
+          //   },
+          // ),
         ],
       ),
     );

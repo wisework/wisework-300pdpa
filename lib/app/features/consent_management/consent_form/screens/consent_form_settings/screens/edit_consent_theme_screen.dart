@@ -72,7 +72,8 @@ class _EditConsentThemeScreenState extends State<EditConsentThemeScreen> {
         listener: (context, state) {
           if (state is CreatedCurrentConsentTheme) {
             BotToast.showText(
-              text: tr('consentManagement.consentForm.editConsentTheme.createSuccess'), //!
+              text: tr(
+                  'consentManagement.consentForm.editConsentTheme.createSuccess'), //!
               contentColor:
                   Theme.of(context).colorScheme.secondary.withOpacity(0.75),
               borderRadius: BorderRadius.circular(8.0),
@@ -94,7 +95,8 @@ class _EditConsentThemeScreenState extends State<EditConsentThemeScreen> {
 
           if (state is UpdatedCurrentConsentTheme) {
             BotToast.showText(
-              text: tr('consentManagement.consentForm.editConsentTheme.updateSuccess'), //!
+              text: tr(
+                  'consentManagement.consentForm.editConsentTheme.updateSuccess'), //!
               contentColor:
                   Theme.of(context).colorScheme.secondary.withOpacity(0.75),
               borderRadius: BorderRadius.circular(8.0),
@@ -108,7 +110,8 @@ class _EditConsentThemeScreenState extends State<EditConsentThemeScreen> {
 
           if (state is DeletedCurrentConsentTheme) {
             BotToast.showText(
-              text: tr('consentManagement.consentForm.editConsentTheme.deleteSuccess'), //!
+              text: tr(
+                  'consentManagement.consentForm.editConsentTheme.deleteSuccess'), //!
               contentColor:
                   Theme.of(context).colorScheme.secondary.withOpacity(0.75),
               borderRadius: BorderRadius.circular(8.0),
@@ -271,7 +274,11 @@ class _EditConsentThemeViewState extends State<EditConsentThemeView> {
       appBar: PdpaAppBar(
         leadingIcon: _buildPopButton(widget.initialConsentTheme),
         title: Text(
-          widget.isNewConsentTheme ? tr('consentManagement.consentForm.editConsentTheme.newConsentTheme')  : tr('consentManagement.consentForm.editConsentTheme.editConsentTheme'), //!
+          widget.isNewConsentTheme
+              ? tr(
+                  'consentManagement.consentForm.editConsentTheme.newConsentTheme')
+              : tr(
+                  'consentManagement.consentForm.editConsentTheme.editConsentTheme'), //!
           style: Theme.of(context).textTheme.titleLarge,
         ),
         actions: [
@@ -345,12 +352,13 @@ class _EditConsentThemeViewState extends State<EditConsentThemeView> {
             ],
           ),
           const SizedBox(height: UiConfig.lineSpacing),
-           TitleRequiredText(
+          TitleRequiredText(
             text: tr('consentManagement.createForm.title'), //!
           ),
           CustomTextField(
             controller: titleController,
-            hintText: tr('consentManagement.consentForm.editConsentTheme.enterConsentThemeTitle'), //!
+            hintText: tr(
+                'consentManagement.consentForm.editConsentTheme.enterConsentThemeTitle'), //!
             onChanged: _setThemeTitle,
           ),
         ],
@@ -635,48 +643,48 @@ class _EditConsentThemeViewState extends State<EditConsentThemeView> {
               ),
             ],
           ),
-          const SizedBox(height: UiConfig.lineSpacing),
-          Row(
-            children: <Widget>[
-              Expanded(
-                child: Text(
-                  tr('consentManagement.consentForm.editConsentTheme.cancelButtonColor'), //!
-                  style: Theme.of(context).textTheme.bodyMedium,
-                ),
-              ),
-              ColorPickerButton(
-                initialColor: consentTheme.cancelButtonColor,
-                onColorChanged: (color) {
-                  setState(() {
-                    consentTheme = consentTheme.copyWith(
-                      cancelButtonColor: color,
-                    );
-                  });
-                },
-              ),
-            ],
-          ),
-          const SizedBox(height: UiConfig.lineSpacing),
-          Row(
-            children: <Widget>[
-              Expanded(
-                child: Text(
-                  tr('consentManagement.consentForm.editConsentTheme.cancelTextColor'), //!
-                  style: Theme.of(context).textTheme.bodyMedium,
-                ),
-              ),
-              ColorPickerButton(
-                initialColor: consentTheme.cancelTextColor,
-                onColorChanged: (color) {
-                  setState(() {
-                    consentTheme = consentTheme.copyWith(
-                      cancelTextColor: color,
-                    );
-                  });
-                },
-              ),
-            ],
-          ),
+          // const SizedBox(height: UiConfig.lineSpacing),
+          // Row(
+          //   children: <Widget>[
+          //     Expanded(
+          //       child: Text(
+          //         tr('consentManagement.consentForm.editConsentTheme.cancelButtonColor'), //!
+          //         style: Theme.of(context).textTheme.bodyMedium,
+          //       ),
+          //     ),
+          //     ColorPickerButton(
+          //       initialColor: consentTheme.cancelButtonColor,
+          //       onColorChanged: (color) {
+          //         setState(() {
+          //           consentTheme = consentTheme.copyWith(
+          //             cancelButtonColor: color,
+          //           );
+          //         });
+          //       },
+          //     ),
+          //   ],
+          // ),
+          // const SizedBox(height: UiConfig.lineSpacing),
+          // Row(
+          //   children: <Widget>[
+          //     Expanded(
+          //       child: Text(
+          //         tr('consentManagement.consentForm.editConsentTheme.cancelTextColor'), //!
+          //         style: Theme.of(context).textTheme.bodyMedium,
+          //       ),
+          //     ),
+          //     ColorPickerButton(
+          //       initialColor: consentTheme.cancelTextColor,
+          //       onColorChanged: (color) {
+          //         setState(() {
+          //           consentTheme = consentTheme.copyWith(
+          //             cancelTextColor: color,
+          //           );
+          //         });
+          //       },
+          //     ),
+          //   ],
+          // ),
         ],
       ),
     );
