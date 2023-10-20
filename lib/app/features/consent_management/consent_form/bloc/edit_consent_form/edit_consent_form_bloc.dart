@@ -158,9 +158,6 @@ class EditConsentFormBloc
     List<LocalizedModel> cancelText = [
       const LocalizedModel(language: 'en-US', text: 'Cancel')
     ];
-    List<LocalizedModel> description = [
-      const LocalizedModel(language: 'en-US', text: '')
-    ];
     List<LocalizedModel> footerDescription = [
       const LocalizedModel(language: 'en-US', text: '')
     ];
@@ -234,9 +231,9 @@ class EditConsentFormBloc
 
     await Future.delayed(const Duration(milliseconds: 800));
 
-    result.fold(
-      (failure) => emit(EditConsentFormError(failure.errorMessage)),
-      (_) => emit(UpdatedCurrentConsentForm(event.consentForm)),
-    );
+    // result.fold(
+    //   (failure) => emit(EditConsentFormError(failure.errorMessage)),
+    //   (_) => emit(UpdatedCurrentConsentForm(event.consentForm)),
+    // );
   }
 }

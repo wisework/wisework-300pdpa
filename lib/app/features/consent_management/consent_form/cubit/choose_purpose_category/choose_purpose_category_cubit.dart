@@ -21,28 +21,4 @@ class ChoosePurposeCategoryCubit
       emit(state.copyWith(expandId: purposeCategoryId));
     }
   }
-
-  void choosePurposeCategorySelected(PurposeCategoryModel purposeCategory) {
-    final templateSelected =
-        state.purposeCategorySelected.map((template) => template).toList();
-    if (templateSelected.contains(purposeCategory)) {
-      templateSelected.remove(purposeCategory);
-      emit(state.copyWith(purposeCategorySelected: templateSelected));
-    } else {
-      templateSelected.add(purposeCategory);
-      emit(state.copyWith(purposeCategorySelected: templateSelected));
-    }
-  }
-
-  void customFieldSelected(CustomFieldModel customField) {
-    final customFieldSelected =
-        state.customFieldSelected.map((template) => template).toList();
-    if (customFieldSelected.contains(customField)) {
-      customFieldSelected.remove(customField);
-      emit(state.copyWith(customFieldSelected: customFieldSelected));
-    } else {
-      customFieldSelected.add(customField);
-      emit(state.copyWith(customFieldSelected: customFieldSelected));
-    }
-  }
 }

@@ -118,13 +118,16 @@ class _EditConsentFormScreenState extends State<EditConsentFormScreen> {
               purposes: state.purposes,
             );
           }
-          // if (state is UpdatedCurrentConsentForm) {
-          //   return EditConsentFormView(
-          //     initialConsentForm: state.consentForm,
-          //     currentUser: currentUser,
-          //     isNewConsentForm: widget.consentFormId.isEmpty,
-          //   );
-          // }
+          if (state is UpdatedCurrentConsentForm) {
+            return EditConsentFormView(
+              initialConsentForm: state.consentForm,
+              currentUser: currentUser,
+              isNewConsentForm: widget.consentFormId.isEmpty,
+              customfields: state.customFields,
+              purposeCategories: state.purposeCategories,
+              purposes: state.purposes,
+            );
+          }
           if (state is EditConsentFormError) {
             return ErrorMessageScreen(message: state.message);
           }
