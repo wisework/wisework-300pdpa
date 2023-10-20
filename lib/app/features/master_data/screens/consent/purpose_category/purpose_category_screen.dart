@@ -165,11 +165,11 @@ class _PurposeCategoryViewState extends State<PurposeCategoryView> {
     const language = 'en-US';
     final description = purposeCategory.description.firstWhere(
       (item) => item.language == language,
-      orElse: LocalizedModel.empty,
+      orElse: () => const LocalizedModel.empty(),
     );
     final title = purposeCategory.title.firstWhere(
       (item) => item.language == language,
-      orElse: LocalizedModel.empty,
+      orElse: () => const LocalizedModel.empty(),
     );
 
     return MasterDataItemCard(
@@ -178,7 +178,8 @@ class _PurposeCategoryViewState extends State<PurposeCategoryView> {
       status: purposeCategory.status,
       onTap: () {
         context.push(
-          MasterDataRoute.editPurposeCategory.path.replaceFirst(':id', purposeCategory.id),
+          MasterDataRoute.editPurposeCategory.path
+              .replaceFirst(':id', purposeCategory.id),
         );
       },
     );

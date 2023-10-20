@@ -56,12 +56,12 @@ class _ConsentInfoTabState extends State<ConsentInfoTab> {
 
     final title = widget.consentForm.title.firstWhere(
       (item) => item.language == language,
-      orElse: LocalizedModel.empty,
+      orElse: () => const LocalizedModel.empty(),
     );
 
     final description = widget.consentForm.description.firstWhere(
       (item) => item.language == language,
-      orElse: LocalizedModel.empty,
+      orElse: () => const LocalizedModel.empty(),
     );
 
     return SingleChildScrollView(
@@ -138,7 +138,7 @@ class _ConsentInfoTabState extends State<ConsentInfoTab> {
                 itemBuilder: (_, index) {
                   final title = purposeCategoryFiltered[index].title.firstWhere(
                         (item) => item.language == language,
-                        orElse: LocalizedModel.empty,
+                        orElse: () => const LocalizedModel.empty(),
                       );
                   return Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
@@ -201,7 +201,7 @@ class _ConsentInfoTabState extends State<ConsentInfoTab> {
       itemBuilder: (_, index) {
         final description = purposeFiltered[index].description.firstWhere(
               (item) => item.language == language,
-              orElse: LocalizedModel.empty,
+              orElse: () => const LocalizedModel.empty(),
             );
 
         return Padding(
@@ -273,7 +273,7 @@ class _ConsentInfoTabState extends State<ConsentInfoTab> {
                 itemBuilder: (_, index) {
                   final title = customFieldFiltered[index].title.firstWhere(
                         (item) => item.language == language,
-                        orElse: LocalizedModel.empty,
+                        orElse: () => const LocalizedModel.empty(),
                       );
                   return Padding(
                     padding: EdgeInsets.only(

@@ -141,7 +141,7 @@ class _RequestTypeViewState extends State<RequestTypeView> {
     const language = 'en-US';
     final description = requestType.description.firstWhere(
       (item) => item.language == language,
-      orElse: LocalizedModel.empty,
+      orElse: () => const LocalizedModel.empty(),
     );
     final requestCode = requestType.requestCode;
 

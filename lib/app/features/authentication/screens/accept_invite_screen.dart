@@ -12,6 +12,7 @@ import 'package:pdpa/app/injection.dart';
 import 'package:pdpa/app/shared/widgets/customs/custom_button.dart';
 import 'package:pdpa/app/shared/widgets/customs/custom_icon_button.dart';
 import 'package:pdpa/app/shared/widgets/customs/custom_text_field.dart';
+import 'package:pdpa/app/shared/widgets/templates/pdpa_app_bar.dart';
 
 class AcceptInviteScreen extends StatelessWidget {
   const AcceptInviteScreen({super.key});
@@ -65,7 +66,23 @@ class _AcceptInviteViewState extends State<AcceptInviteView> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: _buildAppBar(context),
+      appBar: PdpaAppBar(
+        title: Text(
+          tr('auth.acceptInvite.title'),
+          style: Theme.of(context).textTheme.titleLarge,
+        ),
+        actions: [
+          CustomIconButton(
+            onPressed: () {
+              context.pushReplacement(AuthenticationRoute.signIn.path);
+              context.read<SignInBloc>().add(const SignOutEvent());
+            },
+            icon: Ionicons.log_out_outline,
+            iconColor: Theme.of(context).colorScheme.primary,
+            backgroundColor: Theme.of(context).colorScheme.onBackground,
+          ),
+        ],
+      ),
       body: SingleChildScrollView(
         child: Container(
           padding: const EdgeInsets.all(UiConfig.defaultPaddingSpacing),
@@ -98,33 +115,6 @@ class _AcceptInviteViewState extends State<AcceptInviteView> {
           ),
         ),
       ),
-    );
-  }
-
-  AppBar _buildAppBar(BuildContext context) {
-    return AppBar(
-      title: Text(
-        tr('auth.acceptInvite.title'),
-        style: Theme.of(context).textTheme.titleMedium,
-      ),
-      actions: [
-        Padding(
-          padding: const EdgeInsets.only(right: 15.0),
-          child: CustomIconButton(
-            onPressed: () {
-              context.pushReplacement(AuthenticationRoute.signIn.path);
-              context.read<SignInBloc>().add(const SignOutEvent());
-            },
-            icon: Ionicons.log_out_outline,
-            iconColor: Theme.of(context).colorScheme.primary,
-            backgroundColor: Theme.of(context).colorScheme.onBackground,
-          ),
-        ),
-      ],
-      elevation: 1.0,
-      shadowColor: Theme.of(context).colorScheme.background,
-      surfaceTintColor: Theme.of(context).colorScheme.onBackground,
-      backgroundColor: Theme.of(context).colorScheme.onBackground,
     );
   }
 

@@ -128,11 +128,11 @@ class _CustomFieldViewState extends State<CustomFieldView> {
     const language = 'en-US';
     final title = customfield.title.firstWhere(
       (item) => item.language == language,
-      orElse: LocalizedModel.empty,
+      orElse: () => const LocalizedModel.empty(),
     );
     final hintText = customfield.hintText.firstWhere(
       (item) => item.language == language,
-      orElse: LocalizedModel.empty,
+      orElse: () => const LocalizedModel.empty(),
     );
 
     return MasterDataItemCard(

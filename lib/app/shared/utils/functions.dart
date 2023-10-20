@@ -4,7 +4,11 @@ import 'package:path/path.dart';
 import 'package:pdpa/app/config/config.dart';
 import 'package:pdpa/app/data/models/authentication/company_model.dart';
 import 'package:pdpa/app/data/models/data_subject_right/data_subject_right_model.dart';
+import 'package:pdpa/app/data/models/etc/user_company_role.dart';
+import 'package:pdpa/app/data/models/etc/user_input_purpose.dart';
+import 'package:pdpa/app/data/models/etc/user_input_text.dart';
 import 'package:pdpa/app/data/models/master_data/custom_field_model.dart';
+import 'package:pdpa/app/data/models/master_data/mandatory_field_model.dart';
 import 'package:pdpa/app/data/models/master_data/purpose_category_model.dart';
 import 'package:pdpa/app/data/models/master_data/purpose_model.dart';
 
@@ -22,19 +26,57 @@ class UtilFunctions {
     return CompanyModel.empty();
   }
 
+  static String getUserCompanyRole(
+    List<UserCompanyRole> userCompanyRoles,
+    String currentCompanyId,
+  ) {
+    final role = userCompanyRoles
+        .firstWhere(
+          (role) => role.id == currentCompanyId,
+          orElse: () => const UserCompanyRole.empty(),
+        )
+        .role;
+
+    return '${role.name[0].toUpperCase()}${role.name.substring(1)}';
+  }
+
   //? User Consent Form
   static String getUserConsentForm(String consentId, String companyId) {
     final fragment = 'companies/$companyId/consent-forms/$consentId/form';
     return '${AppConfig.baseUrl}/#/$fragment';
   }
 
-  //? Custom Field
-  static List<CustomFieldModel> filterCustomFieldsByIds(
-    List<CustomFieldModel> customFields,
-    List<String> customFieldsIds,
+  static String getValueFromUserInputText(
+    List<UserInputText> userInputs,
+    String mapId,
   ) {
-    return customFields
-        .where((category) => customFieldsIds.contains(category.id))
+    final result = userInputs.firstWhere(
+      (input) => input.id == mapId,
+      orElse: () => const UserInputText.empty(),
+    );
+
+    return result.text;
+  }
+
+  static bool getValueFromUserInputPurpose(
+    List<UserInputPurpose> userInputs,
+    String mapId,
+  ) {
+    final result = userInputs.firstWhere(
+      (input) => input.id == mapId,
+      orElse: () => const UserInputPurpose.empty(),
+    );
+
+    return result.value;
+  }
+
+  //? Mandatory Field
+  static List<MandatoryFieldModel> filterMandatoryFieldsByIds(
+    List<MandatoryFieldModel> mandatoryFields,
+    List<String> mandatoryFieldIds,
+  ) {
+    return mandatoryFields
+        .where((category) => mandatoryFieldIds.contains(category.id))
         .toList();
   }
 
@@ -62,6 +104,16 @@ class UtilFunctions {
     }
 
     return purposeFiltered;
+  }
+
+  //? Custom Field
+  static List<CustomFieldModel> filterCustomFieldsByIds(
+    List<CustomFieldModel> customFields,
+    List<String> customFieldIds,
+  ) {
+    return customFields
+        .where((category) => customFieldIds.contains(category.id))
+        .toList();
   }
 
   //? Data Subject Right

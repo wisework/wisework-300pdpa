@@ -10,6 +10,7 @@ import 'package:pdpa/app/config/config.dart';
 import 'package:pdpa/app/data/models/consent_management/consent_form_model.dart';
 import 'package:pdpa/app/data/models/consent_management/consent_theme_model.dart';
 import 'package:pdpa/app/data/models/master_data/custom_field_model.dart';
+import 'package:pdpa/app/data/models/master_data/mandatory_field_model.dart';
 import 'package:pdpa/app/data/models/master_data/purpose_category_model.dart';
 import 'package:pdpa/app/data/models/master_data/purpose_model.dart';
 
@@ -23,16 +24,18 @@ class ConsentFormTab extends StatefulWidget {
   const ConsentFormTab({
     super.key,
     required this.consentForm,
-    required this.customFields,
+    required this.mandatoryFields,
     required this.purposeCategories,
     required this.purposes,
+    required this.customFields,
     required this.consentTheme,
   });
 
   final ConsentFormModel consentForm;
-  final List<CustomFieldModel> customFields;
+  final List<MandatoryFieldModel> mandatoryFields;
   final List<PurposeCategoryModel> purposeCategories;
   final List<PurposeModel> purposes;
+  final List<CustomFieldModel> customFields;
   final ConsentThemeModel consentTheme;
 
   @override
@@ -270,9 +273,10 @@ class _ConsentFormTabState extends State<ConsentFormTab> {
                 SingleChildScrollView(
                   child: ConsentFormPreview(
                     consentForm: widget.consentForm,
-                    customFields: widget.customFields,
+                    mandatoryFields: widget.mandatoryFields,
                     purposeCategories: widget.purposeCategories,
                     purposes: widget.purposes,
+                    customFields: widget.customFields,
                     consentTheme: widget.consentTheme,
                   ),
                 ),

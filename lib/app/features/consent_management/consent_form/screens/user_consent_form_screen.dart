@@ -8,6 +8,7 @@ import 'package:pdpa/app/data/models/consent_management/consent_theme_model.dart
 import 'package:pdpa/app/data/models/etc/user_input_text.dart';
 import 'package:pdpa/app/data/models/etc/user_input_purpose.dart';
 import 'package:pdpa/app/data/models/master_data/custom_field_model.dart';
+import 'package:pdpa/app/data/models/master_data/mandatory_field_model.dart';
 import 'package:pdpa/app/data/models/master_data/purpose_category_model.dart';
 import 'package:pdpa/app/data/models/master_data/purpose_model.dart';
 import 'package:pdpa/app/features/consent_management/consent_form/bloc/user_consent_form/user_consent_form_bloc.dart';
@@ -45,7 +46,7 @@ class _UserConsentFormScreenState extends State<UserConsentFormScreen> {
   void _getUserConsentForm() {
     final bloc = context.read<UserConsentFormBloc>();
     bloc.add(GetUserConsentFormEvent(
-      consentId: widget.consentFormId,
+      consentFormId: widget.consentFormId,
       companyId: widget.companyId,
     ));
   }
@@ -75,9 +76,10 @@ class _UserConsentFormScreenState extends State<UserConsentFormScreen> {
               ..initialUserConsent(state.consentForm, state.purposeCategories),
             child: UserConsentFormView(
               consentForm: state.consentForm,
-              customFields: state.customFields,
+              mandatoryFields: state.mandatoryFields,
               purposeCategories: state.purposeCategories,
               purposes: state.purposes,
+              customFields: state.customFields,
               consentTheme: state.consentTheme,
               companyId: widget.companyId,
             ),
@@ -151,7 +153,7 @@ class _UserConsentFormScreenState extends State<UserConsentFormScreen> {
                       height: 40.0,
                       onPressed: () {
                         final event = GetUserConsentFormEvent(
-                          consentId: consentForm.id,
+                          consentFormId: consentForm.id,
                           companyId: widget.companyId,
                         );
                         context.read<UserConsentFormBloc>().add(event);
@@ -178,17 +180,19 @@ class UserConsentFormView extends StatefulWidget {
   const UserConsentFormView({
     super.key,
     required this.consentForm,
-    required this.customFields,
+    required this.mandatoryFields,
     required this.purposeCategories,
     required this.purposes,
+    required this.customFields,
     required this.consentTheme,
     required this.companyId,
   });
 
   final ConsentFormModel consentForm;
-  final List<CustomFieldModel> customFields;
+  final List<MandatoryFieldModel> mandatoryFields;
   final List<PurposeCategoryModel> purposeCategories;
   final List<PurposeModel> purposes;
+  final List<CustomFieldModel> customFields;
   final ConsentThemeModel consentTheme;
   final String companyId;
 
@@ -217,28 +221,29 @@ class _UserConsentFormViewState extends State<UserConsentFormView> {
       body: SingleChildScrollView(
         child: ConsentFormPreview(
           consentForm: widget.consentForm,
-          customFields: widget.customFields,
+          mandatoryFields: widget.mandatoryFields,
           purposeCategories: widget.purposeCategories,
           purposes: widget.purposes,
+          customFields: widget.customFields,
           consentTheme: widget.consentTheme,
-          onCustomFieldChanged: (customFieldId, value) {
-            List<UserInputText> customFields = [];
+          onMandatoryFieldChanged: (mandatoryFieldId, value) {
+            List<UserInputText> mandatoryFields = [];
 
-            for (UserInputText customField in userConsent.customFields) {
-              if (customField.id == customFieldId) {
-                customFields.add(
+            for (UserInputText mandatoryField in userConsent.mandatoryFields) {
+              if (mandatoryField.id == mandatoryFieldId) {
+                mandatoryFields.add(
                   UserInputText(
-                    id: customField.id,
+                    id: mandatoryField.id,
                     text: value,
                   ),
                 );
               } else {
-                customFields.add(customField);
+                mandatoryFields.add(mandatoryField);
               }
             }
 
             cubit.setUserConsentForm(
-              userConsent.copyWith(customFields: customFields),
+              userConsent.copyWith(mandatoryFields: mandatoryFields),
             );
           },
           onPurposeChanged: (purposeId, categoryId, value) {

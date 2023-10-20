@@ -9,15 +9,15 @@ abstract class ConsentFormSettingsEvent extends Equatable {
 
 class GetConsentFormSettingsEvent extends ConsentFormSettingsEvent {
   const GetConsentFormSettingsEvent({
-    required this.consentId,
+    required this.consentFormId,
     required this.companyId,
   });
 
-  final String consentId;
+  final String consentFormId;
   final String companyId;
 
   @override
-  List<Object> get props => [consentId, companyId];
+  List<Object> get props => [consentFormId, companyId];
 }
 
 class UpdateConsentFormSettingsEvent extends ConsentFormSettingsEvent {

@@ -47,8 +47,13 @@ class CompanyModel extends Equatable {
           updatedDate: DateTime.parse(map['updatedDate'] as String),
         );
 
+  factory CompanyModel.fromDocument(FirebaseDocument document) {
+    DataMap response = document.data()!;
+    response['id'] = document.id;
+    return CompanyModel.fromMap(response);
+  }
+
   DataMap toMap() => {
-        'id': id,
         'name': name,
         'profileImage': profileImage,
         'status': status.index,
@@ -57,12 +62,6 @@ class CompanyModel extends Equatable {
         'updatedBy': updatedBy,
         'updatedDate': updatedDate.toIso8601String(),
       };
-
-  factory CompanyModel.fromDocument(FirebaseDocument document) {
-    DataMap response = document.data()!;
-    response['id'] = document.id;
-    return CompanyModel.fromMap(response);
-  }
 
   CompanyModel copyWith({
     String? id,
@@ -85,6 +84,18 @@ class CompanyModel extends Equatable {
       updatedDate: updatedDate ?? this.updatedDate,
     );
   }
+
+  CompanyModel setCreate(String email, DateTime date) => copyWith(
+        createdBy: email,
+        createdDate: date,
+        updatedBy: email,
+        updatedDate: date,
+      );
+
+  CompanyModel setUpdate(String email, DateTime date) => copyWith(
+        updatedBy: email,
+        updatedDate: date,
+      );
 
   @override
   List<Object?> get props {

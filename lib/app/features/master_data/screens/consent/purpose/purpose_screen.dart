@@ -126,11 +126,11 @@ class _PurposeViewState extends State<PurposeView> {
     const language = 'en-US';
     final description = purpose.description.firstWhere(
       (item) => item.language == language,
-      orElse: LocalizedModel.empty,
+      orElse: () => const LocalizedModel.empty(),
     );
     final warningDescription = purpose.warningDescription.firstWhere(
       (item) => item.language == language,
-      orElse: LocalizedModel.empty,
+      orElse: () => const LocalizedModel.empty(),
     );
 
     return MasterDataItemCard(
