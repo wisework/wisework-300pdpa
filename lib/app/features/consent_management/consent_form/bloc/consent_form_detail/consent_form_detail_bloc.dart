@@ -133,7 +133,7 @@ class ConsentFormDetailBloc
     emit(
       GotConsentFormDetail(
         gotConsentForm,
-        gotMandatoryFields,
+        gotMandatoryFields..sort((a, b) => b.priority.compareTo(a.priority)),
         gotPurposeCategories..sort((a, b) => b.priority.compareTo(a.priority)),
         gotPurposes,
         gotCustomFields,
