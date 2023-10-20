@@ -8,19 +8,20 @@ import 'package:pdpa/app/config/config.dart';
 import 'package:pdpa/app/data/models/authentication/user_model.dart';
 import 'package:pdpa/app/data/models/master_data/localized_model.dart';
 import 'package:pdpa/app/data/models/master_data/purpose_category_model.dart';
-import 'package:pdpa/app/data/models/master_data/purpose_model.dart';
 import 'package:pdpa/app/features/authentication/bloc/sign_in/sign_in_bloc.dart';
 import 'package:pdpa/app/features/master_data/bloc/consent/edit_purpose_category/edit_purpose_category_bloc.dart';
 import 'package:pdpa/app/features/master_data/bloc/consent/purpose/purpose_bloc.dart';
 import 'package:pdpa/app/features/master_data/bloc/consent/purpose_category/purpose_category_bloc.dart';
+import 'package:pdpa/app/features/master_data/cubit/consent/purpose_category/purpose_category_cubit.dart';
+import 'package:pdpa/app/features/master_data/routes/master_data_route.dart';
 import 'package:pdpa/app/features/master_data/widgets/configuration_info.dart';
+import 'package:pdpa/app/features/master_data/widgets/master_data_addnew_button.dart';
 import 'package:pdpa/app/injection.dart';
 import 'package:pdpa/app/shared/utils/constants.dart';
 import 'package:pdpa/app/shared/widgets/customs/custom_container.dart';
 import 'package:pdpa/app/shared/widgets/customs/custom_icon_button.dart';
 import 'package:pdpa/app/shared/widgets/customs/custom_switch_button.dart';
 import 'package:pdpa/app/shared/widgets/customs/custom_text_field.dart';
-import 'package:pdpa/app/shared/widgets/material_ink_well.dart';
 import 'package:pdpa/app/shared/widgets/screens/error_message_screen.dart';
 import 'package:pdpa/app/shared/widgets/screens/loading_screen.dart';
 import 'package:pdpa/app/shared/widgets/templates/pdpa_app_bar.dart';
@@ -182,7 +183,6 @@ class _EditPurposeCategoryViewState extends State<EditPurposeCategoryView> {
   late TextEditingController titleController;
   late TextEditingController descriptionController;
   late TextEditingController priorityController;
-  late List<PurposeModel> purposeList;
 
   late bool isActivated;
 
@@ -211,7 +211,6 @@ class _EditPurposeCategoryViewState extends State<EditPurposeCategoryView> {
     descriptionController = TextEditingController();
     priorityController = TextEditingController();
 
-    purposeList = [];
     isActivated = true;
 
     if (purposeCategory != PurposeCategoryModel.empty()) {
@@ -439,7 +438,7 @@ class _EditPurposeCategoryViewState extends State<EditPurposeCategoryView> {
                       ),
                       Visibility(
                         visible: purposeCategory.purposes.isEmpty,
-                        child: _buildAddPurposesBottomSheet(context, state),
+                        child: _buildAddPurpose(context, state),
                       ),
                     ],
                   ),
@@ -463,61 +462,36 @@ class _EditPurposeCategoryViewState extends State<EditPurposeCategoryView> {
     );
   }
 
-  MaterialInkWell _buildNewPurposeButton(BuildContext context) {
-    return MaterialInkWell(
-      onTap: () {},
-      child: Padding(
-        padding: const EdgeInsets.all(8.0),
-        child: Row(
-          children: <Widget>[
-            Padding(
-              padding: const EdgeInsets.only(bottom: 2.0),
-              child: Icon(
-                Ionicons.add,
-                color: Theme.of(context).colorScheme.primary,
-              ),
-            ),
-            const SizedBox(width: UiConfig.actionSpacing + 11),
-            Expanded(
-              child: Text(
-                'New Purpose',
-                style: Theme.of(context).textTheme.bodyMedium,
-              ),
-            ),
-          ],
-        ),
-      ),
-    );
-  }
-
   Column _buildPurposeList(BuildContext context, GotPurposes state) {
-    final purposeName = state.purposes
-        .where((id) => purposeCategory.purposes.contains(id.id))
-        .toList();
+    final cubit = context.read<PurposeCategoryCubit>();
+    cubit.initialPurposelist(state.purposes, purposeCategory);
+    final purposeList = cubit.state.purposeList;
+
+    // final purposeName = state.purposes
+    //     .where((id) => purposeCategory.purposes.contains(id.id))
+    //     .toList();
 
     return Column(
       mainAxisSize: MainAxisSize.min,
       children: <Widget>[
         ListView.separated(
           shrinkWrap: true,
-          itemCount: purposeName.length,
+          itemCount: purposeList.length,
           itemBuilder: (context, index) => Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: <Widget>[
               Expanded(
                 child: Text(
-                  purposeName[index].description.first.text,
+                  purposeList[index].description.first.text,
                   style: Theme.of(context).textTheme.bodyMedium,
                 ),
               ),
               const SizedBox(width: UiConfig.textLineSpacing),
               CustomIconButton(
                 onPressed: () {
+                  cubit.removePurpose(purposeList[index].id);
+                  _setPurpose(cubit.state.purposes);
                   //? Delete purpose from seleted
-                  setState(() {
-                    purposeCategory.purposes.remove(purposeName[index].id);
-                    _setPurpose(purposeCategory.purposes);
-                  });
                 },
                 icon: Ionicons.close,
                 iconColor: Theme.of(context).colorScheme.primary,
@@ -525,29 +499,28 @@ class _EditPurposeCategoryViewState extends State<EditPurposeCategoryView> {
               ),
             ],
           ),
-          separatorBuilder: (context, _) => const SizedBox(
-            height: UiConfig.lineSpacing,
+          separatorBuilder: (context, _) => Divider(
+            color:
+                Theme.of(context).colorScheme.outlineVariant.withOpacity(0.5),
           ),
         ),
         const SizedBox(height: UiConfig.lineSpacing),
-        _buildAddPurposesBottomSheet(context, state),
+        _buildAddPurpose(context, state),
       ],
     );
   }
 
-  MaterialInkWell _buildAddPurposesBottomSheet(
+  MasterDataAddNewButton _buildAddPurpose(
       BuildContext context, GotPurposes state) {
-    return MaterialInkWell(
+    final cubit = context.read<PurposeCategoryCubit>();
+
+    return MasterDataAddNewButton(
       onTap: () async {
         //? Open ModalBottomSheet to add Purposes selected
         await showModalBottomSheet(
           backgroundColor: Theme.of(context).colorScheme.onBackground,
           useSafeArea: true,
           isScrollControlled: true, //* required for min/max child size
-          // constraints:  BoxConstraints(
-          //   maxHeight: double.infinity,
-          //   minHeight: MediaQuery.of(context).size.height * 50.0,
-          // ),
           context: context,
           builder: (ctx) {
             return CustomContainer(
@@ -555,7 +528,7 @@ class _EditPurposeCategoryViewState extends State<EditPurposeCategoryView> {
                 child: Column(
                   children: [
                     const SizedBox(height: UiConfig.lineSpacing),
-                    const Text('Purpose List'),
+                    const Text('Purpose List'), //!
                     const SizedBox(height: UiConfig.lineSpacing),
                     ListView.builder(
                       shrinkWrap: true,
@@ -563,33 +536,29 @@ class _EditPurposeCategoryViewState extends State<EditPurposeCategoryView> {
                       itemCount: state.purposes.length,
                       itemBuilder: (_, index) {
                         final item = state.purposes[index];
-                        bool checklist =
-                            purposeCategory.purposes.contains(item.id);
-
                         if (state.purposes.isEmpty) {
-                          return const Text('No Data');
+                          return const Text('No Data'); //!
                         }
-
                         return CheckboxListTile(
                           controlAffinity: ListTileControlAffinity.leading,
                           title: Text(
                               state.purposes[index].description.first.text),
-                          value: checklist,
+                          value: cubit.state.purposes.contains(item.id),
                           onChanged: (bool? newValue) {
-                            setState(() {
-                              if (newValue!) {
-                                purposeCategory.purposes.add(item.id);
-                              } else {
-                                purposeCategory.purposes.remove(item.id);
-                              }
-                              _setPurpose(purposeCategory.purposes);
-                            });
+                            cubit.choosePurposeCategorySelected(item.id);
+                            _setPurpose(cubit.state.purposes);
+                            
                           },
                         );
                       },
                     ),
                     const SizedBox(height: UiConfig.lineSpacing),
-                    _buildNewPurposeButton(context),
+                    MasterDataAddNewButton(
+                      onTap: () {
+                        context.push(MasterDataRoute.createPurpose.path);
+                      },
+                      text: 'Add new Purpose', //!
+                    ),
                     const SizedBox(height: UiConfig.lineSpacing),
                   ],
                 ),
@@ -598,27 +567,7 @@ class _EditPurposeCategoryViewState extends State<EditPurposeCategoryView> {
           },
         );
       },
-      child: Padding(
-        padding: const EdgeInsets.all(8.0),
-        child: Row(
-          children: <Widget>[
-            Padding(
-              padding: const EdgeInsets.only(bottom: 2.0),
-              child: Icon(
-                Ionicons.add,
-                color: Theme.of(context).colorScheme.primary,
-              ),
-            ),
-            const SizedBox(width: UiConfig.actionSpacing + 11),
-            Expanded(
-              child: Text(
-                'Add Purpose',
-                style: Theme.of(context).textTheme.bodyMedium,
-              ),
-            ),
-          ],
-        ),
-      ),
+      text: 'Add Purpose', //!
     );
   }
 

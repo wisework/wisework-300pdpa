@@ -75,6 +75,7 @@ class _SettingViewState extends State<SettingView> {
   void _setInputType(String? value) {
     if (value != null) {
       widget.local.setLocalDevice(value);
+
       if (widget.local.state.localDevice == 'th-TH') {
         EasyLocalization.of(context)?.setLocale(const Locale('th', 'TH'));
       } else {
@@ -85,9 +86,8 @@ class _SettingViewState extends State<SettingView> {
 
   @override
   Widget build(BuildContext context) {
-    var lang = widget.local.state.localDevice;
     print(widget.currentUser.defaultLanguage);
-    // print(context.supportedLocales);
+    print(context.supportedLocales);
     return Scaffold(
       key: _scaffoldKey,
       appBar: PdpaAppBar(
@@ -109,44 +109,55 @@ class _SettingViewState extends State<SettingView> {
           children: <Widget>[
             const SizedBox(height: UiConfig.lineSpacing),
             CustomContainer(
-              child: Column(
-                children: <Widget>[
-                  const SizedBox(height: UiConfig.lineSpacing),
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: <Widget>[
-                      Text(
-                        tr('app.language'), //!
-                        style: Theme.of(context).textTheme.bodyMedium,
-                      ),
-                      SizedBox(
-                        width: 120,
-                        child: CustomDropdownButton<String>(
-                          value: lang,
-                          items: language.map(
-                            (e) {
-                              return DropdownMenuItem(
-                                value: e,
-                                child: Text(
-                                  e,
-                                  style: Theme.of(context).textTheme.bodyMedium,
-                                ),
-                              );
-                            },
-                          ).toList(),
-                          onSelected: _setInputType,
+              child: BlocBuilder<SignInBloc, SignInState>(
+                builder: (context, state) {
+                  if (state is SignedInUser) {
+                    return Column(
+                      children: <Widget>[
+                        const SizedBox(height: UiConfig.lineSpacing),
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: <Widget>[
+                            Text(
+                              tr('app.language'),
+                              style: Theme.of(context).textTheme.bodyMedium,
+                            ),
+                            SizedBox(
+                              width: 120,
+                              child: CustomDropdownButton<String>(
+                                value: state.user.defaultLanguage,
+                                items: language.map(
+                                  (e) {
+                                    return DropdownMenuItem(
+                                      value: e,
+                                      child: Text(
+                                        e,
+                                        style: Theme.of(context)
+                                            .textTheme
+                                            .bodyMedium,
+                                      ),
+                                    );
+                                  },
+                                ).toList(),
+                                onSelected: _setInputType,
+                              ),
+                            ),
+                          ],
                         ),
-                      ),
-                    ],
-                  ),
-                  Divider(
-                    color: Theme.of(context)
-                        .colorScheme
-                        .outlineVariant
-                        .withOpacity(0.5),
-                  ),
-                  const SizedBox(height: UiConfig.lineSpacing),
-                ],
+                        Divider(
+                          color: Theme.of(context)
+                              .colorScheme
+                              .outlineVariant
+                              .withOpacity(0.5),
+                        ),
+                        const SizedBox(height: UiConfig.lineSpacing),
+                      ],
+                    );
+                  }
+                  return const Center(
+                    child: CircularProgressIndicator(),
+                  );
+                },
               ),
             ),
           ],
