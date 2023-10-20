@@ -31,12 +31,16 @@ class GetingCurrentPurposeCategory extends EditPurposeCategoryState {
 }
 
 class GotCurrentPurposeCategory extends EditPurposeCategoryState {
-  const GotCurrentPurposeCategory(this.purposeCategory);
+  const GotCurrentPurposeCategory(
+    this.purposeCategory,
+    this.purposes,
+  );
 
   final PurposeCategoryModel purposeCategory;
+  final List<PurposeModel> purposes;
 
   @override
-  List<Object> get props => [purposeCategory];
+  List<Object> get props => [purposeCategory, purposes];
 }
 
 class CreatingCurrentPurposeCategory extends EditPurposeCategoryState {
@@ -63,12 +67,16 @@ class UpdatingCurrentPurposeCategory extends EditPurposeCategoryState {
 }
 
 class UpdatedCurrentPurposeCategory extends EditPurposeCategoryState {
-  const UpdatedCurrentPurposeCategory(this.purposeCategory);
+  const UpdatedCurrentPurposeCategory(
+    this.purposeCategory,
+    this.purposes,
+  );
 
   final PurposeCategoryModel purposeCategory;
+  final List<PurposeModel> purposes;
 
   @override
-  List<Object> get props => [purposeCategory];
+  List<Object> get props => [purposeCategory, purposes];
 }
 
 class DeletingCurrentPurposeCategory extends EditPurposeCategoryState {

@@ -10,7 +10,6 @@ import 'package:pdpa/app/features/authentication/bloc/sign_in/sign_in_bloc.dart'
 import 'package:pdpa/app/features/master_data/bloc/consent/purpose_category/purpose_category_bloc.dart';
 import 'package:pdpa/app/features/master_data/routes/master_data_route.dart';
 import 'package:pdpa/app/features/master_data/widgets/master_data_item_card.dart';
-import 'package:pdpa/app/shared/utils/constants.dart';
 import 'package:pdpa/app/shared/widgets/customs/custom_icon_button.dart';
 import 'package:pdpa/app/shared/widgets/screens/example_screen.dart';
 import 'package:pdpa/app/shared/widgets/templates/pdpa_app_bar.dart';
@@ -57,42 +56,6 @@ class PurposeCategoryView extends StatefulWidget {
 }
 
 class _PurposeCategoryViewState extends State<PurposeCategoryView> {
-  final purposecategory = [
-    PurposeCategoryModel(
-        id: '1',
-        title: const [
-          LocalizedModel(language: 'en-US', text: 'Test1'),
-          LocalizedModel(language: 'en-US', text: 'Test1'),
-        ],
-        description: const [
-          LocalizedModel(language: 'en-US', text: 'Test1'),
-          LocalizedModel(language: 'en-US', text: 'Test1'),
-        ],
-        purposes: const [],
-        priority: 1,
-        status: ActiveStatus.active,
-        createdBy: '',
-        createdDate: DateTime.fromMillisecondsSinceEpoch(0),
-        updatedBy: '',
-        updatedDate: DateTime.fromMillisecondsSinceEpoch(0)),
-    PurposeCategoryModel(
-        id: '2',
-        title: const [
-          LocalizedModel(language: 'en-US', text: 'Test2'),
-          LocalizedModel(language: 'en-US', text: 'Test2'),
-        ],
-        description: const [
-          LocalizedModel(language: 'en-US', text: 'Test2'),
-          LocalizedModel(language: 'en-US', text: 'Test2'),
-        ],
-        purposes: const [],
-        priority: 1,
-        status: ActiveStatus.active,
-        createdBy: '',
-        createdDate: DateTime.fromMillisecondsSinceEpoch(0),
-        updatedBy: '',
-        updatedDate: DateTime.fromMillisecondsSinceEpoch(0)),
-  ];
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -140,7 +103,6 @@ class _PurposeCategoryViewState extends State<PurposeCategoryView> {
                                 tr('masterData.cm.purposeCategory.create'),
                             descriptionText:
                                 tr('masterData.cm.purposeCategory.create'),
-                           
                             onPress: () {
                               context.push(
                                   MasterDataRoute.createPurposeCategory.path);
@@ -177,18 +139,18 @@ class _PurposeCategoryViewState extends State<PurposeCategoryView> {
     required PurposeCategoryModel purposeCategory,
   }) {
     const language = 'en-US';
-    final description = purposeCategory.description.firstWhere(
+    final title = purposeCategory.title.firstWhere(
       (item) => item.language == language,
       orElse: () => const LocalizedModel.empty(),
     );
-    final title = purposeCategory.title.firstWhere(
+    final description = purposeCategory.description.firstWhere(
       (item) => item.language == language,
       orElse: () => const LocalizedModel.empty(),
     );
 
     return MasterDataItemCard(
-      title: description.text,
-      subtitle: title.text,
+      title: title.text,
+      subtitle: description.text,
       status: purposeCategory.status,
       onTap: () {
         context.push(
