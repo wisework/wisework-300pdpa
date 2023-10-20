@@ -33,22 +33,25 @@ class GetingCurrentConsentForm extends EditConsentFormState {
 class GotCurrentConsentForm extends EditConsentFormState {
   const GotCurrentConsentForm(
     this.consentForm,
-    this.mandatoryField,
+    this.mandatoryFields,
     this.purposeCategories,
     this.purposes,
+    this.customFields,
   );
 
   final ConsentFormModel consentForm;
-  final List<MandatoryFieldModel> mandatoryField;
+  final List<MandatoryFieldModel> mandatoryFields;
   final List<PurposeCategoryModel> purposeCategories;
   final List<PurposeModel> purposes;
+  final List<CustomFieldModel> customFields;
 
   @override
   List<Object> get props => [
         consentForm,
-        mandatoryField,
+        mandatoryFields,
         purposeCategories,
         purposes,
+        customFields,
       ];
 }
 
@@ -60,33 +63,39 @@ class CreatingCurrentConsentForm extends EditConsentFormState {
 }
 
 class CreatedCurrentConsentForm extends EditConsentFormState {
-  const CreatedCurrentConsentForm(this.consentForm);
+  const CreatedCurrentConsentForm(
+    this.consentForm,
+    this.purposeCategories,
+  );
 
   final ConsentFormModel consentForm;
+  final List<PurposeCategoryModel> purposeCategories;
 
   @override
-  List<Object> get props => [consentForm];
+  List<Object> get props => [consentForm, purposeCategories];
 }
 
-class UpdatingCurrentConsentForm extends EditConsentFormState {
-  const UpdatingCurrentConsentForm();
+class UpdatingEditConsentForm extends EditConsentFormState {
+  const UpdatingEditConsentForm();
 
   @override
   List<Object> get props => [];
 }
 
-class UpdatedCurrentConsentForm extends EditConsentFormState {
-  const UpdatedCurrentConsentForm(
+class UpdateEditConsentForm extends EditConsentFormState {
+  const UpdateEditConsentForm(
     this.consentForm,
     this.mandatoryFields,
     this.purposeCategories,
     this.purposes,
+    this.customFields,
   );
 
   final ConsentFormModel consentForm;
   final List<MandatoryFieldModel> mandatoryFields;
   final List<PurposeCategoryModel> purposeCategories;
   final List<PurposeModel> purposes;
+  final List<CustomFieldModel> customFields;
 
   @override
   List<Object> get props => [
@@ -94,5 +103,6 @@ class UpdatedCurrentConsentForm extends EditConsentFormState {
         mandatoryFields,
         purposeCategories,
         purposes,
+        customFields,
       ];
 }

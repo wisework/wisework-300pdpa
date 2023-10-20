@@ -11,8 +11,11 @@ import 'package:pdpa/app/data/models/master_data/purpose_category_model.dart';
 import 'package:pdpa/app/data/models/master_data/purpose_model.dart';
 import 'package:pdpa/app/features/authentication/bloc/sign_in/sign_in_bloc.dart';
 import 'package:pdpa/app/features/consent_management/consent_form/bloc/choose_purpose_category/choose_purpose_category_bloc.dart';
+import 'package:pdpa/app/features/consent_management/consent_form/bloc/edit_consent_form/edit_consent_form_bloc.dart';
 import 'package:pdpa/app/features/consent_management/consent_form/cubit/choose_purpose_category/choose_purpose_category_cubit.dart';
+import 'package:pdpa/app/features/consent_management/consent_form/cubit/current_edit_consent_form/current_edit_consent_form_cubit.dart';
 import 'package:pdpa/app/injection.dart';
+import 'package:pdpa/app/shared/utils/constants.dart';
 import 'package:pdpa/app/shared/widgets/customs/custom_container.dart';
 import 'package:pdpa/app/shared/widgets/customs/custom_icon_button.dart';
 import 'package:pdpa/app/shared/widgets/expanded_container.dart';
@@ -51,12 +54,18 @@ class _ChoosePurposeCategoryScreenState
 
   @override
   Widget build(BuildContext context) {
-    return BlocProvider<ChoosePurposeCategoryBloc>(
-      create: (context) => serviceLocator<ChoosePurposeCategoryBloc>()
-        ..add(GetCurrentAllPurposeCategoryEvent(
-          consentFormId: widget.consentFormId,
-          companyId: currentUser.currentCompany,
-        )),
+    return MultiBlocProvider(
+      providers: [
+        BlocProvider<ChoosePurposeCategoryBloc>(
+          create: (context) => serviceLocator<ChoosePurposeCategoryBloc>()
+            ..add(GetCurrentAllPurposeCategoryEvent(
+              consentFormId: widget.consentFormId,
+              companyId: currentUser.currentCompany,
+            )),
+        ),
+        BlocProvider<EditConsentFormBloc>(
+            create: (context) => serviceLocator<EditConsentFormBloc>()),
+      ],
       child: BlocBuilder<ChoosePurposeCategoryBloc, ChoosePurposeCategoryState>(
         builder: (context, state) {
           if (state is GotCurrentPurposeCategory) {
@@ -64,12 +73,8 @@ class _ChoosePurposeCategoryScreenState
               initialpurposeCategories: state.purposeCategories,
               purposes: state.purposes,
               consentForm: state.consentform,
-              isNewPurposeCategory: state.purposeCategories.isEmpty,
             );
           }
-          // if (state is ChoosePurposeCategoryError) {
-          //   return ErrorMessageScreen(message: state.message);
-          // }
           return const LoadingScreen();
         },
       ),
@@ -83,13 +88,11 @@ class ChoosePurposeCategoryView extends StatefulWidget {
     required this.consentForm,
     required this.initialpurposeCategories,
     required this.purposes,
-    required this.isNewPurposeCategory,
   });
 
   final ConsentFormModel consentForm;
   final List<PurposeCategoryModel> initialpurposeCategories;
   final List<PurposeModel> purposes;
-  final bool isNewPurposeCategory;
 
   @override
   State<ChoosePurposeCategoryView> createState() =>
@@ -98,6 +101,9 @@ class ChoosePurposeCategoryView extends StatefulWidget {
 
 class _ChoosePurposeCategoryViewState extends State<ChoosePurposeCategoryView> {
   late List<PurposeCategoryModel> purposeCategory;
+
+  final List<PurposeCategoryModel> newPurposeCategories = [];
+  final List<String> newPurposeCategoryList = [];
 
   late List<String> purposeCategories;
 
@@ -120,9 +126,19 @@ class _ChoosePurposeCategoryViewState extends State<ChoosePurposeCategoryView> {
       appBar: PdpaAppBar(
         leadingIcon: CustomIconButton(
           onPressed: () {
-            print(purposeCategories);
+            if (purposeCategory.isNotEmpty) {
+              final event = UpdatePurposeCategoriesEvent(
+                purposeCategory: newPurposeCategories,
+                updateType: UpdateType.updated,
+              );
 
-            // context.pop();
+              context.read<EditConsentFormBloc>().add(event);
+
+              context.read<CurrentEditConsentFormCubit>().setPurposeCategory(
+                  newPurposeCategoryList, newPurposeCategories);
+            }
+
+            context.pop();
           },
           icon: Ionicons.chevron_back_outline,
           iconColor: Theme.of(context).colorScheme.primary,
@@ -217,6 +233,18 @@ class _ChoosePurposeCategoryViewState extends State<ChoosePurposeCategoryView> {
                                                                       index]
                                                                   .id,
                                                             )) {
+                                                              newPurposeCategoryList
+                                                                  .removeWhere((item) =>
+                                                                      item ==
+                                                                      purposeCategory[
+                                                                              index]
+                                                                          .id);
+
+                                                              newPurposeCategories
+                                                                  .removeWhere((item) =>
+                                                                      item ==
+                                                                      purposeCategory[
+                                                                          index]);
                                                               purposeCategories
                                                                   .removeWhere((item) =>
                                                                       item ==
@@ -224,6 +252,13 @@ class _ChoosePurposeCategoryViewState extends State<ChoosePurposeCategoryView> {
                                                                               index]
                                                                           .id);
                                                             } else {
+                                                              newPurposeCategoryList.add(
+                                                                  purposeCategory[
+                                                                          index]
+                                                                      .id);
+                                                              newPurposeCategories.add(
+                                                                  purposeCategory[
+                                                                      index]);
                                                               purposeCategories.add(
                                                                   purposeCategory[
                                                                           index]

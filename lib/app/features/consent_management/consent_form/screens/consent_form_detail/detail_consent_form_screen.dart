@@ -76,9 +76,9 @@ class _DetailConsentFormScreenState extends State<DetailConsentFormScreen> {
               consentTheme: state.consentTheme,
             );
           }
-          if (state is ConsentFormDetailError) {
-            return ErrorMessageScreen(message: state.message);
-          }
+          // if (state is ConsentFormDetailError) {
+          //   return ErrorMessageScreen(message: state.message);
+          // }
 
           return const LoadingScreen();
         },
@@ -177,6 +177,7 @@ class _ConsentFormDetailViewState extends State<ConsentFormDetailView> {
           children: <Widget>[
             ConsentInfoTab(
               consentForm: widget.consentForm,
+              mandatoryFields: widget.mandatoryFields,
               customFields: widget.customFields,
               purposeCategories: widget.purposeCategories,
               purposes: widget.purposes,
