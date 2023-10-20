@@ -4,6 +4,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
 import 'package:ionicons/ionicons.dart';
 import 'package:pdpa/app/config/config.dart';
+import 'package:pdpa/app/data/models/consent_management/consent_form_model.dart';
 import 'package:pdpa/app/data/models/consent_management/user_consent_model.dart';
 import 'package:pdpa/app/data/models/etc/user_input_text.dart';
 import 'package:pdpa/app/features/authentication/bloc/sign_in/sign_in_bloc.dart';
@@ -95,6 +96,12 @@ class _UserConsentViewState extends State<UserConsentView> {
                         return _buildItemCard(
                           context,
                           userConsent: state.userConsents[index],
+                          consentForm: state.consentForms.firstWhere(
+                            (role) =>
+                                role.id ==
+                                state.userConsents[index].consentFormId,
+                            orElse: () => ConsentFormModel.empty(),
+                          ),
                           mandatorySelected: state.mandatoryFields.first.id,
                         );
                       },
@@ -128,6 +135,7 @@ class _UserConsentViewState extends State<UserConsentView> {
   Column _buildItemCard(
     BuildContext context, {
     required UserConsentModel userConsent,
+    required ConsentFormModel consentForm,
     required String mandatorySelected,
   }) {
     final title = userConsent.mandatoryFields
@@ -159,9 +167,31 @@ class _UserConsentViewState extends State<UserConsentView> {
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: <Widget>[
-                    Text(
-                      title.isNotEmpty ? title : 'This data is not stored.',
-                      style: Theme.of(context).textTheme.bodyMedium,
+                    Expanded(
+                      child: Column(
+                        mainAxisSize: MainAxisSize.min,
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: <Widget>[
+                          Text(
+                            title.isNotEmpty
+                                ? title
+                                : 'This data is not stored.',
+                            style: Theme.of(context).textTheme.titleMedium,
+                          ),
+                          Visibility(
+                            visible: consentForm.title.isNotEmpty,
+                            child: Padding(
+                              padding: const EdgeInsets.only(
+                                top: UiConfig.textLineSpacing,
+                              ),
+                              child: Text(
+                                consentForm.title.first.text,
+                                style: Theme.of(context).textTheme.bodySmall,
+                              ),
+                            ),
+                          ),
+                        ],
+                      ),
                     ),
                     Padding(
                       padding: const EdgeInsets.only(left: 40.0),
