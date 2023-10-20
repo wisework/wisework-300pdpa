@@ -139,7 +139,7 @@ class _PurposeCategoryViewState extends State<PurposeCategoryView> {
                             buttonText:
                                 tr('masterData.cm.purposeCategory.create'),
                             descriptionText:
-                                tr('masterData.cm.purposeCategory.create'),
+                                tr('masterData.cm.purposeCategory.explain'),
                            
                             onPress: () {
                               context.push(
