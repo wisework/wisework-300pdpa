@@ -47,7 +47,10 @@
     "general": {
         "home": {
             "hello": "สวัสดี",
-            "tagline": "สิ่งที่คุณกำลังมองหาในวันนี้"
+            "tagline": "สิ่งที่คุณกำลังมองหาในวันนี้",
+            "explore" : "สำรวจ",
+            "recentlyUsed": "ใช้ล่าสุด"
+            
         }
     },
     "consentManagement": {

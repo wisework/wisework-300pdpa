@@ -176,9 +176,9 @@ class _HomeScreenState extends State<HomeScreen> {
 
   BlocBuilder _buildExplore(BuildContext context) {
     final List<String> cardTitles = [
-      "Consent Forms",
-      "User Consent",
-      "Master Data"
+      tr("consentManagement.consentForm.consentForms"),
+      tr("consentManagement.userConsent.userConsents"),
+      tr("app.features.masterdata")
     ];
     final List<Icon> icons = [
       const Icon(Icons.document_scanner_outlined),
@@ -194,7 +194,7 @@ class _HomeScreenState extends State<HomeScreen> {
                 Row(
                   mainAxisAlignment: MainAxisAlignment.start,
                   children: [
-                    Text('Explore',
+                    Text(tr('general.home.explore'),
                         style: Theme.of(context).textTheme.titleMedium),
                   ],
                 ),
@@ -262,7 +262,7 @@ BlocBuilder _buildRecentUser(BuildContext context) {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: <Widget>[
             Text(
-              'Recent used',
+              tr('general.home.recentlyUsed'),
               style: Theme.of(context).textTheme.titleMedium,
             ),
             const SizedBox(height: UiConfig.lineSpacing),

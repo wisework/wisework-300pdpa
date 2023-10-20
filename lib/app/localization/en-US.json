@@ -47,7 +47,9 @@
     "general": {
         "home": {
             "hello": "Hello",
-            "tagline": "What you are looking for today"
+            "tagline": "What you are looking for today",
+            "explore" : "Explore",
+            "recentlyUsed": "Recently used"
         }
     },
     "consentManagement": {
