@@ -539,6 +539,7 @@ class _PurposeCategoryTileState extends State<PurposeCategoryTile> {
                           ],
                         ),
                         ExpandedContainer(
+                          duration: const Duration(milliseconds: 400),
                           expand: state.expandId == widget.purposeCategory.id,
                           child: Padding(
                             padding: EdgeInsets.only(
