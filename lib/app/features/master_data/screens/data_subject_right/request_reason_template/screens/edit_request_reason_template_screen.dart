@@ -140,7 +140,6 @@ class _EditRequestReasonTemplateScreenState
         },
         builder: (context, state) {
           if (state is GotCurrentRequestReasonTp) {
-            print('Got');
             return EditRequestReasonTemplateView(
               initialRequestReason: state.requestReasonTp,
               currentUser: currentUser,
@@ -148,7 +147,6 @@ class _EditRequestReasonTemplateScreenState
             );
           }
           if (state is UpdatedCurrentRequestReasonTp) {
-            print('Update');
             return EditRequestReasonTemplateView(
               initialRequestReason: state.requestReasonTp,
               currentUser: currentUser,
@@ -219,7 +217,7 @@ class _EditRequestReasonTemplateViewState
   void _setRequestType(String? value) {
     setState(() {
       final requestType = value;
-      print(value);
+
       requestReason = requestReason.copyWith(requestTypeId: requestType);
     });
   }
@@ -227,7 +225,7 @@ class _EditRequestReasonTemplateViewState
   void _setReasonTypeList(List<String>? value) {
     setState(() {
       final reasonTypesList = value;
-      print(value);
+
       requestReason = requestReason.copyWith(reasonTypesId: reasonTypesList);
     });
   }
@@ -244,7 +242,6 @@ class _EditRequestReasonTemplateViewState
 
   void _saveRequestReason() {
     if (_formKey.currentState!.validate()) {
-      print('pass1');
       if (widget.isNewRequestReason) {
         requestReason = requestReason.setCreate(
           widget.currentUser.email,
@@ -262,7 +259,7 @@ class _EditRequestReasonTemplateViewState
           widget.currentUser.email,
           DateTime.now(),
         );
-        print('pass2');
+
         context
             .read<EditRequestReasonTpBloc>()
             .add(UpdateCurrentRequestReasonTpEvent(
