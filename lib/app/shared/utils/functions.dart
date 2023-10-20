@@ -24,7 +24,7 @@ class UtilFunctions {
 
   //? User Consent Form
   static String getUserConsentForm(String consentId, String companyId) {
-    final fragment = 'companies/$companyId/consent-form/$consentId/form';
+    final fragment = 'companies/$companyId/consent-forms/$consentId/form';
     return '${AppConfig.baseUrl}/#/$fragment';
   }
 
