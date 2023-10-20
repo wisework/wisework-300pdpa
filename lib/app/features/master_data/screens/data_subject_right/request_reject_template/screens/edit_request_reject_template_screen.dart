@@ -214,21 +214,19 @@ class _EditRequestRejectTemplateViewState
     }
   }
 
-  void _setRequestType(String? value) {
-    setState(() {
-      final requestType = value;
+  // void _setRequestType(String? value) {
+  //   setState(() {
+  //     final requestType = value;
+  //     requestReject = requestReject.copyWith(requestTypeId: requestType);
+  //   });
+  // }
 
-      requestReject = requestReject.copyWith(requestTypeId: requestType);
-    });
-  }
-
-  void _setRejectTypeList(List<String>? value) {
-    setState(() {
-      final rejectTypeList = value;
-
-      requestReject = requestReject.copyWith(rejectTypesId: rejectTypeList);
-    });
-  }
+  // void _setRejectTypeList(List<String>? value) {
+  //   setState(() {
+  //     final rejectTypeList = value;
+  //     requestReject = requestReject.copyWith(rejectTypesId: rejectTypeList);
+  //   });
+  // }
 
   void _setActiveStatus(bool value) {
     setState(() {
@@ -259,7 +257,6 @@ class _EditRequestRejectTemplateViewState
           widget.currentUser.email,
           DateTime.now(),
         );
-
         context
             .read<EditRequestRejectTpBloc>()
             .add(UpdateCurrentRequestRejectTpEvent(
