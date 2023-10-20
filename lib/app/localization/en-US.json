@@ -49,7 +49,8 @@
             "hello": "Hello",
             "tagline": "What you are looking for today",
             "explore" : "Explore",
-            "recentlyUsed": "Recently used"
+            "recentlyUsed": "Recently used",
+            "thisDataIsNotStored." : "This data is not stored."
         }
     },
     "consentManagement": {
@@ -271,7 +272,9 @@
                 "descriptionHint": "Enter description",
                 "priority": "Priority",
                 "priorityHint": "Enter Priority",
-                "purposes": "Purposes"
+                "purposes": "Purposes",
+                "purposeList" : "Purpose List",
+                "noData" : "No Data"
             }
         },
         "dsr": {

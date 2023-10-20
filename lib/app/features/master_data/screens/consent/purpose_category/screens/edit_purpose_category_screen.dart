@@ -528,7 +528,7 @@ class _EditPurposeCategoryViewState extends State<EditPurposeCategoryView> {
                 child: Column(
                   children: [
                     const SizedBox(height: UiConfig.lineSpacing),
-                    const Text('Purpose List'), //!
+                     Text(tr('masterData.cm.purposeCategory.purposeList')), //!
                     const SizedBox(height: UiConfig.lineSpacing),
                     ListView.builder(
                       shrinkWrap: true,
@@ -537,7 +537,7 @@ class _EditPurposeCategoryViewState extends State<EditPurposeCategoryView> {
                       itemBuilder: (_, index) {
                         final item = state.purposes[index];
                         if (state.purposes.isEmpty) {
-                          return const Text('No Data'); //!
+                          return const Text('masterData.cm.purposeCategory.noData'); //!
                         }
                         return CheckboxListTile(
                           controlAffinity: ListTileControlAffinity.leading,

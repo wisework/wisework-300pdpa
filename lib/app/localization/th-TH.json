@@ -5,12 +5,12 @@
         "day": "วันที่",
         "month": "เดือน",
         "year": "ปี",
-        "text" : "ข้อความ",
-        "multiline" : "หลายบรรทัด",
-        "number" : "หมายเลข",
-        "phone" : "เบอร์โทรศัพท์",
-        "emailAddress" : "อีเมล",
-        "url" : "URL",
+        "text": "ข้อความ",
+        "multiline": "หลายบรรทัด",
+        "number": "หมายเลข",
+        "phone": "เบอร์โทรศัพท์",
+        "emailAddress": "อีเมล",
+        "url": "URL",
         "features": {
             "home": "หน้าหลัก",
             "consentmanagement": "ระบบบริหารจัดการข้อมูลส่วนบุคคล",
@@ -48,9 +48,9 @@
         "home": {
             "hello": "สวัสดี",
             "tagline": "สิ่งที่คุณกำลังมองหาในวันนี้",
-            "explore" : "สำรวจ",
-            "recentlyUsed": "ใช้ล่าสุด"
-            
+            "explore": "สำรวจ",
+            "recentlyUsed": "ใช้ล่าสุด",
+            "thisDataIsNotStored.": "ข้อมูลนี้ไม่ได้ถูกจัดเก็บ"
         }
     },
     "consentManagement": {
@@ -272,7 +272,9 @@
                 "descriptionHint": "กรอกคำอธิบาย",
                 "priority": "ระดับความสำคัญ",
                 "priorityHint": "กรอกระดับความสำคัญ",
-                "purposes": "วัตถุประสงค์"
+                "purposes": "วัตถุประสงค์",
+                "purposeList": "รายการวัตถุประสงค์",
+                "noData": "ไม่มีข้อมูล"
             }
         },
         "dsr": {
@@ -333,7 +335,6 @@
                 "createDataSubjectRight": "สร้างสิทธิของเจ้าของข้อมูล",
                 "editDataSubjectRight": "แก้ไขสิทธิของเจ้าของข้อมูล"
             }
-           
         },
         "etc": {
             "fieldCannotEmpty": "ช่องต้องไม่เว้นว่าง",
