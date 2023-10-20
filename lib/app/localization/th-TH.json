@@ -216,6 +216,15 @@
         }
     },
     "masterData": {
+        "main": {
+            "mandatories": "Mandatories",
+            "mandatoryFields": {
+                "title": "Mandatory Field",
+                "list": "Mandatory Fields",
+                "edit": "Edit Mandatory Field",
+                "create": "Create Mandatory Field"
+            }
+        },
         "cm": {
             "consents": "ความยินยอม",
             "customfields": {
