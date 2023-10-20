@@ -9,6 +9,7 @@ import 'package:pdpa/app/data/presets/mandatory_field_preset.dart';
 import 'package:pdpa/app/features/authentication/bloc/sign_in/sign_in_bloc.dart';
 import 'package:pdpa/app/features/authentication/bloc/sign_up_company/sign_up_company_bloc.dart';
 import 'package:pdpa/app/features/authentication/routes/authentication_route.dart';
+import 'package:pdpa/app/features/general/bloc/app_settings/app_settings_bloc.dart';
 import 'package:pdpa/app/features/general/routes/general_route.dart';
 import 'package:pdpa/app/injection.dart';
 import 'package:pdpa/app/shared/widgets/customs/custom_button.dart';
@@ -174,8 +175,17 @@ class _SignUpCompanyViewState extends State<SignUpCompanyView> {
       child: BlocConsumer<SignUpCompanyBloc, SignUpCompanyState>(
         listener: (context, state) {
           if (state is SignedUpCompany) {
-            context.read<SignInBloc>().add(UpdateCurrentUserEvent(
-                user: state.user, companies: state.companies));
+            final initialAppSettings = InitialAppSettingsEvent(
+              user: state.user,
+            );
+            context.read<AppSettingsBloc>().add(initialAppSettings);
+
+            final updateCurrentUser = UpdateCurrentUserEvent(
+              user: state.user,
+              companies: state.companies,
+            );
+            context.read<SignInBloc>().add(updateCurrentUser);
+
             context.pushReplacement(GeneralRoute.home.path);
           }
         },

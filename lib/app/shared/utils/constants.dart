@@ -1,6 +1,8 @@
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/services.dart';
 
+final List<String> languages = ['en-US', 'th-TH'];
+
 enum ActiveStatus { active, inactive }
 
 enum UserRoles { owner, editor, viewer }

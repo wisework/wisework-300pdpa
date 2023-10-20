@@ -101,11 +101,10 @@ class UserModel extends Equatable {
         'phoneNumber': phoneNumber,
         'citizenId': citizenId,
         'profileImage': profileImage,
-        'roles': roles
-          ..fold(
-            {},
-            (map, userCompanyRole) => map..addAll(userCompanyRole.toMap()),
-          ),
+        'roles': roles.fold(
+          {},
+          (map, userCompanyRole) => map..addAll(userCompanyRole.toMap()),
+        ),
         'companies': companies,
         'currentCompany': currentCompany,
         'defaultLanguage': defaultLanguage,

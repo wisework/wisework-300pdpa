@@ -16,8 +16,7 @@ import 'package:pdpa/app/features/consent_management/user_consent/bloc/user_cons
 import 'package:pdpa/app/features/consent_management/user_consent/bloc/user_consent_detail/user_consent_detail_bloc.dart';
 import 'package:pdpa/app/features/data_subject_right/bloc/data_subject_right/data_subject_right_bloc.dart';
 import 'package:pdpa/app/features/data_subject_right/bloc/user_data_subject_right_form/user_data_subject_right_form_bloc.dart';
-import 'package:pdpa/app/features/general/bloc/setting/setting_bloc.dart';
-import 'package:pdpa/app/features/general/cubit/setting_cubit.dart';
+import 'package:pdpa/app/features/general/bloc/app_settings/app_settings_bloc.dart';
 import 'package:pdpa/app/features/master_data/bloc/data_subject_right/edit_request_reason_tp/edit_request_reason_tp_bloc.dart';
 import 'package:pdpa/app/features/master_data/bloc/data_subject_right/edit_request_reject_tp/edit_request_reject_tp_bloc.dart';
 import 'package:pdpa/app/features/master_data/bloc/data_subject_right/request_reason_tp/request_reason_tp_bloc.dart';
@@ -348,6 +347,11 @@ Future<void> _other() async {
     ..registerFactory(
       () => DrawerBloc(),
     )
+    ..registerLazySingleton(
+      () => AppSettingsBloc(
+        authenticationRepository: serviceLocator(),
+      ),
+    )
     //? Repositories
     ..registerLazySingleton(
       () => GeneralRepository(
@@ -358,17 +362,6 @@ Future<void> _other() async {
     ..registerLazySingleton(
       () => GeneralApi(
         serviceLocator(),
-      ),
-    )
-    //? Setting
-    ..registerLazySingleton(
-      () => SettingCubit(
-        authenticationRepository: serviceLocator(),
-      ),
-    )
-    ..registerLazySingleton(
-      () => SettingBloc(
-        authenticationRepository: serviceLocator(),
       ),
     );
 }
