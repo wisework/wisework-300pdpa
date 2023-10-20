@@ -43,7 +43,7 @@ class _PurposeRadioOptionState extends State<PurposeRadioOption> {
   Widget build(BuildContext context) {
     return CustomContainer(
       margin: EdgeInsets.zero,
-      color: Theme.of(context).colorScheme.onBackground,
+      color: widget.consentTheme.categoryContentBackgroundColor,
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: <Widget>[
