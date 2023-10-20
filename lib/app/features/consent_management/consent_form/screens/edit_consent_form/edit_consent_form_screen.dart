@@ -505,15 +505,6 @@ class _EditConsentFormViewState extends State<EditConsentFormView> {
                   DateTime.now(),
                 );
 
-                final url = UtilFunctions.getUserConsentForm(
-                  consentForm.id,
-                  widget.currentUser.currentCompany,
-                );
-
-                // final cubit = context.read<CurrentConsentFormSettingsCubit>();
-                // cubit.generateConsentFormUrl(url);
-
-                consentForm = consentForm.setUrl(url);
                 consentForm =
                     consentForm.setPurposeCategory(purposeCategoryList);
 
