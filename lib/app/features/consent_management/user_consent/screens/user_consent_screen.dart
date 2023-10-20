@@ -133,7 +133,7 @@ class _UserConsentViewState extends State<UserConsentView> {
     final title = userConsent.mandatoryFields
         .firstWhere(
           (mandatoryField) => mandatoryField.id == mandatorySelected,
-          orElse: UserInputText.empty,
+          orElse: () => const UserInputText.empty(),
         )
         .text;
 

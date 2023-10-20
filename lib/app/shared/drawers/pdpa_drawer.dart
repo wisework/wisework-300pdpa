@@ -145,8 +145,10 @@ class _PdpaDrawerState extends State<PdpaDrawer> {
                 style: Theme.of(context).textTheme.titleMedium,
               ),
               Text(
-                '${user.role.name[0].toUpperCase()}'
-                '${user.role.name.substring(1)}',
+                UtilFunctions.getUserCompanyRole(
+                  user.roles,
+                  user.currentCompany,
+                ),
                 style: Theme.of(context).textTheme.labelMedium,
                 overflow: TextOverflow.ellipsis,
                 maxLines: 1,

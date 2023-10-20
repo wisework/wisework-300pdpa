@@ -1,4 +1,5 @@
 import 'package:equatable/equatable.dart';
+import 'package:pdpa/app/data/models/etc/user_company_role.dart';
 import 'package:pdpa/app/shared/utils/constants.dart';
 import 'package:pdpa/app/shared/utils/typedef.dart';
 
@@ -12,7 +13,7 @@ class UserModel extends Equatable {
     required this.phoneNumber,
     required this.citizenId,
     required this.profileImage,
-    required this.role,
+    required this.roles,
     required this.companies,
     required this.currentCompany,
     required this.defaultLanguage,
@@ -32,7 +33,7 @@ class UserModel extends Equatable {
   final String phoneNumber;
   final String citizenId;
   final String profileImage;
-  final UserRoles role;
+  final List<UserCompanyRole> roles;
   final List<String> companies;
   final String currentCompany;
   final String defaultLanguage;
@@ -53,7 +54,7 @@ class UserModel extends Equatable {
           phoneNumber: '',
           citizenId: '',
           profileImage: '',
-          role: UserRoles.viewer,
+          roles: [],
           companies: [],
           currentCompany: '',
           defaultLanguage: '',
@@ -75,7 +76,10 @@ class UserModel extends Equatable {
           phoneNumber: map['phoneNumber'] as String,
           citizenId: map['citizenId'] as String,
           profileImage: map['profileImage'] as String,
-          role: UserRoles.values[map['role'] as int],
+          roles: List<UserCompanyRole>.from(
+            (map['roles'] as DataMap).entries.map<UserCompanyRole>((item) =>
+                UserCompanyRole.fromMap({'id': item.key, 'role': item.value})),
+          ),
           companies: List<dynamic>.from((map['companies'] as List<dynamic>))
               .map((item) => item.toString())
               .toList(),
@@ -90,7 +94,6 @@ class UserModel extends Equatable {
         );
 
   DataMap toMap() => {
-        'id': id,
         'uid': uid,
         'firstName': firstName,
         'lastName': lastName,
@@ -98,7 +101,11 @@ class UserModel extends Equatable {
         'phoneNumber': phoneNumber,
         'citizenId': citizenId,
         'profileImage': profileImage,
-        'role': role.index,
+        'roles': roles
+          ..fold(
+            {},
+            (map, userCompanyRole) => map..addAll(userCompanyRole.toMap()),
+          ),
         'companies': companies,
         'currentCompany': currentCompany,
         'defaultLanguage': defaultLanguage,
@@ -125,7 +132,7 @@ class UserModel extends Equatable {
     String? phoneNumber,
     String? citizenId,
     String? profileImage,
-    UserRoles? role,
+    List<UserCompanyRole>? roles,
     List<String>? companies,
     String? currentCompany,
     String? defaultLanguage,
@@ -145,7 +152,7 @@ class UserModel extends Equatable {
       phoneNumber: phoneNumber ?? this.phoneNumber,
       citizenId: citizenId ?? this.citizenId,
       profileImage: profileImage ?? this.profileImage,
-      role: role ?? this.role,
+      roles: roles ?? this.roles,
       companies: companies ?? this.companies,
       currentCompany: currentCompany ?? this.currentCompany,
       defaultLanguage: defaultLanguage ?? this.defaultLanguage,
@@ -169,7 +176,7 @@ class UserModel extends Equatable {
       phoneNumber,
       citizenId,
       profileImage,
-      role,
+      roles,
       companies,
       currentCompany,
       defaultLanguage,

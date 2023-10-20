@@ -34,7 +34,7 @@ class _ReorderPurposeCategoryState extends State<ReorderPurposeCategory> {
             const language = "en-US";
             final title = purposeFiltered[index].title.firstWhere(
                   (item) => item.language == language,
-                  orElse: LocalizedModel.empty,
+                  orElse: () => const LocalizedModel.empty(),
                 );
             return ListTile(
               key: Key('$index'),

@@ -141,7 +141,7 @@ class _RejectTypeViewState extends State<RejectTypeView> {
     const language = 'en-US';
     final description = rejectType.description.firstWhere(
       (item) => item.language == language,
-      orElse: LocalizedModel.empty,
+      orElse: () => const LocalizedModel.empty(),
     );
     final rejectCode = rejectType.rejectCode;
 

@@ -3,6 +3,7 @@ import 'package:bloc/bloc.dart';
 import 'package:equatable/equatable.dart';
 import 'package:pdpa/app/data/models/authentication/company_model.dart';
 import 'package:pdpa/app/data/models/authentication/user_model.dart';
+import 'package:pdpa/app/data/models/etc/user_company_role.dart';
 import 'package:pdpa/app/data/models/master_data/mandatory_field_model.dart';
 import 'package:pdpa/app/data/repositories/authentication_repository.dart';
 import 'package:pdpa/app/data/repositories/master_data_repository.dart';
@@ -53,7 +54,8 @@ class SignUpCompanyBloc extends Bloc<SignUpCompanyEvent, SignUpCompanyState> {
         }
 
         final updated = event.user.copyWith(
-          role: UserRoles.owner,
+          roles: event.user.roles.map((role) => role).toList()
+            ..add(UserCompanyRole(id: company.id, role: UserRoles.owner)),
           companies: event.user.companies.map((id) => id).toList()
             ..add(company.id),
           currentCompany: company.id,
