@@ -14,15 +14,6 @@ class DrawerInitial extends DrawerState {
   List<Object> get props => [];
 }
 
-class SelectedMenuDrawer extends DrawerState {
-  const SelectedMenuDrawer(this.menu);
-
-  final DrawerMenuModel menu;
-
-  @override
-  List<Object> get props => [menu];
-}
-
 class DrawerError extends DrawerState {
   const DrawerError(this.message);
 
@@ -30,4 +21,13 @@ class DrawerError extends DrawerState {
 
   @override
   List<Object> get props => [message];
+}
+
+class SelectedMenuDrawer extends DrawerState {
+  const SelectedMenuDrawer(this.menu);
+
+  final DrawerMenuModel menu;
+
+  @override
+  List<Object> get props => [menu];
 }

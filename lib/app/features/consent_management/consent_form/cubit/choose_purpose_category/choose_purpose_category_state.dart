@@ -3,31 +3,30 @@ part of 'choose_purpose_category_cubit.dart';
 
 class ChoosePurposeCategoryCubitState extends Equatable {
   const ChoosePurposeCategoryCubitState({
-    required this.purposeCategorySelected,
-    required this.customFieldSelected,
+    required this.consentForm,
     required this.expandId,
+    required this.purposeCategory,
   });
   final String expandId;
-  final List<PurposeCategoryModel> purposeCategorySelected;
-  final List<CustomFieldModel> customFieldSelected;
+  final ConsentFormModel consentForm;
+  final List<PurposeCategoryModel> purposeCategory;
 
   ChoosePurposeCategoryCubitState copyWith({
     String? expandId,
-    List<PurposeCategoryModel>? purposeCategorySelected,
-    List<CustomFieldModel>? customFieldSelected,
+    ConsentFormModel? consentForm,
+    List<PurposeCategoryModel>? purposeCategory,
   }) {
     return ChoosePurposeCategoryCubitState(
       expandId: expandId ?? this.expandId,
-      purposeCategorySelected:
-          purposeCategorySelected ?? this.purposeCategorySelected,
-      customFieldSelected: customFieldSelected ?? this.customFieldSelected,
+      consentForm: consentForm ?? this.consentForm,
+      purposeCategory: purposeCategory ?? this.purposeCategory,
     );
   }
 
   @override
   List<Object> get props => [
-        purposeCategorySelected,
-        customFieldSelected,
+        purposeCategory,
+        consentForm,
         expandId,
       ];
 }
