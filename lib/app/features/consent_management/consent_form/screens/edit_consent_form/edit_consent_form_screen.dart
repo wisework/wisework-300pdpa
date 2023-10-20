@@ -18,7 +18,7 @@ import 'package:pdpa/app/features/consent_management/consent_form/bloc/edit_cons
 import 'package:pdpa/app/features/consent_management/consent_form/cubit/current_consent_form_settings/current_consent_form_settings_cubit.dart';
 import 'package:pdpa/app/features/consent_management/consent_form/cubit/current_edit_consent_form/current_edit_consent_form_cubit.dart';
 import 'package:pdpa/app/features/consent_management/consent_form/routes/consent_form_route.dart';
-import 'package:pdpa/app/features/consent_management/consent_form/screens/edit_consent_form/widgets/ReorderPurposeCategory.dart';
+import 'package:pdpa/app/features/consent_management/consent_form/screens/edit_consent_form/widgets/reorderPurposeCategory.dart';
 
 import 'package:pdpa/app/injection.dart';
 import 'package:pdpa/app/shared/utils/constants.dart';
@@ -505,15 +505,6 @@ class _EditConsentFormViewState extends State<EditConsentFormView> {
                   DateTime.now(),
                 );
 
-                final url = UtilFunctions.getUserConsentForm(
-                  consentForm.id,
-                  widget.currentUser.currentCompany,
-                );
-
-                // final cubit = context.read<CurrentConsentFormSettingsCubit>();
-                // cubit.generateConsentFormUrl(url);
-
-                consentForm = consentForm.setUrl(url);
                 consentForm =
                     consentForm.setPurposeCategory(purposeCategoryList);
 

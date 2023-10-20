@@ -14,6 +14,7 @@ import 'package:pdpa/app/data/models/master_data/purpose_model.dart';
 import 'package:pdpa/app/features/authentication/bloc/sign_in/sign_in_bloc.dart';
 import 'package:pdpa/app/features/consent_management/consent_form/bloc/consent_form/consent_form_bloc.dart';
 import 'package:pdpa/app/features/consent_management/consent_form/bloc/consent_form_detail/consent_form_detail_bloc.dart';
+import 'package:pdpa/app/features/consent_management/consent_form/bloc/edit_consent_form/edit_consent_form_bloc.dart';
 import 'package:pdpa/app/features/consent_management/consent_form/routes/consent_form_route.dart';
 import 'package:pdpa/app/injection.dart';
 import 'package:pdpa/app/shared/utils/constants.dart';
@@ -57,14 +58,20 @@ class _CreateConsentFormSuccessScreenState
   @override
   Widget build(BuildContext context) {
     const String language = 'en-US';
-    return BlocProvider(
-      create: (context) => serviceLocator<ConsentFormDetailBloc>()
-        ..add(
-          GetConsentFormEvent(
-            consentFormId: widget.consentFormId,
-            companyId: currentUser.currentCompany,
-          ),
+    return MultiBlocProvider(
+      providers: [
+        BlocProvider(
+          create: (context) => serviceLocator<ConsentFormDetailBloc>()
+            ..add(
+              GetConsentFormEvent(
+                consentFormId: widget.consentFormId,
+                companyId: currentUser.currentCompany,
+              ),
+            ),
         ),
+        BlocProvider(
+            create: (context) => serviceLocator<EditConsentFormBloc>()),
+      ],
       child: BlocBuilder<ConsentFormDetailBloc, ConsentFormDetailState>(
         builder: (context, state) {
           if (state is GotConsentFormDetail) {
@@ -74,6 +81,7 @@ class _CreateConsentFormSuccessScreenState
               purposeCategories: state.purposeCategories,
               purposes: state.purposes,
               customFields: state.customFields,
+              currentUser: currentUser,
             );
           }
 
@@ -92,6 +100,7 @@ class CreateConsentFormSuccessView extends StatefulWidget {
     required this.purposeCategories,
     required this.customFields,
     required this.purposes,
+    required this.currentUser,
   });
 
   final ConsentFormModel consentForm;
@@ -99,6 +108,7 @@ class CreateConsentFormSuccessView extends StatefulWidget {
   final List<CustomFieldModel> customFields;
   final List<PurposeCategoryModel> purposeCategories;
   final List<PurposeModel> purposes;
+  final UserModel currentUser;
 
   @override
   State<CreateConsentFormSuccessView> createState() =>
@@ -109,6 +119,7 @@ class _CreateConsentFormSuccessViewState
     extends State<CreateConsentFormSuccessView> {
   @override
   Widget build(BuildContext context) {
+    ConsentFormModel consentForm = widget.consentForm;
     const String language = 'en-US';
 
     final title = widget.consentForm.title.firstWhere(
@@ -221,6 +232,24 @@ class _CreateConsentFormSuccessViewState
                                   consentForm: widget.consentForm,
                                   updateType: UpdateType.created,
                                   purposeCategories: widget.purposeCategories));
+
+                          final url = UtilFunctions.getUserConsentForm(
+                            widget.consentForm.id,
+                            widget.currentUser.currentCompany,
+                          );
+
+                          // final cubit = context.read<CurrentConsentFormSettingsCubit>();
+                          // cubit.generateConsentFormUrl(url);
+
+                          consentForm = widget.consentForm.setUrl(url);
+
+                          context.read<EditConsentFormBloc>().add(
+                                UpdateCurrentConsentFormEvent(
+                                  consentForm: consentForm,
+                                  companyId: widget.currentUser.currentCompany,
+                                ),
+                              );
+
                           context.push(
                             ConsentFormRoute.consentForm.path,
                           );
@@ -248,6 +277,22 @@ class _CreateConsentFormSuccessViewState
                       const SizedBox(width: 10.0),
                       ElevatedButton(
                         onPressed: () async {
+                          final url = UtilFunctions.getUserConsentForm(
+                            widget.consentForm.id,
+                            widget.currentUser.currentCompany,
+                          );
+
+                          // final cubit = context.read<CurrentConsentFormSettingsCubit>();
+                          // cubit.generateConsentFormUrl(url);
+
+                          consentForm = widget.consentForm.setUrl(url);
+
+                          context.read<EditConsentFormBloc>().add(
+                                UpdateCurrentConsentFormEvent(
+                                  consentForm: consentForm,
+                                  companyId: widget.currentUser.currentCompany,
+                                ),
+                              );
                           context.push(
                             ConsentFormRoute.consentFormSettings.path
                                 .replaceFirst(':id', widget.consentForm.id),

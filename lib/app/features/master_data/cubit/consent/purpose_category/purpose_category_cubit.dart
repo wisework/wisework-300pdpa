@@ -1,3 +1,4 @@
+// ignore: depend_on_referenced_packages
 import 'package:bloc/bloc.dart';
 import 'package:equatable/equatable.dart';
 import 'package:pdpa/app/data/models/master_data/purpose_category_model.dart';
@@ -24,7 +25,6 @@ class PurposeCategoryCubit extends Cubit<PurposeCategoryState> {
     emit(state.copyWith(purposes: purposeCategoryModel.purposes));
 
     emit(state.copyWith(purposeList: purposeList));
-
   }
 
   void choosePurposeCategorySelected(String purposeCategory) {

@@ -302,6 +302,8 @@ class _ChoosePurposeCategoryViewState extends State<ChoosePurposeCategoryView> {
                                                   ],
                                                 ),
                                                 ExpandedContainer(
+                                                  duration: const Duration(
+                                                      milliseconds: 400),
                                                   expand: state.expandId ==
                                                       purposeCategory[index].id,
                                                   child: Padding(
@@ -539,6 +541,7 @@ class _PurposeCategoryTileState extends State<PurposeCategoryTile> {
                           ],
                         ),
                         ExpandedContainer(
+                          duration: const Duration(milliseconds: 400),
                           expand: state.expandId == widget.purposeCategory.id,
                           child: Padding(
                             padding: EdgeInsets.only(
