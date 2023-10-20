@@ -76,48 +76,48 @@ class _ConsentFormViewState extends State<ConsentFormView> {
           tr('consentManagement.cf.consentForms.consentForms'),
           style: Theme.of(context).textTheme.titleLarge,
         ),
-        actions: [
-          IconButton(
-            onPressed: () {},
-            icon: Container(
-              padding: const EdgeInsets.symmetric(
-                vertical: 6.0,
-                horizontal: 12.0,
-              ),
-              decoration: BoxDecoration(
-                color: Theme.of(context).colorScheme.primary,
-                borderRadius: BorderRadius.circular(10.0),
-              ),
-              child: RichText(
-                text: TextSpan(children: [
-                  WidgetSpan(
-                      child: Icon(
-                    Icons.search_rounded,
-                    size: 16,
-                    color: Theme.of(context).colorScheme.onPrimary,
-                  )),
-                  const WidgetSpan(child: SizedBox(width: 4.0)),
-                  TextSpan(
-                    text: tr('app.search'),
-                    style: Theme.of(context).textTheme.bodySmall?.copyWith(
-                        color: Theme.of(context).colorScheme.onPrimary),
-                  ),
-                ]),
-              ),
-            ),
-          ),
-        ],
-        bottom: PreferredSize(
-          preferredSize: const Size.fromHeight(0),
-          child: Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            crossAxisAlignment: CrossAxisAlignment.center,
-            children: <Widget>[
-              _sortButtonGroup(context),
-              _sortByDateButton(context),
-            ],
-          ),
-        ),
+        // actions: [
+        //   IconButton(
+        //     onPressed: () {},
+        //     icon: Container(
+        //       padding: const EdgeInsets.symmetric(
+        //         vertical: 6.0,
+        //         horizontal: 12.0,
+        //       ),
+        //       decoration: BoxDecoration(
+        //         color: Theme.of(context).colorScheme.primary,
+        //         borderRadius: BorderRadius.circular(10.0),
+        //       ),
+        //       child: RichText(
+        //         text: TextSpan(children: [
+        //           WidgetSpan(
+        //               child: Icon(
+        //             Icons.search_rounded,
+        //             size: 16,
+        //             color: Theme.of(context).colorScheme.onPrimary,
+        //           )),
+        //           const WidgetSpan(child: SizedBox(width: 4.0)),
+        //           TextSpan(
+        //             text: tr('app.search'),
+        //             style: Theme.of(context).textTheme.bodySmall?.copyWith(
+        //                 color: Theme.of(context).colorScheme.onPrimary),
+        //           ),
+        //         ]),
+        //       ),
+        //     ),
+        //   ),
+        // ],
+        // bottom: PreferredSize(
+        //   preferredSize: const Size.fromHeight(0),
+        //   child: Row(
+        //     mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        //     crossAxisAlignment: CrossAxisAlignment.center,
+        //     children: <Widget>[
+        //       _sortButtonGroup(context),
+        //       _sortByDateButton(context),
+        //     ],
+        //   ),
+        // ),
       ),
       drawer: PdpaDrawer(
         onClosed: () {
