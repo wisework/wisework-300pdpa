@@ -1,8 +1,8 @@
 // ignore_for_file: public_member_api_docs, sort_constructors_first
 part of 'setting_cubit.dart';
 
-class SettingState extends Equatable {
-  const SettingState({
+class SettingCubitState extends Equatable {
+  const SettingCubitState({
     required this.localDevice,
     required this.currentUser,
   });
@@ -10,11 +10,11 @@ class SettingState extends Equatable {
   final String localDevice;
   final UserModel currentUser;
 
-  SettingState copyWith({
+  SettingCubitState copyWith({
     String? localDevice,
     UserModel? currentUser,
   }) {
-    return SettingState(
+    return SettingCubitState(
       localDevice: localDevice ?? this.localDevice,
       currentUser: currentUser ?? this.currentUser,
     );
