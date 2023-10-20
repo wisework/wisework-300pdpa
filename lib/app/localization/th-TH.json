@@ -1,10 +1,16 @@
 {
     "app": {
-        "name": "PDPA Management Platform",
+        "name": "แพลตฟอร์มการจัดการ PDPA",
         "language": "ภาษา",
         "day": "วันที่",
         "month": "เดือน",
         "year": "ปี",
+        "text" : "ข้อความ",
+        "multiline" : "หลายบรรทัด",
+        "number" : "หมายเลข",
+        "phone" : "เบอร์โทรศัพท์",
+        "emailAddress" : "อีเมล",
+        "url" : "URL",
         "features": {
             "home": "หน้าหลัก",
             "consentmanagement": "ระบบบริหารจัดการข้อมูลส่วนบุคคล",
@@ -59,12 +65,13 @@
             "choosePurposeCategory": "เลือกหมวดหมู่วัตถุประสงค์",
             "formExample": "ตัวอย่างแบบฟอร์ม",
             "noPurposesAdded": "ไม่มีการเพิ่มวัตถุประสงค์",
-            "noInputFieldsAdded": "ไม่มีการเพิ่มช่องป้อนข้อมูล",
+            "noInputFieldsAdded": "ไม่มีการเพิ่มช่องกรอกข้อมูล",
             "createForm": {
                 "create": "สร้างแบบฟอร์มคำยินยอม",
                 "edit": "แก้ไขแบบฟอร์มยินยอม",
                 "section": "ข้อมูลแบบฟอร์มคำขอ",
                 "title": "ชื่อ",
+                "hinttitle": "กรอกชื่อ",
                 "description": "คำอธิบาย",
                 "address": "ที่อยู่",
                 "telNumber": "เบอร์โทรศัพท์",
@@ -112,7 +119,7 @@
                 "newConsentTheme": "ธีมคำยินยอมใหม่",
                 "editConsentTheme": "แก้ไขธีมคำยินยอม",
                 "consentThemeInfomation": "ข้อมูลธีมความยินยอม",
-                "enterConsentThemeTitle": "ป้อนชื่อธีมคำยินยอม",
+                "enterConsentThemeTitle": "กรอกชื่อธีมคำยินยอม",
                 "headerTextColor": "สีข้อความส่วนหัว",
                 "headerBackgroundColor": "สีพื้นหลังของส่วนหัว",
                 "formTextColor": "สีข้อความของแบบฟอร์ม",
@@ -132,23 +139,23 @@
                 "recentlyUsed": "ใช้ล่าสุด"
             },
             "footertab": {
-                "enterFooterDescription": "ป้อนคำอธิบายส่วนท้าย",
+                "enterFooterDescription": "กรอกคำอธิบายส่วนท้าย",
                 "acceptance": "การยอมรับ",
                 "acceptConsentText": "ยอมรับข้อความยินยอม",
-                "enterAcceptConsentText": "ป้อนข้อความยินยอม",
-                "linkToPolicyText": "ลิงก์ไปยังข้อความป้อนลิงก์ไปยังข้อความนโยบายนโยบาย",
-                "enterLinkToPolicyText": "ป้อนลิงก์ไปยังข้อความนโยบาย",
+                "enterAcceptConsentText": "กรอกข้อความยินยอม",
+                "linkToPolicyText": "ลิงก์ไปยังข้อความกรอกลิงก์ไปยังข้อความนโยบายนโยบาย",
+                "enterLinkToPolicyText": "กรอกลิงก์ไปยังข้อความนโยบาย",
                 "linkToPolicyURL": "ลิงก์ไปยัง URL นโยบาย",
-                "enterLinkToPolicyURL": "ป้อนลิงก์ไปยัง URL นโยบาย",
+                "enterLinkToPolicyURL": "กรอกลิงก์ไปยัง URL นโยบาย",
                 "acceptText": "ยอมรับข้อความ",
-                "enterAcceptText": "ป้อนยอมรับข้อความ",
+                "enterAcceptText": "กรอกยอมรับข้อความ",
                 "cancelText": "ยกเลิกข้อความ",
-                "enterCancelText": "ป้อนข้อความยกเลิก"
+                "enterCancelText": "กรอกข้อความยกเลิก"
             },
             "headertab": {
                 "loGo": "โลโก้",
                 "headerText": "ข้อความส่วนหัว",
-                "enterHeaderText": "ป้อนข้อความส่วนหัว"
+                "enterHeaderText": "กรอกข้อความส่วนหัว"
             },
             "themetab": {
                 "themes": "ธีม",
@@ -212,18 +219,18 @@
         "cm": {
             "consents": "ความยินยอม",
             "customfields": {
-                "title": "ฟิลด์ที่กำหนดเอง",
-                "list": "ฟิลด์ที่กำหนดเอง",
-                "edit": "แก้ไขฟิลด์ที่กำหนดเอง",
-                "create": "สร้างฟิลด์ที่กำหนดเอง",
-                "formtitle": "ชื่อ",
-                "formtitlehint": "ป้อนชื่อเรื่อง",
+                "title": "กำหนดฟิลด์เอง",
+                "list": "กำหนดฟิลด์เอง",
+                "edit": "แก้ไขฟิลด์",
+                "create": "สร้างฟิลด์",
+                "formtitle": "หัวข้อ",
+                "formtitlehint": "กรอกหัวข้อ",
                 "hinttext": "ข้อความคำแนะนำ",
-                "hinttexthint": "ป้อนข้อความคำแนะนำ",
+                "hinttexthint": "กรอกข้อความคำแนะนำ",
                 "inputtype": "ประเภทอินพุต",
                 "inputtypehint": "เลือกประเภทอินพุต",
                 "lenghtlimit": "ขีดจำกัดความยาว",
-                "lenghtlimithint": "ป้อนขีดจำกัดความยาว",
+                "lenghtlimithint": "กรอกขีดจำกัดความยาว",
                 "maxline": "สูงสุดกี่บรรทัด",
                 "maxlinehint": "กรอกสูงสุดกี่บรรทัด",
                 "minline": "ต่ำสุดกี่บรรทัด",
@@ -235,9 +242,9 @@
                 "create": "สร้างวัตถุประสงค์",
                 "edit": "แก้ไขวัตถุประสงค์",
                 "description": "คำอธิบาย",
-                "descriptionHint": "ป้อนคำอธิบาย",
+                "descriptionHint": "กรอกคำอธิบาย",
                 "warningDescription": "คำอธิบายคำเตือน",
-                "warningDescriptionHint": "ป้อนคำอธิบายคำเตือน",
+                "warningDescriptionHint": "กรอกคำอธิบายคำเตือน",
                 "retentionPeriod": "ระยะเวลาการจัดเก็บ",
                 "retentionPeriodHint": "กรอกระยะเวลาการจัดเก็บ",
                 "periodUnit": "หน่วยระยะเวลา"
@@ -248,9 +255,9 @@
                 "create": "สร้างหมวดหมู่วัตถุประสงค์",
                 "edit": "แก้ไขหมวดหมู่วัตถุประสงค์",
                 "titlform": "ชื่อ",
-                "titleformHint": "ป้อนชื่อ",
+                "titleformHint": "กรอกชื่อ",
                 "description": "คำอธิบาย",
-                "descriptionHint": "ป้อนคำอธิบาย",
+                "descriptionHint": "กรอกคำอธิบาย",
                 "priority": "ระดับความสำคัญ",
                 "priorityHint": "กรอกระดับความสำคัญ",
                 "purposes": "วัตถุประสงค์"
@@ -284,9 +291,9 @@
                 "create": "สร้างประเภทเหตุผล",
                 "edit": "แก้ไขประเภทเหตุผล",
                 "reasoncode": "รหัสเหตุผล",
-                "reasoncodeHint": "ป้อนรหัส",
+                "reasoncodeHint": "กรอกรหัส",
                 "description": "คำอธิบาย",
-                "descriptionHint": "ป้อนคำอธิบาย",
+                "descriptionHint": "กรอกคำอธิบาย",
                 "needmoreinformation": "ต้องการข้อมูลเพิ่มเติม"
             },
             "requestrejects": {
@@ -307,13 +314,19 @@
                 "requesttype": "ประเภทคำขอ",
                 "chooserequesttype": "เลือกประเภทคำขอ",
                 "reasontype": "ประเภทเหตุผล",
-                "chooserejecttype": "เลือกประเภทเหตุผล"
+                "chooserejecttype": "เลือกประเภทเหตุผล",
+                "addReason": "เพิ่มเหตุผล"
+            },
+            "dataSubjectRight": {
+                "createDataSubjectRight": "สร้างสิทธิของเจ้าของข้อมูล",
+                "editDataSubjectRight": "แก้ไขสิทธิของเจ้าของข้อมูล"
             }
         },
         "etc": {
             "fieldCannotEmpty": "ช่องต้องไม่เว้นว่าง",
             "pleaseEnterValidEmail": "กรุณาใส่อีเมล์ที่ถูกต้อง",
             "active": "ใช้งาน",
+            "inactive": "ไม่ได้ใช้งาน",
             "configuration": "การกำหนดค่า",
             "updateInfo": "อัพเดตข้อมูล",
             "delete": "ลบ"

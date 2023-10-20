@@ -2,6 +2,15 @@
     "app": {
         "name": "PDPA Management Platform",
         "language": "Language",
+        "day": "Day",
+        "month": "Month",
+        "year": "Year",
+        "text" : "Text",
+        "multiline" : "Multiline",
+        "number" : "Number",
+        "phone" : "Phone",
+        "emailAddress" : "Email Address",
+        "url" : "URL",
         "features": {
             "home": "Home",
             "consentmanagement": "Consent Management",
@@ -62,6 +71,7 @@
                 "edit": "Edit consent form",
                 "section": "Request Form Information",
                 "title": "Title",
+                "hinttitle": "Enter Title",
                 "description": "Description",
                 "address": "Address",
                 "telNumber": "Telephone number",
@@ -304,17 +314,19 @@
                 "requesttype": "Request Type",
                 "chooserequesttype": "Choose Request Type",
                 "reasontype": "Reasons Type",
-                "choosereasontype": "Choose Reasons Type"
+                "choosereasontype": "Choose Reasons Type",
+                "addReason": "Add Reason"
             },
             "dataSubjectRight": {
-                "createDataSubjectRight" : "Create Data Subject Right",
-                "editDataSubjectRight" : "Edit Data Subject Right"
+                "createDataSubjectRight": "Create Data Subject Right",
+                "editDataSubjectRight": "Edit Data Subject Right"
             }
         },
         "etc": {
             "fieldCannotEmpty": "Field cannot be empty",
             "pleaseEnterValidEmail": "Please enter a valid email address",
             "active": "Active",
+            "inactive": "Inactive",
             "configuration": "Configuration",
             "updateInfo": "Update Info",
             "delete": "Delete"

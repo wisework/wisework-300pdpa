@@ -616,7 +616,7 @@ class _EditRequestReasonTemplateViewState
             const SizedBox(width: UiConfig.actionSpacing + 11),
             Expanded(
               child: Text(
-                'Add Reason',
+                tr('masterData.dsr.requestreasons.addReason'),
                 style: Theme.of(context).textTheme.bodyMedium,
               ),
             ),

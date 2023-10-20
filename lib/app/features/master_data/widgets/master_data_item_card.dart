@@ -1,3 +1,4 @@
+import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:pdpa/app/config/config.dart';
 import 'package:pdpa/app/shared/utils/constants.dart';
@@ -96,7 +97,7 @@ class MasterDataItemCard extends StatelessWidget {
           ),
           const SizedBox(width: 5.0),
           Text(
-            status == ActiveStatus.active ? 'Active' : 'Inactive',
+            status == ActiveStatus.active ? tr('masterData.etc.active') : tr('masterData.etc.inactive'),
             style: Theme.of(context).textTheme.bodyMedium?.copyWith(
                 color: status == ActiveStatus.active
                     ? Theme.of(context).colorScheme.primary

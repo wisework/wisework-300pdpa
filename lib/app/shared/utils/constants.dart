@@ -22,12 +22,12 @@ final Map<TextInputType, String> textInputTypeNames = {
 };
 
 final Map<TextInputType, String> customInputTypeNames = {
-  TextInputType.text: 'Text',
-  TextInputType.multiline: 'Multiline',
-  TextInputType.number: 'Number',
-  TextInputType.phone: 'Phone',
-  TextInputType.emailAddress: 'Email Address',
-  TextInputType.url: 'URL',
+  TextInputType.text: tr('app.text'),
+  TextInputType.multiline: tr('app.multiline'),
+  TextInputType.number: tr('app.number'),
+  TextInputType.phone: tr('app.phone'),
+  TextInputType.emailAddress: tr('app.emailAddress'),
+  TextInputType.url: tr('app.url'),
 };
 
 final emailRegex = RegExp(r'^[\w-]+(\.[\w-]+)*@[\w-]+(\.[\w-]+)+$');

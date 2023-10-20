@@ -330,7 +330,7 @@ class _EditConsentFormViewState extends State<EditConsentFormView> {
                         CustomTextField(
                           controller: titleController,
                           hintText:
-                              tr('consentManagement.consentForm.createForm.title'),
+                              tr('consentManagement.consentForm.createForm.hinttitle'),
                           onChanged: _setDescription,
                           required: true,
                         ),
