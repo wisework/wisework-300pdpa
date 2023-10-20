@@ -2,7 +2,7 @@ import 'package:flutter/services.dart';
 import 'package:pdpa/app/data/models/master_data/localized_model.dart';
 import 'package:pdpa/app/data/models/master_data/mandatory_field_model.dart';
 
-final List<MandatoryFieldModel> mandatoryFieldPreset = [
+final List<MandatoryFieldModel> mandatoryFieldsPreset = [
   MandatoryFieldModel.empty().copyWith(
     title: const [
       LocalizedModel(

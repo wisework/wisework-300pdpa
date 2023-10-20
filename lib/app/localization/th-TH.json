@@ -36,6 +36,7 @@
     },
     "general": {
         "home": {
+            "welcome": "ยินดีต้อนรับ",
             "hello": "Hello",
             "tagline": "What you are looking for today"
         }

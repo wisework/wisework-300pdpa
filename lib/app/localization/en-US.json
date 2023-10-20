@@ -36,6 +36,7 @@
     },
     "general": {
         "home": {
+            "welcome": "Welcome",
             "hello": "Hello",
             "tagline": "What you are looking for today"
         }
