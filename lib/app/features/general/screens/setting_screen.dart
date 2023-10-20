@@ -1,11 +1,15 @@
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:ionicons/ionicons.dart';
 import 'package:pdpa/app/config/config.dart';
+import 'package:pdpa/app/data/models/authentication/user_model.dart';
+import 'package:pdpa/app/features/authentication/bloc/sign_in/sign_in_bloc.dart';
+import 'package:pdpa/app/features/general/cubit/setting_cubit.dart';
 import 'package:pdpa/app/shared/drawers/pdpa_drawer.dart';
 import 'package:pdpa/app/shared/widgets/customs/custom_container.dart';
+import 'package:pdpa/app/shared/widgets/customs/custom_dropdown_button.dart';
 import 'package:pdpa/app/shared/widgets/customs/custom_icon_button.dart';
-import 'package:pdpa/app/shared/widgets/customs/custom_switch_button.dart';
 import 'package:pdpa/app/shared/widgets/templates/pdpa_app_bar.dart';
 
 class SettingScreen extends StatefulWidget {
@@ -16,23 +20,8 @@ class SettingScreen extends StatefulWidget {
 }
 
 class _SettingScreenState extends State<SettingScreen> {
-  @override
-  Widget build(BuildContext context) {
-    return const SettingView();
-  }
-}
+  late UserModel currentUser;
 
-class SettingView extends StatefulWidget {
-  const SettingView({super.key});
-
-  @override
-  State<SettingView> createState() => _SettingViewState();
-}
-
-class _SettingViewState extends State<SettingView> {
-    bool isEnglish = true;
-
-  final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
   @override
   void initState() {
     super.initState();
@@ -41,34 +30,64 @@ class _SettingViewState extends State<SettingView> {
   }
 
   void _initialData() {
-
-    // if (context.deviceLocale.toString() == 'en_US') {
-    //   isActivated = true;
-    // } else {
-    //   isActivated = false;
-    // }
-  }
- void toggleLocale() {
-    if (isEnglish) {
-      EasyLocalization.of(context)?.setLocale(const Locale('th', 'TH'));
+    final bloc = context.read<SignInBloc>();
+    if (bloc.state is SignedInUser) {
+      currentUser = (bloc.state as SignedInUser).user;
     } else {
-      EasyLocalization.of(context)?.setLocale(const Locale('en', 'US'));
+      currentUser = UserModel.empty();
     }
-    setState(() {
-      isEnglish = !isEnglish;
-    });
   }
-  // void toggleLocale() {
-  //   if (EasyLocalization.of(context)?.locale == Locale('en', 'US')) {
-  //     EasyLocalization.of(context)?.setLocale(Locale('th', 'TH'));
-  //   } else {
-  //     EasyLocalization.of(context)?.setLocale(Locale('en', 'US'));
-  //   }
-  //   setState(() {}); // Rebuild the UI to reflect the new locale
-  // }
 
   @override
   Widget build(BuildContext context) {
+    final cubit = context.read<SettingCubit>();
+    print(cubit.state.localDevice);
+    return SettingView(
+      local: cubit,
+      currentUser: currentUser,
+    );
+  }
+}
+
+// ignore: must_be_immutable
+class SettingView extends StatefulWidget {
+  SettingView({
+    super.key,
+    required this.local,
+    required this.currentUser,
+  });
+
+  SettingCubit local;
+  UserModel currentUser;
+  @override
+  State<SettingView> createState() => _SettingViewState();
+}
+
+class _SettingViewState extends State<SettingView> {
+  final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
+
+  final language = ['en-US', 'th-TH'];
+  @override
+  void initState() {
+    super.initState();
+  }
+
+  void _setInputType(String? value) {
+    if (value != null) {
+      widget.local.setLocalDevice(value);
+      if (widget.local.state.localDevice == 'th-TH') {
+        EasyLocalization.of(context)?.setLocale(const Locale('th', 'TH'));
+      } else {
+        EasyLocalization.of(context)?.setLocale(const Locale('en', 'US'));
+      }
+    }
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    var lang = widget.local.state.localDevice;
+    print(widget.currentUser.defaultLanguage);
+    // print(context.supportedLocales);
     return Scaffold(
       key: _scaffoldKey,
       appBar: PdpaAppBar(
@@ -97,14 +116,26 @@ class _SettingViewState extends State<SettingView> {
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: <Widget>[
                       Text(
-                        tr('masterData.etc.active'),
+                        tr('app.language'),
                         style: Theme.of(context).textTheme.bodyMedium,
                       ),
-                      CustomSwitchButton(
-                        value: isEnglish,
-                        onChanged: (value) {
-                          toggleLocale();
-                        },
+                      SizedBox(
+                        width: 120,
+                        child: CustomDropdownButton<String>(
+                          value: lang,
+                          items: language.map(
+                            (e) {
+                              return DropdownMenuItem(
+                                value: e,
+                                child: Text(
+                                  e,
+                                  style: Theme.of(context).textTheme.bodyMedium,
+                                ),
+                              );
+                            },
+                          ).toList(),
+                          onSelected: _setInputType,
+                        ),
                       ),
                     ],
                   ),
