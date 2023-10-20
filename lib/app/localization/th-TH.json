@@ -1,14 +1,25 @@
 {
     "app": {
-        "name": "PDPA Management Platform",
+        "name": "แพลตฟอร์มการจัดการ PDPA",
         "language": "ภาษา",
+        "day": "วันที่",
+        "month": "เดือน",
+        "year": "ปี",
+        "text": "ข้อความ",
+        "multiline": "หลายบรรทัด",
+        "number": "หมายเลข",
+        "phone": "เบอร์โทรศัพท์",
+        "emailAddress": "อีเมล",
+        "url": "URL",
         "features": {
-            "consentmanagement": "Consent Management",
-            "consentforms": "Consent Forms",
-            "userconsents": "User Consents",
-            "datasubjectright": "Data Subject Right",
-            "masterdata": "Master Data",
-            "setting": "Setting"
+            "home": "หน้าหลัก",
+            "consentmanagement": "ระบบบริหารจัดการข้อมูลส่วนบุคคล",
+            "consentforms": "เอกสารแสดงความยินยอม",
+            "userconsents": "ความยินยอมของผู้ใช้",
+            "datasubjectright": "สิทธิของเจ้าของข้อมูล",
+            "masterdata": "ข้อมูลหลัก",
+            "setting": "การตั้งค่า",
+            "createNewConsentForm": "สร้างแบบฟอร์มยินยอมใหม่"
         },
         "search": "ค้นหา"
     },
@@ -36,142 +47,373 @@
     },
     "general": {
         "home": {
-            "hello": "Hello",
-            "tagline": "What you are looking for today"
+            "hello": "สวัสดี",
+            "tagline": "สิ่งที่คุณกำลังมองหาในวันนี้",
+            "explore": "สำรวจ",
+            "recentlyUsed": "ใช้ล่าสุด",
+            "thisDataIsNotStored.": "ข้อมูลนี้ไม่ได้ถูกจัดเก็บ"
+        }
+    },
+    "consentManagement": {
+        "listage": {
+            "search": "ค้นหา",
+            "filter": {
+                "all": "ทั้งหมด",
+                "recents": "ล่าสุด",
+                "problem": "ปัญหา",
+                "date": "วันที่"
+            }
+        },
+        "consentForm": {
+            "consentForms": "แบบฟอร์มยินยอม",
+            "choosePurposeCategory": "เลือกหมวดหมู่วัตถุประสงค์",
+            "formExample": "ตัวอย่างแบบฟอร์ม",
+            "noPurposesAdded": "ไม่มีการเพิ่มวัตถุประสงค์",
+            "noInputFieldsAdded": "ไม่มีการเพิ่มช่องกรอกข้อมูล",
+            "createForm": {
+                "create": "สร้างแบบฟอร์มคำยินยอม",
+                "edit": "แก้ไขแบบฟอร์มยินยอม",
+                "section": "ข้อมูลแบบฟอร์มของคำขอ",
+                "title": "ชื่อ",
+                "hinttitle": "กรอกชื่อ",
+                "description": "รายละเอียด",
+                "address": "ที่อยู่",
+                "telNumber": "เบอร์โทรศัพท์",
+                "nameSurename": "ชื่อ-นามสกุล",
+                "email": "อีเมล",
+                "idCardNumber": "เลขบัตรประจำตัวประชาชน",
+                "purpose": "วัตถุประสงค์",
+                "purposeOfDC": "วัตถุประสงค์ในการเก็บข้อมูล",
+                "selectPurposeCategory": "เลือกหมวดหมู่วัตถุประสงค์"
+            },
+            "consentFormDetails": {
+                "title": "รายละเอียดแบบฟอร์มยินยอม",
+                "id": "id",
+                "storedInformation": "ข้อมูลที่จัดเก็บ",
+                "Purposes": "วัตถุประสงค์",
+                "information": "ข้อมูล",
+                "filter": {
+                    "informationPurpose": "ข้อมูล-วัตถุประสงค์",
+                    "form": "แบบฟอร์ม"
+                },
+                "form": {
+                    "form": "แบบฟอร์ม",
+                    "shareLinkForm": "แชร์ลิงค์แบบฟอร์ม",
+                    "descriptionShare": "สามารถใช้แบบฟอร์มนี้ในการเก็บข้อมูลจากผู้ใช้งานด้วยการเปิดลิงค์ หรือ การแสกน QR Code",
+                    "formExample": "ตัวอย่างแบบฟอร์ม",
+                    "telNumber": "เบอร์โทรศัพท์",
+                    "nameSurename": "ชื่อ-นามสกุล",
+                    "email": "อีเมล",
+                    "idCardNumber": "เลขบัตรประจำตัวประชาชน"
+                }
+            },
+            "consentFormsetting": {
+                "updateSuccess": "อัปเดตสำเร็จ",
+                "consentFormSettings": "การตั้งค่าแบบฟอร์มยินยอม",
+                "url": "URL",
+                "header": "หัวข้อ",
+                "body": "ส่วนกลาง",
+                "footer": "ส่วนท้าย",
+                "theme": "ธีม"
+            },
+            "editConsentTheme": {
+                "createSuccess": "สร้างสำเร็จ",
+                "updateSuccess": "อัปเดตสำเร็จ",
+                "deleteSuccess": "ลบสำเร็จ",
+                "newConsentTheme": "ธีมคำยินยอมใหม่",
+                "editConsentTheme": "แก้ไขธีมคำยินยอม",
+                "consentThemeInfomation": "ข้อมูลธีมความยินยอม",
+                "enterConsentThemeTitle": "กรอกชื่อธีมคำยินยอม",
+                "headerTextColor": "สีข้อความส่วนหัว",
+                "headerBackgroundColor": "สีพื้นหลังของส่วนหัว",
+                "formTextColor": "สีข้อความของแบบฟอร์ม",
+                "actionButtonColor": "สีของปุ่มการดำเนินการ",
+                "categoryIconColor": "สีไอคอนหมวดหมู่",
+                "categoryTitleTextColor": "สีข้อความชื่อหมวดหมู่",
+                "bodyBackgroundColor": "สีพื้นหลังของส่วนกลาง",
+                "backgroundColor": "สีพื้นหลัง",
+                "linkToPolicyTextColor": "ลิงก์ไปยังสีข้อความนโยบาย",
+                "submitButtonColor": "สีของปุ่มส่ง",
+                "submitTextColor": "สีข้อความปุ่มส่ง",
+                "cancelButtonColor": "สีของปุ่มยกเลิก",
+                "cancelTextColor": "สีข้อความปุ่มยกเลิก"
+            },
+            "bodytab": {
+                "background": "พื้นหลัง",
+                "recentlyUsed": "ใช้ล่าสุด"
+            },
+            "footertab": {
+                "enterFooterDescription": "กรอกรายละเอียดส่วนท้าย",
+                "acceptance": "การยอมรับ",
+                "acceptConsentText": "ยอมรับข้อความยินยอม",
+                "enterAcceptConsentText": "กรอกข้อความยินยอม",
+                "linkToPolicyText": "ลิงก์ไปยังข้อความกรอกลิงก์ไปยังข้อความนโยบายนโยบาย",
+                "enterLinkToPolicyText": "กรอกลิงก์ไปยังข้อความนโยบาย",
+                "linkToPolicyURL": "ลิงก์ไปยัง URL นโยบาย",
+                "enterLinkToPolicyURL": "กรอกลิงก์ไปยัง URL นโยบาย",
+                "acceptText": "ยอมรับข้อความ",
+                "enterAcceptText": "กรอกยอมรับข้อความ",
+                "cancelText": "ยกเลิกข้อความ",
+                "enterCancelText": "กรอกข้อความยกเลิก"
+            },
+            "headertab": {
+                "loGo": "โลโก้",
+                "headerText": "ข้อความส่วนหัว",
+                "enterHeaderText": "กรอกข้อความส่วนหัว"
+            },
+            "themetab": {
+                "themes": "ธีม",
+                "newTheme": "ธีมใหม่"
+            },
+            "urltab": {
+                "formLinkURL": "URL ลิงก์แบบฟอร์ม",
+                "urlCopied": "คัดลอก URL แล้ว",
+                "description": "พบปัญหาเกี่ยวกับ URL คลิก",
+                "here": "ที่นี่",
+                "toRegenerateANewOne.": "เพื่อสร้างใหม่",
+                "qrCodeFormLink": "ลิงค์แบบฟอร์ม QR Code",
+                "qrCodeHasBeenDownloaded": "ดาวน์โหลดรหัส QR แล้ว",
+                "failedToDownloadQrCode": "ดาวน์โหลดโค้ด QR ไม่สำเร็จ",
+                "download": "ดาวน์โหลด"
+            },
+            "consentThemeTile": {
+                "dataCollection": "การเก็บรวบรวมข้อมูล",
+                "decription": "แบบฟอร์มยินยอมนี้จะสรุปข้อกำหนดและเงื่อนไขสำหรับการรวบรวม",
+                "decription2": "วัตถุประสงค์หลักในการเก็บรวบรวมข้อมูลส่วนบุคคลของคุณ",
+                "decription3": "ฉันยอมรับ: ความยินยอมให้ใช้ข้อมูลส่วนบุคคลเพื่อวัตถุประสงค์ด้านข้อมูลเชิงลึกและการวิเคราะห์ทรัพย์สิน",
+                "submit": "ส่ง",
+                "cancel": "ยกเลิก"
+            }
+        },
+        "userConsent": {
+            "userConsents": "ความยินยอมของผู้ใช้",
+            "createForm": {
+                "create": "สร้างแบบฟอร์มยินยอม",
+                "section": "ขอข้อมูลแบบฟอร์ม",
+                "title": "หัวข้อ",
+                "description": "รายละเอียด",
+                "address": "ที่อยู่",
+                "telNumber": "เบอร์โทรศัพท์",
+                "nameSurename": "ชื่อ-นามสกุล",
+                "email": "Email",
+                "identificationNumber": "หมายเลขประจำตัวประชาชน",
+                "purpose": "วัตถุประสงค์",
+                "purposeOfDC": "วัตถุประสงค์ของการรวบรวมข้อมูล",
+                "selectPurposeCategory": "เลือกหมวดหมู่วัตถุประสงค์"
+            },
+            "consentFormDetails": {
+                "filter": {
+                    "informationPurpose": "ข้อมูล-วัตถุประสงค์",
+                    "form": "แบบฟอร์ม"
+                },
+                "title": "รายละเอียดแบบฟอร์มยินยอม",
+                "id": "id",
+                "storedInformation": "ข้อมูลที่จัดเก็บ",
+                "Purposes": "วัตถุประสงค์",
+                "edit": {
+                    "submitSuccess": "ส่งสำเร็จ",
+                    "decription": "ฉันได้รวบรวมความยินยอมของคุณจากการกรอกแบบฟอร์ม",
+                    "fillOutTheFormAgain": "กรอกแบบฟอร์มอีกครั้ง",
+                    "pleaseAcceptConsent": "กรุณายอมรับความยินยอม"
+                }
+            }
         }
     },
     "masterData": {
         "main": {
-            "mandatories": "Mandatories",
+            "mandatories": "ข้อบังคับ",
             "mandatoryFields": {
-                "title": "Mandatory Field",
-                "list": "Mandatory Fields",
-                "edit": "Edit Mandatory Field",
-                "create": "Create Mandatory Field"
+                "title": "ช่องกรอกข้อบังคับ",
+                "list": "ช่องกรอกข้อบังคับ",
+                "edit": "แก้ไขช่องกรอกข้อบังคับ",
+                "create": "สร้างข้อบังคับ"
             }
         },
         "cm": {
-            "consents": "Consents",
+            "consents": "ความยินยอม",
             "customfields": {
-                "title": "Custom Field",
-                "list": "Custom Fields",
-                "edit": "Edit Custom Fields",
-                "create": "Create Custom Fields",
-                "formtitle": "Title",
-                "formtitlehint": "Enter Title",
-                "hinttext": "Hint Text",
-                "hinttexthint": "Enter Hint Text",
-                "inputtype": "Input Type",
-                "inputtypehint": "Choose Input Type",
-                "lenghtlimit": "Lenght Limit",
-                "lenghtlimithint": "Enter Lenght Limit",
-                "maxline": "Max Line",
-                "maxlinehint": "Enter Max Line",
-                "minline": "Min Line",
-                "minlinehint": "Enter Min Line"
+                "title": "ช่องเก็บข้อมูล",
+                "list": "ช่องเก็บข้อมูล",
+                "edit": "แก้ไขช่องเก็บข้อมูล",
+                "create": "สร้างช่องเก็บข้อมูล",
+                "formtitle": "หัวข้อ",
+                "formtitlehint": "กรอกหัวข้อ",
+                "hinttext": "ข้อความคำแนะนำ",
+                "hinttexthint": "กรอกข้อความคำแนะนำ",
+                "inputtype": "ประเภทการกรอกข้อมูล",
+                "inputtypehint": "เลือกประเภทการกรอกข้อมูล",
+                "lenghtlimit": "ขีดจำกัดความยาว",
+                "lenghtlimithint": "กรอกขีดจำกัดความยาว",
+                "maxline": "สูงสุดกี่บรรทัด",
+                "maxlinehint": "กรอกสูงสุดกี่บรรทัด",
+                "minline": "ต่ำสุดกี่บรรทัด",
+                "minlinehint": "กรอกต่ำสุดกี่บรรทัด"
             },
             "purpose": {
-                "title": "Purpose",
-                "list": "Purposes",
-                "create": "Create Purpose",
-                "edit": "Edit Purpose",
-                "description": "Description",
-                "descriptionHint": "Enter description",
-                "warningDescription": "Warning Description",
-                "warningDescriptionHint": "Enter warning description",
-                "retentionPeriod": "Retention Period",
-                "retentionPeriodHint": "Enter retention period",
-                "periodUnit": "Period Unit"
+                "title": "วัตถุประสงค์",
+                "list": "วัตถุประสงค์",
+                "create": "สร้างวัตถุประสงค์",
+                "edit": "แก้ไขวัตถุประสงค์",
+                "description": "รายละเอียด",
+                "descriptionHint": "กรอกรายละเอียด",
+                "warningDescription": "รายละเอียดแจ้งเตือน",
+                "warningDescriptionHint": "กรอกรายละเอียดแจ้งเตือน",
+                "retentionPeriod": "ระยะเวลาการจัดเก็บ",
+                "retentionPeriodHint": "กรอกระยะเวลาการจัดเก็บ",
+                "periodUnit": "หน่วยระยะเวลา"
             },
             "purposeCategory": {
-                "title": "Purpose Category",
-                "list": "Purpose Categories",
-                "create": "Create Purpose Category",
-                "edit": "Edit Purpose Category",
-                "titlform": "Edit Purpose Category",
-                "titleformHint": "Edit Purpose Category",
-                "description": "Edit Purpose Category",
-                "descriptionHint": "Edit Purpose Category",
-                "priority": "Edit Purpose Category",
-                "priorityHint": "Edit Purpose Category",
-                "purposes": "Edit Purpose Category"
+                "title": "หมวดหมู่วัตถุประสงค์",
+                "list": "หมวดหมู่วัตถุประสงค์",
+                "create": "สร้างหมวดหมู่วัตถุประสงค์",
+                "edit": "แก้ไขหมวดหมู่วัตถุประสงค์",
+                "titlform": "หัวข้อ",
+                "titleformHint": "กรอกหัวข้อ",
+                "description": "รายละเอียด",
+                "descriptionHint": "กรอกรายละเอียด",
+                "priority": "ระดับความสำคัญ",
+                "priorityHint": "กรอกระดับความสำคัญ",
+                "purposes": "วัตถุประสงค์",
+                "purposeList": "รายการวัตถุประสงค์",
+                "noData": "ไม่มีข้อมูล",
+                "addPurpose": "เพิ่มวัตถุประสงค์",
+                "addObjectiveCategory": "เพิ่มหมวดหมู่วัตถุประสงค์",
+                "createSuccess": "สร้างสำเร็จ",
+                "updateSuccess": "อัปเดตสำเร็จ",
+                "deleteSuccess": "ลบสำเร็จ",
+                "active": "การใช้งาน",
+                "addnewPurpose": "เพิ่มวัตถุประสงค์ใหม่"
             }
         },
         "dsr": {
-            "datasubjectright": "Data Subject Right",
+            "datasubjectright": "สิทธิของเจ้าของข้อมูล",
             "request": {
-                "title": "Request Types",
-                "list": "Requests",
-                "create": "Create Request Type",
-                "edit": "Edit Request Type",
-                "requestcode" : "Request Code",
-                "requestcodeHint" : "Request Code",
-                "description" : "Request Description",
-                "descriptionHint" : "Request Description"
+                "title": "ประเภทของคำ",
+                "list": "คำขอ",
+                "create": "สร้างประเภทของคำขอ",
+                "edit": "แก้ไขประเภทของคำขอ",
+                "requestcode": "รหัสของคำขอ",
+                "requestcodeHint": "รหัสประเภทของคำขอ",
+                "description": "รายละเอียดคำของขอ",
+                "descriptionHint": "รายละเอียดของคำขอ"
             },
             "rejections": {
-                "title": "Reject Type",
-                "list": "Rejections",
-                "create": "Create Reject Type",
-                "edit": "Edit Reject Type",
-                "rejectcode" : "Reject Code",
-                "rejectcodeHint" : "Reject Code",
-                "description" : "Reject Description",
-                "descriptionHint" : "Reject Description"
+                "title": "ประเภทการปฏิเสธ",
+                "list": "การปฏิเสธ",
+                "create": "สร้างประเภทการปฏิเสธ",
+                "edit": "แก้ไขประเภทการปฏิเสธ",
+                "rejectcode": "รหัสการปฏิเสธ",
+                "rejectcodeHint": "รหัสการปฏิเสธ",
+                "description": "รายละเอียดการปฏิเสธ",
+                "descriptionHint": "รายละเอียดการปฏิเสธ"
             },
             "reason": {
-                "title": "Reason Type",
-                "list": "Reasons",
-                "create": "Create Reason Type",
-                "edit": "Edit Reason Type",
-                "reasoncode" : "Reason Code",
-                "reasoncodeHint" : "Enter Code",
-                "description" : "Description",
-                "descriptionHint" : "Enter Description",
-                "needmoreinformation" : "Need more information"
+                "title": "ประเภทของเหตุผล",
+                "list": "เหตุผล",
+                "create": "สร้างประเภทของเหตุผล",
+                "edit": "แก้ไขประเภทของเหตุผล",
+                "reasoncode": "รหัสของเหตุผล",
+                "reasoncodeHint": "กรอกของรหัส",
+                "description": "รายละเอียด",
+                "descriptionHint": "กรอกรายละเอียด",
+                "needmoreinformation": "ต้องการข้อมูลเพิ่มเติม"
             },
             "requestrejects": {
-                "title": "Request Rejects",
-                "list": "List of Request Rejects",
-                "create": "Create Request Rejects",
-                "edit": "Edit Request Rejects",
-                "requesttype" : "Request Type",
-                "chooserequesttype" : "Choose Request Type",
-                "rejecttype" : "Rejects Type",
-                "chooserejecttype" : "Choose Rejects Type"
+                "title": "ปฏิเสธคำขอ",
+                "list": "ปฏิเสธคำขอ",
+                "create": "สร้างปฏิเสธคำขอ",
+                "edit": "แก้ไขปฏิเสธคำขอ",
+                "requesttype": "ประเภทของคำขอ",
+                "chooserequesttype": "เลือกประเภทของคำขอ",
+                "rejecttype": "ประเภทของคำขอปฏิเสธ",
+                "chooserejecttype": "เลือกประเภทการปฏิเสธ",
+                "Added a Decline option allowed to this request type.": "เพิ่มตัวเลือกการปฏิเสธที่อนุญาตในประเภทคำร้องนี้"
             },
             "requestreasons": {
-                "title": "Request Reasons",
-                "list": "List of Request Reasons",
-                "create": "Create Request Reasons",
-                "edit": "Edit Request Reasons",
-                "requesttype" : "Request Type",
-                "chooserequesttype" : "Choose Request Type",
-                "rejecttype" : "Reasons Type",
-                "chooserejecttype" : "Choose Reasons Type"
+                "title": "เหตุผลในการขอ",
+                "list": "เหตุผลในการขอ",
+                "create": "สร้างเหตุผลของคำขอ",
+                "edit": "แก้ไขเหตุผลคำขอ",
+                "requesttype": "ประเภทคำขอ",
+                "chooserequesttype": "เลือกประเภทของคำขอ",
+                "reasontype": "ประเภทของเหตุผล",
+                "chooserejecttype": "เลือกประเภทของเหตุผล",
+                "addReason": "เพิ่มเหตุผล"
+            },
+            "dataSubjectRight": {
+                "createDataSubjectRight": "สร้างสิทธิของเจ้าของข้อมูล",
+                "editDataSubjectRight": "แก้ไขสิทธิของเจ้าของข้อมูล"
             }
         },
         "etc": {
-            "fieldCannotEmpty": "Field cannot be empty",
-            "pleaseEnterValidEmail": "Please enter a valid email address",
-            "active": "Active",
-            "configuration": "Configuration",
-            "updateInfo": "Update Info",
-            "delete" : "Delete"
+            "fieldCannotEmpty": "ช่องต้องไม่เว้นว่าง",
+            "pleaseEnterValidEmail": "กรุณาใส่อีเมล์ที่ถูกต้อง",
+            "active": "ใช้งาน",
+            "inactive": "ไม่ได้ใช้งาน",
+            "configuration": "การกำหนดค่า",
+            "updateInfo": "อัพเดตข้อมูล",
+            "delete": "ลบ"
         }
     },
-    "consentManagement": {
-        "cf": {
-            "consentForms": {
-                "consentForms": "ข้อมูลแบบฟอร์ม",
-                "create": "Edit consent form",
-                "edit": "Create consent form",
-                "title": "Title",
-                "description": "Description",
-                "detail": "รายละเอียดแบบฟอร์มความยินยอม",
-                "consentFormInfo" : "ข้อมูลขวัตถุ-ประสงค์",
-                "form" : "แบบฟอร์ม"
-            }           
+    "dataSubjectRight": {
+        "datasubjectright": "สิทธิของเจ้าของข้อมูล",
+        "namesurename": "ชื่อ-นานสกุล",
+        "address": "ที่อยู่",
+        "email": "อีเมล",
+        "telnumber": "เบอร์ติดต่อ",
+        "Listpage": {
+            "filter": {
+                "all": "ทั้งหมด",
+                "recents": "ล่าสุด",
+                "duesoon": "Due soon"
+            }
+        },
+        "step1": {
+            "areYouTheDs": "ท่านเป็นเจ้าของข้อมูลหรือไม่",
+            "applicantDs": "ผู้ยื่นคำร้องเป็นบุคคลเดียวกับเจ้าของข้อมูล",
+            "ApplicantAds": "ผู้ยื่นคำร้องเป็นตัวแทนเจ้าของข้อมูล",
+            "ApplicantInformation": "ข้อมูลของผู้ยื่นของคำขอ",
+            "namesurename": "ชื่อ-นานสกุล",
+            "address": "ที่อยู่",
+            "email": "อีเมล",
+            "telnumber": "เบอร์ติดต่อ"
+        },
+        "step2": {
+            "title": "เอกสารพิสูจน์อำนาจดำเนินการแทน",
+            "subtitle": "ทั้งนี้ข้าพเจ้าได้แนบเอกสารดังต่อไปนี้เพื่อการตรวจสอบอำนาจตัวตนและถิ่นที่อยู่ของผู้ยื่นคำร้องและเจ้าของข้อมูลส่วนบุคคลเพื่อให้บริษัทสามารถดำเนินการตามสิทธิที่ร้องขอได้อย่างถูกต้อง",
+            "powerOfAttorney": "หนังสือมอบอำนาจ",
+            "other": "อื่นๆ ถ้ามี (โปรดระบุ)",
+            "documentType": "ประเภทเอกสาร",
+            "copyFile": "ไฟล์สำเนา"
+        },
+        "step3": {
+            "namesurename": "ชื่อ-นานสกุล",
+            "address": "ที่อยู่",
+            "email": "อีเมล",
+            "telnumber": "เบอร์ติดต่อ"
+        },
+        "step4": {
+            "title": "เอกสารพิสูจน์ตัวตนและ/หรือพิสูจน์ถิ่นที่อยู่เจ้าของข้อมูล",
+            "subtitle": "ข้าพเจ้าได้แนบเอกสารดังต่อไปนี้เพื่อการตรวจสอบตัวตนและที่อยู่ของผู้ยื่นคำร้องเพื่อให้บริษัทฯสามารถดำเนินการตามสิทธิที่ร้องขอได้อย่างถูกต้อง",
+            "copyOfIdentificationCare": "สำเนาบัตรประจำตัวประชาชน(กรณีสัญชาติไทย)",
+            "copyOfPassport": "สำเนาพาสปอร์ต (กรณีต่างชาติ)",
+            "copyOfHouseRegistration": "สำเนาทะเบียนบ้าน",
+            "other": "อื่นๆ ถ้ามี (โปรดระบุ)",
+            "documentType": "ประเภทเอกสาร",
+            "copyFile": "ไฟล์สำเนา"
+        },
+        "step5": {
+            "title": "ต้องการยื่นคำร้องขอเพื่อจุดประสงค์ดังต่อไปนี้",
+            "ApplicantAds": "Applicant is the agent of the data subject."
+        },
+        "step6": {
+            "title": "ข้อสงวนสิทธิของผู้ควบคุมข้อมูล",
+            "subtitle": "บริษัทขอเรียนแจ้งให้ท่านทราบว่า เพื่อให้เป็นไปตามกฎหมายที่เกี่ยวข้อง บริษัทอาจจำเป็นต้องปฏิเสธคำร้องขอของท่าน ในบางกรณี ซึ่งรวมถึงแต่ไม่จำกัดเพียงกรณีดังต่อไปนี้",
+            "decription": "1)ท่านไม่สามารถแสดงให้เห็นอย่างชัดเจนได้ว่าผู้ยื่นคำร้องเป็นเจ้าของข้อมูลส่วนบุคคลหรือมีอำนาจในการยื่นคำร้องขอดังกล่าว2)คำร้องขอดังกล่าวไม่สมเหตุสมผล เช่น กรณีที่ผู้ร้องขอไม่มีสิทธิในการขอเข้าถึงข้อมูลส่วนบุคคล หรือไม่มีข้อมูลส่วนบุคคลนั้นอยู่ที่บริษัท เป็นต้น3)คำร้องขอดังกล่าวเป็นคำร้องขอฟุ่มเฟือย เช่น เป็นคำร้องขอที่มีลักษณะเดียวกัน หรือ มีเนื้อหาเดียวกันซ้ำ ๆ กันโดยไม่มีเหตุอันสมควร4)การเก็บรักษาข้อมูลส่วนบุคคลนั้นเป็นไปเพื่อการก่อตั้งสิทธิเรียกร้องตามกฎหมาย การปฏิบัติตามกฎหมาย การใช้สิทธิเรียกร้องตามกฎหมาย หรือการยกขึ้นต่อสู้สิทธิเรียกร้องตามกฎหมาย5)การดำเนินการดังกล่าวกระทบในด้านลบต่อสิทธิเสรีภาพของบุคคลอื่น6)การประมวลผลข้อมูลนั้นมีความจำเป็นในการปฏิบัติหน้าที่ตามสัญญาระหว่างเจ้าของข้อมูลส่วนบุคคลกับบริษัท7)การประมวลผลข้อมูลมีความจำเป็นเพื่อประโยชน์โดยชอบด้วยกฎหมายของบริษัท8)กรณีอื่นๆตามกฎหมายที่เกี่ยวข้องกำหนดโดยปกติท่านจะไม่เสียค่าใช้จ่ายในการดำเนินการตามคำร้องขอของท่านอย่างไรก็ดีหากปรากฏอย่างชัดเจนว่าคำร้องขอของท่านเป็นคำร้องขอที่ไม่สมเหตุสมผลหรือคำร้องขอฟุ่มเฟือยบริษัทอาจคิดค่าใช้จ่ายในการดำเนินการแก่ท่านตามสมควร"
+        },
+        "step7": {
+            "title": "การรับทราบและยินยอม",
+            "subtitle": "ท่านได้อ่านและเข้าใจเนื้อหาของคำร้องขอฉบับนี้อย่างละเอียดแล้ว และยืนยันว่าข้อมูลต่าง ๆ ที่ได้แจ้งให้แก่บริษัททราบนั้นเป็นความจริง ถูกต้องท่านเข้าใจดีว่าการตรวจสอบเพื่อยืนยัน อำนาจตัวตนและถิ่นที่อยู่นั้นเป็นการจำเป็นอย่างยิ่งเพื่อพิจารณาดำเนินการตามสิทธิที่ท่านร้องขอหากท่านให้ข้อมูลที่ผิดพลาดด้วยเจตนาทุจริตท่านอาจถูกดำเนินคดีตามกฎหมายได้ และบริษัทอาจขอข้อมูลเพิ่มเติมจากท่านเพื่อการตรวจสอบดังกล่าวเพื่อให้การดำเนินการตามคำร้องของท่านเป็นไปอย่างถูกต้องครบถ้วนต่อไป"
         }
     }
 }

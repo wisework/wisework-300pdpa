@@ -400,7 +400,7 @@ class _EditRequestRejectTemplateViewState
         ),
         const SizedBox(height: UiConfig.lineSpacing),
         Text(
-          'เพิ่มตัวเลือกการปฏิเสธที่อนุญาตในประเภทคำร้องนี้',
+          tr('masterData.dsr.requestrejects.add'),
           style: Theme.of(context).textTheme.bodySmall,
         ),
         const SizedBox(height: UiConfig.lineSpacing),
@@ -485,7 +485,7 @@ class _EditRequestRejectTemplateViewState
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: <Widget>[
                 Text(
-                  tr('masterData.etc.active'),
+                  tr('masterData.cm.purposeCategory.active'),
                   style: Theme.of(context).textTheme.bodyMedium,
                 ),
                 CustomSwitchButton(

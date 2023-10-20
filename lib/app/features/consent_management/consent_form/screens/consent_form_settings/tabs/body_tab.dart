@@ -1,5 +1,6 @@
 import 'dart:io';
 
+import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:pdpa/app/config/config.dart';
@@ -62,7 +63,7 @@ class _BodyTabState extends State<BodyTab> {
           Row(
             children: <Widget>[
               Text(
-                'Background',
+                tr('consentManagement.consentForm.bodytab.background'), //!
                 style: Theme.of(context).textTheme.titleMedium,
               ),
             ],
@@ -105,7 +106,7 @@ class _BodyTabState extends State<BodyTab> {
               Row(
                 children: <Widget>[
                   Text(
-                    'Recently used',
+                    tr('consentManagement.consentForm.bodytab.recentlyUsed'), //!
                     style: Theme.of(context).textTheme.titleMedium,
                   ),
                 ],

@@ -10,7 +10,6 @@ import 'package:pdpa/app/data/models/master_data/mandatory_field_model.dart';
 import 'package:pdpa/app/features/authentication/bloc/sign_in/sign_in_bloc.dart';
 import 'package:pdpa/app/features/master_data/bloc/mandatory/mandatory_field/mandatory_field_bloc.dart';
 import 'package:pdpa/app/features/master_data/widgets/master_data_item_card.dart';
-import 'package:pdpa/app/shared/utils/constants.dart';
 import 'package:pdpa/app/shared/widgets/customs/custom_icon_button.dart';
 import 'package:pdpa/app/shared/widgets/templates/pdpa_app_bar.dart';
 
@@ -65,6 +64,15 @@ class MandatoryFieldView extends StatefulWidget {
 class _MandatoryFieldViewState extends State<MandatoryFieldView> {
   List<MandatoryFieldModel> mandatoryFields = [];
   bool isEditable = false;
+
+  final Map<TextInputType, String> customInputTypeNames = {
+    TextInputType.text: tr('app.text'),
+    TextInputType.multiline: tr('app.multiline'),
+    TextInputType.number: tr('app.number'),
+    TextInputType.phone: tr('app.phone'),
+    TextInputType.emailAddress: tr('app.emailAddress'),
+    TextInputType.url: tr('app.url'),
+  };
 
   void _initialMandatoryFields(List<MandatoryFieldModel> initial) {
     mandatoryFields = initial;

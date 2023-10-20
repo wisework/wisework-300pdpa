@@ -124,7 +124,7 @@ class _HomeScreenState extends State<HomeScreen> {
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: <Widget>[
                         Text(
-                          'Recent',
+                          tr('general.home.recentlyUsed'),
                           style: Theme.of(context).textTheme.titleMedium,
                         ),
                         _buildRecent(context),
@@ -180,7 +180,7 @@ class _HomeScreenState extends State<HomeScreen> {
                         crossAxisAlignment: CrossAxisAlignment.center,
                         mainAxisAlignment: MainAxisAlignment.center,
                         children: [
-                          Text(tr('no data')), //!
+                          Text(tr('masterData.cm.purposeCategory.noData')), //!
                         ],
                       ),
                       const SizedBox(
@@ -192,7 +192,7 @@ class _HomeScreenState extends State<HomeScreen> {
                           _selectMenuDrawer(
                             DrawerMenuModel(
                               value: 'consent_forms',
-                              title: 'Consent Forms',
+                              title: tr('app.features.consentforms'),
                               icon: Ionicons.clipboard_outline,
                               route: ConsentFormRoute.consentForm,
                               parent: 'consent_management',
@@ -200,7 +200,7 @@ class _HomeScreenState extends State<HomeScreen> {
                           );
                         },
                         child: Text(
-                          tr('create new consent form'),
+                          tr('app.features.createNewConsentForm'),
                           style: Theme.of(context)
                               .textTheme
                               .titleMedium
@@ -277,9 +277,9 @@ class _HomeScreenState extends State<HomeScreen> {
 
   BlocBuilder _buildExplore(BuildContext context) {
     final List<String> cardTitles = [
-      "Consent Forms",
-      "User Consent",
-      "Master Data"
+      tr("app.features.consentforms"),
+      tr("app.features.userconsents"),
+      tr("app.features.masterdata")
     ];
     final List<IconData> icons = [
       Ionicons.clipboard_outline,
@@ -296,7 +296,7 @@ class _HomeScreenState extends State<HomeScreen> {
                   mainAxisAlignment: MainAxisAlignment.start,
                   children: [
                     Text(
-                      'Explore',
+                      tr('general.home.explore'),
                       style: Theme.of(context).textTheme.titleMedium,
                     ),
                   ],
@@ -442,7 +442,7 @@ class _HomeScreenState extends State<HomeScreen> {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: <Widget>[
                     Text(
-                      title.isNotEmpty ? title : 'This data is not stored.',
+                      title.isNotEmpty ? title : tr('general.home.thisDataIsNotStored'),
                       style: Theme.of(context).textTheme.bodyMedium,
                     ),
                     Padding(

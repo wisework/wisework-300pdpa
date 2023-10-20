@@ -2,7 +2,6 @@
 import 'package:bloc/bloc.dart';
 import 'package:equatable/equatable.dart';
 import 'package:pdpa/app/data/models/consent_management/consent_form_model.dart';
-import 'package:pdpa/app/data/models/consent_management/consent_theme_model.dart';
 import 'package:pdpa/app/data/models/master_data/custom_field_model.dart';
 import 'package:pdpa/app/data/models/master_data/localized_model.dart';
 import 'package:pdpa/app/data/models/master_data/mandatory_field_model.dart';
@@ -295,7 +294,7 @@ class EditConsentFormBloc
   ) async {
     ConsentFormModel consentForm = ConsentFormModel.empty();
     List<MandatoryFieldModel> mandatoryFields = [];
-    List<PurposeCategoryModel> purposeCategories = [];
+
     List<PurposeModel> purposes = [];
     List<CustomFieldModel> customFields = [];
 
@@ -304,7 +303,6 @@ class EditConsentFormBloc
 
       consentForm = settings.consentForm;
       mandatoryFields = settings.mandatoryFields;
-      purposeCategories = settings.purposeCategories;
       purposes = settings.purposes;
       customFields = settings.customFields;
     } else if (state is UpdateEditConsentForm) {
@@ -312,7 +310,6 @@ class EditConsentFormBloc
 
       consentForm = settings.consentForm;
       mandatoryFields = settings.mandatoryFields;
-      purposeCategories = settings.purposeCategories;
       purposes = settings.purposes;
       customFields = settings.customFields;
     }

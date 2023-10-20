@@ -1,3 +1,4 @@
+import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
@@ -143,7 +144,7 @@ class _ChoosePurposeCategoryViewState extends State<ChoosePurposeCategoryView> {
           backgroundColor: Theme.of(context).colorScheme.onBackground,
         ),
         title: Text(
-          "Choose purpose category",
+          tr("consentManagement.consentForm.choosePurposeCategory"),
           style: Theme.of(context).textTheme.titleLarge,
         ),
       ),
@@ -390,7 +391,7 @@ class _ChoosePurposeCategoryViewState extends State<ChoosePurposeCategoryView> {
                                       child: Padding(
                                         padding: const EdgeInsets.symmetric(
                                             horizontal: 15.0),
-                                        child: Text("เพิ่มหมวดหมู่วัตถุประสงค์",
+                                        child: Text(tr("masterData.cm.purposeCategory.addObjectiveCategory"),
                                             style: Theme.of(context)
                                                 .textTheme
                                                 .bodyMedium

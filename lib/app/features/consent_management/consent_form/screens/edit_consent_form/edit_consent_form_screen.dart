@@ -7,7 +7,6 @@ import 'package:ionicons/ionicons.dart';
 import 'package:pdpa/app/config/config.dart';
 import 'package:pdpa/app/data/models/authentication/user_model.dart';
 import 'package:pdpa/app/data/models/consent_management/consent_form_model.dart';
-import 'package:pdpa/app/data/models/master_data/custom_field_model.dart';
 import 'package:pdpa/app/data/models/master_data/localized_model.dart';
 import 'package:pdpa/app/data/models/master_data/mandatory_field_model.dart';
 import 'package:pdpa/app/data/models/master_data/purpose_category_model.dart';
@@ -15,14 +14,11 @@ import 'package:pdpa/app/data/models/master_data/purpose_model.dart';
 import 'package:pdpa/app/features/authentication/bloc/sign_in/sign_in_bloc.dart';
 import 'package:pdpa/app/features/consent_management/consent_form/bloc/consent_form/consent_form_bloc.dart';
 import 'package:pdpa/app/features/consent_management/consent_form/bloc/edit_consent_form/edit_consent_form_bloc.dart';
-import 'package:pdpa/app/features/consent_management/consent_form/cubit/current_consent_form_settings/current_consent_form_settings_cubit.dart';
 import 'package:pdpa/app/features/consent_management/consent_form/cubit/current_edit_consent_form/current_edit_consent_form_cubit.dart';
 import 'package:pdpa/app/features/consent_management/consent_form/routes/consent_form_route.dart';
 import 'package:pdpa/app/features/consent_management/consent_form/screens/edit_consent_form/widgets/reorderPurposeCategory.dart';
-
 import 'package:pdpa/app/injection.dart';
 import 'package:pdpa/app/shared/utils/constants.dart';
-import 'package:pdpa/app/shared/utils/functions.dart';
 import 'package:pdpa/app/shared/widgets/customs/custom_container.dart';
 import 'package:pdpa/app/shared/widgets/customs/custom_icon_button.dart';
 import 'package:pdpa/app/shared/widgets/customs/custom_switch_button.dart';
@@ -283,8 +279,8 @@ class _EditConsentFormViewState extends State<EditConsentFormView> {
         leadingIcon: _buildPopButton(widget.consentForm),
         title: Text(
           widget.isNewConsentForm
-              ? tr('consentManagement.cf.consentForms.edit')
-              : tr('consentManagement.cf.consentForms.create'),
+              ? tr('consentManagement.consentForm.createForm.create')
+              : tr('consentManagement.consentForm.createForm.edit'),
           style: Theme.of(context).textTheme.titleLarge,
         ),
         actions: [
@@ -307,33 +303,34 @@ class _EditConsentFormViewState extends State<EditConsentFormView> {
                         Row(
                           children: <Widget>[
                             Text(
-                              tr('consentManagement.cf.consentForms.consentForms'),
+                              tr('consentManagement.consentForm.createForm.section'),
                               style: Theme.of(context).textTheme.titleLarge,
                             ),
                           ],
                         ),
                         const SizedBox(height: UiConfig.lineSpacing),
                         TitleRequiredText(
-                          text: tr('consentManagement.cf.consentForms.title'),
+                          text: tr(
+                              'consentManagement.consentForm.createForm.title'),
                           required: true,
                         ),
                         CustomTextField(
                           controller: titleController,
-                          hintText:
-                              tr('consentManagement.cf.consentForms.title'),
-                          onChanged: _setTitleController,
+                          hintText: tr(
+                              'consentManagement.consentForm.createForm.hinttitle'),
+                          onChanged: _setDescription,
                           required: true,
                         ),
                         const SizedBox(height: UiConfig.lineSpacing),
                         TitleRequiredText(
                           text: tr(
-                              'consentManagement.cf.consentForms.description'),
+                              'consentManagement.consentForm.createForm.description'),
                         ),
                         CustomTextField(
                           controller: descriptionController,
                           hintText: tr(
-                              'consentManagement.cf.consentForms.description'),
-                          onChanged: _setDescription,
+                              'consentManagement.consentForm.createForm.description'),
+                          onChanged: _setTitleController,
                         ),
                       ],
                     ),
@@ -346,7 +343,7 @@ class _EditConsentFormViewState extends State<EditConsentFormView> {
                         Row(
                           children: <Widget>[
                             Text(
-                              "ข้อมูลที่จัดเก็บ",
+                              tr("consentManagement.consentForm.consentFormDetails.storedInformation"),
                               style: Theme.of(context).textTheme.titleLarge,
                             ),
                           ],
@@ -404,11 +401,11 @@ class _EditConsentFormViewState extends State<EditConsentFormView> {
                       mainAxisAlignment: MainAxisAlignment.start,
                       children: <Widget>[
                         Text(
-                          "วัตถุประสงค์",
+                          tr("consentManagement.consentForm.createForm.purpose"),
                           style: Theme.of(context).textTheme.titleLarge,
                         ),
                         Text(
-                          "วัตถุประสงค์ในการเก็บข้อมูล",
+                          tr("consentManagement.consentForm.createForm.purposeOfDC"),
                           style: Theme.of(context).textTheme.labelLarge,
                         ),
                         const SizedBox(height: UiConfig.lineSpacing),
@@ -450,7 +447,7 @@ class _EditConsentFormViewState extends State<EditConsentFormView> {
                               children: <Widget>[
                                 Expanded(
                                   child: Text(
-                                    "เลือกหมวดหมู่วัตถุประสงค์",
+                                    tr("consentManagement.consentForm.createForm.selectPurposeCategory"),
                                     style: Theme.of(context)
                                         .textTheme
                                         .labelLarge

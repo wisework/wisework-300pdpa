@@ -41,8 +41,8 @@ class MasterDataScreen extends StatelessWidget {
             const SizedBox(height: UiConfig.lineSpacing),
             _buildConsentSection(context),
             const SizedBox(height: UiConfig.lineSpacing),
-            _buildDataSubjectRightSection(context),
-            const SizedBox(height: UiConfig.lineSpacing),
+            // _buildDataSubjectRightSection(context),
+            // const SizedBox(height: UiConfig.lineSpacing),
           ],
         ),
       ),
@@ -118,56 +118,56 @@ class MasterDataScreen extends StatelessWidget {
     );
   }
 
-  CustomContainer _buildDataSubjectRightSection(BuildContext context) {
-    return CustomContainer(
-      child: Column(
-        children: <Widget>[
-          Row(
-            children: <Widget>[
-              Text(
-                tr('masterData.dsr.datasubjectright'),
-                style: Theme.of(context).textTheme.titleLarge,
-              ),
-            ],
-          ),
-          const SizedBox(height: UiConfig.lineSpacing),
-          MasterDataListTile(
-            trail: true,
-            title: tr('masterData.dsr.request.list'),
-            onTap: () {
-              context.push(MasterDataRoute.requestType.path);
-            },
-          ),
-          MasterDataListTile(
-            trail: true,
-            title: tr('masterData.dsr.rejections.list'),
-            onTap: () {
-              context.push(MasterDataRoute.rejectType.path);
-            },
-          ),
-          MasterDataListTile(
-            trail: true,
-            title: tr('masterData.dsr.reason.list'),
-            onTap: () {
-              context.push(MasterDataRoute.reasonType.path);
-            },
-          ),
-          MasterDataListTile(
-            trail: true,
-            title: tr('masterData.dsr.requestrejects.list'),
-            onTap: () {
-              context.push(MasterDataRoute.requestReject.path);
-            },
-          ),
-          MasterDataListTile(
-            trail: true,
-            title: tr('masterData.dsr.requestreasons.list'),
-            onTap: () {
-              context.push(MasterDataRoute.requestReason.path);
-            },
-          ),
-        ],
-      ),
-    );
-  }
+  // CustomContainer _buildDataSubjectRightSection(BuildContext context) {
+  //   return CustomContainer(
+  //     child: Column(
+  //       children: <Widget>[
+  //         Row(
+  //           children: <Widget>[
+  //             Text(
+  //               tr('masterData.dsr.datasubjectright'),
+  //               style: Theme.of(context).textTheme.titleLarge,
+  //             ),
+  //           ],
+  //         ),
+  //         const SizedBox(height: UiConfig.lineSpacing),
+  //         MasterDataListTile(
+  //           trail: true,
+  //           title: tr('masterData.dsr.request.list'),
+  //           onTap: () {
+  //             context.push(MasterDataRoute.requestType.path);
+  //           },
+  //         ),
+  //         MasterDataListTile(
+  //           trail: true,
+  //           title: tr('masterData.dsr.rejections.list'),
+  //           onTap: () {
+  //             context.push(MasterDataRoute.rejectType.path);
+  //           },
+  //         ),
+  //         MasterDataListTile(
+  //           trail: true,
+  //           title: tr('masterData.dsr.reason.list'),
+  //           onTap: () {
+  //             context.push(MasterDataRoute.reasonType.path);
+  //           },
+  //         ),
+  //         MasterDataListTile(
+  //           trail: true,
+  //           title: tr('masterData.dsr.requestrejects.list'),
+  //           onTap: () {
+  //             context.push(MasterDataRoute.requestReject.path);
+  //           },
+  //         ),
+  //         MasterDataListTile(
+  //           trail: true,
+  //           title: tr('masterData.dsr.requestreasons.list'),
+  //           onTap: () {
+  //             context.push(MasterDataRoute.requestReason.path);
+  //           },
+  //         ),
+  //       ],
+  //     ),
+  //   );
+  // }
 }
