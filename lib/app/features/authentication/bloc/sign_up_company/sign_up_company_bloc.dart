@@ -5,6 +5,10 @@ import 'package:pdpa/app/data/models/authentication/company_model.dart';
 import 'package:pdpa/app/data/models/authentication/user_model.dart';
 import 'package:pdpa/app/data/models/etc/user_company_role.dart';
 import 'package:pdpa/app/data/models/master_data/mandatory_field_model.dart';
+import 'package:pdpa/app/data/models/master_data/purpose_model.dart';
+import 'package:pdpa/app/data/presets/mandatory_fields_preset.dart';
+import 'package:pdpa/app/data/presets/purpose_categories_preset.dart';
+import 'package:pdpa/app/data/presets/purposes_preset.dart';
 import 'package:pdpa/app/data/repositories/authentication_repository.dart';
 import 'package:pdpa/app/data/repositories/master_data_repository.dart';
 import 'package:pdpa/app/shared/utils/constants.dart';
@@ -39,9 +43,15 @@ class SignUpCompanyBloc extends Bloc<SignUpCompanyEvent, SignUpCompanyState> {
         return;
       },
       (company) async {
-        for (MandatoryFieldModel mandatoryField in event.mandatoryFields) {
+        //? Create Mandatory Fields
+        for (MandatoryFieldModel mandatoryField in mandatoryFieldsPreset) {
+          final updated = mandatoryField.setCreate(
+            event.user.email,
+            DateTime.now(),
+          );
+
           final result = await _masterDataRepository.createMandatoryField(
-            mandatoryField,
+            updated,
             company.id,
           );
           result.fold(
@@ -49,6 +59,46 @@ class SignUpCompanyBloc extends Bloc<SignUpCompanyEvent, SignUpCompanyState> {
               emit(SignUpCompanyError(failure.errorMessage));
               return;
             },
+            (_) {},
+          );
+        }
+
+        //? Create Purpose Categories
+        for (int index = 0; index < purposeCategoriesPreset.length; index++) {
+          List<String> purposeIds = [];
+
+          //? Create Purposes
+          for (PurposeModel purpose in purposesPreset[index]) {
+            final updated = purpose.setCreate(
+              event.user.email,
+              DateTime.now(),
+            );
+
+            final result = await _masterDataRepository.createPurpose(
+              updated,
+              company.id,
+            );
+            result.fold(
+              (failure) => emit(SignUpCompanyError(failure.errorMessage)),
+              (purpose) {
+                purposeIds.add(purpose.id);
+              },
+            );
+          }
+
+          final updated = purposeCategoriesPreset[index]
+              .copyWith(purposes: purposeIds)
+              .setCreate(
+                event.user.email,
+                DateTime.now(),
+              );
+
+          final result = await _masterDataRepository.createPurposeCategory(
+            updated,
+            company.id,
+          );
+          result.fold(
+            (failure) => emit(SignUpCompanyError(failure.errorMessage)),
             (_) {},
           );
         }

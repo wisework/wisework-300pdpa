@@ -4,6 +4,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
 import 'package:ionicons/ionicons.dart';
 import 'package:pdpa/app/config/config.dart';
+import 'package:pdpa/app/data/models/authentication/company_model.dart';
 import 'package:pdpa/app/data/models/consent_management/consent_form_model.dart';
 import 'package:pdpa/app/data/models/master_data/localized_model.dart';
 import 'package:pdpa/app/data/models/master_data/purpose_category_model.dart';
@@ -31,6 +32,8 @@ class HomeScreen extends StatefulWidget {
 }
 
 class _HomeScreenState extends State<HomeScreen> {
+  late CompanyModel currentCompany;
+
   final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
 
   @override
@@ -46,6 +49,14 @@ class _HomeScreenState extends State<HomeScreen> {
     String companyId = '';
     if (bloc.state is SignedInUser) {
       companyId = (bloc.state as SignedInUser).user.currentCompany;
+
+      final companies = (bloc.state as SignedInUser).companies;
+      currentCompany = companies.firstWhere(
+        (company) => company.id == companyId,
+        orElse: () => CompanyModel.empty(),
+      );
+    } else {
+      currentCompany = CompanyModel.empty();
     }
 
     context
@@ -154,7 +165,6 @@ class _HomeScreenState extends State<HomeScreen> {
 
   Container _buildRecent(BuildContext context) {
     return Container(
-      height: 300,
       padding: const EdgeInsets.all(UiConfig.defaultPaddingSpacing),
       decoration: BoxDecoration(
         color: Theme.of(context).colorScheme.onBackground,
@@ -164,6 +174,7 @@ class _HomeScreenState extends State<HomeScreen> {
           if (state is GotConsentForms) {
             return state.consentForms.isNotEmpty
                 ? ListView.builder(
+                    physics: const NeverScrollableScrollPhysics(),
                     shrinkWrap: true,
                     itemCount: min(3, state.consentForms.length),
                     itemBuilder: (context, index) {
@@ -233,36 +244,45 @@ class _HomeScreenState extends State<HomeScreen> {
       builder: (context, state) {
         if (state is SignedInUser) {
           return Column(
-            children: [
+            children: <Widget>[
               Row(
                 children: <Widget>[
                   Text(
-                    tr('auth.acceptInvite.hello'),
+                    tr('general.home.welcome'),
                     style: Theme.of(context).textTheme.titleMedium,
                   ),
                 ],
               ),
+              const SizedBox(width: UiConfig.textSpacing),
               Row(
-                children: [
+                children: <Widget>[
                   Text(
                     state.user.firstName,
                     style: Theme.of(context).textTheme.titleMedium,
                   ),
                   const SizedBox(width: 8.0),
-                  Icon(
-                    Ionicons.sparkles,
-                    color: Theme.of(context).colorScheme.onError,
+                  Padding(
+                    padding: const EdgeInsets.only(bottom: 5.0),
+                    child: Icon(
+                      Ionicons.sparkles,
+                      color: Theme.of(context).colorScheme.onError,
+                    ),
                   ),
                 ],
               ),
-              Row(
-                children: [
-                  const SizedBox(height: 8.0),
-                  Text(
-                    'The wisework Co.,Ltd.',
-                    style: Theme.of(context).textTheme.bodySmall,
-                  )
-                ],
+              Visibility(
+                visible: currentCompany.name.isNotEmpty,
+                child: Padding(
+                  padding: const EdgeInsets.only(top: UiConfig.textSpacing),
+                  child: Row(
+                    children: <Widget>[
+                      Text(
+                        currentCompany.name,
+                        style: Theme.of(context).textTheme.bodySmall,
+                      ),
+                    ],
+                  ),
+                ),
               )
             ],
           );
@@ -312,7 +332,8 @@ class _HomeScreenState extends State<HomeScreen> {
                         String currentCardTitle = cardTitles[index];
                         return GestureDetector(
                           onTap: () {
-                            if (currentCardTitle == tr("app.features.consentforms")) {
+                            if (currentCardTitle ==
+                                tr("app.features.consentforms")) {
                               _selectMenuDrawer(
                                 DrawerMenuModel(
                                   value: 'consent_forms',
@@ -322,7 +343,9 @@ class _HomeScreenState extends State<HomeScreen> {
                                   parent: 'consent_management',
                                 ),
                               );
-                            }  if (currentCardTitle == tr("app.features.userconsents")) {
+                            }
+                            if (currentCardTitle ==
+                                tr("app.features.userconsents")) {
                               _selectMenuDrawer(
                                 DrawerMenuModel(
                                   value: 'user_consents',
@@ -332,7 +355,9 @@ class _HomeScreenState extends State<HomeScreen> {
                                   parent: 'consent_management',
                                 ),
                               );
-                            }  if (currentCardTitle == tr("app.features.masterdata")) {
+                            }
+                            if (currentCardTitle ==
+                                tr("app.features.masterdata")) {
                               _selectMenuDrawer(
                                 DrawerMenuModel(
                                   value: 'master_data',
@@ -349,22 +374,24 @@ class _HomeScreenState extends State<HomeScreen> {
                             alignment: Alignment.center,
                             // color: Theme.of(context).colorScheme.outline,
                             padding: const EdgeInsets.all(
-                                UiConfig.defaultPaddingSpacing),
+                              UiConfig.defaultPaddingSpacing,
+                            ),
                             decoration: BoxDecoration(
                               color: Theme.of(context).colorScheme.onBackground,
                               borderRadius: BorderRadius.circular(10.0),
-                              boxShadow: const [
+                              boxShadow: [
                                 BoxShadow(
-                                    color: Colors.grey,
-                                    blurRadius: 5.0,
-                                    spreadRadius: 1.0,
-                                    offset: Offset(
-                                      1.0, // Move to right 7.0 horizontally
-                                      2.0, // Move to bottom 8.0 Vertically
-                                    ))
+                                  color: Colors.grey.withOpacity(0.4),
+                                  blurRadius: 5.0,
+                                  spreadRadius: 1.0,
+                                  offset: const Offset(
+                                    1.0,
+                                    2.0,
+                                  ),
+                                )
                               ],
                             ),
-
+                            constraints: const BoxConstraints(minWidth: 120.0),
                             margin: const EdgeInsets.all(10.0),
                             child: Column(
                               mainAxisAlignment: MainAxisAlignment.center,
@@ -372,7 +399,7 @@ class _HomeScreenState extends State<HomeScreen> {
                               children: [
                                 Icon(
                                   icons[index],
-                                  size: 30,
+                                  size: 30.0,
                                 ),
                                 const SizedBox(height: 20.0),
                                 Expanded(
