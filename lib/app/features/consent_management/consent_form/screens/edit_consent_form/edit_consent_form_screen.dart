@@ -302,6 +302,21 @@ class _EditConsentFormViewState extends State<EditConsentFormView> {
     }
 
     if (_formKey.currentState!.validate()) {
+      consentForm = consentForm.copyWith(
+        title: [
+          LocalizedModel(
+            language: 'en-US',
+            text: titleController.text,
+          ),
+        ],
+        description: [
+          LocalizedModel(
+            language: 'en-US',
+            text: descriptionController.text,
+          ),
+        ],
+      );
+
       if (widget.isNewConsentForm) {
         consentForm = consentForm.setCreate(
           widget.currentUser.email,

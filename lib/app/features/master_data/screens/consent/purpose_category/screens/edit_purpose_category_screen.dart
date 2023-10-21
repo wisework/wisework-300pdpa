@@ -33,9 +33,11 @@ class EditPurposeCategoryScreen extends StatefulWidget {
   const EditPurposeCategoryScreen({
     super.key,
     required this.purposeCategoryId,
+    this.isCreateByConsent = false,
   });
 
   final String purposeCategoryId;
+  final bool isCreateByConsent;
 
   @override
   State<EditPurposeCategoryScreen> createState() =>
@@ -143,6 +145,7 @@ class _EditPurposeCategoryScreenState extends State<EditPurposeCategoryScreen> {
               purposes: state.purposes,
               currentUser: currentUser,
               isNewPurposeCategory: widget.purposeCategoryId.isEmpty,
+              isCreateByConsent: widget.isCreateByConsent,
             );
           }
           if (state is UpdatedCurrentPurposeCategory) {
@@ -151,6 +154,7 @@ class _EditPurposeCategoryScreenState extends State<EditPurposeCategoryScreen> {
               purposes: state.purposes,
               currentUser: currentUser,
               isNewPurposeCategory: widget.purposeCategoryId.isEmpty,
+              isCreateByConsent: widget.isCreateByConsent,
             );
           }
           if (state is EditPurposeCategoryError) {
@@ -171,12 +175,14 @@ class EditPurposeCategoryView extends StatefulWidget {
     required this.purposes,
     required this.currentUser,
     required this.isNewPurposeCategory,
+    required this.isCreateByConsent,
   });
 
   final PurposeCategoryModel initialPurposeCategory;
   final List<PurposeModel> purposes;
   final UserModel currentUser;
   final bool isNewPurposeCategory;
+  final bool isCreateByConsent;
 
   @override
   State<EditPurposeCategoryView> createState() =>

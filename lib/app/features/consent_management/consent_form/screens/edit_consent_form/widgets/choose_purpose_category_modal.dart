@@ -228,7 +228,7 @@ class _ChoosePurposeCategoryModalState
   Widget _buildCreatePurposeCategoryButton(BuildContext context) {
     return MaterialInkWell(
       onTap: () async {
-        context.push(MasterDataRoute.createPurposeCategory.path);
+        context.push(MasterDataRoute.createPurposeCategoryByConsent.path);
       },
       child: Padding(
         padding: const EdgeInsets.all(8.0),

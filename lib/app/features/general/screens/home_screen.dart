@@ -138,7 +138,7 @@ class _HomeScreenState extends State<HomeScreen> {
                           tr('general.home.recentlyUsed'),
                           style: Theme.of(context).textTheme.titleMedium,
                         ),
-                        _buildRecent(context),
+                        _buildRecentlyUsed(context),
                       ],
                     ),
                   ),
@@ -163,7 +163,7 @@ class _HomeScreenState extends State<HomeScreen> {
     );
   }
 
-  Container _buildRecent(BuildContext context) {
+  Container _buildRecentlyUsed(BuildContext context) {
     return Container(
       padding: const EdgeInsets.all(UiConfig.defaultPaddingSpacing),
       decoration: BoxDecoration(
@@ -369,8 +369,8 @@ class _HomeScreenState extends State<HomeScreen> {
                             }
                           },
                           child: Container(
-                            width: 200,
-                            height: 200,
+                            width: 170.0,
+                            height: 150.0,
                             alignment: Alignment.center,
                             // color: Theme.of(context).colorScheme.outline,
                             padding: const EdgeInsets.all(
@@ -397,11 +397,12 @@ class _HomeScreenState extends State<HomeScreen> {
                               mainAxisAlignment: MainAxisAlignment.center,
                               crossAxisAlignment: CrossAxisAlignment.center,
                               children: [
+                                const SizedBox(height: UiConfig.lineSpacing),
                                 Icon(
                                   icons[index],
                                   size: 30.0,
                                 ),
-                                const SizedBox(height: 20.0),
+                                const SizedBox(height: UiConfig.lineGap),
                                 Expanded(
                                   child: Text(
                                     cardTitles[index],
@@ -410,6 +411,7 @@ class _HomeScreenState extends State<HomeScreen> {
                                     textAlign: TextAlign.center,
                                   ),
                                 ),
+                                const SizedBox(height: UiConfig.lineSpacing),
                               ],
                             ),
                           ),
@@ -445,13 +447,10 @@ class _HomeScreenState extends State<HomeScreen> {
       purposeCategory,
       consentForm.purposeCategories.map((item) => item.id).toList(),
     );
-    final dateConsentForm =
-        DateFormat("dd.MM.yy").format(consentForm.updatedDate);
+    final dateConsentForm = DateFormat("dd.MM.yy").format(
+      consentForm.updatedDate,
+    );
 
-    // final purposeCategoryFiltered = UtilFunctions.filterPurposeCategoriesByIds(
-    //   purposeCategory,
-    //   consentForm.purposeCategories,
-    // );
     return Column(
       mainAxisSize: MainAxisSize.min,
       children: <Widget>[
