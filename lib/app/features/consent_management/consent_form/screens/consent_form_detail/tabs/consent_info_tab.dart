@@ -119,7 +119,7 @@ class _ConsentInfoTabState extends State<ConsentInfoTab> {
   Column _purposeCategoriesInfo(BuildContext context, String language) {
     final purposeCategoryFiltered = UtilFunctions.filterPurposeCategoriesByIds(
       widget.purposeCategories,
-      widget.consentForm.purposeCategories,
+      widget.consentForm.purposeCategories.map((item) => item.id).toList(),
     );
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,

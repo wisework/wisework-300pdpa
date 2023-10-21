@@ -233,7 +233,9 @@ class _CreateConsentFormSuccessViewState
                             // final cubit = context.read<CurrentConsentFormSettingsCubit>();
                             // cubit.generateConsentFormUrl(url);
 
-                            consentForm = widget.consentForm.setUrl(url);
+                            consentForm = widget.consentForm.copyWith(
+                              consentFormUrl: url,
+                            );
 
                             context.read<EditConsentFormBloc>().add(
                                   UpdateCurrentConsentFormEvent(
@@ -279,7 +281,9 @@ class _CreateConsentFormSuccessViewState
                             // final cubit = context.read<CurrentConsentFormSettingsCubit>();
                             // cubit.generateConsentFormUrl(url);
 
-                            consentForm = widget.consentForm.setUrl(url);
+                            consentForm = widget.consentForm.copyWith(
+                              consentFormUrl: url,
+                            );
 
                             context.read<EditConsentFormBloc>().add(
                                   UpdateCurrentConsentFormEvent(
@@ -329,7 +333,8 @@ class _CreateConsentFormSuccessViewState
   Column _purposeCategoriesInfo(BuildContext context, String language) {
     final purposeCategoryFiltered = UtilFunctions.filterPurposeCategoriesByIds(
       widget.purposeCategories,
-      widget.consentForm.purposeCategories,
+      [],
+      // widget.consentForm.purposeCategories,
     );
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,

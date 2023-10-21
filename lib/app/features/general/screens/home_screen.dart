@@ -443,7 +443,7 @@ class _HomeScreenState extends State<HomeScreen> {
         .text;
     final purposeCategoryFiltered = UtilFunctions.filterPurposeCategoriesByIds(
       purposeCategory,
-      consentForm.purposeCategories,
+      consentForm.purposeCategories.map((item) => item.id).toList(),
     );
     final dateConsentForm =
         DateFormat("dd.MM.yy").format(consentForm.updatedDate);

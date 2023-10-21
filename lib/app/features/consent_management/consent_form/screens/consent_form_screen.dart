@@ -156,9 +156,8 @@ class _ConsentFormViewState extends State<ConsentFormView> {
                                 'consentManagement.consentForm.consentForms'),
                             buttonText: tr(
                                 'consentManagement.consentForm.createForm.create'),
-                            descriptionText: tr(
-                                'consentManagement.consentForm.explain'),
-                            
+                            descriptionText:
+                                tr('consentManagement.consentForm.explain'),
                             onPress: () {
                               context.push(
                                   ConsentFormRoute.createConsentForm.path);
@@ -282,7 +281,7 @@ class _ConsentFormViewState extends State<ConsentFormView> {
 
     final purposeCategoryFiltered = UtilFunctions.filterPurposeCategoriesByIds(
       purposeCategory,
-      consentForm.purposeCategories,
+      consentForm.purposeCategories.map((item) => item.id).toList(),
     );
 
     return Column(

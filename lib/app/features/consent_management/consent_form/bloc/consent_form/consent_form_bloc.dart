@@ -44,8 +44,11 @@ class ConsentFormBloc extends Bloc<ConsentFormEvent, ConsentFormState> {
       emit(ConsentFormError(failure.errorMessage));
       return;
     }, (consentForms) async {
-      allPurposeCategories
-          .addAll(consentForms.expand((form) => form.purposeCategories));
+      allPurposeCategories.addAll(
+        consentForms.expand(
+          (form) => form.purposeCategories.map((item) => item.id).toList(),
+        ),
+      );
 
       for (String purposeCategoryId in allPurposeCategories) {
         final result = await _masterDataRepository.getPurposeCategoryById(

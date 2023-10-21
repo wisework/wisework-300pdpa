@@ -12,7 +12,6 @@ import 'package:pdpa/app/features/authentication/bloc/sign_in/sign_in_bloc.dart'
 import 'package:pdpa/app/features/consent_management/consent_form/bloc/choose_purpose_category/choose_purpose_category_bloc.dart';
 import 'package:pdpa/app/features/consent_management/consent_form/bloc/edit_consent_form/edit_consent_form_bloc.dart';
 import 'package:pdpa/app/features/consent_management/consent_form/cubit/choose_purpose_category/choose_purpose_category_cubit.dart';
-import 'package:pdpa/app/features/consent_management/consent_form/cubit/current_edit_consent_form/current_edit_consent_form_cubit.dart';
 import 'package:pdpa/app/injection.dart';
 import 'package:pdpa/app/shared/utils/constants.dart';
 import 'package:pdpa/app/shared/widgets/customs/custom_container.dart';
@@ -115,8 +114,6 @@ class _ChoosePurposeCategoryViewState extends State<ChoosePurposeCategoryView> {
 
   void _initialData() {
     purposeCategory = widget.initialpurposeCategories;
-
-    purposeCategories = widget.consentForm.purposeCategories;
   }
 
   @override
@@ -133,8 +130,8 @@ class _ChoosePurposeCategoryViewState extends State<ChoosePurposeCategoryView> {
 
               context.read<EditConsentFormBloc>().add(event);
 
-              context.read<CurrentEditConsentFormCubit>().setPurposeCategory(
-                  newPurposeCategoryList, newPurposeCategories);
+              // context.read<CurrentEditConsentFormCubit>().setPurposeCategory(
+              //     newPurposeCategoryList, newPurposeCategories);
             }
 
             context.pop();
@@ -391,7 +388,9 @@ class _ChoosePurposeCategoryViewState extends State<ChoosePurposeCategoryView> {
                                       child: Padding(
                                         padding: const EdgeInsets.symmetric(
                                             horizontal: 15.0),
-                                        child: Text(tr("masterData.cm.purposeCategory.addObjectiveCategory"),
+                                        child: Text(
+                                            tr(
+                                                "masterData.cm.purposeCategory.addObjectiveCategory"),
                                             style: Theme.of(context)
                                                 .textTheme
                                                 .bodyMedium

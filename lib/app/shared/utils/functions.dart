@@ -7,6 +7,7 @@ import 'package:pdpa/app/data/models/data_subject_right/data_subject_right_model
 import 'package:pdpa/app/data/models/etc/user_company_role.dart';
 import 'package:pdpa/app/data/models/etc/user_input_purpose.dart';
 import 'package:pdpa/app/data/models/etc/user_input_text.dart';
+import 'package:pdpa/app/data/models/etc/user_reorder_item.dart';
 import 'package:pdpa/app/data/models/master_data/custom_field_model.dart';
 import 'package:pdpa/app/data/models/master_data/mandatory_field_model.dart';
 import 'package:pdpa/app/data/models/master_data/purpose_category_model.dart';
@@ -85,9 +86,21 @@ class UtilFunctions {
     List<PurposeCategoryModel> purposeCategories,
     List<String> purposeCategoryIds,
   ) {
-    return purposeCategories
-        .where((category) => purposeCategoryIds.contains(category.id))
-        .toList();
+    List<PurposeCategoryModel> filtered = [];
+    final empty = PurposeCategoryModel.empty();
+
+    for (String id in purposeCategoryIds) {
+      final result = purposeCategories.firstWhere(
+        (category) => category.id == id,
+        orElse: () => empty,
+      );
+
+      if (result != empty) {
+        filtered.add(result);
+      }
+    }
+
+    return filtered;
   }
 
   //? Purpose
@@ -206,5 +219,33 @@ class UtilFunctions {
     final folder = '${imageType.name}/';
 
     return [company, consent, folder].join('/');
+  }
+
+  //? ETC
+  static List<UserReorderItem> getReorderItem(
+    List<String> targetIds,
+  ) {
+    List<UserReorderItem> items = [];
+
+    for (int index = 0; index < targetIds.length; index++) {
+      items.add(
+        UserReorderItem(
+          id: targetIds[index],
+          priority: index + 1,
+        ),
+      );
+    }
+
+    return items;
+  }
+
+  static UserReorderItem getReorderItemById(
+    List<String> targetIds,
+    String id,
+  ) {
+    return getReorderItem(targetIds).firstWhere(
+      (item) => item.id == id,
+      orElse: () => const UserReorderItem.empty(),
+    );
   }
 }

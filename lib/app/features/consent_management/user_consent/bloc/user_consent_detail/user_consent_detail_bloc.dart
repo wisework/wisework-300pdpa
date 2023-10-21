@@ -4,6 +4,7 @@ import 'package:equatable/equatable.dart';
 import 'package:pdpa/app/data/models/consent_management/consent_form_model.dart';
 import 'package:pdpa/app/data/models/consent_management/consent_theme_model.dart';
 import 'package:pdpa/app/data/models/consent_management/user_consent_model.dart';
+import 'package:pdpa/app/data/models/etc/user_reorder_item.dart';
 import 'package:pdpa/app/data/models/master_data/custom_field_model.dart';
 import 'package:pdpa/app/data/models/master_data/mandatory_field_model.dart';
 import 'package:pdpa/app/data/models/master_data/purpose_category_model.dart';
@@ -89,9 +90,9 @@ class UserConsentDetailBloc
               );
             }
 
-            for (String purposeCategoryId in consentForm.purposeCategories) {
+            for (UserReorderItem item in consentForm.purposeCategories) {
               final result = await _masterDataRepository.getPurposeCategoryById(
-                purposeCategoryId,
+                item.id,
                 event.companyId,
               );
 
@@ -132,17 +133,19 @@ class UserConsentDetailBloc
               );
             }
 
-            final result = await _consentRepository.getConsentThemeById(
-              consentForm.consentThemeId,
-              event.companyId,
-            );
+            if (consentForm.consentThemeId.isNotEmpty) {
+              final result = await _consentRepository.getConsentThemeById(
+                consentForm.consentThemeId,
+                event.companyId,
+              );
 
-            result.fold(
-              (failure) => emit(UserConsentDetailError(failure.errorMessage)),
-              (consentThemes) {
-                gotConsentTheme = consentThemes;
-              },
-            );
+              result.fold(
+                (failure) => emit(UserConsentDetailError(failure.errorMessage)),
+                (consentThemes) {
+                  gotConsentTheme = consentThemes;
+                },
+              );
+            }
           },
         );
       },

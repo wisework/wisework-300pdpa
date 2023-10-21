@@ -2,6 +2,7 @@
 import 'package:bloc/bloc.dart';
 import 'package:equatable/equatable.dart';
 import 'package:pdpa/app/data/models/consent_management/consent_form_model.dart';
+import 'package:pdpa/app/data/models/etc/user_reorder_item.dart';
 import 'package:pdpa/app/data/models/master_data/custom_field_model.dart';
 import 'package:pdpa/app/data/models/master_data/localized_model.dart';
 import 'package:pdpa/app/data/models/master_data/mandatory_field_model.dart';
@@ -43,103 +44,70 @@ class EditConsentFormBloc
     emit(const GetingCurrentConsentForm());
 
     ConsentFormModel gotConsentForm = ConsentFormModel.empty();
-
     List<MandatoryFieldModel> gotMandatoryFields = [];
     List<PurposeCategoryModel> gotPurposeCategories = [];
     List<PurposeModel> gotPurposes = [];
     List<CustomFieldModel> gotCustomFields = [];
 
-    final resultCustomfield = await _masterDataRepository.getMandatoryFields(
-      event.companyId,
-    );
-    resultCustomfield
-        .fold((failure) => emit(EditConsentFormError(failure.errorMessage)),
-            (mandatoryField) {
-      gotMandatoryFields = mandatoryField;
-    });
-
-    if (event.consentFormId.isEmpty) {
-      emit(
-        GotCurrentConsentForm(
-          ConsentFormModel.empty(),
-          gotMandatoryFields
-            ..sort(((a, b) => b.priority.compareTo(a.priority))),
-          const [],
-          const [],
-          const [],
-        ),
+    if (event.consentFormId.isNotEmpty) {
+      final consentFormResult = await _consentRepository.getConsentFormById(
+        event.consentFormId,
+        event.companyId,
       );
-      return;
+      consentFormResult.fold(
+        (failure) => emit(EditConsentFormError(failure.errorMessage)),
+        (consentForm) {
+          gotConsentForm = consentForm;
+        },
+      );
     }
 
-    final result = await _consentRepository.getConsentFormById(
-      event.consentFormId,
+    final mandatoryFieldResult = await _masterDataRepository.getMandatoryFields(
       event.companyId,
     );
-
-    await Future.delayed(const Duration(milliseconds: 800));
-
-    await result.fold(
-      (failure) {
-        emit(EditConsentFormError(failure.errorMessage));
-        return;
+    mandatoryFieldResult.fold(
+      (failure) => emit(EditConsentFormError(failure.errorMessage)),
+      (mandatoryField) {
+        gotMandatoryFields = mandatoryField;
       },
-      (consentForm) async {
-        gotConsentForm = consentForm;
+    );
 
-        for (String customFieldId in consentForm.mandatoryFields) {
-          final result = await _masterDataRepository.getMandatoryFieldById(
-            customFieldId,
-            event.companyId,
-          );
+    final purposeCategoryResult =
+        await _masterDataRepository.getPurposeCategories(
+      event.companyId,
+    );
+    purposeCategoryResult.fold(
+      (failure) => emit(EditConsentFormError(failure.errorMessage)),
+      (purposeCategories) {
+        gotPurposeCategories = purposeCategories;
+      },
+    );
 
-          result.fold(
-              (failure) => emit(EditConsentFormError(failure.errorMessage)),
-              (mandatoryField) {
-            if (!gotMandatoryFields.contains(mandatoryField)) {
-              gotMandatoryFields.add(mandatoryField);
-            }
-          });
-        }
+    final purposeResult = await _masterDataRepository.getPurposes(
+      event.companyId,
+    );
+    purposeResult.fold(
+      (failure) => emit(EditConsentFormError(failure.errorMessage)),
+      (purposes) {
+        gotPurposes = purposes;
+      },
+    );
 
-        for (String purposeCategoryId in consentForm.purposeCategories) {
-          final result = await _masterDataRepository.getPurposeCategoryById(
-            purposeCategoryId,
-            event.companyId,
-          );
-
-          await result.fold(
-            (failure) {
-              emit(EditConsentFormError(failure.errorMessage));
-              return;
-            },
-            (purposeCategory) async {
-              gotPurposeCategories.add(purposeCategory);
-
-              for (String purposeId in purposeCategory.purposes) {
-                final result = await _masterDataRepository.getPurposeById(
-                  purposeId,
-                  event.companyId,
-                );
-
-                result.fold(
-                  (failure) => emit(
-                    EditConsentFormError(failure.errorMessage),
-                  ),
-                  (purpose) => gotPurposes.add(purpose),
-                );
-              }
-            },
-          );
-        }
+    final customFieldResult = await _masterDataRepository.getCustomFields(
+      event.companyId,
+    );
+    customFieldResult.fold(
+      (failure) => emit(EditConsentFormError(failure.errorMessage)),
+      (customFields) {
+        gotCustomFields = customFields;
       },
     );
 
     emit(
       GotCurrentConsentForm(
         gotConsentForm,
-        gotMandatoryFields..sort((a, b) => b.priority.compareTo(a.priority)),
-        gotPurposeCategories..sort((a, b) => b.priority.compareTo(a.priority)),
+        gotMandatoryFields..sort((a, b) => a.priority.compareTo(b.priority)),
+        gotPurposeCategories..sort((a, b) => a.priority.compareTo(b.priority)),
         gotPurposes,
         gotCustomFields,
       ),
@@ -157,38 +125,31 @@ class EditConsentFormBloc
 
     emit(const CreatingCurrentConsentForm());
 
-    final ConsentFormModel consentForm;
-
-    List<LocalizedModel> acceptConsentText = [
-      const LocalizedModel(language: 'en-US', text: 'Accept consent')
+    const cancelText = [
+      LocalizedModel(language: 'en-US', text: 'Cancel'),
     ];
-    List<LocalizedModel> cancelText = [
-      const LocalizedModel(language: 'en-US', text: 'Cancel')
+    const headerText = [
+      LocalizedModel(language: 'en-US', text: 'Header'),
     ];
-    List<LocalizedModel> footerDescription = [
-      const LocalizedModel(language: 'en-US', text: '')
+    const headerDescription = [
+      LocalizedModel(language: 'en-US', text: ''),
     ];
-    List<LocalizedModel> headerDescription = [
-      const LocalizedModel(language: 'en-US', text: '')
+    const footerDescription = [
+      LocalizedModel(language: 'en-US', text: ''),
     ];
-    List<LocalizedModel> headerText = [
-      const LocalizedModel(language: 'en-US', text: 'Header')
+    const acceptConsentText = [
+      LocalizedModel(language: 'en-US', text: 'Accept consent')
     ];
-    List<LocalizedModel> linkToPolicyText = [
-      const LocalizedModel(language: 'en-US', text: 'Link to policy')
+    const linkToPolicyText = [
+      LocalizedModel(language: 'en-US', text: 'Link to policy'),
     ];
-    List<LocalizedModel> submitText = [
-      const LocalizedModel(language: 'en-US', text: 'Submit')
+    const submitText = [
+      LocalizedModel(language: 'en-US', text: 'Submit'),
     ];
 
     final List<PurposeCategoryModel> purposeCategories = [];
 
-    consentForm = ConsentFormModel(
-      id: event.consentForm.id,
-      title: event.consentForm.title,
-      description: event.consentForm.description,
-      purposeCategories: event.consentForm.purposeCategories,
-      customFields: event.consentForm.customFields,
+    final consentForm = event.consentForm.copyWith(
       headerText: headerText,
       headerDescription: headerDescription,
       footerDescription: footerDescription,
@@ -196,18 +157,7 @@ class EditConsentFormBloc
       submitText: submitText,
       cancelText: cancelText,
       linkToPolicyText: linkToPolicyText,
-      linkToPolicyUrl: event.consentForm.linkToPolicyUrl,
-      consentFormUrl: event.consentForm.consentFormUrl,
-      consentThemeId: event.consentForm.consentThemeId,
-      logoImage: event.consentForm.logoImage,
-      headerBackgroundImage: event.consentForm.headerBackgroundImage,
-      bodyBackgroundImage: event.consentForm.bodyBackgroundImage,
-      status: event.consentForm.status,
-      createdBy: event.consentForm.createdBy,
-      createdDate: event.consentForm.createdDate,
-      updatedBy: event.consentForm.updatedBy,
-      updatedDate: event.consentForm.updatedDate,
-      mandatoryFields: event.consentForm.mandatoryFields,
+      linkToPolicyUrl: '',
     );
 
     final result = await _consentRepository.createConsentForm(
@@ -215,9 +165,9 @@ class EditConsentFormBloc
       event.companyId,
     );
 
-    for (String purposeCategoryId in event.consentForm.purposeCategories) {
+    for (UserReorderItem item in event.consentForm.purposeCategories) {
       final result = await _masterDataRepository.getPurposeCategoryById(
-        purposeCategoryId,
+        item.id,
         event.companyId,
       );
 
