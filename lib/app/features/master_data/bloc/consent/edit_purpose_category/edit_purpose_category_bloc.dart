@@ -51,8 +51,6 @@ class EditPurposeCategoryBloc
       event.companyId,
     );
 
-    await Future.delayed(const Duration(milliseconds: 800));
-
     await result.fold(
       (failure) {
         emit(EditPurposeCategoryError(failure.errorMessage));

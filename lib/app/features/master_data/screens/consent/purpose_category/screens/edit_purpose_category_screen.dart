@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
 import 'package:ionicons/ionicons.dart';
+import 'package:modal_bottom_sheet/modal_bottom_sheet.dart';
 import 'package:pdpa/app/config/config.dart';
 import 'package:pdpa/app/data/models/authentication/user_model.dart';
 import 'package:pdpa/app/data/models/master_data/localized_model.dart';
@@ -13,9 +14,8 @@ import 'package:pdpa/app/features/authentication/bloc/sign_in/sign_in_bloc.dart'
 import 'package:pdpa/app/features/master_data/bloc/consent/edit_purpose_category/edit_purpose_category_bloc.dart';
 import 'package:pdpa/app/features/master_data/bloc/consent/purpose/purpose_bloc.dart';
 import 'package:pdpa/app/features/master_data/bloc/consent/purpose_category/purpose_category_bloc.dart';
-import 'package:pdpa/app/features/master_data/routes/master_data_route.dart';
+import 'package:pdpa/app/features/master_data/screens/consent/purpose_category/widgets/choose_purpose_modal.dart';
 import 'package:pdpa/app/features/master_data/widgets/configuration_info.dart';
-import 'package:pdpa/app/features/master_data/widgets/master_data_addnew_button.dart';
 import 'package:pdpa/app/injection.dart';
 import 'package:pdpa/app/shared/utils/constants.dart';
 import 'package:pdpa/app/shared/utils/functions.dart';
@@ -581,15 +581,13 @@ class _EditPurposeCategoryViewState extends State<EditPurposeCategoryView> {
   Widget _buildAddPurposeButton(BuildContext context) {
     return MaterialInkWell(
       onTap: () async {
-        //? Open ModalBottomSheet to add Purposes selected
-        await showModalBottomSheet(
-          backgroundColor: Theme.of(context).colorScheme.onBackground,
-          useSafeArea: true,
-          isScrollControlled: true, //* required for min/max child size
+        showBarModalBottomSheet(
+          // expand: true,
           context: context,
-          builder: (context) {
-            return _buildAddPurposeModal(context);
-          },
+          backgroundColor: Colors.transparent,
+          builder: (context) => ChoosePurposeModal(
+            purposes: widget.purposes,
+          ),
         );
       },
       child: Padding(
@@ -638,48 +636,6 @@ class _EditPurposeCategoryViewState extends State<EditPurposeCategoryView> {
     );
   }
   */
-
-  CustomContainer _buildAddPurposeModal(BuildContext context) {
-    return CustomContainer(
-      child: SingleChildScrollView(
-        child: Column(
-          children: [
-            const SizedBox(height: UiConfig.lineSpacing),
-            Text(tr('masterData.cm.purposeCategory.purposeList')), //!
-            const SizedBox(height: UiConfig.lineSpacing),
-            ListView.builder(
-              shrinkWrap: true,
-              physics: const NeverScrollableScrollPhysics(),
-              itemCount: widget.purposes.length,
-              itemBuilder: (_, index) {
-                final item = widget.purposes[index];
-                if (widget.purposes.isEmpty) {
-                  return const Text('masterData.cm.purposeCategory.noData'); //!
-                }
-                return CheckboxListTile(
-                  controlAffinity: ListTileControlAffinity.leading,
-                  title: Text(widget.purposes[index].description.first.text),
-                  value: false,
-                  onChanged: (bool? newValue) {
-                    // cubit.choosePurposeCategorySelected(item.id);
-                    // _setPurpose(cubit.state.purposes);
-                  },
-                );
-              },
-            ),
-            const SizedBox(height: UiConfig.lineSpacing),
-            MasterDataAddNewButton(
-              onTap: () {
-                context.push(MasterDataRoute.createPurpose.path);
-              },
-              text: 'masterData.cm.purposeCategory.addnewPurpose', //!
-            ),
-            const SizedBox(height: UiConfig.lineSpacing),
-          ],
-        ),
-      ),
-    );
-  }
 
   CustomIconButton _buildPopButton(PurposeCategoryModel purposeCategory) {
     return CustomIconButton(
