@@ -150,7 +150,7 @@ class _UrlTabState extends State<UrlTab> {
                     },
                 ),
                 TextSpan(
-                  text: tr(' consentManagement.consentForm.urltab.toRegenerateANewOne'), //!
+                  text: tr('consentManagement.consentForm.urltab.toRegenerateANewOne'), //!
                   style: Theme.of(context).textTheme.bodySmall,
                 ),
               ],
@@ -228,7 +228,7 @@ class _UrlTabState extends State<UrlTab> {
                     ),
                   ),
                   Text(
-                    tr('consentManagement.consentForm.urltab.Download'), //!
+                    tr('consentManagement.consentForm.urltab.download'), //!
                     style: Theme.of(context).textTheme.bodyMedium?.copyWith(
                         color: Theme.of(context).colorScheme.primary),
                   ),

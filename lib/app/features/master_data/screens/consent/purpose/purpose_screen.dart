@@ -97,7 +97,7 @@ class _PurposeViewState extends State<PurposeView> {
                         : ExampleScreen(
                             headderText: tr('masterData.cm.purpose.list'),
                             buttonText: tr('masterData.cm.purpose.create'),
-                            descriptionText: tr('masterData.cm.purpose.create'),
+                            descriptionText: tr('masterData.cm.purpose.explain'),
                            
                             onPress: () {
                               context.push(MasterDataRoute.createPurpose.path);

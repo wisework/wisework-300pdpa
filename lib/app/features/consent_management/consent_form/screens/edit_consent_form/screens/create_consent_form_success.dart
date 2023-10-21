@@ -1,3 +1,4 @@
+import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
@@ -19,6 +20,7 @@ import 'package:pdpa/app/shared/utils/constants.dart';
 import 'package:pdpa/app/shared/utils/functions.dart';
 import 'package:pdpa/app/shared/widgets/customs/custom_container.dart';
 import 'package:pdpa/app/shared/widgets/screens/loading_screen.dart';
+import 'package:pdpa/app/shared/widgets/templates/pdpa_app_bar.dart';
 
 class CreateConsentFormSuccessScreen extends StatefulWidget {
   const CreateConsentFormSuccessScreen({
@@ -128,199 +130,197 @@ class _CreateConsentFormSuccessViewState
       (item) => item.language == language,
       orElse: () => const LocalizedModel.empty(),
     );
-    return SingleChildScrollView(
-      child: CustomContainer(
-        padding: const EdgeInsets.all(0),
-        margin: const EdgeInsets.all(0),
-        color: Theme.of(context).colorScheme.background,
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.center,
-          children: [
-            Container(
-              decoration: BoxDecoration(
-                color: Theme.of(context).colorScheme.onPrimary,
-                borderRadius: BorderRadius.circular(10.0),
-              ),
-              padding:
-                  const EdgeInsets.symmetric(vertical: UiConfig.lineSpacing),
-              width: double.infinity,
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.center,
-                children: <Widget>[
-                  Text(
-                    "Congratulations!",
-                    style: Theme.of(context).textTheme.titleLarge?.copyWith(
-                        color: Theme.of(context).colorScheme.primary),
-                  ),
-                  Text(
-                    "สร้างแบบฟอร์มคำยินยอมแล้ว",
-                    style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                        color: Theme.of(context).colorScheme.secondary),
-                  ),
-                ],
-              ),
-            ),
-            const SizedBox(height: UiConfig.lineSpacing),
-            CustomContainer(
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  widget.consentForm.id.isNotEmpty
-                      ? _consentInfo(
-                          context,
-                          title,
-                          description,
-                        )
-                      : Padding(
-                          padding: const EdgeInsets.all(20.0),
-                          child: Center(
-                            child: Text(
-                              "No consent details.",
-                              style: Theme.of(context)
-                                  .textTheme
-                                  .labelLarge
-                                  ?.copyWith(
-                                      color: Theme.of(context)
-                                          .colorScheme
-                                          .secondary),
+    return Scaffold(
+      appBar: PdpaAppBar(
+        title: Text(
+          tr('consentManagement.consentForm.congratulations.title'),
+          style: Theme.of(context)
+              .textTheme
+              .titleLarge
+              ?.copyWith(color: Theme.of(context).colorScheme.primary),
+          textAlign: TextAlign.center,
+        ),
+      ),
+      body: SingleChildScrollView(
+        child: CustomContainer(
+          padding: const EdgeInsets.all(0),
+          margin: const EdgeInsets.all(0),
+          color: Theme.of(context).colorScheme.background,
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.center,
+            children: [
+              const SizedBox(height: UiConfig.lineSpacing),
+              CustomContainer(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      tr('consentManagement.consentForm.congratulations.created'),
+                      style: Theme.of(context).textTheme.titleMedium?.copyWith(
+                          color: Theme.of(context).colorScheme.secondary),
+                    ),
+                    widget.consentForm.id.isNotEmpty
+                        ? _consentInfo(
+                            context,
+                            title,
+                            description,
+                          )
+                        : Padding(
+                            padding: const EdgeInsets.all(20.0),
+                            child: Center(
+                              child: Text(
+                                tr('consentManagement.consentForm.congratulations.noConsentDetails'),
+                                style: Theme.of(context)
+                                    .textTheme
+                                    .labelLarge
+                                    ?.copyWith(
+                                        color: Theme.of(context)
+                                            .colorScheme
+                                            .secondary),
+                              ),
                             ),
                           ),
-                        ),
-                  Padding(
-                    padding: const EdgeInsets.symmetric(
-                        vertical: UiConfig.lineSpacing),
-                    child: Divider(
-                      color: Theme.of(context).colorScheme.outline,
-                      thickness: 0.3,
-                    ),
-                  ),
-                  _customFieldInfo(context, language),
-                  Padding(
-                    padding: const EdgeInsets.symmetric(
-                        vertical: UiConfig.lineSpacing),
-                    child: Divider(
-                      color: Theme.of(context).colorScheme.outline,
-                      thickness: 0.3,
-                    ),
-                  ),
-                  _purposeCategoriesInfo(context, language),
-                ],
-              ),
-            ),
-            const SizedBox(height: UiConfig.lineSpacing),
-            CustomContainer(
-              margin: const EdgeInsets.all(0),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: <Widget>[
-                  Text(
-                    "คุณต้องการตั้งค่าแบบฟอร์มยินยอม (ข้อความ สี รูปภาพ ฯลฯ) หรือไม่ ?",
-                    style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                        color: Theme.of(context).colorScheme.secondary),
-                  ),
-                  const SizedBox(height: UiConfig.lineSpacing),
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.end,
-                    children: <Widget>[
-                      TextButton(
-                        onPressed: () {
-                          context.read<ConsentFormBloc>().add(
-                              UpdateConsentFormEvent(
-                                  consentForm: widget.consentForm,
-                                  updateType: UpdateType.created,
-                                  purposeCategories: widget.purposeCategories));
-
-                          final url = UtilFunctions.getUserConsentForm(
-                            widget.consentForm.id,
-                            widget.currentUser.currentCompany,
-                          );
-
-                          // final cubit = context.read<CurrentConsentFormSettingsCubit>();
-                          // cubit.generateConsentFormUrl(url);
-
-                          consentForm = widget.consentForm.setUrl(url);
-
-                          context.read<EditConsentFormBloc>().add(
-                                UpdateCurrentConsentFormEvent(
-                                  consentForm: consentForm,
-                                  companyId: widget.currentUser.currentCompany,
-                                ),
-                              );
-
-                          context.push(
-                            ConsentFormRoute.consentForm.path,
-                          );
-                        },
-                        style: ButtonStyle(
-                            backgroundColor: MaterialStateProperty.all<Color>(
-                              Theme.of(context).colorScheme.onPrimary,
-                            ),
-                            shape: MaterialStateProperty.all<
-                                RoundedRectangleBorder>(
-                              RoundedRectangleBorder(
-                                borderRadius: BorderRadius.circular(8.0),
-                              ),
-                            )),
-                        child: Text(
-                          "ภายหลัง",
-                          style: Theme.of(context)
-                              .textTheme
-                              .bodyMedium
-                              ?.copyWith(
-                                  color:
-                                      Theme.of(context).colorScheme.secondary),
-                        ),
+                    Padding(
+                      padding: const EdgeInsets.symmetric(
+                          vertical: UiConfig.lineSpacing),
+                      child: Divider(
+                        color: Theme.of(context).colorScheme.outline,
+                        thickness: 0.3,
                       ),
-                      const SizedBox(width: 10.0),
-                      ElevatedButton(
-                        onPressed: () async {
-                          final url = UtilFunctions.getUserConsentForm(
-                            widget.consentForm.id,
-                            widget.currentUser.currentCompany,
-                          );
-
-                          // final cubit = context.read<CurrentConsentFormSettingsCubit>();
-                          // cubit.generateConsentFormUrl(url);
-
-                          consentForm = widget.consentForm.setUrl(url);
-
-                          context.read<EditConsentFormBloc>().add(
-                                UpdateCurrentConsentFormEvent(
-                                  consentForm: consentForm,
-                                  companyId: widget.currentUser.currentCompany,
-                                ),
-                              );
-                          context.push(
-                            ConsentFormRoute.consentFormSettings.path
-                                .replaceFirst(':id', widget.consentForm.id),
-                          );
-                        },
-                        style: ButtonStyle(
-                            backgroundColor: MaterialStateProperty.all<Color>(
-                              Theme.of(context).colorScheme.primary,
-                            ),
-                            shape: MaterialStateProperty.all<
-                                RoundedRectangleBorder>(
-                              RoundedRectangleBorder(
-                                borderRadius: BorderRadius.circular(8.0),
-                              ),
-                            )),
-                        child: Text(
-                          "ตกลง",
-                          style: Theme.of(context)
-                              .textTheme
-                              .bodyMedium
-                              ?.copyWith(
-                                  color:
-                                      Theme.of(context).colorScheme.onPrimary),
-                        ),
+                    ),
+                    _customFieldInfo(context, language),
+                    Padding(
+                      padding: const EdgeInsets.symmetric(
+                          vertical: UiConfig.lineSpacing),
+                      child: Divider(
+                        color: Theme.of(context).colorScheme.outline,
+                        thickness: 0.3,
                       ),
-                    ],
-                  )
-                ],
+                    ),
+                    _purposeCategoriesInfo(context, language),
+                  ],
+                ),
               ),
-            )
-          ],
+              const SizedBox(height: UiConfig.lineSpacing),
+              CustomContainer(
+                margin: const EdgeInsets.all(0),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: <Widget>[
+                    Text(
+                      tr('consentManagement.consentForm.congratulations.settingConsentTheme'),
+                      style: Theme.of(context).textTheme.bodyMedium?.copyWith(
+                          color: Theme.of(context).colorScheme.secondary),
+                    ),
+                    const SizedBox(height: UiConfig.lineSpacing),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.end,
+                      children: <Widget>[
+                        TextButton(
+                          onPressed: () {
+                            context.read<ConsentFormBloc>().add(
+                                UpdateConsentFormEvent(
+                                    consentForm: widget.consentForm,
+                                    updateType: UpdateType.created,
+                                    purposeCategories:
+                                        widget.purposeCategories));
+
+                            final url = UtilFunctions.getUserConsentForm(
+                              widget.consentForm.id,
+                              widget.currentUser.currentCompany,
+                            );
+
+                            // final cubit = context.read<CurrentConsentFormSettingsCubit>();
+                            // cubit.generateConsentFormUrl(url);
+
+                            consentForm = widget.consentForm.setUrl(url);
+
+                            context.read<EditConsentFormBloc>().add(
+                                  UpdateCurrentConsentFormEvent(
+                                    consentForm: consentForm,
+                                    companyId:
+                                        widget.currentUser.currentCompany,
+                                  ),
+                                );
+
+                            context.push(
+                              ConsentFormRoute.consentForm.path,
+                            );
+                          },
+                          style: ButtonStyle(
+                              backgroundColor: MaterialStateProperty.all<Color>(
+                                Theme.of(context).colorScheme.onPrimary,
+                              ),
+                              shape: MaterialStateProperty.all<
+                                  RoundedRectangleBorder>(
+                                RoundedRectangleBorder(
+                                  borderRadius: BorderRadius.circular(8.0),
+                                ),
+                              )),
+                          child: Text(
+                            tr('consentManagement.consentForm.congratulations.later'),
+                            style: Theme.of(context)
+                                .textTheme
+                                .bodyMedium
+                                ?.copyWith(
+                                    color: Theme.of(context)
+                                        .colorScheme
+                                        .secondary),
+                          ),
+                        ),
+                        const SizedBox(width: 10.0),
+                        ElevatedButton(
+                          onPressed: () async {
+                            final url = UtilFunctions.getUserConsentForm(
+                              widget.consentForm.id,
+                              widget.currentUser.currentCompany,
+                            );
+
+                            // final cubit = context.read<CurrentConsentFormSettingsCubit>();
+                            // cubit.generateConsentFormUrl(url);
+
+                            consentForm = widget.consentForm.setUrl(url);
+
+                            context.read<EditConsentFormBloc>().add(
+                                  UpdateCurrentConsentFormEvent(
+                                    consentForm: consentForm,
+                                    companyId:
+                                        widget.currentUser.currentCompany,
+                                  ),
+                                );
+                            context.push(
+                              ConsentFormRoute.consentFormSettings.path
+                                  .replaceFirst(':id', widget.consentForm.id),
+                            );
+                          },
+                          style: ButtonStyle(
+                              backgroundColor: MaterialStateProperty.all<Color>(
+                                Theme.of(context).colorScheme.primary,
+                              ),
+                              shape: MaterialStateProperty.all<
+                                  RoundedRectangleBorder>(
+                                RoundedRectangleBorder(
+                                  borderRadius: BorderRadius.circular(8.0),
+                                ),
+                              )),
+                          child: Text(
+                            tr('consentManagement.consentForm.congratulations.ok'),
+                            style: Theme.of(context)
+                                .textTheme
+                                .bodyMedium
+                                ?.copyWith(
+                                    color: Theme.of(context)
+                                        .colorScheme
+                                        .onPrimary),
+                          ),
+                        ),
+                      ],
+                    )
+                  ],
+                ),
+              )
+            ],
+          ),
         ),
       ),
     );
@@ -337,7 +337,7 @@ class _CreateConsentFormSuccessViewState
         Padding(
           padding: const EdgeInsets.only(bottom: 8.0),
           child: Text(
-            "วัตถุประสงค์",
+            tr('consentManagement.consentForm.consentFormDetails.Purposes'),
             style: Theme.of(context).textTheme.bodyMedium?.copyWith(
                   color: Theme.of(context).colorScheme.surfaceTint,
                 ),
@@ -391,7 +391,7 @@ class _CreateConsentFormSuccessViewState
                 padding: const EdgeInsets.all(20.0),
                 child: Center(
                   child: Text(
-                    "No purposes added.",
+                    tr('consentManagement.consentForm.consentFormDetails.noPurposes'),
                     style: Theme.of(context).textTheme.labelLarge?.copyWith(
                         color: Theme.of(context).colorScheme.secondary),
                   ),
@@ -472,7 +472,7 @@ class _CreateConsentFormSuccessViewState
         Padding(
           padding: const EdgeInsets.only(bottom: 8.0),
           child: Text(
-            "ข้อมูลที่จัดเก็บ",
+            tr('consentManagement.consentForm.consentFormDetails.storedInformation'),
             style: Theme.of(context).textTheme.bodyMedium?.copyWith(
                   color: Theme.of(context).colorScheme.surfaceTint,
                 ),
@@ -521,7 +521,7 @@ class _CreateConsentFormSuccessViewState
                 padding: const EdgeInsets.all(20.0),
                 child: Center(
                   child: Text(
-                    "No input fields added.",
+                    tr('consentManagement.consentForm.consentFormDetails.noInputField'),
                     style: Theme.of(context).textTheme.labelLarge?.copyWith(
                         color: Theme.of(context).colorScheme.onSurface),
                   ),

@@ -125,7 +125,7 @@ class _FooterTabState extends State<FooterTab> {
           ),
           const SizedBox(height: UiConfig.lineSpacing),
            TitleRequiredText(
-            text: tr('consentManagement.createForm.description'), //!
+            text: tr('consentManagement.consentForm.createForm.description'), //!
             required: true,
           ),
           CustomTextField(

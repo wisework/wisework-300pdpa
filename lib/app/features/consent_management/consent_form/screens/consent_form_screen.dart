@@ -157,7 +157,7 @@ class _ConsentFormViewState extends State<ConsentFormView> {
                             buttonText: tr(
                                 'consentManagement.consentForm.createForm.create'),
                             descriptionText: tr(
-                                'consentManagement.consentForm.createForm.create'),
+                                'consentManagement.consentForm.explain'),
                             
                             onPress: () {
                               context.push(
