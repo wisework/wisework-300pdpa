@@ -88,11 +88,22 @@
                 "purposeOfDC": "Purpose of data collection",
                 "selectPurposeCategory": "Select purpose category"
             },
+            "congratulations":{
+                "title" : "Congratulations!",
+                "created" : "Created Consent Form",
+                "noConsentDetails" : "No consent details.!",
+                "settingConsentTheme" : "Do you want to setting consent theme(Text, Color, Image and etc.) or not?",
+                "later" : "Later",
+                "ok" : "Ok"
+
+            },
             "consentFormDetails": {
                 "title": "Consent form details",
                 "id": "ID",
-                "storedInformation": "Stored information",
+                "storedInformation": "Input Fields",
+                "noInputField": "No input fields added.",
                 "Purposes": "Purpose",
+                "noPurposes": "No purpose added.",
                 "information": "Information",
                 "filter": {
                     "informationPurpose": "Information-Purpose",

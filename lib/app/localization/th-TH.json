@@ -88,10 +88,20 @@
                 "purposeOfDC": "วัตถุประสงค์ในการเก็บข้อมูล",
                 "selectPurposeCategory": "เลือกหมวดหมู่วัตถุประสงค์"
             },
+            "congratulations":{
+                "title" : "ยินดีด้วย!",
+                "created" : "สร้างแบบฟอร์มความยินยอมแล้ว",
+                "noConsentDetails" : "ไม่มีรายละเอียดความยินยอม!",
+                "settingConsentTheme" : "คุณต้องการตั้งค่าแบบฟอร์มยินยอม (ข้อความ สี รูปภาพ ฯลฯ) หรือไม่ ?",
+                "later" : "ภายหลัง",
+                "ok" : "ตกลง"
+            },
+            
             "consentFormDetails": {
                 "title": "รายละเอียดแบบฟอร์มยินยอม",
                 "id": "id",
                 "storedInformation": "ข้อมูลที่จัดเก็บ",
+                "noInputField": "ไม่มีข้อมูลที่จัดเก็บ",
                 "Purposes": "วัตถุประสงค์",
                 "information": "ข้อมูล",
                 "filter": {
