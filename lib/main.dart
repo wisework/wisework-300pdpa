@@ -5,11 +5,12 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 import 'app/config/config.dart';
-import 'app/config/firebase_options.dart';
 import 'app/config/provider/global_bloc_provider.dart';
 import 'app/config/router/global_router.dart';
 import 'app/config/themes/pdpa_theme_data.dart';
 import 'app/injection.dart';
+
+import 'firebase_options.dart';
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
