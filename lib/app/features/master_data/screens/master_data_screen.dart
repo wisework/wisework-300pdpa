@@ -92,13 +92,13 @@ class MasterDataScreen extends StatelessWidget {
             ],
           ),
           const SizedBox(height: UiConfig.lineSpacing),
-          MasterDataListTile(
-            trail: true,
-            title: tr('masterData.cm.customfields.list'),
-            onTap: () {
-              context.push(MasterDataRoute.customFields.path);
-            },
-          ),
+          // MasterDataListTile(
+          //   trail: true,
+          //   title: tr('masterData.cm.customfields.list'),
+          //   onTap: () {
+          //     context.push(MasterDataRoute.customFields.path);
+          //   },
+          // ),
           MasterDataListTile(
             trail: true,
             title: tr('masterData.cm.purpose.list'),

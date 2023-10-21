@@ -45,17 +45,17 @@ class ConsentFormSettingsBloc
 
     emit(const GettingConsentFormSettings());
 
-    final result = await _consentRepository.getConsentFormById(
-      event.consentFormId,
-      event.companyId,
-    );
-
     ConsentFormModel gotConsentForm = ConsentFormModel.empty();
     List<MandatoryFieldModel> gotMandatoryFields = [];
     List<PurposeCategoryModel> gotPurposeCategories = [];
     List<CustomFieldModel> gotCustomFields = [];
     List<PurposeModel> gotPurposes = [];
     List<ConsentThemeModel> gotConsentThemes = [];
+
+    final result = await _consentRepository.getConsentFormById(
+      event.consentFormId,
+      event.companyId,
+    );
 
     await result.fold(
       (failure) {
