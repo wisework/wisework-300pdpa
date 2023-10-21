@@ -22,7 +22,7 @@ class ExampleScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     return Column(
       mainAxisSize: MainAxisSize.min,
-      crossAxisAlignment: CrossAxisAlignment.start,
+      crossAxisAlignment: CrossAxisAlignment.center,
       children: <Widget>[
         const SizedBox(height: UiConfig.defaultPaddingSpacing),
         Row(
@@ -30,7 +30,7 @@ class ExampleScreen extends StatelessWidget {
           children: [
             Text(
               headderText,
-              style: Theme.of(context).textTheme.titleMedium,
+              style: Theme.of(context).textTheme.titleLarge,
               textAlign: TextAlign.center,
             ),
           ],
@@ -42,29 +42,35 @@ class ExampleScreen extends StatelessWidget {
             Expanded(
               child: Text(
                 descriptionText,
-                style: Theme.of(context).textTheme.titleSmall,
+                style: Theme.of(context).textTheme.bodyMedium,
                 textAlign: TextAlign.center,
               ),
             ),
           ],
         ),
         const SizedBox(height: UiConfig.defaultPaddingSpacing),
-        Center(
-          child: Padding(
-            padding: const EdgeInsets.symmetric(vertical: 20.0),
-            child: SizedBox(width: double.infinity, child: image),
+        
+        Visibility(
+          visible: image != null,
+          child: Center(
+            child: Padding(
+              padding: const EdgeInsets.symmetric(vertical: 20.0),
+              child: SizedBox(width: double.infinity, child: image),
+            ),
           ),
         ),
-        const SizedBox(height: UiConfig.defaultPaddingSpacing),
-        CustomButton(
-          height: 40,
-          onPressed: onPress,
-          child: Text(
-            buttonText,
-            style: Theme.of(context)
-                .textTheme
-                .titleMedium
-                ?.copyWith(color: Theme.of(context).colorScheme.onPrimary),
+        ConstrainedBox(
+          constraints: const BoxConstraints(maxWidth: 260.0),
+          child: CustomButton(
+            height: 40,
+            onPressed: onPress,
+            child: Text(
+              buttonText,
+              style: Theme.of(context)
+                  .textTheme
+                  .titleMedium
+                  ?.copyWith(color: Theme.of(context).colorScheme.onPrimary),
+            ),
           ),
         ),
       ],

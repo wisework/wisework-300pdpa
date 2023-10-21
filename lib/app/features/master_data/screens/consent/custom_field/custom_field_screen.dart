@@ -109,7 +109,7 @@ class _CustomFieldViewState extends State<CustomFieldView> {
                             headderText: tr('masterData.cm.customfields.list'),
                             buttonText: tr('masterData.cm.customfields.create'),
                             descriptionText:
-                                tr('masterData.cm.customfields.create'),
+                                tr('masterData.cm.customfields.explain'),
                            
                             onPress: () {
                               context
