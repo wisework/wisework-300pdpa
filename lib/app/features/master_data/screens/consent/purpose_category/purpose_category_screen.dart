@@ -106,7 +106,8 @@ class _PurposeCategoryViewState extends State<PurposeCategoryView> {
                             onPress: () {
                               context.push(
                                   MasterDataRoute.createPurposeCategory.path);
-                            });
+                            },
+                          );
                   }
                   if (state is PurposeCategoryError) {
                     return Center(

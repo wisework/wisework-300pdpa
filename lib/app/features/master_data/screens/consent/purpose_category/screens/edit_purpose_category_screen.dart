@@ -276,13 +276,6 @@ class _EditPurposeCategoryViewState extends State<EditPurposeCategoryView> {
     }
   }
 
-  void _setPurpose(List<String>? value) {
-    setState(() {
-      final purposes = value;
-      purposeCategory = purposeCategory.copyWith(purposes: purposes);
-    });
-  }
-
   void _setActiveStatus(bool value) {
     setState(() {
       isActivated = value;
@@ -301,24 +294,22 @@ class _EditPurposeCategoryViewState extends State<EditPurposeCategoryView> {
           DateTime.now(),
         );
 
-        context
-            .read<EditPurposeCategoryBloc>()
-            .add(CreateCurrentPurposeCategoryEvent(
-              purposeCategory: purposeCategory,
-              companyId: widget.currentUser.currentCompany,
-            ));
+        final event = CreateCurrentPurposeCategoryEvent(
+          purposeCategory: purposeCategory,
+          companyId: widget.currentUser.currentCompany,
+        );
+        context.read<EditPurposeCategoryBloc>().add(event);
       } else {
         purposeCategory = purposeCategory.setUpdate(
           widget.currentUser.email,
           DateTime.now(),
         );
 
-        context
-            .read<EditPurposeCategoryBloc>()
-            .add(UpdateCurrentPurposeCategoryEvent(
-              purposeCategory: purposeCategory,
-              companyId: widget.currentUser.currentCompany,
-            ));
+        final event = UpdateCurrentPurposeCategoryEvent(
+          purposeCategory: purposeCategory,
+          companyId: widget.currentUser.currentCompany,
+        );
+        context.read<EditPurposeCategoryBloc>().add(event);
       }
     }
   }
@@ -347,7 +338,7 @@ class _EditPurposeCategoryViewState extends State<EditPurposeCategoryView> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: PdpaAppBar(
-        leadingIcon: _buildPopButton(widget.initialPurposeCategory),
+        leadingIcon: _buildPopButton(),
         title: Text(
           widget.isNewPurposeCategory
               ? tr('masterData.cm.purposeCategory.create') //!
@@ -371,12 +362,41 @@ class _EditPurposeCategoryViewState extends State<EditPurposeCategoryView> {
               visible:
                   widget.initialPurposeCategory != PurposeCategoryModel.empty(),
               child: _buildConfigurationInfo(
-                  context, widget.initialPurposeCategory),
+                context,
+                widget.initialPurposeCategory,
+              ),
             ),
           ],
         ),
       ),
     );
+  }
+
+  CustomIconButton _buildPopButton() {
+    return CustomIconButton(
+      onPressed: _goBackAndUpdate,
+      icon: Ionicons.chevron_back_outline,
+      iconColor: Theme.of(context).colorScheme.primary,
+      backgroundColor: Theme.of(context).colorScheme.onBackground,
+    );
+  }
+
+  Builder _buildSaveButton() {
+    return Builder(builder: (context) {
+      if (purposeCategory != widget.initialPurposeCategory) {
+        return CustomIconButton(
+          onPressed: _savePurposeCategory,
+          icon: Ionicons.save_outline,
+          iconColor: Theme.of(context).colorScheme.primary,
+          backgroundColor: Theme.of(context).colorScheme.onBackground,
+        );
+      }
+      return CustomIconButton(
+        icon: Ionicons.save_outline,
+        iconColor: Theme.of(context).colorScheme.outlineVariant,
+        backgroundColor: Theme.of(context).colorScheme.onBackground,
+      );
+    });
   }
 
   Form _buildPurposeCategoryForm(BuildContext context) {
@@ -430,40 +450,6 @@ class _EditPurposeCategoryViewState extends State<EditPurposeCategoryView> {
           ),
           const SizedBox(height: UiConfig.lineSpacing),
           _buildPurposeSection(context, purposeCategory.purposes),
-          // BlocBuilder<PurposeBloc, PurposeState>(
-          //   builder: (context, state) {
-          //     if (state is GotPurposes) {
-          //       return CustomContainer(
-          //         child: Column(
-          //           mainAxisSize: MainAxisSize.min,
-          //           crossAxisAlignment: CrossAxisAlignment.start,
-          //           children: <Widget>[
-          //             const SizedBox(height: UiConfig.lineSpacing),
-          //             Visibility(
-          //               visible: purposeCategory.purposes.isNotEmpty,
-          //               child: _buildPurposeList(context, state),
-          //             ),
-          //             Visibility(
-          //               visible: purposeCategory.purposes.isEmpty,
-          //               child: _buildAddPurpose(context, state),
-          //             ),
-          //           ],
-          //         ),
-          //       );
-          //     }
-          //     if (state is PurposeError) {
-          //       return Center(
-          //         child: Text(
-          //           state.message,
-          //           style: Theme.of(context).textTheme.bodyMedium,
-          //         ),
-          //       );
-          //     }
-          //     return const Center(
-          //       child: CircularProgressIndicator(),
-          //     );
-          //   },
-          // ),
         ],
       ),
     );
@@ -474,119 +460,98 @@ class _EditPurposeCategoryViewState extends State<EditPurposeCategoryView> {
       widget.purposes,
       purposeIds,
     );
+
     return Column(
       children: <Widget>[
         Padding(
           padding: const EdgeInsets.symmetric(
             horizontal: UiConfig.defaultPaddingSpacing,
           ),
-          child: ListView.separated(
+          child: ListView.builder(
             physics: const NeverScrollableScrollPhysics(),
             shrinkWrap: true,
             itemCount: purposeFiltered.length,
-            itemBuilder: (context, index) => Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            itemBuilder: (context, index) => Column(
               children: <Widget>[
-                Expanded(
-                  child: Text(
-                    purposeFiltered[index].description.first.text,
-                    style: Theme.of(context).textTheme.bodyMedium,
-                  ),
+                _buildPurposeTile(
+                  context,
+                  purpose: purposeFiltered[index],
                 ),
                 Padding(
-                  padding:
-                      const EdgeInsets.only(left: UiConfig.actionSpacing * 2),
-                  child: CustomIconButton(
-                    onPressed: () {
-                      // cubit.removePurpose(purposeList[index].id);
-                      // _setPurpose(cubit.state.purposes);
-                      //? Delete purpose from seleted
-                    },
-                    icon: Ionicons.close,
-                    iconColor: Theme.of(context).colorScheme.primary,
-                    backgroundColor: Theme.of(context).colorScheme.onBackground,
+                  padding: const EdgeInsets.symmetric(
+                    vertical: 8.0,
+                  ),
+                  child: Divider(
+                    color: Theme.of(context)
+                        .colorScheme
+                        .outlineVariant
+                        .withOpacity(0.5),
                   ),
                 ),
               ],
             ),
-            separatorBuilder: (context, _) => Padding(
-              padding: const EdgeInsets.symmetric(
-                vertical: 8.0,
-              ),
-              child: Divider(
-                color: Theme.of(context)
-                    .colorScheme
-                    .outlineVariant
-                    .withOpacity(0.5),
-              ),
-            ),
           ),
         ),
-        if (purposeFiltered.isNotEmpty)
-          const SizedBox(height: UiConfig.defaultPaddingSpacing),
         _buildAddPurposeButton(context),
       ],
     );
   }
 
-/*
-  Column _buildPurposeList(BuildContext context, GotPurposes state) {
-    final cubit = context.read<PurposeCategoryCubit>();
-    cubit.initialPurposelist(state.purposes, purposeCategory);
-    final purposeList = cubit.state.purposeList;
+  Row _buildPurposeTile(
+    BuildContext context, {
+    required PurposeModel purpose,
+  }) {
+    const language = 'en-US';
+    final description = purpose.description.firstWhere(
+      (item) => item.language == language,
+      orElse: () => const LocalizedModel.empty(),
+    );
 
-    // final purposeName = state.purposes
-    //     .where((id) => purposeCategory.purposes.contains(id.id))
-    //     .toList();
-
-    return Column(
-      mainAxisSize: MainAxisSize.min,
+    return Row(
       children: <Widget>[
-        ListView.separated(
-          shrinkWrap: true,
-          itemCount: purposeList.length,
-          itemBuilder: (context, index) => Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: <Widget>[
-              Expanded(
-                child: Text(
-                  purposeList[index].description.first.text,
-                  style: Theme.of(context).textTheme.bodyMedium,
-                ),
-              ),
-              const SizedBox(width: UiConfig.textLineSpacing),
-              CustomIconButton(
-                onPressed: () {
-                  cubit.removePurpose(purposeList[index].id);
-                  _setPurpose(cubit.state.purposes);
-                  //? Delete purpose from seleted
-                },
-                icon: Ionicons.close,
-                iconColor: Theme.of(context).colorScheme.primary,
-                backgroundColor: Theme.of(context).colorScheme.onBackground,
-              ),
-            ],
-          ),
-          separatorBuilder: (context, _) => Divider(
-            color:
-                Theme.of(context).colorScheme.outlineVariant.withOpacity(0.5),
+        Expanded(
+          child: Text(
+            description.text,
+            style: Theme.of(context).textTheme.bodyMedium,
           ),
         ),
-        const SizedBox(height: UiConfig.lineSpacing),
-        _buildAddPurpose(context, state),
+        Padding(
+          padding: const EdgeInsets.only(
+            left: UiConfig.actionSpacing * 2,
+          ),
+          child: CustomIconButton(
+            onPressed: () {
+              final ids = purposeCategory.purposes
+                  .where((id) => id != purpose.id)
+                  .toList();
+
+              setState(() {
+                purposeCategory = purposeCategory.copyWith(purposes: ids);
+              });
+            },
+            icon: Ionicons.close,
+            iconColor: Theme.of(context).colorScheme.primary,
+            backgroundColor: Theme.of(context).colorScheme.onBackground,
+          ),
+        ),
       ],
     );
   }
-*/
+
   Widget _buildAddPurposeButton(BuildContext context) {
     return MaterialInkWell(
       onTap: () async {
-        showBarModalBottomSheet(
-          // expand: true,
+        await showBarModalBottomSheet(
           context: context,
           backgroundColor: Colors.transparent,
           builder: (context) => ChoosePurposeModal(
             purposes: widget.purposes,
+            initialIds: purposeCategory.purposes,
+            onChanged: (ids) {
+              setState(() {
+                purposeCategory = purposeCategory.copyWith(purposes: ids);
+              });
+            },
           ),
         );
       },
@@ -612,56 +577,6 @@ class _EditPurposeCategoryViewState extends State<EditPurposeCategoryView> {
         ),
       ),
     );
-  }
-
-  /*
-  MasterDataAddNewButton _buildAddPurpose(
-      BuildContext context, GotPurposes state) {
-    final cubit = context.read<PurposeCategoryCubit>();
-
-    return MasterDataAddNewButton(
-      onTap: () async {
-        //? Open ModalBottomSheet to add Purposes selected
-        await showModalBottomSheet(
-          backgroundColor: Theme.of(context).colorScheme.onBackground,
-          useSafeArea: true,
-          isScrollControlled: true, // required for min/max child size
-          context: context,
-          builder: (ctx) {
-            return _buildAddPurposeModal(state, cubit, context);
-          },
-        );
-      },
-      text: tr('masterData.cm.purposeCategory.addPurpose'), //!
-    );
-  }
-  */
-
-  CustomIconButton _buildPopButton(PurposeCategoryModel purposeCategory) {
-    return CustomIconButton(
-      onPressed: _goBackAndUpdate,
-      icon: Ionicons.chevron_back_outline,
-      iconColor: Theme.of(context).colorScheme.primary,
-      backgroundColor: Theme.of(context).colorScheme.onBackground,
-    );
-  }
-
-  Builder _buildSaveButton() {
-    return Builder(builder: (context) {
-      if (purposeCategory != widget.initialPurposeCategory) {
-        return CustomIconButton(
-          onPressed: _savePurposeCategory,
-          icon: Ionicons.save_outline,
-          iconColor: Theme.of(context).colorScheme.primary,
-          backgroundColor: Theme.of(context).colorScheme.onBackground,
-        );
-      }
-      return CustomIconButton(
-        icon: Ionicons.save_outline,
-        iconColor: Theme.of(context).colorScheme.outlineVariant,
-        backgroundColor: Theme.of(context).colorScheme.onBackground,
-      );
-    });
   }
 
   Column _buildConfigurationInfo(

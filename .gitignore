@@ -43,6 +43,15 @@ app.*.map.json
 /android/app/profile
 /android/app/release
 
+# Ignore generated Flutter plugin registration files for Linux and Windows
+**/linux/flutter/generated_plugin_registrant.cc
+**/linux/flutter/generated_plugins.cmake
+**/windows/flutter/generated_plugin_registrant.cc
+**/windows/flutter/generated_plugins.cmake
+
+# Ignore generated Flutter plugin registration file for macOS
+**/macos/Flutter/GeneratedPluginRegistrant.swift
+
 # Ignore public folder for hosting
 public/**
 key.properties
