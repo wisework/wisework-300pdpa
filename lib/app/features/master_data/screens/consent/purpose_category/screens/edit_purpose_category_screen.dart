@@ -1,4 +1,3 @@
-import 'package:bot_toast/bot_toast.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -7,18 +6,19 @@ import 'package:ionicons/ionicons.dart';
 import 'package:modal_bottom_sheet/modal_bottom_sheet.dart';
 import 'package:pdpa/app/config/config.dart';
 import 'package:pdpa/app/data/models/authentication/user_model.dart';
+import 'package:pdpa/app/data/models/etc/retun_and_update.dart';
 import 'package:pdpa/app/data/models/master_data/localized_model.dart';
 import 'package:pdpa/app/data/models/master_data/purpose_category_model.dart';
 import 'package:pdpa/app/data/models/master_data/purpose_model.dart';
 import 'package:pdpa/app/features/authentication/bloc/sign_in/sign_in_bloc.dart';
 import 'package:pdpa/app/features/master_data/bloc/consent/edit_purpose_category/edit_purpose_category_bloc.dart';
-import 'package:pdpa/app/features/master_data/bloc/consent/purpose/purpose_bloc.dart';
 import 'package:pdpa/app/features/master_data/bloc/consent/purpose_category/purpose_category_bloc.dart';
 import 'package:pdpa/app/features/master_data/screens/consent/purpose_category/widgets/choose_purpose_modal.dart';
 import 'package:pdpa/app/features/master_data/widgets/configuration_info.dart';
 import 'package:pdpa/app/injection.dart';
 import 'package:pdpa/app/shared/utils/constants.dart';
 import 'package:pdpa/app/shared/utils/functions.dart';
+import 'package:pdpa/app/shared/utils/toast.dart';
 import 'package:pdpa/app/shared/widgets/customs/custom_container.dart';
 import 'package:pdpa/app/shared/widgets/customs/custom_icon_button.dart';
 import 'package:pdpa/app/shared/widgets/customs/custom_switch_button.dart';
@@ -33,11 +33,9 @@ class EditPurposeCategoryScreen extends StatefulWidget {
   const EditPurposeCategoryScreen({
     super.key,
     required this.purposeCategoryId,
-    this.isCreateByConsent = false,
   });
 
   final String purposeCategoryId;
-  final bool isCreateByConsent;
 
   @override
   State<EditPurposeCategoryScreen> createState() =>
@@ -67,7 +65,8 @@ class _EditPurposeCategoryScreenState extends State<EditPurposeCategoryScreen> {
       companyId = (bloc.state as SignedInUser).user.currentCompany;
     }
 
-    context.read<PurposeBloc>().add(GetPurposesEvent(companyId: companyId));
+    final event = GetPurposeCategoriesEvent(companyId: companyId);
+    context.read<PurposeCategoryBloc>().add(event);
   }
 
   @override
@@ -83,59 +82,41 @@ class _EditPurposeCategoryScreenState extends State<EditPurposeCategoryScreen> {
       child: BlocConsumer<EditPurposeCategoryBloc, EditPurposeCategoryState>(
         listener: (context, state) {
           if (state is CreatedCurrentPurposeCategory) {
-            BotToast.showText(
-              text: tr('masterData.cm.purposeCategory.createSuccess'), //!
-              contentColor:
-                  Theme.of(context).colorScheme.secondary.withOpacity(0.75),
-              borderRadius: BorderRadius.circular(8.0),
-              textStyle: Theme.of(context)
-                  .textTheme
-                  .bodyMedium!
-                  .copyWith(color: Theme.of(context).colorScheme.onPrimary),
-              duration: UiConfig.toastDuration,
+            showToast(
+              context,
+              text: tr('masterData.cm.purposeCategory.createSuccess'),
             );
 
-            context.read<PurposeCategoryBloc>().add(UpdatePurposeCategoryEvent(
-                purposeCategory: state.purposeCategory,
-                updateType: UpdateType.created));
-
-            context.pop();
+            context.pop(
+              ReturnAndUpdate<PurposeCategoryModel>(
+                object: state.purposeCategory,
+                updateType: UpdateType.updated,
+              ),
+            );
           }
 
           if (state is UpdatedCurrentPurposeCategory) {
-            BotToast.showText(
-              text: tr('masterData.cm.purposeCategory.updateSuccess'), //!
-              contentColor:
-                  Theme.of(context).colorScheme.secondary.withOpacity(0.75),
-              borderRadius: BorderRadius.circular(8.0),
-              textStyle: Theme.of(context)
-                  .textTheme
-                  .bodyMedium!
-                  .copyWith(color: Theme.of(context).colorScheme.onPrimary),
-              duration: UiConfig.toastDuration,
+            showToast(
+              context,
+              text: tr('masterData.cm.purposeCategory.updateSuccess'),
             );
           }
 
           if (state is DeletedCurrentPurposeCategory) {
-            BotToast.showText(
-              text: tr('masterData.cm.purposeCategory.deleteSuccess'), //!
-              contentColor:
-                  Theme.of(context).colorScheme.secondary.withOpacity(0.75),
-              borderRadius: BorderRadius.circular(8.0),
-              textStyle: Theme.of(context)
-                  .textTheme
-                  .bodyMedium!
-                  .copyWith(color: Theme.of(context).colorScheme.onPrimary),
-              duration: UiConfig.toastDuration,
+            showToast(
+              context,
+              text: tr('masterData.cm.purposeCategory.deleteSuccess'),
             );
 
             final deleted = PurposeCategoryModel.empty()
                 .copyWith(id: state.purposeCategoryId);
 
-            context.read<PurposeCategoryBloc>().add(UpdatePurposeCategoryEvent(
-                purposeCategory: deleted, updateType: UpdateType.deleted));
-
-            context.pop();
+            context.pop(
+              ReturnAndUpdate<PurposeCategoryModel>(
+                object: deleted,
+                updateType: UpdateType.deleted,
+              ),
+            );
           }
         },
         builder: (context, state) {
@@ -145,7 +126,6 @@ class _EditPurposeCategoryScreenState extends State<EditPurposeCategoryScreen> {
               purposes: state.purposes,
               currentUser: currentUser,
               isNewPurposeCategory: widget.purposeCategoryId.isEmpty,
-              isCreateByConsent: widget.isCreateByConsent,
             );
           }
           if (state is UpdatedCurrentPurposeCategory) {
@@ -154,7 +134,6 @@ class _EditPurposeCategoryScreenState extends State<EditPurposeCategoryScreen> {
               purposes: state.purposes,
               currentUser: currentUser,
               isNewPurposeCategory: widget.purposeCategoryId.isEmpty,
-              isCreateByConsent: widget.isCreateByConsent,
             );
           }
           if (state is EditPurposeCategoryError) {
@@ -175,14 +154,12 @@ class EditPurposeCategoryView extends StatefulWidget {
     required this.purposes,
     required this.currentUser,
     required this.isNewPurposeCategory,
-    required this.isCreateByConsent,
   });
 
   final PurposeCategoryModel initialPurposeCategory;
   final List<PurposeModel> purposes;
   final UserModel currentUser;
   final bool isNewPurposeCategory;
-  final bool isCreateByConsent;
 
   @override
   State<EditPurposeCategoryView> createState() =>
@@ -321,23 +298,25 @@ class _EditPurposeCategoryViewState extends State<EditPurposeCategoryView> {
   }
 
   void _deletePurposeCategory() {
-    context
-        .read<EditPurposeCategoryBloc>()
-        .add(DeleteCurrentPurposeCategoryEvent(
-          purposeCategoryId: purposeCategory.id,
-          companyId: widget.currentUser.currentCompany,
-        ));
+    final event = DeleteCurrentPurposeCategoryEvent(
+      purposeCategoryId: purposeCategory.id,
+      companyId: widget.currentUser.currentCompany,
+    );
+    context.read<EditPurposeCategoryBloc>().add(event);
   }
 
   void _goBackAndUpdate() {
-    if (!widget.isNewPurposeCategory) {
-      context.read<PurposeCategoryBloc>().add(UpdatePurposeCategoryEvent(
-            purposeCategory: purposeCategory,
-            updateType: UpdateType.updated,
-          ));
+    final isChanged = purposeCategory != widget.initialPurposeCategory;
+    if (!widget.isNewPurposeCategory && !isChanged) {
+      context.pop(
+        ReturnAndUpdate<PurposeCategoryModel>(
+          object: purposeCategory,
+          updateType: UpdateType.updated,
+        ),
+      );
+    } else {
+      context.pop();
     }
-
-    context.pop();
   }
 
   @override
@@ -455,7 +434,8 @@ class _EditPurposeCategoryViewState extends State<EditPurposeCategoryView> {
             text: tr('masterData.cm.purposeCategory.purposes'), //!
           ),
           const SizedBox(height: UiConfig.lineSpacing),
-          _buildPurposeSection(context, purposeCategory.purposes),
+          _buildPurposeSection(context,
+              purposeCategory.purposes.map((purpose) => purpose.id).toList()),
         ],
       ),
     );
@@ -527,12 +507,15 @@ class _EditPurposeCategoryViewState extends State<EditPurposeCategoryView> {
           ),
           child: CustomIconButton(
             onPressed: () {
-              final ids = purposeCategory.purposes
-                  .where((id) => id != purpose.id)
+              final removeId = purpose.id;
+              final purposes = purposeCategory.purposes
+                  .where((purpose) => purpose.id != removeId)
                   .toList();
 
               setState(() {
-                purposeCategory = purposeCategory.copyWith(purposes: ids);
+                purposeCategory = purposeCategory.copyWith(
+                  purposes: purposes,
+                );
               });
             },
             icon: Ionicons.close,
@@ -552,10 +535,11 @@ class _EditPurposeCategoryViewState extends State<EditPurposeCategoryView> {
           backgroundColor: Colors.transparent,
           builder: (context) => ChoosePurposeModal(
             purposes: widget.purposes,
-            initialIds: purposeCategory.purposes,
+            initialIds:
+                purposeCategory.purposes.map((purpose) => purpose.id).toList(),
             onChanged: (ids) {
               setState(() {
-                purposeCategory = purposeCategory.copyWith(purposes: ids);
+                // purposeCategory = purposeCategory.copyWith(purposes: ids);
               });
             },
           ),

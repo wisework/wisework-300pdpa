@@ -4,6 +4,7 @@ import 'package:pdpa/app/shared/utils/constants.dart';
 import 'package:pdpa/app/shared/utils/typedef.dart';
 
 import 'localized_model.dart';
+import 'purpose_model.dart';
 
 class PurposeCategoryModel extends Equatable {
   const PurposeCategoryModel({
@@ -22,7 +23,7 @@ class PurposeCategoryModel extends Equatable {
   final String id;
   final List<LocalizedModel> title;
   final List<LocalizedModel> description;
-  final List<String> purposes;
+  final List<PurposeModel> purposes;
   final int priority;
   final ActiveStatus status;
   final String createdBy;
@@ -57,8 +58,12 @@ class PurposeCategoryModel extends Equatable {
               (item) => LocalizedModel.fromMap(item as DataMap),
             ),
           ),
-          purposes: List<String>.from(map['purposes'] as List<dynamic>),
-          priority: map['priority'] as int,
+          purposes: List<PurposeModel>.from(
+            (map['purposes'] as List<dynamic>).map<PurposeModel>(
+              (item) => PurposeModel.fromMap(item as DataMap),
+            ),
+          ),
+          priority: 0,
           status: ActiveStatus.values[map['status'] as int],
           createdBy: map['createdBy'] as String,
           createdDate: DateTime.parse(map['createdDate'] as String),
@@ -75,8 +80,7 @@ class PurposeCategoryModel extends Equatable {
   DataMap toMap() => {
         'title': title.map((item) => item.toMap()).toList(),
         'description': description.map((item) => item.toMap()).toList(),
-        'purposes': purposes,
-        'priority': priority,
+        'purposes': purposes.map((purpose) => purpose.id).toList(),
         'status': status.index,
         'createdBy': createdBy,
         'createdDate': createdDate.toIso8601String(),
@@ -88,7 +92,7 @@ class PurposeCategoryModel extends Equatable {
     String? id,
     List<LocalizedModel>? title,
     List<LocalizedModel>? description,
-    List<String>? purposes,
+    List<PurposeModel>? purposes,
     int? priority,
     ActiveStatus? status,
     String? createdBy,

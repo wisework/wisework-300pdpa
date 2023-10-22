@@ -1,7 +1,7 @@
 import 'package:equatable/equatable.dart';
-import 'package:pdpa/app/data/models/etc/user_reorder_item.dart';
 
 import 'package:pdpa/app/data/models/master_data/localized_model.dart';
+import 'package:pdpa/app/data/models/master_data/purpose_category_model.dart';
 import 'package:pdpa/app/shared/utils/constants.dart';
 import 'package:pdpa/app/shared/utils/typedef.dart';
 
@@ -37,7 +37,7 @@ class ConsentFormModel extends Equatable {
   final List<LocalizedModel> title;
   final List<LocalizedModel> description;
   final List<String> mandatoryFields;
-  final List<UserReorderItem> purposeCategories;
+  final List<PurposeCategoryModel> purposeCategories;
   final List<String> customFields;
   final String consentFormUrl;
   final String consentThemeId;
@@ -101,10 +101,11 @@ class ConsentFormModel extends Equatable {
           ),
           mandatoryFields:
               List<String>.from(map['mandatoryFields'] as List<dynamic>),
-          purposeCategories: List<UserReorderItem>.from(
-            (map['purposeCategories'] as DataMap).entries.map<UserReorderItem>(
-                (item) => UserReorderItem.fromMap(
-                    {'id': item.key, 'priority': item.value})),
+          purposeCategories: List<PurposeCategoryModel>.from(
+            (map['purposeCategories'] as List<dynamic>)
+                .map<PurposeCategoryModel>(
+              (item) => PurposeCategoryModel.fromMap(item as DataMap),
+            ),
           ),
           customFields: List<String>.from(map['customFields'] as List<dynamic>),
           consentFormUrl: map['consentFormUrl'] as String,
@@ -167,7 +168,8 @@ class ConsentFormModel extends Equatable {
         'mandatoryFields': mandatoryFields,
         'purposeCategories': purposeCategories.fold(
           {},
-          (map, userReorderItem) => map..addAll(userReorderItem.toMap()),
+          (map, purposeCategory) =>
+              map..addAll({purposeCategory.id: purposeCategory.priority}),
         ),
         'customFields': customFields,
         'consentFormUrl': consentFormUrl,
@@ -199,7 +201,7 @@ class ConsentFormModel extends Equatable {
     List<LocalizedModel>? title,
     List<LocalizedModel>? description,
     List<String>? mandatoryFields,
-    List<UserReorderItem>? purposeCategories,
+    List<PurposeCategoryModel>? purposeCategories,
     List<String>? customFields,
     String? consentFormUrl,
     String? consentThemeId,

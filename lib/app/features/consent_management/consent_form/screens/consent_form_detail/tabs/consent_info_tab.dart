@@ -195,7 +195,7 @@ class _ConsentInfoTabState extends State<ConsentInfoTab> {
       PurposeCategoryModel purposeCategory) {
     final purposeFiltered = UtilFunctions.filterPurposeByIds(
       widget.purposes,
-      purposeCategory.purposes,
+      purposeCategory.purposes.map((purpose) => purpose.id).toList(),
     );
     return ListView.separated(
       shrinkWrap: true,

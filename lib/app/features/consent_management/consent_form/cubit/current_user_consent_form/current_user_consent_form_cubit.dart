@@ -28,7 +28,7 @@ class CurrentUserConsentFormCubit extends Cubit<CurrentUserConsentFormState> {
       final values = category.purposes
           .map(
             (id) => UserInputPurpose(
-              id: id,
+              id: id.id,
               value: true,
               purposeCategoryId: category.id,
             ),

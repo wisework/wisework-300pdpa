@@ -393,7 +393,7 @@ class _ConsentFormPreviewState extends State<ConsentFormPreview> {
   }) {
     final purposeFiltered = UtilFunctions.filterPurposeByIds(
       widget.purposes,
-      purposeCategory.purposes,
+      purposeCategory.purposes.map((purpose) => purpose.id).toList(),
     );
 
     return Visibility(

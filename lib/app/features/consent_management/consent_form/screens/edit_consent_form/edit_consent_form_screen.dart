@@ -8,7 +8,6 @@ import 'package:modal_bottom_sheet/modal_bottom_sheet.dart';
 import 'package:pdpa/app/config/config.dart';
 import 'package:pdpa/app/data/models/authentication/user_model.dart';
 import 'package:pdpa/app/data/models/consent_management/consent_form_model.dart';
-import 'package:pdpa/app/data/models/etc/user_reorder_item.dart';
 import 'package:pdpa/app/data/models/master_data/custom_field_model.dart';
 import 'package:pdpa/app/data/models/master_data/localized_model.dart';
 import 'package:pdpa/app/data/models/master_data/mandatory_field_model.dart';
@@ -93,7 +92,6 @@ class _EditConsentFormScreenState extends State<EditConsentFormScreen> {
             final event = UpdateConsentFormEvent(
               consentForm: state.consentForm,
               updateType: UpdateType.created,
-              purposeCategories: state.purposeCategories,
             );
 
             context.read<ConsentFormBloc>().add(event);
@@ -104,7 +102,7 @@ class _EditConsentFormScreenState extends State<EditConsentFormScreen> {
             );
           }
 
-          if (state is UpdateEditConsentForm) {
+          if (state is UpdateCurrentConsentForm) {
             BotToast.showText(
               text: 'Update successfully',
               contentColor:
@@ -130,7 +128,7 @@ class _EditConsentFormScreenState extends State<EditConsentFormScreen> {
               isNewConsentForm: widget.consentFormId.isEmpty,
             );
           }
-          if (state is UpdateEditConsentForm) {
+          if (state is UpdateCurrentConsentForm) {
             return EditConsentFormView(
               consentForm: state.consentForm,
               mandatoryFields: state.mandatoryFields,
@@ -286,11 +284,11 @@ class _EditConsentFormViewState extends State<EditConsentFormView> {
     final selected = consentForm.purposeCategories.removeAt(oldIndex);
     consentForm.purposeCategories.insert(newIndex, selected);
 
-    final items = UtilFunctions.getReorderItem(
-      consentForm.purposeCategories.map((category) => category.id).toList(),
+    final purposeCategories = UtilFunctions.reorderPurposeCategories(
+      consentForm.purposeCategories,
     );
 
-    consentForm = consentForm.copyWith(purposeCategories: items);
+    consentForm = consentForm.copyWith(purposeCategories: purposeCategories);
   }
 
   void _saveConsentForm() {
@@ -350,7 +348,6 @@ class _EditConsentFormViewState extends State<EditConsentFormView> {
       final event = UpdateConsentFormEvent(
         consentForm: consentForm,
         updateType: UpdateType.updated,
-        purposeCategories: widget.purposeCategories,
       );
 
       context.read<ConsentFormBloc>().add(event);
@@ -544,7 +541,6 @@ class _EditConsentFormViewState extends State<EditConsentFormView> {
                             consentForm.purposeCategories[index].id,
                         orElse: () => PurposeCategoryModel.empty(),
                       ),
-                      item: consentForm.purposeCategories[index],
                     );
                   },
                   itemCount: consentForm.purposeCategories.length,
@@ -578,7 +574,7 @@ class _EditConsentFormViewState extends State<EditConsentFormView> {
                 builder: (context) => ChoosePurposeCategoryModal(
                   purposeCategories: widget.purposeCategories,
                   purposes: widget.purposes,
-                  initialItems: consentForm.purposeCategories,
+                  initialPurposeCategory: consentForm.purposeCategories,
                   onChanged: (ids) {
                     setState(() {
                       consentForm = consentForm.copyWith(
@@ -629,7 +625,6 @@ class _EditConsentFormViewState extends State<EditConsentFormView> {
   Row _buildItemTile(
     BuildContext context, {
     required PurposeCategoryModel purposeCategory,
-    required UserReorderItem item,
   }) {
     const language = 'en-US';
     final title = purposeCategory.title.firstWhere(
@@ -643,7 +638,7 @@ class _EditConsentFormViewState extends State<EditConsentFormView> {
         Padding(
           padding: const EdgeInsets.all(UiConfig.actionSpacing),
           child: ReorderableDragStartListener(
-            index: consentForm.purposeCategories.indexOf(item),
+            index: consentForm.purposeCategories.indexOf(purposeCategory),
             child: Icon(
               Ionicons.reorder_two_outline,
               color: Theme.of(context).colorScheme.primary,

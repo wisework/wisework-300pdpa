@@ -7,7 +7,6 @@ import 'package:pdpa/app/config/config.dart';
 import 'package:pdpa/app/data/models/authentication/company_model.dart';
 import 'package:pdpa/app/data/models/consent_management/consent_form_model.dart';
 import 'package:pdpa/app/data/models/master_data/localized_model.dart';
-import 'package:pdpa/app/data/models/master_data/purpose_category_model.dart';
 import 'package:pdpa/app/features/authentication/bloc/sign_in/sign_in_bloc.dart';
 import 'package:pdpa/app/features/consent_management/consent_form/bloc/consent_form/consent_form_bloc.dart';
 import 'package:pdpa/app/features/consent_management/consent_form/routes/consent_form_route.dart';
@@ -16,7 +15,6 @@ import 'package:pdpa/app/features/master_data/routes/master_data_route.dart';
 import 'package:pdpa/app/shared/drawers/bloc/drawer_bloc.dart';
 import 'package:pdpa/app/shared/drawers/models/drawer_menu_models.dart';
 import 'package:pdpa/app/shared/drawers/pdpa_drawer.dart';
-import 'package:pdpa/app/shared/utils/functions.dart';
 import 'package:pdpa/app/shared/widgets/customs/custom_button.dart';
 import 'package:pdpa/app/shared/widgets/customs/custom_container.dart';
 import 'package:pdpa/app/shared/widgets/customs/custom_icon_button.dart';
@@ -181,7 +179,6 @@ class _HomeScreenState extends State<HomeScreen> {
                       return _buildItemCard(
                         context,
                         consentForm: state.consentForms[index],
-                        purposeCategory: state.purposeCategories,
                       );
                     },
                   )
@@ -433,7 +430,6 @@ class _HomeScreenState extends State<HomeScreen> {
   Column _buildItemCard(
     BuildContext context, {
     required ConsentFormModel consentForm,
-    required List<PurposeCategoryModel> purposeCategory,
   }) {
     const language = 'en-US';
 
@@ -443,10 +439,6 @@ class _HomeScreenState extends State<HomeScreen> {
           orElse: () => const LocalizedModel.empty(),
         )
         .text;
-    final purposeCategoryFiltered = UtilFunctions.filterPurposeCategoriesByIds(
-      purposeCategory,
-      consentForm.purposeCategories.map((item) => item.id).toList(),
-    );
     final dateConsentForm = DateFormat("dd.MM.yy").format(
       consentForm.updatedDate,
     );
@@ -486,12 +478,12 @@ class _HomeScreenState extends State<HomeScreen> {
                   ],
                 ),
                 Visibility(
-                  visible: purposeCategoryFiltered.isNotEmpty,
+                  visible: consentForm.purposeCategories.isNotEmpty,
                   child: Padding(
                     padding: const EdgeInsets.only(
                       top: UiConfig.textLineSpacing,
                     ),
-                    child: Text(purposeCategoryFiltered.first.title
+                    child: Text(consentForm.purposeCategories.first.title
                         .firstWhere(
                           (item) => item.language == language,
                           orElse: LocalizedModel.empty,

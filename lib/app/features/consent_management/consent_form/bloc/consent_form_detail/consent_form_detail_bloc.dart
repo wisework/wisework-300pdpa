@@ -3,7 +3,6 @@ import 'package:bloc/bloc.dart';
 import 'package:equatable/equatable.dart';
 import 'package:pdpa/app/data/models/consent_management/consent_form_model.dart';
 import 'package:pdpa/app/data/models/consent_management/consent_theme_model.dart';
-import 'package:pdpa/app/data/models/etc/user_reorder_item.dart';
 import 'package:pdpa/app/data/models/master_data/custom_field_model.dart';
 import 'package:pdpa/app/data/models/master_data/mandatory_field_model.dart';
 import 'package:pdpa/app/data/models/master_data/purpose_category_model.dart';
@@ -43,107 +42,127 @@ class ConsentFormDetailBloc
 
     emit(const GettingConsentFormDetail());
 
-    final result = await _consentRepository.getConsentFormById(
-      event.consentFormId,
+    final emptyConsentForm = ConsentFormModel.empty();
+    ConsentFormModel gotConsentForm = emptyConsentForm;
+    List<MandatoryFieldModel> gotMandatoryFields = [];
+    List<PurposeModel> gotPurposes = [];
+    List<PurposeCategoryModel> gotPurposeCategories = [];
+    List<CustomFieldModel> gotCustomFields = [];
+    ConsentThemeModel gotConsentTheme = ConsentThemeModel.initial();
+
+    if (event.consentFormId.isNotEmpty) {
+      final consentFormResult = await _consentRepository.getConsentFormById(
+        event.consentFormId,
+        event.companyId,
+      );
+      consentFormResult.fold(
+        (failure) {
+          emit(ConsentFormDetailError(failure.errorMessage));
+          return;
+        },
+        (consentForm) {
+          gotConsentForm = consentForm;
+        },
+      );
+    }
+
+    final mandatoryFieldResult = await _masterDataRepository.getMandatoryFields(
       event.companyId,
     );
-
-    ConsentFormModel gotConsentForm = ConsentFormModel.empty();
-    List<MandatoryFieldModel> gotMandatoryFields = [];
-    List<PurposeCategoryModel> gotPurposeCategories = [];
-    List<PurposeModel> gotPurposes = [];
-    List<CustomFieldModel> gotCustomFields = [];
-    List<ConsentThemeModel> gotConsentThemes = [];
-
-    await result.fold(
+    mandatoryFieldResult.fold(
       (failure) {
         emit(ConsentFormDetailError(failure.errorMessage));
         return;
       },
-      (consentForm) async {
-        gotConsentForm = consentForm;
+      (mandatoryField) {
+        gotMandatoryFields = mandatoryField;
+      },
+    );
 
-        for (String mandatoryFieldId in consentForm.mandatoryFields) {
-          final result = await _masterDataRepository.getMandatoryFieldById(
-            mandatoryFieldId,
-            event.companyId,
-          );
+    final purposeResult = await _masterDataRepository.getPurposes(
+      event.companyId,
+    );
+    purposeResult.fold(
+      (failure) {
+        emit(ConsentFormDetailError(failure.errorMessage));
+        return;
+      },
+      (purposes) {
+        gotPurposes = purposes;
+      },
+    );
 
-          result.fold(
-            (failure) => emit(ConsentFormDetailError(failure.errorMessage)),
-            (mandatoryField) => gotMandatoryFields.add(mandatoryField),
-          );
+    final purposeCategoryResult =
+        await _masterDataRepository.getPurposeCategories(
+      event.companyId,
+    );
+    purposeCategoryResult.fold(
+      (failure) {
+        emit(ConsentFormDetailError(failure.errorMessage));
+        return;
+      },
+      (purposeCategories) {
+        for (PurposeCategoryModel category in purposeCategories) {
+          final purposeIds =
+              category.purposes.map((purpose) => purpose.id).toList();
+          final purposes = gotPurposes
+              .where((purpose) => purposeIds.contains(purpose.id))
+              .toList();
+
+          gotPurposeCategories.add(category.copyWith(purposes: purposes));
         }
+      },
+    );
 
-        for (UserReorderItem item in consentForm.purposeCategories) {
-          final result = await _masterDataRepository.getPurposeCategoryById(
-            item.id,
-            event.companyId,
+    final customFieldResult = await _masterDataRepository.getCustomFields(
+      event.companyId,
+    );
+    customFieldResult.fold(
+      (failure) {
+        emit(ConsentFormDetailError(failure.errorMessage));
+        return;
+      },
+      (customFields) {
+        gotCustomFields = customFields;
+      },
+    );
+
+    //? Filter data for Consent Form
+    if (gotConsentForm != emptyConsentForm) {
+      gotConsentForm = gotConsentForm.copyWith(
+        purposeCategories: gotConsentForm.purposeCategories.map((category) {
+          final purposeCategory = gotPurposeCategories.firstWhere(
+            (pc) => pc.id == category.id,
+            orElse: () => category,
           );
 
-          await result.fold(
-            (failure) {
-              emit(ConsentFormDetailError(failure.errorMessage));
-              return;
-            },
-            (purposeCategory) async {
-              gotPurposeCategories.add(purposeCategory);
+          return purposeCategory.copyWith(priority: category.priority);
+        }).toList(),
+      );
 
-              for (String purposeId in purposeCategory.purposes) {
-                final result = await _masterDataRepository.getPurposeById(
-                  purposeId,
-                  event.companyId,
-                );
-
-                result.fold(
-                  (failure) => emit(
-                    ConsentFormDetailError(failure.errorMessage),
-                  ),
-                  (purpose) => gotPurposes.add(purpose),
-                );
-              }
-            },
-          );
-        }
-
-        for (String customFieldId in consentForm.customFields) {
-          final result = await _masterDataRepository.getCustomFieldById(
-            customFieldId,
-            event.companyId,
-          );
-
-          result.fold(
-            (failure) => emit(ConsentFormDetailError(failure.errorMessage)),
-            (customField) => gotCustomFields.add(customField),
-          );
-        }
-
-        final result = await _consentRepository.getConsentThemes(
+      if (gotConsentForm.consentThemeId.isNotEmpty) {
+        final result = await _consentRepository.getConsentThemeById(
+          gotConsentForm.consentThemeId,
           event.companyId,
         );
 
         result.fold(
           (failure) => emit(ConsentFormDetailError(failure.errorMessage)),
           (consentThemes) {
-            gotConsentThemes = consentThemes;
+            gotConsentTheme = consentThemes;
           },
         );
-      },
-    );
+      }
+    }
 
     emit(
       GotConsentFormDetail(
         gotConsentForm,
         gotMandatoryFields..sort((a, b) => b.priority.compareTo(a.priority)),
-        gotPurposeCategories..sort((a, b) => b.priority.compareTo(a.priority)),
         gotPurposes,
+        gotPurposeCategories..sort((a, b) => b.priority.compareTo(a.priority)),
         gotCustomFields,
-        gotConsentThemes
-          ..sort((a, b) => b.updatedDate.compareTo(a.updatedDate)),
-        gotConsentThemes.firstWhere(
-          (theme) => theme.id == gotConsentForm.consentThemeId,
-          orElse: () => ConsentThemeModel.initial(),
-        ),
+        gotConsentTheme,
       ),
     );
   }

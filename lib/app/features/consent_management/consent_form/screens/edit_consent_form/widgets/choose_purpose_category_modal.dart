@@ -4,7 +4,6 @@ import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:ionicons/ionicons.dart';
 import 'package:pdpa/app/config/config.dart';
-import 'package:pdpa/app/data/models/etc/user_reorder_item.dart';
 import 'package:pdpa/app/data/models/master_data/localized_model.dart';
 import 'package:pdpa/app/data/models/master_data/purpose_category_model.dart';
 import 'package:pdpa/app/data/models/master_data/purpose_model.dart';
@@ -16,16 +15,16 @@ import 'package:pdpa/app/shared/widgets/material_ink_well.dart';
 class ChoosePurposeCategoryModal extends StatefulWidget {
   const ChoosePurposeCategoryModal({
     super.key,
+    required this.initialPurposeCategory,
     required this.purposeCategories,
     required this.purposes,
-    required this.initialItems,
     required this.onChanged,
   });
 
+  final List<PurposeCategoryModel> initialPurposeCategory;
   final List<PurposeCategoryModel> purposeCategories;
   final List<PurposeModel> purposes;
-  final List<UserReorderItem> initialItems;
-  final Function(List<UserReorderItem> items) onChanged;
+  final Function(List<PurposeCategoryModel> categories) onChanged;
 
   @override
   State<ChoosePurposeCategoryModal> createState() =>
@@ -44,13 +43,9 @@ class _ChoosePurposeCategoryModalState
   }
 
   void _initialData() {
-    if (widget.initialItems.isNotEmpty) {
-      final ids = widget.initialItems.map((item) => item.id).toList();
-
-      selectPurposeCategories = UtilFunctions.filterPurposeCategoriesByIds(
-        widget.purposeCategories,
-        ids,
-      );
+    if (widget.initialPurposeCategory.isNotEmpty) {
+      selectPurposeCategories =
+          widget.initialPurposeCategory.map((category) => category).toList();
     } else {
       selectPurposeCategories = [];
     }
@@ -68,13 +63,13 @@ class _ChoosePurposeCategoryModalState
             .toList()
           ..add(purposeCategory);
       }
+
+      selectPurposeCategories = UtilFunctions.reorderPurposeCategories(
+        selectPurposeCategories,
+      );
     });
 
-    final items = UtilFunctions.getReorderItem(
-      selectPurposeCategories.map((category) => category.id).toList(),
-    );
-
-    widget.onChanged(items);
+    widget.onChanged(selectPurposeCategories);
   }
 
   @override
@@ -115,7 +110,7 @@ class _ChoosePurposeCategoryModalState
                 ),
                 ConstrainedBox(
                   constraints: const BoxConstraints(maxWidth: 200.0),
-                  child: _buildCreatePurposeCategoryButton(context),
+                  child: _buildAddButton(context),
                 ),
               ],
             ),
@@ -170,10 +165,6 @@ class _ChoosePurposeCategoryModalState
       (item) => item.language == language,
       orElse: () => const LocalizedModel.empty(),
     );
-    final item = UtilFunctions.getReorderItemById(
-      selectPurposeCategories.map((category) => category.id).toList(),
-      purposeCategory.id,
-    );
 
     return Row(
       children: <Widget>[
@@ -197,7 +188,8 @@ class _ChoosePurposeCategoryModalState
                   text: title.text,
                   style: Theme.of(context).textTheme.bodyMedium,
                 ),
-                if (item.id.isNotEmpty && item.priority != 0)
+                if (purposeCategory.id.isNotEmpty &&
+                    purposeCategory.priority != 0)
                   WidgetSpan(
                     alignment: PlaceholderAlignment.baseline,
                     baseline: TextBaseline.alphabetic,
@@ -211,7 +203,7 @@ class _ChoosePurposeCategoryModalState
                         left: UiConfig.actionSpacing,
                       ),
                       child: Text(
-                        item.priority.toString(),
+                        purposeCategory.priority.toString(),
                         style: Theme.of(context).textTheme.labelLarge?.copyWith(
                             color: Theme.of(context).colorScheme.onPrimary),
                       ),
@@ -225,30 +217,22 @@ class _ChoosePurposeCategoryModalState
     );
   }
 
-  Widget _buildCreatePurposeCategoryButton(BuildContext context) {
+  Widget _buildAddButton(BuildContext context) {
     return MaterialInkWell(
       onTap: () async {
-        context.push(MasterDataRoute.createPurposeCategoryByConsent.path);
+        final result = await context.push(
+          MasterDataRoute.createPurposeCategory.path,
+        );
+
+        if (result != null) {
+          print(result);
+        }
       },
       child: Padding(
-        padding: const EdgeInsets.all(8.0),
-        child: Row(
-          children: <Widget>[
-            Padding(
-              padding: const EdgeInsets.only(bottom: 2.0),
-              child: Icon(
-                Ionicons.add,
-                color: Theme.of(context).colorScheme.primary,
-              ),
-            ),
-            const SizedBox(width: UiConfig.actionSpacing),
-            Expanded(
-              child: Text(
-                tr('masterData.cm.purposeCategory.addnewPurpose'), //!
-                style: Theme.of(context).textTheme.bodyMedium,
-              ),
-            ),
-          ],
+        padding: const EdgeInsets.only(bottom: 2.0),
+        child: Icon(
+          Ionicons.add,
+          color: Theme.of(context).colorScheme.primary,
         ),
       ),
     );

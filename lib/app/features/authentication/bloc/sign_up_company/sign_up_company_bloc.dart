@@ -65,7 +65,7 @@ class SignUpCompanyBloc extends Bloc<SignUpCompanyEvent, SignUpCompanyState> {
 
         //? Create Purpose Categories
         for (int index = 0; index < purposeCategoriesPreset.length; index++) {
-          List<String> purposeIds = [];
+          List<PurposeModel> purposes = [];
 
           //? Create Purposes
           for (PurposeModel purpose in purposesPreset[index]) {
@@ -81,13 +81,13 @@ class SignUpCompanyBloc extends Bloc<SignUpCompanyEvent, SignUpCompanyState> {
             result.fold(
               (failure) => emit(SignUpCompanyError(failure.errorMessage)),
               (purpose) {
-                purposeIds.add(purpose.id);
+                purposes.add(purpose);
               },
             );
           }
 
           final updated = purposeCategoriesPreset[index]
-              .copyWith(purposes: purposeIds)
+              .copyWith(purposes: purposes)
               .setCreate(
                 event.user.email,
                 DateTime.now(),

@@ -2,6 +2,8 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:pdpa/app/data/models/consent_management/consent_form_model.dart';
 import 'package:pdpa/app/data/models/consent_management/consent_theme_model.dart';
 import 'package:pdpa/app/data/models/consent_management/user_consent_model.dart';
+import 'package:pdpa/app/data/models/master_data/purpose_category_model.dart';
+import 'package:pdpa/app/shared/utils/typedef.dart';
 
 class ConsentApi {
   const ConsentApi(this._firestore);
@@ -15,7 +17,23 @@ class ConsentApi {
 
     List<ConsentFormModel> consentForms = [];
     for (var document in result.docs) {
-      consentForms.add(ConsentFormModel.fromDocument(document));
+      DataMap response = document.data();
+      response['id'] = document.id;
+
+      final purposeCategories = (response['purposeCategories'] as DataMap)
+          .entries
+          .map(
+            (entry) => {
+              'id': entry.key,
+              ...PurposeCategoryModel.empty()
+                  .copyWith(priority: entry.value)
+                  .toMap(),
+            },
+          )
+          .toList();
+      response['purposeCategories'] = purposeCategories;
+
+      consentForms.add(ConsentFormModel.fromMap(response));
     }
 
     return consentForms;
@@ -31,7 +49,24 @@ class ConsentApi {
         .get();
 
     if (!result.exists) return null;
-    return ConsentFormModel.fromDocument(result);
+
+    DataMap response = result.data()!;
+    response['id'] = result.id;
+
+    final purposeCategories = (response['purposeCategories'] as DataMap)
+        .entries
+        .map(
+          (entry) => {
+            'id': entry.key,
+            ...PurposeCategoryModel.empty()
+                .copyWith(priority: entry.value)
+                .toMap(),
+          },
+        )
+        .toList();
+    response['purposeCategories'] = purposeCategories;
+
+    return ConsentFormModel.fromMap(response);
   }
 
   Future<ConsentFormModel> createConsentForm(

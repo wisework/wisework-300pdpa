@@ -3,6 +3,7 @@ import 'package:bloc/bloc.dart';
 import 'package:equatable/equatable.dart';
 import 'package:pdpa/app/data/models/consent_management/consent_form_model.dart';
 import 'package:pdpa/app/data/models/master_data/purpose_category_model.dart';
+import 'package:pdpa/app/data/models/master_data/purpose_model.dart';
 import 'package:pdpa/app/data/repositories/consent_repository.dart';
 import 'package:pdpa/app/data/repositories/master_data_repository.dart';
 import 'package:pdpa/app/shared/utils/constants.dart';
@@ -35,43 +36,76 @@ class ConsentFormBloc extends Bloc<ConsentFormEvent, ConsentFormState> {
 
     emit(const GettingConsentForms());
 
-    final List<String> allPurposeCategories = [];
+    List<ConsentFormModel> gotConsentForms = [];
+    List<PurposeModel> gotPurposes = [];
     List<PurposeCategoryModel> gotPurposeCategories = [];
 
-    final result = await _consentRepository.getConsentForms(event.companyId);
+    final purposeResult = await _masterDataRepository.getPurposes(
+      event.companyId,
+    );
+    purposeResult.fold(
+      (failure) {
+        emit(ConsentFormError(failure.errorMessage));
+        return;
+      },
+      (purposes) {
+        gotPurposes = purposes;
+      },
+    );
 
-    await result.fold((failure) {
-      emit(ConsentFormError(failure.errorMessage));
-      return;
-    }, (consentForms) async {
-      allPurposeCategories.addAll(
-        consentForms.expand(
-          (form) => form.purposeCategories.map((item) => item.id).toList(),
-        ),
-      );
+    final purposeCategoryResult =
+        await _masterDataRepository.getPurposeCategories(
+      event.companyId,
+    );
+    purposeCategoryResult.fold(
+      (failure) {
+        emit(ConsentFormError(failure.errorMessage));
+        return;
+      },
+      (purposeCategories) {
+        for (PurposeCategoryModel category in purposeCategories) {
+          final purposeIds =
+              category.purposes.map((purpose) => purpose.id).toList();
+          final purposes = gotPurposes
+              .where((purpose) => purposeIds.contains(purpose.id))
+              .toList();
 
-      for (String purposeCategoryId in allPurposeCategories) {
-        final result = await _masterDataRepository.getPurposeCategoryById(
-          purposeCategoryId,
-          event.companyId,
-        );
+          gotPurposeCategories.add(category.copyWith(purposes: purposes));
+        }
+      },
+    );
 
-        result.fold((failure) => emit(ConsentFormError(failure.errorMessage)),
-            (purposeCategory) {
-          if (!gotPurposeCategories.contains(purposeCategory)) {
-            gotPurposeCategories.add(purposeCategory);
-          }
-        });
-      }
+    final consentFormsResult = await _consentRepository.getConsentForms(
+      event.companyId,
+    );
+    consentFormsResult.fold(
+      (failure) {
+        emit(ConsentFormError(failure.errorMessage));
+        return;
+      },
+      (consentForms) {
+        for (ConsentFormModel consentForm in consentForms) {
+          gotConsentForms.add(
+            consentForm.copyWith(
+              purposeCategories: consentForm.purposeCategories.map((category) {
+                final purposeCategory = gotPurposeCategories.firstWhere(
+                  (pc) => pc.id == category.id,
+                  orElse: () => category,
+                );
 
-      emit(
-        GotConsentForms(
-            consentForms
-              ..sort((a, b) => b.updatedDate.compareTo(a.updatedDate)),
-            gotPurposeCategories
-              ..sort((a, b) => b.priority.compareTo(a.priority))),
-      );
-    });
+                return purposeCategory.copyWith(priority: category.priority);
+              }).toList(),
+            ),
+          );
+        }
+      },
+    );
+
+    emit(
+      GotConsentForms(
+        gotConsentForms..sort((a, b) => b.updatedDate.compareTo(a.updatedDate)),
+      ),
+    );
   }
 
   Future<void> _updateConsentFormsEvent(
@@ -82,16 +116,6 @@ class ConsentFormBloc extends Bloc<ConsentFormEvent, ConsentFormState> {
       final consentForms = (state as GotConsentForms).consentForms;
 
       List<ConsentFormModel> updated = [];
-      List<PurposeCategoryModel> purposeCategories = [];
-
-      if (state is GotConsentForms) {
-        final settings = state as GotConsentForms;
-        purposeCategories = settings.purposeCategories;
-      } else if (state is UpdateConsentFormEvent) {
-        final settings = state as UpdateConsentFormEvent;
-
-        purposeCategories = settings.purposeCategories;
-      }
 
       switch (event.updateType) {
         case UpdateType.created:
@@ -113,9 +137,8 @@ class ConsentFormBloc extends Bloc<ConsentFormEvent, ConsentFormState> {
 
       emit(
         GotConsentForms(
-            updated..sort((a, b) => b.updatedDate.compareTo(a.updatedDate)),
-            purposeCategories
-              ..sort((a, b) => b.priority.compareTo(a.priority))),
+          updated..sort((a, b) => b.updatedDate.compareTo(a.updatedDate)),
+        ),
       );
     }
   }

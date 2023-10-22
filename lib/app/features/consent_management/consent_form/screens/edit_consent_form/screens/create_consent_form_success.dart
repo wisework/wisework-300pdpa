@@ -218,14 +218,13 @@ class _CreateConsentFormSuccessViewState
                       children: <Widget>[
                         TextButton(
                           onPressed: () {
-                            context.read<ConsentFormBloc>().add(
-                                UpdateConsentFormEvent(
-                                    consentForm: widget.consentForm,
-                                    updateType: UpdateType.created,
-                                    purposeCategories:
-                                        widget.purposeCategories));
+                            final event = UpdateConsentFormEvent(
+                              consentForm: widget.consentForm,
+                              updateType: UpdateType.created,
+                            );
+                            context.read<ConsentFormBloc>().add(event);
 
-                            final url = UtilFunctions.getUserConsentForm(
+                            final url = UtilFunctions.getUserConsentFormUrl(
                               widget.consentForm.id,
                               widget.currentUser.currentCompany,
                             );
@@ -273,7 +272,7 @@ class _CreateConsentFormSuccessViewState
                         const SizedBox(width: 10.0),
                         ElevatedButton(
                           onPressed: () async {
-                            final url = UtilFunctions.getUserConsentForm(
+                            final url = UtilFunctions.getUserConsentFormUrl(
                               widget.consentForm.id,
                               widget.currentUser.currentCompany,
                             );
@@ -410,7 +409,7 @@ class _CreateConsentFormSuccessViewState
       PurposeCategoryModel purposeCategory) {
     final purposeFiltered = UtilFunctions.filterPurposeByIds(
       widget.purposes,
-      purposeCategory.purposes,
+      purposeCategory.purposes.map((purpose) => purpose.id).toList(),
     );
     return ListView.separated(
       shrinkWrap: true,

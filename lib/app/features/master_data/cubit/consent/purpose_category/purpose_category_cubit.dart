@@ -16,13 +16,19 @@ class PurposeCategoryCubit extends Cubit<PurposeCategoryState> {
   Future<void> initialPurposelist(List<PurposeModel> purposes,
       PurposeCategoryModel purposeCategoryModel) async {
     final purposeList = purposes
-        .where((id) => purposeCategoryModel.purposes.contains(id.id))
+        .where((id) => purposeCategoryModel.purposes.contains(id))
         .toList();
     state.copyWith(purposeList: purposeList);
 
-    state.copyWith(purposes: purposeCategoryModel.purposes);
+    state.copyWith(
+        purposes: purposeCategoryModel.purposes
+            .map((purpose) => purpose.id)
+            .toList());
 
-    emit(state.copyWith(purposes: purposeCategoryModel.purposes));
+    emit(state.copyWith(
+        purposes: purposeCategoryModel.purposes
+            .map((purpose) => purpose.id)
+            .toList()));
 
     emit(state.copyWith(purposeList: purposeList));
   }

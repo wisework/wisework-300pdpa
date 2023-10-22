@@ -34,11 +34,17 @@ class PurposeCategoryBloc
         await _masterDataRepository.getPurposeCategories(event.companyId);
 
     result.fold(
-      (failure) => emit(PurposeCategoryError(failure.errorMessage)),
-      (purposeCategories) => emit(GotPurposeCategories(
-        purposeCategories
-          ..sort((a, b) => b.updatedDate.compareTo(a.updatedDate)),
-      )),
+      (failure) {
+        emit(PurposeCategoryError(failure.errorMessage));
+      },
+      (purposeCategories) {
+        emit(
+          GotPurposeCategories(
+            purposeCategories
+              ..sort((a, b) => b.updatedDate.compareTo(a.updatedDate)),
+          ),
+        );
+      },
     );
   }
 

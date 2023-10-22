@@ -103,7 +103,8 @@ class _UrlTabState extends State<UrlTab> {
                     );
 
                     BotToast.showText(
-                      text: tr('consentManagement.consentForm.urltab.urlCopied'), //!
+                      text: tr(
+                          'consentManagement.consentForm.urltab.urlCopied'), //!
                       contentColor: Theme.of(context)
                           .colorScheme
                           .secondary
@@ -129,7 +130,8 @@ class _UrlTabState extends State<UrlTab> {
             text: TextSpan(
               children: [
                 TextSpan(
-                  text: tr('consentManagement.consentForm.urltab.description'), //!
+                  text: tr(
+                      'consentManagement.consentForm.urltab.description'), //!
                   style: Theme.of(context).textTheme.bodySmall,
                 ),
                 TextSpan(
@@ -140,7 +142,7 @@ class _UrlTabState extends State<UrlTab> {
                       decorationColor: Theme.of(context).colorScheme.primary),
                   recognizer: TapGestureRecognizer()
                     ..onTap = () {
-                      final url = UtilFunctions.getUserConsentForm(
+                      final url = UtilFunctions.getUserConsentFormUrl(
                         widget.consentForm.id,
                         widget.companyId,
                       );
@@ -150,7 +152,8 @@ class _UrlTabState extends State<UrlTab> {
                     },
                 ),
                 TextSpan(
-                  text: tr('consentManagement.consentForm.urltab.toRegenerateANewOne'), //!
+                  text: tr(
+                      'consentManagement.consentForm.urltab.toRegenerateANewOne'), //!
                   style: Theme.of(context).textTheme.bodySmall,
                 ),
               ],
@@ -185,7 +188,8 @@ class _UrlTabState extends State<UrlTab> {
                 await _downloadQrCode().then((value) {
                   if (value) {
                     BotToast.showText(
-                      text: tr('consentManagement.consentForm.urltab.qrCodeHasBeenDownloaded'), //!
+                      text: tr(
+                          'consentManagement.consentForm.urltab.qrCodeHasBeenDownloaded'), //!
                       contentColor: Theme.of(context)
                           .colorScheme
                           .secondary
@@ -200,7 +204,8 @@ class _UrlTabState extends State<UrlTab> {
                     );
                   } else {
                     BotToast.showText(
-                      text: tr('consentManagement.consentForm.urltab.failedToDownloadQrCode'), //!
+                      text: tr(
+                          'consentManagement.consentForm.urltab.failedToDownloadQrCode'), //!
                       contentColor: Theme.of(context)
                           .colorScheme
                           .secondary

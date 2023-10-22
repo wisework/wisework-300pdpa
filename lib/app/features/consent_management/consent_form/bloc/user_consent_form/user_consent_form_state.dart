@@ -34,16 +34,16 @@ class GotUserConsentForm extends UserConsentFormState {
   const GotUserConsentForm(
     this.consentForm,
     this.mandatoryFields,
-    this.purposeCategories,
     this.purposes,
+    this.purposeCategories,
     this.customFields,
     this.consentTheme,
   );
 
   final ConsentFormModel consentForm;
   final List<MandatoryFieldModel> mandatoryFields;
-  final List<PurposeCategoryModel> purposeCategories;
   final List<PurposeModel> purposes;
+  final List<PurposeCategoryModel> purposeCategories;
   final List<CustomFieldModel> customFields;
   final ConsentThemeModel consentTheme;
 
@@ -52,8 +52,8 @@ class GotUserConsentForm extends UserConsentFormState {
     return [
       consentForm,
       mandatoryFields,
-      purposeCategories,
       purposes,
+      purposeCategories,
       customFields,
       consentTheme,
     ];
