@@ -78,12 +78,7 @@ class EditPurposeCategoryBloc
       );
     }
 
-    emit(
-      GotCurrentPurposeCategory(
-        gotPurposeCategory.copyWith(purposes: gotPurposes),
-        gotPurposes,
-      ),
-    );
+    emit(GotCurrentPurposeCategory(gotPurposeCategory, gotPurposes));
   }
 
   Future<void> _createCurrentPurposeCategoryHandler(
