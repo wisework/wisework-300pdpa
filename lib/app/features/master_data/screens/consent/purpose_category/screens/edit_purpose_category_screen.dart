@@ -287,10 +287,7 @@ class _EditPurposeCategoryViewState extends State<EditPurposeCategoryView> {
   }
 
   void _goBackAndUpdate() {
-    print(widget.isNewPurposeCategory);
-    print(widget.initialPurposeCategory);
     if (!widget.isNewPurposeCategory) {
-      print('here');
       context.pop(
         UpdatedReturn<PurposeCategoryModel>(
           object: widget.initialPurposeCategory,
