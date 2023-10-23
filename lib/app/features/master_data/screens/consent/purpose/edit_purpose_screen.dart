@@ -68,7 +68,9 @@ class _EditPurposeScreenState extends State<EditPurposeScreen> {
       child: BlocConsumer<EditPurposeBloc, EditPurposeState>(
         listener: (context, state) {
           if (state is CreatedCurrentPurpose) {
-            showToast(context, text: 'Create successfully'); //!
+            showToast(context,
+                text: tr(
+                    'consentManagement.consentForm.editConsentTheme.createSuccess')); //!
 
             context.pop(
               UpdatedReturn<PurposeModel>(
@@ -79,11 +81,13 @@ class _EditPurposeScreenState extends State<EditPurposeScreen> {
           }
 
           if (state is UpdatedCurrentPurpose) {
-            showToast(context, text: 'Update successfully'); //!
+            showToast(context, text: tr(
+                    'consentManagement.consentForm.editConsentTheme.updateSuccess')); //!
           }
 
           if (state is DeletedCurrentPurpose) {
-            showToast(context, text: 'Delete successfully'); //!
+            showToast(context, text: tr(
+                    'consentManagement.consentForm.editConsentTheme.deleteSuccess')); //!
 
             final deleted = PurposeModel.empty().copyWith(id: state.purposeId);
             context.pop(

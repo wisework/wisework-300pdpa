@@ -131,7 +131,8 @@ class _ConsentFormTabState extends State<ConsentFormTab> {
                               await _downloadQrCode().then((value) {
                                 if (value) {
                                   BotToast.showText(
-                                    text: 'QR code has been downloaded',
+                                    text: tr(
+                                        'consentManagement.consentForm.urltab.qrCodeHasBeenDownloaded'),
                                     contentColor: Theme.of(context)
                                         .colorScheme
                                         .secondary
@@ -148,7 +149,8 @@ class _ConsentFormTabState extends State<ConsentFormTab> {
                                   );
                                 } else {
                                   BotToast.showText(
-                                    text: 'Failed to download QR code',
+                                    text: tr(
+                                        'consentManagement.consentForm.urltab.failedToDownloadQrCode'),
                                     contentColor: Theme.of(context)
                                         .colorScheme
                                         .secondary
@@ -227,7 +229,8 @@ class _ConsentFormTabState extends State<ConsentFormTab> {
                               );
 
                               BotToast.showText(
-                                text: 'URL Copied',
+                                text: tr(
+                                    "consentManagement.consentForm.consentFormDetails.form.urlCopied"), 
                                 contentColor: Theme.of(context)
                                     .colorScheme
                                     .secondary

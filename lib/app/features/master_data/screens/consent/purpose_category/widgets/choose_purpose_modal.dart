@@ -110,7 +110,7 @@ class _ChoosePurposeModalState extends State<ChoosePurposeModal> {
             itemBuilder: (_, index) {
               if (purposes.isEmpty) {
                 return Text(
-                  'masterData.cm.purposeCategory.noData',
+                  tr('masterData.cm.purposeCategory.noData'),
                   style: Theme.of(context).textTheme.bodyMedium,
                 ); //!
               }

@@ -123,7 +123,7 @@ class _SettingViewState extends State<SettingView> {
           backgroundColor: Theme.of(context).colorScheme.onBackground,
         ),
         title: Text(
-          tr('app.features.setting'), //!
+          tr('app.features.setting'), 
           style: Theme.of(context).textTheme.titleLarge,
         ),
       ),

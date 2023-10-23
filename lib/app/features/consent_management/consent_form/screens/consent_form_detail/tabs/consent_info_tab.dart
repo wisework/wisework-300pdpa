@@ -85,7 +85,7 @@ class _ConsentInfoTabState extends State<ConsentInfoTab> {
                     padding: const EdgeInsets.all(20.0),
                     child: Center(
                       child: Text(
-                        "No consent details.", //!
+                        tr('consentManagement.consentForm.congratulations.noConsentDetails'), 
                         style: Theme.of(context).textTheme.labelLarge?.copyWith(
                             color: Theme.of(context).colorScheme.onSurface),
                       ),

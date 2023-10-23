@@ -78,7 +78,8 @@ class _EditConsentFormScreenState extends State<EditConsentFormScreen> {
         listener: (context, state) {
           if (state is CreatedCurrentConsentForm) {
             BotToast.showText(
-              text: 'Create successfully',
+              text: tr(
+                  'consentManagement.consentForm.editConsentTheme.createSuccess'), //!
               contentColor:
                   Theme.of(context).colorScheme.secondary.withOpacity(0.75),
               borderRadius: BorderRadius.circular(8.0),
@@ -104,7 +105,8 @@ class _EditConsentFormScreenState extends State<EditConsentFormScreen> {
 
           if (state is UpdateCurrentConsentForm) {
             BotToast.showText(
-              text: 'Update successfully',
+              text: tr(
+                  'consentManagement.consentForm.editConsentTheme.updateSuccess'), //!
               contentColor:
                   Theme.of(context).colorScheme.secondary.withOpacity(0.75),
               borderRadius: BorderRadius.circular(8.0),
@@ -506,8 +508,8 @@ class _EditConsentFormViewState extends State<EditConsentFormView> {
           _buildWarningDescription(
             context,
             isWarning: consentForm.mandatoryFields.isEmpty,
-            text:
-                'Please select at least one field to allow the form to store user information.',
+            text: tr(
+                'consentManagement.consentForm.createForm.pleaseSelectOneField'), //!
           ),
         ],
       ),
@@ -614,8 +616,8 @@ class _EditConsentFormViewState extends State<EditConsentFormView> {
           _buildWarningDescription(
             context,
             isWarning: errorPurposeCategoryEmpty,
-            text:
-                'Please select at least one category to inform users of the purpose for collecting the data.',
+            text: tr(
+                'consentManagement.consentForm.createForm.pleaseSelectPurposeCategory'), //!
           ),
         ],
       ),

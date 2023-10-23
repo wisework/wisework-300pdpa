@@ -83,7 +83,7 @@ class _EditRequestRejectTemplateScreenState
         listener: (context, state) {
           if (state is CreatedCurrentRequestRejectTp) {
             BotToast.showText(
-              text: 'Create successfully',
+              text: 'Create successfully', //!
               contentColor:
                   Theme.of(context).colorScheme.secondary.withOpacity(0.75),
               borderRadius: BorderRadius.circular(8.0),
@@ -103,7 +103,7 @@ class _EditRequestRejectTemplateScreenState
 
           if (state is UpdatedCurrentRequestRejectTp) {
             BotToast.showText(
-              text: 'Update successfully',
+              text: 'Update successfully', //!
               contentColor:
                   Theme.of(context).colorScheme.secondary.withOpacity(0.75),
               borderRadius: BorderRadius.circular(8.0),
@@ -117,7 +117,7 @@ class _EditRequestRejectTemplateScreenState
 
           if (state is DeletedCurrentRequestRejectTp) {
             BotToast.showText(
-              text: 'Delete successfully',
+              text: 'Delete successfully', //!
               contentColor:
                   Theme.of(context).colorScheme.secondary.withOpacity(0.75),
               borderRadius: BorderRadius.circular(8.0),
@@ -359,9 +359,9 @@ class _EditRequestRejectTemplateViewState
                         mainAxisAlignment: MainAxisAlignment.center,
                         mainAxisSize: MainAxisSize.min,
                         children: <Widget>[
-                          const Text('Modal BottomSheet'),
+                          const Text('Modal BottomSheet'), //!
                           ElevatedButton(
-                            child: const Text('Close BottomSheet'),
+                            child: const Text('Close BottomSheet'), //!
                             onPressed: () => Navigator.pop(context),
                           ),
                         ],
@@ -419,9 +419,9 @@ class _EditRequestRejectTemplateViewState
                         mainAxisAlignment: MainAxisAlignment.center,
                         mainAxisSize: MainAxisSize.min,
                         children: <Widget>[
-                          const Text('Modal BottomSheet'),
+                          const Text('Modal BottomSheet'), //!
                           ElevatedButton(
-                            child: const Text('Close BottomSheet'),
+                            child: const Text('Close BottomSheet'), //!
                             onPressed: () => Navigator.pop(context),
                           ),
                         ],

@@ -15,7 +15,6 @@ import 'package:pdpa/app/data/models/master_data/purpose_model.dart';
 import 'package:pdpa/app/features/authentication/bloc/sign_in/sign_in_bloc.dart';
 import 'package:pdpa/app/features/consent_management/consent_form/bloc/consent_form_settings/consent_form_settings_bloc.dart';
 import 'package:pdpa/app/features/consent_management/consent_form/cubit/current_consent_form_settings/current_consent_form_settings_cubit.dart';
-import 'package:pdpa/app/features/consent_management/consent_form/routes/consent_form_route.dart';
 import 'package:pdpa/app/features/consent_management/consent_form/widgets/consent_form_preview.dart';
 import 'package:pdpa/app/shared/widgets/customs/custom_icon_button.dart';
 import 'package:pdpa/app/shared/widgets/screens/error_message_screen.dart';
@@ -77,7 +76,7 @@ class _ConsentFormSettingScreenState extends State<ConsentFormSettingScreen> {
         if (state is UpdatedConsentFormSettings) {
           BotToast.showText(
             text: tr(
-                'consentManagement.consentForm.consentFormsetting.updateSuccess'), //!
+                'consentManagement.consentForm.consentFormsetting.updateSuccess'),
             contentColor:
                 Theme.of(context).colorScheme.secondary.withOpacity(0.75),
             borderRadius: BorderRadius.circular(8.0),
@@ -187,15 +186,14 @@ class _ConsentFormSettingViewState extends State<ConsentFormSettingView> {
         appBar: PdpaAppBar(
           leadingIcon: CustomIconButton(
             onPressed: () {
-              context.go(ConsentFormRoute.consentForm.path);
-              // print(widget.consentThemes);
+              context.pop();
             },
             icon: Ionicons.chevron_back_outline,
             iconColor: Theme.of(context).colorScheme.primary,
             backgroundColor: Theme.of(context).colorScheme.onBackground,
           ),
           title: Text(
-            tr('consentManagement.consentForm.consentFormsetting.consentFormSettings'), //!
+            tr('consentManagement.consentForm.consentFormsetting.consentFormSettings'),
             style: Theme.of(context).textTheme.titleLarge,
           ),
           actions: [
@@ -295,21 +293,15 @@ class _ConsentFormSettingViewState extends State<ConsentFormSettingView> {
   TabBar _buildTabBar(BuildContext context) {
     return TabBar(
       tabs: [
+        Tab(text: tr('consentManagement.consentForm.consentFormsetting.url')),
         Tab(
             text:
-                tr('consentManagement.consentForm.consentFormsetting.url')), //!
+                tr('consentManagement.consentForm.consentFormsetting.header')),
+        Tab(text: tr('consentManagement.consentForm.consentFormsetting.body')),
         Tab(
-            text: tr(
-                'consentManagement.consentForm.consentFormsetting.header')), //!
-        Tab(
-            text: tr(
-                'consentManagement.consentForm.consentFormsetting.body')), //!
-        Tab(
-            text: tr(
-                'consentManagement.consentForm.consentFormsetting.footer')), //!
-        Tab(
-            text: tr(
-                'consentManagement.consentForm.consentFormsetting.theme')), //!
+            text:
+                tr('consentManagement.consentForm.consentFormsetting.footer')),
+        Tab(text: tr('consentManagement.consentForm.consentFormsetting.theme')),
       ],
       indicatorColor: Theme.of(context).colorScheme.primary,
       indicatorSize: TabBarIndicatorSize.tab,

@@ -71,7 +71,6 @@ class ConsentRepository {
       String companyId) async {
     try {
       final result = await _api.getConsentThemes(companyId);
-
       return Right(result);
     } on ApiException catch (error) {
       return Left(ApiFailure.fromException(error));

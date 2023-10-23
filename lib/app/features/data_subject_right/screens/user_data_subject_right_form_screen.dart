@@ -1,4 +1,5 @@
 import 'package:bot_toast/bot_toast.dart';
+import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:pdpa/app/config/config.dart';
@@ -46,7 +47,7 @@ class _UserDataSubjectRightFormScreenState
       listener: (context, state) {
         if (state is SubmittedUserDataSubjectRightForm) {
           BotToast.showText(
-            text: 'Submit successfully',
+            text: tr('consentManagement.consentForm.consentFormDetails.edit.submitSuccess'), //!
             contentColor:
                 Theme.of(context).colorScheme.secondary.withOpacity(0.75),
             borderRadius: BorderRadius.circular(8.0),

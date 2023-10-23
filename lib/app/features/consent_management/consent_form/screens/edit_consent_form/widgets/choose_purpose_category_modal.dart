@@ -225,7 +225,6 @@ class _ChoosePurposeCategoryModalState
         );
 
         if (result != null) {
-          print(result);
         }
       },
       child: Padding(

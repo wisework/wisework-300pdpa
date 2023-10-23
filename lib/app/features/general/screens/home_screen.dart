@@ -188,7 +188,7 @@ class _HomeScreenState extends State<HomeScreen> {
                         crossAxisAlignment: CrossAxisAlignment.center,
                         mainAxisAlignment: MainAxisAlignment.center,
                         children: [
-                          Text(tr('masterData.cm.purposeCategory.noData')), //!
+                          Text(tr('masterData.cm.purposeCategory.noData')), 
                         ],
                       ),
                       const SizedBox(
@@ -318,7 +318,7 @@ class _HomeScreenState extends State<HomeScreen> {
                     ),
                   ],
                 ),
-                Container(
+                SizedBox(
                   // constraints:
                   //     const BoxConstraints(maxHeight: 170, minHeight: 150),
                   height:
