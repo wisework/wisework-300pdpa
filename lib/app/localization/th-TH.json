@@ -146,6 +146,7 @@
                 "actionButtonColor": "สีของปุ่มการดำเนินการ",
                 "categoryIconColor": "สีไอคอนหมวดหมู่",
                 "categoryTitleTextColor": "สีข้อความชื่อหมวดหมู่",
+                "categoryContentBackgroundColor": "สีพื้นหลังเนื้อหาหมวดหมู่",
                 "bodyBackgroundColor": "สีพื้นหลังของส่วนกลาง",
                 "backgroundColor": "สีพื้นหลัง",
                 "linkToPolicyTextColor": "ลิงก์ไปยังสีข้อความนโยบาย",
