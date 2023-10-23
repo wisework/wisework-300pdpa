@@ -59,8 +59,8 @@ class DeleteCurrentPurposeCategoryEvent extends EditPurposeCategoryEvent {
   List<Object> get props => [purposeCategoryId, companyId];
 }
 
-class AddNewlyPurposeInCategoryEvent extends EditPurposeCategoryEvent {
-  const AddNewlyPurposeInCategoryEvent({
+class UpdateEditPurposeCategoryStateEvent extends EditPurposeCategoryEvent {
+  const UpdateEditPurposeCategoryStateEvent({
     required this.purpose,
   });
 

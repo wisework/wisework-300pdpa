@@ -8,6 +8,7 @@ import 'package:modal_bottom_sheet/modal_bottom_sheet.dart';
 import 'package:pdpa/app/config/config.dart';
 import 'package:pdpa/app/data/models/authentication/user_model.dart';
 import 'package:pdpa/app/data/models/consent_management/consent_form_model.dart';
+import 'package:pdpa/app/data/models/etc/updated_return.dart';
 import 'package:pdpa/app/data/models/master_data/custom_field_model.dart';
 import 'package:pdpa/app/data/models/master_data/localized_model.dart';
 import 'package:pdpa/app/data/models/master_data/mandatory_field_model.dart';
@@ -16,7 +17,7 @@ import 'package:pdpa/app/data/models/master_data/purpose_model.dart';
 import 'package:pdpa/app/features/authentication/bloc/sign_in/sign_in_bloc.dart';
 import 'package:pdpa/app/features/consent_management/consent_form/bloc/consent_form/consent_form_bloc.dart';
 import 'package:pdpa/app/features/consent_management/consent_form/bloc/edit_consent_form/edit_consent_form_bloc.dart';
-import 'package:pdpa/app/features/consent_management/consent_form/routes/consent_form_route.dart';
+import 'package:pdpa/app/features/consent_management/consent_form/screens/edit_consent_form/screens/create_consent_form_success.dart';
 import 'package:pdpa/app/injection.dart';
 import 'package:pdpa/app/shared/utils/constants.dart';
 import 'package:pdpa/app/shared/utils/functions.dart';
@@ -96,10 +97,10 @@ class _EditConsentFormScreenState extends State<EditConsentFormScreen> {
 
             context.read<ConsentFormBloc>().add(event);
 
-            context.push(
-              ConsentFormRoute.createConsentFormScuccess.path
-                  .replaceFirst(':id', state.consentForm.id),
-            );
+            // context.push(
+            //   ConsentFormRoute.createConsentFormScuccess.path
+            //       .replaceFirst(':id', state.consentForm.id),
+            // );
           }
 
           if (state is UpdateCurrentConsentForm) {
@@ -117,6 +118,16 @@ class _EditConsentFormScreenState extends State<EditConsentFormScreen> {
           }
         },
         builder: (context, state) {
+          if (state is CreatedCurrentConsentForm) {
+            return CreateConsentFormSuccessScreen(
+              consentForm: state.consentForm,
+              mandatoryFields: state.mandatoryFields,
+              purposeCategories: state.purposeCategories,
+              purposes: state.purposes,
+              customFields: state.customFields,
+              currentUser: currentUser,
+            );
+          }
           if (state is GotCurrentConsentForm) {
             return EditConsentFormView(
               consentForm: state.consentForm,
@@ -176,6 +187,9 @@ class EditConsentFormView extends StatefulWidget {
 
 class _EditConsentFormViewState extends State<EditConsentFormView> {
   late ConsentFormModel consentForm;
+  late List<PurposeCategoryModel> purposeCategories;
+
+  late List<PurposeCategoryModel> purposeCategorySelected;
 
   late TextEditingController titleController;
   late TextEditingController descriptionController;
@@ -201,9 +215,11 @@ class _EditConsentFormViewState extends State<EditConsentFormView> {
 
   void _initialData() {
     consentForm = widget.consentForm;
-    // mandatoryFieldIds = consentForm.mandatoryFields.map((id) => id).toList();
-    // purposeCategoryItems =
-    //     consentForm.purposeCategories.map((item) => item).toList();
+    purposeCategories =
+        widget.purposeCategories.map((category) => category).toList();
+
+    purposeCategorySelected =
+        consentForm.purposeCategories.map((category) => category).toList();
 
     titleController = TextEditingController();
     descriptionController = TextEditingController();
@@ -226,12 +242,6 @@ class _EditConsentFormViewState extends State<EditConsentFormView> {
             .toList(),
       );
     }
-
-    // final cubit = context.read<CurrentEditConsentFormCubit>();
-    // cubit.initialSettings(
-    //   widget.consentForm,
-    //   widget.purposeCategories,
-    // );
   }
 
   void _setTitleController(String? value) {
@@ -276,20 +286,20 @@ class _EditConsentFormViewState extends State<EditConsentFormView> {
     });
   }
 
-  void _setPriority(int oldIndex, int newIndex) {
-    if (oldIndex < newIndex) {
-      newIndex -= 1;
-    }
+  // void _setPriority(int oldIndex, int newIndex) {
+  //   if (oldIndex < newIndex) {
+  //     newIndex -= 1;
+  //   }
 
-    final selected = consentForm.purposeCategories.removeAt(oldIndex);
-    consentForm.purposeCategories.insert(newIndex, selected);
+  //   final selected = purposeCategorySelected.removeAt(oldIndex);
+  //   purposeCategorySelected.insert(newIndex, selected);
 
-    final purposeCategories = UtilFunctions.reorderPurposeCategories(
-      consentForm.purposeCategories,
-    );
-
-    consentForm = consentForm.copyWith(purposeCategories: purposeCategories);
-  }
+  //   consentForm = consentForm.copyWith(
+  //     purposeCategories: UtilFunctions.reorderPurposeCategories(
+  //       purposeCategorySelected,
+  //     ),
+  //   );
+  // }
 
   void _saveConsentForm() {
     if (consentForm.purposeCategories.isEmpty) {
@@ -354,6 +364,15 @@ class _EditConsentFormViewState extends State<EditConsentFormView> {
     }
 
     context.pop();
+  }
+
+  void _updateEditConsentFormState(
+    UpdatedReturn<PurposeCategoryModel> updated,
+  ) {
+    final event = UpdateEditConsentFormStateEvent(
+      purposeCategory: updated.object,
+    );
+    context.read<EditConsentFormBloc>().add(event);
   }
 
   @override
@@ -530,25 +549,37 @@ class _EditConsentFormViewState extends State<EditConsentFormView> {
             style: Theme.of(context).textTheme.bodyMedium,
           ),
           const SizedBox(height: UiConfig.lineGap),
-          consentForm.purposeCategories.isNotEmpty
-              ? ReorderableListView.builder(
+          purposeCategorySelected.isNotEmpty
+              ? ListView.builder(
                   itemBuilder: (context, index) {
                     return _buildItemTile(
                       context,
-                      purposeCategory: widget.purposeCategories.firstWhere(
-                        (category) =>
-                            category.id ==
-                            consentForm.purposeCategories[index].id,
-                        orElse: () => PurposeCategoryModel.empty(),
+                      purposeCategory: UtilFunctions.getPurposeCategoryById(
+                        purposeCategories,
+                        purposeCategorySelected[index].id,
                       ),
                     );
                   },
-                  itemCount: consentForm.purposeCategories.length,
-                  onReorder: _setPriority,
-                  buildDefaultDragHandles: false,
+                  itemCount: purposeCategorySelected.length,
                   physics: const NeverScrollableScrollPhysics(),
                   shrinkWrap: true,
                 )
+              // ? ReorderableListView.builder(
+              //     itemBuilder: (context, index) {
+              //       return _buildItemTile(
+              //         context,
+              //         purposeCategory: UtilFunctions.getPurposeCategoryById(
+              //           purposeCategories,
+              //           purposeCategorySelected[index].id,
+              //         ),
+              //       );
+              //     },
+              //     itemCount: purposeCategorySelected.length,
+              //     onReorder: _setPriority,
+              //     buildDefaultDragHandles: false,
+              //     physics: const NeverScrollableScrollPhysics(),
+              //     shrinkWrap: true,
+              //   )
               : Padding(
                   padding: const EdgeInsets.symmetric(vertical: 10.0),
                   child: Icon(
@@ -560,31 +591,37 @@ class _EditConsentFormViewState extends State<EditConsentFormView> {
           const SizedBox(height: UiConfig.lineGap),
           CustomButton(
             height: 50.0,
-            onPressed: () async {
-              // if (consentForm.id.isNotEmpty) {
-              //   context.push(ConsentFormRoute.editChoosePurposeCategory.path
-              //       .replaceFirst(':id', consentForm.id));
-              // } else {
-              //   context.push(ConsentFormRoute.choosePurposeCategory.path);
-              // }
-
-              await showBarModalBottomSheet(
+            onPressed: () {
+              showBarModalBottomSheet(
                 context: context,
                 backgroundColor: Colors.transparent,
                 builder: (context) => ChoosePurposeCategoryModal(
-                  purposeCategories: widget.purposeCategories,
-                  purposes: widget.purposes,
-                  initialPurposeCategory: consentForm.purposeCategories,
-                  onChanged: (ids) {
+                  purposeCategories: purposeCategories,
+                  initialPurposeCategory: purposeCategorySelected,
+                  onChanged: (categories) {
+                    final categoryIds = purposeCategories
+                        .map((category) => category.id)
+                        .toList();
+
                     setState(() {
+                      purposeCategories = purposeCategories
+                        ..addAll(categories.where(
+                            (category) => !categoryIds.contains(category.id)));
+
+                      purposeCategorySelected = categories;
+
                       consentForm = consentForm.copyWith(
-                        purposeCategories: ids,
+                        purposeCategories:
+                            UtilFunctions.reorderPurposeCategories(
+                          purposeCategorySelected,
+                        ),
                       );
 
                       errorPurposeCategoryEmpty =
-                          consentForm.purposeCategories.isEmpty;
+                          purposeCategorySelected.isEmpty;
                     });
                   },
+                  onUpdated: _updateEditConsentFormState,
                 ),
               );
             },
@@ -637,14 +674,22 @@ class _EditConsentFormViewState extends State<EditConsentFormView> {
       children: <Widget>[
         Padding(
           padding: const EdgeInsets.all(UiConfig.actionSpacing),
-          child: ReorderableDragStartListener(
-            index: consentForm.purposeCategories.indexOf(purposeCategory),
-            child: Icon(
-              Ionicons.reorder_two_outline,
-              color: Theme.of(context).colorScheme.primary,
-            ),
+          child: Icon(
+            Icons.circle,
+            size: 8.0,
+            color: Theme.of(context).colorScheme.primary,
           ),
         ),
+        // Padding(
+        //   padding: const EdgeInsets.all(UiConfig.actionSpacing),
+        //   child: ReorderableDragStartListener(
+        //     index: purposeCategorySelected.indexOf(purposeCategory),
+        //     child: Icon(
+        //       Ionicons.reorder_two_outline,
+        //       color: Theme.of(context).colorScheme.primary,
+        //     ),
+        //   ),
+        // ),
         Expanded(
           child: Text(
             title.text,

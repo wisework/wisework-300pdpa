@@ -9,7 +9,6 @@ import 'package:pdpa/app/data/models/master_data/purpose_category_model.dart';
 import 'package:pdpa/app/data/models/master_data/purpose_model.dart';
 import 'package:pdpa/app/data/repositories/consent_repository.dart';
 import 'package:pdpa/app/data/repositories/master_data_repository.dart';
-import 'package:pdpa/app/shared/utils/constants.dart';
 
 part 'edit_consent_form_event.dart';
 part 'edit_consent_form_state.dart';
@@ -25,7 +24,7 @@ class EditConsentFormBloc
     on<GetCurrentConsentFormEvent>(_getCurrentConsentFormHandler);
     on<CreateCurrentConsentFormEvent>(_createCurrentConsentFormHandler);
     on<UpdateCurrentConsentFormEvent>(_updateCurrentConsentFormHandler);
-    on<UpdatePurposeCategoriesEvent>(_updatePurposeCategoriesHandler);
+    on<UpdateEditConsentFormStateEvent>(_updateEditConsentFormStateHandler);
   }
 
   final ConsentRepository _consentRepository;
@@ -128,15 +127,19 @@ class EditConsentFormBloc
 
     //? Filter data for Consent Form
     if (gotConsentForm != emptyConsentForm) {
-      gotConsentForm = gotConsentForm.copyWith(
-        purposeCategories: gotConsentForm.purposeCategories.map((category) {
-          final purposeCategory = gotPurposeCategories.firstWhere(
-            (pc) => pc.id == category.id,
-            orElse: () => category,
-          );
+      final purposeCategories =
+          gotConsentForm.purposeCategories.map((category) {
+        final purposeCategory = gotPurposeCategories.firstWhere(
+          (pc) => pc.id == category.id,
+          orElse: () => category,
+        );
 
-          return purposeCategory.copyWith(priority: category.priority);
-        }).toList(),
+        return purposeCategory.copyWith(priority: category.priority);
+      }).toList();
+      // ..sort((a, b) => a.priority.compareTo(b.priority));
+
+      gotConsentForm = gotConsentForm.copyWith(
+        purposeCategories: purposeCategories,
       );
     }
 
@@ -158,6 +161,27 @@ class EditConsentFormBloc
     if (event.companyId.isEmpty) {
       emit(const EditConsentFormError('Required company ID'));
       return;
+    }
+
+    List<MandatoryFieldModel> mandatoryFields = [];
+    List<PurposeModel> purposes = [];
+    List<PurposeCategoryModel> purposeCategories = [];
+    List<CustomFieldModel> customFields = [];
+
+    if (state is GotCurrentConsentForm) {
+      final settings = state as GotCurrentConsentForm;
+
+      mandatoryFields = settings.mandatoryFields;
+      purposes = settings.purposes;
+      purposeCategories = settings.purposeCategories;
+      customFields = settings.customFields;
+    } else if (state is UpdateCurrentConsentForm) {
+      final settings = state as UpdateCurrentConsentForm;
+
+      mandatoryFields = settings.mandatoryFields;
+      purposes = settings.purposes;
+      purposeCategories = settings.purposeCategories;
+      customFields = settings.customFields;
     }
 
     emit(const CreatingCurrentConsentForm());
@@ -204,7 +228,15 @@ class EditConsentFormBloc
 
     result.fold(
       (failure) => emit(EditConsentFormError(failure.errorMessage)),
-      (consentForm) => emit(CreatedCurrentConsentForm(consentForm)),
+      (consentForm) => emit(
+        CreatedCurrentConsentForm(
+          consentForm,
+          mandatoryFields,
+          purposes,
+          purposeCategories,
+          customFields,
+        ),
+      ),
     );
   }
 
@@ -261,50 +293,51 @@ class EditConsentFormBloc
     );
   }
 
-  Future<void> _updatePurposeCategoriesHandler(
-    UpdatePurposeCategoriesEvent event,
+  Future<void> _updateEditConsentFormStateHandler(
+    UpdateEditConsentFormStateEvent event,
     Emitter<EditConsentFormState> emit,
   ) async {
-    ConsentFormModel consentForm = ConsentFormModel.empty();
-    List<MandatoryFieldModel> mandatoryFields = [];
-    List<PurposeModel> purposes = [];
-    List<CustomFieldModel> customFields = [];
+    List<PurposeCategoryModel> purposeCategories = [];
 
     if (state is GotCurrentConsentForm) {
-      final settings = state as GotCurrentConsentForm;
+      final consentForm = (state as GotCurrentConsentForm).consentForm;
+      final mandatoryFields = (state as GotCurrentConsentForm).mandatoryFields;
+      final purposes = (state as GotCurrentConsentForm).purposes;
+      final customFields = (state as GotCurrentConsentForm).customFields;
 
-      consentForm = settings.consentForm;
-      mandatoryFields = settings.mandatoryFields;
-      purposes = settings.purposes;
-      customFields = settings.customFields;
+      purposeCategories =
+          consentForm.purposeCategories.map((category) => category).toList();
+      purposeCategories.add(event.purposeCategory);
+
+      emit(
+        GotCurrentConsentForm(
+          consentForm.copyWith(purposeCategories: purposeCategories),
+          mandatoryFields,
+          purposes,
+          purposeCategories,
+          customFields,
+        ),
+      );
     } else if (state is UpdateCurrentConsentForm) {
-      final settings = state as UpdateCurrentConsentForm;
+      final consentForm = (state as UpdateCurrentConsentForm).consentForm;
+      final mandatoryFields =
+          (state as UpdateCurrentConsentForm).mandatoryFields;
+      final purposes = (state as UpdateCurrentConsentForm).purposes;
+      final customFields = (state as UpdateCurrentConsentForm).customFields;
 
-      consentForm = settings.consentForm;
-      mandatoryFields = settings.mandatoryFields;
-      purposes = settings.purposes;
-      customFields = settings.customFields;
+      purposeCategories =
+          consentForm.purposeCategories.map((category) => category).toList();
+      purposeCategories.add(event.purposeCategory);
+
+      emit(
+        UpdateCurrentConsentForm(
+          consentForm.copyWith(purposeCategories: purposeCategories),
+          mandatoryFields,
+          purposes,
+          purposeCategories,
+          customFields,
+        ),
+      );
     }
-
-    List<PurposeCategoryModel> updated = [];
-
-    switch (event.updateType) {
-      case UpdateType.created:
-      case UpdateType.updated:
-        updated = event.purposeCategory;
-        break;
-      case UpdateType.deleted:
-        break;
-    }
-
-    emit(
-      GotCurrentConsentForm(
-        consentForm,
-        mandatoryFields..sort((a, b) => a.priority.compareTo(b.priority)),
-        purposes,
-        updated..sort((a, b) => b.priority.compareTo(a.priority)),
-        customFields,
-      ),
-    );
   }
 }

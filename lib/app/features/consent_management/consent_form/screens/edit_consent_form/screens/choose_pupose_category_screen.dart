@@ -13,7 +13,6 @@ import 'package:pdpa/app/features/consent_management/consent_form/bloc/choose_pu
 import 'package:pdpa/app/features/consent_management/consent_form/bloc/edit_consent_form/edit_consent_form_bloc.dart';
 import 'package:pdpa/app/features/consent_management/consent_form/cubit/choose_purpose_category/choose_purpose_category_cubit.dart';
 import 'package:pdpa/app/injection.dart';
-import 'package:pdpa/app/shared/utils/constants.dart';
 import 'package:pdpa/app/shared/widgets/customs/custom_container.dart';
 import 'package:pdpa/app/shared/widgets/customs/custom_icon_button.dart';
 import 'package:pdpa/app/shared/widgets/expanded_container.dart';
@@ -123,12 +122,12 @@ class _ChoosePurposeCategoryViewState extends State<ChoosePurposeCategoryView> {
         leadingIcon: CustomIconButton(
           onPressed: () {
             if (purposeCategory.isNotEmpty) {
-              final event = UpdatePurposeCategoriesEvent(
-                purposeCategory: newPurposeCategories,
-                updateType: UpdateType.updated,
-              );
+              // final event = UpdatePurposeCategoriesEvent(
+              //   purposeCategory: newPurposeCategories,
+              //   updateType: UpdateType.updated,
+              // );
 
-              context.read<EditConsentFormBloc>().add(event);
+              // context.read<EditConsentFormBloc>().add(event);
 
               // context.read<CurrentEditConsentFormCubit>().setPurposeCategory(
               //     newPurposeCategoryList, newPurposeCategories);

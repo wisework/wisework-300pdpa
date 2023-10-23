@@ -18,7 +18,8 @@ class EditPurposeCategoryBloc
     on<CreateCurrentPurposeCategoryEvent>(_createCurrentPurposeCategoryHandler);
     on<UpdateCurrentPurposeCategoryEvent>(_updateCurrentPurposeCategoryHandler);
     on<DeleteCurrentPurposeCategoryEvent>(_deleteCurrentPurposeCategoryHandler);
-    on<AddNewlyPurposeInCategoryEvent>(_addNewlyPurposeInCategoryHandler);
+    on<UpdateEditPurposeCategoryStateEvent>(
+        _updateEditPurposeCategoryStateHandler);
   }
   final MasterDataRepository _masterDataRepository;
 
@@ -165,8 +166,8 @@ class EditPurposeCategoryBloc
     );
   }
 
-  Future<void> _addNewlyPurposeInCategoryHandler(
-    AddNewlyPurposeInCategoryEvent event,
+  Future<void> _updateEditPurposeCategoryStateHandler(
+    UpdateEditPurposeCategoryStateEvent event,
     Emitter<EditPurposeCategoryState> emit,
   ) async {
     List<PurposeModel> purposes = [];

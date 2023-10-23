@@ -299,8 +299,8 @@ class _EditPurposeCategoryViewState extends State<EditPurposeCategoryView> {
     }
   }
 
-  void _addNewlyPurposeInCategory(UpdatedReturn<PurposeModel> updated) {
-    final event = AddNewlyPurposeInCategoryEvent(purpose: updated.object);
+  void _updateEditPurposeCategoryState(UpdatedReturn<PurposeModel> updated) {
+    final event = UpdateEditPurposeCategoryStateEvent(purpose: updated.object);
     context.read<EditPurposeCategoryBloc>().add(event);
   }
 
@@ -513,7 +513,7 @@ class _EditPurposeCategoryViewState extends State<EditPurposeCategoryView> {
                 );
               });
             },
-            onUpdated: _addNewlyPurposeInCategory,
+            onUpdated: _updateEditPurposeCategoryState,
           ),
         );
       },

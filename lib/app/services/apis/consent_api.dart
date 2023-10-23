@@ -3,6 +3,7 @@ import 'package:pdpa/app/data/models/consent_management/consent_form_model.dart'
 import 'package:pdpa/app/data/models/consent_management/consent_theme_model.dart';
 import 'package:pdpa/app/data/models/consent_management/user_consent_model.dart';
 import 'package:pdpa/app/data/models/master_data/purpose_category_model.dart';
+import 'package:pdpa/app/shared/utils/functions.dart';
 import 'package:pdpa/app/shared/utils/typedef.dart';
 
 class ConsentApi {
@@ -25,9 +26,8 @@ class ConsentApi {
           .map(
             (entry) => {
               'id': entry.key,
-              ...PurposeCategoryModel.empty()
-                  .copyWith(priority: entry.value)
-                  .toMap(),
+              'priority': entry.value,
+              ...PurposeCategoryModel.empty().toMap(),
             },
           )
           .toList();
@@ -58,9 +58,8 @@ class ConsentApi {
         .map(
           (entry) => {
             'id': entry.key,
-            ...PurposeCategoryModel.empty()
-                .copyWith(priority: entry.value)
-                .toMap(),
+            'priority': entry.value,
+            ...PurposeCategoryModel.empty().toMap(),
           },
         )
         .toList();
@@ -75,7 +74,13 @@ class ConsentApi {
   ) async {
     final ref =
         _firestore.collection('Companies/$companyId/ConsentForms').doc();
-    final created = consentForm.copyWith(id: ref.id);
+    final created = consentForm.copyWith(
+      id: ref.id,
+      consentFormUrl: UtilFunctions.getUserConsentFormUrl(
+        ref.id,
+        companyId,
+      ),
+    );
 
     await ref.set(created.toMap());
 

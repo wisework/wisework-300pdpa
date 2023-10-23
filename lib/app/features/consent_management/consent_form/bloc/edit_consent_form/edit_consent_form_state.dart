@@ -67,12 +67,28 @@ class CreatingCurrentConsentForm extends EditConsentFormState {
 class CreatedCurrentConsentForm extends EditConsentFormState {
   const CreatedCurrentConsentForm(
     this.consentForm,
+    this.mandatoryFields,
+    this.purposes,
+    this.purposeCategories,
+    this.customFields,
   );
 
   final ConsentFormModel consentForm;
+  final List<MandatoryFieldModel> mandatoryFields;
+  final List<PurposeModel> purposes;
+  final List<PurposeCategoryModel> purposeCategories;
+  final List<CustomFieldModel> customFields;
 
   @override
-  List<Object> get props => [consentForm];
+  List<Object> get props {
+    return [
+      consentForm,
+      mandatoryFields,
+      purposes,
+      purposeCategories,
+      customFields,
+    ];
+  }
 }
 
 class UpdatingCurrentConsentForm extends EditConsentFormState {

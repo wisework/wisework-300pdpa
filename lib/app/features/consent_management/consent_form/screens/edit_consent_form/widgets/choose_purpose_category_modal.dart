@@ -4,27 +4,26 @@ import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:ionicons/ionicons.dart';
 import 'package:pdpa/app/config/config.dart';
+import 'package:pdpa/app/data/models/etc/updated_return.dart';
 import 'package:pdpa/app/data/models/master_data/localized_model.dart';
 import 'package:pdpa/app/data/models/master_data/purpose_category_model.dart';
-import 'package:pdpa/app/data/models/master_data/purpose_model.dart';
 import 'package:pdpa/app/features/master_data/routes/master_data_route.dart';
-import 'package:pdpa/app/shared/utils/functions.dart';
 import 'package:pdpa/app/shared/widgets/customs/custom_checkbox.dart';
-import 'package:pdpa/app/shared/widgets/material_ink_well.dart';
+import 'package:pdpa/app/shared/widgets/customs/custom_icon_button.dart';
 
 class ChoosePurposeCategoryModal extends StatefulWidget {
   const ChoosePurposeCategoryModal({
     super.key,
     required this.initialPurposeCategory,
     required this.purposeCategories,
-    required this.purposes,
     required this.onChanged,
+    required this.onUpdated,
   });
 
   final List<PurposeCategoryModel> initialPurposeCategory;
   final List<PurposeCategoryModel> purposeCategories;
-  final List<PurposeModel> purposes;
   final Function(List<PurposeCategoryModel> categories) onChanged;
+  final Function(UpdatedReturn<PurposeCategoryModel> categories) onUpdated;
 
   @override
   State<ChoosePurposeCategoryModal> createState() =>
@@ -33,6 +32,7 @@ class ChoosePurposeCategoryModal extends StatefulWidget {
 
 class _ChoosePurposeCategoryModalState
     extends State<ChoosePurposeCategoryModal> {
+  late List<PurposeCategoryModel> purposeCategories;
   late List<PurposeCategoryModel> selectPurposeCategories;
 
   @override
@@ -43,30 +43,27 @@ class _ChoosePurposeCategoryModalState
   }
 
   void _initialData() {
-    if (widget.initialPurposeCategory.isNotEmpty) {
-      selectPurposeCategories =
-          widget.initialPurposeCategory.map((category) => category).toList();
-    } else {
-      selectPurposeCategories = [];
-    }
+    purposeCategories =
+        widget.purposeCategories.map((category) => category).toList();
+    selectPurposeCategories =
+        widget.initialPurposeCategory.map((category) => category).toList();
   }
 
   void _selectPurposeCategory(PurposeCategoryModel purposeCategory) {
+    final selectIds =
+        selectPurposeCategories.map((selected) => selected.id).toList();
+
     setState(() {
-      if (selectPurposeCategories.contains(purposeCategory)) {
+      if (selectIds.contains(purposeCategory.id)) {
         selectPurposeCategories = selectPurposeCategories
-            .where((categoryId) => categoryId != purposeCategory)
+            .where((selected) => selected.id != purposeCategory.id)
             .toList();
       } else {
         selectPurposeCategories = selectPurposeCategories
-            .map((categoryId) => categoryId)
+            .map((selected) => selected)
             .toList()
           ..add(purposeCategory);
       }
-
-      selectPurposeCategories = UtilFunctions.reorderPurposeCategories(
-        selectPurposeCategories,
-      );
     });
 
     widget.onChanged(selectPurposeCategories);
@@ -122,9 +119,9 @@ class _ChoosePurposeCategoryModalState
             padding: const EdgeInsets.symmetric(
               horizontal: UiConfig.defaultPaddingSpacing,
             ),
-            itemCount: widget.purposeCategories.length,
+            itemCount: purposeCategories.length,
             itemBuilder: (_, index) {
-              if (widget.purposeCategories.isEmpty) {
+              if (purposeCategories.isEmpty) {
                 return Text(
                   'masterData.cm.purposeCategory.noData',
                   style: Theme.of(context).textTheme.bodyMedium,
@@ -134,7 +131,7 @@ class _ChoosePurposeCategoryModalState
                 children: <Widget>[
                   _buildCheckBoxListTile(
                     context,
-                    purposeCategory: widget.purposeCategories[index],
+                    purposeCategory: purposeCategories[index],
                   ),
                   Padding(
                     padding: const EdgeInsets.symmetric(
@@ -166,6 +163,10 @@ class _ChoosePurposeCategoryModalState
       orElse: () => const LocalizedModel.empty(),
     );
 
+    final selectIds =
+        selectPurposeCategories.map((category) => category.id).toList();
+    final priority = selectIds.indexOf(purposeCategory.id) + 1;
+
     return Row(
       children: <Widget>[
         Padding(
@@ -174,7 +175,7 @@ class _ChoosePurposeCategoryModalState
             right: UiConfig.actionSpacing,
           ),
           child: CustomCheckBox(
-            value: selectPurposeCategories.contains(purposeCategory),
+            value: selectIds.contains(purposeCategory.id),
             onChanged: (_) {
               _selectPurposeCategory(purposeCategory);
             },
@@ -188,8 +189,7 @@ class _ChoosePurposeCategoryModalState
                   text: title.text,
                   style: Theme.of(context).textTheme.bodyMedium,
                 ),
-                if (purposeCategory.id.isNotEmpty &&
-                    purposeCategory.priority != 0)
+                if (priority > 0)
                   WidgetSpan(
                     alignment: PlaceholderAlignment.baseline,
                     baseline: TextBaseline.alphabetic,
@@ -203,7 +203,7 @@ class _ChoosePurposeCategoryModalState
                         left: UiConfig.actionSpacing,
                       ),
                       child: Text(
-                        purposeCategory.priority.toString(),
+                        '$priority',
                         style: Theme.of(context).textTheme.labelLarge?.copyWith(
                             color: Theme.of(context).colorScheme.onPrimary),
                       ),
@@ -217,24 +217,25 @@ class _ChoosePurposeCategoryModalState
     );
   }
 
-  Widget _buildAddButton(BuildContext context) {
-    return MaterialInkWell(
-      onTap: () async {
-        final result = await context.push(
-          MasterDataRoute.createPurposeCategory.path,
-        );
+  CustomIconButton _buildAddButton(BuildContext context) {
+    return CustomIconButton(
+      onPressed: () async {
+        await context
+            .push(MasterDataRoute.createPurposeCategory.path)
+            .then((value) {
+          if (value != null) {
+            final updated = value as UpdatedReturn<PurposeCategoryModel>;
 
-        if (result != null) {
-          print(result);
-        }
+            purposeCategories = purposeCategories..add(updated.object);
+            _selectPurposeCategory(updated.object);
+
+            widget.onUpdated(updated);
+          }
+        });
       },
-      child: Padding(
-        padding: const EdgeInsets.only(bottom: 2.0),
-        child: Icon(
-          Ionicons.add,
-          color: Theme.of(context).colorScheme.primary,
-        ),
-      ),
+      icon: Ionicons.add,
+      iconColor: Theme.of(context).colorScheme.primary,
+      backgroundColor: Theme.of(context).colorScheme.onBackground,
     );
   }
 }
