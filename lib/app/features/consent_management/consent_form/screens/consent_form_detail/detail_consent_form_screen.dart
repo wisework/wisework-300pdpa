@@ -12,7 +12,6 @@ import 'package:pdpa/app/data/models/master_data/purpose_category_model.dart';
 import 'package:pdpa/app/data/models/master_data/purpose_model.dart';
 import 'package:pdpa/app/features/authentication/bloc/sign_in/sign_in_bloc.dart';
 import 'package:pdpa/app/features/consent_management/consent_form/bloc/consent_form_detail/consent_form_detail_bloc.dart';
-import 'package:pdpa/app/features/consent_management/consent_form/cubit/current_consent_form_detail/current_consent_form_detail_cubit.dart';
 import 'package:pdpa/app/features/consent_management/consent_form/routes/consent_form_route.dart';
 import 'package:pdpa/app/features/consent_management/consent_form/screens/consent_form_detail/tabs/consent_form_tab.dart';
 import 'package:pdpa/app/features/consent_management/consent_form/screens/consent_form_detail/tabs/consent_info_tab.dart';
@@ -110,6 +109,15 @@ class ConsentFormDetailView extends StatefulWidget {
 
 class _ConsentFormDetailViewState extends State<ConsentFormDetailView> {
   final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
+
+  int tabIndex = 0;
+
+  void _setTabIndex(int index) {
+    setState(() {
+      tabIndex = index;
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     return DefaultTabController(
@@ -130,49 +138,44 @@ class _ConsentFormDetailViewState extends State<ConsentFormDetailView> {
             style: Theme.of(context).textTheme.titleLarge,
           ),
           actions: [
-            BlocBuilder<CurrentConsentFormDetailCubit,
-                CurrentConsentFormDetailState>(
-              builder: (context, state) {
-                return CustomIconButton(
-                  onPressed: () {
-                    if (state.settingTabs == 0) {
-                      context.push(
-                        ConsentFormRoute.editConsentForm.path
-                            .replaceFirst(':id', widget.consentForm.id),
-                      );
-                    }
-                    if (state.settingTabs == 1) {
-                      context.push(
-                        ConsentFormRoute.consentFormSettings.path
-                            .replaceFirst(':id', widget.consentForm.id),
-                      );
-                    }
-                  },
-                  icon: Ionicons.pencil_outline,
-                  iconColor: Theme.of(context).colorScheme.primary,
-                  backgroundColor: Theme.of(context).colorScheme.onBackground,
-                );
+            CustomIconButton(
+              onPressed: () {
+                if (tabIndex == 0) {
+                  context.push(
+                    ConsentFormRoute.editConsentForm.path
+                        .replaceFirst(':id', widget.consentForm.id),
+                  );
+                } else if (tabIndex == 1) {
+                  context.push(
+                    ConsentFormRoute.consentFormSettings.path
+                        .replaceFirst(':id', widget.consentForm.id),
+                  );
+                }
               },
+              icon: Ionicons.pencil_outline,
+              iconColor: Theme.of(context).colorScheme.primary,
+              backgroundColor: Theme.of(context).colorScheme.onBackground,
             ),
           ],
           bottom: TabBar(
             tabs: [
               Tab(
-                  text: tr(
-                      'consentManagement.consentForm.consentFormDetails.information')),
+                text: tr(
+                  'consentManagement.consentForm.consentFormDetails.information',
+                ),
+              ),
               Tab(
-                  text: tr(
-                      'consentManagement.consentForm.consentFormDetails.filter.form')),
+                text: tr(
+                  'consentManagement.consentForm.consentFormDetails.filter.form',
+                ),
+              ),
             ],
             // isScrollable: true,
             indicatorColor: Theme.of(context).colorScheme.primary,
             indicatorSize: TabBarIndicatorSize.tab,
             labelColor: Theme.of(context).colorScheme.primary,
             labelStyle: Theme.of(context).textTheme.bodySmall,
-            onTap: (value) {
-              final cubit = context.read<CurrentConsentFormDetailCubit>();
-              cubit.setSettingTab(value);
-            },
+            onTap: _setTabIndex,
           ),
           appBarHeight: 100.0,
         ),
