@@ -94,7 +94,7 @@ class _ChoosePurposeModalState extends State<ChoosePurposeModal> {
               children: <Widget>[
                 Expanded(
                   child: Text(
-                    tr('masterData.cm.purposeCategory.purposeList'),
+                    tr('masterData.cm.purpose.list'),
                     style: Theme.of(context).textTheme.titleLarge,
                   ),
                 ),

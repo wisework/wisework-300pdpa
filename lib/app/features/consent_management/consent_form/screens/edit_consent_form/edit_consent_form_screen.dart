@@ -304,14 +304,14 @@ class _EditConsentFormViewState extends State<EditConsentFormView> {
   // }
 
   void _saveConsentForm() {
-    if (consentForm.purposeCategories.isEmpty) {
-      setState(() {
-        errorPurposeCategoryEmpty = true;
-      });
-      return;
-    }
-
     if (_formKey.currentState!.validate()) {
+      if (consentForm.purposeCategories.isEmpty) {
+        setState(() {
+          errorPurposeCategoryEmpty = true;
+        });
+        return;
+      }
+
       consentForm = consentForm.copyWith(
         title: [
           LocalizedModel(

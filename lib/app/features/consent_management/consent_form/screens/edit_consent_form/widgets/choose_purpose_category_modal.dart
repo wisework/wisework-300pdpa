@@ -10,6 +10,7 @@ import 'package:pdpa/app/data/models/master_data/purpose_category_model.dart';
 import 'package:pdpa/app/features/master_data/routes/master_data_route.dart';
 import 'package:pdpa/app/shared/widgets/customs/custom_checkbox.dart';
 import 'package:pdpa/app/shared/widgets/customs/custom_icon_button.dart';
+import 'package:pdpa/app/shared/widgets/expanded_card.dart';
 
 class ChoosePurposeCategoryModal extends StatefulWidget {
   const ChoosePurposeCategoryModal({
@@ -101,7 +102,7 @@ class _ChoosePurposeCategoryModalState
               children: <Widget>[
                 Expanded(
                   child: Text(
-                    tr('masterData.cm.purposeCategory.purposeList'),
+                    tr('masterData.cm.purposeCategory.list'),
                     style: Theme.of(context).textTheme.titleLarge,
                   ),
                 ),
@@ -153,7 +154,7 @@ class _ChoosePurposeCategoryModalState
     );
   }
 
-  Row _buildCheckBoxListTile(
+  ExpandedCard _buildCheckBoxListTile(
     BuildContext context, {
     required PurposeCategoryModel purposeCategory,
   }) {
@@ -167,53 +168,89 @@ class _ChoosePurposeCategoryModalState
         selectPurposeCategories.map((category) => category.id).toList();
     final priority = selectIds.indexOf(purposeCategory.id) + 1;
 
-    return Row(
-      children: <Widget>[
-        Padding(
-          padding: const EdgeInsets.only(
-            left: 4.0,
-            right: UiConfig.actionSpacing,
-          ),
-          child: CustomCheckBox(
-            value: selectIds.contains(purposeCategory.id),
-            onChanged: (_) {
-              _selectPurposeCategory(purposeCategory);
-            },
-          ),
-        ),
-        Expanded(
-          child: RichText(
-            text: TextSpan(
-              children: [
-                TextSpan(
-                  text: title.text,
-                  style: Theme.of(context).textTheme.bodyMedium,
-                ),
-                if (priority > 0)
-                  WidgetSpan(
-                    alignment: PlaceholderAlignment.baseline,
-                    baseline: TextBaseline.alphabetic,
-                    child: Container(
-                      padding: const EdgeInsets.all(5.0),
-                      decoration: BoxDecoration(
-                        color: Theme.of(context).colorScheme.primary,
-                        shape: BoxShape.circle,
-                      ),
-                      margin: const EdgeInsets.only(
-                        left: UiConfig.actionSpacing,
-                      ),
-                      child: Text(
-                        '$priority',
-                        style: Theme.of(context).textTheme.labelLarge?.copyWith(
-                            color: Theme.of(context).colorScheme.onPrimary),
-                      ),
-                    ),
-                  ),
-              ],
+    return ExpandedCard(
+      title: Row(
+        children: <Widget>[
+          Padding(
+            padding: const EdgeInsets.only(
+              left: 4.0,
+              right: UiConfig.actionSpacing,
+            ),
+            child: CustomCheckBox(
+              value: selectIds.contains(purposeCategory.id),
+              onChanged: (_) {
+                _selectPurposeCategory(purposeCategory);
+              },
             ),
           ),
+          Expanded(
+            child: RichText(
+              text: TextSpan(
+                children: [
+                  TextSpan(
+                    text: title.text,
+                    style: Theme.of(context).textTheme.bodyMedium,
+                  ),
+                  if (priority > 0)
+                    WidgetSpan(
+                      alignment: PlaceholderAlignment.baseline,
+                      baseline: TextBaseline.alphabetic,
+                      child: Container(
+                        padding: const EdgeInsets.all(5.0),
+                        decoration: BoxDecoration(
+                          color: Theme.of(context).colorScheme.primary,
+                          shape: BoxShape.circle,
+                        ),
+                        margin: const EdgeInsets.only(
+                          left: UiConfig.actionSpacing,
+                        ),
+                        child: Text(
+                          '$priority',
+                          style: Theme.of(context)
+                              .textTheme
+                              .labelLarge
+                              ?.copyWith(
+                                  color:
+                                      Theme.of(context).colorScheme.onPrimary),
+                        ),
+                      ),
+                    ),
+                ],
+              ),
+            ),
+          ),
+        ],
+      ),
+      subtitle: Padding(
+        padding: const EdgeInsets.only(
+          left: UiConfig.defaultPaddingSpacing * 3,
+          top: UiConfig.lineGap,
+          bottom: UiConfig.lineGap,
         ),
-      ],
+        child: ListView.separated(
+          physics: const NeverScrollableScrollPhysics(),
+          shrinkWrap: true,
+          itemBuilder: (context, index) => Text(
+            purposeCategory.purposes[index].description
+                .firstWhere(
+                  (item) => item.language == language,
+                  orElse: () => const LocalizedModel.empty(),
+                )
+                .text,
+            style: Theme.of(context).textTheme.bodyMedium,
+          ),
+          separatorBuilder: (context, index) => Padding(
+            padding: const EdgeInsets.symmetric(
+              vertical: UiConfig.textSpacing,
+            ),
+            child: Divider(
+              color:
+                  Theme.of(context).colorScheme.outlineVariant.withOpacity(0.5),
+            ),
+          ),
+          itemCount: purposeCategory.purposes.length,
+        ),
+      ),
     );
   }
 
