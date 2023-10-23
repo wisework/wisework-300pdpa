@@ -103,6 +103,7 @@
                 "storedInformation": "ข้อมูลที่จัดเก็บ",
                 "noInputField": "ไม่มีข้อมูลที่จัดเก็บ",
                 "Purposes": "วัตถุประสงค์",
+                "noPurposes": "ไม่มีวัตถุประสงค์ที่ถูกเพิ่ม",
                 "information": "ข้อมูล",
                 "filter": {
                     "informationPurpose": "ข้อมูล-วัตถุประสงค์",
@@ -135,6 +136,7 @@
                 "newConsentTheme": "ธีมคำยินยอมใหม่",
                 "editConsentTheme": "แก้ไขธีมคำยินยอม",
                 "consentThemeInfomation": "ข้อมูลธีมความยินยอม",
+                "consentThemeTitle": "Consent theme infomation",
                 "enterConsentThemeTitle": "กรอกชื่อธีมคำยินยอม",
                 "headerTextColor": "สีข้อความส่วนหัว",
                 "headerBackgroundColor": "สีพื้นหลังของส่วนหัว",

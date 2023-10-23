@@ -18,6 +18,7 @@ import 'package:pdpa/app/features/consent_management/consent_form/routes/consent
 import 'package:pdpa/app/injection.dart';
 import 'package:pdpa/app/shared/utils/constants.dart';
 import 'package:pdpa/app/shared/utils/functions.dart';
+import 'package:pdpa/app/shared/widgets/customs/custom_button.dart';
 import 'package:pdpa/app/shared/widgets/customs/custom_container.dart';
 import 'package:pdpa/app/shared/widgets/screens/loading_screen.dart';
 import 'package:pdpa/app/shared/widgets/templates/pdpa_app_bar.dart';
@@ -132,13 +133,18 @@ class _CreateConsentFormSuccessViewState
     );
     return Scaffold(
       appBar: PdpaAppBar(
-        title: Text(
-          tr('consentManagement.consentForm.congratulations.title'),
-          style: Theme.of(context)
-              .textTheme
-              .titleLarge
-              ?.copyWith(color: Theme.of(context).colorScheme.primary),
-          textAlign: TextAlign.center,
+        title: Row(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            Text(
+              tr('consentManagement.consentForm.congratulations.title'),
+              style: Theme.of(context)
+                  .textTheme
+                  .titleLarge
+                  ?.copyWith(color: Theme.of(context).colorScheme.primary),
+              textAlign: TextAlign.center,
+            ),
+          ],
         ),
       ),
       body: SingleChildScrollView(
@@ -203,7 +209,6 @@ class _CreateConsentFormSuccessViewState
               ),
               const SizedBox(height: UiConfig.lineSpacing),
               CustomContainer(
-                margin: const EdgeInsets.all(0),
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: <Widget>[
@@ -216,7 +221,11 @@ class _CreateConsentFormSuccessViewState
                     Row(
                       mainAxisAlignment: MainAxisAlignment.end,
                       children: <Widget>[
-                        TextButton(
+                        CustomButton(
+                          width: 100,
+                          height: 40,
+                          buttonColor:
+                              Theme.of(context).colorScheme.onBackground,
                           onPressed: () {
                             final event = UpdateConsentFormEvent(
                               consentForm: widget.consentForm,
@@ -248,16 +257,6 @@ class _CreateConsentFormSuccessViewState
                               ConsentFormRoute.consentForm.path,
                             );
                           },
-                          style: ButtonStyle(
-                              backgroundColor: MaterialStateProperty.all<Color>(
-                                Theme.of(context).colorScheme.onPrimary,
-                              ),
-                              shape: MaterialStateProperty.all<
-                                  RoundedRectangleBorder>(
-                                RoundedRectangleBorder(
-                                  borderRadius: BorderRadius.circular(8.0),
-                                ),
-                              )),
                           child: Text(
                             tr('consentManagement.consentForm.congratulations.later'),
                             style: Theme.of(context)
@@ -270,7 +269,9 @@ class _CreateConsentFormSuccessViewState
                           ),
                         ),
                         const SizedBox(width: 10.0),
-                        ElevatedButton(
+                        CustomButton(
+                          width: 100,
+                          height: 40,
                           onPressed: () async {
                             final url = UtilFunctions.getUserConsentFormUrl(
                               widget.consentForm.id,
@@ -296,16 +297,6 @@ class _CreateConsentFormSuccessViewState
                                   .replaceFirst(':id', widget.consentForm.id),
                             );
                           },
-                          style: ButtonStyle(
-                              backgroundColor: MaterialStateProperty.all<Color>(
-                                Theme.of(context).colorScheme.primary,
-                              ),
-                              shape: MaterialStateProperty.all<
-                                  RoundedRectangleBorder>(
-                                RoundedRectangleBorder(
-                                  borderRadius: BorderRadius.circular(8.0),
-                                ),
-                              )),
                           child: Text(
                             tr('consentManagement.consentForm.congratulations.ok'),
                             style: Theme.of(context)

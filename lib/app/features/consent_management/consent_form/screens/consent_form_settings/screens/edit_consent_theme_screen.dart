@@ -353,7 +353,7 @@ class _EditConsentThemeViewState extends State<EditConsentThemeView> {
           ),
           const SizedBox(height: UiConfig.lineSpacing),
           TitleRequiredText(
-            text: tr('consentManagement.createForm.title'), //!
+            text: tr('consentManagement.consentForm.createForm.title'), //!
           ),
           CustomTextField(
             controller: titleController,

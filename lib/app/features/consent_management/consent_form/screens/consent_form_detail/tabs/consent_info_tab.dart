@@ -85,7 +85,7 @@ class _ConsentInfoTabState extends State<ConsentInfoTab> {
                     padding: const EdgeInsets.all(20.0),
                     child: Center(
                       child: Text(
-                        "No consent details.",
+                        "No consent details.", //!
                         style: Theme.of(context).textTheme.labelLarge?.copyWith(
                             color: Theme.of(context).colorScheme.onSurface),
                       ),
@@ -207,36 +207,33 @@ class _ConsentInfoTabState extends State<ConsentInfoTab> {
               orElse: () => const LocalizedModel.empty(),
             );
 
-        return Padding(
-          padding: const EdgeInsets.only(left: 20.0),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: <Widget>[
-              Row(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: <Widget>[
-                  Expanded(
-                    child: Text(
-                      description.text,
-                      style: Theme.of(context).textTheme.labelLarge?.copyWith(
-                            height: 1.8,
-                            color: Theme.of(context).colorScheme.secondary,
-                          ),
-                    ),
+        return Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: <Widget>[
+            Row(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: <Widget>[
+                Expanded(
+                  child: Text(
+                    description.text,
+                    style: Theme.of(context).textTheme.labelLarge?.copyWith(
+                          height: 1.8,
+                          color: Theme.of(context).colorScheme.secondary,
+                        ),
                   ),
-                  Padding(
-                    padding: const EdgeInsets.only(left: 30.0),
-                    child: Text(
-                      "${purposeFiltered[index].retentionPeriod} ${purposeFiltered[index].periodUnit}",
-                      style: Theme.of(context).textTheme.labelLarge?.copyWith(
-                            color: Theme.of(context).colorScheme.secondary,
-                          ),
-                    ),
+                ),
+                Padding(
+                  padding: const EdgeInsets.only(left: 30.0),
+                  child: Text(
+                    "${purposeFiltered[index].retentionPeriod} ${purposeFiltered[index].periodUnit}",
+                    style: Theme.of(context).textTheme.labelLarge?.copyWith(
+                          color: Theme.of(context).colorScheme.secondary,
+                        ),
                   ),
-                ],
-              ),
-            ],
-          ),
+                ),
+              ],
+            ),
+          ],
         );
       },
       separatorBuilder: (context, _) => Padding(
