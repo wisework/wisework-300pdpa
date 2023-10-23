@@ -1,11 +1,15 @@
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:go_router/go_router.dart';
 import 'package:ionicons/ionicons.dart';
 import 'package:pdpa/app/config/config.dart';
 import 'package:pdpa/app/data/models/authentication/user_model.dart';
 import 'package:pdpa/app/features/authentication/bloc/sign_in/sign_in_bloc.dart';
 import 'package:pdpa/app/features/general/bloc/app_settings/app_settings_bloc.dart';
+import 'package:pdpa/app/features/general/routes/general_route.dart';
+import 'package:pdpa/app/shared/drawers/bloc/drawer_bloc.dart';
+import 'package:pdpa/app/shared/drawers/models/drawer_menu_models.dart';
 import 'package:pdpa/app/shared/drawers/pdpa_drawer.dart';
 import 'package:pdpa/app/shared/utils/constants.dart';
 import 'package:pdpa/app/shared/widgets/customs/custom_container.dart';
@@ -71,20 +75,37 @@ class _SettingViewState extends State<SettingView> {
     currentLanguage = widget.currentUser.defaultLanguage;
   }
 
+  void _selectMenuDrawer(DrawerMenuModel menu) {
+    context.read<DrawerBloc>().add(SelectMenuDrawerEvent(menu: menu));
+    context.pushReplacement(menu.route.path);
+  }
+
   void _setCurrentLanguage(String? value) {
     if (value != null && value != currentLanguage) {
       currentLanguage = value;
 
       final locales = value.split('-');
-      EasyLocalization.of(context)?.setLocale(
+      context.setLocale(
         Locale(locales.first, locales.last),
       );
+
+      // EasyLocalization.of(context)?.setLocale(
+      //   Locale(locales.first, locales.last),
+      // );
 
       final setDeviceLanguage = SetDeviceLanguageEvent(
         language: value,
         user: widget.currentUser.copyWith(defaultLanguage: value),
       );
       context.read<AppSettingsBloc>().add(setDeviceLanguage);
+      _selectMenuDrawer(
+        DrawerMenuModel(
+          value: 'home',
+          title: tr('app.features.home'),
+          icon: Ionicons.home_outline,
+          route: GeneralRoute.home,
+        ),
+      );
     }
   }
 
