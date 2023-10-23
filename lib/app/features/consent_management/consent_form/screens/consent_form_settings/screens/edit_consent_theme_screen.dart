@@ -73,7 +73,7 @@ class _EditConsentThemeScreenState extends State<EditConsentThemeScreen> {
           if (state is CreatedCurrentConsentTheme) {
             BotToast.showText(
               text: tr(
-                  'consentManagement.consentForm.editConsentTheme.createSuccess'), 
+                  'consentManagement.consentForm.editConsentTheme.createSuccess'),
               contentColor:
                   Theme.of(context).colorScheme.secondary.withOpacity(0.75),
               borderRadius: BorderRadius.circular(8.0),
@@ -96,7 +96,7 @@ class _EditConsentThemeScreenState extends State<EditConsentThemeScreen> {
           if (state is UpdatedCurrentConsentTheme) {
             BotToast.showText(
               text: tr(
-                  'consentManagement.consentForm.editConsentTheme.updateSuccess'), 
+                  'consentManagement.consentForm.editConsentTheme.updateSuccess'),
               contentColor:
                   Theme.of(context).colorScheme.secondary.withOpacity(0.75),
               borderRadius: BorderRadius.circular(8.0),
@@ -111,7 +111,7 @@ class _EditConsentThemeScreenState extends State<EditConsentThemeScreen> {
           if (state is DeletedCurrentConsentTheme) {
             BotToast.showText(
               text: tr(
-                  'consentManagement.consentForm.editConsentTheme.deleteSuccess'), 
+                  'consentManagement.consentForm.editConsentTheme.deleteSuccess'),
               contentColor:
                   Theme.of(context).colorScheme.secondary.withOpacity(0.75),
               borderRadius: BorderRadius.circular(8.0),
@@ -278,7 +278,7 @@ class _EditConsentThemeViewState extends State<EditConsentThemeView> {
               ? tr(
                   'consentManagement.consentForm.editConsentTheme.newConsentTheme')
               : tr(
-                  'consentManagement.consentForm.editConsentTheme.editConsentTheme'), 
+                  'consentManagement.consentForm.editConsentTheme.editConsentTheme'),
           style: Theme.of(context).textTheme.titleLarge,
         ),
         actions: [
@@ -346,19 +346,19 @@ class _EditConsentThemeViewState extends State<EditConsentThemeView> {
           Row(
             children: <Widget>[
               Text(
-                tr('consentManagement.consentForm.editConsentTheme.consentThemeInfomation'), 
+                tr('consentManagement.consentForm.editConsentTheme.consentThemeInfomation'),
                 style: Theme.of(context).textTheme.titleMedium,
               ),
             ],
           ),
           const SizedBox(height: UiConfig.lineSpacing),
           TitleRequiredText(
-            text: tr('consentManagement.consentForm.createForm.title'), 
+            text: tr('consentManagement.consentForm.createForm.title'),
           ),
           CustomTextField(
             controller: titleController,
             hintText: tr(
-                'consentManagement.consentForm.editConsentTheme.enterConsentThemeTitle'), 
+                'consentManagement.consentForm.editConsentTheme.enterConsentThemeTitle'),
             onChanged: _setThemeTitle,
           ),
         ],
@@ -373,7 +373,7 @@ class _EditConsentThemeViewState extends State<EditConsentThemeView> {
           Row(
             children: <Widget>[
               Text(
-                tr('consentManagement.consentForm.consentFormsetting.header'), 
+                tr('consentManagement.consentForm.consentFormsetting.header'),
                 style: Theme.of(context).textTheme.titleMedium,
               ),
             ],
@@ -383,7 +383,7 @@ class _EditConsentThemeViewState extends State<EditConsentThemeView> {
             children: <Widget>[
               Expanded(
                 child: Text(
-                  tr('consentManagement.consentForm.editConsentTheme.headerTextColor'), 
+                  tr('consentManagement.consentForm.editConsentTheme.headerTextColor'),
                   style: Theme.of(context).textTheme.bodyMedium,
                 ),
               ),
@@ -404,7 +404,7 @@ class _EditConsentThemeViewState extends State<EditConsentThemeView> {
             children: <Widget>[
               Expanded(
                 child: Text(
-                  tr('consentManagement.consentForm.editConsentTheme.headerBackgroundColor'), 
+                  tr('consentManagement.consentForm.editConsentTheme.headerBackgroundColor'),
                   style: Theme.of(context).textTheme.bodyMedium,
                 ),
               ),
@@ -432,7 +432,7 @@ class _EditConsentThemeViewState extends State<EditConsentThemeView> {
           Row(
             children: <Widget>[
               Text(
-                tr('consentManagement.consentForm.consentFormsetting.body'), 
+                tr('consentManagement.consentForm.consentFormsetting.body'),
                 style: Theme.of(context).textTheme.titleMedium,
               ),
             ],
@@ -442,7 +442,7 @@ class _EditConsentThemeViewState extends State<EditConsentThemeView> {
             children: <Widget>[
               Expanded(
                 child: Text(
-                  tr('consentManagement.consentForm.editConsentTheme.formTextColor'), 
+                  tr('consentManagement.consentForm.editConsentTheme.formTextColor'),
                   style: Theme.of(context).textTheme.bodyMedium,
                 ),
               ),
@@ -463,7 +463,7 @@ class _EditConsentThemeViewState extends State<EditConsentThemeView> {
             children: <Widget>[
               Expanded(
                 child: Text(
-                  tr('consentManagement.consentForm.editConsentTheme.actionButtonColor'), 
+                  tr('consentManagement.consentForm.editConsentTheme.actionButtonColor'),
                   style: Theme.of(context).textTheme.bodyMedium,
                 ),
               ),
@@ -484,7 +484,7 @@ class _EditConsentThemeViewState extends State<EditConsentThemeView> {
             children: <Widget>[
               Expanded(
                 child: Text(
-                  tr('consentManagement.consentForm.editConsentTheme.categoryIconColor'), 
+                  tr('consentManagement.consentForm.editConsentTheme.categoryIconColor'),
                   style: Theme.of(context).textTheme.bodyMedium,
                 ),
               ),
@@ -505,7 +505,7 @@ class _EditConsentThemeViewState extends State<EditConsentThemeView> {
             children: <Widget>[
               Expanded(
                 child: Text(
-                  tr('consentManagement.consentForm.editConsentTheme.categoryTitleTextColor'), 
+                  tr('consentManagement.consentForm.editConsentTheme.categoryTitleTextColor'),
                   style: Theme.of(context).textTheme.bodyMedium,
                 ),
               ),
@@ -526,7 +526,28 @@ class _EditConsentThemeViewState extends State<EditConsentThemeView> {
             children: <Widget>[
               Expanded(
                 child: Text(
-                  tr('consentManagement.consentForm.editConsentTheme.bodyBackgroundColor'), 
+                  tr('consentManagement.consentForm.editConsentTheme.categoryContentBackgroundColor'),
+                  style: Theme.of(context).textTheme.bodyMedium,
+                ),
+              ),
+              ColorPickerButton(
+                initialColor: consentTheme.categoryContentBackgroundColor,
+                onColorChanged: (color) {
+                  setState(() {
+                    consentTheme = consentTheme.copyWith(
+                      categoryContentBackgroundColor: color,
+                    );
+                  });
+                },
+              ),
+            ],
+          ),
+          const SizedBox(height: UiConfig.lineSpacing),
+          Row(
+            children: <Widget>[
+              Expanded(
+                child: Text(
+                  tr('consentManagement.consentForm.editConsentTheme.bodyBackgroundColor'),
                   style: Theme.of(context).textTheme.bodyMedium,
                 ),
               ),
@@ -547,7 +568,7 @@ class _EditConsentThemeViewState extends State<EditConsentThemeView> {
             children: <Widget>[
               Expanded(
                 child: Text(
-                  tr('consentManagement.consentForm.editConsentTheme.backgroundColor'), 
+                  tr('consentManagement.consentForm.editConsentTheme.backgroundColor'),
                   style: Theme.of(context).textTheme.bodyMedium,
                 ),
               ),
@@ -575,7 +596,7 @@ class _EditConsentThemeViewState extends State<EditConsentThemeView> {
           Row(
             children: <Widget>[
               Text(
-                tr('consentManagement.consentForm.consentFormsetting.footer'), 
+                tr('consentManagement.consentForm.consentFormsetting.footer'),
                 style: Theme.of(context).textTheme.titleMedium,
               ),
             ],
@@ -585,7 +606,7 @@ class _EditConsentThemeViewState extends State<EditConsentThemeView> {
             children: <Widget>[
               Expanded(
                 child: Text(
-                  tr('consentManagement.consentForm.editConsentTheme.linkToPolicyTextColor'), 
+                  tr('consentManagement.consentForm.editConsentTheme.linkToPolicyTextColor'),
                   style: Theme.of(context).textTheme.bodyMedium,
                 ),
               ),
@@ -606,7 +627,7 @@ class _EditConsentThemeViewState extends State<EditConsentThemeView> {
             children: <Widget>[
               Expanded(
                 child: Text(
-                  tr('consentManagement.consentForm.editConsentTheme.submitButtonColor'), 
+                  tr('consentManagement.consentForm.editConsentTheme.submitButtonColor'),
                   style: Theme.of(context).textTheme.bodyMedium,
                 ),
               ),
@@ -627,7 +648,7 @@ class _EditConsentThemeViewState extends State<EditConsentThemeView> {
             children: <Widget>[
               Expanded(
                 child: Text(
-                  tr('consentManagement.consentForm.editConsentTheme.submitTextColor'), 
+                  tr('consentManagement.consentForm.editConsentTheme.submitTextColor'),
                   style: Theme.of(context).textTheme.bodyMedium,
                 ),
               ),
@@ -648,7 +669,7 @@ class _EditConsentThemeViewState extends State<EditConsentThemeView> {
           //   children: <Widget>[
           //     Expanded(
           //       child: Text(
-          //         tr('consentManagement.consentForm.editConsentTheme.cancelButtonColor'), 
+          //         tr('consentManagement.consentForm.editConsentTheme.cancelButtonColor'),
           //         style: Theme.of(context).textTheme.bodyMedium,
           //       ),
           //     ),
@@ -669,7 +690,7 @@ class _EditConsentThemeViewState extends State<EditConsentThemeView> {
           //   children: <Widget>[
           //     Expanded(
           //       child: Text(
-          //         tr('consentManagement.consentForm.editConsentTheme.cancelTextColor'), 
+          //         tr('consentManagement.consentForm.editConsentTheme.cancelTextColor'),
           //         style: Theme.of(context).textTheme.bodyMedium,
           //       ),
           //     ),

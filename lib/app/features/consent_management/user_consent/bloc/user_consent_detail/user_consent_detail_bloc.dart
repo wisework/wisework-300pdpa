@@ -157,6 +157,20 @@ class UserConsentDetailBloc
           return purposeCategory.copyWith(priority: category.priority);
         }).toList(),
       );
+
+      if (gotConsentForm.consentThemeId.isNotEmpty) {
+        final result = await _consentRepository.getConsentThemeById(
+          gotConsentForm.consentThemeId,
+          event.companyId,
+        );
+
+        result.fold(
+          (failure) => emit(UserConsentDetailError(failure.errorMessage)),
+          (consentThemes) {
+            gotConsentTheme = consentThemes;
+          },
+        );
+      }
     }
 
     emit(

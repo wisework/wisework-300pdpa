@@ -146,6 +146,7 @@
                 "actionButtonColor": "Action button color",
                 "categoryIconColor": "Category icon color",
                 "categoryTitleTextColor": "Category title text color",
+                "categoryContentBackgroundColor": "Category content background color",
                 "bodyBackgroundColor": "Body background color",
                 "backgroundColor": "Background color",
                 "linkToPolicyTextColor": "Link to policy text color",

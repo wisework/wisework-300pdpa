@@ -4,12 +4,7 @@ import 'package:ionicons/ionicons.dart';
 import 'package:pdpa/app/features/authentication/bloc/sign_in/sign_in_bloc.dart';
 import 'package:pdpa/app/features/consent_management/consent_form/bloc/consent_form/consent_form_bloc.dart';
 import 'package:pdpa/app/features/consent_management/consent_form/bloc/consent_form_settings/consent_form_settings_bloc.dart';
-import 'package:pdpa/app/features/consent_management/consent_form/cubit/choose_purpose_category/choose_purpose_category_cubit.dart';
-
-import 'package:pdpa/app/features/consent_management/consent_form/cubit/current_consent_form_detail/current_consent_form_detail_cubit.dart';
-
 import 'package:pdpa/app/features/consent_management/consent_form/bloc/user_consent_form/user_consent_form_bloc.dart';
-
 import 'package:pdpa/app/features/consent_management/consent_form/cubit/current_consent_form_settings/current_consent_form_settings_cubit.dart';
 import 'package:pdpa/app/features/consent_management/user_consent/bloc/user_consent/user_consent_bloc.dart';
 import 'package:pdpa/app/features/data_subject_right/bloc/data_subject_right/data_subject_right_bloc.dart';
@@ -58,12 +53,6 @@ class GlobalBlocProvider {
       ),
       BlocProvider<CurrentConsentFormSettingsCubit>(
         create: (context) => serviceLocator<CurrentConsentFormSettingsCubit>(),
-      ),
-      BlocProvider<CurrentConsentFormDetailCubit>(
-        create: (context) => serviceLocator<CurrentConsentFormDetailCubit>(),
-      ),
-      BlocProvider<ChoosePurposeCategoryCubit>(
-        create: (context) => serviceLocator<ChoosePurposeCategoryCubit>(),
       ),
       BlocProvider<UserConsentFormBloc>(
         create: (context) => serviceLocator<UserConsentFormBloc>(),

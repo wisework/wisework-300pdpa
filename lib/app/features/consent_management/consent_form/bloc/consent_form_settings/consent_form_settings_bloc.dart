@@ -130,6 +130,19 @@ class ConsentFormSettingsBloc
       },
     );
 
+    final consentThemeResult = await _consentRepository.getConsentThemes(
+      event.companyId,
+    );
+    consentThemeResult.fold(
+      (failure) {
+        emit(ConsentFormSettingsError(failure.errorMessage));
+        return;
+      },
+      (consentThemes) {
+        gotConsentThemes = consentThemes;
+      },
+    );
+
     //? Filter data for Consent Form
     if (gotConsentForm != emptyConsentForm) {
       gotConsentForm = gotConsentForm.copyWith(
@@ -144,18 +157,6 @@ class ConsentFormSettingsBloc
       );
     }
 
-    final consentThemesResult = await _consentRepository.getConsentThemes(
-      event.companyId,
-    );
-    consentThemesResult.fold(
-      (failure) {
-        emit(ConsentFormSettingsError(failure.errorMessage));
-        return;
-      },
-      (consentThemes) {
-        gotConsentThemes = consentThemes;
-      },
-    );
     emit(
       GotConsentFormSettings(
         gotConsentForm,
