@@ -63,7 +63,7 @@ class _BodyTabState extends State<BodyTab> {
           Row(
             children: <Widget>[
               Text(
-                tr('consentManagement.consentForm.bodytab.background'), //!
+                tr('consentManagement.consentForm.bodytab.background'), 
                 style: Theme.of(context).textTheme.titleMedium,
               ),
             ],
@@ -106,7 +106,7 @@ class _BodyTabState extends State<BodyTab> {
               Row(
                 children: <Widget>[
                   Text(
-                    tr('consentManagement.consentForm.bodytab.recentlyUsed'), //!
+                    tr('consentManagement.consentForm.bodytab.recentlyUsed'), 
                     style: Theme.of(context).textTheme.titleMedium,
                   ),
                 ],

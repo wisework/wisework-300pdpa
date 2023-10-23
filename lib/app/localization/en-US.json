@@ -86,7 +86,9 @@
                 "idCardNumber": "ID Card Number",
                 "purpose": "Purpose",
                 "purposeOfDC": "Purpose of data collection",
-                "selectPurposeCategory": "Select purpose category"
+                "selectPurposeCategory": "Select purpose category",
+                "pleaseSelectOneField": "Please select at least one field to allow the form to store user information.",
+                "pleaseSelectPurposeCategory": "Please select at least one category to inform users of the purpose for collecting the data."
             },
             "congratulations":{
                 "title" : "Congratulations!",
@@ -136,6 +138,7 @@
                 "newConsentTheme": "New consent theme",
                 "editConsentTheme": "Edit consent theme",
                 "consentThemeInfomation": "Consent theme infomation",
+                "consentThemeTitle": "Consent theme infomation",
                 "enterConsentThemeTitle": "Enter consent theme title",
                 "headerTextColor": "Header text color",
                 "headerBackgroundColor": "Header background color",

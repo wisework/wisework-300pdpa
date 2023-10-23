@@ -57,7 +57,7 @@ class _UserConsentFormScreenState extends State<UserConsentFormScreen> {
       listener: (context, state) {
         if (state is SubmittedUserConsentForm) {
           BotToast.showText(
-            text: tr('consentManagement.userConsent.consentFormDetails.edit.submitSuccess'),//!
+            text: tr('consentManagement.userConsent.consentFormDetails.edit.submitSuccess'),
             contentColor:
                 Theme.of(context).colorScheme.secondary.withOpacity(0.75),
             borderRadius: BorderRadius.circular(8.0),
@@ -137,7 +137,7 @@ class _UserConsentFormScreenState extends State<UserConsentFormScreen> {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: <Widget>[
                   Text(
-                    tr('consentManagement.userConsent.consentFormDetails.edit.decription'), //!
+                    tr('consentManagement.userConsent.consentFormDetails.edit.decription'), 
                     style: Theme.of(context).textTheme.bodyMedium,
                   ),
                   const SizedBox(height: UiConfig.lineGap),
@@ -159,7 +159,7 @@ class _UserConsentFormScreenState extends State<UserConsentFormScreen> {
                         context.read<UserConsentFormBloc>().add(event);
                       },
                       child: Text(
-                        tr('consentManagement.userConsent.consentFormDetails.edit.fillOutTheFormAgain'), //!
+                        tr('consentManagement.userConsent.consentFormDetails.edit.fillOutTheFormAgain'), 
                         style: Theme.of(context).textTheme.bodyMedium?.copyWith(
                             color: Theme.of(context).colorScheme.onPrimary),
                       ),
@@ -275,7 +275,7 @@ class _UserConsentFormViewState extends State<UserConsentFormView> {
           onSubmitted: () {
             if (!userConsent.isAcceptConsent) {
               BotToast.showText(
-                text: tr('consentManagement.userConsent.consentFormDetails.edit.pleaseAcceptConsent'), //!
+                text: tr('consentManagement.userConsent.consentFormDetails.edit.pleaseAcceptConsent'), 
                 contentColor:
                     Theme.of(context).colorScheme.secondary.withOpacity(0.75),
                 borderRadius: BorderRadius.circular(8.0),

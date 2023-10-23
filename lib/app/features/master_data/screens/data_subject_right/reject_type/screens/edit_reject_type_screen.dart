@@ -68,7 +68,7 @@ class _EditRejectTypeScreenState extends State<EditRejectTypeScreen> {
         listener: (context, state) {
           if (state is CreatedCurrentRejectType) {
             BotToast.showText(
-              text: 'Create successfully',
+              text: tr('consentManagement.consentForm.editConsentTheme.createSuccess'), //!
               contentColor:
                   Theme.of(context).colorScheme.secondary.withOpacity(0.75),
               borderRadius: BorderRadius.circular(8.0),
@@ -87,7 +87,7 @@ class _EditRejectTypeScreenState extends State<EditRejectTypeScreen> {
 
           if (state is UpdatedCurrentRejectType) {
             BotToast.showText(
-              text: 'Update successfully',
+              text: tr('consentManagement.consentForm.editConsentTheme.updateSuccess'),
               contentColor:
                   Theme.of(context).colorScheme.secondary.withOpacity(0.75),
               borderRadius: BorderRadius.circular(8.0),
@@ -101,7 +101,7 @@ class _EditRejectTypeScreenState extends State<EditRejectTypeScreen> {
 
           if (state is DeletedCurrentRejectType) {
             BotToast.showText(
-              text: 'Delete successfully',
+              text: tr('consentManagement.consentForm.editConsentTheme.deleteSuccess'),
               contentColor:
                   Theme.of(context).colorScheme.secondary.withOpacity(0.75),
               borderRadius: BorderRadius.circular(8.0),

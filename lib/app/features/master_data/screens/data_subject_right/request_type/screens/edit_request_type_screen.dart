@@ -68,7 +68,7 @@ class _EditRequestTypeScreenState extends State<EditRequestTypeScreen> {
         listener: (context, state) {
           if (state is CreatedCurrentRequestType) {
             BotToast.showText(
-              text: 'Create successfully',
+              text: 'Create successfully', //!
               contentColor:
                   Theme.of(context).colorScheme.secondary.withOpacity(0.75),
               borderRadius: BorderRadius.circular(8.0),
@@ -88,7 +88,7 @@ class _EditRequestTypeScreenState extends State<EditRequestTypeScreen> {
 
           if (state is UpdatedCurrentRequestType) {
             BotToast.showText(
-              text: 'Update successfully',
+              text: 'Update successfully', //!
               contentColor:
                   Theme.of(context).colorScheme.secondary.withOpacity(0.75),
               borderRadius: BorderRadius.circular(8.0),
@@ -102,7 +102,7 @@ class _EditRequestTypeScreenState extends State<EditRequestTypeScreen> {
 
           if (state is DeletedCurrentRequestType) {
             BotToast.showText(
-              text: 'Delete successfully',
+              text: 'Delete successfully', //!
               contentColor:
                   Theme.of(context).colorScheme.secondary.withOpacity(0.75),
               borderRadius: BorderRadius.circular(8.0),

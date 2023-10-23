@@ -188,7 +188,7 @@ class _HomeScreenState extends State<HomeScreen> {
                         crossAxisAlignment: CrossAxisAlignment.center,
                         mainAxisAlignment: MainAxisAlignment.center,
                         children: [
-                          Text(tr('masterData.cm.purposeCategory.noData')), //!
+                          Text(tr('masterData.cm.purposeCategory.noData')), 
                         ],
                       ),
                       const SizedBox(
@@ -319,7 +319,10 @@ class _HomeScreenState extends State<HomeScreen> {
                   ],
                 ),
                 SizedBox(
-                  height: 150.0,
+                  // constraints:
+                  //     const BoxConstraints(maxHeight: 170, minHeight: 150),
+                  height:
+                      context.locale.toString() == 'en_US' ? 140 : 170,
                   child: ListView.builder(
                       physics: const ClampingScrollPhysics(),
                       shrinkWrap: true,
@@ -367,7 +370,7 @@ class _HomeScreenState extends State<HomeScreen> {
                           },
                           child: Container(
                             width: 170.0,
-                            height: 150.0,
+                            height: 180.0,
                             alignment: Alignment.center,
                             // color: Theme.of(context).colorScheme.outline,
                             padding: const EdgeInsets.all(
@@ -462,11 +465,13 @@ class _HomeScreenState extends State<HomeScreen> {
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: <Widget>[
-                    Text(
-                      title.isNotEmpty
-                          ? title
-                          : tr('general.home.thisDataIsNotStored'),
-                      style: Theme.of(context).textTheme.bodyMedium,
+                    Expanded(
+                      child: Text(
+                        title.isNotEmpty
+                            ? title
+                            : tr('general.home.thisDataIsNotStored'),
+                        style: Theme.of(context).textTheme.bodyMedium,
+                      ),
                     ),
                     Padding(
                       padding: const EdgeInsets.only(left: 40.0),
@@ -483,12 +488,15 @@ class _HomeScreenState extends State<HomeScreen> {
                     padding: const EdgeInsets.only(
                       top: UiConfig.textLineSpacing,
                     ),
-                    child: Text(consentForm.purposeCategories.first.title
-                        .firstWhere(
-                          (item) => item.language == language,
-                          orElse: LocalizedModel.empty,
-                        )
-                        .text),
+                    child: Text(
+                      consentForm.purposeCategories.first.title
+                          .firstWhere(
+                            (item) => item.language == language,
+                            orElse: LocalizedModel.empty,
+                          )
+                          .text,
+                      style: Theme.of(context).textTheme.bodySmall,
+                    ),
                   ),
                 ),
               ],

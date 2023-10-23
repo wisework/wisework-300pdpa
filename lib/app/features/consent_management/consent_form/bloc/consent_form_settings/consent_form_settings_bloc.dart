@@ -144,6 +144,18 @@ class ConsentFormSettingsBloc
       );
     }
 
+    final consentThemesResult = await _consentRepository.getConsentThemes(
+      event.companyId,
+    );
+    consentThemesResult.fold(
+      (failure) {
+        emit(ConsentFormSettingsError(failure.errorMessage));
+        return;
+      },
+      (consentThemes) {
+        gotConsentThemes = consentThemes;
+      },
+    );
     emit(
       GotConsentFormSettings(
         gotConsentForm,

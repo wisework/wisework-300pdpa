@@ -75,7 +75,8 @@ class _ConsentFormSettingScreenState extends State<ConsentFormSettingScreen> {
       listener: (context, state) {
         if (state is UpdatedConsentFormSettings) {
           BotToast.showText(
-            text: tr('consentManagement.consentForm.consentFormsetting.updateSuccess'), //!
+            text: tr(
+                'consentManagement.consentForm.consentFormsetting.updateSuccess'),
             contentColor:
                 Theme.of(context).colorScheme.secondary.withOpacity(0.75),
             borderRadius: BorderRadius.circular(8.0),
@@ -192,7 +193,7 @@ class _ConsentFormSettingViewState extends State<ConsentFormSettingView> {
             backgroundColor: Theme.of(context).colorScheme.onBackground,
           ),
           title: Text(
-            tr('consentManagement.consentForm.consentFormsetting.consentFormSettings'), //!
+            tr('consentManagement.consentForm.consentFormsetting.consentFormSettings'),
             style: Theme.of(context).textTheme.titleLarge,
           ),
           actions: [
@@ -291,12 +292,16 @@ class _ConsentFormSettingViewState extends State<ConsentFormSettingView> {
 
   TabBar _buildTabBar(BuildContext context) {
     return TabBar(
-      tabs:  [
-        Tab(text: tr('consentManagement.consentForm.consentFormsetting.url')), //!
-        Tab(text: tr('consentManagement.consentForm.consentFormsetting.header')), //!
-        Tab(text: tr('consentManagement.consentForm.consentFormsetting.body')), //!
-        Tab(text: tr('consentManagement.consentForm.consentFormsetting.footer')), //!
-        Tab(text: tr('consentManagement.consentForm.consentFormsetting.theme')), //!
+      tabs: [
+        Tab(text: tr('consentManagement.consentForm.consentFormsetting.url')),
+        Tab(
+            text:
+                tr('consentManagement.consentForm.consentFormsetting.header')),
+        Tab(text: tr('consentManagement.consentForm.consentFormsetting.body')),
+        Tab(
+            text:
+                tr('consentManagement.consentForm.consentFormsetting.footer')),
+        Tab(text: tr('consentManagement.consentForm.consentFormsetting.theme')),
       ],
       indicatorColor: Theme.of(context).colorScheme.primary,
       indicatorSize: TabBarIndicatorSize.tab,

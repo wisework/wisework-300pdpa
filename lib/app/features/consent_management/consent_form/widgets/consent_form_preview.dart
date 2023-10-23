@@ -288,6 +288,7 @@ class _ConsentFormPreviewState extends State<ConsentFormPreview> {
           },
           readOnly: widget.isReadOnly,
           required: true,
+          maxLength: mandatoryField.lengthLimit,
         ),
       ],
     );
