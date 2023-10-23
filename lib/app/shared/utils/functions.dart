@@ -108,8 +108,18 @@ class UtilFunctions {
     return purposeCategories
         .asMap()
         .entries
-        .map((entry) => entry.value.copyWith(priority: entry.key))
+        .map((entry) => entry.value.copyWith(priority: entry.key + 1))
         .toList();
+  }
+
+  static PurposeCategoryModel getPurposeCategoryById(
+    List<PurposeCategoryModel> purposeCategories,
+    String purposeCategoryId,
+  ) {
+    return purposeCategories.firstWhere(
+      (category) => category.id == purposeCategoryId,
+      orElse: () => PurposeCategoryModel.empty(),
+    );
   }
 
   //? Purpose

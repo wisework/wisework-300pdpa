@@ -6,7 +6,7 @@ import 'package:pdpa/app/features/consent_management/consent_form/screens/consen
 
 import 'package:pdpa/app/features/consent_management/consent_form/screens/edit_consent_form/edit_consent_form_screen.dart';
 import 'package:pdpa/app/features/consent_management/consent_form/screens/edit_consent_form/screens/choose_pupose_category_screen.dart';
-import 'package:pdpa/app/features/consent_management/consent_form/screens/edit_consent_form/screens/create_consent_form_success.dart';
+// import 'package:pdpa/app/features/consent_management/consent_form/screens/edit_consent_form/screens/create_consent_form_success.dart';
 
 import 'package:pdpa/app/features/consent_management/consent_form/screens/user_consent_form_screen.dart';
 
@@ -34,12 +34,12 @@ class ConsentFormRoute {
       consentFormId: state.pathParameters['id'] ?? '',
     ),
   );
-  static final GoRoute createConsentFormScuccess = GoRoute(
-    path: '/consent-forms/create/:id/success',
-    builder: (context, state) => CreateConsentFormSuccessScreen(
-      consentFormId: state.pathParameters['id'] ?? '',
-    ),
-  );
+  // static final GoRoute createConsentFormScuccess = GoRoute(
+  //   path: '/consent-forms/create/:id/success',
+  //   builder: (context, state) => CreateConsentFormSuccessScreen1(
+  //     consentFormId: state.pathParameters['id'] ?? '',
+  //   ),
+  // );
 
   static final GoRoute editChoosePurposeCategory = GoRoute(
     path: '/consent-forms/create/:id/choose-purpose-category',
@@ -111,6 +111,6 @@ class ConsentFormRoute {
     editConsentTheme,
     copyConsentTheme,
     userConsentForm,
-    createConsentFormScuccess,
+    // createConsentFormScuccess,
   ];
 }

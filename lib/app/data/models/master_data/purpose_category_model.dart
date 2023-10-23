@@ -63,7 +63,7 @@ class PurposeCategoryModel extends Equatable {
               (item) => PurposeModel.fromMap(item as DataMap),
             ),
           ),
-          priority: 0,
+          priority: map['priority'] != null ? map['priority'] as int : 0,
           status: ActiveStatus.values[map['status'] as int],
           createdBy: map['createdBy'] as String,
           createdDate: DateTime.parse(map['createdDate'] as String),

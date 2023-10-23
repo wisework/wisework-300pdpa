@@ -37,18 +37,24 @@ class _ChoosePurposeModalState extends State<ChoosePurposeModal> {
   void initState() {
     super.initState();
 
+    _initialData();
+  }
+
+  void _initialData() {
     purposes = widget.purposes.map((purpose) => purpose).toList();
     selectPurposes = widget.initialPurposes.map((purpose) => purpose).toList();
   }
 
   void _selectPurpose(PurposeModel purpose) {
+    final selectIds = selectPurposes.map((selected) => selected.id).toList();
+
     setState(() {
-      if (selectPurposes.contains(purpose)) {
+      if (selectIds.contains(purpose.id)) {
         selectPurposes = selectPurposes
-            .where((categoryId) => categoryId != purpose)
+            .where((selected) => selected.id != purpose.id)
             .toList();
       } else {
-        selectPurposes = selectPurposes.map((categoryId) => categoryId).toList()
+        selectPurposes = selectPurposes.map((selected) => selected).toList()
           ..add(purpose);
       }
     });
@@ -150,6 +156,8 @@ class _ChoosePurposeModalState extends State<ChoosePurposeModal> {
       orElse: () => const LocalizedModel.empty(),
     );
 
+    final selectIds = selectPurposes.map((category) => category.id).toList();
+
     return Row(
       children: <Widget>[
         Padding(
@@ -158,7 +166,7 @@ class _ChoosePurposeModalState extends State<ChoosePurposeModal> {
             right: UiConfig.actionSpacing,
           ),
           child: CustomCheckBox(
-            value: selectPurposes.contains(purpose),
+            value: selectIds.contains(purpose.id),
             onChanged: (_) {
               _selectPurpose(purpose);
             },
