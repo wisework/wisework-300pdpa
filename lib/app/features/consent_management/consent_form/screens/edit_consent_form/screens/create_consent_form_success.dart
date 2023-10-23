@@ -1,5 +1,6 @@
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
 import 'package:ionicons/ionicons.dart';
 import 'package:pdpa/app/config/config.dart';
 import 'package:pdpa/app/data/models/authentication/user_model.dart';
@@ -9,6 +10,7 @@ import 'package:pdpa/app/data/models/master_data/localized_model.dart';
 import 'package:pdpa/app/data/models/master_data/mandatory_field_model.dart';
 import 'package:pdpa/app/data/models/master_data/purpose_category_model.dart';
 import 'package:pdpa/app/data/models/master_data/purpose_model.dart';
+import 'package:pdpa/app/features/consent_management/consent_form/routes/consent_form_route.dart';
 import 'package:pdpa/app/shared/utils/functions.dart';
 import 'package:pdpa/app/shared/widgets/customs/custom_container.dart';
 import 'package:pdpa/app/shared/widgets/customs/custom_icon_button.dart';
@@ -47,34 +49,9 @@ class _CreateConsentFormSuccessScreenState
       appBar: PdpaAppBar(
         leadingIcon: CustomIconButton(
           onPressed: () {
-            // final event = UpdateConsentFormEvent(
-            //   consentForm: widget.consentForm,
-            //   updateType: UpdateType.created,
-            // );
-            // context.read<ConsentFormBloc>().add(event);
-
-            // final url = UtilFunctions.getUserConsentFormUrl(
-            //   widget.consentForm.id,
-            //   widget.currentUser.currentCompany,
-            // );
-
-            // final cubit = context.read<CurrentConsentFormSettingsCubit>();
-            // cubit.generateConsentFormUrl(url);
-
-            // consentForm = widget.consentForm.copyWith(
-            //   consentFormUrl: url,
-            // );
-
-            // context.read<EditConsentFormBloc>().add(
-            //       UpdateCurrentConsentFormEvent(
-            //         consentForm: consentForm,
-            //         companyId: widget.currentUser.currentCompany,
-            //       ),
-            //     );
-
-            // context.push(
-            //   ConsentFormRoute.consentForm.path,
-            // );
+            context.pushReplacement(
+              ConsentFormRoute.consentForm.path,
+            );
           },
           icon: Ionicons.chevron_back_outline,
           iconColor: Theme.of(context).colorScheme.primary,
@@ -431,31 +408,9 @@ class _CreateConsentFormSuccessScreenState
           children: <Widget>[
             TextButton(
               onPressed: () {
-                // final event = UpdateConsentFormEvent(
-                //   consentForm: widget.consentForm,
-                //   updateType: UpdateType.created,
-                // );
-                // context.read<ConsentFormBloc>().add(event);
-
-                // final url = UtilFunctions.getUserConsentFormUrl(
-                //   widget.consentForm.id,
-                //   widget.currentUser.currentCompany,
-                // );
-
-                // consentForm = widget.consentForm.copyWith(
-                //   consentFormUrl: url,
-                // );
-
-                // context.read<EditConsentFormBloc>().add(
-                //       UpdateCurrentConsentFormEvent(
-                //         consentForm: consentForm,
-                //         companyId: widget.currentUser.currentCompany,
-                //       ),
-                //     );
-
-                // context.push(
-                //   ConsentFormRoute.consentForm.path,
-                // );
+                context.pushReplacement(
+                  ConsentFormRoute.consentForm.path,
+                );
               },
               style: ButtonStyle(
                   backgroundColor: MaterialStateProperty.all<Color>(
@@ -477,25 +432,10 @@ class _CreateConsentFormSuccessScreenState
             const SizedBox(width: 10.0),
             ElevatedButton(
               onPressed: () async {
-                // final url = UtilFunctions.getUserConsentFormUrl(
-                //   widget.consentForm.id,
-                //   widget.currentUser.currentCompany,
-                // );
-
-                // consentForm = widget.consentForm.copyWith(
-                //   consentFormUrl: url,
-                // );
-
-                // context.read<EditConsentFormBloc>().add(
-                //       UpdateCurrentConsentFormEvent(
-                //         consentForm: consentForm,
-                //         companyId: widget.currentUser.currentCompany,
-                //       ),
-                //     );
-                // context.push(
-                //   ConsentFormRoute.consentFormSettings.path
-                //       .replaceFirst(':id', widget.consentForm.id),
-                // );
+                context.pushReplacement(
+                  ConsentFormRoute.consentFormSettings.path
+                      .replaceFirst(':id', widget.consentForm.id),
+                );
               },
               style: ButtonStyle(
                   backgroundColor: MaterialStateProperty.all<Color>(

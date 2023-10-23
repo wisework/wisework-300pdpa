@@ -188,7 +188,7 @@ class _HomeScreenState extends State<HomeScreen> {
                         crossAxisAlignment: CrossAxisAlignment.center,
                         mainAxisAlignment: MainAxisAlignment.center,
                         children: [
-                          Text(tr('masterData.cm.purposeCategory.noData')), 
+                          Text(tr('masterData.cm.purposeCategory.noData')),
                         ],
                       ),
                       const SizedBox(
@@ -321,8 +321,7 @@ class _HomeScreenState extends State<HomeScreen> {
                 SizedBox(
                   // constraints:
                   //     const BoxConstraints(maxHeight: 170, minHeight: 150),
-                  height:
-                      context.locale.toString() == 'en_US' ? 140 : 170,
+                  height: context.locale.toString() == 'en_US' ? 140 : 170,
                   child: ListView.builder(
                       physics: const ClampingScrollPhysics(),
                       shrinkWrap: true,
@@ -330,7 +329,7 @@ class _HomeScreenState extends State<HomeScreen> {
                       itemCount: cardTitles.length,
                       itemBuilder: (BuildContext context, int index) {
                         String currentCardTitle = cardTitles[index];
-                        return GestureDetector(
+                        return MaterialInkWell(
                           onTap: () {
                             if (currentCardTitle ==
                                 tr("app.features.consentforms")) {

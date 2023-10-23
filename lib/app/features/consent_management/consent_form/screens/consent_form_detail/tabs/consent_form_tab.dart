@@ -63,13 +63,13 @@ class _ConsentFormTabState extends State<ConsentFormTab> {
     return SingleChildScrollView(
       child: Column(
         children: <Widget>[
+          const SizedBox(height: UiConfig.lineSpacing),
           CustomContainer(
-            margin: const EdgeInsets.only(top: 10.0),
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: <Widget>[
                 Padding(
-                  padding: const EdgeInsets.only(bottom: 10.0),
+                  padding: const EdgeInsets.all(UiConfig.textLineSpacing),
                   child: Text(
                       tr(
                           "consentManagement.consentForm.consentFormDetails.form.shareLinkForm"),
@@ -77,7 +77,7 @@ class _ConsentFormTabState extends State<ConsentFormTab> {
                           color: Theme.of(context).colorScheme.onSurface)),
                 ),
                 Padding(
-                  padding: const EdgeInsets.only(bottom: 10.0),
+                  padding: const EdgeInsets.all(UiConfig.textLineSpacing),
                   child: Text(
                       tr(
                           "consentManagement.consentForm.consentFormDetails.form.descriptionShare"),
@@ -87,6 +87,7 @@ class _ConsentFormTabState extends State<ConsentFormTab> {
                 Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: <Widget>[
+                    const SizedBox(height: UiConfig.lineSpacing),
                     Row(
                       children: <Widget>[
                         Expanded(
@@ -191,6 +192,7 @@ class _ConsentFormTabState extends State<ConsentFormTab> {
                         ),
                       ],
                     ),
+                    const SizedBox(height: UiConfig.lineSpacing),
                     Row(
                       children: <Widget>[
                         Expanded(
@@ -230,7 +232,7 @@ class _ConsentFormTabState extends State<ConsentFormTab> {
 
                               BotToast.showText(
                                 text: tr(
-                                    "consentManagement.consentForm.consentFormDetails.form.urlCopied"), 
+                                    "consentManagement.consentForm.consentFormDetails.form.urlCopied"),
                                 contentColor: Theme.of(context)
                                     .colorScheme
                                     .secondary
@@ -269,22 +271,22 @@ class _ConsentFormTabState extends State<ConsentFormTab> {
                         ),
                       ],
                     ),
+                    const SizedBox(height: UiConfig.lineSpacing),
                   ],
                 ),
               ],
             ),
           ),
+          const SizedBox(height: UiConfig.lineSpacing),
           CustomContainer(
-            margin: const EdgeInsets.only(top: 10.0),
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: <Widget>[
-                Padding(
-                  padding: const EdgeInsets.only(bottom: 10.0),
-                  child: Text(tr("consentManagement.consentForm.formExample"),
-                      style: Theme.of(context).textTheme.titleLarge?.copyWith(
-                          color: Theme.of(context).colorScheme.onSurface)),
-                ),
+                const SizedBox(height: UiConfig.lineSpacing),
+                Text(tr("consentManagement.consentForm.formExample"),
+                    style: Theme.of(context).textTheme.titleLarge?.copyWith(
+                        color: Theme.of(context).colorScheme.onSurface)),
+                const SizedBox(height: UiConfig.lineSpacing),
                 SingleChildScrollView(
                   child: ConsentFormPreview(
                     consentForm: widget.consentForm,
@@ -295,9 +297,11 @@ class _ConsentFormTabState extends State<ConsentFormTab> {
                     consentTheme: widget.consentTheme,
                   ),
                 ),
+                const SizedBox(height: UiConfig.lineSpacing),
               ],
             ),
-          )
+          ),
+          const SizedBox(height: UiConfig.lineSpacing),
         ],
       ),
     );

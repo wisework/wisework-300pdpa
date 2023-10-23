@@ -68,14 +68,11 @@ class _ConsentInfoTabState extends State<ConsentInfoTab> {
     );
 
     return SingleChildScrollView(
-      child: CustomContainer(
-        padding: const EdgeInsets.all(UiConfig.defaultPaddingSpacing),
-        margin: const EdgeInsets.only(top: UiConfig.lineSpacing),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: <Widget>[
-            const SizedBox(height: UiConfig.lineSpacing),
-            widget.consentForm.id.isNotEmpty
+      child: Column(
+        children: <Widget>[
+          const SizedBox(height: UiConfig.lineSpacing),
+          CustomContainer(
+            child: widget.consentForm.id.isNotEmpty
                 ? _consentInfo(
                     context,
                     title,
@@ -85,33 +82,34 @@ class _ConsentInfoTabState extends State<ConsentInfoTab> {
                     padding: const EdgeInsets.all(20.0),
                     child: Center(
                       child: Text(
-                        tr('consentManagement.consentForm.congratulations.noConsentDetails'), 
+                        tr('consentManagement.consentForm.congratulations.noConsentDetails'),
                         style: Theme.of(context).textTheme.labelLarge?.copyWith(
                             color: Theme.of(context).colorScheme.onSurface),
                       ),
                     ),
                   ),
-            Padding(
-              padding:
-                  const EdgeInsets.symmetric(vertical: UiConfig.lineSpacing),
-              child: Divider(
-                color: Theme.of(context).colorScheme.outline,
-                thickness: 0.3,
-              ),
-            ),
-            _customFieldInfo(context, language),
-            Padding(
-              padding:
-                  const EdgeInsets.symmetric(vertical: UiConfig.lineSpacing),
-              child: Divider(
-                color: Theme.of(context).colorScheme.outline,
-                thickness: 0.3,
-              ),
-            ),
-            _purposeCategoriesInfo(context, language),
-            const SizedBox(height: UiConfig.lineSpacing),
-          ],
-        ),
+          ),
+          const SizedBox(height: UiConfig.lineSpacing),
+          // Padding(
+          //   padding: const EdgeInsets.symmetric(vertical: UiConfig.lineSpacing),
+          //   child: Divider(
+          //     color: Theme.of(context).colorScheme.outline,
+          //     thickness: 0.3,
+          //   ),
+          // ),
+          CustomContainer(child: _customFieldInfo(context, language)),
+          const SizedBox(height: UiConfig.lineSpacing),
+
+          // Padding(
+          //   padding: const EdgeInsets.symmetric(vertical: UiConfig.lineSpacing),
+          //   child: Divider(
+          //     color: Theme.of(context).colorScheme.outline,
+          //     thickness: 0.3,
+          //   ),
+          // ),
+          CustomContainer(child: _purposeCategoriesInfo(context, language)),
+          const SizedBox(height: UiConfig.lineSpacing),
+        ],
       ),
     );
   }
@@ -125,7 +123,7 @@ class _ConsentInfoTabState extends State<ConsentInfoTab> {
       crossAxisAlignment: CrossAxisAlignment.start,
       children: <Widget>[
         Padding(
-          padding: const EdgeInsets.only(bottom: 8.0),
+          padding: const EdgeInsets.all(UiConfig.textLineSpacing),
           child: Text(
             tr("consentManagement.consentForm.consentFormDetails.Purposes"),
             style: Theme.of(context).textTheme.bodyMedium?.copyWith(
@@ -323,11 +321,16 @@ class _ConsentInfoTabState extends State<ConsentInfoTab> {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: <Widget>[
-        Text(
-          "ID: ${widget.consentForm.id}",
-          style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                color: Theme.of(context).colorScheme.secondary,
-              ),
+        Row(
+          mainAxisAlignment: MainAxisAlignment.start,
+          children: [
+            Text(
+              "ID: ${widget.consentForm.id}",
+              style: Theme.of(context).textTheme.bodyMedium?.copyWith(
+                    color: Theme.of(context).colorScheme.secondary,
+                  ),
+            ),
+          ],
         ),
         Padding(
           padding: const EdgeInsets.symmetric(vertical: 8.0),
