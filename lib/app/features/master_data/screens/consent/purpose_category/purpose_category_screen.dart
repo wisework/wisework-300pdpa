@@ -4,14 +4,18 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
 import 'package:ionicons/ionicons.dart';
 import 'package:pdpa/app/config/config.dart';
+import 'package:pdpa/app/data/models/etc/updated_return.dart';
 import 'package:pdpa/app/data/models/master_data/localized_model.dart';
 import 'package:pdpa/app/data/models/master_data/purpose_category_model.dart';
 import 'package:pdpa/app/features/authentication/bloc/sign_in/sign_in_bloc.dart';
 import 'package:pdpa/app/features/master_data/bloc/consent/purpose_category/purpose_category_bloc.dart';
 import 'package:pdpa/app/features/master_data/routes/master_data_route.dart';
 import 'package:pdpa/app/features/master_data/widgets/master_data_item_card.dart';
+import 'package:pdpa/app/shared/utils/constants.dart';
 import 'package:pdpa/app/shared/widgets/customs/custom_icon_button.dart';
+import 'package:pdpa/app/shared/widgets/screens/error_message_screen.dart';
 import 'package:pdpa/app/shared/widgets/screens/example_screen.dart';
+import 'package:pdpa/app/shared/widgets/screens/loading_screen.dart';
 import 'package:pdpa/app/shared/widgets/templates/pdpa_app_bar.dart';
 
 class PurposeCategoryScreen extends StatefulWidget {
@@ -44,18 +48,80 @@ class _PurposeCategoryScreenState extends State<PurposeCategoryScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return const PurposeCategoryView();
+    return BlocBuilder<PurposeCategoryBloc, PurposeCategoryState>(
+      builder: (context, state) {
+        if (state is GotPurposeCategories) {
+          return PurposeCategoryView(
+            initialPurposeCategories: state.purposeCategories,
+          );
+        }
+        if (state is PurposeCategoryError) {
+          return ErrorMessageScreen(message: state.message);
+        }
+
+        return const LoadingScreen();
+      },
+    );
   }
 }
 
 class PurposeCategoryView extends StatefulWidget {
-  const PurposeCategoryView({super.key});
+  const PurposeCategoryView({
+    super.key,
+    required this.initialPurposeCategories,
+  });
+
+  final List<PurposeCategoryModel> initialPurposeCategories;
 
   @override
   State<PurposeCategoryView> createState() => _PurposeCategoryViewState();
 }
 
 class _PurposeCategoryViewState extends State<PurposeCategoryView> {
+  late List<PurposeCategoryModel> purposeCategories;
+
+  @override
+  void initState() {
+    super.initState();
+
+    purposeCategories = widget.initialPurposeCategories;
+  }
+
+  void _updatePurposeCategoriesChanged(
+    UpdatedReturn<PurposeCategoryModel> updated,
+  ) {
+    switch (updated.type) {
+      case UpdateType.created:
+        purposeCategories = purposeCategories
+            .map((category) => category)
+            .toList()
+          ..add(updated.object);
+        break;
+      case UpdateType.updated:
+        purposeCategories = purposeCategories
+            .map((category) =>
+                category.id == updated.object.id ? updated.object : category)
+            .toList();
+        break;
+      case UpdateType.deleted:
+        purposeCategories = purposeCategories
+            .where((category) => category.id != updated.object.id)
+            .toList();
+        break;
+    }
+
+    setState(() {
+      purposeCategories = purposeCategories
+        ..sort((a, b) => b.updatedDate.compareTo(a.updatedDate));
+    });
+
+    final event = UpdatePurposeCategoriesChangedEvent(
+      purposeCategory: updated.object,
+      updateType: updated.type,
+    );
+    context.read<PurposeCategoryBloc>().add(event);
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -83,52 +149,41 @@ class _PurposeCategoryViewState extends State<PurposeCategoryView> {
               decoration: BoxDecoration(
                 color: Theme.of(context).colorScheme.onBackground,
               ),
-              child: BlocBuilder<PurposeCategoryBloc, PurposeCategoryState>(
-                builder: (context, state) {
-                  if (state is GotPurposeCategories) {
-                    return state.purposeCategories.isNotEmpty
-                        ? ListView.builder(
-                            itemCount: state.purposeCategories.length,
-                            itemBuilder: (context, index) {
-                              return _buildItemCard(
-                                context,
-                                purposeCategory: state.purposeCategories[index],
-                              );
-                            },
-                          )
-                        : ExampleScreen(
-                            headderText:
-                                tr('masterData.cm.purposeCategory.list'),
-                            buttonText:
-                                tr('masterData.cm.purposeCategory.create'),
-                            descriptionText:
-                                tr('masterData.cm.purposeCategory.explain'),
-                            onPress: () {
-                              context.push(
-                                  MasterDataRoute.createPurposeCategory.path);
-                            },
-                          );
-                  }
-                  if (state is PurposeCategoryError) {
-                    return Center(
-                      child: Text(
-                        state.message,
-                        style: Theme.of(context).textTheme.bodyMedium,
-                      ),
-                    );
-                  }
-                  return const Center(
-                    child: CircularProgressIndicator(),
-                  );
-                },
-              ),
+              child: purposeCategories.isNotEmpty
+                  ? ListView.builder(
+                      itemCount: purposeCategories.length,
+                      itemBuilder: (context, index) {
+                        return _buildItemCard(
+                          context,
+                          purposeCategory: purposeCategories[index],
+                        );
+                      },
+                    )
+                  : ExampleScreen(
+                      headderText: tr('masterData.cm.purposeCategory.list'),
+                      buttonText: tr('masterData.cm.purposeCategory.create'),
+                      descriptionText:
+                          tr('masterData.cm.purposeCategory.explain'),
+                      onPress: () {
+                        context
+                            .push(MasterDataRoute.createPurposeCategory.path);
+                      },
+                    ),
             ),
           ),
         ],
       ),
       floatingActionButton: FloatingActionButton(
-        onPressed: () {
-          context.push(MasterDataRoute.createPurposeCategory.path);
+        onPressed: () async {
+          await context
+              .push(MasterDataRoute.createPurposeCategory.path)
+              .then((value) {
+            if (value != null) {
+              _updatePurposeCategoriesChanged(
+                value as UpdatedReturn<PurposeCategoryModel>,
+              );
+            }
+          });
         },
         child: const Icon(Icons.add),
       ),
@@ -153,11 +208,19 @@ class _PurposeCategoryViewState extends State<PurposeCategoryView> {
       title: title.text,
       subtitle: description.text,
       status: purposeCategory.status,
-      onTap: () {
-        context.push(
+      onTap: () async {
+        await context
+            .push(
           MasterDataRoute.editPurposeCategory.path
               .replaceFirst(':id', purposeCategory.id),
-        );
+        )
+            .then((value) {
+          if (value != null) {
+            _updatePurposeCategoriesChanged(
+              value as UpdatedReturn<PurposeCategoryModel>,
+            );
+          }
+        });
       },
     );
   }

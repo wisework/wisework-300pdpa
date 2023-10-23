@@ -2,6 +2,7 @@
 import 'package:bloc/bloc.dart';
 import 'package:equatable/equatable.dart';
 import 'package:pdpa/app/data/models/master_data/purpose_category_model.dart';
+import 'package:pdpa/app/data/models/master_data/purpose_model.dart';
 import 'package:pdpa/app/data/repositories/master_data_repository.dart';
 import 'package:pdpa/app/shared/utils/constants.dart';
 
@@ -15,7 +16,8 @@ class PurposeCategoryBloc
   })  : _masterDataRepository = masterDataRepository,
         super(const PurposeCategoryInitial()) {
     on<GetPurposeCategoriesEvent>(_getPurposeCategoriesHandler);
-    on<UpdatePurposeCategoryEvent>(_updatePurposeCategoryHandler);
+    on<UpdatePurposeCategoriesChangedEvent>(
+        _updatePurposeCategoriesChangedHandler);
   }
   final MasterDataRepository _masterDataRepository;
 
@@ -30,17 +32,45 @@ class PurposeCategoryBloc
 
     emit(const GettingPurposeCategories());
 
-    final result =
-        await _masterDataRepository.getPurposeCategories(event.companyId);
+    List<PurposeModel> gotPurposes = [];
+    List<PurposeCategoryModel> gotPurposeCategories = [];
 
-    result.fold(
+    final purposeResult = await _masterDataRepository.getPurposes(
+      event.companyId,
+    );
+    purposeResult.fold(
       (failure) {
         emit(PurposeCategoryError(failure.errorMessage));
+        return;
+      },
+      (purposes) {
+        gotPurposes = purposes;
+      },
+    );
+
+    final purposeCategoryResult =
+        await _masterDataRepository.getPurposeCategories(
+      event.companyId,
+    );
+    purposeCategoryResult.fold(
+      (failure) {
+        emit(PurposeCategoryError(failure.errorMessage));
+        return;
       },
       (purposeCategories) {
+        for (PurposeCategoryModel category in purposeCategories) {
+          final purposeIds =
+              category.purposes.map((purpose) => purpose.id).toList();
+          final purposes = gotPurposes
+              .where((purpose) => purposeIds.contains(purpose.id))
+              .toList();
+
+          gotPurposeCategories.add(category.copyWith(purposes: purposes));
+        }
+
         emit(
           GotPurposeCategories(
-            purposeCategories
+            gotPurposeCategories
               ..sort((a, b) => b.updatedDate.compareTo(a.updatedDate)),
           ),
         );
@@ -48,8 +78,8 @@ class PurposeCategoryBloc
     );
   }
 
-  Future<void> _updatePurposeCategoryHandler(
-    UpdatePurposeCategoryEvent event,
+  Future<void> _updatePurposeCategoriesChangedHandler(
+    UpdatePurposeCategoriesChangedEvent event,
     Emitter<PurposeCategoryState> emit,
   ) async {
     if (state is GotPurposeCategories) {
@@ -60,24 +90,19 @@ class PurposeCategoryBloc
 
       switch (event.updateType) {
         case UpdateType.created:
-          updated = purposeCategories
-              .map((purposeCategories) => purposeCategories)
-              .toList()
+          updated = purposeCategories.map((category) => category).toList()
             ..add(event.purposeCategory);
           break;
         case UpdateType.updated:
-          for (PurposeCategoryModel purposeCategories in purposeCategories) {
-            if (purposeCategories.id == event.purposeCategory.id) {
-              updated.add(event.purposeCategory);
-            } else {
-              updated.add(purposeCategories);
-            }
-          }
+          updated = purposeCategories
+              .map((category) => category.id == event.purposeCategory.id
+                  ? event.purposeCategory
+                  : category)
+              .toList();
           break;
         case UpdateType.deleted:
           updated = purposeCategories
-              .where((purposeCategories) =>
-                  purposeCategories.id != event.purposeCategory.id)
+              .where((category) => category.id != event.purposeCategory.id)
               .toList();
           break;
       }

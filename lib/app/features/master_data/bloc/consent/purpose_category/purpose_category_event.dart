@@ -16,8 +16,8 @@ class GetPurposeCategoriesEvent extends PurposeCategoryEvent {
   List<Object> get props => [companyId];
 }
 
-class UpdatePurposeCategoryEvent extends PurposeCategoryEvent {
-  const UpdatePurposeCategoryEvent({
+class UpdatePurposeCategoriesChangedEvent extends PurposeCategoryEvent {
+  const UpdatePurposeCategoriesChangedEvent({
     required this.purposeCategory,
     required this.updateType,
   });

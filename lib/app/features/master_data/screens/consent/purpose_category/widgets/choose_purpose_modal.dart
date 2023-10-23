@@ -4,48 +4,56 @@ import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:ionicons/ionicons.dart';
 import 'package:pdpa/app/config/config.dart';
+import 'package:pdpa/app/data/models/etc/updated_return.dart';
 import 'package:pdpa/app/data/models/master_data/localized_model.dart';
 import 'package:pdpa/app/data/models/master_data/purpose_model.dart';
 import 'package:pdpa/app/features/master_data/routes/master_data_route.dart';
 import 'package:pdpa/app/shared/widgets/customs/custom_checkbox.dart';
-import 'package:pdpa/app/shared/widgets/material_ink_well.dart';
+import 'package:pdpa/app/shared/widgets/customs/custom_icon_button.dart';
 
 class ChoosePurposeModal extends StatefulWidget {
   const ChoosePurposeModal({
     super.key,
+    required this.initialPurposes,
     required this.purposes,
-    required this.initialIds,
     required this.onChanged,
+    required this.onUpdated,
   });
 
+  final List<PurposeModel> initialPurposes;
   final List<PurposeModel> purposes;
-  final List<String> initialIds;
-  final Function(List<String> ids) onChanged;
+  final Function(List<PurposeModel> purposes) onChanged;
+  final Function(UpdatedReturn<PurposeModel> purpose) onUpdated;
 
   @override
   State<ChoosePurposeModal> createState() => _ChoosePurposeModalState();
 }
 
 class _ChoosePurposeModalState extends State<ChoosePurposeModal> {
-  late List<String> selectIds;
+  late List<PurposeModel> purposes;
+  late List<PurposeModel> selectPurposes;
 
   @override
   void initState() {
     super.initState();
 
-    selectIds = widget.initialIds;
+    purposes = widget.purposes.map((purpose) => purpose).toList();
+    selectPurposes = widget.initialPurposes.map((purpose) => purpose).toList();
   }
 
-  void _selectPurpose(String id) {
+  void _selectPurpose(PurposeModel purpose) {
     setState(() {
-      if (selectIds.contains(id)) {
-        selectIds = selectIds.where((categoryId) => categoryId != id).toList();
+      if (selectPurposes.contains(purpose)) {
+        selectPurposes = selectPurposes
+            .where((categoryId) => categoryId != purpose)
+            .toList();
       } else {
-        selectIds = selectIds.map((categoryId) => categoryId).toList()..add(id);
+        selectPurposes = selectPurposes.map((categoryId) => categoryId).toList()
+          ..add(purpose);
       }
     });
 
-    widget.onChanged(selectIds);
+    widget.onChanged(selectPurposes);
   }
 
   @override
@@ -86,7 +94,7 @@ class _ChoosePurposeModalState extends State<ChoosePurposeModal> {
                 ),
                 ConstrainedBox(
                   constraints: const BoxConstraints(maxWidth: 200.0),
-                  child: _buildCreatePurposeButton(context),
+                  child: _buildAddButton(context),
                 ),
               ],
             ),
@@ -98,9 +106,9 @@ class _ChoosePurposeModalState extends State<ChoosePurposeModal> {
             padding: const EdgeInsets.symmetric(
               horizontal: UiConfig.defaultPaddingSpacing,
             ),
-            itemCount: widget.purposes.length,
+            itemCount: purposes.length,
             itemBuilder: (_, index) {
-              if (widget.purposes.isEmpty) {
+              if (purposes.isEmpty) {
                 return Text(
                   'masterData.cm.purposeCategory.noData',
                   style: Theme.of(context).textTheme.bodyMedium,
@@ -110,7 +118,7 @@ class _ChoosePurposeModalState extends State<ChoosePurposeModal> {
                 children: <Widget>[
                   _buildCheckBoxListTile(
                     context,
-                    purpose: widget.purposes[index],
+                    purpose: purposes[index],
                   ),
                   Padding(
                     padding: const EdgeInsets.symmetric(
@@ -150,9 +158,9 @@ class _ChoosePurposeModalState extends State<ChoosePurposeModal> {
             right: UiConfig.actionSpacing,
           ),
           child: CustomCheckBox(
-            value: selectIds.contains(purpose.id),
+            value: selectPurposes.contains(purpose),
             onChanged: (_) {
-              _selectPurpose(purpose.id);
+              _selectPurpose(purpose);
             },
           ),
         ),
@@ -166,32 +174,23 @@ class _ChoosePurposeModalState extends State<ChoosePurposeModal> {
     );
   }
 
-  Widget _buildCreatePurposeButton(BuildContext context) {
-    return MaterialInkWell(
-      onTap: () async {
-        context.push(MasterDataRoute.createPurpose.path);
+  CustomIconButton _buildAddButton(BuildContext context) {
+    return CustomIconButton(
+      onPressed: () async {
+        await context.push(MasterDataRoute.createPurpose.path).then((value) {
+          if (value != null) {
+            final updated = value as UpdatedReturn<PurposeModel>;
+
+            purposes = purposes..add(updated.object);
+            _selectPurpose(updated.object);
+
+            widget.onUpdated(updated);
+          }
+        });
       },
-      child: Padding(
-        padding: const EdgeInsets.all(8.0),
-        child: Row(
-          children: <Widget>[
-            Padding(
-              padding: const EdgeInsets.only(bottom: 2.0),
-              child: Icon(
-                Ionicons.add,
-                color: Theme.of(context).colorScheme.primary,
-              ),
-            ),
-            const SizedBox(width: UiConfig.actionSpacing),
-            Expanded(
-              child: Text(
-                tr('masterData.cm.purposeCategory.addnewPurpose'), //!
-                style: Theme.of(context).textTheme.bodyMedium,
-              ),
-            ),
-          ],
-        ),
-      ),
+      icon: Ionicons.add,
+      iconColor: Theme.of(context).colorScheme.primary,
+      backgroundColor: Theme.of(context).colorScheme.onBackground,
     );
   }
 }

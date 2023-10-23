@@ -6,7 +6,7 @@ import 'package:ionicons/ionicons.dart';
 import 'package:modal_bottom_sheet/modal_bottom_sheet.dart';
 import 'package:pdpa/app/config/config.dart';
 import 'package:pdpa/app/data/models/authentication/user_model.dart';
-import 'package:pdpa/app/data/models/etc/retun_and_update.dart';
+import 'package:pdpa/app/data/models/etc/updated_return.dart';
 import 'package:pdpa/app/data/models/master_data/localized_model.dart';
 import 'package:pdpa/app/data/models/master_data/purpose_category_model.dart';
 import 'package:pdpa/app/data/models/master_data/purpose_model.dart';
@@ -17,13 +17,12 @@ import 'package:pdpa/app/features/master_data/screens/consent/purpose_category/w
 import 'package:pdpa/app/features/master_data/widgets/configuration_info.dart';
 import 'package:pdpa/app/injection.dart';
 import 'package:pdpa/app/shared/utils/constants.dart';
-import 'package:pdpa/app/shared/utils/functions.dart';
 import 'package:pdpa/app/shared/utils/toast.dart';
+import 'package:pdpa/app/shared/widgets/customs/custom_button.dart';
 import 'package:pdpa/app/shared/widgets/customs/custom_container.dart';
 import 'package:pdpa/app/shared/widgets/customs/custom_icon_button.dart';
 import 'package:pdpa/app/shared/widgets/customs/custom_switch_button.dart';
 import 'package:pdpa/app/shared/widgets/customs/custom_text_field.dart';
-import 'package:pdpa/app/shared/widgets/material_ink_well.dart';
 import 'package:pdpa/app/shared/widgets/screens/error_message_screen.dart';
 import 'package:pdpa/app/shared/widgets/screens/loading_screen.dart';
 import 'package:pdpa/app/shared/widgets/templates/pdpa_app_bar.dart';
@@ -88,9 +87,9 @@ class _EditPurposeCategoryScreenState extends State<EditPurposeCategoryScreen> {
             );
 
             context.pop(
-              ReturnAndUpdate<PurposeCategoryModel>(
+              UpdatedReturn<PurposeCategoryModel>(
                 object: state.purposeCategory,
-                updateType: UpdateType.updated,
+                type: UpdateType.created,
               ),
             );
           }
@@ -108,13 +107,13 @@ class _EditPurposeCategoryScreenState extends State<EditPurposeCategoryScreen> {
               text: tr('masterData.cm.purposeCategory.deleteSuccess'),
             );
 
-            final deleted = PurposeCategoryModel.empty()
-                .copyWith(id: state.purposeCategoryId);
-
+            final deleted = PurposeCategoryModel.empty().copyWith(
+              id: state.purposeCategoryId,
+            );
             context.pop(
-              ReturnAndUpdate<PurposeCategoryModel>(
+              UpdatedReturn<PurposeCategoryModel>(
                 object: deleted,
-                updateType: UpdateType.deleted,
+                type: UpdateType.deleted,
               ),
             );
           }
@@ -171,7 +170,6 @@ class _EditPurposeCategoryViewState extends State<EditPurposeCategoryView> {
 
   late TextEditingController titleController;
   late TextEditingController descriptionController;
-  late TextEditingController priorityController;
 
   late bool isActivated;
 
@@ -188,7 +186,6 @@ class _EditPurposeCategoryViewState extends State<EditPurposeCategoryView> {
   void dispose() {
     titleController.dispose();
     descriptionController.dispose();
-    priorityController.dispose();
 
     super.dispose();
   }
@@ -198,7 +195,6 @@ class _EditPurposeCategoryViewState extends State<EditPurposeCategoryView> {
 
     titleController = TextEditingController();
     descriptionController = TextEditingController();
-    priorityController = TextEditingController();
 
     isActivated = true;
 
@@ -211,11 +207,6 @@ class _EditPurposeCategoryViewState extends State<EditPurposeCategoryView> {
       if (purposeCategory.description.isNotEmpty) {
         descriptionController = TextEditingController(
           text: purposeCategory.description.first.text,
-        );
-      }
-      if (purposeCategory.priority != 0) {
-        priorityController = TextEditingController(
-          text: purposeCategory.priority.toString(),
         );
       }
 
@@ -247,16 +238,6 @@ class _EditPurposeCategoryViewState extends State<EditPurposeCategoryView> {
 
       purposeCategory = purposeCategory.copyWith(description: description);
     });
-  }
-
-  void _setPriority(String? value) {
-    if (value != null && value.isNotEmpty) {
-      setState(() {
-        final priority = int.parse(priorityController.text);
-
-        purposeCategory = purposeCategory.copyWith(priority: priority);
-      });
-    }
   }
 
   void _setActiveStatus(bool value) {
@@ -306,17 +287,24 @@ class _EditPurposeCategoryViewState extends State<EditPurposeCategoryView> {
   }
 
   void _goBackAndUpdate() {
-    final isChanged = purposeCategory != widget.initialPurposeCategory;
-    if (!widget.isNewPurposeCategory && !isChanged) {
+    print(widget.isNewPurposeCategory);
+    print(widget.initialPurposeCategory);
+    if (!widget.isNewPurposeCategory) {
+      print('here');
       context.pop(
-        ReturnAndUpdate<PurposeCategoryModel>(
-          object: purposeCategory,
-          updateType: UpdateType.updated,
+        UpdatedReturn<PurposeCategoryModel>(
+          object: widget.initialPurposeCategory,
+          type: UpdateType.updated,
         ),
       );
     } else {
       context.pop();
     }
+  }
+
+  void _addNewlyPurposeInCategory(UpdatedReturn<PurposeModel> updated) {
+    final event = AddNewlyPurposeInCategoryEvent(purpose: updated.object);
+    context.read<EditPurposeCategoryBloc>().add(event);
   }
 
   @override
@@ -420,17 +408,6 @@ class _EditPurposeCategoryViewState extends State<EditPurposeCategoryView> {
           ),
           const SizedBox(height: UiConfig.lineSpacing),
           TitleRequiredText(
-            text: tr('masterData.cm.purposeCategory.priority'), //!
-            required: true,
-          ),
-          CustomTextField(
-            controller: priorityController,
-            hintText: tr('masterData.cm.purposeCategory.priorityHint'), //!
-            onChanged: _setPriority,
-            required: true,
-          ),
-          const SizedBox(height: UiConfig.lineSpacing),
-          TitleRequiredText(
             text: tr('masterData.cm.purposeCategory.purposes'), //!
           ),
           const SizedBox(height: UiConfig.lineSpacing),
@@ -442,11 +419,6 @@ class _EditPurposeCategoryViewState extends State<EditPurposeCategoryView> {
   }
 
   Column _buildPurposeSection(BuildContext context, List<String> purposeIds) {
-    final purposeFiltered = UtilFunctions.filterPurposeByIds(
-      widget.purposes,
-      purposeIds,
-    );
-
     return Column(
       children: <Widget>[
         Padding(
@@ -456,12 +428,12 @@ class _EditPurposeCategoryViewState extends State<EditPurposeCategoryView> {
           child: ListView.builder(
             physics: const NeverScrollableScrollPhysics(),
             shrinkWrap: true,
-            itemCount: purposeFiltered.length,
+            itemCount: purposeCategory.purposes.length,
             itemBuilder: (context, index) => Column(
               children: <Widget>[
                 _buildPurposeTile(
                   context,
-                  purpose: purposeFiltered[index],
+                  purpose: purposeCategory.purposes[index],
                 ),
                 Padding(
                   padding: const EdgeInsets.symmetric(
@@ -528,25 +500,32 @@ class _EditPurposeCategoryViewState extends State<EditPurposeCategoryView> {
   }
 
   Widget _buildAddPurposeButton(BuildContext context) {
-    return MaterialInkWell(
-      onTap: () async {
-        await showBarModalBottomSheet(
+    return CustomButton(
+      height: 50.0,
+      onPressed: () {
+        showBarModalBottomSheet(
           context: context,
           backgroundColor: Colors.transparent,
           builder: (context) => ChoosePurposeModal(
+            initialPurposes: purposeCategory.purposes,
             purposes: widget.purposes,
-            initialIds:
-                purposeCategory.purposes.map((purpose) => purpose.id).toList(),
-            onChanged: (ids) {
+            onChanged: (purposes) {
               setState(() {
-                // purposeCategory = purposeCategory.copyWith(purposes: ids);
+                purposeCategory = purposeCategory.copyWith(
+                  purposes: purposes,
+                );
               });
             },
+            onUpdated: _addNewlyPurposeInCategory,
           ),
         );
       },
+      buttonType: CustomButtonType.outlined,
+      buttonColor: Theme.of(context).colorScheme.outlineVariant,
       child: Padding(
-        padding: const EdgeInsets.all(8.0),
+        padding: const EdgeInsets.symmetric(
+          horizontal: UiConfig.defaultPaddingSpacing,
+        ),
         child: Row(
           children: <Widget>[
             Padding(
@@ -559,7 +538,7 @@ class _EditPurposeCategoryViewState extends State<EditPurposeCategoryView> {
             const SizedBox(width: UiConfig.actionSpacing + 11),
             Expanded(
               child: Text(
-                tr('masterData.cm.purposeCategory.addPurpose'), //!
+                tr('masterData.cm.purposeCategory.addPurpose'),
                 style: Theme.of(context).textTheme.bodyMedium,
               ),
             ),

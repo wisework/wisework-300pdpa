@@ -18,6 +18,7 @@ class EditPurposeCategoryBloc
     on<CreateCurrentPurposeCategoryEvent>(_createCurrentPurposeCategoryHandler);
     on<UpdateCurrentPurposeCategoryEvent>(_updateCurrentPurposeCategoryHandler);
     on<DeleteCurrentPurposeCategoryEvent>(_deleteCurrentPurposeCategoryHandler);
+    on<AddNewlyPurposeInCategoryEvent>(_addNewlyPurposeInCategoryHandler);
   }
   final MasterDataRepository _masterDataRepository;
 
@@ -29,46 +30,59 @@ class EditPurposeCategoryBloc
       emit(const EditPurposeCategoryError('Required company ID'));
       return;
     }
-    if (event.purposeCategoryId.isEmpty) {
-      final result = await _masterDataRepository.getPurposes(
+
+    emit(const GettingCurrentPurposeCategory());
+
+    final emptyPurposeCategory = PurposeCategoryModel.empty();
+    PurposeCategoryModel gotPurposeCategory = emptyPurposeCategory;
+    List<PurposeModel> gotPurposes = [];
+
+    if (event.purposeCategoryId.isNotEmpty) {
+      final purposeCategoryResult =
+          await _masterDataRepository.getPurposeCategoryById(
+        event.purposeCategoryId,
         event.companyId,
       );
-
-      result.fold(
-        (failure) => emit(EditPurposeCategoryError(failure.errorMessage)),
-        (purposes) => emit(GotCurrentPurposeCategory(
-          PurposeCategoryModel.empty(),
-          purposes,
-        )),
+      purposeCategoryResult.fold(
+        (failure) {
+          emit(EditPurposeCategoryError(failure.errorMessage));
+          return;
+        },
+        (purposeCategory) {
+          gotPurposeCategory = purposeCategory;
+        },
       );
-      return;
     }
 
-    emit(const GetingCurrentPurposeCategory());
-
-    final result = await _masterDataRepository.getPurposeCategoryById(
-      event.purposeCategoryId,
+    final purposeResult = await _masterDataRepository.getPurposes(
       event.companyId,
     );
-
-    await result.fold(
+    purposeResult.fold(
       (failure) {
         emit(EditPurposeCategoryError(failure.errorMessage));
         return;
       },
-      (purposeCategory) async {
-        final result = await _masterDataRepository.getPurposes(
-          event.companyId,
-        );
-
-        result.fold(
-          (failure) => emit(EditPurposeCategoryError(failure.errorMessage)),
-          (purposes) => emit(GotCurrentPurposeCategory(
-            purposeCategory,
-            purposes,
-          )),
-        );
+      (purposes) {
+        gotPurposes = purposes;
       },
+    );
+
+    if (gotPurposeCategory != emptyPurposeCategory) {
+      final purposeIds =
+          gotPurposeCategory.purposes.map((purpose) => purpose.id).toList();
+
+      gotPurposeCategory = gotPurposeCategory.copyWith(
+        purposes: gotPurposes.where((purpose) {
+          return purposeIds.contains(purpose.id);
+        }).toList(),
+      );
+    }
+
+    emit(
+      GotCurrentPurposeCategory(
+        gotPurposeCategory.copyWith(purposes: gotPurposes),
+        gotPurposes,
+      ),
     );
   }
 
@@ -154,5 +168,36 @@ class EditPurposeCategoryBloc
       (failure) => emit(EditPurposeCategoryError(failure.errorMessage)),
       (_) => emit(DeletedCurrentPurposeCategory(event.purposeCategoryId)),
     );
+  }
+
+  Future<void> _addNewlyPurposeInCategoryHandler(
+    AddNewlyPurposeInCategoryEvent event,
+    Emitter<EditPurposeCategoryState> emit,
+  ) async {
+    List<PurposeModel> purposes = [];
+
+    if (state is GotCurrentPurposeCategory) {
+      final purposeCategory =
+          (state as GotCurrentPurposeCategory).purposeCategory;
+
+      purposes = (state as GotCurrentPurposeCategory)
+          .purposes
+          .map((purpose) => purpose)
+          .toList();
+      purposes.add(event.purpose);
+
+      emit(GotCurrentPurposeCategory(purposeCategory, purposes));
+    } else if (state is UpdatedCurrentPurposeCategory) {
+      final purposeCategory =
+          (state as UpdatedCurrentPurposeCategory).purposeCategory;
+
+      purposes = (state as UpdatedCurrentPurposeCategory)
+          .purposes
+          .map((purpose) => purpose)
+          .toList();
+      purposes.add(event.purpose);
+
+      emit(UpdatedCurrentPurposeCategory(purposeCategory, purposes));
+    }
   }
 }

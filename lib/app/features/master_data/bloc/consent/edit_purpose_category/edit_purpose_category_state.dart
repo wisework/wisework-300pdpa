@@ -23,8 +23,8 @@ class EditPurposeCategoryError extends EditPurposeCategoryState {
   List<Object> get props => [message];
 }
 
-class GetingCurrentPurposeCategory extends EditPurposeCategoryState {
-  const GetingCurrentPurposeCategory();
+class GettingCurrentPurposeCategory extends EditPurposeCategoryState {
+  const GettingCurrentPurposeCategory();
 
   @override
   List<Object> get props => [];

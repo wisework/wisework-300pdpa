@@ -98,7 +98,9 @@ class MasterDataItemCard extends StatelessWidget {
           ),
           const SizedBox(width: 5.0),
           Text(
-            status == ActiveStatus.active ? tr('masterData.etc.active') : tr('masterData.etc.inactive'),
+            status == ActiveStatus.active
+                ? tr('masterData.etc.active')
+                : tr('masterData.etc.inactive'),
             style: Theme.of(context).textTheme.bodyMedium?.copyWith(
                 color: status == ActiveStatus.active
                     ? Theme.of(context).colorScheme.primary
