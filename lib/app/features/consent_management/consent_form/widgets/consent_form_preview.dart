@@ -288,6 +288,7 @@ class _ConsentFormPreviewState extends State<ConsentFormPreview> {
           },
           readOnly: widget.isReadOnly,
           required: true,
+          maxLength: mandatoryField.lengthLimit,
         ),
       ],
     );
@@ -296,7 +297,7 @@ class _ConsentFormPreviewState extends State<ConsentFormPreview> {
   Visibility _buildPurposeCategorySection(BuildContext context) {
     final purposeCategoryFiltered = UtilFunctions.filterPurposeCategoriesByIds(
       widget.purposeCategories,
-      widget.consentForm.purposeCategories,
+      widget.consentForm.purposeCategories.map((item) => item.id).toList(),
     );
 
     return Visibility(
@@ -393,7 +394,7 @@ class _ConsentFormPreviewState extends State<ConsentFormPreview> {
   }) {
     final purposeFiltered = UtilFunctions.filterPurposeByIds(
       widget.purposes,
-      purposeCategory.purposes,
+      purposeCategory.purposes.map((purpose) => purpose.id).toList(),
     );
 
     return Visibility(

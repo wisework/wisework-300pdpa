@@ -8,6 +8,7 @@ import 'package:pdpa/app/data/models/master_data/reject_type_model.dart';
 import 'package:pdpa/app/data/models/master_data/request_reason_template_model.dart';
 import 'package:pdpa/app/data/models/master_data/request_reject_template_model.dart';
 import 'package:pdpa/app/data/models/master_data/request_type_model.dart';
+import 'package:pdpa/app/shared/utils/typedef.dart';
 
 class MasterDataApi {
   const MasterDataApi(this._firestore);
@@ -149,7 +150,15 @@ class MasterDataApi {
 
     List<PurposeCategoryModel> purposeCategories = [];
     for (var document in result.docs) {
-      purposeCategories.add(PurposeCategoryModel.fromDocument(document));
+      DataMap response = document.data();
+      response['id'] = document.id;
+
+      final purposes = (response['purposes'] as List<dynamic>)
+          .map((id) => {'id': id, ...PurposeModel.empty().toMap()})
+          .toList();
+      response['purposes'] = purposes;
+
+      purposeCategories.add(PurposeCategoryModel.fromMap(response));
     }
 
     return purposeCategories;
@@ -165,7 +174,16 @@ class MasterDataApi {
         .get();
 
     if (!result.exists) return null;
-    return PurposeCategoryModel.fromDocument(result);
+
+    DataMap response = result.data()!;
+    response['id'] = result.id;
+
+    final purposes = (response['purposes'] as List<dynamic>)
+        .map((id) => {'id': id, ...PurposeModel.empty().toMap()})
+        .toList();
+    response['purposes'] = purposes;
+
+    return PurposeCategoryModel.fromMap(response);
   }
 
   Future<PurposeCategoryModel> createPurposeCategory(

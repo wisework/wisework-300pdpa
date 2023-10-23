@@ -228,13 +228,6 @@ class _MandatoryFieldViewState extends State<MandatoryFieldView> {
     return Row(
       key: ValueKey(mandatoryField.id),
       children: <Widget>[
-        Expanded(
-          child: MasterDataItemCard(
-            title: title.text,
-            subtitle: customInputTypeNames[mandatoryField.inputType].toString(),
-            status: mandatoryField.status,
-          ),
-        ),
         Visibility(
           visible: isEditable,
           child: Padding(
@@ -244,10 +237,17 @@ class _MandatoryFieldViewState extends State<MandatoryFieldView> {
             child: ReorderableDragStartListener(
               index: mandatoryFields.indexOf(mandatoryField),
               child: Icon(
-                Ionicons.reorder_three_outline,
+                Ionicons.reorder_two_outline,
                 color: Theme.of(context).colorScheme.primary,
               ),
             ),
+          ),
+        ),
+        Expanded(
+          child: MasterDataItemCard(
+            title: title.text,
+            subtitle: customInputTypeNames[mandatoryField.inputType].toString(),
+            status: mandatoryField.status,
           ),
         ),
       ],

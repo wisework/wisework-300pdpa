@@ -58,3 +58,14 @@ class DeleteCurrentPurposeCategoryEvent extends EditPurposeCategoryEvent {
   @override
   List<Object> get props => [purposeCategoryId, companyId];
 }
+
+class AddNewlyPurposeInCategoryEvent extends EditPurposeCategoryEvent {
+  const AddNewlyPurposeInCategoryEvent({
+    required this.purpose,
+  });
+
+  final PurposeModel purpose;
+
+  @override
+  List<Object> get props => [purpose];
+}

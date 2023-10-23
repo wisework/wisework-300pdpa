@@ -39,10 +39,10 @@ class CustomTextField extends StatefulWidget {
 class _CustomTextFieldState extends State<CustomTextField> {
   String? _validateInput(String? value) {
     if (value == null || value.isEmpty) {
-      return widget.errorText ?? tr('masterData.etc.fieldCannotEmpty');
+      return widget.errorText ?? tr('masterData.etc.fieldCannotEmpty'); //!
     } else if (widget.keyboardType == TextInputType.emailAddress &&
         !emailRegex.hasMatch(value)) {
-      return widget.errorText ?? tr('masterData.etc.pleaseEnterValidEmail');
+      return widget.errorText ?? tr('masterData.etc.pleaseEnterValidEmail'); //!
     }
     return null;
   }

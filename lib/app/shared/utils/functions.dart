@@ -41,7 +41,7 @@ class UtilFunctions {
   }
 
   //? User Consent Form
-  static String getUserConsentForm(String consentId, String companyId) {
+  static String getUserConsentFormUrl(String consentId, String companyId) {
     final fragment = 'companies/$companyId/consent-forms/$consentId/form';
     return '${AppConfig.baseUrl}/#/$fragment';
   }
@@ -85,8 +85,30 @@ class UtilFunctions {
     List<PurposeCategoryModel> purposeCategories,
     List<String> purposeCategoryIds,
   ) {
+    List<PurposeCategoryModel> filtered = [];
+    final empty = PurposeCategoryModel.empty();
+
+    for (String id in purposeCategoryIds) {
+      final result = purposeCategories.firstWhere(
+        (category) => category.id == id,
+        orElse: () => empty,
+      );
+
+      if (result != empty) {
+        filtered.add(result);
+      }
+    }
+
+    return filtered;
+  }
+
+  static List<PurposeCategoryModel> reorderPurposeCategories(
+    List<PurposeCategoryModel> purposeCategories,
+  ) {
     return purposeCategories
-        .where((category) => purposeCategoryIds.contains(category.id))
+        .asMap()
+        .entries
+        .map((entry) => entry.value.copyWith(priority: entry.key))
         .toList();
   }
 

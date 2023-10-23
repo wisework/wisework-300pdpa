@@ -14,7 +14,7 @@ class PurposeBloc extends Bloc<PurposeEvent, PurposeState> {
   })  : _masterDataRepository = masterDataRepository,
         super(const PurposeInitial()) {
     on<GetPurposesEvent>(_getPurposesHandler);
-    on<UpdatePurposesEvent>(_updatePurposesHandler);
+    on<UpdatePurposesChangedEvent>(_updatePurposesChangedHandler);
   }
 
   final MasterDataRepository _masterDataRepository;
@@ -40,8 +40,8 @@ class PurposeBloc extends Bloc<PurposeEvent, PurposeState> {
     );
   }
 
-  Future<void> _updatePurposesHandler(
-    UpdatePurposesEvent event,
+  Future<void> _updatePurposesChangedHandler(
+    UpdatePurposesChangedEvent event,
     Emitter<PurposeState> emit,
   ) async {
     if (state is GotPurposes) {
@@ -55,13 +55,10 @@ class PurposeBloc extends Bloc<PurposeEvent, PurposeState> {
             ..add(event.purpose);
           break;
         case UpdateType.updated:
-          for (PurposeModel purpose in purposes) {
-            if (purpose.id == event.purpose.id) {
-              updated.add(event.purpose);
-            } else {
-              updated.add(purpose);
-            }
-          }
+          updated = purposes
+              .map((purpose) =>
+                  purpose.id == event.purpose.id ? event.purpose : purpose)
+              .toList();
           break;
         case UpdateType.deleted:
           updated = purposes

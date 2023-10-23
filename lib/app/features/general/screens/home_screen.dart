@@ -7,7 +7,6 @@ import 'package:pdpa/app/config/config.dart';
 import 'package:pdpa/app/data/models/authentication/company_model.dart';
 import 'package:pdpa/app/data/models/consent_management/consent_form_model.dart';
 import 'package:pdpa/app/data/models/master_data/localized_model.dart';
-import 'package:pdpa/app/data/models/master_data/purpose_category_model.dart';
 import 'package:pdpa/app/features/authentication/bloc/sign_in/sign_in_bloc.dart';
 import 'package:pdpa/app/features/consent_management/consent_form/bloc/consent_form/consent_form_bloc.dart';
 import 'package:pdpa/app/features/consent_management/consent_form/routes/consent_form_route.dart';
@@ -16,7 +15,6 @@ import 'package:pdpa/app/features/master_data/routes/master_data_route.dart';
 import 'package:pdpa/app/shared/drawers/bloc/drawer_bloc.dart';
 import 'package:pdpa/app/shared/drawers/models/drawer_menu_models.dart';
 import 'package:pdpa/app/shared/drawers/pdpa_drawer.dart';
-import 'package:pdpa/app/shared/utils/functions.dart';
 import 'package:pdpa/app/shared/widgets/customs/custom_button.dart';
 import 'package:pdpa/app/shared/widgets/customs/custom_container.dart';
 import 'package:pdpa/app/shared/widgets/customs/custom_icon_button.dart';
@@ -138,7 +136,7 @@ class _HomeScreenState extends State<HomeScreen> {
                           tr('general.home.recentlyUsed'),
                           style: Theme.of(context).textTheme.titleMedium,
                         ),
-                        _buildRecent(context),
+                        _buildRecentlyUsed(context),
                       ],
                     ),
                   ),
@@ -163,7 +161,7 @@ class _HomeScreenState extends State<HomeScreen> {
     );
   }
 
-  Container _buildRecent(BuildContext context) {
+  Container _buildRecentlyUsed(BuildContext context) {
     return Container(
       padding: const EdgeInsets.all(UiConfig.defaultPaddingSpacing),
       decoration: BoxDecoration(
@@ -181,7 +179,6 @@ class _HomeScreenState extends State<HomeScreen> {
                       return _buildItemCard(
                         context,
                         consentForm: state.consentForms[index],
-                        purposeCategory: state.purposeCategories,
                       );
                     },
                   )
@@ -191,7 +188,7 @@ class _HomeScreenState extends State<HomeScreen> {
                         crossAxisAlignment: CrossAxisAlignment.center,
                         mainAxisAlignment: MainAxisAlignment.center,
                         children: [
-                          Text(tr('masterData.cm.purposeCategory.noData')), //!
+                          Text(tr('masterData.cm.purposeCategory.noData')), 
                         ],
                       ),
                       const SizedBox(
@@ -322,7 +319,10 @@ class _HomeScreenState extends State<HomeScreen> {
                   ],
                 ),
                 SizedBox(
-                  height: 150.0,
+                  // constraints:
+                  //     const BoxConstraints(maxHeight: 170, minHeight: 150),
+                  height:
+                      context.locale.toString() == 'en_US' ? 140 : 170,
                   child: ListView.builder(
                       physics: const ClampingScrollPhysics(),
                       shrinkWrap: true,
@@ -369,8 +369,8 @@ class _HomeScreenState extends State<HomeScreen> {
                             }
                           },
                           child: Container(
-                            width: 200,
-                            height: 200,
+                            width: 170.0,
+                            height: 180.0,
                             alignment: Alignment.center,
                             // color: Theme.of(context).colorScheme.outline,
                             padding: const EdgeInsets.all(
@@ -397,11 +397,12 @@ class _HomeScreenState extends State<HomeScreen> {
                               mainAxisAlignment: MainAxisAlignment.center,
                               crossAxisAlignment: CrossAxisAlignment.center,
                               children: [
+                                const SizedBox(height: UiConfig.lineSpacing),
                                 Icon(
                                   icons[index],
                                   size: 30.0,
                                 ),
-                                const SizedBox(height: 20.0),
+                                const SizedBox(height: UiConfig.lineGap),
                                 Expanded(
                                   child: Text(
                                     cardTitles[index],
@@ -410,6 +411,7 @@ class _HomeScreenState extends State<HomeScreen> {
                                     textAlign: TextAlign.center,
                                   ),
                                 ),
+                                const SizedBox(height: UiConfig.lineSpacing),
                               ],
                             ),
                           ),
@@ -431,7 +433,6 @@ class _HomeScreenState extends State<HomeScreen> {
   Column _buildItemCard(
     BuildContext context, {
     required ConsentFormModel consentForm,
-    required List<PurposeCategoryModel> purposeCategory,
   }) {
     const language = 'en-US';
 
@@ -441,17 +442,10 @@ class _HomeScreenState extends State<HomeScreen> {
           orElse: () => const LocalizedModel.empty(),
         )
         .text;
-    final purposeCategoryFiltered = UtilFunctions.filterPurposeCategoriesByIds(
-      purposeCategory,
-      consentForm.purposeCategories,
+    final dateConsentForm = DateFormat("dd.MM.yy").format(
+      consentForm.updatedDate,
     );
-    final dateConsentForm =
-        DateFormat("dd.MM.yy").format(consentForm.updatedDate);
 
-    // final purposeCategoryFiltered = UtilFunctions.filterPurposeCategoriesByIds(
-    //   purposeCategory,
-    //   consentForm.purposeCategories,
-    // );
     return Column(
       mainAxisSize: MainAxisSize.min,
       children: <Widget>[
@@ -471,11 +465,13 @@ class _HomeScreenState extends State<HomeScreen> {
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: <Widget>[
-                    Text(
-                      title.isNotEmpty
-                          ? title
-                          : tr('general.home.thisDataIsNotStored'),
-                      style: Theme.of(context).textTheme.bodyMedium,
+                    Expanded(
+                      child: Text(
+                        title.isNotEmpty
+                            ? title
+                            : tr('general.home.thisDataIsNotStored'),
+                        style: Theme.of(context).textTheme.bodyMedium,
+                      ),
                     ),
                     Padding(
                       padding: const EdgeInsets.only(left: 40.0),
@@ -487,17 +483,20 @@ class _HomeScreenState extends State<HomeScreen> {
                   ],
                 ),
                 Visibility(
-                  visible: purposeCategoryFiltered.isNotEmpty,
+                  visible: consentForm.purposeCategories.isNotEmpty,
                   child: Padding(
                     padding: const EdgeInsets.only(
                       top: UiConfig.textLineSpacing,
                     ),
-                    child: Text(purposeCategoryFiltered.first.title
-                        .firstWhere(
-                          (item) => item.language == language,
-                          orElse: LocalizedModel.empty,
-                        )
-                        .text),
+                    child: Text(
+                      consentForm.purposeCategories.first.title
+                          .firstWhere(
+                            (item) => item.language == language,
+                            orElse: LocalizedModel.empty,
+                          )
+                          .text,
+                      style: Theme.of(context).textTheme.bodySmall,
+                    ),
                   ),
                 ),
               ],

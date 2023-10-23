@@ -78,7 +78,7 @@ class _CustomFieldViewState extends State<CustomFieldView> {
           backgroundColor: Theme.of(context).colorScheme.onBackground,
         ),
         title: Text(
-          tr('masterData.cm.customfields.list'), //!
+          tr('masterData.cm.customfields.list'), 
           style: Theme.of(context).textTheme.titleLarge,
         ),
       ),

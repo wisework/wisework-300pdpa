@@ -84,7 +84,8 @@ class _EditRequestReasonTemplateScreenState
         listener: (context, state) {
           if (state is CreatedCurrentRequestReasonTp) {
             BotToast.showText(
-              text: 'Create successfully',
+              text: tr(
+                  'consentManagement.consentForm.editConsentTheme.createSuccess'), //!
               contentColor:
                   Theme.of(context).colorScheme.secondary.withOpacity(0.75),
               borderRadius: BorderRadius.circular(8.0),
@@ -104,7 +105,8 @@ class _EditRequestReasonTemplateScreenState
 
           if (state is UpdatedCurrentRequestReasonTp) {
             BotToast.showText(
-              text: 'Update successfully',
+              text: tr(
+                  'consentManagement.consentForm.editConsentTheme.updateSuccess'), //!
               contentColor:
                   Theme.of(context).colorScheme.secondary.withOpacity(0.75),
               borderRadius: BorderRadius.circular(8.0),
@@ -118,7 +120,8 @@ class _EditRequestReasonTemplateScreenState
 
           if (state is DeletedCurrentRequestReasonTp) {
             BotToast.showText(
-              text: 'Delete successfully',
+              text: tr(
+                  'consentManagement.consentForm.editConsentTheme.deleteSuccess'), //!
               contentColor:
                   Theme.of(context).colorScheme.secondary.withOpacity(0.75),
               borderRadius: BorderRadius.circular(8.0),
@@ -432,7 +435,7 @@ class _EditRequestReasonTemplateViewState
                     child: Column(
                       children: [
                         const SizedBox(height: UiConfig.lineSpacing),
-                        const Text('Request Types'),
+                        const Text('Request Types'), //!
                         const SizedBox(height: UiConfig.lineSpacing),
                         ListView.builder(
                           shrinkWrap: true,
@@ -443,7 +446,7 @@ class _EditRequestReasonTemplateViewState
                               final item = state.requestTypes[index];
 
                               if (state.requestTypes.isEmpty) {
-                                return const Text('No Data');
+                                return const Text('No Data'); //!
                               }
                               return MasterDataListTile(
                                 trail: false,
@@ -545,7 +548,7 @@ class _EditRequestReasonTemplateViewState
                     Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
-                        const Text('Reason Types'),
+                        const Text('Reason Types'), //!
                         CustomIconButton(
                           icon: Ionicons.close,
                           onPressed: () {
@@ -563,7 +566,7 @@ class _EditRequestReasonTemplateViewState
                           final item = state.reasonTypes[index];
 
                           if (state.reasonTypes.isEmpty) {
-                            return const Text('No Data');
+                            return const Text('No Data'); //!
                           }
                           return CheckboxListTile(
                             controlAffinity: ListTileControlAffinity.leading,

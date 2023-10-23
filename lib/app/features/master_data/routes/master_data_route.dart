@@ -72,8 +72,9 @@ class MasterDataRoute {
 
   static final GoRoute createPurposeCategory = GoRoute(
     path: '/master-data/purposecategory/create',
-    builder: (context, _) =>
-        const EditPurposeCategoryScreen(purposeCategoryId: ''),
+    builder: (context, _) => const EditPurposeCategoryScreen(
+      purposeCategoryId: '',
+    ),
   );
 
   static final GoRoute editPurposeCategory = GoRoute(
@@ -82,6 +83,14 @@ class MasterDataRoute {
       purposeCategoryId: state.pathParameters['id'] ?? '',
     ),
   );
+
+  // static final GoRoute createPurposeCategoryByConsent = GoRoute(
+  //   path: '/master-data/purposecategory/create-by-consent',
+  //   builder: (context, _) => const EditPurposeCategoryScreen(
+  //     purposeCategoryId: '',
+  //     isCreateByConsent: true,
+  //   ),
+  // );
 
   //? Reason Type
   static final GoRoute reasonType = GoRoute(
@@ -197,6 +206,7 @@ class MasterDataRoute {
     purposesCategories,
     createPurposeCategory,
     editPurposeCategory,
+    // createPurposeCategoryByConsent,
     //dsr
     reasonType,
     createReasonType,

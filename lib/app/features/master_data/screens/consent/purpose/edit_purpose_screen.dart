@@ -1,4 +1,3 @@
-import 'package:bot_toast/bot_toast.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -6,14 +5,15 @@ import 'package:go_router/go_router.dart';
 import 'package:ionicons/ionicons.dart';
 import 'package:pdpa/app/config/config.dart';
 import 'package:pdpa/app/data/models/authentication/user_model.dart';
+import 'package:pdpa/app/data/models/etc/updated_return.dart';
 import 'package:pdpa/app/data/models/master_data/localized_model.dart';
 import 'package:pdpa/app/data/models/master_data/purpose_model.dart';
 import 'package:pdpa/app/features/authentication/bloc/sign_in/sign_in_bloc.dart';
 import 'package:pdpa/app/features/master_data/bloc/consent/edit_purpose/edit_purpose_bloc.dart';
-import 'package:pdpa/app/features/master_data/bloc/consent/purpose/purpose_bloc.dart';
 import 'package:pdpa/app/features/master_data/widgets/configuration_info.dart';
 import 'package:pdpa/app/injection.dart';
 import 'package:pdpa/app/shared/utils/constants.dart';
+import 'package:pdpa/app/shared/utils/toast.dart';
 import 'package:pdpa/app/shared/widgets/customs/custom_container.dart';
 import 'package:pdpa/app/shared/widgets/customs/custom_dropdown_button.dart';
 import 'package:pdpa/app/shared/widgets/customs/custom_icon_button.dart';
@@ -68,57 +68,34 @@ class _EditPurposeScreenState extends State<EditPurposeScreen> {
       child: BlocConsumer<EditPurposeBloc, EditPurposeState>(
         listener: (context, state) {
           if (state is CreatedCurrentPurpose) {
-            BotToast.showText(
-              text: 'Create successfully', //!
-              contentColor:
-                  Theme.of(context).colorScheme.secondary.withOpacity(0.75),
-              borderRadius: BorderRadius.circular(8.0),
-              textStyle: Theme.of(context)
-                  .textTheme
-                  .bodyMedium!
-                  .copyWith(color: Theme.of(context).colorScheme.onPrimary),
-              duration: UiConfig.toastDuration,
+            showToast(context,
+                text: tr(
+                    'consentManagement.consentForm.editConsentTheme.createSuccess')); //!
+
+            context.pop(
+              UpdatedReturn<PurposeModel>(
+                object: state.purpose,
+                type: UpdateType.created,
+              ),
             );
-
-            context.read<PurposeBloc>().add(UpdatePurposesEvent(
-                purpose: state.purpose, updateType: UpdateType.created));
-
-            context.pop();
           }
 
           if (state is UpdatedCurrentPurpose) {
-            BotToast.showText(
-              text: 'Update successfully', //!
-              contentColor:
-                  Theme.of(context).colorScheme.secondary.withOpacity(0.75),
-              borderRadius: BorderRadius.circular(8.0),
-              textStyle: Theme.of(context)
-                  .textTheme
-                  .bodyMedium!
-                  .copyWith(color: Theme.of(context).colorScheme.onPrimary),
-              duration: UiConfig.toastDuration,
-            );
+            showToast(context, text: tr(
+                    'consentManagement.consentForm.editConsentTheme.updateSuccess')); //!
           }
 
           if (state is DeletedCurrentPurpose) {
-            BotToast.showText(
-              text: 'Delete successfully', //!
-              contentColor:
-                  Theme.of(context).colorScheme.secondary.withOpacity(0.75),
-              borderRadius: BorderRadius.circular(8.0),
-              textStyle: Theme.of(context)
-                  .textTheme
-                  .bodyMedium!
-                  .copyWith(color: Theme.of(context).colorScheme.onPrimary),
-              duration: UiConfig.toastDuration,
-            );
+            showToast(context, text: tr(
+                    'consentManagement.consentForm.editConsentTheme.deleteSuccess')); //!
 
             final deleted = PurposeModel.empty().copyWith(id: state.purposeId);
-
-            context.read<PurposeBloc>().add(UpdatePurposesEvent(
-                purpose: deleted, updateType: UpdateType.deleted));
-
-            context.pop();
+            context.pop(
+              UpdatedReturn<PurposeModel>(
+                object: deleted,
+                type: UpdateType.deleted,
+              ),
+            );
           }
         },
         builder: (context, state) {
@@ -287,40 +264,46 @@ class _EditPurposeViewState extends State<EditPurposeView> {
           DateTime.now(),
         );
 
-        context.read<EditPurposeBloc>().add(CreateCurrentPurposeEvent(
-              purpose: purpose,
-              companyId: widget.currentUser.currentCompany,
-            ));
+        final event = CreateCurrentPurposeEvent(
+          purpose: purpose,
+          companyId: widget.currentUser.currentCompany,
+        );
+
+        context.read<EditPurposeBloc>().add(event);
       } else {
         purpose = purpose.setUpdate(
           widget.currentUser.email,
           DateTime.now(),
         );
 
-        context.read<EditPurposeBloc>().add(UpdateCurrentPurposeEvent(
-              purpose: purpose,
-              companyId: widget.currentUser.currentCompany,
-            ));
+        final event = UpdateCurrentPurposeEvent(
+          purpose: purpose,
+          companyId: widget.currentUser.currentCompany,
+        );
+        context.read<EditPurposeBloc>().add(event);
       }
     }
   }
 
   void _deletePurpose() {
-    context.read<EditPurposeBloc>().add(DeleteCurrentPurposeEvent(
-          purposeId: purpose.id,
-          companyId: widget.currentUser.currentCompany,
-        ));
+    final event = DeleteCurrentPurposeEvent(
+      purposeId: purpose.id,
+      companyId: widget.currentUser.currentCompany,
+    );
+    context.read<EditPurposeBloc>().add(event);
   }
 
   void _goBackAndUpdate() {
     if (!widget.isNewPurpose) {
-      context.read<PurposeBloc>().add(UpdatePurposesEvent(
-            purpose: purpose,
-            updateType: UpdateType.updated,
-          ));
+      context.pop(
+        UpdatedReturn<PurposeModel>(
+          object: widget.initialPurpose,
+          type: UpdateType.updated,
+        ),
+      );
+    } else {
+      context.pop();
     }
-
-    context.pop();
   }
 
   @override

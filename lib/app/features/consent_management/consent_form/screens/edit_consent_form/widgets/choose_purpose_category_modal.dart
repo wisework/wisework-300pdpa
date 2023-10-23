@@ -4,56 +4,72 @@ import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:ionicons/ionicons.dart';
 import 'package:pdpa/app/config/config.dart';
-import 'package:pdpa/app/data/models/etc/updated_return.dart';
 import 'package:pdpa/app/data/models/master_data/localized_model.dart';
+import 'package:pdpa/app/data/models/master_data/purpose_category_model.dart';
 import 'package:pdpa/app/data/models/master_data/purpose_model.dart';
 import 'package:pdpa/app/features/master_data/routes/master_data_route.dart';
+import 'package:pdpa/app/shared/utils/functions.dart';
 import 'package:pdpa/app/shared/widgets/customs/custom_checkbox.dart';
-import 'package:pdpa/app/shared/widgets/customs/custom_icon_button.dart';
+import 'package:pdpa/app/shared/widgets/material_ink_well.dart';
 
-class ChoosePurposeModal extends StatefulWidget {
-  const ChoosePurposeModal({
+class ChoosePurposeCategoryModal extends StatefulWidget {
+  const ChoosePurposeCategoryModal({
     super.key,
-    required this.initialPurposes,
+    required this.initialPurposeCategory,
+    required this.purposeCategories,
     required this.purposes,
     required this.onChanged,
-    required this.onUpdated,
   });
 
-  final List<PurposeModel> initialPurposes;
+  final List<PurposeCategoryModel> initialPurposeCategory;
+  final List<PurposeCategoryModel> purposeCategories;
   final List<PurposeModel> purposes;
-  final Function(List<PurposeModel> purposes) onChanged;
-  final Function(UpdatedReturn<PurposeModel> purpose) onUpdated;
+  final Function(List<PurposeCategoryModel> categories) onChanged;
 
   @override
-  State<ChoosePurposeModal> createState() => _ChoosePurposeModalState();
+  State<ChoosePurposeCategoryModal> createState() =>
+      _ChoosePurposeCategoryModalState();
 }
 
-class _ChoosePurposeModalState extends State<ChoosePurposeModal> {
-  late List<PurposeModel> purposes;
-  late List<PurposeModel> selectPurposes;
+class _ChoosePurposeCategoryModalState
+    extends State<ChoosePurposeCategoryModal> {
+  late List<PurposeCategoryModel> selectPurposeCategories;
 
   @override
   void initState() {
     super.initState();
 
-    purposes = widget.purposes.map((purpose) => purpose).toList();
-    selectPurposes = widget.initialPurposes.map((purpose) => purpose).toList();
+    _initialData();
   }
 
-  void _selectPurpose(PurposeModel purpose) {
+  void _initialData() {
+    if (widget.initialPurposeCategory.isNotEmpty) {
+      selectPurposeCategories =
+          widget.initialPurposeCategory.map((category) => category).toList();
+    } else {
+      selectPurposeCategories = [];
+    }
+  }
+
+  void _selectPurposeCategory(PurposeCategoryModel purposeCategory) {
     setState(() {
-      if (selectPurposes.contains(purpose)) {
-        selectPurposes = selectPurposes
-            .where((categoryId) => categoryId != purpose)
+      if (selectPurposeCategories.contains(purposeCategory)) {
+        selectPurposeCategories = selectPurposeCategories
+            .where((categoryId) => categoryId != purposeCategory)
             .toList();
       } else {
-        selectPurposes = selectPurposes.map((categoryId) => categoryId).toList()
-          ..add(purpose);
+        selectPurposeCategories = selectPurposeCategories
+            .map((categoryId) => categoryId)
+            .toList()
+          ..add(purposeCategory);
       }
+
+      selectPurposeCategories = UtilFunctions.reorderPurposeCategories(
+        selectPurposeCategories,
+      );
     });
 
-    widget.onChanged(selectPurposes);
+    widget.onChanged(selectPurposeCategories);
   }
 
   @override
@@ -106,11 +122,11 @@ class _ChoosePurposeModalState extends State<ChoosePurposeModal> {
             padding: const EdgeInsets.symmetric(
               horizontal: UiConfig.defaultPaddingSpacing,
             ),
-            itemCount: purposes.length,
+            itemCount: widget.purposeCategories.length,
             itemBuilder: (_, index) {
-              if (purposes.isEmpty) {
+              if (widget.purposeCategories.isEmpty) {
                 return Text(
-                  tr('masterData.cm.purposeCategory.noData'),
+                  'masterData.cm.purposeCategory.noData',
                   style: Theme.of(context).textTheme.bodyMedium,
                 ); //!
               }
@@ -118,7 +134,7 @@ class _ChoosePurposeModalState extends State<ChoosePurposeModal> {
                 children: <Widget>[
                   _buildCheckBoxListTile(
                     context,
-                    purpose: purposes[index],
+                    purposeCategory: widget.purposeCategories[index],
                   ),
                   Padding(
                     padding: const EdgeInsets.symmetric(
@@ -142,10 +158,10 @@ class _ChoosePurposeModalState extends State<ChoosePurposeModal> {
 
   Row _buildCheckBoxListTile(
     BuildContext context, {
-    required PurposeModel purpose,
+    required PurposeCategoryModel purposeCategory,
   }) {
     const language = 'en-US';
-    final description = purpose.description.firstWhere(
+    final title = purposeCategory.title.firstWhere(
       (item) => item.language == language,
       orElse: () => const LocalizedModel.empty(),
     );
@@ -158,39 +174,66 @@ class _ChoosePurposeModalState extends State<ChoosePurposeModal> {
             right: UiConfig.actionSpacing,
           ),
           child: CustomCheckBox(
-            value: selectPurposes.contains(purpose),
+            value: selectPurposeCategories.contains(purposeCategory),
             onChanged: (_) {
-              _selectPurpose(purpose);
+              _selectPurposeCategory(purposeCategory);
             },
           ),
         ),
         Expanded(
-          child: Text(
-            description.text,
-            style: Theme.of(context).textTheme.bodyMedium,
+          child: RichText(
+            text: TextSpan(
+              children: [
+                TextSpan(
+                  text: title.text,
+                  style: Theme.of(context).textTheme.bodyMedium,
+                ),
+                if (purposeCategory.id.isNotEmpty &&
+                    purposeCategory.priority != 0)
+                  WidgetSpan(
+                    alignment: PlaceholderAlignment.baseline,
+                    baseline: TextBaseline.alphabetic,
+                    child: Container(
+                      padding: const EdgeInsets.all(5.0),
+                      decoration: BoxDecoration(
+                        color: Theme.of(context).colorScheme.primary,
+                        shape: BoxShape.circle,
+                      ),
+                      margin: const EdgeInsets.only(
+                        left: UiConfig.actionSpacing,
+                      ),
+                      child: Text(
+                        purposeCategory.priority.toString(),
+                        style: Theme.of(context).textTheme.labelLarge?.copyWith(
+                            color: Theme.of(context).colorScheme.onPrimary),
+                      ),
+                    ),
+                  ),
+              ],
+            ),
           ),
         ),
       ],
     );
   }
 
-  CustomIconButton _buildAddButton(BuildContext context) {
-    return CustomIconButton(
-      onPressed: () async {
-        await context.push(MasterDataRoute.createPurpose.path).then((value) {
-          if (value != null) {
-            final updated = value as UpdatedReturn<PurposeModel>;
+  Widget _buildAddButton(BuildContext context) {
+    return MaterialInkWell(
+      onTap: () async {
+        final result = await context.push(
+          MasterDataRoute.createPurposeCategory.path,
+        );
 
-            purposes = purposes..add(updated.object);
-            _selectPurpose(updated.object);
-
-            widget.onUpdated(updated);
-          }
-        });
+        if (result != null) {
+        }
       },
-      icon: Ionicons.add,
-      iconColor: Theme.of(context).colorScheme.primary,
-      backgroundColor: Theme.of(context).colorScheme.onBackground,
+      child: Padding(
+        padding: const EdgeInsets.only(bottom: 2.0),
+        child: Icon(
+          Ionicons.add,
+          color: Theme.of(context).colorScheme.primary,
+        ),
+      ),
     );
   }
 }

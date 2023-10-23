@@ -4,6 +4,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
 import 'package:ionicons/ionicons.dart';
 import 'package:pdpa/app/config/config.dart';
+import 'package:pdpa/app/data/models/etc/updated_return.dart';
 import 'package:pdpa/app/data/models/master_data/purpose_model.dart';
 import 'package:pdpa/app/features/authentication/bloc/sign_in/sign_in_bloc.dart';
 import 'package:pdpa/app/features/master_data/bloc/consent/purpose/purpose_bloc.dart';
@@ -11,6 +12,7 @@ import 'package:pdpa/app/features/master_data/routes/master_data_route.dart';
 import 'package:pdpa/app/features/master_data/widgets/master_data_item_card.dart';
 import 'package:pdpa/app/data/models/master_data/localized_model.dart';
 import 'package:pdpa/app/shared/widgets/customs/custom_icon_button.dart';
+import 'package:pdpa/app/shared/widgets/loading_indicator.dart';
 import 'package:pdpa/app/shared/widgets/screens/example_screen.dart';
 import 'package:pdpa/app/shared/widgets/templates/pdpa_app_bar.dart';
 
@@ -54,6 +56,14 @@ class PurposeView extends StatefulWidget {
 }
 
 class _PurposeViewState extends State<PurposeView> {
+  void _onUpdated(UpdatedReturn<PurposeModel> updated) {
+    final event = UpdatePurposesChangedEvent(
+      purpose: updated.object,
+      updateType: updated.type,
+    );
+    context.read<PurposeBloc>().add(event);
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -84,24 +94,24 @@ class _PurposeViewState extends State<PurposeView> {
               child: BlocBuilder<PurposeBloc, PurposeState>(
                 builder: (context, state) {
                   if (state is GotPurposes) {
-                    return state.purposes.isNotEmpty
-                        ? ListView.builder(
-                            itemCount: state.purposes.length,
-                            itemBuilder: (context, index) {
-                              return _buildItemCard(
-                                context,
-                                purpose: state.purposes[index],
-                              );
-                            },
-                          )
-                        : ExampleScreen(
-                            headderText: tr('masterData.cm.purpose.list'),
-                            buttonText: tr('masterData.cm.purpose.create'),
-                            descriptionText: tr('masterData.cm.purpose.explain'),
-                           
-                            onPress: () {
-                              context.push(MasterDataRoute.createPurpose.path);
-                            });
+                    if (state.purposes.isEmpty) {
+                      return ExampleScreen(
+                        headderText: tr('masterData.cm.purpose.list'),
+                        buttonText: tr('masterData.cm.purpose.create'),
+                        descriptionText: tr('masterData.cm.purpose.explain'),
+                        onPress: () {
+                          context.push(MasterDataRoute.createPurpose.path);
+                        },
+                      );
+                    }
+                    return ListView.builder(
+                      itemCount: state.purposes.length,
+                      itemBuilder: (context, index) {
+                        return _buildItemCard(context,
+                            purpose: state.purposes[index],
+                            onUpdated: _onUpdated);
+                      },
+                    );
                   }
                   if (state is PurposeError) {
                     return Center(
@@ -112,7 +122,7 @@ class _PurposeViewState extends State<PurposeView> {
                     );
                   }
                   return const Center(
-                    child: CircularProgressIndicator(),
+                    child: LoadingIndicator(),
                   );
                 },
               ),
@@ -121,8 +131,12 @@ class _PurposeViewState extends State<PurposeView> {
         ],
       ),
       floatingActionButton: FloatingActionButton(
-        onPressed: () {
-          context.push(MasterDataRoute.createPurpose.path);
+        onPressed: () async {
+          await context.push(MasterDataRoute.createPurpose.path).then((value) {
+            if (value != null) {
+              _onUpdated(value as UpdatedReturn<PurposeModel>);
+            }
+          });
         },
         child: const Icon(Icons.add),
       ),
@@ -132,6 +146,7 @@ class _PurposeViewState extends State<PurposeView> {
   MasterDataItemCard _buildItemCard(
     BuildContext context, {
     required PurposeModel purpose,
+    required Function(UpdatedReturn<PurposeModel> updated) onUpdated,
   }) {
     const language = 'en-US';
     final description = purpose.description.firstWhere(
@@ -147,10 +162,15 @@ class _PurposeViewState extends State<PurposeView> {
       title: description.text,
       subtitle: warningDescription.text,
       status: purpose.status,
-      onTap: () {
-        context.push(
-          MasterDataRoute.editPurpose.path.replaceFirst(':id', purpose.id),
-        );
+      onTap: () async {
+        await context
+            .push(MasterDataRoute.editPurpose.path
+                .replaceFirst(':id', purpose.id))
+            .then((value) {
+          if (value != null) {
+            onUpdated(value as UpdatedReturn<PurposeModel>);
+          }
+        });
       },
     );
   }

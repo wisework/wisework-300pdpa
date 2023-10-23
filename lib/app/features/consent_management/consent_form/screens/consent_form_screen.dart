@@ -6,13 +6,11 @@ import 'package:ionicons/ionicons.dart';
 import 'package:pdpa/app/config/config.dart';
 import 'package:pdpa/app/data/models/consent_management/consent_form_model.dart';
 import 'package:pdpa/app/data/models/master_data/localized_model.dart';
-import 'package:pdpa/app/data/models/master_data/purpose_category_model.dart';
 import 'package:pdpa/app/features/authentication/bloc/sign_in/sign_in_bloc.dart';
 import 'package:pdpa/app/features/consent_management/consent_form/bloc/consent_form/consent_form_bloc.dart';
 import 'package:pdpa/app/features/consent_management/consent_form/routes/consent_form_route.dart';
 
 import 'package:pdpa/app/shared/drawers/pdpa_drawer.dart';
-import 'package:pdpa/app/shared/utils/functions.dart';
 import 'package:pdpa/app/shared/widgets/customs/custom_icon_button.dart';
 import 'package:pdpa/app/shared/widgets/material_ink_well.dart';
 import 'package:pdpa/app/shared/widgets/screens/example_screen.dart';
@@ -147,7 +145,6 @@ class _ConsentFormViewState extends State<ConsentFormView> {
                               return _buildItemCard(
                                 context,
                                 consentForm: state.consentForms[index],
-                                purposeCategory: state.purposeCategories,
                               );
                             },
                           )
@@ -156,9 +153,8 @@ class _ConsentFormViewState extends State<ConsentFormView> {
                                 'consentManagement.consentForm.consentForms'),
                             buttonText: tr(
                                 'consentManagement.consentForm.createForm.create'),
-                            descriptionText: tr(
-                                'consentManagement.consentForm.explain'),
-                            
+                            descriptionText:
+                                tr('consentManagement.consentForm.explain'),
                             onPress: () {
                               context.push(
                                   ConsentFormRoute.createConsentForm.path);
@@ -266,7 +262,6 @@ class _ConsentFormViewState extends State<ConsentFormView> {
   _buildItemCard(
     BuildContext context, {
     required ConsentFormModel consentForm,
-    required List<PurposeCategoryModel> purposeCategory,
   }) {
     const language = 'en-US';
 
@@ -279,11 +274,6 @@ class _ConsentFormViewState extends State<ConsentFormView> {
 
     final dateConsentForm =
         DateFormat("dd.MM.yy").format(consentForm.updatedDate);
-
-    final purposeCategoryFiltered = UtilFunctions.filterPurposeCategoriesByIds(
-      purposeCategory,
-      consentForm.purposeCategories,
-    );
 
     return Column(
       mainAxisSize: MainAxisSize.min,
@@ -324,7 +314,7 @@ class _ConsentFormViewState extends State<ConsentFormView> {
                         ],
                       ),
                       Visibility(
-                        visible: purposeCategoryFiltered.isNotEmpty,
+                        visible: consentForm.purposeCategories.isNotEmpty,
                         child: Padding(
                           padding: const EdgeInsets.only(
                             top: UiConfig.textLineSpacing,
@@ -332,11 +322,10 @@ class _ConsentFormViewState extends State<ConsentFormView> {
                           child: ListView.builder(
                             shrinkWrap: true,
                             physics: const NeverScrollableScrollPhysics(),
-                            itemCount: purposeCategoryFiltered.length,
+                            itemCount: consentForm.purposeCategories.length,
                             itemBuilder: (_, index) {
                               final titlePurpose =
-                                  purposeCategoryFiltered[index]
-                                      .title
+                                  consentForm.purposeCategories[index].title
                                       .firstWhere(
                                         (item) => item.language == language,
                                         orElse: LocalizedModel.empty,

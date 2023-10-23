@@ -48,7 +48,8 @@ class ChoosePurposeCategoryBloc
         return;
       },
       (purposeCategories) async {
-        allPurpose.addAll(purposeCategories.expand((form) => form.purposes));
+        allPurpose.addAll(purposeCategories.expand(
+            (form) => form.purposes.map((purpose) => purpose.id).toList()));
 
         for (String purposeId in allPurpose) {
           final result = await _masterDataRepository.getPurposeById(

@@ -86,7 +86,9 @@
                 "idCardNumber": "เลขบัตรประจำตัวประชาชน",
                 "purpose": "วัตถุประสงค์",
                 "purposeOfDC": "วัตถุประสงค์ในการเก็บข้อมูล",
-                "selectPurposeCategory": "เลือกหมวดหมู่วัตถุประสงค์"
+                "selectPurposeCategory": "เลือกหมวดหมู่วัตถุประสงค์",
+                "pleaseSelectOneField": "โปรดเลือกอย่างน้อยหนึ่งช่องกรอกเพื่อใช้ในการเก็บข้อมูลผู้ใช้",
+                "pleaseSelectPurposeCategory": "โปรดเลือกอย่างน้อยหนึ่งหมวดหมู่เพื่อแจ้งให้ผู้ใช้ทราบถึงวัตถุประสงค์ในการรวบรวมข้อมูล"
             },
             "congratulations":{
                 "title" : "ยินดีด้วย!",
@@ -103,6 +105,7 @@
                 "storedInformation": "ข้อมูลที่จัดเก็บ",
                 "noInputField": "ไม่มีข้อมูลที่จัดเก็บ",
                 "Purposes": "วัตถุประสงค์",
+                "noPurposes": "ไม่มีวัตถุประสงค์ที่ถูกเพิ่ม",
                 "information": "ข้อมูล",
                 "filter": {
                     "informationPurpose": "ข้อมูล-วัตถุประสงค์",
@@ -135,6 +138,7 @@
                 "newConsentTheme": "ธีมคำยินยอมใหม่",
                 "editConsentTheme": "แก้ไขธีมคำยินยอม",
                 "consentThemeInfomation": "ข้อมูลธีมความยินยอม",
+                "consentThemeTitle": "Consent theme infomation",
                 "enterConsentThemeTitle": "กรอกชื่อธีมคำยินยอม",
                 "headerTextColor": "สีข้อความส่วนหัว",
                 "headerBackgroundColor": "สีพื้นหลังของส่วนหัว",

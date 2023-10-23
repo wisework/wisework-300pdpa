@@ -34,25 +34,27 @@ class GotCurrentConsentForm extends EditConsentFormState {
   const GotCurrentConsentForm(
     this.consentForm,
     this.mandatoryFields,
-    this.purposeCategories,
     this.purposes,
+    this.purposeCategories,
     this.customFields,
   );
 
   final ConsentFormModel consentForm;
   final List<MandatoryFieldModel> mandatoryFields;
-  final List<PurposeCategoryModel> purposeCategories;
   final List<PurposeModel> purposes;
+  final List<PurposeCategoryModel> purposeCategories;
   final List<CustomFieldModel> customFields;
 
   @override
-  List<Object> get props => [
-        consentForm,
-        mandatoryFields,
-        purposeCategories,
-        purposes,
-        customFields,
-      ];
+  List<Object> get props {
+    return [
+      consentForm,
+      mandatoryFields,
+      purposes,
+      purposeCategories,
+      customFields,
+    ];
+  }
 }
 
 class CreatingCurrentConsentForm extends EditConsentFormState {
@@ -65,44 +67,44 @@ class CreatingCurrentConsentForm extends EditConsentFormState {
 class CreatedCurrentConsentForm extends EditConsentFormState {
   const CreatedCurrentConsentForm(
     this.consentForm,
-    this.purposeCategories,
   );
 
   final ConsentFormModel consentForm;
-  final List<PurposeCategoryModel> purposeCategories;
 
   @override
-  List<Object> get props => [consentForm, purposeCategories];
+  List<Object> get props => [consentForm];
 }
 
-class UpdatingEditConsentForm extends EditConsentFormState {
-  const UpdatingEditConsentForm();
+class UpdatingCurrentConsentForm extends EditConsentFormState {
+  const UpdatingCurrentConsentForm();
 
   @override
   List<Object> get props => [];
 }
 
-class UpdateEditConsentForm extends EditConsentFormState {
-  const UpdateEditConsentForm(
+class UpdateCurrentConsentForm extends EditConsentFormState {
+  const UpdateCurrentConsentForm(
     this.consentForm,
     this.mandatoryFields,
-    this.purposeCategories,
     this.purposes,
+    this.purposeCategories,
     this.customFields,
   );
 
   final ConsentFormModel consentForm;
   final List<MandatoryFieldModel> mandatoryFields;
-  final List<PurposeCategoryModel> purposeCategories;
   final List<PurposeModel> purposes;
+  final List<PurposeCategoryModel> purposeCategories;
   final List<CustomFieldModel> customFields;
 
   @override
-  List<Object> get props => [
-        consentForm,
-        mandatoryFields,
-        purposeCategories,
-        purposes,
-        customFields,
-      ];
+  List<Object> get props {
+    return [
+      consentForm,
+      mandatoryFields,
+      purposes,
+      purposeCategories,
+      customFields,
+    ];
+  }
 }
