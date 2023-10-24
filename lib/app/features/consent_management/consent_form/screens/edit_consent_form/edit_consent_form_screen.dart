@@ -552,7 +552,20 @@ class _EditConsentFormViewState extends State<EditConsentFormView> {
           ),
           const SizedBox(height: UiConfig.lineGap),
           purposeCategorySelected.isNotEmpty
-              ? ListView.builder(
+              // ? ListView.builder(
+              //     itemBuilder: (context, index) {
+              //       return _buildItemTile(context,
+              //           purposeCategory: UtilFunctions.getPurposeCategoryById(
+              //             purposeCategories,
+              //             purposeCategorySelected[index].id,
+              //           ),
+              //           language: widget.currentUser.defaultLanguage);
+              //     },
+              //     itemCount: purposeCategorySelected.length,
+              //     physics: const NeverScrollableScrollPhysics(),
+              //     shrinkWrap: true,
+              //   )
+              ? ReorderableListView.builder(
                   itemBuilder: (context, index) {
                     return _buildItemTile(context,
                         purposeCategory: UtilFunctions.getPurposeCategoryById(
@@ -562,25 +575,19 @@ class _EditConsentFormViewState extends State<EditConsentFormView> {
                         language: widget.currentUser.defaultLanguage);
                   },
                   itemCount: purposeCategorySelected.length,
+                  onReorder: (oldIndex, newIndex) {
+                    setState(() {
+                      if (newIndex > oldIndex) {
+                        newIndex -= 1;
+                      }
+                      var item = purposeCategorySelected.removeAt(oldIndex);
+                      purposeCategorySelected.insert(newIndex, item);
+                    });
+                  },
+                  buildDefaultDragHandles: false,
                   physics: const NeverScrollableScrollPhysics(),
                   shrinkWrap: true,
                 )
-              // ? ReorderableListView.builder(
-              //     itemBuilder: (context, index) {
-              //       return _buildItemTile(
-              //         context,
-              //         purposeCategory: UtilFunctions.getPurposeCategoryById(
-              //           purposeCategories,
-              //           purposeCategorySelected[index].id,
-              //         ),
-              //       );
-              //     },
-              //     itemCount: purposeCategorySelected.length,
-              //     onReorder: _setPriority,
-              //     buildDefaultDragHandles: false,
-              //     physics: const NeverScrollableScrollPhysics(),
-              //     shrinkWrap: true,
-              //   )
               : Padding(
                   padding: const EdgeInsets.symmetric(vertical: 10.0),
                   child: Icon(
@@ -674,24 +681,24 @@ class _EditConsentFormViewState extends State<EditConsentFormView> {
     return Row(
       key: ValueKey(purposeCategory.id),
       children: <Widget>[
-        Padding(
-          padding: const EdgeInsets.all(UiConfig.actionSpacing),
-          child: Icon(
-            Icons.circle,
-            size: 8.0,
-            color: Theme.of(context).colorScheme.primary,
-          ),
-        ),
         // Padding(
         //   padding: const EdgeInsets.all(UiConfig.actionSpacing),
-        //   child: ReorderableDragStartListener(
-        //     index: purposeCategorySelected.indexOf(purposeCategory),
-        //     child: Icon(
-        //       Ionicons.reorder_two_outline,
-        //       color: Theme.of(context).colorScheme.primary,
-        //     ),
+        //   child: Icon(
+        //     Icons.circle,
+        //     size: 8.0,
+        //     color: Theme.of(context).colorScheme.primary,
         //   ),
         // ),
+        Padding(
+          padding: const EdgeInsets.all(UiConfig.actionSpacing),
+          child: ReorderableDragStartListener(
+            index: purposeCategorySelected.indexOf(purposeCategory),
+            child: Icon(
+              Ionicons.reorder_two_outline,
+              color: Theme.of(context).colorScheme.primary,
+            ),
+          ),
+        ),
         Expanded(
           child: Text(
             title.text,
