@@ -28,6 +28,7 @@ class PdpaAppBar extends StatelessWidget implements PreferredSizeWidget {
     return AppBar(
       automaticallyImplyLeading: false,
       title: Row(
+        crossAxisAlignment: CrossAxisAlignment.center,
         children: <Widget>[
           if (leadingIcon != null) leadingIcon!,
           SizedBox(width: titleSpacing),

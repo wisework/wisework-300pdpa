@@ -5,7 +5,7 @@ class AppConfig {
   static const String baseUrl = 'https://pdpa-300.web.app';
   static const String accessTokenBitly =
       '1a4228869e688dba97d940375d04122e2341ec40';
-  static const String defaultLanguage = 'en-US';
+  static const String defaultLanguage = 'th-TH';
 }
 
 class UiConfig {

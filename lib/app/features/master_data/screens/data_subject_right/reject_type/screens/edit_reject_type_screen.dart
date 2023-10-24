@@ -68,7 +68,8 @@ class _EditRejectTypeScreenState extends State<EditRejectTypeScreen> {
         listener: (context, state) {
           if (state is CreatedCurrentRejectType) {
             BotToast.showText(
-              text: tr('consentManagement.consentForm.editConsentTheme.createSuccess'), //!
+              text: tr(
+                  'consentManagement.consentForm.editConsentTheme.createSuccess'), //!
               contentColor:
                   Theme.of(context).colorScheme.secondary.withOpacity(0.75),
               borderRadius: BorderRadius.circular(8.0),
@@ -87,7 +88,8 @@ class _EditRejectTypeScreenState extends State<EditRejectTypeScreen> {
 
           if (state is UpdatedCurrentRejectType) {
             BotToast.showText(
-              text: tr('consentManagement.consentForm.editConsentTheme.updateSuccess'),
+              text: tr(
+                  'consentManagement.consentForm.editConsentTheme.updateSuccess'),
               contentColor:
                   Theme.of(context).colorScheme.secondary.withOpacity(0.75),
               borderRadius: BorderRadius.circular(8.0),
@@ -101,7 +103,8 @@ class _EditRejectTypeScreenState extends State<EditRejectTypeScreen> {
 
           if (state is DeletedCurrentRejectType) {
             BotToast.showText(
-              text: tr('consentManagement.consentForm.editConsentTheme.deleteSuccess'),
+              text: tr(
+                  'consentManagement.consentForm.editConsentTheme.deleteSuccess'),
               contentColor:
                   Theme.of(context).colorScheme.secondary.withOpacity(0.75),
               borderRadius: BorderRadius.circular(8.0),
@@ -360,7 +363,7 @@ class _EditRejectTypeViewState extends State<EditRejectTypeView> {
   CustomIconButton _buildPopButton(RejectTypeModel rejectType) {
     return CustomIconButton(
       onPressed: _goBackAndUpdate,
-      icon: Ionicons.chevron_back_outline,
+      icon: Icons.chevron_left_outlined,
       iconColor: Theme.of(context).colorScheme.primary,
       backgroundColor: Theme.of(context).colorScheme.onBackground,
     );

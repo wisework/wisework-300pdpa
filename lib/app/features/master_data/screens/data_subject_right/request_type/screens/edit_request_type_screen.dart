@@ -362,7 +362,7 @@ class _EditRequestTypeViewState extends State<EditRequestTypeView> {
   CustomIconButton _buildPopButton(RequestTypeModel requestType) {
     return CustomIconButton(
       onPressed: _goBackAndUpdate,
-      icon: Ionicons.chevron_back_outline,
+      icon: Icons.chevron_left_outlined,
       iconColor: Theme.of(context).colorScheme.primary,
       backgroundColor: Theme.of(context).colorScheme.onBackground,
     );

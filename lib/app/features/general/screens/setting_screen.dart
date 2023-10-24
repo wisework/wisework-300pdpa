@@ -118,12 +118,12 @@ class _SettingViewState extends State<SettingView> {
           onPressed: () {
             _scaffoldKey.currentState?.openDrawer();
           },
-          icon: Ionicons.menu_outline,
+          icon: Icons.menu_outlined,
           iconColor: Theme.of(context).colorScheme.primary,
           backgroundColor: Theme.of(context).colorScheme.onBackground,
         ),
         title: Text(
-          tr('app.features.setting'), 
+          tr('app.features.setting'),
           style: Theme.of(context).textTheme.titleLarge,
         ),
       ),
@@ -159,6 +159,7 @@ class _SettingViewState extends State<SettingView> {
               SizedBox(
                 width: 120,
                 child: CustomDropdownButton<String>(
+                  colorBorder: Theme.of(context).colorScheme.onPrimary,
                   value: currentLanguage,
                   items: languages.map(
                     (language) {

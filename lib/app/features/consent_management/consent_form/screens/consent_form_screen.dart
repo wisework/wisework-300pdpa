@@ -2,7 +2,7 @@ import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
-import 'package:ionicons/ionicons.dart';
+
 import 'package:pdpa/app/config/config.dart';
 import 'package:pdpa/app/data/models/consent_management/consent_form_model.dart';
 import 'package:pdpa/app/data/models/master_data/localized_model.dart';
@@ -24,6 +24,8 @@ class ConsentFormScreen extends StatefulWidget {
 }
 
 class _ConsentFormScreenState extends State<ConsentFormScreen> {
+  late String language;
+
   @override
   void initState() {
     super.initState();
@@ -37,6 +39,7 @@ class _ConsentFormScreenState extends State<ConsentFormScreen> {
     String companyId = '';
     if (bloc.state is SignedInUser) {
       companyId = (bloc.state as SignedInUser).user.currentCompany;
+      language = (bloc.state as SignedInUser).user.defaultLanguage;
     }
 
     context
@@ -46,12 +49,14 @@ class _ConsentFormScreenState extends State<ConsentFormScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return const ConsentFormView();
+    return ConsentFormView(language: language);
   }
 }
 
 class ConsentFormView extends StatefulWidget {
-  const ConsentFormView({super.key});
+  const ConsentFormView({super.key, required this.language});
+
+  final String language;
 
   @override
   State<ConsentFormView> createState() => _ConsentFormViewState();
@@ -69,7 +74,7 @@ class _ConsentFormViewState extends State<ConsentFormView> {
           onPressed: () {
             _scaffoldKey.currentState?.openDrawer();
           },
-          icon: Ionicons.menu_outline,
+          icon: Icons.menu_outlined,
           iconColor: Theme.of(context).colorScheme.primary,
           backgroundColor: Theme.of(context).colorScheme.onBackground,
         ),
@@ -145,6 +150,7 @@ class _ConsentFormViewState extends State<ConsentFormView> {
                               return _buildItemCard(
                                 context,
                                 consentForm: state.consentForms[index],
+                                language: widget.language,
                               );
                             },
                           )
@@ -262,9 +268,8 @@ class _ConsentFormViewState extends State<ConsentFormView> {
   _buildItemCard(
     BuildContext context, {
     required ConsentFormModel consentForm,
+    required String language,
   }) {
-    const language = 'en-US';
-
     final title = consentForm.title
         .firstWhere(
           (item) => item.language == language,
@@ -309,7 +314,7 @@ class _ConsentFormViewState extends State<ConsentFormView> {
                           ),
                           Text(
                             dateConsentForm,
-                            style: Theme.of(context).textTheme.bodySmall,
+                            style: Theme.of(context).textTheme.bodyMedium,
                           ),
                         ],
                       ),
