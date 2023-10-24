@@ -66,6 +66,12 @@ class _PurposeViewState extends State<PurposeView> {
 
   @override
   Widget build(BuildContext context) {
+    final bloc = context.read<SignInBloc>();
+
+    String language = '';
+    if (bloc.state is SignedInUser) {
+      language = (bloc.state as SignedInUser).user.defaultLanguage;
+    }
     return Scaffold(
       appBar: PdpaAppBar(
         leadingIcon: CustomIconButton(
@@ -109,7 +115,8 @@ class _PurposeViewState extends State<PurposeView> {
                       itemBuilder: (context, index) {
                         return _buildItemCard(context,
                             purpose: state.purposes[index],
-                            onUpdated: _onUpdated);
+                            onUpdated: _onUpdated,
+                            language: language);
                       },
                     );
                   }
@@ -147,8 +154,8 @@ class _PurposeViewState extends State<PurposeView> {
     BuildContext context, {
     required PurposeModel purpose,
     required Function(UpdatedReturn<PurposeModel> updated) onUpdated,
+    required String language,
   }) {
-    const language = 'en-US';
     final description = purpose.description.firstWhere(
       (item) => item.language == language,
       orElse: () => const LocalizedModel.empty(),

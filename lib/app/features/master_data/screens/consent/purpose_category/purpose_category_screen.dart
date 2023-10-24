@@ -68,6 +68,12 @@ class _PurposeCategoryViewState extends State<PurposeCategoryView> {
 
   @override
   Widget build(BuildContext context) {
+    final bloc = context.read<SignInBloc>();
+
+    String language = '';
+    if (bloc.state is SignedInUser) {
+      language = (bloc.state as SignedInUser).user.defaultLanguage;
+    }
     return Scaffold(
       appBar: PdpaAppBar(
         leadingIcon: CustomIconButton(
@@ -115,6 +121,7 @@ class _PurposeCategoryViewState extends State<PurposeCategoryView> {
                           context,
                           purposeCategory: state.purposeCategories[index],
                           onUpdated: _onUpdated,
+                          language: language,
                         );
                       },
                     );
@@ -155,8 +162,8 @@ class _PurposeCategoryViewState extends State<PurposeCategoryView> {
     BuildContext context, {
     required PurposeCategoryModel purposeCategory,
     required Function(UpdatedReturn<PurposeCategoryModel> updated) onUpdated,
+    required String language,
   }) {
-    const language = 'en-US';
     final title = purposeCategory.title.firstWhere(
       (item) => item.language == language,
       orElse: () => const LocalizedModel.empty(),

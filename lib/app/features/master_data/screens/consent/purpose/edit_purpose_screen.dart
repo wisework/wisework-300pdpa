@@ -81,12 +81,14 @@ class _EditPurposeScreenState extends State<EditPurposeScreen> {
           }
 
           if (state is UpdatedCurrentPurpose) {
-            showToast(context, text: tr(
+            showToast(context,
+                text: tr(
                     'consentManagement.consentForm.editConsentTheme.updateSuccess')); //!
           }
 
           if (state is DeletedCurrentPurpose) {
-            showToast(context, text: tr(
+            showToast(context,
+                text: tr(
                     'consentManagement.consentForm.editConsentTheme.deleteSuccess')); //!
 
             final deleted = PurposeModel.empty().copyWith(id: state.purposeId);
@@ -204,7 +206,7 @@ class _EditPurposeViewState extends State<EditPurposeView> {
     setState(() {
       final description = [
         LocalizedModel(
-          language: 'en-US',
+          language: 'th-TH',
           text: descriptionController.text,
         ),
       ];
@@ -217,7 +219,7 @@ class _EditPurposeViewState extends State<EditPurposeView> {
     setState(() {
       final warningDescription = [
         LocalizedModel(
-          language: 'en-US',
+          language: 'th-TH',
           text: warningDescriptionController.text,
         ),
       ];

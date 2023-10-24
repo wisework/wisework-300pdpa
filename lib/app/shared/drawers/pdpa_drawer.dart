@@ -273,11 +273,14 @@ class _PdpaDrawerState extends State<PdpaDrawer> {
                 overflow: TextOverflow.ellipsis,
                 maxLines: 1,
               ),
-              Text(
-                user.email,
-                style: Theme.of(context).textTheme.labelMedium,
-                overflow: TextOverflow.ellipsis,
-                maxLines: 1,
+              SizedBox(
+                width: 150,
+                child: Text(
+                  user.email,
+                  style: Theme.of(context).textTheme.labelMedium,
+                  overflow: TextOverflow.ellipsis,
+                  maxLines: 1,
+                ),
               ),
             ],
           ),

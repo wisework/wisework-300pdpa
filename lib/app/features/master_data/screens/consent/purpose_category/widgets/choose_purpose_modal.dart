@@ -18,12 +18,14 @@ class ChoosePurposeModal extends StatefulWidget {
     required this.purposes,
     required this.onChanged,
     required this.onUpdated,
+    required this.language,
   });
 
   final List<PurposeModel> initialPurposes;
   final List<PurposeModel> purposes;
   final Function(List<PurposeModel> purposes) onChanged;
   final Function(UpdatedReturn<PurposeModel> purpose) onUpdated;
+  final String language;
 
   @override
   State<ChoosePurposeModal> createState() => _ChoosePurposeModalState();
@@ -125,6 +127,7 @@ class _ChoosePurposeModalState extends State<ChoosePurposeModal> {
                   _buildCheckBoxListTile(
                     context,
                     purpose: purposes[index],
+                    language: widget.language,
                   ),
                   Padding(
                     padding: const EdgeInsets.symmetric(
@@ -149,8 +152,8 @@ class _ChoosePurposeModalState extends State<ChoosePurposeModal> {
   Row _buildCheckBoxListTile(
     BuildContext context, {
     required PurposeModel purpose,
+    required String language,
   }) {
-    const language = 'en-US';
     final description = purpose.description.firstWhere(
       (item) => item.language == language,
       orElse: () => const LocalizedModel.empty(),

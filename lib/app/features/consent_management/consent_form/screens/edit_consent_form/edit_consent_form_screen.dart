@@ -554,13 +554,12 @@ class _EditConsentFormViewState extends State<EditConsentFormView> {
           purposeCategorySelected.isNotEmpty
               ? ListView.builder(
                   itemBuilder: (context, index) {
-                    return _buildItemTile(
-                      context,
-                      purposeCategory: UtilFunctions.getPurposeCategoryById(
-                        purposeCategories,
-                        purposeCategorySelected[index].id,
-                      ),
-                    );
+                    return _buildItemTile(context,
+                        purposeCategory: UtilFunctions.getPurposeCategoryById(
+                          purposeCategories,
+                          purposeCategorySelected[index].id,
+                        ),
+                        language: widget.currentUser.defaultLanguage);
                   },
                   itemCount: purposeCategorySelected.length,
                   physics: const NeverScrollableScrollPhysics(),
@@ -624,6 +623,7 @@ class _EditConsentFormViewState extends State<EditConsentFormView> {
                     });
                   },
                   onUpdated: _updateEditConsentFormState,
+                  language: widget.currentUser.defaultLanguage,
                 ),
               );
             },
@@ -664,8 +664,8 @@ class _EditConsentFormViewState extends State<EditConsentFormView> {
   Row _buildItemTile(
     BuildContext context, {
     required PurposeCategoryModel purposeCategory,
+    required String language,
   }) {
-    const language = 'en-US';
     final title = purposeCategory.title.firstWhere(
       (item) => item.language == language,
       orElse: () => const LocalizedModel.empty(),

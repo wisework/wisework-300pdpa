@@ -8,6 +8,7 @@ import 'package:pdpa/app/data/models/etc/updated_return.dart';
 import 'package:pdpa/app/data/models/master_data/localized_model.dart';
 import 'package:pdpa/app/data/models/master_data/purpose_category_model.dart';
 import 'package:pdpa/app/features/master_data/routes/master_data_route.dart';
+import 'package:pdpa/app/shared/utils/constants.dart';
 import 'package:pdpa/app/shared/widgets/customs/custom_checkbox.dart';
 import 'package:pdpa/app/shared/widgets/customs/custom_icon_button.dart';
 import 'package:pdpa/app/shared/widgets/expanded_card.dart';
@@ -19,8 +20,10 @@ class ChoosePurposeCategoryModal extends StatefulWidget {
     required this.purposeCategories,
     required this.onChanged,
     required this.onUpdated,
+    required this.language,
   });
 
+  final String language;
   final List<PurposeCategoryModel> initialPurposeCategory;
   final List<PurposeCategoryModel> purposeCategories;
   final Function(List<PurposeCategoryModel> categories) onChanged;
@@ -133,6 +136,7 @@ class _ChoosePurposeCategoryModalState
                   _buildCheckBoxListTile(
                     context,
                     purposeCategory: purposeCategories[index],
+                    language: widget.language,
                   ),
                   Padding(
                     padding: const EdgeInsets.symmetric(
@@ -157,8 +161,8 @@ class _ChoosePurposeCategoryModalState
   ExpandedCard _buildCheckBoxListTile(
     BuildContext context, {
     required PurposeCategoryModel purposeCategory,
+    required String language,
   }) {
-    const language = 'en-US';
     final title = purposeCategory.title.firstWhere(
       (item) => item.language == language,
       orElse: () => const LocalizedModel.empty(),
