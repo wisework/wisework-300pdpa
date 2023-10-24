@@ -9,6 +9,7 @@ import 'package:pdpa/app/data/models/master_data/purpose_category_model.dart';
 import 'package:pdpa/app/data/models/master_data/purpose_model.dart';
 import 'package:pdpa/app/data/repositories/consent_repository.dart';
 import 'package:pdpa/app/data/repositories/master_data_repository.dart';
+import 'package:pdpa/app/shared/utils/constants.dart';
 
 part 'consent_form_detail_event.dart';
 part 'consent_form_detail_state.dart';
@@ -22,6 +23,7 @@ class ConsentFormDetailBloc
         _masterDataRepository = masterDataRepository,
         super(const ConsentFormDetailInitial()) {
     on<GetConsentFormEvent>(_getConsentFormHandler);
+    on<UpdateConsentFormEvent>(_getUpdateconsentFormHandler);
   }
 
   final ConsentRepository _consentRepository;
@@ -164,6 +166,66 @@ class ConsentFormDetailBloc
         gotCustomFields,
         gotConsentTheme,
       ),
+    );
+  }
+
+  Future<void> _getUpdateconsentFormHandler(
+    UpdateConsentFormEvent event,
+    Emitter<ConsentFormDetailState> emit,
+  ) async {
+    ConsentFormModel consentForm = ConsentFormModel.empty();
+    List<MandatoryFieldModel> mandatoryFields = [];
+    List<PurposeModel> purposes = [];
+    List<PurposeCategoryModel> purposeCategories = [];
+    List<CustomFieldModel> customFields = [];
+    ConsentThemeModel consentTheme = ConsentThemeModel.initial();
+
+    if (state is GotConsentFormDetail) {
+      final settings = state as GotConsentFormDetail;
+
+      consentForm = settings.consentForm;
+      mandatoryFields = settings.mandatoryFields;
+      purposes = settings.purposes;
+      purposeCategories = settings.purposeCategories;
+      customFields = settings.customFields;
+      consentTheme = settings.consentTheme;
+    } else if (state is UpdateConsentFormDetail) {
+      final settings = state as UpdateConsentFormDetail;
+
+      consentForm = settings.consentForm;
+      mandatoryFields = settings.mandatoryFields;
+      purposes = settings.purposes;
+      purposeCategories = settings.purposeCategories;
+      customFields = settings.customFields;
+      consentTheme = settings.consentTheme;
+    }
+
+    ConsentFormModel updatedConsentForm = ConsentFormModel.empty();
+    List<MandatoryFieldModel> updateMandatoryFields;
+    List<PurposeCategoryModel> updatePurposeCategoryModel;
+    List<PurposeModel> updatePurposeModel;
+    ConsentThemeModel updateConsentThemeModel;
+
+    switch (event.updateType) {
+      case UpdateType.created:
+        updatedConsentForm = event.consentForm;
+        break;
+      case UpdateType.updated:
+        if (consentForm.id == event.consentForm.id) {
+          updatedConsentForm = event.consentForm;
+        }
+        break;
+      case UpdateType.deleted:
+        break;
+    }
+
+    GotConsentFormDetail(
+      updatedConsentForm,
+      mandatoryFields..sort((a, b) => b.priority.compareTo(a.priority)),
+      purposes,
+      purposeCategories..sort((a, b) => b.priority.compareTo(a.priority)),
+      customFields,
+      consentTheme,
     );
   }
 }

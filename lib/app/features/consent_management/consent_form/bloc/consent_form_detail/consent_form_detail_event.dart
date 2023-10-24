@@ -19,3 +19,19 @@ class GetConsentFormEvent extends ConsentFormDetailEvent {
   @override
   List<Object> get props => [consentFormId, companyId];
 }
+
+class UpdateConsentFormEvent extends ConsentFormDetailEvent {
+  const UpdateConsentFormEvent({
+    required this.consentForm,
+    required this.updateType,
+  });
+
+  final ConsentFormModel consentForm;
+  final UpdateType updateType;
+
+  @override
+  List<Object> get props => [
+        consentForm,
+        updateType,
+      ];
+}
