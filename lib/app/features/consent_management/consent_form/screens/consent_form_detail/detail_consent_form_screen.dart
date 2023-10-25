@@ -72,6 +72,7 @@ class _DetailConsentFormScreenState extends State<DetailConsentFormScreen> {
               purposes: state.purposes,
               customFields: state.customFields,
               consentTheme: state.consentTheme,
+              language: currentUser.defaultLanguage,
             );
           }
           // if (state is ConsentFormDetailError) {
@@ -94,6 +95,7 @@ class ConsentFormDetailView extends StatefulWidget {
     required this.purposes,
     required this.customFields,
     required this.consentTheme,
+    required this.language,
   });
 
   final ConsentFormModel consentForm;
@@ -102,6 +104,7 @@ class ConsentFormDetailView extends StatefulWidget {
   final List<PurposeModel> purposes;
   final List<CustomFieldModel> customFields;
   final ConsentThemeModel consentTheme;
+  final String language;
 
   @override
   State<ConsentFormDetailView> createState() => _ConsentFormDetailViewState();
@@ -187,6 +190,7 @@ class _ConsentFormDetailViewState extends State<ConsentFormDetailView> {
               customFields: widget.customFields,
               purposeCategories: widget.purposeCategories,
               purposes: widget.purposes,
+              language: widget.language,
             ),
             ConsentFormTab(
               consentForm: widget.consentForm,

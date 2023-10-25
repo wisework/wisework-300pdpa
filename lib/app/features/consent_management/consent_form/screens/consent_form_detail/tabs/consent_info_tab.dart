@@ -21,6 +21,7 @@ class ConsentInfoTab extends StatefulWidget {
     required this.purposeCategories,
     required this.customFields,
     required this.purposes,
+    required this.language,
   });
 
   final ConsentFormModel consentForm;
@@ -28,6 +29,7 @@ class ConsentInfoTab extends StatefulWidget {
   final List<CustomFieldModel> customFields;
   final List<PurposeCategoryModel> purposeCategories;
   final List<PurposeModel> purposes;
+  final String language;
 
   @override
   State<ConsentInfoTab> createState() => _ConsentInfoTabState();
@@ -36,6 +38,7 @@ class ConsentInfoTab extends StatefulWidget {
 class _ConsentInfoTabState extends State<ConsentInfoTab> {
   late UserModel currentUser;
   late String consentId;
+  late String language;
 
   @override
   void initState() {
@@ -48,6 +51,7 @@ class _ConsentInfoTabState extends State<ConsentInfoTab> {
     final bloc = context.read<SignInBloc>();
     if (bloc.state is SignedInUser) {
       currentUser = (bloc.state as SignedInUser).user;
+      language = currentUser.defaultLanguage;
     } else {
       currentUser = UserModel.empty();
     }
@@ -55,8 +59,6 @@ class _ConsentInfoTabState extends State<ConsentInfoTab> {
 
   @override
   Widget build(BuildContext context) {
-    const String language = 'en-US';
-
     final title = widget.consentForm.title.firstWhere(
       (item) => item.language == language,
       orElse: () => const LocalizedModel.empty(),

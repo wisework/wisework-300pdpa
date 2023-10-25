@@ -329,21 +329,36 @@ class _ConsentFormViewState extends State<ConsentFormView> {
                             physics: const NeverScrollableScrollPhysics(),
                             itemCount: consentForm.purposeCategories.length,
                             itemBuilder: (_, index) {
-                              final titlePurpose =
-                                  consentForm.purposeCategories[index].title
-                                      .firstWhere(
-                                        (item) => item.language == language,
-                                        orElse: LocalizedModel.empty,
-                                      )
-                                      .text;
-                              return Padding(
-                                padding: const EdgeInsets.only(
-                                    top: UiConfig.textSpacing),
-                                child: Text(
-                                  titlePurpose,
-                                  style: Theme.of(context).textTheme.bodySmall,
-                                ),
-                              );
+                              if (index <= 1) {
+                                final titlePurposeCategories =
+                                    consentForm.purposeCategories[index].title
+                                        .firstWhere(
+                                          (item) => item.language == language,
+                                          orElse: LocalizedModel.empty,
+                                        )
+                                        .text;
+                                return Padding(
+                                  padding: const EdgeInsets.only(
+                                      top: UiConfig.textSpacing),
+                                  child: Text(
+                                    titlePurposeCategories,
+                                    style:
+                                        Theme.of(context).textTheme.bodySmall,
+                                  ),
+                                );
+                              }
+                              if (index == 2) {
+                                return Padding(
+                                  padding: const EdgeInsets.only(
+                                      top: UiConfig.textSpacing),
+                                  child: Text(
+                                    "...",
+                                    style:
+                                        Theme.of(context).textTheme.bodySmall,
+                                  ),
+                                );
+                              }
+                              return Container();
                             },
                           ),
                         ),

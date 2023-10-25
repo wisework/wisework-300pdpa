@@ -139,6 +139,7 @@ class _EditConsentFormScreenState extends State<EditConsentFormScreen> {
               customFields: state.customFields,
               currentUser: currentUser,
               isNewConsentForm: widget.consentFormId.isEmpty,
+              language: currentUser.defaultLanguage,
             );
           }
           if (state is UpdateCurrentConsentForm) {
@@ -150,6 +151,7 @@ class _EditConsentFormScreenState extends State<EditConsentFormScreen> {
               customFields: state.customFields,
               currentUser: currentUser,
               isNewConsentForm: widget.consentFormId.isEmpty,
+              language: currentUser.defaultLanguage,
             );
           }
           if (state is EditConsentFormError) {
@@ -173,6 +175,7 @@ class EditConsentFormView extends StatefulWidget {
     required this.customFields,
     required this.currentUser,
     required this.isNewConsentForm,
+    required this.language,
   });
 
   final ConsentFormModel consentForm;
@@ -182,6 +185,7 @@ class EditConsentFormView extends StatefulWidget {
   final List<CustomFieldModel> customFields;
   final UserModel currentUser;
   final bool isNewConsentForm;
+  final String language;
 
   @override
   State<EditConsentFormView> createState() => _EditConsentFormViewState();
@@ -200,6 +204,8 @@ class _EditConsentFormViewState extends State<EditConsentFormView> {
 
   bool errorPurposeCategoryEmpty = false;
 
+  late String language;
+
   @override
   void initState() {
     super.initState();
@@ -216,6 +222,7 @@ class _EditConsentFormViewState extends State<EditConsentFormView> {
   }
 
   void _initialData() {
+    language = widget.language;
     consentForm = widget.consentForm;
     purposeCategories =
         widget.purposeCategories.map((category) => category).toList();
@@ -253,6 +260,10 @@ class _EditConsentFormViewState extends State<EditConsentFormView> {
           language: 'en-US',
           text: titleController.text,
         ),
+        LocalizedModel(
+          language: 'th-TH',
+          text: titleController.text,
+        ),
       ];
 
       consentForm = consentForm.copyWith(title: title);
@@ -264,6 +275,10 @@ class _EditConsentFormViewState extends State<EditConsentFormView> {
       final description = [
         LocalizedModel(
           language: 'en-US',
+          text: descriptionController.text,
+        ),
+        LocalizedModel(
+          language: 'th-TH',
           text: descriptionController.text,
         ),
       ];
@@ -318,10 +333,18 @@ class _EditConsentFormViewState extends State<EditConsentFormView> {
             language: 'en-US',
             text: titleController.text,
           ),
+          LocalizedModel(
+            language: 'th-TH',
+            text: titleController.text,
+          ),
         ],
         description: [
           LocalizedModel(
             language: 'en-US',
+            text: descriptionController.text,
+          ),
+          LocalizedModel(
+            language: 'th-TH',
             text: descriptionController.text,
           ),
         ],
@@ -501,7 +524,6 @@ class _EditConsentFormViewState extends State<EditConsentFormView> {
             physics: const NeverScrollableScrollPhysics(),
             itemCount: widget.mandatoryFields.length,
             itemBuilder: (_, index) {
-              const language = "en-US";
               final title = widget.mandatoryFields[index].title.firstWhere(
                 (item) => item.language == language,
                 orElse: () => const LocalizedModel.empty(),
@@ -552,19 +574,6 @@ class _EditConsentFormViewState extends State<EditConsentFormView> {
           ),
           const SizedBox(height: UiConfig.lineGap),
           purposeCategorySelected.isNotEmpty
-              // ? ListView.builder(
-              //     itemBuilder: (context, index) {
-              //       return _buildItemTile(context,
-              //           purposeCategory: UtilFunctions.getPurposeCategoryById(
-              //             purposeCategories,
-              //             purposeCategorySelected[index].id,
-              //           ),
-              //           language: widget.currentUser.defaultLanguage);
-              //     },
-              //     itemCount: purposeCategorySelected.length,
-              //     physics: const NeverScrollableScrollPhysics(),
-              //     shrinkWrap: true,
-              //   )
               ? ReorderableListView.builder(
                   itemBuilder: (context, index) {
                     return _buildItemTile(context,
@@ -582,6 +591,13 @@ class _EditConsentFormViewState extends State<EditConsentFormView> {
                       }
                       var item = purposeCategorySelected.removeAt(oldIndex);
                       purposeCategorySelected.insert(newIndex, item);
+
+                      consentForm = consentForm.copyWith(
+                        purposeCategories:
+                            UtilFunctions.reorderPurposeCategories(
+                          purposeCategorySelected,
+                        ),
+                      );
                     });
                   },
                   buildDefaultDragHandles: false,

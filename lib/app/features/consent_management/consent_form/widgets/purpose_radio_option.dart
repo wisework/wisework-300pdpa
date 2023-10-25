@@ -1,9 +1,12 @@
+import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:pdpa/app/config/config.dart';
 import 'package:pdpa/app/data/models/consent_management/consent_theme_model.dart';
+import 'package:pdpa/app/data/models/master_data/localized_model.dart';
 import 'package:pdpa/app/data/models/master_data/purpose_model.dart';
 import 'package:pdpa/app/shared/widgets/customs/custom_container.dart';
 import 'package:pdpa/app/shared/widgets/customs/custom_radio_button.dart';
+import 'package:pdpa/app/shared/widgets/expanded_container.dart';
 
 class PurposeRadioOption extends StatefulWidget {
   const PurposeRadioOption({
@@ -27,6 +30,7 @@ class PurposeRadioOption extends StatefulWidget {
 
 class _PurposeRadioOptionState extends State<PurposeRadioOption> {
   bool isAgree = true;
+  final language = "th-TH";
 
   @override
   void initState() {
@@ -46,7 +50,12 @@ class _PurposeRadioOptionState extends State<PurposeRadioOption> {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: <Widget>[
           Text(
-            widget.purpose.description.first.text,
+            widget.purpose.description
+                .firstWhere(
+                  (item) => item.language == language,
+                  orElse: () => const LocalizedModel.empty(),
+                )
+                .text,
             style: Theme.of(context).textTheme.bodyMedium,
           ),
           const SizedBox(width: UiConfig.lineSpacing),
@@ -73,7 +82,7 @@ class _PurposeRadioOptionState extends State<PurposeRadioOption> {
                   ),
                   const SizedBox(width: UiConfig.actionSpacing),
                   Text(
-                    'Agree',
+                    tr('app.agree'),
                     style: Theme.of(context).textTheme.bodyMedium,
                   ),
                 ],
@@ -100,53 +109,61 @@ class _PurposeRadioOptionState extends State<PurposeRadioOption> {
                   ),
                   const SizedBox(width: UiConfig.actionSpacing),
                   Text(
-                    'Decline',
+                    tr('app.decline'),
                     style: Theme.of(context).textTheme.bodyMedium,
                   ),
                 ],
               ),
             ],
           ),
-          // ExpandedContainer(
-          //   expand: !isAgree,
-          //   duration: const Duration(milliseconds: 400),
-          //   child: Column(
-          //     children: <Widget>[
-          //       const SizedBox(width: UiConfig.lineGap),
-          //       Container(
-          //         padding: const EdgeInsets.all(10.0),
-          //         decoration: BoxDecoration(
-          //           color: Theme.of(context).colorScheme.onBackground,
-          //           border: Border.all(
-          //             color: Theme.of(context).colorScheme.onError,
-          //             width: 1.0,
-          //           ),
-          //           borderRadius: BorderRadius.circular(4.0),
-          //         ),
-          //         margin: const EdgeInsets.only(top: 10.0),
-          //         child: Row(
-          //           children: <Widget>[
-          //             Padding(
-          //               padding: const EdgeInsets.only(bottom: 4.0),
-          //               child: Icon(
-          //                 Ionicons.warning_outline,
-          //                 size: 18.0,
-          //                 color: Theme.of(context).colorScheme.onError,
-          //               ),
-          //             ),
-          //             const SizedBox(width: UiConfig.textSpacing),
-          //             Expanded(
-          //               child: Text(
-          //                 widget.purpose.warningDescription.first.text,
-          //                 style: Theme.of(context).textTheme.bodyMedium,
-          //               ),
-          //             ),
-          //           ],
-          //         ),
-          //       ),
-          //     ],
-          //   ),
-          // ),
+          ExpandedContainer(
+            expand: !isAgree,
+            duration: const Duration(milliseconds: 400),
+            child: Column(
+              children: <Widget>[
+                const SizedBox(width: UiConfig.lineGap),
+                Container(
+                  padding: const EdgeInsets.all(10.0),
+                  decoration: BoxDecoration(
+                    color: Theme.of(context).colorScheme.onBackground,
+                    border: Border.all(
+                      color: Theme.of(context).colorScheme.onError,
+                      width: 1.0,
+                    ),
+                    borderRadius: BorderRadius.circular(4.0),
+                  ),
+                  margin: const EdgeInsets.only(top: 10.0),
+                  child: Row(
+                    children: <Widget>[
+                      Padding(
+                        padding: const EdgeInsets.only(bottom: 4.0),
+                        child: Icon(
+                          Icons.warning_outlined,
+                          size: 18.0,
+                          color: Theme.of(context).colorScheme.onError,
+                        ),
+                      ),
+                      const SizedBox(width: UiConfig.textSpacing),
+                      Expanded(
+                        child: Text(
+                          widget.purpose.warningDescription.first.text.isEmpty
+                              ? tr(
+                                  'consentManagement.consentForm.warningPurpose')
+                              : widget.purpose.warningDescription.first.text,
+                          style: Theme.of(context)
+                              .textTheme
+                              .bodyMedium
+                              ?.copyWith(
+                                  color:
+                                      Theme.of(context).colorScheme.secondary),
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+              ],
+            ),
+          ),
         ],
       ),
     );

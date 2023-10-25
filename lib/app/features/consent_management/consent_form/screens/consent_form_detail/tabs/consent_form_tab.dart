@@ -1,7 +1,9 @@
 import 'package:bot_toast/bot_toast.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
+
 import 'package:flutter/services.dart';
+
 import 'package:pdpa/app/config/config.dart';
 import 'package:pdpa/app/data/models/consent_management/consent_form_model.dart';
 import 'package:pdpa/app/data/models/consent_management/consent_theme_model.dart';
@@ -14,8 +16,8 @@ import 'package:pdpa/app/features/consent_management/consent_form/widgets/consen
 import 'package:pdpa/app/shared/widgets/customs/custom_container.dart';
 import 'package:qr_flutter/qr_flutter.dart';
 
-import 'package:pdpa/app/features/consent_management/consent_form/widgets/download_fuctions.dart/netive_download.dart'
-    if (dart.library.html) 'package:pdpa/app/features/consent_management/consent_form/widgets/download_fuctions.dart/web_download.dart'
+import 'package:pdpa/app/features/consent_management/consent_form/widgets/download_fuctions/netive_download.dart'
+    if (dart.library.html) 'package:pdpa/app/features/consent_management/consent_form/widgets/download_fuctions/web_download.dart'
     // ignore: library_prefixes
     as downloadQrCode;
 
@@ -42,25 +44,7 @@ class ConsentFormTab extends StatefulWidget {
 }
 
 class _ConsentFormTabState extends State<ConsentFormTab> {
-  final qrKey = GlobalKey();
-
-  // Future<bool> _downloadQrCode() async {
-  //   final boundary =
-  //       qrCodeKey.currentContext?.findRenderObject() as RenderRepaintBoundary?;
-  //   final qrCodeImage = await boundary?.toImage();
-
-  //   if (qrCodeImage != null) {
-  //     final byteData = await qrCodeImage.toByteData(
-  //       format: ui.ImageByteFormat.png,
-  //     );
-  //     final bytes = byteData!.buffer.asUint8List();
-
-  //     await ImageGallerySaver.saveImage(bytes);
-
-  //     return true;
-  //   }
-  //   return false;
-  // }
+  final qrCodeKey = GlobalKey();
 
   @override
   Widget build(BuildContext context) {
@@ -113,7 +97,7 @@ class _ConsentFormTabState extends State<ConsentFormTab> {
                                     Align(
                                       alignment: Alignment.centerLeft,
                                       child: RepaintBoundary(
-                                        key: qrKey,
+                                        key: qrCodeKey,
                                         child: QrImageView(
                                           data:
                                               widget.consentForm.consentFormUrl,
@@ -133,46 +117,48 @@ class _ConsentFormTabState extends State<ConsentFormTab> {
                           padding: const EdgeInsets.only(left: 5.0),
                           child: IconButton(
                             onPressed: () async {
-                              downloadQrCode.downloadQrcode(qrKey);
-                              // await _downloadQrCode().then((value) {
-                              //   if (value) {
-                              //     BotToast.showText(
-                              //       text: tr(
-                              //           'consentManagement.consentForm.urltab.qrCodeHasBeenDownloaded'),
-                              //       contentColor: Theme.of(context)
-                              //           .colorScheme
-                              //           .secondary
-                              //           .withOpacity(0.75),
-                              //       borderRadius: BorderRadius.circular(8.0),
-                              //       textStyle: Theme.of(context)
-                              //           .textTheme
-                              //           .bodyMedium!
-                              //           .copyWith(
-                              //               color: Theme.of(context)
-                              //                   .colorScheme
-                              //                   .onPrimary),
-                              //       duration: UiConfig.toastDuration,
-                              //     );
-                              //   } else {
-                              //     BotToast.showText(
-                              //       text: tr(
-                              //           'consentManagement.consentForm.urltab.failedToDownloadQrCode'),
-                              //       contentColor: Theme.of(context)
-                              //           .colorScheme
-                              //           .secondary
-                              //           .withOpacity(0.75),
-                              //       borderRadius: BorderRadius.circular(8.0),
-                              //       textStyle: Theme.of(context)
-                              //           .textTheme
-                              //           .bodyMedium!
-                              //           .copyWith(
-                              //               color: Theme.of(context)
-                              //                   .colorScheme
-                              //                   .onPrimary),
-                              //       duration: UiConfig.toastDuration,
-                              //     );
-                              //   }
-                              // });
+                              // downloadQrCode.downloadQrcode(qrKey);
+                              await downloadQrCode
+                                  .downloadQrCode(qrCodeKey)
+                                  .then((value) {
+                                if (value) {
+                                  BotToast.showText(
+                                    text: tr(
+                                        'consentManagement.consentForm.urltab.qrCodeHasBeenDownloaded'),
+                                    contentColor: Theme.of(context)
+                                        .colorScheme
+                                        .secondary
+                                        .withOpacity(0.75),
+                                    borderRadius: BorderRadius.circular(8.0),
+                                    textStyle: Theme.of(context)
+                                        .textTheme
+                                        .bodyMedium!
+                                        .copyWith(
+                                            color: Theme.of(context)
+                                                .colorScheme
+                                                .onPrimary),
+                                    duration: UiConfig.toastDuration,
+                                  );
+                                } else {
+                                  BotToast.showText(
+                                    text: tr(
+                                        'consentManagement.consentForm.urltab.failedToDownloadQrCode'),
+                                    contentColor: Theme.of(context)
+                                        .colorScheme
+                                        .secondary
+                                        .withOpacity(0.75),
+                                    borderRadius: BorderRadius.circular(8.0),
+                                    textStyle: Theme.of(context)
+                                        .textTheme
+                                        .bodyMedium!
+                                        .copyWith(
+                                            color: Theme.of(context)
+                                                .colorScheme
+                                                .onPrimary),
+                                    duration: UiConfig.toastDuration,
+                                  );
+                                }
+                              });
                             },
                             icon: Padding(
                               padding:

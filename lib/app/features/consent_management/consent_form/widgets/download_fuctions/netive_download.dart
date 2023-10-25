@@ -1,12 +1,11 @@
 import 'dart:ui' as ui;
 
-import 'package:bot_toast/bot_toast.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 
 import 'package:image_gallery_saver/image_gallery_saver.dart';
 
-void downloadQrcode(GlobalKey qrCodeKey) async {
+Future<bool> downloadQrCode(GlobalKey qrCodeKey) async {
   final boundary =
       qrCodeKey.currentContext?.findRenderObject() as RenderRepaintBoundary?;
   final qrCodeImage = await boundary?.toImage();
@@ -18,6 +17,8 @@ void downloadQrcode(GlobalKey qrCodeKey) async {
     final bytes = byteData!.buffer.asUint8List();
 
     await ImageGallerySaver.saveImage(bytes);
-    BotToast.showText(text: "Download QR Code to gallery");
+
+    return true;
   }
+  return false;
 }
