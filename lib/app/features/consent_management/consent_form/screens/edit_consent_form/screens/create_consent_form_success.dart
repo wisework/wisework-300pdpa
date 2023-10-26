@@ -1,7 +1,7 @@
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
-import 'package:ionicons/ionicons.dart';
+
 import 'package:pdpa/app/config/config.dart';
 import 'package:pdpa/app/data/models/authentication/user_model.dart';
 import 'package:pdpa/app/data/models/consent_management/consent_form_model.dart';
@@ -41,8 +41,6 @@ class CreateConsentFormSuccessScreen extends StatefulWidget {
 
 class _CreateConsentFormSuccessScreenState
     extends State<CreateConsentFormSuccessScreen> {
-  final String language = 'en-US';
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -53,7 +51,7 @@ class _CreateConsentFormSuccessScreenState
               ConsentFormRoute.consentForm.path,
             );
           },
-          icon: Ionicons.chevron_back_outline,
+          icon: Icons.chevron_left_outlined,
           iconColor: Theme.of(context).colorScheme.primary,
           backgroundColor: Theme.of(context).colorScheme.onBackground,
         ),
@@ -135,12 +133,12 @@ class _CreateConsentFormSuccessScreenState
 
   Column _buildConsentInfo(BuildContext context) {
     final title = widget.consentForm.title.firstWhere(
-      (item) => item.language == language,
+      (item) => item.language == widget.currentUser.defaultLanguage,
       orElse: () => const LocalizedModel.empty(),
     );
 
     final description = widget.consentForm.description.firstWhere(
-      (item) => item.language == language,
+      (item) => item.language == widget.currentUser.defaultLanguage,
       orElse: () => const LocalizedModel.empty(),
     );
 
@@ -201,7 +199,8 @@ class _CreateConsentFormSuccessScreenState
                 itemCount: mandatoryFiltered.length,
                 itemBuilder: (_, index) {
                   final title = mandatoryFiltered[index].title.firstWhere(
-                        (item) => item.language == language,
+                        (item) =>
+                            item.language == widget.currentUser.defaultLanguage,
                         orElse: () => const LocalizedModel.empty(),
                       );
 
@@ -277,7 +276,8 @@ class _CreateConsentFormSuccessScreenState
                 itemCount: purposeCategoryFiltered.length,
                 itemBuilder: (_, index) {
                   final title = purposeCategoryFiltered[index].title.firstWhere(
-                        (item) => item.language == language,
+                        (item) =>
+                            item.language == widget.currentUser.defaultLanguage,
                         orElse: () => const LocalizedModel.empty(),
                       );
 
@@ -346,7 +346,7 @@ class _CreateConsentFormSuccessScreenState
       itemCount: purposeFiltered.length,
       itemBuilder: (_, index) {
         final description = purposeFiltered[index].description.firstWhere(
-              (item) => item.language == language,
+              (item) => item.language == widget.currentUser.defaultLanguage,
               orElse: () => const LocalizedModel.empty(),
             );
 

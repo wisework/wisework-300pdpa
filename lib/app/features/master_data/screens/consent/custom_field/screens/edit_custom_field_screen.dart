@@ -503,7 +503,7 @@ class _EditCustomFieldViewState extends State<EditCustomFieldView> {
   CustomIconButton _buildPopButton(CustomFieldModel customfield) {
     return CustomIconButton(
       onPressed: _goBackAndUpdate,
-      icon: Ionicons.chevron_back_outline,
+      icon: Icons.chevron_left_outlined,
       iconColor: Theme.of(context).colorScheme.primary,
       backgroundColor: Theme.of(context).colorScheme.onBackground,
     );

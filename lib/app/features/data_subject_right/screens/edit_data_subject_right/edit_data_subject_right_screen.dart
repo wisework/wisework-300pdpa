@@ -235,7 +235,7 @@ class _EditDataSubjectRightViewState extends State<EditDataSubjectRightView> {
   CustomIconButton _buildPopButton() {
     return CustomIconButton(
       onPressed: _goBackAndUpdate,
-      icon: Ionicons.chevron_back_outline,
+      icon: Icons.chevron_left_outlined,
       iconColor: Theme.of(context).colorScheme.primary,
       backgroundColor: Theme.of(context).colorScheme.onBackground,
     );

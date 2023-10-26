@@ -2,7 +2,7 @@ import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
-import 'package:ionicons/ionicons.dart';
+
 import 'package:pdpa/app/config/config.dart';
 import 'package:pdpa/app/data/models/etc/updated_return.dart';
 import 'package:pdpa/app/data/models/master_data/purpose_model.dart';
@@ -66,13 +66,19 @@ class _PurposeViewState extends State<PurposeView> {
 
   @override
   Widget build(BuildContext context) {
+    final bloc = context.read<SignInBloc>();
+
+    String language = '';
+    if (bloc.state is SignedInUser) {
+      language = (bloc.state as SignedInUser).user.defaultLanguage;
+    }
     return Scaffold(
       appBar: PdpaAppBar(
         leadingIcon: CustomIconButton(
           onPressed: () {
             context.pop();
           },
-          icon: Ionicons.chevron_back_outline,
+          icon: Icons.chevron_left_outlined,
           iconColor: Theme.of(context).colorScheme.primary,
           backgroundColor: Theme.of(context).colorScheme.onBackground,
         ),
@@ -109,7 +115,8 @@ class _PurposeViewState extends State<PurposeView> {
                       itemBuilder: (context, index) {
                         return _buildItemCard(context,
                             purpose: state.purposes[index],
-                            onUpdated: _onUpdated);
+                            onUpdated: _onUpdated,
+                            language: language);
                       },
                     );
                   }
@@ -147,8 +154,8 @@ class _PurposeViewState extends State<PurposeView> {
     BuildContext context, {
     required PurposeModel purpose,
     required Function(UpdatedReturn<PurposeModel> updated) onUpdated,
+    required String language,
   }) {
-    const language = 'en-US';
     final description = purpose.description.firstWhere(
       (item) => item.language == language,
       orElse: () => const LocalizedModel.empty(),

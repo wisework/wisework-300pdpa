@@ -2,7 +2,7 @@ import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
-import 'package:ionicons/ionicons.dart';
+
 import 'package:pdpa/app/config/config.dart';
 import 'package:pdpa/app/data/models/master_data/request_reason_template_model.dart';
 import 'package:pdpa/app/features/authentication/bloc/sign_in/sign_in_bloc.dart';
@@ -14,8 +14,6 @@ import 'package:pdpa/app/shared/widgets/templates/pdpa_app_bar.dart';
 
 class RequestReasonTemplateScreen extends StatefulWidget {
   const RequestReasonTemplateScreen({super.key});
-
-  
 
   @override
   State<RequestReasonTemplateScreen> createState() =>
@@ -67,7 +65,7 @@ class _RequestReasonTemplateViewState extends State<RequestReasonTemplateView> {
           onPressed: () {
             context.pop();
           },
-          icon: Ionicons.chevron_back_outline,
+          icon: Icons.chevron_left_outlined,
           iconColor: Theme.of(context).colorScheme.primary,
           backgroundColor: Theme.of(context).colorScheme.onBackground,
         ),

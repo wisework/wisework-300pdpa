@@ -4,6 +4,7 @@ import 'package:pdpa/app/data/models/consent_management/consent_form_model.dart'
 import 'package:pdpa/app/data/models/consent_management/consent_theme_model.dart';
 import 'package:pdpa/app/data/models/consent_management/user_consent_model.dart';
 import 'package:pdpa/app/data/models/master_data/custom_field_model.dart';
+import 'package:pdpa/app/data/models/master_data/localized_model.dart';
 import 'package:pdpa/app/data/models/master_data/mandatory_field_model.dart';
 import 'package:pdpa/app/data/models/master_data/purpose_category_model.dart';
 import 'package:pdpa/app/data/models/master_data/purpose_model.dart';
@@ -64,6 +65,8 @@ class ConsentFormPreview extends StatefulWidget {
 
 class _ConsentFormPreviewState extends State<ConsentFormPreview> {
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
+
+  final String language = "th-TH";
 
   @override
   Widget build(BuildContext context) {
@@ -269,7 +272,12 @@ class _ConsentFormPreviewState extends State<ConsentFormPreview> {
       mainAxisSize: MainAxisSize.min,
       children: <Widget>[
         TitleRequiredText(
-          text: mandatoryField.title.first.text,
+          text: mandatoryField.title
+              .firstWhere(
+                (item) => item.language == language,
+                orElse: () => const LocalizedModel.empty(),
+              )
+              .text,
           required: true,
         ),
         CustomTextField(
@@ -279,7 +287,12 @@ class _ConsentFormPreviewState extends State<ConsentFormPreview> {
                   mandatoryField.id,
                 )
               : null,
-          hintText: mandatoryField.hintText.first.text,
+          hintText: mandatoryField.hintText
+              .firstWhere(
+                (item) => item.language == language,
+                orElse: () => const LocalizedModel.empty(),
+              )
+              .text,
           keyboardType: mandatoryField.inputType,
           onChanged: (value) {
             if (widget.onMandatoryFieldChanged != null && !widget.isReadOnly) {
@@ -364,18 +377,35 @@ class _ConsentFormPreviewState extends State<ConsentFormPreview> {
             children: <Widget>[
               const SizedBox(height: 11.0),
               Text(
-                purposeCategory.title.first.text,
+                purposeCategory.title
+                    .firstWhere(
+                      (item) => item.language == language,
+                      orElse: () => const LocalizedModel.empty(),
+                    )
+                    .text,
                 style: Theme.of(context).textTheme.bodyMedium?.copyWith(
                     color: widget.consentTheme.categoryTitleTextColor),
               ),
               const SizedBox(height: UiConfig.lineGap),
-              Text(
-                purposeCategory.description.first.text,
-                style: Theme.of(context)
-                    .textTheme
-                    .bodyMedium
-                    ?.copyWith(color: widget.consentTheme.formTextColor),
-              ),
+              if (purposeCategory.description
+                  .firstWhere(
+                    (item) => item.language == language,
+                    orElse: () => const LocalizedModel.empty(),
+                  )
+                  .text
+                  .isNotEmpty)
+                Text(
+                  purposeCategory.description
+                      .firstWhere(
+                        (item) => item.language == language,
+                        orElse: () => const LocalizedModel.empty(),
+                      )
+                      .text,
+                  style: Theme.of(context)
+                      .textTheme
+                      .bodyMedium
+                      ?.copyWith(color: widget.consentTheme.formTextColor),
+                ),
               const SizedBox(height: UiConfig.lineGap),
               _buildPurposeSection(
                 context,

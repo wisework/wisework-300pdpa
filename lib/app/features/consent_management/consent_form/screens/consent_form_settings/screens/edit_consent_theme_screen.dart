@@ -315,7 +315,7 @@ class _EditConsentThemeViewState extends State<EditConsentThemeView> {
   CustomIconButton _buildPopButton(ConsentThemeModel consentTheme) {
     return CustomIconButton(
       onPressed: _goBackAndUpdate,
-      icon: Ionicons.chevron_back_outline,
+      icon: Icons.chevron_left_outlined,
       iconColor: Theme.of(context).colorScheme.primary,
       backgroundColor: Theme.of(context).colorScheme.onBackground,
     );

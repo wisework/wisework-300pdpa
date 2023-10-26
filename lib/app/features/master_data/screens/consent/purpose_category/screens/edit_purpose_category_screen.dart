@@ -218,7 +218,7 @@ class _EditPurposeCategoryViewState extends State<EditPurposeCategoryView> {
     setState(() {
       final title = [
         LocalizedModel(
-          language: 'en-US',
+          language: 'th-TH',
           text: titleController.text,
         ),
       ];
@@ -231,7 +231,7 @@ class _EditPurposeCategoryViewState extends State<EditPurposeCategoryView> {
     setState(() {
       final description = [
         LocalizedModel(
-          language: 'en-US',
+          language: 'th-TH',
           text: descriptionController.text,
         ),
       ];
@@ -345,7 +345,7 @@ class _EditPurposeCategoryViewState extends State<EditPurposeCategoryView> {
   CustomIconButton _buildPopButton() {
     return CustomIconButton(
       onPressed: _goBackAndUpdate,
-      icon: Ionicons.chevron_back_outline,
+      icon: Icons.chevron_left_outlined,
       iconColor: Theme.of(context).colorScheme.primary,
       backgroundColor: Theme.of(context).colorScheme.onBackground,
     );
@@ -431,6 +431,7 @@ class _EditPurposeCategoryViewState extends State<EditPurposeCategoryView> {
                 _buildPurposeTile(
                   context,
                   purpose: purposeCategory.purposes[index],
+                  language: widget.currentUser.defaultLanguage,
                 ),
                 Padding(
                   padding: const EdgeInsets.symmetric(
@@ -455,8 +456,8 @@ class _EditPurposeCategoryViewState extends State<EditPurposeCategoryView> {
   Row _buildPurposeTile(
     BuildContext context, {
     required PurposeModel purpose,
+    required String language,
   }) {
-    const language = 'en-US';
     final description = purpose.description.firstWhere(
       (item) => item.language == language,
       orElse: () => const LocalizedModel.empty(),
@@ -514,6 +515,7 @@ class _EditPurposeCategoryViewState extends State<EditPurposeCategoryView> {
               });
             },
             onUpdated: _updateEditPurposeCategoryState,
+            language: widget.currentUser.defaultLanguage,
           ),
         );
       },

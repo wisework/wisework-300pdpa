@@ -2,7 +2,7 @@ import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
-import 'package:ionicons/ionicons.dart';
+
 import 'package:pdpa/app/config/config.dart';
 import 'package:pdpa/app/data/models/consent_management/consent_form_model.dart';
 import 'package:pdpa/app/data/models/consent_management/user_consent_model.dart';
@@ -70,7 +70,7 @@ class _UserConsentViewState extends State<UserConsentView> {
           onPressed: () {
             _scaffoldKey.currentState?.openDrawer();
           },
-          icon: Ionicons.menu_outline,
+          icon: Icons.menu_outlined,
           iconColor: Theme.of(context).colorScheme.primary,
           backgroundColor: Theme.of(context).colorScheme.onBackground,
         ),
@@ -113,11 +113,10 @@ class _UserConsentViewState extends State<UserConsentView> {
                         : ExampleScreen(
                             headderText: tr(
                                 'consentManagement.userConsent.userConsents'),
-                            buttonText:
-                                tr('consentManagement.userConsent.createForm.create'),
+                            buttonText: tr(
+                                'consentManagement.userConsent.createForm.create'),
                             descriptionText:
                                 tr('consentManagement.userConsent.explain'),
-                           
                             onPress: () {
                               context.push(
                                   ConsentFormRoute.createConsentForm.path);

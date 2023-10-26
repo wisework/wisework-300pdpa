@@ -231,7 +231,7 @@ class _PdpaDrawerState extends State<PdpaDrawer> {
         child: Padding(
           padding: const EdgeInsets.only(top: 4.0, bottom: 6.0),
           child: Icon(
-            Ionicons.chevron_back_outline,
+            Icons.chevron_left_outlined,
             size: 14.0,
             color: Theme.of(context).colorScheme.onPrimary,
           ),
@@ -273,11 +273,14 @@ class _PdpaDrawerState extends State<PdpaDrawer> {
                 overflow: TextOverflow.ellipsis,
                 maxLines: 1,
               ),
-              Text(
-                user.email,
-                style: Theme.of(context).textTheme.labelMedium,
-                overflow: TextOverflow.ellipsis,
-                maxLines: 1,
+              SizedBox(
+                width: 150,
+                child: Text(
+                  user.email,
+                  style: Theme.of(context).textTheme.labelMedium,
+                  overflow: TextOverflow.ellipsis,
+                  maxLines: 1,
+                ),
               ),
             ],
           ),

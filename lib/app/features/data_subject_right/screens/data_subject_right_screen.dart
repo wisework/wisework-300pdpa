@@ -67,7 +67,7 @@ class _DataSubjectRightViewState extends State<DataSubjectRightView> {
           onPressed: () {
             _scaffoldKey.currentState?.openDrawer();
           },
-          icon: Ionicons.menu_outline,
+          icon: Icons.menu_outlined,
           iconColor: Theme.of(context).colorScheme.primary,
           backgroundColor: Theme.of(context).colorScheme.onBackground,
         ),

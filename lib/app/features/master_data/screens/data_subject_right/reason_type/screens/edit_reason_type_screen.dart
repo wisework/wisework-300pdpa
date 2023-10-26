@@ -68,7 +68,8 @@ class _EditReasonTypeScreenState extends State<EditReasonTypeScreen> {
         listener: (context, state) {
           if (state is CreatedCurrentReasonType) {
             BotToast.showText(
-              text: tr('consentManagement.consentForm.editConsentTheme.createSuccess'), //!
+              text: tr(
+                  'consentManagement.consentForm.editConsentTheme.createSuccess'), //!
               contentColor:
                   Theme.of(context).colorScheme.secondary.withOpacity(0.75),
               borderRadius: BorderRadius.circular(8.0),
@@ -87,7 +88,8 @@ class _EditReasonTypeScreenState extends State<EditReasonTypeScreen> {
 
           if (state is UpdatedCurrentReasonType) {
             BotToast.showText(
-              text: tr('consentManagement.consentForm.editConsentTheme.updateSuccess'), //!
+              text: tr(
+                  'consentManagement.consentForm.editConsentTheme.updateSuccess'), //!
               contentColor:
                   Theme.of(context).colorScheme.secondary.withOpacity(0.75),
               borderRadius: BorderRadius.circular(8.0),
@@ -101,7 +103,8 @@ class _EditReasonTypeScreenState extends State<EditReasonTypeScreen> {
 
           if (state is DeletedCurrentReasonType) {
             BotToast.showText(
-              text: tr('consentManagement.consentForm.editConsentTheme.deleteSuccess'), //!
+              text: tr(
+                  'consentManagement.consentForm.editConsentTheme.deleteSuccess'), //!
               contentColor:
                   Theme.of(context).colorScheme.secondary.withOpacity(0.75),
               borderRadius: BorderRadius.circular(8.0),
@@ -394,7 +397,7 @@ class _EditReasonTypeViewState extends State<EditReasonTypeView> {
   CustomIconButton _buildPopButton(ReasonTypeModel reasonType) {
     return CustomIconButton(
       onPressed: _goBackAndUpdate,
-      icon: Ionicons.chevron_back_outline,
+      icon: Icons.chevron_left_outlined,
       iconColor: Theme.of(context).colorScheme.primary,
       backgroundColor: Theme.of(context).colorScheme.onBackground,
     );

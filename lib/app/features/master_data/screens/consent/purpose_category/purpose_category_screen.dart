@@ -2,7 +2,7 @@ import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
-import 'package:ionicons/ionicons.dart';
+
 import 'package:pdpa/app/config/config.dart';
 import 'package:pdpa/app/data/models/etc/updated_return.dart';
 import 'package:pdpa/app/data/models/master_data/localized_model.dart';
@@ -68,13 +68,19 @@ class _PurposeCategoryViewState extends State<PurposeCategoryView> {
 
   @override
   Widget build(BuildContext context) {
+    final bloc = context.read<SignInBloc>();
+
+    String language = '';
+    if (bloc.state is SignedInUser) {
+      language = (bloc.state as SignedInUser).user.defaultLanguage;
+    }
     return Scaffold(
       appBar: PdpaAppBar(
         leadingIcon: CustomIconButton(
           onPressed: () {
             context.pop();
           },
-          icon: Ionicons.chevron_back_outline,
+          icon: Icons.chevron_left_outlined,
           iconColor: Theme.of(context).colorScheme.primary,
           backgroundColor: Theme.of(context).colorScheme.onBackground,
         ),
@@ -115,6 +121,7 @@ class _PurposeCategoryViewState extends State<PurposeCategoryView> {
                           context,
                           purposeCategory: state.purposeCategories[index],
                           onUpdated: _onUpdated,
+                          language: language,
                         );
                       },
                     );
@@ -155,8 +162,8 @@ class _PurposeCategoryViewState extends State<PurposeCategoryView> {
     BuildContext context, {
     required PurposeCategoryModel purposeCategory,
     required Function(UpdatedReturn<PurposeCategoryModel> updated) onUpdated,
+    required String language,
   }) {
-    const language = 'en-US';
     final title = purposeCategory.title.firstWhere(
       (item) => item.language == language,
       orElse: () => const LocalizedModel.empty(),

@@ -2,12 +2,13 @@ import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
-import 'package:ionicons/ionicons.dart';
 import 'package:pdpa/app/config/config.dart';
 import 'package:pdpa/app/data/models/etc/updated_return.dart';
 import 'package:pdpa/app/data/models/master_data/localized_model.dart';
 import 'package:pdpa/app/data/models/master_data/purpose_category_model.dart';
 import 'package:pdpa/app/features/master_data/routes/master_data_route.dart';
+import 'package:pdpa/app/shared/widgets/customs/custom_button.dart';
+
 import 'package:pdpa/app/shared/widgets/customs/custom_checkbox.dart';
 import 'package:pdpa/app/shared/widgets/customs/custom_icon_button.dart';
 import 'package:pdpa/app/shared/widgets/expanded_card.dart';
@@ -19,8 +20,10 @@ class ChoosePurposeCategoryModal extends StatefulWidget {
     required this.purposeCategories,
     required this.onChanged,
     required this.onUpdated,
+    required this.language,
   });
 
+  final String language;
   final List<PurposeCategoryModel> initialPurposeCategory;
   final List<PurposeCategoryModel> purposeCategories;
   final Function(List<PurposeCategoryModel> categories) onChanged;
@@ -110,6 +113,21 @@ class _ChoosePurposeCategoryModalState
                   constraints: const BoxConstraints(maxWidth: 200.0),
                   child: _buildAddButton(context),
                 ),
+                ConstrainedBox(
+                  constraints: const BoxConstraints(maxWidth: 200.0),
+                  child: CustomButton(
+                    width: 80,
+                    height: 22,
+                    onPressed: () {
+                      Navigator.pop(context);
+                    },
+                    child: Text(
+                      "done",
+                      style: Theme.of(context).textTheme.bodyMedium?.copyWith(
+                          color: Theme.of(context).colorScheme.onPrimary),
+                    ),
+                  ),
+                ),
               ],
             ),
           ),
@@ -133,6 +151,7 @@ class _ChoosePurposeCategoryModalState
                   _buildCheckBoxListTile(
                     context,
                     purposeCategory: purposeCategories[index],
+                    language: widget.language,
                   ),
                   Padding(
                     padding: const EdgeInsets.symmetric(
@@ -145,6 +164,53 @@ class _ChoosePurposeCategoryModalState
                           .withOpacity(0.5),
                     ),
                   ),
+                  if (purposeCategories[index] == purposeCategories.last)
+                    CustomButton(
+                      buttonColor: Theme.of(context).colorScheme.onPrimary,
+                      onPressed: () async {
+                        await context
+                            .push(MasterDataRoute.createPurposeCategory.path)
+                            .then((value) {
+                          if (value != null) {
+                            final updated =
+                                value as UpdatedReturn<PurposeCategoryModel>;
+
+                            purposeCategories = purposeCategories
+                              ..add(updated.object);
+                            _selectPurposeCategory(updated.object);
+
+                            widget.onUpdated(updated);
+                          }
+                        });
+                      },
+                      child: Row(
+                        children: [
+                          Padding(
+                            padding: const EdgeInsets.only(
+                              left: 4.0,
+                              right: UiConfig.actionSpacing,
+                            ),
+                            child: Icon(
+                              Icons.add,
+                              color: Theme.of(context).colorScheme.primary,
+                            ),
+                          ),
+                          Padding(
+                            padding: const EdgeInsets.all(5.0),
+                            child: Text(
+                              "เพิ่มหมวดหมู่วัตถุประสงค์",
+                              style: Theme.of(context)
+                                  .textTheme
+                                  .bodyMedium
+                                  ?.copyWith(
+                                      color: Theme.of(context)
+                                          .colorScheme
+                                          .secondary),
+                            ),
+                          ),
+                        ],
+                      ),
+                    )
                 ],
               );
             },
@@ -157,8 +223,8 @@ class _ChoosePurposeCategoryModalState
   ExpandedCard _buildCheckBoxListTile(
     BuildContext context, {
     required PurposeCategoryModel purposeCategory,
+    required String language,
   }) {
-    const language = 'en-US';
     final title = purposeCategory.title.firstWhere(
       (item) => item.language == language,
       orElse: () => const LocalizedModel.empty(),
@@ -270,7 +336,7 @@ class _ChoosePurposeCategoryModalState
           }
         });
       },
-      icon: Ionicons.add,
+      icon: Icons.add,
       iconColor: Theme.of(context).colorScheme.primary,
       backgroundColor: Theme.of(context).colorScheme.onBackground,
     );

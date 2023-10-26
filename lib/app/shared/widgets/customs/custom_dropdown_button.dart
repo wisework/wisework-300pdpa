@@ -7,11 +7,14 @@ class CustomDropdownButton<T> extends StatelessWidget {
     required this.value,
     required this.items,
     required this.onSelected,
+    this.colorBorder,
   });
 
   final T value;
   final List<DropdownMenuItem<T>> items;
   final Function(T? value) onSelected;
+
+  final Color? colorBorder;
 
   @override
   Widget build(BuildContext context) {
@@ -28,7 +31,8 @@ class CustomDropdownButton<T> extends StatelessWidget {
             color: Theme.of(context).colorScheme.onBackground,
             borderRadius: BorderRadius.circular(8.0),
             border: Border.all(
-              color: Theme.of(context).colorScheme.outlineVariant,
+              color:
+                  colorBorder ?? Theme.of(context).colorScheme.outlineVariant,
             ),
           ),
         ),

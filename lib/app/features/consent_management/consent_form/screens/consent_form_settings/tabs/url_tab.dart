@@ -1,13 +1,11 @@
-import 'dart:ui' as ui;
-
 import 'package:bot_toast/bot_toast.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/rendering.dart';
+
 import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:image_gallery_saver/image_gallery_saver.dart';
+
 import 'package:ionicons/ionicons.dart';
 import 'package:pdpa/app/config/config.dart';
 import 'package:pdpa/app/data/models/consent_management/consent_form_model.dart';
@@ -18,6 +16,11 @@ import 'package:pdpa/app/shared/widgets/customs/custom_container.dart';
 import 'package:pdpa/app/shared/widgets/customs/custom_icon_button.dart';
 import 'package:pdpa/app/shared/widgets/customs/custom_text_field.dart';
 import 'package:qr_flutter/qr_flutter.dart';
+
+import 'package:pdpa/app/features/consent_management/consent_form/widgets/download_fuctions/netive_download.dart'
+    if (dart.library.html) 'package:pdpa/app/features/consent_management/consent_form/widgets/download_fuctions/web_download.dart'
+    // ignore: library_prefixes
+    as downloadQrCode;
 
 class UrlTab extends StatefulWidget {
   const UrlTab({
@@ -35,24 +38,6 @@ class UrlTab extends StatefulWidget {
 
 class _UrlTabState extends State<UrlTab> {
   final GlobalKey qrCodeKey = GlobalKey();
-
-  Future<bool> _downloadQrCode() async {
-    final boundary =
-        qrCodeKey.currentContext?.findRenderObject() as RenderRepaintBoundary?;
-    final qrCodeImage = await boundary?.toImage();
-
-    if (qrCodeImage != null) {
-      final byteData = await qrCodeImage.toByteData(
-        format: ui.ImageByteFormat.png,
-      );
-      final bytes = byteData!.buffer.asUint8List();
-
-      await ImageGallerySaver.saveImage(bytes);
-
-      return true;
-    }
-    return false;
-  }
 
   @override
   Widget build(BuildContext context) {
@@ -103,8 +88,8 @@ class _UrlTabState extends State<UrlTab> {
                     );
 
                     BotToast.showText(
-                      text: tr(
-                          'consentManagement.consentForm.urltab.urlCopied'), 
+                      text:
+                          tr('consentManagement.consentForm.urltab.urlCopied'),
                       contentColor: Theme.of(context)
                           .colorScheme
                           .secondary
@@ -172,7 +157,7 @@ class _UrlTabState extends State<UrlTab> {
           Row(
             children: <Widget>[
               Text(
-                tr('consentManagement.consentForm.urltab.qrCodeFormLink'), 
+                tr('consentManagement.consentForm.urltab.qrCodeFormLink'),
                 style: Theme.of(context).textTheme.titleMedium,
               ),
             ],
@@ -185,11 +170,11 @@ class _UrlTabState extends State<UrlTab> {
             child: CustomButton(
               height: 40.0,
               onPressed: () async {
-                await _downloadQrCode().then((value) {
+                await downloadQrCode.downloadQrCode(qrCodeKey).then((value) {
                   if (value) {
                     BotToast.showText(
                       text: tr(
-                          'consentManagement.consentForm.urltab.qrCodeHasBeenDownloaded'), 
+                          'consentManagement.consentForm.urltab.qrCodeHasBeenDownloaded'),
                       contentColor: Theme.of(context)
                           .colorScheme
                           .secondary
@@ -205,7 +190,7 @@ class _UrlTabState extends State<UrlTab> {
                   } else {
                     BotToast.showText(
                       text: tr(
-                          'consentManagement.consentForm.urltab.failedToDownloadQrCode'), 
+                          'consentManagement.consentForm.urltab.failedToDownloadQrCode'),
                       contentColor: Theme.of(context)
                           .colorScheme
                           .secondary

@@ -33,10 +33,13 @@ class _DrawerMenuTileState extends State<DrawerMenuTile> {
   void _initialExpandMenu() {
     final bloc = context.read<DrawerBloc>();
     if (bloc.state is SelectedMenuDrawer) {
-      final parentMenu = widget.menu;
+      // final parentMenu = widget.menu;
       final selectedMenu = (bloc.state as SelectedMenuDrawer).menu;
 
-      if (parentMenu.isParent && parentMenu.children!.contains(selectedMenu)) {
+      // if (parentMenu.isParent && parentMenu.children!.contains(selectedMenu)) {
+      //   _toggleExpandTile();
+      // }
+      if (selectedMenu.parent == "consent_management") {
         _toggleExpandTile();
       }
     }

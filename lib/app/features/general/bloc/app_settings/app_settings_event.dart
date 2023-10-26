@@ -28,5 +28,5 @@ class SetDeviceLanguageEvent extends AppSettingsEvent {
   final UserModel user;
 
   @override
-  List<Object> get props => [language, user];
+  List<Object> get props => [language];
 }

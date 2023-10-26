@@ -163,7 +163,8 @@ class _HomeScreenState extends State<HomeScreen> {
 
   Container _buildRecentlyUsed(BuildContext context) {
     return Container(
-      padding: const EdgeInsets.all(UiConfig.defaultPaddingSpacing),
+      padding:
+          const EdgeInsets.symmetric(vertical: UiConfig.defaultPaddingSpacing),
       decoration: BoxDecoration(
         color: Theme.of(context).colorScheme.onBackground,
       ),
@@ -456,7 +457,8 @@ class _HomeScreenState extends State<HomeScreen> {
             );
           },
           child: Padding(
-            padding: const EdgeInsets.all(UiConfig.defaultPaddingSpacing),
+            padding: const EdgeInsets.symmetric(
+                vertical: UiConfig.defaultPaddingSpacing),
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: <Widget>[
@@ -469,14 +471,14 @@ class _HomeScreenState extends State<HomeScreen> {
                         title.isNotEmpty
                             ? title
                             : tr('general.home.thisDataIsNotStored'),
-                        style: Theme.of(context).textTheme.bodyMedium,
+                        style: Theme.of(context).textTheme.titleMedium,
                       ),
                     ),
                     Padding(
                       padding: const EdgeInsets.only(left: 40.0),
                       child: Text(
                         dateConsentForm,
-                        style: Theme.of(context).textTheme.bodySmall,
+                        style: Theme.of(context).textTheme.bodyMedium,
                       ),
                     ),
                   ],
@@ -502,14 +504,8 @@ class _HomeScreenState extends State<HomeScreen> {
             ),
           ),
         ),
-        Padding(
-          padding: const EdgeInsets.symmetric(
-            horizontal: UiConfig.defaultPaddingSpacing,
-          ),
-          child: Divider(
-            color:
-                Theme.of(context).colorScheme.outlineVariant.withOpacity(0.5),
-          ),
+        Divider(
+          color: Theme.of(context).colorScheme.outlineVariant.withOpacity(0.5),
         ),
       ],
     );

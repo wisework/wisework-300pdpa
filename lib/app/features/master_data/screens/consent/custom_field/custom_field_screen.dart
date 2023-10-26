@@ -2,7 +2,7 @@ import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
-import 'package:ionicons/ionicons.dart';
+
 import 'package:pdpa/app/config/config.dart';
 import 'package:pdpa/app/data/models/master_data/custom_field_model.dart';
 import 'package:pdpa/app/data/models/master_data/localized_model.dart';
@@ -73,12 +73,12 @@ class _CustomFieldViewState extends State<CustomFieldView> {
           onPressed: () {
             context.pop();
           },
-          icon: Ionicons.chevron_back_outline,
+          icon: Icons.chevron_left_outlined,
           iconColor: Theme.of(context).colorScheme.primary,
           backgroundColor: Theme.of(context).colorScheme.onBackground,
         ),
         title: Text(
-          tr('masterData.cm.customfields.list'), 
+          tr('masterData.cm.customfields.list'),
           style: Theme.of(context).textTheme.titleLarge,
         ),
       ),
@@ -110,7 +110,6 @@ class _CustomFieldViewState extends State<CustomFieldView> {
                             buttonText: tr('masterData.cm.customfields.create'),
                             descriptionText:
                                 tr('masterData.cm.customfields.explain'),
-                           
                             onPress: () {
                               context
                                   .push(MasterDataRoute.createCustomField.path);

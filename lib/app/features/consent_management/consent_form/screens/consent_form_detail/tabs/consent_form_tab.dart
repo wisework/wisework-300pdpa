@@ -1,10 +1,9 @@
-import 'dart:ui' as ui;
 import 'package:bot_toast/bot_toast.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/rendering.dart';
+
 import 'package:flutter/services.dart';
-import 'package:image_gallery_saver/image_gallery_saver.dart';
+
 import 'package:pdpa/app/config/config.dart';
 import 'package:pdpa/app/data/models/consent_management/consent_form_model.dart';
 import 'package:pdpa/app/data/models/consent_management/consent_theme_model.dart';
@@ -13,8 +12,14 @@ import 'package:pdpa/app/data/models/master_data/mandatory_field_model.dart';
 import 'package:pdpa/app/data/models/master_data/purpose_category_model.dart';
 import 'package:pdpa/app/data/models/master_data/purpose_model.dart';
 import 'package:pdpa/app/features/consent_management/consent_form/widgets/consent_form_preview.dart';
+
 import 'package:pdpa/app/shared/widgets/customs/custom_container.dart';
 import 'package:qr_flutter/qr_flutter.dart';
+
+import 'package:pdpa/app/features/consent_management/consent_form/widgets/download_fuctions/netive_download.dart'
+    if (dart.library.html) 'package:pdpa/app/features/consent_management/consent_form/widgets/download_fuctions/web_download.dart'
+    // ignore: library_prefixes
+    as downloadQrCode;
 
 class ConsentFormTab extends StatefulWidget {
   const ConsentFormTab({
@@ -39,24 +44,7 @@ class ConsentFormTab extends StatefulWidget {
 }
 
 class _ConsentFormTabState extends State<ConsentFormTab> {
-  final GlobalKey qrCodeKey = GlobalKey();
-  Future<bool> _downloadQrCode() async {
-    final boundary =
-        qrCodeKey.currentContext?.findRenderObject() as RenderRepaintBoundary?;
-    final qrCodeImage = await boundary?.toImage();
-
-    if (qrCodeImage != null) {
-      final byteData = await qrCodeImage.toByteData(
-        format: ui.ImageByteFormat.png,
-      );
-      final bytes = byteData!.buffer.asUint8List();
-
-      await ImageGallerySaver.saveImage(bytes);
-
-      return true;
-    }
-    return false;
-  }
+  final qrCodeKey = GlobalKey();
 
   @override
   Widget build(BuildContext context) {
@@ -129,7 +117,10 @@ class _ConsentFormTabState extends State<ConsentFormTab> {
                           padding: const EdgeInsets.only(left: 5.0),
                           child: IconButton(
                             onPressed: () async {
-                              await _downloadQrCode().then((value) {
+                              // downloadQrCode.downloadQrcode(qrKey);
+                              await downloadQrCode
+                                  .downloadQrCode(qrCodeKey)
+                                  .then((value) {
                                 if (value) {
                                   BotToast.showText(
                                     text: tr(
@@ -232,7 +223,7 @@ class _ConsentFormTabState extends State<ConsentFormTab> {
 
                               BotToast.showText(
                                 text: tr(
-                                    "consentManagement.consentForm.consentFormDetails.form.urlCopied"),
+                                    'consentManagement.consentForm.urltab.urlCopied'),
                                 contentColor: Theme.of(context)
                                     .colorScheme
                                     .secondary

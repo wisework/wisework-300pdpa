@@ -67,17 +67,17 @@ class _HeaderTabState extends State<HeaderTab> {
   }
 
   void _uploadLogoImage(File file) {
-    final cubit = context.read<CurrentConsentFormSettingsCubit>();
-    cubit.uploadConsentImage(
-      file,
-      UtilFunctions.getUniqueFileName(file),
-      UtilFunctions.getConsentImagePath(
-        widget.companyId,
-        widget.consentForm.id,
-        ConsentFormImageType.logo,
-      ),
-      ConsentFormImageType.logo,
-    );
+    // final cubit = context.read<CurrentConsentFormSettingsCubit>();
+    // cubit.uploadConsentImage(
+    //   file,
+    //   UtilFunctions.getUniqueFileName(file),
+    //   UtilFunctions.getConsentImagePath(
+    //     widget.companyId,
+    //     widget.consentForm.id,
+    //     ConsentFormImageType.logo,
+    //   ),
+    //   ConsentFormImageType.logo,
+    // );
   }
 
   void _uploadHeaderImage(File file) {
@@ -106,7 +106,6 @@ class _HeaderTabState extends State<HeaderTab> {
           const SizedBox(height: UiConfig.lineSpacing),
           _buildBackgroundSection(context),
           const SizedBox(height: 100),
-          
         ],
       ),
     );
@@ -121,7 +120,7 @@ class _HeaderTabState extends State<HeaderTab> {
           Row(
             children: <Widget>[
               Text(
-                tr('consentManagement.consentForm.headertab.loGo'), 
+                tr('consentManagement.consentForm.headertab.loGo'),
                 style: Theme.of(context).textTheme.titleMedium,
               ),
             ],
@@ -164,7 +163,7 @@ class _HeaderTabState extends State<HeaderTab> {
               Row(
                 children: <Widget>[
                   Text(
-                    tr('consentManagement.consentForm.bodytab.recentlyUsed'), 
+                    tr('consentManagement.consentForm.bodytab.recentlyUsed'),
                     style: Theme.of(context).textTheme.titleMedium,
                   ),
                 ],
@@ -201,18 +200,19 @@ class _HeaderTabState extends State<HeaderTab> {
           Row(
             children: <Widget>[
               Text(
-                tr('consentManagement.consentForm.consentFormsetting.header'), 
+                tr('consentManagement.consentForm.consentFormsetting.header'),
                 style: Theme.of(context).textTheme.titleMedium,
               ),
             ],
           ),
           const SizedBox(height: UiConfig.lineSpacing),
-           TitleRequiredText( 
-            text: tr('consentManagement.consentForm.headertab.headerText'), 
+          TitleRequiredText(
+            text: tr('consentManagement.consentForm.headertab.headerText'),
           ),
           CustomTextField(
             controller: headerTextController,
-            hintText: tr('consentManagement.consentForm.headertab.enterHeaderText'), 
+            hintText:
+                tr('consentManagement.consentForm.headertab.enterHeaderText'),
             onChanged: (value) {
               final updated = widget.consentForm.copyWith(
                 headerText: [
@@ -226,10 +226,11 @@ class _HeaderTabState extends State<HeaderTab> {
             },
           ),
           const SizedBox(height: UiConfig.lineSpacing),
-           TitleRequiredText(text: tr('consentManagement.consentForm.createForm.description')), 
+          TitleRequiredText(
+              text: tr('consentManagement.consentForm.createForm.description')),
           CustomTextField(
             controller: headerDescriptionController,
-            hintText: tr('masterData.cm.purpose.descriptionHint'), 
+            hintText: tr('masterData.cm.purpose.descriptionHint'),
             onChanged: (value) {
               final updated = widget.consentForm.copyWith(
                 headerDescription: [

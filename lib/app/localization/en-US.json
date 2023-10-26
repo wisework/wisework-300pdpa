@@ -21,7 +21,9 @@
             "setting": "Setting",
             "createNewConsentForm": "Create New Consent Form"
         },
-        "search": "Search"
+        "search": "Search",
+        "agree": "Agree",
+        "decline": "Decline"
     },
     "auth": {
         "signIn": {
@@ -66,12 +68,13 @@
             }
         },
         "consentForm": {
-            "explain" : "This screen shows a list of forms created by the user. You can click on the form name to view more details about the form. If you want to create a consent form for a form, you can click the 'Create Consent Form' button.",
+            "explain": "This screen shows a list of forms created by the user. You can click on the form name to view more details about the form. If you want to create a consent form for a form, you can click the 'Create Consent Form' button.",
             "consentForms": "Consent Forms",
             "choosePurposeCategory": "Choose purpose category",
             "formExample": "Form example",
             "noPurposesAdded": "No purposes added.",
             "noInputFieldsAdded": "No input fields added.",
+            "warningPurpose": "If you don't consent, we can't use your data for this purpose.",
             "createForm": {
                 "create": "Create Consent Form",
                 "edit": "Edit consent form",
@@ -90,14 +93,13 @@
                 "pleaseSelectOneField": "Please select at least one field to allow the form to store user information.",
                 "pleaseSelectPurposeCategory": "Please select at least one category to inform users of the purpose for collecting the data."
             },
-            "congratulations":{
-                "title" : "Congratulations!",
-                "created" : "Created Consent Form",
-                "noConsentDetails" : "No consent details.!",
-                "settingConsentTheme" : "Do you want to setting consent theme(Text, Color, Image and etc.) or not?",
-                "later" : "Later",
-                "ok" : "Ok"
-
+            "congratulations": {
+                "title": "Congratulations!",
+                "created": "Created Consent Form",
+                "noConsentDetails": "No consent details.!",
+                "settingConsentTheme": "Do you want to setting consent theme(Text, Color, Image and etc.) or not?",
+                "later": "Later",
+                "ok": "Ok"
             },
             "consentFormDetails": {
                 "title": "Consent form details",
@@ -203,7 +205,7 @@
             }
         },
         "userConsent": {
-            "explain" : "This screen shows a list of consent forms received from users. You can view the information for each form",
+            "explain": "This screen shows a list of consent forms received from users. You can view the information for each form",
             "userConsents": "User consents",
             "createForm": {
                 "create": "Create Consent Form",
@@ -239,7 +241,7 @@
     },
     "masterData": {
         "main": {
-            "explain" : "This screen shows a list of Mandatory field created by the user. You can click on the mandatory field name to view more details about the mandatory field. If you want to create a mandatory field template for a mandatory field, you can click the 'Create Mandatory ' button.",
+            "explain": "This screen shows a list of Mandatory field created by the user. You can click on the mandatory field name to view more details about the mandatory field. If you want to create a mandatory field template for a mandatory field, you can click the 'Create Mandatory ' button.",
             "mandatories": "Mandatories",
             "mandatoryFields": {
                 "title": "Mandatory field",
@@ -251,7 +253,7 @@
         "cm": {
             "consents": "Consents",
             "customfields": {
-                "explain" : "This screen shows a list of Custom field created by the user. You can click on the custom field name to view more details about the custom field. If you want to create a custom field template for a custom field, you can click the 'Create Custom field ' button.",
+                "explain": "This screen shows a list of Custom field created by the user. You can click on the custom field name to view more details about the custom field. If you want to create a custom field template for a custom field, you can click the 'Create Custom field ' button.",
                 "title": "Custom field",
                 "list": "Custom fields",
                 "edit": "Edit Custom fields",
@@ -270,7 +272,7 @@
                 "minlinehint": "Enter min line"
             },
             "purpose": {
-                "explain" : "This screen shows a list of Purposes created by the user. You can click on the Purposes name to view more details about the Purposes. If you want to create a Purposes template for a Purposes, you can click the 'Create Purpose ' button.",
+                "explain": "This screen shows a list of Purposes created by the user. You can click on the Purposes name to view more details about the Purposes. If you want to create a Purposes template for a Purposes, you can click the 'Create Purpose ' button.",
                 "title": "Purpose",
                 "list": "Purposes",
                 "create": "Create purpose",
@@ -284,7 +286,7 @@
                 "periodUnit": "Period unit"
             },
             "purposeCategory": {
-                "explain" : "This screen shows a list of Purpose category created by the user. You can click on the purpose category name to view more details about the purpose category. If you want to create a purpose category template for a purpose category, you can click the 'Create Purpose category ' button.",
+                "explain": "This screen shows a list of Purpose category created by the user. You can click on the purpose category name to view more details about the purpose category. If you want to create a purpose category template for a purpose category, you can click the 'Create Purpose category ' button.",
                 "title": "Purpose category",
                 "list": "Purpose categories",
                 "create": "Create purpose category",
@@ -298,13 +300,13 @@
                 "purposes": "Purposes",
                 "purposeList": "Purpose list",
                 "noData": "No data",
-                "addPurpose" : "Add purpose",
-                "addObjectiveCategory" : "Add objective category",
-                "createSuccess" : "Create successfully",
-                "updateSuccess" : "Update successfully",
-                "deleteSuccess" : "Delete successfully",
+                "addPurpose": "Add purpose",
+                "addObjectiveCategory": "Add objective category",
+                "createSuccess": "Create successfully",
+                "updateSuccess": "Update successfully",
+                "deleteSuccess": "Delete successfully",
                 "active": "Active",
-                "addnewPurpose" : "Add new Purpose"
+                "addnewPurpose": "Add new Purpose"
             }
         },
         "dsr": {
@@ -349,7 +351,7 @@
                 "chooserequesttype": "Choose request type",
                 "rejecttype": "Rejects type",
                 "chooserejecttype": "Choose rejects type",
-                "add" : "Added a decline option allowed to this request type."
+                "add": "Added a decline option allowed to this request type."
             },
             "requestreasons": {
                 "title": "Request reasons",

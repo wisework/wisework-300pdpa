@@ -58,6 +58,12 @@ class _SignInScreenState extends State<SignInScreen> {
     final event = InitialAppSettingsEvent(user: user);
     context.read<AppSettingsBloc>().add(event);
 
+    if (user.defaultLanguage == "en-US") {
+      context.setLocale(const Locale('en', 'US'));
+    } else {
+      context.setLocale(const Locale('th', 'TH'));
+    }
+
     if (user.companies.isEmpty || user.currentCompany.isEmpty) {
       context.pushReplacement(AuthenticationRoute.signUpCompany.path);
     } else {
