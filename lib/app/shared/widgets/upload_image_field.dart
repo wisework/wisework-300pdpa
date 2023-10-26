@@ -1,5 +1,6 @@
 import 'dart:io';
 
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:ionicons/ionicons.dart';
@@ -27,13 +28,28 @@ class UploadImageField extends StatefulWidget {
 }
 
 class _UploadImageFieldState extends State<UploadImageField> {
+  Uint8List webImage = Uint8List(10);
+
   void _pickImage() async {
-    final imagePicker = ImagePicker();
-    final result = await imagePicker.pickImage(source: ImageSource.gallery);
+    if (!kIsWeb) {
+      final imagePicker = ImagePicker();
+      final result = await imagePicker.pickImage(source: ImageSource.gallery);
 
-    if (result == null) return;
+      if (result == null) return;
 
-    widget.onUploaded(File(result.path));
+      widget.onUploaded(File(result.path));
+    }
+
+    if (kIsWeb) {
+      final ImagePicker imagePicker = ImagePicker();
+      final result = await imagePicker.pickImage(source: ImageSource.gallery);
+
+      if (result == null) return;
+
+      var f = await result.readAsBytes();
+
+      print(File(result.path));
+    }
   }
 
   @override
