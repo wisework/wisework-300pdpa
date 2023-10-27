@@ -1,4 +1,5 @@
 import 'dart:io';
+import 'dart:typed_data';
 
 // ignore: depend_on_referenced_packages
 import 'package:bloc/bloc.dart';
@@ -106,13 +107,15 @@ class CurrentConsentFormSettingsCubit
   }
 
   Future<void> uploadConsentImage(
-    File file,
+    File? file,
+    Uint8List? data,
     String fileName,
     String path,
     ConsentFormImageType imageType,
   ) async {
     final result = await _generalRepository.uploadConsentImage(
       file,
+      data,
       fileName,
       path,
     );

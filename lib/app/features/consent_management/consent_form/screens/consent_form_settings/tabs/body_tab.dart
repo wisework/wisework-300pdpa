@@ -1,4 +1,5 @@
 import 'dart:io';
+import 'dart:typed_data';
 
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
@@ -27,11 +28,16 @@ class BodyTab extends StatefulWidget {
 }
 
 class _BodyTabState extends State<BodyTab> {
-  void _uploadBodyImage(File file) {
+  void _uploadBodyImage(
+    File? file,
+    Uint8List? data,
+    String path,
+  ) {
     final cubit = context.read<CurrentConsentFormSettingsCubit>();
     cubit.uploadConsentImage(
       file,
-      UtilFunctions.getUniqueFileName(file),
+      data,
+      UtilFunctions.getUniqueFileName(path),
       UtilFunctions.getConsentImagePath(
         widget.companyId,
         widget.consentForm.id,
@@ -63,7 +69,7 @@ class _BodyTabState extends State<BodyTab> {
           Row(
             children: <Widget>[
               Text(
-                tr('consentManagement.consentForm.bodytab.background'), 
+                tr('consentManagement.consentForm.bodytab.background'),
                 style: Theme.of(context).textTheme.titleMedium,
               ),
             ],
@@ -106,7 +112,7 @@ class _BodyTabState extends State<BodyTab> {
               Row(
                 children: <Widget>[
                   Text(
-                    tr('consentManagement.consentForm.bodytab.recentlyUsed'), 
+                    tr('consentManagement.consentForm.bodytab.recentlyUsed'),
                     style: Theme.of(context).textTheme.titleMedium,
                   ),
                 ],

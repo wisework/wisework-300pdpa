@@ -1,5 +1,6 @@
 import 'dart:convert';
 import 'dart:io';
+import 'dart:typed_data';
 
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:http/http.dart' as http;
@@ -35,12 +36,20 @@ class GeneralApi {
   }
 
   Future<String> uploadImage(
-    File file,
+    File? file,
+    Uint8List? data,
     String fileName,
     String path,
   ) async {
     final ref = _storage.ref().child(path).child(fileName);
-    await ref.putFile(file);
+    if (file != null) {
+      await ref.putFile(file);
+    }
+
+    if (data != null) {
+      await ref.putData(data);
+    }
+
     return await ref.getDownloadURL();
   }
 
