@@ -1,4 +1,5 @@
 import 'dart:io';
+import 'dart:typed_data';
 
 import 'package:dartz/dartz.dart';
 import 'package:pdpa/app/services/apis/general_api.dart';
@@ -24,12 +25,13 @@ class GeneralRepository {
   }
 
   ResultFuture<String> uploadConsentImage(
-    File file,
+    File? file,
+    Uint8List? data,
     String fileName,
     String path,
   ) async {
     try {
-      final result = await _api.uploadImage(file, fileName, path);
+      final result = await _api.uploadImage(file, data, fileName, path);
 
       return Right(result);
     } on ApiException catch (error) {

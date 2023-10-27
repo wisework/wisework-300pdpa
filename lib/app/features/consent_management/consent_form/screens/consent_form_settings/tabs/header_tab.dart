@@ -1,4 +1,5 @@
 import 'dart:io';
+import 'dart:typed_data';
 
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
@@ -66,25 +67,35 @@ class _HeaderTabState extends State<HeaderTab> {
     }
   }
 
-  void _uploadLogoImage(File file) {
-    // final cubit = context.read<CurrentConsentFormSettingsCubit>();
-    // cubit.uploadConsentImage(
-    //   file,
-    //   UtilFunctions.getUniqueFileName(file),
-    //   UtilFunctions.getConsentImagePath(
-    //     widget.companyId,
-    //     widget.consentForm.id,
-    //     ConsentFormImageType.logo,
-    //   ),
-    //   ConsentFormImageType.logo,
-    // );
-  }
-
-  void _uploadHeaderImage(File file) {
+  void _uploadLogoImage(
+    File? file,
+    Uint8List? data,
+    String path,
+  ) {
     final cubit = context.read<CurrentConsentFormSettingsCubit>();
     cubit.uploadConsentImage(
       file,
-      UtilFunctions.getUniqueFileName(file),
+      data,
+      UtilFunctions.getUniqueFileName(path),
+      UtilFunctions.getConsentImagePath(
+        widget.companyId,
+        widget.consentForm.id,
+        ConsentFormImageType.logo,
+      ),
+      ConsentFormImageType.logo,
+    );
+  }
+
+  void _uploadHeaderImage(
+    File? file,
+    Uint8List? data,
+    String path,
+  ) {
+    final cubit = context.read<CurrentConsentFormSettingsCubit>();
+    cubit.uploadConsentImage(
+      file,
+      data,
+      UtilFunctions.getUniqueFileName(path),
       UtilFunctions.getConsentImagePath(
         widget.companyId,
         widget.consentForm.id,

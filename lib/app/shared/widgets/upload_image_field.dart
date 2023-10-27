@@ -1,6 +1,6 @@
 import 'dart:io';
 
-import 'package:flutter/foundation.dart';
+import 'package:flutter/foundation.dart' show Uint8List, kIsWeb;
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:ionicons/ionicons.dart';
@@ -20,7 +20,12 @@ class UploadImageField extends StatefulWidget {
   });
 
   final String imageUrl;
-  final Function(File image) onUploaded;
+  // final Function(File image) onUploaded;
+  final Function(
+    File? image,
+    Uint8List? data,
+    String path,
+  ) onUploaded;
   final VoidCallback? onRemoved;
 
   @override
@@ -28,27 +33,20 @@ class UploadImageField extends StatefulWidget {
 }
 
 class _UploadImageFieldState extends State<UploadImageField> {
-  Uint8List webImage = Uint8List(10);
-
   void _pickImage() async {
-    if (!kIsWeb) {
-      final imagePicker = ImagePicker();
-      final result = await imagePicker.pickImage(source: ImageSource.gallery);
-
-      if (result == null) return;
-
-      widget.onUploaded(File(result.path));
+    final imagePicker = ImagePicker();
+    final result = await imagePicker.pickImage(source: ImageSource.gallery);
+    Uint8List data = Uint8List(10);
+    if (result != null) {
+      data = await result.readAsBytes();
     }
 
+    if (result == null) return;
     if (kIsWeb) {
-      final ImagePicker imagePicker = ImagePicker();
-      final result = await imagePicker.pickImage(source: ImageSource.gallery);
-
-      if (result == null) return;
-
-      var f = await result.readAsBytes();
-
-      print(File(result.path));
+      widget.onUploaded(null, data, result.path);
+    }
+    if (!kIsWeb) {
+      widget.onUploaded(File(result.path), null, result.path);
     }
   }
 

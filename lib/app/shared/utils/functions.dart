@@ -212,9 +212,9 @@ class UtilFunctions {
   }
 
   //? Upload File
-  static String getUniqueFileName(File file) {
+  static String getUniqueFileName(String path) {
     final fileName = DateTime.now().millisecondsSinceEpoch.toString();
-    final fileExtension = extension(file.path);
+    final fileExtension = extension(path);
 
     return '$fileName$fileExtension';
   }
