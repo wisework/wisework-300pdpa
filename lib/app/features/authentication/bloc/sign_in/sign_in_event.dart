@@ -34,6 +34,17 @@ class SignOutEvent extends SignInEvent {
   List<Object> get props => [];
 }
 
+class SendPasswordResetEvent extends SignInEvent {
+  const SendPasswordResetEvent({
+    required this.email,
+  });
+
+  final String email;
+
+  @override
+  List<Object> get props => [email];
+}
+
 class GetCurrentUserEvent extends SignInEvent {
   const GetCurrentUserEvent();
 

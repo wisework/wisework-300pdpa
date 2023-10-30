@@ -21,23 +21,27 @@ class AuthenticationApi {
     String email,
     String password,
   ) async {
-    final userCredential = await _auth.signInWithEmailAndPassword(
-      email: email,
-      password: password,
-    );
-    if (userCredential.user != null) {
-      final queryResult = await _firestore
-          .collection('Users')
-          .where('uid', isEqualTo: userCredential.user!.uid)
-          .get();
-      if (queryResult.docs.isNotEmpty) {
-        final version = queryResult.docs
-            .map((document) => UserModel.fromDocument(document))
-            .toList();
-        return version.first;
+    try {
+      final userCredential = await _auth.signInWithEmailAndPassword(
+        email: email,
+        password: password,
+      );
+      if (userCredential.user != null) {
+        final queryResult = await _firestore
+            .collection('Users')
+            .where('uid', isEqualTo: userCredential.user!.uid)
+            .get();
+        if (queryResult.docs.isNotEmpty) {
+          final version = queryResult.docs
+              .map((document) => UserModel.fromDocument(document))
+              .toList();
+          return version.first;
+        }
       }
+      throw const ApiException(message: 'User not found', statusCode: 404);
+    } catch (error) {
+      throw const ApiException(message: 'User not found', statusCode: 404);
     }
-    throw const ApiException(message: 'User not found', statusCode: 404);
   }
 
   Future<UserModel> signInWithGoogle() async {
@@ -101,6 +105,10 @@ class AuthenticationApi {
       await _googleSignIn.disconnect();
     }
     _auth.signOut();
+  }
+
+  Future<void> sendPasswordResetEmail(String email) async {
+    await _auth.sendPasswordResetEmail(email: email);
   }
 
   //? User

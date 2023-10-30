@@ -36,11 +36,12 @@
             "password": "Password",
             "rememberMe": "Remember me",
             "forgotPassword": "Forgot password",
-            "forgotDescription": "Please enter an email linked to your account. We’ll send a link that will sign you into the app instantly.",
             "signIn": "Sign in",
             "signInWithGoogle": "Sign in with Google",
             "signInSuccessful": "Sign in is successfully!",
-            "welcomeBack": "Welcome back!"
+            "welcomeBack": "Welcome back!",
+            "forgotDescription": "Please enter an email linked to your account. We’ll send a link that will sign you into the app instantly.",
+            "passwordResetSent": "Password reset email sent."
         },
         "acceptInvite": {
             "title": "Accept the invitation",

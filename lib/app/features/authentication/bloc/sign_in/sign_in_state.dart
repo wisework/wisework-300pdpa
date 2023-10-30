@@ -57,6 +57,20 @@ class SigningOut extends SignInState {
   List<Object> get props => [];
 }
 
+class SendingPasswordReset extends SignInState {
+  const SendingPasswordReset();
+
+  @override
+  List<Object> get props => [];
+}
+
+class SentPasswordReset extends SignInState {
+  const SentPasswordReset();
+
+  @override
+  List<Object> get props => [];
+}
+
 class GettingCurrentUser extends SignInState {
   const GettingCurrentUser();
 

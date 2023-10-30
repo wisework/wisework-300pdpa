@@ -54,6 +54,16 @@ class AuthenticationRepository {
     }
   }
 
+  ResultVoid sendPasswordResetEmail(String email) async {
+    try {
+      await _api.sendPasswordResetEmail(email);
+
+      return const Right(null);
+    } on ApiException catch (error) {
+      return Left(ApiFailure.fromException(error));
+    }
+  }
+
   //? User
   ResultFuture<UserModel> getCurrentUser() async {
     try {

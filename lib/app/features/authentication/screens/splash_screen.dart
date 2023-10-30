@@ -8,6 +8,7 @@ import 'package:pdpa/app/features/authentication/bloc/sign_in/sign_in_bloc.dart'
 import 'package:pdpa/app/features/authentication/routes/authentication_route.dart';
 import 'package:pdpa/app/features/general/bloc/app_settings/app_settings_bloc.dart';
 import 'package:pdpa/app/features/general/routes/general_route.dart';
+import 'package:pdpa/app/shared/utils/toast.dart';
 import 'package:pdpa/app/shared/widgets/wise_work_shimmer.dart';
 
 class SplashScreen extends StatefulWidget {
@@ -30,18 +31,7 @@ class _SplashScreenState extends State<SplashScreen> {
   }
 
   void _alreadySignedIn(UserModel user) {
-    ScaffoldMessenger.of(context).showSnackBar(
-      SnackBar(
-        content: Text(
-          tr('auth.signIn.welcomeBack'),
-          style: Theme.of(context)
-              .textTheme
-              .bodyMedium
-              ?.copyWith(color: Theme.of(context).colorScheme.onPrimary),
-        ),
-        duration: UiConfig.toastDuration,
-      ),
-    );
+    showToast(context, text: tr('auth.signIn.welcomeBack'));
 
     final event = InitialAppSettingsEvent(user: user);
     context.read<AppSettingsBloc>().add(event);

@@ -8,9 +8,11 @@ import 'package:pdpa/app/features/authentication/bloc/sign_in/sign_in_bloc.dart'
 import 'package:pdpa/app/features/authentication/routes/authentication_route.dart';
 import 'package:pdpa/app/features/general/bloc/app_settings/app_settings_bloc.dart';
 import 'package:pdpa/app/features/general/routes/general_route.dart';
+import 'package:pdpa/app/shared/utils/toast.dart';
 import 'package:pdpa/app/shared/widgets/customs/custom_button.dart';
 import 'package:pdpa/app/shared/widgets/customs/custom_checkbox.dart';
 import 'package:pdpa/app/shared/widgets/customs/custom_text_field.dart';
+import 'package:pdpa/app/shared/widgets/loading_indicator.dart';
 
 class SignInScreen extends StatefulWidget {
   const SignInScreen({super.key});
@@ -56,18 +58,7 @@ class _SignInScreenState extends State<SignInScreen> {
   }
 
   void _signInSuccessful(UserModel user) {
-    ScaffoldMessenger.of(context).showSnackBar(
-      SnackBar(
-        content: Text(
-          tr('auth.signIn.signInSuccessful'),
-          style: Theme.of(context)
-              .textTheme
-              .bodyMedium
-              ?.copyWith(color: Theme.of(context).colorScheme.onPrimary),
-        ),
-        duration: UiConfig.toastDuration,
-      ),
-    );
+    showToast(context, text: tr('auth.signIn.signInSuccessful'));
 
     final event = InitialAppSettingsEvent(user: user);
     context.read<AppSettingsBloc>().add(event);
@@ -85,21 +76,6 @@ class _SignInScreenState extends State<SignInScreen> {
     }
   }
 
-  void _signInFailed(String message) {
-    ScaffoldMessenger.of(context).showSnackBar(
-      SnackBar(
-        content: Text(
-          message,
-          style: Theme.of(context)
-              .textTheme
-              .bodyMedium
-              ?.copyWith(color: Theme.of(context).colorScheme.onPrimary),
-        ),
-        duration: UiConfig.toastDuration,
-      ),
-    );
-  }
-
   void _setRememberMe(bool value) {
     setState(() {
       isRememberMe = value;
@@ -110,6 +86,15 @@ class _SignInScreenState extends State<SignInScreen> {
     setState(() {
       isForgotPassword = !isForgotPassword;
     });
+  }
+
+  void _sendPasswordReset() {
+    if (_forgotPasswordFormKey.currentState!.validate()) {
+      final event = SendPasswordResetEvent(
+        email: emailController.text,
+      );
+      context.read<SignInBloc>().add(event);
+    }
   }
 
   @override
@@ -272,7 +257,7 @@ class _SignInScreenState extends State<SignInScreen> {
               child: BlocConsumer<SignInBloc, SignInState>(
                 listener: (context, state) {
                   if (state is SignInError) {
-                    _signInFailed(state.message);
+                    showToast(context, text: state.message);
                   } else if (state is SignedInUser) {
                     _signInSuccessful(state.user);
                   }
@@ -280,13 +265,10 @@ class _SignInScreenState extends State<SignInScreen> {
                 builder: (context, state) {
                   if (state is SigningInWithEmailAndPassword ||
                       state is SigningInWithGoogle) {
-                    return SizedBox(
-                      width: 24.0,
-                      height: 24.0,
-                      child: CircularProgressIndicator(
-                        color: Theme.of(context).colorScheme.onPrimary,
-                        strokeWidth: 3.0,
-                      ),
+                    return LoadingIndicator(
+                      color: Theme.of(context).colorScheme.onPrimary,
+                      size: 28.0,
+                      loadingType: LoadingType.horizontalRotatingDots,
                     );
                   }
                   return Text(
@@ -345,17 +327,36 @@ class _SignInScreenState extends State<SignInScreen> {
               key: const ValueKey('forgot_password_email_field'),
               controller: emailController,
               hintText: tr('auth.signIn.email'),
+              keyboardType: TextInputType.emailAddress,
+              required: true,
             ),
             const SizedBox(height: UiConfig.lineSpacing),
             CustomButton(
               height: 50.0,
-              onPressed: () async {},
-              child: Text(
-                tr('app.confirm'),
-                style: Theme.of(context)
-                    .textTheme
-                    .titleMedium
-                    ?.copyWith(color: Theme.of(context).colorScheme.onPrimary),
+              onPressed: _sendPasswordReset,
+              child: BlocConsumer<SignInBloc, SignInState>(
+                listener: (context, state) {
+                  if (state is SentPasswordReset) {
+                    showToast(
+                      context,
+                      text: tr('auth.signIn.passwordResetSent'),
+                    );
+                  }
+                },
+                builder: (context, state) {
+                  if (state is SendingPasswordReset) {
+                    return LoadingIndicator(
+                      color: Theme.of(context).colorScheme.onPrimary,
+                      size: 28.0,
+                      loadingType: LoadingType.horizontalRotatingDots,
+                    );
+                  }
+                  return Text(
+                    tr('app.confirm'),
+                    style: Theme.of(context).textTheme.titleMedium?.copyWith(
+                        color: Theme.of(context).colorScheme.onPrimary),
+                  );
+                },
               ),
             ),
             const SizedBox(height: UiConfig.lineSpacing),

@@ -16,6 +16,7 @@ class SignInBloc extends Bloc<SignInEvent, SignInState> {
     on<SignInWithEmailAndPasswordEvent>(_signInWithEmailAndPasswordHandler);
     on<SignInWithGoogleEvent>(_signInWithGoogleHandler);
     on<SignOutEvent>(_signOutEventHandler);
+    on<SendPasswordResetEvent>(_sendPasswordResetHandler);
     on<GetCurrentUserEvent>(_getCurrentUserHandler);
     on<UpdateCurrentUserEvent>(_updateCurrentUserHandler);
   }
@@ -26,6 +27,15 @@ class SignInBloc extends Bloc<SignInEvent, SignInState> {
     SignInWithEmailAndPasswordEvent event,
     Emitter<SignInState> emit,
   ) async {
+    if (event.email.isEmpty) {
+      emit(const SignInError('Required email'));
+      return;
+    }
+    if (event.password.isEmpty) {
+      emit(const SignInError('Required password'));
+      return;
+    }
+
     emit(const SigningInWithEmailAndPassword());
 
     final result = await _authenticationRepository.signInWithEmailAndPassword(
@@ -98,6 +108,35 @@ class SignInBloc extends Bloc<SignInEvent, SignInState> {
     result.fold(
       (failure) => emit(SignInError(failure.errorMessage)),
       (_) => emit(const SignInInitial()),
+    );
+  }
+
+  Future<void> _sendPasswordResetHandler(
+    SendPasswordResetEvent event,
+    Emitter<SignInState> emit,
+  ) async {
+    if (event.email.isEmpty) {
+      emit(const SignInError('Required email'));
+      return;
+    }
+
+    emit(const SendingPasswordReset());
+
+    final result = await _authenticationRepository.sendPasswordResetEmail(
+      event.email,
+    );
+
+    await result.fold(
+      (failure) {
+        emit(SignInError(failure.errorMessage));
+      },
+      (_) async {
+        emit(const SentPasswordReset());
+
+        await Future.delayed(const Duration(milliseconds: 400));
+
+        emit(const SignInInitial());
+      },
     );
   }
 
