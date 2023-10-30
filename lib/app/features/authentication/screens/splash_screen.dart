@@ -1,3 +1,4 @@
+import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
@@ -32,7 +33,7 @@ class _SplashScreenState extends State<SplashScreen> {
     ScaffoldMessenger.of(context).showSnackBar(
       SnackBar(
         content: Text(
-          'Welcome back!',
+          tr('auth.signIn.welcomeBack'),
           style: Theme.of(context)
               .textTheme
               .bodyMedium
@@ -59,21 +60,56 @@ class _SplashScreenState extends State<SplashScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: Center(
-        child: BlocListener<SignInBloc, SignInState>(
-          listener: (context, state) async {
-            await Future.delayed(const Duration(milliseconds: 500)).then((_) {
-              if (state is SignedInUser) {
-                _alreadySignedIn(state.user);
-              } else if (state is SignInInitial || state is SignInError) {
-                _redirectToSignIn();
-              }
-            });
-          },
-          child: const WiseWorkShimmer(),
+      body: Padding(
+        padding: const EdgeInsets.all(UiConfig.defaultPaddingSpacing * 2),
+        child: Column(
+          children: <Widget>[
+            _buildLogoApp(),
+            const Spacer(),
+            Align(
+              alignment: Alignment.center,
+              child: Column(
+                children: <Widget>[
+                  Text(
+                    tr('app.poweredBy'),
+                    style: Theme.of(context).textTheme.bodySmall?.copyWith(
+                        color: Theme.of(context).colorScheme.onTertiary),
+                    textAlign: TextAlign.center,
+                  ),
+                  const SizedBox(height: UiConfig.textSpacing),
+                  Text(
+                    tr('app.copyright'),
+                    style: Theme.of(context).textTheme.bodySmall?.copyWith(
+                        color: Theme.of(context).colorScheme.onTertiary),
+                    textAlign: TextAlign.center,
+                  ),
+                ],
+              ),
+            ),
+          ],
         ),
       ),
       backgroundColor: Theme.of(context).colorScheme.onBackground,
+    );
+  }
+
+  BlocListener _buildLogoApp() {
+    return BlocListener<SignInBloc, SignInState>(
+      listener: (context, state) async {
+        await Future.delayed(const Duration(milliseconds: 1000)).then((_) {
+          if (state is SignedInUser) {
+            _alreadySignedIn(state.user);
+          } else if (state is SignInInitial || state is SignInError) {
+            _redirectToSignIn();
+          }
+        });
+      },
+      child: const Padding(
+        padding: EdgeInsets.symmetric(
+          vertical: UiConfig.defaultPaddingSpacing * 8,
+        ),
+        child: WiseWorkShimmer(),
+      ),
     );
   }
 }

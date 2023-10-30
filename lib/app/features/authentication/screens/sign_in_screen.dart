@@ -9,6 +9,8 @@ import 'package:pdpa/app/features/authentication/routes/authentication_route.dar
 import 'package:pdpa/app/features/general/bloc/app_settings/app_settings_bloc.dart';
 import 'package:pdpa/app/features/general/routes/general_route.dart';
 import 'package:pdpa/app/shared/widgets/customs/custom_button.dart';
+import 'package:pdpa/app/shared/widgets/customs/custom_checkbox.dart';
+import 'package:pdpa/app/shared/widgets/customs/custom_text_field.dart';
 
 class SignInScreen extends StatefulWidget {
   const SignInScreen({super.key});
@@ -18,34 +20,46 @@ class SignInScreen extends StatefulWidget {
 }
 
 class _SignInScreenState extends State<SignInScreen> {
-  late TextEditingController usernameController;
+  late TextEditingController emailController;
   late TextEditingController passwordController;
+
+  final GlobalKey<FormState> _signInformKey = GlobalKey<FormState>();
+  final GlobalKey<FormState> _forgotPasswordFormKey = GlobalKey<FormState>();
+
+  bool isRememberMe = false;
+  bool isForgotPassword = false;
 
   @override
   void initState() {
     super.initState();
 
-    usernameController = TextEditingController();
+    emailController = TextEditingController();
     passwordController = TextEditingController();
   }
 
   @override
   void dispose() {
-    usernameController.dispose();
+    emailController.dispose();
     passwordController.dispose();
 
     super.dispose();
   }
 
-  void _signInWithGoogle() {
-    context.read<SignInBloc>().add(const SignInWithGoogleEvent());
+  void _signInWithEmailAndPassword() {
+    if (_signInformKey.currentState!.validate()) {
+      final event = SignInWithEmailAndPasswordEvent(
+        email: emailController.text,
+        password: passwordController.text,
+      );
+      context.read<SignInBloc>().add(event);
+    }
   }
 
   void _signInSuccessful(UserModel user) {
     ScaffoldMessenger.of(context).showSnackBar(
       SnackBar(
         content: Text(
-          'Sign in with Google is successfully!',
+          tr('auth.signIn.signInSuccessful'),
           style: Theme.of(context)
               .textTheme
               .bodyMedium
@@ -86,84 +100,284 @@ class _SignInScreenState extends State<SignInScreen> {
     );
   }
 
+  void _setRememberMe(bool value) {
+    setState(() {
+      isRememberMe = value;
+    });
+  }
+
+  void _setForgotPassword() {
+    setState(() {
+      isForgotPassword = !isForgotPassword;
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
+    final screenSize = MediaQuery.of(context).size;
+
     return Scaffold(
       backgroundColor: Theme.of(context).colorScheme.onPrimary,
-      body: Column(
-        crossAxisAlignment: CrossAxisAlignment.center,
-        children: <Widget>[
-          Expanded(
-            child: Center(
-              child: Column(
-                mainAxisSize: MainAxisSize.min,
-                children: <Widget>[
-                  SizedBox(
-                    width: 240.0,
-                    child: Image.asset(
-                      'assets/images/wisework-logo.png',
+      body: SingleChildScrollView(
+        child: Center(
+          child: ConstrainedBox(
+            constraints: const BoxConstraints(
+              maxWidth: 480.0,
+            ),
+            child: Column(
+              children: <Widget>[
+                SizedBox(
+                  width: screenSize.width,
+                  child: Builder(builder: (context) {
+                    if (isForgotPassword) {
+                      return ConstrainedBox(
+                        constraints: const BoxConstraints(
+                          maxHeight: 402.0,
+                        ),
+                        child: Image.asset(
+                          'assets/images/authentication/forgot-password.png',
+                          fit: BoxFit.contain,
+                        ),
+                      );
+                    }
+                    return Image.asset(
+                      'assets/images/authentication/login.png',
                       fit: BoxFit.contain,
-                    ),
+                    );
+                  }),
+                ),
+                Padding(
+                  padding: const EdgeInsets.symmetric(
+                    horizontal: UiConfig.defaultPaddingSpacing,
                   ),
-                  const SizedBox(height: 60.0),
-                  Text(
-                    tr('app.name'),
-                    style: Theme.of(context).textTheme.displayMedium,
-                  ),
-                  const SizedBox(height: 40.0),
-                  _buildAuthenticationButton(),
-                ],
-              ),
+                  child: Builder(builder: (context) {
+                    if (isForgotPassword) {
+                      return _buildResetPasswordWrapper(context);
+                    }
+                    return _buildLoginWrapper(context);
+                  }),
+                ),
+              ],
             ),
           ),
-          Padding(
-            padding: const EdgeInsets.symmetric(vertical: 20.0),
-            child: Text(
-              tr('auth.signIn.joinOverForGoal'),
-              style: Theme.of(context)
-                  .textTheme
-                  .bodySmall
-                  ?.copyWith(color: Theme.of(context).colorScheme.onTertiary),
-            ),
-          ),
-        ],
+        ),
       ),
     );
   }
 
-  ConstrainedBox _buildAuthenticationButton() {
+  Padding _buildLoginWrapper(BuildContext context) {
+    return Padding(
+      padding: const EdgeInsets.all(UiConfig.defaultPaddingSpacing),
+      child: ConstrainedBox(
+        constraints: const BoxConstraints(
+          maxWidth: 480.0,
+        ),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: <Widget>[
+            const SizedBox(height: UiConfig.lineSpacing * 2),
+            Text(
+              tr('auth.signIn.signIn'),
+              style: Theme.of(context).textTheme.displayLarge,
+            ),
+            const SizedBox(height: UiConfig.lineGap),
+            Text(
+              tr('auth.signIn.signInDescription'),
+              style: Theme.of(context).textTheme.titleMedium,
+            ),
+            const SizedBox(height: UiConfig.lineSpacing * 2),
+            Center(child: _buildSignInForm(context)),
+            const SizedBox(height: UiConfig.lineSpacing * 2),
+            Align(
+              alignment: Alignment.center,
+              child: Text(
+                tr('app.copyright'),
+                style: Theme.of(context)
+                    .textTheme
+                    .bodySmall
+                    ?.copyWith(color: Theme.of(context).colorScheme.onTertiary),
+                textAlign: TextAlign.center,
+              ),
+            ),
+            const SizedBox(height: UiConfig.lineSpacing),
+          ],
+        ),
+      ),
+    );
+  }
+
+  ConstrainedBox _buildSignInForm(BuildContext context) {
     return ConstrainedBox(
-      constraints: const BoxConstraints(maxWidth: 260.0),
-      child: CustomButton(
-        height: 40.0,
-        onPressed: _signInWithGoogle,
-        child: BlocConsumer<SignInBloc, SignInState>(
-          listener: (context, state) {
-            if (state is SignInError) {
-              _signInFailed(state.message);
-            } else if (state is SignedInUser) {
-              _signInSuccessful(state.user);
-            }
-          },
-          builder: (context, state) {
-            if (state is SigningInWithGoogle) {
-              return SizedBox(
-                width: 24.0,
-                height: 24.0,
-                child: CircularProgressIndicator(
-                  color: Theme.of(context).colorScheme.onPrimary,
-                  strokeWidth: 3.0,
+      constraints: const BoxConstraints(
+        maxWidth: 300.0,
+      ),
+      child: Form(
+        key: _signInformKey,
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: <Widget>[
+            CustomTextField(
+              key: const ValueKey('sign_in_email_field'),
+              controller: emailController,
+              hintText: tr('auth.signIn.email'),
+              keyboardType: TextInputType.emailAddress,
+              required: true,
+            ),
+            const SizedBox(height: UiConfig.lineSpacing),
+            CustomTextField(
+              key: const ValueKey('sign_in_password_field'),
+              controller: passwordController,
+              hintText: tr('auth.signIn.password'),
+              required: true,
+              obscureText: true,
+            ),
+            const SizedBox(height: UiConfig.lineGap),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              crossAxisAlignment: CrossAxisAlignment.center,
+              children: <Widget>[
+                Row(
+                  mainAxisSize: MainAxisSize.min,
+                  children: <Widget>[
+                    CustomCheckBox(
+                      value: isRememberMe,
+                      onChanged: _setRememberMe,
+                    ),
+                    const SizedBox(width: 8.0),
+                    Text(
+                      tr('auth.signIn.rememberMe'),
+                      style: Theme.of(context).textTheme.bodySmall,
+                    ),
+                  ],
                 ),
-              );
-            }
-            return Text(
-              tr('auth.signIn.signInWithGoogle'),
-              style: Theme.of(context)
-                  .textTheme
-                  .titleMedium
-                  ?.copyWith(color: Theme.of(context).colorScheme.onPrimary),
-            );
-          },
+                CustomButton(
+                  padding: const EdgeInsets.symmetric(
+                    horizontal: 8.0,
+                    vertical: 2.0,
+                  ),
+                  onPressed: _setForgotPassword,
+                  buttonType: CustomButtonType.text,
+                  child: Text(
+                    tr('auth.signIn.forgotPassword'),
+                    style: Theme.of(context).textTheme.bodySmall?.copyWith(
+                        color: Theme.of(context).colorScheme.primary),
+                  ),
+                ),
+              ],
+            ),
+            const SizedBox(height: UiConfig.lineGap),
+            CustomButton(
+              height: 50.0,
+              onPressed: _signInWithEmailAndPassword,
+              child: BlocConsumer<SignInBloc, SignInState>(
+                listener: (context, state) {
+                  if (state is SignInError) {
+                    _signInFailed(state.message);
+                  } else if (state is SignedInUser) {
+                    _signInSuccessful(state.user);
+                  }
+                },
+                builder: (context, state) {
+                  if (state is SigningInWithEmailAndPassword ||
+                      state is SigningInWithGoogle) {
+                    return SizedBox(
+                      width: 24.0,
+                      height: 24.0,
+                      child: CircularProgressIndicator(
+                        color: Theme.of(context).colorScheme.onPrimary,
+                        strokeWidth: 3.0,
+                      ),
+                    );
+                  }
+                  return Text(
+                    tr('auth.signIn.signIn'),
+                    style: Theme.of(context).textTheme.titleMedium?.copyWith(
+                        color: Theme.of(context).colorScheme.onPrimary),
+                  );
+                },
+              ),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+
+  Padding _buildResetPasswordWrapper(BuildContext context) {
+    return Padding(
+      padding: const EdgeInsets.all(UiConfig.defaultPaddingSpacing),
+      child: ConstrainedBox(
+        constraints: const BoxConstraints(
+          maxWidth: 480.0,
+        ),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: <Widget>[
+            Text(
+              '${tr('auth.signIn.forgotPassword')}?',
+              style: Theme.of(context).textTheme.displayLarge,
+            ),
+            const SizedBox(height: UiConfig.lineGap),
+            Text(
+              tr('auth.signIn.forgotDescription'),
+              style: Theme.of(context).textTheme.titleMedium,
+            ),
+            const SizedBox(height: UiConfig.lineSpacing * 2),
+            Center(child: _buildForgotPasswordForm(context)),
+            const SizedBox(height: UiConfig.lineSpacing),
+          ],
+        ),
+      ),
+    );
+  }
+
+  ConstrainedBox _buildForgotPasswordForm(BuildContext context) {
+    return ConstrainedBox(
+      constraints: const BoxConstraints(
+        maxWidth: 300.0,
+      ),
+      child: Form(
+        key: _forgotPasswordFormKey,
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: <Widget>[
+            CustomTextField(
+              key: const ValueKey('forgot_password_email_field'),
+              controller: emailController,
+              hintText: tr('auth.signIn.email'),
+            ),
+            const SizedBox(height: UiConfig.lineSpacing),
+            CustomButton(
+              height: 50.0,
+              onPressed: () async {},
+              child: Text(
+                tr('app.confirm'),
+                style: Theme.of(context)
+                    .textTheme
+                    .titleMedium
+                    ?.copyWith(color: Theme.of(context).colorScheme.onPrimary),
+              ),
+            ),
+            const SizedBox(height: UiConfig.lineSpacing),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: <Widget>[
+                CustomButton(
+                  padding: const EdgeInsets.symmetric(
+                    horizontal: 8.0,
+                    vertical: 2.0,
+                  ),
+                  onPressed: _setForgotPassword,
+                  buttonType: CustomButtonType.text,
+                  child: Text(
+                    tr('app.back'),
+                    style: Theme.of(context).textTheme.bodySmall?.copyWith(
+                        color: Theme.of(context).colorScheme.primary),
+                  ),
+                ),
+              ],
+            ),
+          ],
         ),
       ),
     );

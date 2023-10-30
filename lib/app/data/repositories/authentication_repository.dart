@@ -12,6 +12,19 @@ class AuthenticationRepository {
   final AuthenticationApi _api;
 
   //? Authentication
+  ResultFuture<UserModel> signInWithEmailAndPassword(
+    String email,
+    String password,
+  ) async {
+    try {
+      final result = await _api.signInWithEmailAndPassword(email, password);
+
+      return Right(result);
+    } on ApiException catch (error) {
+      return Left(ApiFailure.fromException(error));
+    }
+  }
+
   ResultFuture<UserModel> signInWithGoogle() async {
     try {
       final result = await _api.signInWithGoogle();

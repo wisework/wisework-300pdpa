@@ -23,12 +23,24 @@
         },
         "search": "ค้นหา",
         "agree": "ยินยอม",
-        "decline": "ไม่ยินยอม"
+        "decline": "ไม่ยินยอม",
+        "confirm": "ยืนยัน",
+        "back": "ย้อนกลับ",
+        "poweredBy": "ขับเคลื่อนโดย แสงอุษา ‘solutions Co.,Ltd.",
+        "copyright": "© 2023 wisework. สงวนลิขสิทธิ์ทั้งหมด"
     },
     "auth": {
         "signIn": {
+            "signInDescription": "กรุณาเข้าสู่ระบบเพื่อดำเนินการต่อ",
+            "email": "อีเมล",
+            "password": "รหัสผ่าน",
+            "rememberMe": "จำฉันไว้",
+            "forgotPassword": "ลืมรหัสผ่าน",
+            "forgotDescription": "กรุณากรอกอีเมลที่เชื่อมโยงกับบัญชีของคุณ เราจะส่งลิงก์ที่จะลงชื่อเข้าใช้แอปให้คุณทันที",
+            "signIn": "เข้าสู่ระบบ",
             "signInWithGoogle": "เข้าสู่ระบบด้วย Google",
-            "joinOverForGoal": "เข้าร่วมกับผู้ใช้มากกว่า 100,000 ราย เพื่อบรรลุเป้าหมาย!"
+            "signInSuccessful": "เข้าสู่ระบบสำเร็จ!",
+            "welcomeBack": "ยินดีต้อนรับกลับ!"
         },
         "acceptInvite": {
             "title": "ตอบรับคำเชิญ",

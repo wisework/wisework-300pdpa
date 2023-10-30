@@ -88,31 +88,31 @@ class PdpaThemeData {
   static const _light = FontWeight.w300;
   static const _regular = FontWeight.w400;
   static const _semiBold = FontWeight.w500;
-  static const _bold = FontWeight.w600;
+  // static const _bold = FontWeight.w600;
 
   static final TextTheme _textTheme = TextTheme(
     displayLarge: GoogleFonts.ibmPlexSansThai(
-      fontWeight: _bold,
-      fontSize: 24.0,
+      fontWeight: _semiBold,
+      fontSize: 32.0,
     ),
     displayMedium: GoogleFonts.ibmPlexSansThai(
       fontWeight: _semiBold,
-      fontSize: 22.0,
+      fontSize: 30.0,
     ),
     displaySmall: GoogleFonts.ibmPlexSansThai(
       fontWeight: _semiBold,
-      fontSize: 20.0,
+      fontSize: 28.0,
     ),
     headlineLarge: GoogleFonts.ibmPlexSansThai(
-      fontWeight: _regular,
+      fontWeight: _semiBold,
       fontSize: 24.0,
     ),
     headlineMedium: GoogleFonts.ibmPlexSansThai(
-      fontWeight: _regular,
+      fontWeight: _semiBold,
       fontSize: 22.0,
     ),
     headlineSmall: GoogleFonts.ibmPlexSansThai(
-      fontWeight: _regular,
+      fontWeight: _semiBold,
       fontSize: 20.0,
     ),
     titleLarge: GoogleFonts.ibmPlexSansThai(

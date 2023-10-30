@@ -13,6 +13,7 @@ class SignInBloc extends Bloc<SignInEvent, SignInState> {
     required AuthenticationRepository authenticationRepository,
   })  : _authenticationRepository = authenticationRepository,
         super(const SignInInitial()) {
+    on<SignInWithEmailAndPasswordEvent>(_signInWithEmailAndPasswordHandler);
     on<SignInWithGoogleEvent>(_signInWithGoogleHandler);
     on<SignOutEvent>(_signOutEventHandler);
     on<GetCurrentUserEvent>(_getCurrentUserHandler);
@@ -20,6 +21,40 @@ class SignInBloc extends Bloc<SignInEvent, SignInState> {
   }
 
   final AuthenticationRepository _authenticationRepository;
+
+  Future<void> _signInWithEmailAndPasswordHandler(
+    SignInWithEmailAndPasswordEvent event,
+    Emitter<SignInState> emit,
+  ) async {
+    emit(const SigningInWithEmailAndPassword());
+
+    final result = await _authenticationRepository.signInWithEmailAndPassword(
+      event.email,
+      event.password,
+    );
+
+    await result.fold(
+      (failure) {
+        emit(SignInError(failure.errorMessage));
+        return;
+      },
+      (user) async {
+        if (user == UserModel.empty()) {
+          emit(const SignInInitial());
+          return;
+        }
+
+        final result = await _authenticationRepository.getUserCompanies(
+          user.companies,
+        );
+
+        result.fold(
+          (failure) => emit(SignInError(failure.errorMessage)),
+          (companies) => emit(SignedInUser(user, companies)),
+        );
+      },
+    );
+  }
 
   Future<void> _signInWithGoogleHandler(
     SignInWithGoogleEvent event,

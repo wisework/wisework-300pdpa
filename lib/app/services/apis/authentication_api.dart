@@ -17,6 +17,29 @@ class AuthenticationApi {
   final GoogleSignIn _googleSignIn;
 
   //? Authentication
+  Future<UserModel> signInWithEmailAndPassword(
+    String email,
+    String password,
+  ) async {
+    final userCredential = await _auth.signInWithEmailAndPassword(
+      email: email,
+      password: password,
+    );
+    if (userCredential.user != null) {
+      final queryResult = await _firestore
+          .collection('Users')
+          .where('uid', isEqualTo: userCredential.user!.uid)
+          .get();
+      if (queryResult.docs.isNotEmpty) {
+        final version = queryResult.docs
+            .map((document) => UserModel.fromDocument(document))
+            .toList();
+        return version.first;
+      }
+    }
+    throw const ApiException(message: 'User not found', statusCode: 404);
+  }
+
   Future<UserModel> signInWithGoogle() async {
     final result = await _googleSignIn.signIn();
     if (result != null) {
@@ -39,35 +62,34 @@ class AuthenticationApi {
               .toList();
           return version.first;
         } else {
-          final userRef = _firestore.collection('Users').doc();
-          final name = userCredential.user!.displayName?.split(' ') ??
-              [userCredential.user!.displayName!];
-
-          String firstName = '';
-          String lastName = '';
-
-          firstName = name.first;
-          if (name.length > 1) lastName = name.last;
-
-          final newUser = UserModel.empty().copyWith(
-            id: userRef.id,
-            uid: userCredential.user!.uid,
-            firstName: firstName,
-            lastName: lastName,
-            email: userCredential.user!.email,
-            roles: [],
-            defaultLanguage: 'th-US',
-            isEmailVerified: userCredential.user!.emailVerified,
-            createdBy: '',
-            createdDate: DateTime.now(),
-            updatedBy: '',
-            updatedDate: DateTime.now(),
-          );
-
-          await userRef.set(newUser.toMap());
-
-          return newUser;
+          return await _createUserByCredential(userCredential);
         }
+      }
+    }
+    throw const ApiException(message: 'User not found', statusCode: 404);
+  }
+
+  Future<UserModel> signUpWithEmailAndPassword(
+    String email,
+    String password,
+  ) async {
+    final userCredential = await _auth.createUserWithEmailAndPassword(
+      email: email,
+      password: password,
+    );
+    if (userCredential.user != null) {
+      final queryResult = await _firestore
+          .collection('Users')
+          .where('uid', isEqualTo: userCredential.user!.uid)
+          .get();
+
+      if (queryResult.docs.isNotEmpty) {
+        final version = queryResult.docs
+            .map((document) => UserModel.fromDocument(document))
+            .toList();
+        return version.first;
+      } else {
+        return await _createUserByCredential(userCredential);
       }
     }
     throw const ApiException(message: 'User not found', statusCode: 404);
@@ -99,6 +121,13 @@ class AuthenticationApi {
       throw const ApiException(message: 'User not found', statusCode: 404);
     }
     return UserModel.empty();
+  }
+
+  Future<void> verifyEmail() async {
+    final user = _auth.currentUser;
+    if (user != null) {
+      await user.sendEmailVerification();
+    }
   }
 
   Future<UserModel> updateCurrentUser(UserModel user) async {
@@ -145,5 +174,35 @@ class AuthenticationApi {
     await ref.set(created.toMap());
 
     return created;
+  }
+
+  //? Private Functions
+  Future<UserModel> _createUserByCredential(
+    UserCredential userCredential,
+  ) async {
+    final userRef = _firestore.collection('Users').doc();
+    final name = userCredential.user!.displayName?.split(' ') ?? ['', ''];
+
+    final firstName = name.first;
+    final lastName = name.last;
+
+    final newUser = UserModel.empty().copyWith(
+      id: userRef.id,
+      uid: userCredential.user!.uid,
+      firstName: firstName,
+      lastName: lastName,
+      email: userCredential.user!.email,
+      roles: [],
+      defaultLanguage: 'th-US',
+      isEmailVerified: userCredential.user!.emailVerified,
+      createdBy: '',
+      createdDate: DateTime.now(),
+      updatedBy: '',
+      updatedDate: DateTime.now(),
+    );
+
+    await userRef.set(newUser.toMap());
+
+    return newUser;
   }
 }
