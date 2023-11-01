@@ -18,6 +18,7 @@ class UserModel extends Equatable {
     required this.currentCompany,
     required this.defaultLanguage,
     required this.isEmailVerified,
+    required this.isFirstSignIn,
     required this.status,
     required this.createdBy,
     required this.createdDate,
@@ -38,6 +39,7 @@ class UserModel extends Equatable {
   final String currentCompany;
   final String defaultLanguage;
   final bool isEmailVerified;
+  final bool isFirstSignIn;
   final ActiveStatus status;
   final String createdBy;
   final DateTime createdDate;
@@ -59,6 +61,7 @@ class UserModel extends Equatable {
           currentCompany: '',
           defaultLanguage: '',
           isEmailVerified: false,
+          isFirstSignIn: true,
           status: ActiveStatus.active,
           createdBy: '',
           createdDate: DateTime.fromMillisecondsSinceEpoch(0),
@@ -86,6 +89,7 @@ class UserModel extends Equatable {
           currentCompany: map['currentCompany'] as String,
           defaultLanguage: map['defaultLanguage'] as String,
           isEmailVerified: map['isEmailVerified'] as bool,
+          isFirstSignIn: map['isFirstSignIn'] as bool,
           status: ActiveStatus.values[map['status'] as int],
           createdBy: map['createdBy'] as String,
           createdDate: DateTime.parse(map['createdDate'] as String),
@@ -109,6 +113,7 @@ class UserModel extends Equatable {
         'currentCompany': currentCompany,
         'defaultLanguage': defaultLanguage,
         'isEmailVerified': isEmailVerified,
+        'isFirstSignIn': isFirstSignIn,
         'status': status.index,
         'createdBy': createdBy,
         'createdDate': createdDate.toIso8601String(),
@@ -136,6 +141,7 @@ class UserModel extends Equatable {
     String? currentCompany,
     String? defaultLanguage,
     bool? isEmailVerified,
+    bool? isFirstSignIn,
     ActiveStatus? status,
     String? createdBy,
     DateTime? createdDate,
@@ -156,6 +162,7 @@ class UserModel extends Equatable {
       currentCompany: currentCompany ?? this.currentCompany,
       defaultLanguage: defaultLanguage ?? this.defaultLanguage,
       isEmailVerified: isEmailVerified ?? this.isEmailVerified,
+      isFirstSignIn: isFirstSignIn ?? this.isFirstSignIn,
       status: status ?? this.status,
       createdBy: createdBy ?? this.createdBy,
       createdDate: createdDate ?? this.createdDate,
@@ -163,6 +170,18 @@ class UserModel extends Equatable {
       updatedDate: updatedDate ?? this.updatedDate,
     );
   }
+
+  UserModel setCreate(String email, DateTime date) => copyWith(
+        createdBy: email,
+        createdDate: date,
+        updatedBy: email,
+        updatedDate: date,
+      );
+
+  UserModel setUpdate(String email, DateTime date) => copyWith(
+        updatedBy: email,
+        updatedDate: date,
+      );
 
   @override
   List<Object?> get props {
@@ -180,6 +199,7 @@ class UserModel extends Equatable {
       currentCompany,
       defaultLanguage,
       isEmailVerified,
+      isFirstSignIn,
       status,
       createdBy,
       createdDate,

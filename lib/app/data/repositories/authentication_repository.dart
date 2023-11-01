@@ -75,6 +75,29 @@ class AuthenticationRepository {
     }
   }
 
+  ResultVoid updatePassword(
+    String currentPassword,
+    String newPassword,
+  ) async {
+    try {
+      await _api.updatePassword(currentPassword, newPassword);
+
+      return const Right(null);
+    } on ApiException catch (error) {
+      return Left(ApiFailure.fromException(error));
+    }
+  }
+
+  ResultVoid verifyEmail() async {
+    try {
+      await _api.verifyEmail();
+
+      return const Right(null);
+    } on ApiException catch (error) {
+      return Left(ApiFailure.fromException(error));
+    }
+  }
+
   ResultFuture<UserModel> updateCurrentUser(UserModel user) async {
     try {
       final result = await _api.updateCurrentUser(user);

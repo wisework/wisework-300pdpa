@@ -69,7 +69,9 @@ class _SignInScreenState extends State<SignInScreen> {
       context.setLocale(const Locale('th', 'TH'));
     }
 
-    if (user.companies.isEmpty || user.currentCompany.isEmpty) {
+    if (user.isFirstSignIn) {
+      context.pushReplacement(AuthenticationRoute.resetPassword.path);
+    } else if (user.companies.isEmpty || user.currentCompany.isEmpty) {
       context.pushReplacement(AuthenticationRoute.signUpCompany.path);
     } else {
       context.pushReplacement(GeneralRoute.home.path);
