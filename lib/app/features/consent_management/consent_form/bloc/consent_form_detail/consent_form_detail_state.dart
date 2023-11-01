@@ -59,3 +59,33 @@ class GotConsentFormDetail extends ConsentFormDetailState {
     ];
   }
 }
+
+class UpdatedConsentFormDetail extends ConsentFormDetailState {
+  const UpdatedConsentFormDetail(
+    this.consentForm,
+    this.mandatoryFields,
+    this.purposes,
+    this.purposeCategories,
+    this.customFields,
+    this.consentTheme,
+  );
+
+  final ConsentFormModel consentForm;
+  final List<MandatoryFieldModel> mandatoryFields;
+  final List<PurposeModel> purposes;
+  final List<PurposeCategoryModel> purposeCategories;
+  final List<CustomFieldModel> customFields;
+  final ConsentThemeModel consentTheme;
+
+  @override
+  List<Object> get props {
+    return [
+      consentForm,
+      mandatoryFields,
+      purposes,
+      purposeCategories,
+      customFields,
+      consentTheme,
+    ];
+  }
+}
