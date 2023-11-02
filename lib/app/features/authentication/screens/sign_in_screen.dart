@@ -9,6 +9,7 @@ import 'package:pdpa/app/features/authentication/routes/authentication_route.dar
 import 'package:pdpa/app/features/general/bloc/app_settings/app_settings_bloc.dart';
 import 'package:pdpa/app/features/general/routes/general_route.dart';
 import 'package:pdpa/app/shared/utils/toast.dart';
+import 'package:pdpa/app/shared/utils/user_preferences.dart';
 import 'package:pdpa/app/shared/widgets/customs/custom_button.dart';
 import 'package:pdpa/app/shared/widgets/customs/custom_checkbox.dart';
 import 'package:pdpa/app/shared/widgets/customs/custom_text_field.dart';
@@ -37,6 +38,8 @@ class _SignInScreenState extends State<SignInScreen> {
 
     emailController = TextEditingController();
     passwordController = TextEditingController();
+
+    _getEmailSaved();
   }
 
   @override
@@ -47,14 +50,43 @@ class _SignInScreenState extends State<SignInScreen> {
     super.dispose();
   }
 
-  void _signInWithEmailAndPassword() {
-    if (_signInformKey.currentState!.validate()) {
-      final event = SignInWithEmailAndPasswordEvent(
-        email: emailController.text,
-        password: passwordController.text,
-      );
-      context.read<SignInBloc>().add(event);
+  void _getEmailSaved() async {
+    final result = await UserPreferences.getString(
+      AppPreferences.rememberEmail,
+    );
+
+    if (result != null) {
+      setState(() {
+        isRememberMe = true;
+        emailController.text = result;
+      });
     }
+  }
+
+  void _formValidate() async {
+    if (_signInformKey.currentState!.validate()) {
+      if (isRememberMe) {
+        await UserPreferences.setString(
+          AppPreferences.rememberEmail,
+          emailController.text,
+        );
+      } else {
+        await UserPreferences.setString(
+          AppPreferences.rememberEmail,
+          '',
+        );
+      }
+
+      _signInWithEmailAndPassword();
+    }
+  }
+
+  void _signInWithEmailAndPassword() {
+    final event = SignInWithEmailAndPasswordEvent(
+      email: emailController.text,
+      password: passwordController.text,
+    );
+    context.read<SignInBloc>().add(event);
   }
 
   void _signInSuccessful(UserModel user) {
@@ -255,7 +287,7 @@ class _SignInScreenState extends State<SignInScreen> {
             const SizedBox(height: UiConfig.lineGap),
             CustomButton(
               height: 50.0,
-              onPressed: _signInWithEmailAndPassword,
+              onPressed: _formValidate,
               child: BlocConsumer<SignInBloc, SignInState>(
                 listener: (context, state) {
                   if (state is SignInError) {

@@ -8,6 +8,11 @@ class AppConfig {
   static const String defaultLanguage = 'th-TH';
 }
 
+class AppPreferences {
+  // static const String rememberMe = 'remember_me';
+  static const String rememberEmail = 'remember_email';
+}
+
 class UiConfig {
   static const double appBarTitleSpacing = 10.0;
   static const double defaultPaddingSpacing = 15.0;
