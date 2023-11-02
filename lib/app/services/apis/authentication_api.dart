@@ -75,8 +75,9 @@ class AuthenticationApi {
 
   Future<UserModel> signUpWithEmailAndPassword(
     String email,
-    String password,
-  ) async {
+    String password, {
+    UserModel? user,
+  }) async {
     final userCredential = await _auth.createUserWithEmailAndPassword(
       email: email,
       password: password,
@@ -93,6 +94,14 @@ class AuthenticationApi {
             .toList();
         return version.first;
       } else {
+        if (user != null) {
+          final ref = _firestore.collection('Users').doc();
+          final created = user.copyWith(id: ref.id);
+
+          await ref.set(created.toMap());
+
+          return created;
+        }
         return await _createUserByCredential(userCredential);
       }
     }

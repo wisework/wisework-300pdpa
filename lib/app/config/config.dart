@@ -6,6 +6,7 @@ class AppConfig {
   static const String accessTokenBitly =
       '1a4228869e688dba97d940375d04122e2341ec40';
   static const String defaultLanguage = 'th-TH';
+  static const int generatePasswordLength = 6;
 }
 
 class AppPreferences {

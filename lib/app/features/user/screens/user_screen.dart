@@ -6,35 +6,51 @@ import 'package:pdpa/app/data/models/authentication/user_model.dart';
 import 'package:pdpa/app/data/models/etc/updated_return.dart';
 import 'package:pdpa/app/features/user/bloc/user/user_bloc.dart';
 import 'package:pdpa/app/features/user/routes/user_route.dart';
-import 'package:pdpa/app/injection.dart';
 import 'package:pdpa/app/shared/widgets/loading_indicator.dart';
 import 'package:pdpa/app/shared/widgets/material_ink_well.dart';
 import 'package:pdpa/app/shared/widgets/templates/pdpa_app_bar.dart';
 
-class UserScreen extends StatelessWidget {
+class UserScreen extends StatefulWidget {
   const UserScreen({super.key});
 
   @override
+  State<UserScreen> createState() => _UserScreenState();
+}
+
+class _UserScreenState extends State<UserScreen> {
+  @override
+  void initState() {
+    super.initState();
+
+    _initialData();
+  }
+
+  void _initialData() {
+    context.read<UserBloc>().add(const GetUsersEvent());
+  }
+
+  @override
   Widget build(BuildContext context) {
-    return BlocProvider<UserBloc>(
-      create: (context) =>
-          serviceLocator<UserBloc>()..add(const GetUsersEvent()),
-      child: const UserView(),
-    );
+    return const UserView();
   }
 }
 
-class UserView extends StatelessWidget {
+class UserView extends StatefulWidget {
   const UserView({
     super.key,
   });
 
+  @override
+  State<UserView> createState() => _UserViewState();
+}
+
+class _UserViewState extends State<UserView> {
   void _onUpdated(UpdatedReturn<UserModel> updated) {
-    // final event = UpdatePurposeCategoriesChangedEvent(
-    //   purposeCategory: updated.object,
-    //   updateType: updated.type,
-    // );
-    // context.read<PurposeCategoryBloc>().add(event);
+    final event = UpdateUsersChangedEvent(
+      user: updated.object,
+      updateType: updated.type,
+    );
+    context.read<UserBloc>().add(event);
   }
 
   @override
@@ -88,7 +104,13 @@ class UserView extends StatelessWidget {
         ],
       ),
       floatingActionButton: FloatingActionButton(
-        onPressed: () {},
+        onPressed: () async {
+          await context.push(UserRoute.createUser.path).then((value) {
+            if (value != null) {
+              _onUpdated(value as UpdatedReturn<UserModel>);
+            }
+          });
+        },
         child: const Icon(Icons.add),
       ),
     );

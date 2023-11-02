@@ -335,8 +335,9 @@ Future<void> _user() async {
         userRepository: serviceLocator(),
       ),
     )
-    ..registerLazySingleton(
+    ..registerFactory(
       () => EditUserBloc(
+        authenticationRepository: serviceLocator(),
         userRepository: serviceLocator(),
       ),
     )

@@ -17,7 +17,9 @@ class GetCurrentUserEvent extends EditUserEvent {
 }
 
 class CreateCurrentUserEvent extends EditUserEvent {
-  const CreateCurrentUserEvent({required this.user});
+  const CreateCurrentUserEvent({
+    required this.user,
+  });
 
   final UserModel user;
 

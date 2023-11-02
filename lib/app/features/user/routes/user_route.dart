@@ -8,6 +8,11 @@ class UserRoute {
     builder: (context, _) => const UserScreen(),
   );
 
+  static final GoRoute createUser = GoRoute(
+    path: '/user/create',
+    builder: (context, _) => const EditUserScreen(userId: ''),
+  );
+
   static final GoRoute editUser = GoRoute(
     path: '/user/:id/edit',
     builder: (context, state) => EditUserScreen(
@@ -17,6 +22,7 @@ class UserRoute {
 
   static final List<GoRoute> routes = <GoRoute>[
     user,
+    createUser,
     editUser,
   ];
 }
