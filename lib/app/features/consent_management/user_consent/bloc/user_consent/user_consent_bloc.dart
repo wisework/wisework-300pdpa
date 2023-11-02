@@ -19,6 +19,7 @@ class UserConsentBloc extends Bloc<UserConsentEvent, UserConsentState> {
         _masterDataRepository = masterDataRepository,
         super(const UserConsentInitial()) {
     on<GetUserConsentsEvent>(_getUserConsentsHandler);
+    on<SearchUserConsentSearchChanged>(_getUserConsentsSearching);
   }
   final ConsentRepository _consentRepository;
   final MasterDataRepository _masterDataRepository;
@@ -69,6 +70,85 @@ class UserConsentBloc extends Bloc<UserConsentEvent, UserConsentState> {
               mandatoryFields..sort((a, b) => a.priority.compareTo(b.priority)),
             ),
           ),
+        );
+      },
+    );
+  }
+
+  Future<void> _getUserConsentsSearching(
+    SearchUserConsentSearchChanged event,
+    Emitter<UserConsentState> emit,
+  ) async {
+    if (event.companyId.isEmpty) {
+      emit(const UserConsentError('Required company ID'));
+      return;
+    }
+
+    emit(const GettingUserConsents());
+
+    final result = await _consentRepository.getUserConsents(event.companyId);
+
+    await result.fold(
+      (failure) {
+        emit(UserConsentError(failure.errorMessage));
+        return;
+      },
+      (userConsents) async {
+        List<ConsentFormModel> gotConsentForms = [];
+        for (UserConsentModel userConsent in userConsents) {
+          final result = await _consentRepository.getConsentFormById(
+            userConsent.consentFormId,
+            event.companyId,
+          );
+
+          result.fold(
+            (failure) => emit(UserConsentError(failure.errorMessage)),
+            (consentForm) => gotConsentForms.add(consentForm),
+          );
+        }
+
+        final result = await _masterDataRepository.getMandatoryFields(
+          event.companyId,
+        );
+
+        result.fold(
+          (failure) => emit(UserConsentError(failure.errorMessage)),
+          (mandatoryFields) async {
+            emit(
+              GotUserConsents(
+                userConsents
+                  ..sort((a, b) => b.updatedDate.compareTo(a.updatedDate)),
+                gotConsentForms,
+                mandatoryFields
+                  ..sort((a, b) => a.priority.compareTo(b.priority)),
+              ),
+            );
+            List<UserConsentModel> newUserConsent = [];
+            
+            for (UserConsentModel userConsent in userConsents) {
+              bool isTitleFound = false;
+
+              if (userConsent.mandatoryFields
+                  .toString()
+                  .contains(event.search)) {
+                isTitleFound = true;
+              }
+
+              if (isTitleFound) {
+                newUserConsent.add(userConsent);
+              }
+            }
+
+            emit(
+              GotUserConsents(
+                newUserConsent
+                  ..sort((a, b) => b.updatedDate.compareTo(a.updatedDate)),
+                gotConsentForms,
+                mandatoryFields
+                  ..sort((a, b) => a.priority.compareTo(b.priority)),
+              ),
+            );
+          },
         );
       },
     );

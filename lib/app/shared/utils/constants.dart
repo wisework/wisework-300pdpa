@@ -3,6 +3,8 @@ import 'package:flutter/services.dart';
 
 final List<String> languages = ['en-US', 'th-TH'];
 
+enum SortType { asc, desc }
+
 enum ActiveStatus { active, inactive }
 
 enum UserRoles { owner, editor, viewer }

@@ -20,6 +20,8 @@ class ConsentFormBloc extends Bloc<ConsentFormEvent, ConsentFormState> {
         super(const ConsentFormInitial()) {
     on<GetConsentFormsEvent>(_getConstFormsHandler);
     on<UpdateConsentFormEvent>(_updateConsentFormsEvent);
+    on<SearchConsentSearchChanged>(_getConstFormsSearching);
+    // on<GeneralConsentSortChanged>(_onGeneralConsentSortChanged);
   }
 
   final ConsentRepository _consentRepository;
@@ -140,4 +142,139 @@ class ConsentFormBloc extends Bloc<ConsentFormEvent, ConsentFormState> {
       );
     }
   }
+
+  Future<void> _getConstFormsSearching(
+    SearchConsentSearchChanged event,
+    Emitter<ConsentFormState> emit,
+  ) async {
+    if (event.companyId.isEmpty) {
+      emit(const ConsentFormError('Required company ID'));
+      return;
+    }
+
+    emit(const GettingConsentForms());
+
+    List<ConsentFormModel> gotConsentForms = [];
+    List<PurposeModel> gotPurposes = [];
+    List<PurposeCategoryModel> gotPurposeCategories = [];
+
+    final purposeResult = await _masterDataRepository.getPurposes(
+      event.companyId,
+    );
+    purposeResult.fold(
+      (failure) {
+        emit(ConsentFormError(failure.errorMessage));
+        return;
+      },
+      (purposes) {
+        gotPurposes = purposes;
+      },
+    );
+
+    final purposeCategoryResult =
+        await _masterDataRepository.getPurposeCategories(
+      event.companyId,
+    );
+    purposeCategoryResult.fold(
+      (failure) {
+        emit(ConsentFormError(failure.errorMessage));
+        return;
+      },
+      (purposeCategories) {
+        for (PurposeCategoryModel category in purposeCategories) {
+          final purposeIds =
+              category.purposes.map((purpose) => purpose.id).toList();
+          final purposes = gotPurposes
+              .where((purpose) => purposeIds.contains(purpose.id))
+              .toList();
+
+          gotPurposeCategories.add(category.copyWith(purposes: purposes));
+        }
+      },
+    );
+
+    final consentFormsResult = await _consentRepository.getConsentForms(
+      event.companyId,
+    );
+    consentFormsResult.fold(
+      (failure) {
+        emit(ConsentFormError(failure.errorMessage));
+        return;
+      },
+      (consentForms) {
+        for (ConsentFormModel consentForm in consentForms) {
+          gotConsentForms.add(
+            consentForm.copyWith(
+              purposeCategories: consentForm.purposeCategories.map((category) {
+                final purposeCategory = gotPurposeCategories.firstWhere(
+                  (pc) => pc.id == category.id,
+                  orElse: () => category,
+                );
+
+                return purposeCategory.copyWith(priority: category.priority);
+              }).toList(),
+            ),
+          );
+        }
+      },
+    );
+
+    if (event.search.isEmpty) {
+      emit(
+        GotConsentForms(
+          gotConsentForms
+            ..sort((a, b) => b.updatedDate.compareTo(a.updatedDate)),
+        ),
+      );
+    }
+    List<ConsentFormModel> newConsents = [];
+    for (ConsentFormModel consent in gotConsentForms) {
+      bool isTitleFound = false;
+      bool isPurposeCategoryFound = false;
+
+      if (consent.title.toString().contains(event.search)) {
+        isTitleFound = true;
+      }
+      for (PurposeCategoryModel category in gotPurposeCategories) {
+        if (category.title.map((e) => e.text).first.contains(event.search)) {
+          isPurposeCategoryFound = true;
+          print(isPurposeCategoryFound);
+        }
+      }
+      if (isTitleFound || isPurposeCategoryFound) {
+        newConsents.add(consent);
+      }
+    }
+
+    
+    emit(
+      GotConsentForms(
+        newConsents..sort((a, b) => b.updatedDate.compareTo(a.updatedDate)),
+      ),
+    );
+  }
+
+  //  void _onGeneralConsentSortChanged(
+  //   GeneralConsentSortChanged event,
+  //   Emitter<GeneralConsentState> emit,
+  // ) {
+  //   final sortConsents = state.consents;
+  //   if (state.sort == SortConsentListView.asc) {
+  //     sortConsents.sort(
+  //       (a, b) => b.createdDate.toString().compareTo(a.createdDate.toString()),
+  //     );
+  //     emit(state.copyWith(
+  //       consents: sortConsents,
+  //       sort: SortConsentListView.desc,
+  //     ));
+  //   } else if (state.sort == SortConsentListView.desc) {
+  //     sortConsents.sort(
+  //       (a, b) => a.createdDate.toString().compareTo(b.createdDate.toString()),
+  //     );
+  //     emit(state.copyWith(
+  //       consents: sortConsents,
+  //       sort: SortConsentListView.asc,
+  //     ));
+  //   }
+  // }
 }

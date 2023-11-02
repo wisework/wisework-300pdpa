@@ -78,6 +78,39 @@ class _UserConsentViewState extends State<UserConsentView> {
           tr('app.features.userconsents'),
           style: Theme.of(context).textTheme.titleLarge,
         ),
+        actions: [
+          IconButton(
+            onPressed: () {
+              context.push(UserConsentRoute.userConsentSearch.path);
+            },
+            icon: Container(
+              padding: const EdgeInsets.symmetric(
+                vertical: 6.0,
+                horizontal: 12.0,
+              ),
+              decoration: BoxDecoration(
+                color: Theme.of(context).colorScheme.primary,
+                borderRadius: BorderRadius.circular(10.0),
+              ),
+              child: RichText(
+                text: TextSpan(children: [
+                  WidgetSpan(
+                      child: Icon(
+                    Icons.search_rounded,
+                    size: 16,
+                    color: Theme.of(context).colorScheme.onPrimary,
+                  )),
+                  const WidgetSpan(child: SizedBox(width: 4.0)),
+                  TextSpan(
+                    text: tr('app.search'),
+                    style: Theme.of(context).textTheme.bodySmall?.copyWith(
+                        color: Theme.of(context).colorScheme.onPrimary),
+                  ),
+                ]),
+              ),
+            ),
+          ),
+        ],
       ),
       body: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -89,51 +122,66 @@ class _UserConsentViewState extends State<UserConsentView> {
               decoration: BoxDecoration(
                 color: Theme.of(context).colorScheme.onBackground,
               ),
-              child: BlocBuilder<UserConsentBloc, UserConsentState>(
-                builder: (context, state) {
-                  if (state is GotUserConsents) {
-                    return state.userConsents.isNotEmpty
-                        ? ListView.builder(
-                            itemCount: state.userConsents.length,
-                            itemBuilder: (context, index) {
-                              return _buildItemCard(
-                                context,
-                                userConsent: state.userConsents[index],
-                                consentForm: state.consentForms.firstWhere(
-                                  (role) =>
-                                      role.id ==
-                                      state.userConsents[index].consentFormId,
-                                  orElse: () => ConsentFormModel.empty(),
-                                ),
-                                mandatorySelected:
-                                    state.mandatoryFields.first.id,
-                              );
-                            },
-                          )
-                        : ExampleScreen(
-                            headderText: tr(
-                                'consentManagement.userConsent.userConsents'),
-                            buttonText: tr(
-                                'consentManagement.userConsent.createForm.create'),
-                            descriptionText:
-                                tr('consentManagement.userConsent.explain'),
-                            onPress: () {
-                              context.push(
-                                  ConsentFormRoute.createConsentForm.path);
-                            });
-                  }
-                  if (state is UserConsentError) {
-                    return Center(
-                      child: Text(
-                        state.message,
-                        style: Theme.of(context).textTheme.bodyMedium,
-                      ),
-                    );
-                  }
-                  return const Center(
-                    child: CircularProgressIndicator(),
-                  );
-                },
+              child: Column(
+                children: <Widget>[
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    crossAxisAlignment: CrossAxisAlignment.center,
+                    children: <Widget>[
+                      const Text('รายการความยินยอมที่ได้รับ'),
+                      _sortByDateButton(context),
+                    ],
+                  ),
+                  const SizedBox(height: UiConfig.lineSpacing),
+                  BlocBuilder<UserConsentBloc, UserConsentState>(
+                    builder: (context, state) {
+                      if (state is GotUserConsents) {
+                        return state.consentForms.isNotEmpty
+                            ? ListView.builder(
+                                shrinkWrap: true,
+                                itemCount: state.consentForms.length,
+                                itemBuilder: (context, index) {
+                                  return _buildItemCard(
+                                    context,
+                                    userConsent: state.userConsents[index],
+                                    consentForm: state.consentForms.firstWhere(
+                                      (role) =>
+                                          role.id ==
+                                          state.userConsents[index]
+                                              .consentFormId,
+                                      orElse: () => ConsentFormModel.empty(),
+                                    ),
+                                    mandatorySelected:
+                                        state.mandatoryFields.first.id,
+                                  );
+                                },
+                              )
+                            : ExampleScreen(
+                                headderText: tr(
+                                    'consentManagement.consentForm.consentForms'),
+                                buttonText: tr(
+                                    'consentManagement.consentForm.createForm.create'),
+                                descriptionText:
+                                    tr('consentManagement.consentForm.explain'),
+                                onPress: () {
+                                  context.push(
+                                      ConsentFormRoute.createConsentForm.path);
+                                });
+                      }
+                      if (state is UserConsentError) {
+                        return Center(
+                          child: Text(
+                            state.message,
+                            style: Theme.of(context).textTheme.bodyMedium,
+                          ),
+                        );
+                      }
+                      return const Center(
+                        child: CircularProgressIndicator(),
+                      );
+                    },
+                  ),
+                ],
               ),
             ),
           ),
@@ -147,7 +195,33 @@ class _UserConsentViewState extends State<UserConsentView> {
     );
   }
 
-  Column _buildItemCard(
+  Widget _sortByDateButton(BuildContext context) {
+    return IconButton(
+      onPressed: () {},
+      padding: EdgeInsets.zero,
+      icon: Column(
+        children: [
+          RichText(
+              text: TextSpan(
+            children: [
+              TextSpan(
+                  text: tr("consentManagement.listage.filter.date"),
+                  style: Theme.of(context).textTheme.bodyMedium),
+              WidgetSpan(
+                child: Icon(
+                  Icons.arrow_drop_down,
+                  size: 20,
+                  color: Theme.of(context).colorScheme.secondary,
+                ),
+              ),
+            ],
+          )),
+        ],
+      ),
+    );
+  }
+
+  _buildItemCard(
     BuildContext context, {
     required UserConsentModel userConsent,
     required ConsentFormModel consentForm,
@@ -169,53 +243,52 @@ class _UserConsentViewState extends State<UserConsentView> {
         MaterialInkWell(
           onTap: () {
             context.push(
-              UserConsentRoute.userConsentDetail.path
-                  .replaceFirst(':id', userConsent.id),
+              ConsentFormRoute.consentFormDetail.path
+                  .replaceFirst(':id', consentForm.id),
             );
           },
           child: Padding(
             padding: const EdgeInsets.all(UiConfig.defaultPaddingSpacing),
-            child: Column(
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
               crossAxisAlignment: CrossAxisAlignment.start,
               children: <Widget>[
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: <Widget>[
-                    Expanded(
-                      child: Column(
-                        mainAxisSize: MainAxisSize.min,
+                Expanded(
+                  child: Column(
+                    mainAxisSize: MainAxisSize.min,
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: <Widget>[
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         crossAxisAlignment: CrossAxisAlignment.start,
-                        children: <Widget>[
-                          Text(
-                            title.isNotEmpty
-                                ? title
-                                : 'This data is not stored.',
-                            style: Theme.of(context).textTheme.titleMedium,
-                          ),
-                          Visibility(
-                            visible: consentForm.title.isNotEmpty,
-                            child: Padding(
-                              padding: const EdgeInsets.only(
-                                top: UiConfig.textLineSpacing,
-                              ),
-                              child: Text(
-                                consentForm.title.first.text,
-                                style: Theme.of(context).textTheme.bodySmall,
-                              ),
+                        children: [
+                          Expanded(
+                            child: Text(
+                              title,
+                              style: Theme.of(context).textTheme.titleMedium,
+                              maxLines: 3,
                             ),
+                          ),
+                          Text(
+                            dateConsentForm,
+                            style: Theme.of(context).textTheme.bodyMedium,
                           ),
                         ],
                       ),
-                    ),
-                    Padding(
-                      padding: const EdgeInsets.only(left: 40.0),
-                      child: Text(
-                        dateConsentForm,
-                        style: Theme.of(context).textTheme.bodySmall,
+                      Visibility(
+                        visible: consentForm.title.isNotEmpty,
+                        child: Padding(
+                          padding: const EdgeInsets.only(
+                            top: UiConfig.textLineSpacing,
+                          ),
+                          child: Text(
+                            consentForm.title.first.text,
+                            style: Theme.of(context).textTheme.bodySmall,
+                          ),
+                        ),
                       ),
-                    ),
-                  ],
+                    ],
+                  ),
                 ),
               ],
             ),
