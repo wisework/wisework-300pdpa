@@ -10,6 +10,16 @@ class UserRepository {
 
   final UserApi _api;
 
+  ResultFuture<List<UserModel>> getUsers() async {
+    try {
+      final user = await _api.getUsers();
+
+      return Right(user);
+    } on ApiException catch (error) {
+      return Left(ApiFailure.fromException(error));
+    }
+  }
+
   ResultFuture<UserModel> getUserById(String userId) async {
     try {
       final user = await _api.getUserById(userId);

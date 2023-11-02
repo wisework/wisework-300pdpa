@@ -6,6 +6,17 @@ class UserApi {
 
   final FirebaseFirestore _firestore;
 
+  Future<List<UserModel>> getUsers() async {
+    final result = await _firestore.collection('Users').get();
+
+    List<UserModel> users = [];
+    for (var document in result.docs) {
+      users.add(UserModel.fromDocument(document));
+    }
+
+    return users;
+  }
+
   Future<UserModel?> getUserById(String userId) async {
     final result = await _firestore.collection('Users').doc(userId).get();
 

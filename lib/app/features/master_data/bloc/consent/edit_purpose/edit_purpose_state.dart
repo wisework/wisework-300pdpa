@@ -84,5 +84,5 @@ class DeletedCurrentPurpose extends EditPurposeState {
   final String purposeId;
 
   @override
-  List<Object> get props => [];
+  List<Object> get props => [purposeId];
 }

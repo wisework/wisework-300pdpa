@@ -131,6 +131,30 @@ class AuthenticationApi {
     return UserModel.empty();
   }
 
+  Future<void> updatePassword(
+    String currentPassword,
+    String newPassword,
+  ) async {
+    final user = _auth.currentUser;
+    if (user != null) {
+      final credential = EmailAuthProvider.credential(
+        email: user.email ?? '',
+        password: currentPassword,
+      );
+
+      try {
+        await user.reauthenticateWithCredential(credential);
+      } catch (error) {
+        throw const ApiException(
+          message: 'Password is wrong',
+          statusCode: 401,
+        );
+      }
+
+      await user.updatePassword(newPassword);
+    }
+  }
+
   Future<void> verifyEmail() async {
     final user = _auth.currentUser;
     if (user != null) {

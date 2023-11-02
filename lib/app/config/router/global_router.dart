@@ -5,6 +5,7 @@ import 'package:pdpa/app/features/consent_management/user_consent/routes/user_co
 import 'package:pdpa/app/features/data_subject_right/routes/data_subject_right_route.dart';
 import 'package:pdpa/app/features/general/routes/general_route.dart';
 import 'package:pdpa/app/features/master_data/routes/master_data_route.dart';
+import 'package:pdpa/app/features/user/routes/user_route.dart';
 
 class GlobalRouter {
   static final String initial = AuthenticationRoute.splash.path;
@@ -18,7 +19,8 @@ class GlobalRouter {
         ...ConsentFormRoute.routes,
         ...UserConsentRoute.routes,
         ...MasterDataRoute.routes,
-        ...DataSubjectRightRoute.routes
+        ...DataSubjectRightRoute.routes,
+        ...UserRoute.routes,
       ],
     );
   }

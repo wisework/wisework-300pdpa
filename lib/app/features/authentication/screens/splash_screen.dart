@@ -36,7 +36,9 @@ class _SplashScreenState extends State<SplashScreen> {
     final event = InitialAppSettingsEvent(user: user);
     context.read<AppSettingsBloc>().add(event);
 
-    if (user.companies.isEmpty || user.currentCompany.isEmpty) {
+    if (user.isFirstSignIn) {
+      context.pushReplacement(AuthenticationRoute.resetPassword.path);
+    } else if (user.companies.isEmpty || user.currentCompany.isEmpty) {
       context.pushReplacement(AuthenticationRoute.signUpCompany.path);
     } else {
       context.pushReplacement(GeneralRoute.home.path);
