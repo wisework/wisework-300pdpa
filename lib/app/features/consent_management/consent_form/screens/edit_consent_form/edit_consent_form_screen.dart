@@ -16,7 +16,9 @@ import 'package:pdpa/app/data/models/master_data/purpose_category_model.dart';
 import 'package:pdpa/app/data/models/master_data/purpose_model.dart';
 import 'package:pdpa/app/features/authentication/bloc/sign_in/sign_in_bloc.dart';
 import 'package:pdpa/app/features/consent_management/consent_form/bloc/consent_form/consent_form_bloc.dart';
+import 'package:pdpa/app/features/consent_management/consent_form/bloc/consent_form_detail/consent_form_detail_bloc.dart';
 import 'package:pdpa/app/features/consent_management/consent_form/bloc/edit_consent_form/edit_consent_form_bloc.dart';
+import 'package:pdpa/app/features/consent_management/consent_form/cubit/current_consent_form_detail/current_consent_form_detail_cubit.dart';
 import 'package:pdpa/app/features/consent_management/consent_form/screens/edit_consent_form/screens/create_consent_form_success.dart';
 import 'package:pdpa/app/injection.dart';
 import 'package:pdpa/app/shared/utils/constants.dart';
@@ -204,6 +206,8 @@ class _EditConsentFormViewState extends State<EditConsentFormView> {
 
   bool errorPurposeCategoryEmpty = false;
 
+  bool isSave = false;
+
   late String language;
 
   @override
@@ -376,19 +380,25 @@ class _EditConsentFormViewState extends State<EditConsentFormView> {
         context.read<EditConsentFormBloc>().add(event);
       }
     }
+    setState(() {
+      isSave = true;
+    });
   }
 
   void _goBackAndUpdate() {
-    if (!widget.isNewConsentForm) {
-      final event = UpdateConsentFormEvent(
-        consentForm: consentForm,
-        updateType: UpdateType.updated,
-      );
+    // if (!widget.isNewConsentForm && isSave == true) {
+    //   final event = UpdateConsentFormDetailEvent(
+    //     consentForm: consentForm,
+    //     updateType: UpdateType.updated,
+    //   );
 
-      context.read<ConsentFormBloc>().add(event);
-    }
+    //   context.read<ConsentFormDetailBloc>().add(event);
 
-    context.pop();
+    //   context.read<CurrentConsentFormDetailCubit>().setConsentForm(consentForm);
+    // }
+
+    // context.pop();
+    print(isSave);
   }
 
   void _updateEditConsentFormState(
@@ -412,6 +422,20 @@ class _EditConsentFormViewState extends State<EditConsentFormView> {
           style: Theme.of(context).textTheme.titleLarge,
         ),
         actions: [
+          // CustomIconButton(
+          //   onPressed: () {
+          //     // print(widget.consentForm.title);
+          //     // print("======================");
+          //     // print(consentForm.title);
+          //     // print("======================");
+          //     // print(widget.consentForm.description);
+          //     // print("======================");
+          //     // print(consentForm.description);
+          //   },
+          //   icon: Ionicons.save_outline,
+          //   iconColor: Theme.of(context).colorScheme.primary,
+          //   backgroundColor: Theme.of(context).colorScheme.onBackground,
+          // )
           _buildSaveButton(),
         ],
       ),

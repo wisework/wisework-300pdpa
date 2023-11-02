@@ -119,8 +119,6 @@ class ConsentFormBloc extends Bloc<ConsentFormEvent, ConsentFormState> {
 
       switch (event.updateType) {
         case UpdateType.created:
-          updated = consentForms.map((consentForm) => consentForm).toList()
-            ..add(event.consentForm);
           break;
         case UpdateType.updated:
           for (ConsentFormModel consentForm in consentForms) {
