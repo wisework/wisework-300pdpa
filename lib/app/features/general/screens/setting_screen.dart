@@ -1,9 +1,10 @@
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
 import 'package:ionicons/ionicons.dart';
 import 'package:pdpa/app/config/config.dart';
+import 'package:pdpa/app/features/general/bloc/theme_provider.dart';
+import 'package:pdpa/app/config/themes/pdpa_theme_data.dart';
 import 'package:pdpa/app/data/models/authentication/user_model.dart';
 import 'package:pdpa/app/features/authentication/bloc/sign_in/sign_in_bloc.dart';
 import 'package:pdpa/app/features/general/bloc/app_settings/app_settings_bloc.dart';
@@ -16,6 +17,7 @@ import 'package:pdpa/app/shared/widgets/customs/custom_container.dart';
 import 'package:pdpa/app/shared/widgets/customs/custom_dropdown_button.dart';
 import 'package:pdpa/app/shared/widgets/customs/custom_icon_button.dart';
 import 'package:pdpa/app/shared/widgets/templates/pdpa_app_bar.dart';
+import 'package:provider/provider.dart';
 
 class SettingScreen extends StatefulWidget {
   const SettingScreen({super.key});
@@ -109,6 +111,10 @@ class _SettingViewState extends State<SettingView> {
     }
   }
 
+  void _toggleTheme() {
+    Provider.of<ThemeProvider>(context, listen: false).toggleTheme();
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -133,6 +139,7 @@ class _SettingViewState extends State<SettingView> {
             const SizedBox(height: UiConfig.lineSpacing),
             _buildGeneralSection(),
             const SizedBox(height: UiConfig.lineSpacing),
+            _buildThemeSwitchButton(),
           ],
         ),
       ),
@@ -140,6 +147,27 @@ class _SettingViewState extends State<SettingView> {
         onClosed: () {
           _scaffoldKey.currentState?.closeDrawer();
         },
+      ),
+    );
+  }
+
+  Widget _buildThemeSwitchButton() {
+    return CustomContainer(
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        children: <Widget>[
+          Text(
+            tr('app.mode'),
+            style: Theme.of(context).textTheme.bodyMedium,
+          ),
+          Switch(
+            value: context.watch<ThemeProvider>().currentTheme ==
+                PdpaThemeData.darkThemeData,
+            onChanged: (value) {
+              _toggleTheme();
+            },
+          ),
+        ],
       ),
     );
   }

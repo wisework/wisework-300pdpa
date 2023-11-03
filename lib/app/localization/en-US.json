@@ -2,6 +2,7 @@
     "app": {
         "name": "PDPA Management Platform",
         "language": "Language",
+        "mode" : "Dark Mode",
         "day": "Day",
         "month": "Month",
         "year": "Year",
@@ -14,12 +15,19 @@
         "features": {
             "home": "Home",
             "consentmanagement": "Consent Management",
+            "consent" : "Consent",
+            "createcsf" : "Add new consent",
+            "masterdatas" : "MasterData",
             "consentforms": "Consent Forms",
             "userconsents": "User Consents",
             "datasubjectright": "Data Subject Right",
             "masterdata": "Master Data",
             "setting": "Setting",
-            "createNewConsentForm": "Create New Consent Form"
+            "createNewConsentForm": "Create New Consent Form",
+            "seeMore" : "See more",
+            "resultNotFound" : "Result Not Found!",
+            "description" : "You have not created the form yet. Add some consent form, just click create new consent form button and go ahead."
+            
         },
         "search": "Search",
         "agree": "Agree",
@@ -62,11 +70,11 @@
     },
     "general": {
         "home": {
-            "welcome": "Welcome",
+            "welcome": "Welcome :)",
             "hello": "Hello",
             "tagline": "What you are looking for today",
-            "explore": "Explore",
-            "recentlyUsed": "Recently used",
+            "explore": "Explore Activity",
+            "recentlyUsed": "Recent consents",
             "thisDataIsNotStored.": "This data is not stored."
         }
     },
