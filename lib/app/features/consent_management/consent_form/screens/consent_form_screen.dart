@@ -9,11 +9,11 @@ import 'package:pdpa/app/data/models/master_data/localized_model.dart';
 import 'package:pdpa/app/data/models/master_data/purpose_category_model.dart';
 import 'package:pdpa/app/features/authentication/bloc/sign_in/sign_in_bloc.dart';
 import 'package:pdpa/app/features/consent_management/consent_form/bloc/consent_form/consent_form_bloc.dart';
-import 'package:pdpa/app/features/consent_management/consent_form/cubit/consent_form/cubit/consent_form_cubit.dart';
+
 import 'package:pdpa/app/features/consent_management/consent_form/routes/consent_form_route.dart';
 
 import 'package:pdpa/app/shared/drawers/pdpa_drawer.dart';
-import 'package:pdpa/app/shared/utils/constants.dart';
+
 import 'package:pdpa/app/shared/widgets/customs/custom_icon_button.dart';
 import 'package:pdpa/app/shared/widgets/material_ink_well.dart';
 import 'package:pdpa/app/shared/widgets/screens/example_screen.dart';
@@ -38,16 +38,10 @@ class _ConsentFormScreenState extends State<ConsentFormScreen> {
 
   void _initialData() {
     final bloc = context.read<SignInBloc>();
-    final cubit = context.read<ConsentFormCubit>();
 
-    String companyId = '';
     if (bloc.state is SignedInUser) {
-      companyId = (bloc.state as SignedInUser).user.currentCompany;
       language = (bloc.state as SignedInUser).user.defaultLanguage;
     }
-
-    context.read<ConsentFormBloc>().add(
-        GetConsentFormsEvent(companyId: companyId, sort: cubit.state.sort));
   }
 
   @override
@@ -67,6 +61,13 @@ class ConsentFormView extends StatefulWidget {
 
 class _ConsentFormViewState extends State<ConsentFormView> {
   final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
+  bool _sortAscending = true;
+
+  void _sortProducts(bool ascending) {
+    setState(() {
+      _sortAscending = ascending;
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -147,14 +148,22 @@ class _ConsentFormViewState extends State<ConsentFormView> {
                   BlocBuilder<ConsentFormBloc, ConsentFormState>(
                     builder: (context, state) {
                       if (state is GotConsentForms) {
+                        final consentForms = state.consentForms;
+                        if (_sortAscending == true) {
+                          consentForms.sort(((a, b) =>
+                              a.updatedDate.compareTo(b.updatedDate)));
+                        } else {
+                          consentForms.sort(((a, b) =>
+                              b.updatedDate.compareTo(a.updatedDate)));
+                        }
                         return state.consentForms.isNotEmpty
                             ? ListView.builder(
                                 shrinkWrap: true,
-                                itemCount: state.consentForms.length,
+                                itemCount: consentForms.length,
                                 itemBuilder: (context, index) {
                                   return _buildItemCard(
                                     context,
-                                    consentForm: state.consentForms[index],
+                                    consentForm: consentForms[index],
                                     language: widget.language,
                                   );
                                 },
@@ -247,18 +256,9 @@ class _ConsentFormViewState extends State<ConsentFormView> {
   // }
 
   Widget _sortByDateButton(BuildContext context) {
-    final cubit = context.read<ConsentFormCubit>();
     return IconButton(
       onPressed: () {
-        if (cubit.state.sort == SortType.asc) {
-          setState(() {
-            cubit.sortConsentFormChange(SortType.desc);
-          });
-        } else {
-          setState(() {
-            cubit.sortConsentFormChange(SortType.asc);
-          });
-        }
+        _sortProducts(!_sortAscending);
       },
       padding: EdgeInsets.zero,
       icon: Column(
@@ -270,7 +270,7 @@ class _ConsentFormViewState extends State<ConsentFormView> {
                   text: tr("consentManagement.listage.filter.date"),
                   style: Theme.of(context).textTheme.bodyMedium),
               WidgetSpan(
-                child: cubit.state.sort == SortType.desc
+                child: _sortAscending
                     ? Icon(
                         Icons.arrow_drop_down,
                         size: 20,
