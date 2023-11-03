@@ -15,21 +15,23 @@ import 'package:pdpa/app/shared/widgets/customs/custom_text_field.dart';
 import 'package:pdpa/app/shared/widgets/material_ink_well.dart';
 import 'package:pdpa/app/shared/widgets/screens/example_screen.dart';
 
-class SearchConsentFormScreen extends StatefulWidget {
-  const SearchConsentFormScreen({
+class SearchConsentFormModal extends StatefulWidget {
+  const SearchConsentFormModal({
     super.key,
     required this.initialConsentForms,
+    required this.language,
   });
 
   final List<ConsentFormModel> initialConsentForms;
+  final String language;
 
   @override
-  State<SearchConsentFormScreen> createState() =>
-      _SearchConsentFormScreenState();
+  State<SearchConsentFormModal> createState() => _SearchConsentFormModalState();
 }
 
-class _SearchConsentFormScreenState extends State<SearchConsentFormScreen> {
+class _SearchConsentFormModalState extends State<SearchConsentFormModal> {
   late UserModel currentUser;
+  late TextEditingController searchController;
 
   @override
   void initState() {
@@ -38,9 +40,17 @@ class _SearchConsentFormScreenState extends State<SearchConsentFormScreen> {
     _initialData();
   }
 
-  void _initialData() {
-    final bloc = context.read<SignInBloc>();
+  @override
+  void dispose() {
+    searchController.dispose();
 
+    super.dispose();
+  }
+
+  void _initialData() {
+    searchController = TextEditingController();
+
+    final bloc = context.read<SignInBloc>();
     if (bloc.state is SignedInUser) {
       currentUser = (bloc.state as SignedInUser).user;
     }
@@ -53,144 +63,103 @@ class _SearchConsentFormScreenState extends State<SearchConsentFormScreen> {
         ..initialConsentForm(
           widget.initialConsentForms,
         ),
-      child: SearchConsentFormView(currentUser: currentUser),
-    );
-  }
-}
-
-class SearchConsentFormView extends StatefulWidget {
-  const SearchConsentFormView({
-    super.key,
-    required this.currentUser,
-  });
-
-  final UserModel currentUser;
-
-  @override
-  State<SearchConsentFormView> createState() => _SearchConsentFormViewState();
-}
-
-class _SearchConsentFormViewState extends State<SearchConsentFormView> {
-  late UserModel user;
-  late TextEditingController searchController;
-
-  @override
-  void initState() {
-    super.initState();
-
-    user = widget.currentUser;
-    searchController = TextEditingController();
-  }
-
-  @override
-  void dispose() {
-    searchController.dispose();
-
-    super.dispose();
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        backgroundColor: Theme.of(context).colorScheme.onBackground,
-        automaticallyImplyLeading: false,
-        titleSpacing: 0,
-        title: Row(
-          children: <Widget>[
-            CustomIconButton(
-              onPressed: () {
-                // final event = SearchConsentSearchChanged(
-                //   companyId: user.currentCompany,
-                //   search: "",
-                // );
-                // context.read<ConsentFormBloc>().add(event);
-
-                Navigator.pop(context);
-              },
-              icon: Icons.chevron_left_outlined,
-              iconColor: Theme.of(context).colorScheme.primary,
-              backgroundColor: Theme.of(context).colorScheme.onBackground,
-            ),
-            Expanded(
-              child: SizedBox(
-                width: double.infinity,
-                height: 40.0,
-                child: Builder(builder: (context) {
-                  return CustomTextField(
-                    controller: searchController,
-                    hintText: 'ค้นหา',
-                    onChanged: (search) {
-                      // final event = SearchConsentSearchChanged(
-                      //   companyId: user.currentCompany,
-                      //   search: search,
-                      // );
-                      // context.read<ConsentFormBloc>().add(event);
-                    },
-                  );
-                }),
+      child: Scaffold(
+        appBar: AppBar(
+          backgroundColor: Theme.of(context).colorScheme.onBackground,
+          automaticallyImplyLeading: false,
+          titleSpacing: 0,
+          title: Row(
+            children: <Widget>[
+              CustomIconButton(
+                onPressed: () {
+                  Navigator.pop(context);
+                },
+                icon: Icons.chevron_left_outlined,
+                iconColor: Theme.of(context).colorScheme.primary,
+                backgroundColor: Theme.of(context).colorScheme.onBackground,
               ),
-            ),
-            CustomIconButton(
-              backgroundColor: Theme.of(context).colorScheme.onBackground,
-              icon: Ionicons.close_outline,
-              iconColor: Theme.of(context).colorScheme.primary,
-              onPressed: () {
-                searchController.clear();
-                // final event = SearchConsentSearchChanged(
-                //   companyId: user.currentCompany,
-                //   search: "",
-                // );
-                // context.read<ConsentFormBloc>().add(event);
-              },
-            ),
-          ],
+              Expanded(
+                child: SizedBox(
+                  width: double.infinity,
+                  height: 40.0,
+                  child: Builder(builder: (context) {
+                    return CustomTextField(
+                      controller: searchController,
+                      hintText: 'ค้นหา',
+                      onChanged: (search) {
+                        final cubit = context.read<SearchConsentFormCubit>();
+                        cubit.searchConsentForm(search, widget.language);
+                        // final event = SearchConsentSearchChanged(
+                        //   companyId: user.currentCompany,
+                        //   search: search,
+                        // );
+                        // context.read<ConsentFormBloc>().add(event);
+                      },
+                    );
+                  }),
+                ),
+              ),
+              Builder(builder: (context) {
+                return CustomIconButton(
+                  backgroundColor: Theme.of(context).colorScheme.onBackground,
+                  icon: Ionicons.close_outline,
+                  iconColor: Theme.of(context).colorScheme.primary,
+                  onPressed: () {
+                    final cubit = context.read<SearchConsentFormCubit>();
+                    cubit.searchConsentForm('', widget.language);
+
+                    searchController.clear();
+                  },
+                );
+              }),
+            ],
+          ),
         ),
-      ),
-      body: Column(
-        children: [
-          const SizedBox(height: UiConfig.lineSpacing),
-          Expanded(
-            child: Container(
-              padding: const EdgeInsets.all(UiConfig.defaultPaddingSpacing),
-              decoration: BoxDecoration(
-                color: Theme.of(context).colorScheme.onBackground,
-              ),
-              child:
-                  BlocBuilder<SearchConsentFormCubit, SearchConsentFormState>(
-                builder: (context, state) {
-                  if (state.consentForms.isNotEmpty) {
-                    return ListView.builder(
-                      shrinkWrap: true,
-                      itemCount: state.consentForms.length,
-                      itemBuilder: (context, index) {
-                        return _buildItemCard(
-                          context,
-                          consentForm: state.consentForms[index],
-                          language: user.defaultLanguage,
+        body: Column(
+          children: [
+            const SizedBox(height: UiConfig.lineSpacing),
+            Expanded(
+              child: Container(
+                padding: const EdgeInsets.all(UiConfig.defaultPaddingSpacing),
+                decoration: BoxDecoration(
+                  color: Theme.of(context).colorScheme.onBackground,
+                ),
+                child:
+                    BlocBuilder<SearchConsentFormCubit, SearchConsentFormState>(
+                  builder: (context, state) {
+                    if (state.consentForms.isNotEmpty) {
+                      return ListView.builder(
+                        shrinkWrap: true,
+                        itemCount: state.consentForms.length,
+                        itemBuilder: (context, index) {
+                          return _buildItemCard(
+                            context,
+                            consentForm: state.consentForms[index],
+                            language: widget.language,
+                          );
+                        },
+                      );
+                    }
+
+                    return ExampleScreen(
+                      headderText:
+                          tr('consentManagement.consentForm.consentForms'),
+                      buttonText:
+                          tr('consentManagement.consentForm.createForm.create'),
+                      descriptionText:
+                          tr('consentManagement.consentForm.explain'),
+                      onPress: () {
+                        context.push(
+                          ConsentFormRoute.createConsentForm.path,
                         );
                       },
                     );
-                  }
-
-                  return ExampleScreen(
-                    headderText:
-                        tr('consentManagement.consentForm.consentForms'),
-                    buttonText:
-                        tr('consentManagement.consentForm.createForm.create'),
-                    descriptionText:
-                        tr('consentManagement.consentForm.explain'),
-                    onPress: () {
-                      context.push(
-                        ConsentFormRoute.createConsentForm.path,
-                      );
-                    },
-                  );
-                },
+                  },
+                ),
               ),
             ),
-          ),
-        ],
+          ],
+        ),
       ),
     );
   }

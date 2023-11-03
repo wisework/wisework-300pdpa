@@ -53,26 +53,3 @@ class UpdateConsentFormEvent extends ConsentFormEvent {
         updateType,
       ];
 }
-
-class SearchConsentSearchChanged extends ConsentFormEvent {
-  const SearchConsentSearchChanged({
-    required this.companyId,
-    required this.search,
-  });
-
-  final String search;
-  final String companyId;
-
-  @override
-  List<Object> get props => [
-        companyId,
-        search,
-      ];
-}
-
-class ConsentFormsSortChanged extends ConsentFormEvent {
-  const ConsentFormsSortChanged();
-
-  @override
-  List<Object> get props => [];
-}

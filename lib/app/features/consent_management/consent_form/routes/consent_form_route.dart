@@ -4,7 +4,6 @@ import 'package:pdpa/app/features/consent_management/consent_form/screens/consen
 import 'package:pdpa/app/features/consent_management/consent_form/screens/consent_form_settings/consent_form_settings_screen.dart';
 import 'package:pdpa/app/features/consent_management/consent_form/screens/consent_form_settings/screens/edit_consent_theme_screen.dart';
 import 'package:pdpa/app/features/consent_management/consent_form/screens/edit_consent_form/edit_consent_form_screen.dart';
-import 'package:pdpa/app/features/consent_management/consent_form/screens/search_consent_form/search_consent_form_screen.dart';
 import 'package:pdpa/app/features/consent_management/consent_form/screens/user_consent_form_screen.dart';
 
 class ConsentFormRoute {
@@ -69,11 +68,6 @@ class ConsentFormRoute {
     ),
   );
 
-  static final GoRoute searchConsentFormList = GoRoute(
-    path: '/consent-form/search',
-    builder: (context, _) => const SearchConsentFormScreen(),
-  );
-
   static final List<GoRoute> routes = <GoRoute>[
     consentForm,
     createConsentForm,
@@ -84,6 +78,5 @@ class ConsentFormRoute {
     editConsentTheme,
     copyConsentTheme,
     userConsentForm,
-    searchConsentFormList,
   ];
 }

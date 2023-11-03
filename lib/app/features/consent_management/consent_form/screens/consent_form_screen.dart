@@ -2,6 +2,7 @@ import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
+import 'package:modal_bottom_sheet/modal_bottom_sheet.dart';
 
 import 'package:pdpa/app/config/config.dart';
 import 'package:pdpa/app/data/models/consent_management/consent_form_model.dart';
@@ -11,6 +12,7 @@ import 'package:pdpa/app/features/authentication/bloc/sign_in/sign_in_bloc.dart'
 import 'package:pdpa/app/features/consent_management/consent_form/bloc/consent_form/consent_form_bloc.dart';
 
 import 'package:pdpa/app/features/consent_management/consent_form/routes/consent_form_route.dart';
+import 'package:pdpa/app/features/consent_management/consent_form/widgets/search_consent_form_modal.dart';
 
 import 'package:pdpa/app/shared/drawers/pdpa_drawer.dart';
 
@@ -61,9 +63,28 @@ class ConsentFormView extends StatefulWidget {
 
 class _ConsentFormViewState extends State<ConsentFormView> {
   final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
-  bool _sortAscending = true;
 
-  void _sortProducts(bool ascending) {
+  bool _sortAscending = false;
+
+  void _openSeachConsentFormModal() {
+    final bloc = context.read<ConsentFormBloc>();
+
+    List<ConsentFormModel> consentForms = [];
+    if (bloc.state is GotConsentForms) {
+      consentForms = (bloc.state as GotConsentForms).consentForms;
+    }
+
+    showBarModalBottomSheet(
+      context: context,
+      backgroundColor: Colors.transparent,
+      builder: (context) => SearchConsentFormModal(
+        initialConsentForms: consentForms,
+        language: widget.language,
+      ),
+    );
+  }
+
+  void _sortConsentForms(bool ascending) {
     setState(() {
       _sortAscending = ascending;
     });
@@ -88,9 +109,7 @@ class _ConsentFormViewState extends State<ConsentFormView> {
         ),
         actions: [
           IconButton(
-            onPressed: () {
-              context.push(ConsentFormRoute.searchConsentFormList.path);
-            },
+            onPressed: _openSeachConsentFormModal,
             icon: Container(
               padding: const EdgeInsets.symmetric(
                 vertical: 6.0,
@@ -258,7 +277,7 @@ class _ConsentFormViewState extends State<ConsentFormView> {
   Widget _sortByDateButton(BuildContext context) {
     return IconButton(
       onPressed: () {
-        _sortProducts(!_sortAscending);
+        _sortConsentForms(!_sortAscending);
       },
       padding: EdgeInsets.zero,
       icon: Column(
@@ -409,11 +428,7 @@ class _ConsentFormViewState extends State<ConsentFormView> {
                 Theme.of(context).colorScheme.outlineVariant.withOpacity(0.5),
           ),
         ),
-        
       ],
     );
-    
   }
-  
-  
 }
