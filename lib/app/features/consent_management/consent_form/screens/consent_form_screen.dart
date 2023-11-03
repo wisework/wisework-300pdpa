@@ -386,7 +386,11 @@ class _ConsentFormViewState extends State<ConsentFormView> {
                 Theme.of(context).colorScheme.outlineVariant.withOpacity(0.5),
           ),
         ),
+        
       ],
     );
+    
   }
+  
+  
 }

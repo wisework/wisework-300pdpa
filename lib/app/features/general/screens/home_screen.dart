@@ -62,40 +62,69 @@ class _HomeScreenState extends State<HomeScreen> {
         .add(GetConsentFormsEvent(companyId: companyId));
   }
 
-  void _selectMenuDrawer(DrawerMenuModel menu) {
-    context.read<DrawerBloc>().add(SelectMenuDrawerEvent(menu: menu));
-    context.pushReplacement(menu.route.path);
-  }
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       key: _scaffoldKey,
-      appBar: PdpaAppBar(
-        leadingIcon: CustomIconButton(
-          onPressed: () {
-            _scaffoldKey.currentState?.openDrawer();
-          },
-          icon: Ionicons.menu_outline,
-          iconColor: Theme.of(context).colorScheme.primary,
-          backgroundColor: Theme.of(context).colorScheme.onBackground,
+      appBar: AppBar(
+        shadowColor: Theme.of(context).colorScheme.background,
+        surfaceTintColor: Theme.of(context).colorScheme.onBackground,
+        backgroundColor: Theme.of(context).colorScheme.onBackground,
+        title: Image.asset(
+          'assets/images/wisework-logo-mini.png', // เปลี่ยนเป็นที่อยู่ของไฟล์โลโก้ของคุณ
+          height: 30, // ปรับความสูงตามที่คุณต้องการ
         ),
-        title: SizedBox(
-          width: 110.0,
-          child: Image.asset(
-            'assets/images/wisework-logo-mini.png',
-            fit: BoxFit.contain,
+        centerTitle: true,
+        leading: Builder(
+          builder: (context) => IconButton(
+            icon: Icon(
+              Ionicons.menu_outline,
+              color: Theme.of(context).colorScheme.primary,
+            ),
+            onPressed: () {
+              _scaffoldKey.currentState?.openDrawer();
+            },
+            splashColor:
+                Theme.of(context).colorScheme.surfaceTint.withOpacity(0.3),
           ),
         ),
-        // actions: [
-        //   CustomIconButton(
-        //     onPressed: () {},
-        //     icon: Ionicons.notifications_outline,
-        //     iconColor: Theme.of(context).colorScheme.primary,
-        //     backgroundColor: Theme.of(context).colorScheme.onBackground,
-        //   ),
-        // ],
       ),
+      // AppBar(
+      //   shadowColor: Theme.of(context).colorScheme.background,
+      //   surfaceTintColor: Theme.of(context).colorScheme.onBackground,
+      //   backgroundColor: Theme.of(context).colorScheme.onBackground,
+      //   automaticallyImplyLeading: false,
+      //   title: Row(
+      //     mainAxisAlignment:
+      //         MainAxisAlignment.start, // Align items to the start (left)
+      //     children: <Widget>[
+      //       InkWell(
+      //         onTap: () {
+      //           _scaffoldKey.currentState?.openDrawer();
+      //         },
+      //         splashColor:
+      //             Theme.of(context).colorScheme.surfaceTint.withOpacity(0.3),
+      //         borderRadius: BorderRadius.circular(8.0),
+      //         child: Padding(
+      //           padding: const EdgeInsets.all(8.0),
+      //           child: Icon(
+      //             Ionicons.menu_outline,
+      //             color: Theme.of(context).colorScheme.primary,
+      //           ),
+      //         ),
+      //       ),
+      //       Expanded(
+      //         child: SizedBox(
+      //           height: 50,
+      //           width: 50,
+      //           child: Image.asset(
+      //             'assets/images/wisework-logo-mini.png',
+      //           ),
+      //         ),
+      //       ),
+      //     ],
+      //   ),
+      // ),
       body: SingleChildScrollView(
         child: BlocBuilder<SignInBloc, SignInState>(
           builder: (context, state) {
@@ -103,9 +132,19 @@ class _HomeScreenState extends State<HomeScreen> {
               return Column(
                 children: [
                   const SizedBox(
-                    height: UiConfig.defaultPaddingSpacing,
+                    height: UiConfig.textSpacing,
                   ),
-                  CustomContainer(
+                  Container(
+                    height: 150,
+                    width: double.infinity,
+                    decoration: BoxDecoration(
+                      borderRadius: BorderRadius.circular(10.0),
+                      image: const DecorationImage(
+                        image: AssetImage("assets/images/3.png"),
+                        fit: BoxFit
+                            .fill, // Use BoxFit.cover to make the image fill the container without distorting the aspect ratio
+                      ),
+                    ),
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: <Widget>[
@@ -116,25 +155,79 @@ class _HomeScreenState extends State<HomeScreen> {
                   const SizedBox(
                     height: UiConfig.defaultPaddingSpacing,
                   ),
-                  CustomContainer(
+                  Container(
+                    decoration: BoxDecoration(
+                      borderRadius: BorderRadius.circular(10.0),
+                    ),
+                    margin: const EdgeInsets.symmetric(
+                      horizontal: UiConfig.lineGap,
+                    ),
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: <Widget>[
+                        Padding(
+                          padding: const EdgeInsets.only(
+                              left: UiConfig.defaultPaddingSpacing,
+                              right: UiConfig.defaultPaddingSpacing),
+                          child: Text(
+                            tr('general.home.explore'),
+                            style: Theme.of(context).textTheme.displaySmall,
+                          ),
+                        ),
+                        const SizedBox(height: UiConfig.lineSpacing),
                         _buildExplore(context),
                         const SizedBox(height: UiConfig.lineSpacing),
                       ],
                     ),
                   ),
-                  const SizedBox(
-                    height: UiConfig.defaultPaddingSpacing,
-                  ),
-                  CustomContainer(
+                  Container(
+                    decoration: BoxDecoration(
+                      borderRadius: BorderRadius.circular(10.0),
+                    ),
+                    margin: const EdgeInsets.symmetric(
+                      horizontal: UiConfig.lineGap,
+                    ),
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: <Widget>[
-                        Text(
-                          tr('general.home.recentlyUsed'),
-                          style: Theme.of(context).textTheme.titleMedium,
+                        Padding(
+                          padding: const EdgeInsets.only(
+                              left: UiConfig.defaultPaddingSpacing,
+                              right: UiConfig.defaultPaddingSpacing),
+                          child: Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            children: [
+                              Text(
+                                tr('general.home.recentlyUsed'),
+                                style: Theme.of(context).textTheme.displaySmall,
+                              ),
+                              MouseRegion(
+                                cursor: SystemMouseCursors.click,
+                                child: GestureDetector(
+                                  onTap: () {
+                                    context.push(
+                                      ConsentFormRoute.consentForm.path,
+                                    );
+                                  },
+                                  child: Text(
+                                    tr('app.features.seeMore'),
+                                    style: Theme.of(context)
+                                        .textTheme
+                                        .titleSmall
+                                        ?.copyWith(
+                                          decoration: TextDecoration.underline,
+                                          decorationColor: Theme.of(context)
+                                              .colorScheme
+                                              .primary,
+                                          color: Theme.of(context)
+                                              .colorScheme
+                                              .primary,
+                                        ),
+                                  ),
+                                ),
+                              ),
+                            ],
+                          ),
                         ),
                         _buildRecentlyUsed(context),
                       ],
@@ -163,11 +256,7 @@ class _HomeScreenState extends State<HomeScreen> {
 
   Container _buildRecentlyUsed(BuildContext context) {
     return Container(
-      padding:
-          const EdgeInsets.symmetric(vertical: UiConfig.defaultPaddingSpacing),
-      decoration: BoxDecoration(
-        color: Theme.of(context).colorScheme.onBackground,
-      ),
+      padding: const EdgeInsets.all(UiConfig.defaultPaddingSpacing),
       child: BlocBuilder<ConsentFormBloc, ConsentFormState>(
         builder: (context, state) {
           if (state is GotConsentForms) {
@@ -183,42 +272,26 @@ class _HomeScreenState extends State<HomeScreen> {
                       );
                     },
                   )
-                : Column(
-                    children: [
-                      Row(
-                        crossAxisAlignment: CrossAxisAlignment.center,
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: [
-                          Text(tr('masterData.cm.purposeCategory.noData')),
-                        ],
-                      ),
-                      const SizedBox(
-                        height: UiConfig.defaultPaddingSpacing,
-                      ),
-                      CustomButton(
-                        height: 40.0,
-                        onPressed: () {
-                          _selectMenuDrawer(
-                            DrawerMenuModel(
-                              value: 'consent_forms',
-                              title: tr('app.features.consentforms'),
-                              icon: Ionicons.clipboard_outline,
-                              route: ConsentFormRoute.consentForm,
-                              parent: 'consent_management',
-                            ),
-                          );
-                        },
-                        child: Text(
-                          tr('app.features.createNewConsentForm'),
-                          style: Theme.of(context)
-                              .textTheme
-                              .titleMedium
-                              ?.copyWith(
-                                  color:
-                                      Theme.of(context).colorScheme.onPrimary),
+                : Center(
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.center,
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        const SizedBox(height: UiConfig.lineSpacing),
+                        Image.asset(
+                          'assets/images/4.png',
                         ),
-                      )
-                    ],
+                        Text(tr('app.features.resultNotFound'),
+                            style: Theme.of(context).textTheme.titleMedium),
+                        const SizedBox(height: UiConfig.lineSpacing),
+                        Text(tr('app.features.description'),
+                            textAlign: TextAlign.center,
+                            style: Theme.of(context).textTheme.labelLarge),
+                        const SizedBox(
+                          height: UiConfig.defaultPaddingSpacing,
+                        ),
+                      ],
+                    ),
                   );
           }
           if (state is ConsentFormError) {
@@ -242,46 +315,58 @@ class _HomeScreenState extends State<HomeScreen> {
       builder: (context, state) {
         if (state is SignedInUser) {
           return Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
             children: <Widget>[
-              Row(
-                children: <Widget>[
-                  Text(
-                    tr('general.home.welcome'),
-                    style: Theme.of(context).textTheme.titleMedium,
-                  ),
-                ],
-              ),
-              const SizedBox(width: UiConfig.textSpacing),
-              Row(
-                children: <Widget>[
-                  Text(
-                    state.user.firstName,
-                    style: Theme.of(context).textTheme.titleMedium,
-                  ),
-                  const SizedBox(width: 8.0),
-                  Padding(
-                    padding: const EdgeInsets.only(bottom: 5.0),
-                    child: Icon(
-                      Ionicons.sparkles,
-                      color: Theme.of(context).colorScheme.onError,
+              Padding(
+                padding: const EdgeInsets.only(left: 20.0, right: 20),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: <Widget>[
+                    const SizedBox(height: UiConfig.defaultPaddingSpacing),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: <Widget>[
+                        Text(
+                          tr('general.home.welcome'),
+                          style: Theme.of(context).textTheme.displaySmall,
+                        ),
+                        Row(
+                          children: <Widget>[
+                            Text(
+                              state.user.firstName,
+                              style: Theme.of(context).textTheme.bodyMedium,
+                            ),
+                            const SizedBox(width: 8.0),
+                            Padding(
+                              padding: const EdgeInsets.only(bottom: 5.0),
+                              child: Icon(
+                                Ionicons.sparkles,
+                                color: Theme.of(context).colorScheme.onError,
+                              ),
+                            ),
+                          ],
+                        ),
+                      ],
                     ),
-                  ),
-                ],
-              ),
-              Visibility(
-                visible: currentCompany.name.isNotEmpty,
-                child: Padding(
-                  padding: const EdgeInsets.only(top: UiConfig.textSpacing),
-                  child: Row(
-                    children: <Widget>[
-                      Text(
-                        currentCompany.name,
-                        style: Theme.of(context).textTheme.bodySmall,
+                    Visibility(
+                      visible: currentCompany.name.isNotEmpty,
+                      child: Padding(
+                        padding:
+                            const EdgeInsets.only(top: UiConfig.textSpacing),
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.end,
+                          children: <Widget>[
+                            Text(
+                              currentCompany.name,
+                              style: Theme.of(context).textTheme.bodySmall,
+                            ),
+                          ],
+                        ),
                       ),
-                    ],
-                  ),
+                    ),
+                  ],
                 ),
-              )
+              ),
             ],
           );
         }
@@ -294,132 +379,639 @@ class _HomeScreenState extends State<HomeScreen> {
   }
 
   BlocBuilder _buildExplore(BuildContext context) {
-    final List<String> cardTitles = [
-      tr("app.features.consentforms"),
-      tr("app.features.userconsents"),
-      tr("app.features.masterdata")
-    ];
-    final List<IconData> icons = [
-      Ionicons.clipboard_outline,
-      Ionicons.people_outline,
-      Ionicons.server_outline,
-    ];
     return BlocBuilder<SignInBloc, SignInState>(
       builder: (context, state) {
         if (state is SignedInUser) {
-          return SingleChildScrollView(
-            child: Column(
-              children: [
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.start,
-                  children: [
-                    Text(
-                      tr('general.home.explore'),
-                      style: Theme.of(context).textTheme.titleMedium,
-                    ),
-                  ],
-                ),
-                SizedBox(
-                  // constraints:
-                  //     const BoxConstraints(maxHeight: 170, minHeight: 150),
-                  height: context.locale.toString() == 'en_US' ? 140 : 170,
-                  child: ListView.builder(
-                      physics: const ClampingScrollPhysics(),
-                      shrinkWrap: true,
-                      scrollDirection: Axis.horizontal,
-                      itemCount: cardTitles.length,
-                      itemBuilder: (BuildContext context, int index) {
-                        String currentCardTitle = cardTitles[index];
-                        return MaterialInkWell(
-                          onTap: () {
-                            if (currentCardTitle ==
-                                tr("app.features.consentforms")) {
-                              _selectMenuDrawer(
-                                DrawerMenuModel(
-                                  value: 'consent_forms',
-                                  title: 'Consent Forms',
-                                  icon: Ionicons.clipboard_outline,
-                                  route: ConsentFormRoute.consentForm,
-                                  parent: 'consent_management',
-                                ),
-                              );
-                            }
-                            if (currentCardTitle ==
-                                tr("app.features.userconsents")) {
-                              _selectMenuDrawer(
-                                DrawerMenuModel(
-                                  value: 'user_consents',
-                                  title: 'User Consents',
-                                  icon: Ionicons.people_outline,
-                                  route: UserConsentRoute.userConsentScreen,
-                                  parent: 'consent_management',
-                                ),
-                              );
-                            }
-                            if (currentCardTitle ==
-                                tr("app.features.masterdata")) {
-                              _selectMenuDrawer(
-                                DrawerMenuModel(
-                                  value: 'master_data',
-                                  title: 'Master Data',
-                                  icon: Ionicons.server_outline,
-                                  route: MasterDataRoute.masterData,
-                                ),
-                              );
-                            }
-                          },
-                          child: Container(
-                            width: 170.0,
-                            height: 180.0,
-                            alignment: Alignment.center,
-                            // color: Theme.of(context).colorScheme.outline,
-                            padding: const EdgeInsets.all(
-                              UiConfig.defaultPaddingSpacing,
-                            ),
-                            decoration: BoxDecoration(
-                              color: Theme.of(context).colorScheme.onBackground,
-                              borderRadius: BorderRadius.circular(10.0),
-                              boxShadow: [
-                                BoxShadow(
-                                  color: Colors.grey.withOpacity(0.4),
-                                  blurRadius: 5.0,
-                                  spreadRadius: 1.0,
-                                  offset: const Offset(
-                                    1.0,
-                                    2.0,
-                                  ),
-                                )
-                              ],
-                            ),
-                            constraints: const BoxConstraints(minWidth: 120.0),
-                            margin: const EdgeInsets.all(10.0),
-                            child: Column(
-                              mainAxisAlignment: MainAxisAlignment.center,
-                              crossAxisAlignment: CrossAxisAlignment.center,
+          return LayoutBuilder(
+            builder: (context, constraints) {
+              final screenWidth = constraints.maxWidth;
+
+              return Column(
+               mainAxisAlignment :MainAxisAlignment.center,
+                          crossAxisAlignment: CrossAxisAlignment.center,
+                children: [
+                  Row(
+                    crossAxisAlignment: CrossAxisAlignment.center,
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      if (screenWidth <= 726)
+                        // Display this when screen width is 600 or more
+                        Column(
+                          mainAxisAlignment :MainAxisAlignment.center,
+                          crossAxisAlignment: CrossAxisAlignment.center,
+                          children: [
+                            Row(
+                              mainAxisAlignment:
+                                  MainAxisAlignment.spaceEvenly,
                               children: [
-                                const SizedBox(height: UiConfig.lineSpacing),
-                                Icon(
-                                  icons[index],
-                                  size: 30.0,
-                                ),
-                                const SizedBox(height: UiConfig.lineGap),
-                                Expanded(
-                                  child: Text(
-                                    cardTitles[index],
-                                    style:
-                                        Theme.of(context).textTheme.titleMedium,
-                                    textAlign: TextAlign.center,
+                                SizedBox(
+                                  height: 136,
+                                  width: 200,
+                                  child: InkWell(
+                                    onTap: () {
+                                      context.push(ConsentFormRoute
+                                          .createConsentForm.path);
+                                    },
+                                    child: Ink(
+                                      decoration: BoxDecoration(
+                                        color: Theme.of(context)
+                                            .colorScheme
+                                            .onBackground,
+                                        borderRadius:
+                                            BorderRadius.circular(16.0),
+                                      ),
+                                      child: Padding(
+                                        padding: const EdgeInsets.all(10.0),
+                                        child: Column(
+                                          crossAxisAlignment:
+                                              CrossAxisAlignment.start,
+                                          mainAxisAlignment:
+                                              MainAxisAlignment
+                                                  .spaceBetween,
+                                          children: [
+                                            Container(
+                                              decoration: BoxDecoration(
+                                                color:
+                                                    const Color(0xff262626),
+                                                borderRadius:
+                                                    BorderRadius.circular(
+                                                        8.0),
+                                              ),
+                                              child: const Padding(
+                                                padding:
+                                                    EdgeInsets.all(5.0),
+                                                child: Icon(
+                                                  Ionicons
+                                                      .add_circle_outline,
+                                                  color: Colors.white,
+                                                  size: 20,
+                                                ),
+                                              ),
+                                            ),
+                                            Column(
+                                              crossAxisAlignment:
+                                                  CrossAxisAlignment.start,
+                                              children: [
+                                                Text(
+                                                  tr('app.features.consent'),
+                                                  style: Theme.of(context)
+                                                      .textTheme
+                                                      .bodySmall,
+                                                ),
+                                                Text(
+                                                  tr('app.features.createcsf'),
+                                                  style: Theme.of(context)
+                                                      .textTheme
+                                                      .bodySmall,
+                                                ),
+                                              ],
+                                            ),
+                                          ],
+                                        ),
+                                      ),
+                                    ),
                                   ),
                                 ),
-                                const SizedBox(height: UiConfig.lineSpacing),
+                                SizedBox(width: 10),
+                                SizedBox(
+                                  height: 136,
+                                  width: 200,
+                                  child: InkWell(
+                                    onTap: () {
+                                      context.push(UserConsentRoute
+                                          .userConsentScreen.path);
+                                    },
+                                    child: Ink(
+                                      decoration: BoxDecoration(
+                                        color: Theme.of(context)
+                                            .colorScheme
+                                            .onBackground, // Set your button color here
+                                        borderRadius:
+                                            BorderRadius.circular(16.0),
+                                      ),
+                                      child: Padding(
+                                        padding: const EdgeInsets.all(10.0),
+                                        child: Column(
+                                          crossAxisAlignment:
+                                              CrossAxisAlignment.start,
+                                          mainAxisAlignment:
+                                              MainAxisAlignment
+                                                  .spaceBetween,
+                                          children: [
+                                            Container(
+                                              decoration: BoxDecoration(
+                                                color:
+                                                    const Color(0xff262626),
+                                                borderRadius:
+                                                    BorderRadius.circular(
+                                                        8.0),
+                                              ),
+                                              child: const Padding(
+                                                padding:
+                                                    EdgeInsets.all(5.0),
+                                                child: Icon(
+                                                  Ionicons.people_outline,
+                                                  color: Colors.white,
+                                                  size: 20,
+                                                ),
+                                              ),
+                                            ),
+                                            Column(
+                                              crossAxisAlignment:
+                                                  CrossAxisAlignment.start,
+                                              children: [
+                                                Text(
+                                                  tr('app.features.consent'),
+                                                  style: Theme.of(context)
+                                                      .textTheme
+                                                      .bodySmall,
+                                                ),
+                                                Text(
+                                                  tr('app.features.userconsents'),
+                                                  style: Theme.of(context)
+                                                      .textTheme
+                                                      .bodySmall,
+                                                ),
+                                              ],
+                                            ),
+                                          ],
+                                        ),
+                                      ),
+                                    ),
+                                  ),
+                                ),
                               ],
                             ),
-                          ),
-                        );
-                      }),
-                ),
-              ],
-            ),
+                            const SizedBox(height: 10),
+                            Row(
+                              mainAxisAlignment:
+                                  MainAxisAlignment.spaceEvenly,
+                              children: [
+                                SizedBox(
+                                  height: 136,
+                                  width: 200,
+                                  child: InkWell(
+                                    onTap: () {
+                                      context.push(ConsentFormRoute
+                                          .consentForm.path);
+                                    },
+                                    child: Ink(
+                                      decoration: BoxDecoration(
+                                        color: Theme.of(context)
+                                            .colorScheme
+                                            .onBackground, // Set your button color here
+                                        borderRadius:
+                                            BorderRadius.circular(16.0),
+                                      ),
+                                      child: Padding(
+                                        padding: const EdgeInsets.all(10.0),
+                                        child: Column(
+                                          crossAxisAlignment:
+                                              CrossAxisAlignment.start,
+                                          mainAxisAlignment:
+                                              MainAxisAlignment
+                                                  .spaceBetween,
+                                          children: [
+                                            Container(
+                                              decoration: BoxDecoration(
+                                                color:
+                                                    const Color(0xff262626),
+                                                borderRadius:
+                                                    BorderRadius.circular(
+                                                        8.0),
+                                              ),
+                                              child: const Padding(
+                                                padding:
+                                                    EdgeInsets.all(5.0),
+                                                child: Icon(
+                                                  Ionicons
+                                                      .clipboard_outline,
+                                                  color: Colors.white,
+                                                  size: 20,
+                                                ),
+                                              ),
+                                            ),
+                                            Column(
+                                              crossAxisAlignment:
+                                                  CrossAxisAlignment.start,
+                                              children: [
+                                                Text(
+                                                  tr('app.features.consent'),
+                                                  style: Theme.of(context)
+                                                      .textTheme
+                                                      .bodySmall, // Adjust the font size as needed
+                                                ),
+                                                Text(
+                                                  tr('app.features.consentforms'),
+                                                  style: Theme.of(context)
+                                                      .textTheme
+                                                      .bodySmall,
+                                                ),
+                                              ],
+                                            ),
+                                          ],
+                                        ),
+                                      ),
+                                    ),
+                                  ),
+                                ),
+                                SizedBox(width: 10),
+                                SizedBox(
+                                  height: 136,
+                                  width: 200,
+                                  child: InkWell(
+                                    onTap: () {
+                                      context.push(MasterDataRoute
+                                          .purposesCategories.path);
+                                    },
+                                    child: Ink(
+                                      decoration: BoxDecoration(
+                                        color: Theme.of(context)
+                                            .colorScheme
+                                            .onBackground, // Set your button color here
+                                        borderRadius:
+                                            BorderRadius.circular(16.0),
+                                      ),
+                                      child: Padding(
+                                        padding: const EdgeInsets.all(10.0),
+                                        child: Column(
+                                          crossAxisAlignment:
+                                              CrossAxisAlignment.start,
+                                          mainAxisAlignment:
+                                              MainAxisAlignment
+                                                  .spaceBetween,
+                                          children: [
+                                            Row(
+                                              mainAxisAlignment:
+                                                  MainAxisAlignment.start,
+                                              children: [
+                                                Container(
+                                                  decoration: BoxDecoration(
+                                                    color: const Color(
+                                                        0xff262626),
+                                                    borderRadius:
+                                                        BorderRadius
+                                                            .circular(8.0),
+                                                  ),
+                                                  child: const Padding(
+                                                    padding:
+                                                        EdgeInsets.all(5.0),
+                                                    child: Icon(
+                                                      Ionicons
+                                                          .server_outline,
+                                                      color: Colors.white,
+                                                      size: 20,
+                                                    ),
+                                                  ),
+                                                ),
+                                              ],
+                                            ),
+                                            Column(
+                                              crossAxisAlignment:
+                                                  CrossAxisAlignment.start,
+                                              children: [
+                                                Text(
+                                                  tr('app.features.masterdata'),
+                                                  style: Theme.of(context)
+                                                      .textTheme
+                                                      .bodySmall,
+                                                ),
+                                                Text(
+                                                  tr('masterData.cm.purposeCategory.title'),
+                                                  style: Theme.of(context)
+                                                      .textTheme
+                                                      .bodySmall,
+                                                ),
+                                              ],
+                                            ),
+                                          ],
+                                        ),
+                                      ),
+                                    ),
+                                  ),
+                                ),
+                              ],
+                            ),
+                          ],
+                        ),
+                      if (screenWidth >= 726)
+                        Column(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            Row(
+                              mainAxisAlignment:
+                                  MainAxisAlignment.spaceEvenly,
+                              children: [
+                                SizedBox(
+                    
+                                  child: InkWell(
+                                    onTap: () {
+                                      context.push(ConsentFormRoute
+                                          .createConsentForm.path);
+                                    },
+                                    child: Ink(
+                                      decoration: BoxDecoration(
+                                        color: Theme.of(context)
+                                            .colorScheme
+                                            .onBackground,
+                                        borderRadius:
+                                            BorderRadius.circular(16.0),
+                                      ),
+                                      child: Padding(
+                                        padding:
+                                            const EdgeInsets.all(10.0),
+                                        child: Column(
+                                          crossAxisAlignment:
+                                              CrossAxisAlignment.start,
+                                          mainAxisAlignment:
+                                              MainAxisAlignment
+                                                  .spaceBetween,
+                                          children: [
+                                            Container(
+                                              decoration: BoxDecoration(
+                                                color: const Color(
+                                                    0xff262626),
+                                                borderRadius:
+                                                    BorderRadius
+                                                        .circular(8.0),
+                                              ),
+                                              child: const Padding(
+                                                padding:
+                                                    EdgeInsets.all(5.0),
+                                                child: Icon(
+                                                  Ionicons
+                                                      .add_circle_outline,
+                                                  color: Colors.white,
+                                                  size: 20,
+                                                ),
+                                              ),
+                                            ),
+                                            Column(
+                                              crossAxisAlignment:
+                                                  CrossAxisAlignment
+                                                      .start,
+                                              children: [
+                                                Text(
+                                                  tr('app.features.consent'),
+                                                  style:
+                                                      Theme.of(context)
+                                                          .textTheme
+                                                          .bodySmall,
+                                                ),
+                                                Text(
+                                                  tr('app.features.createcsf'),
+                                                  style:
+                                                      Theme.of(context)
+                                                          .textTheme
+                                                          .bodySmall,
+                                                ),
+                                              ],
+                                            ),
+                                          ],
+                                        ),
+                                      ),
+                                    ),
+                                  ),
+                                ),
+                                SizedBox(width: 10),
+                                SizedBox(
+                                  height: 136,
+                                  width: 200,
+                                  child: InkWell(
+                                    onTap: () {
+                                      context.push(UserConsentRoute
+                                          .userConsentScreen.path);
+                                    },
+                                    child: Ink(
+                                      decoration: BoxDecoration(
+                                        color: Theme.of(context)
+                                            .colorScheme
+                                            .onBackground, // Set your button color here
+                                        borderRadius:
+                                            BorderRadius.circular(16.0),
+                                      ),
+                                      child: Padding(
+                                        padding:
+                                            const EdgeInsets.all(10.0),
+                                        child: Column(
+                                          crossAxisAlignment:
+                                              CrossAxisAlignment.start,
+                                          mainAxisAlignment:
+                                              MainAxisAlignment
+                                                  .spaceBetween,
+                                          children: [
+                                            Container(
+                                              decoration: BoxDecoration(
+                                                color: const Color(
+                                                    0xff262626),
+                                                borderRadius:
+                                                    BorderRadius
+                                                        .circular(8.0),
+                                              ),
+                                              child: const Padding(
+                                                padding:
+                                                    EdgeInsets.all(5.0),
+                                                child: Icon(
+                                                  Ionicons
+                                                      .people_outline,
+                                                  color: Colors.white,
+                                                  size: 20,
+                                                ),
+                                              ),
+                                            ),
+                                            Column(
+                                              crossAxisAlignment:
+                                                  CrossAxisAlignment
+                                                      .start,
+                                              children: [
+                                                Text(
+                                                  tr('app.features.consent'),
+                                                  style:
+                                                      Theme.of(context)
+                                                          .textTheme
+                                                          .bodySmall,
+                                                ),
+                                                Text(
+                                                  tr('app.features.userconsents'),
+                                                  style:
+                                                      Theme.of(context)
+                                                          .textTheme
+                                                          .bodySmall,
+                                                ),
+                                              ],
+                                            ),
+                                          ],
+                                        ),
+                                      ),
+                                    ),
+                                  ),
+                                ),
+                                SizedBox(width: 10),
+                                SizedBox(
+                                  height: 136,
+                                  width: 200,
+                                  child: InkWell(
+                                    onTap: () {
+                                      context.push(ConsentFormRoute
+                                          .consentForm.path);
+                                    },
+                                    child: Ink(
+                                      decoration: BoxDecoration(
+                                        color: Theme.of(context)
+                                            .colorScheme
+                                            .onBackground, // Set your button color here
+                                        borderRadius:
+                                            BorderRadius.circular(16.0),
+                                      ),
+                                      child: Padding(
+                                        padding:
+                                            const EdgeInsets.all(10.0),
+                                        child: Column(
+                                          crossAxisAlignment:
+                                              CrossAxisAlignment.start,
+                                          mainAxisAlignment:
+                                              MainAxisAlignment
+                                                  .spaceBetween,
+                                          children: [
+                                            Container(
+                                              decoration: BoxDecoration(
+                                                color: const Color(
+                                                    0xff262626),
+                                                borderRadius:
+                                                    BorderRadius
+                                                        .circular(8.0),
+                                              ),
+                                              child: const Padding(
+                                                padding:
+                                                    EdgeInsets.all(5.0),
+                                                child: Icon(
+                                                  Ionicons
+                                                      .clipboard_outline,
+                                                  color: Colors.white,
+                                                  size: 20,
+                                                ),
+                                              ),
+                                            ),
+                                            Column(
+                                              crossAxisAlignment:
+                                                  CrossAxisAlignment
+                                                      .start,
+                                              children: [
+                                                Text(
+                                                  tr('app.features.consent'),
+                                                  style: Theme.of(
+                                                          context)
+                                                      .textTheme
+                                                      .bodySmall, // Adjust the font size as needed
+                                                ),
+                                                Text(
+                                                  tr('app.features.consentforms'),
+                                                  style:
+                                                      Theme.of(context)
+                                                          .textTheme
+                                                          .bodySmall,
+                                                ),
+                                              ],
+                                            ),
+                                          ],
+                                        ),
+                                      ),
+                                    ),
+                                  ),
+                                ),
+                                SizedBox(width: 10),
+                                SizedBox(
+                                  height: 136,
+                                  width: 200,
+                                  child: InkWell(
+                                    onTap: () {
+                                      context.push(MasterDataRoute
+                                          .purposesCategories.path);
+                                    },
+                                    child: Ink(
+                                      decoration: BoxDecoration(
+                                        color: Theme.of(context)
+                                            .colorScheme
+                                            .onBackground, // Set your button color here
+                                        borderRadius:
+                                            BorderRadius.circular(16.0),
+                                      ),
+                                      child: Padding(
+                                        padding:
+                                            const EdgeInsets.all(10.0),
+                                        child: Column(
+                                          crossAxisAlignment:
+                                              CrossAxisAlignment.start,
+                                          mainAxisAlignment:
+                                              MainAxisAlignment
+                                                  .spaceBetween,
+                                          children: [
+                                            Row(
+                                              mainAxisAlignment:
+                                                  MainAxisAlignment
+                                                      .start,
+                                              children: [
+                                                Container(
+                                                  decoration:
+                                                      BoxDecoration(
+                                                    color: const Color(
+                                                        0xff262626),
+                                                    borderRadius:
+                                                        BorderRadius
+                                                            .circular(
+                                                                8.0),
+                                                  ),
+                                                  child: const Padding(
+                                                    padding:
+                                                        EdgeInsets.all(
+                                                            5.0),
+                                                    child: Icon(
+                                                      Ionicons
+                                                          .server_outline,
+                                                      color:
+                                                          Colors.white,
+                                                      size: 20,
+                                                    ),
+                                                  ),
+                                                ),
+                                              ],
+                                            ),
+                                            Column(
+                                              crossAxisAlignment:
+                                                  CrossAxisAlignment
+                                                      .start,
+                                              children: [
+                                                Text(
+                                                  tr('app.features.masterdata'),
+                                                  style:
+                                                      Theme.of(context)
+                                                          .textTheme
+                                                          .bodySmall,
+                                                ),
+                                                Text(
+                                                  tr('masterData.cm.purposeCategory.title'),
+                                                  style:
+                                                      Theme.of(context)
+                                                          .textTheme
+                                                          .bodySmall,
+                                                ),
+                                              ],
+                                            ),
+                                          ],
+                                        ),
+                                      ),
+                                    ),
+                                  ),
+                                ),
+                              ],
+                            ),
+                          ],
+                        ),
+                    ],
+                  ),
+                ],
+              );
+            },
           );
         }
         return Text(
@@ -504,8 +1096,27 @@ class _HomeScreenState extends State<HomeScreen> {
             ),
           ),
         ),
-        Divider(
-          color: Theme.of(context).colorScheme.outlineVariant.withOpacity(0.5),
+        const Padding(
+          padding: EdgeInsets.symmetric(
+            horizontal: UiConfig.defaultPaddingSpacing,
+          ),
+          child: SizedBox(
+            height: UiConfig.defaultPaddingSpacing,
+          ),
+        ),
+        // เพิ่ม Container สำหรับเงาด้านล่าง
+        Container(
+          margin:
+              const EdgeInsets.only(top: 8.0), // ระยะทางของ Container จากด้านบน
+          decoration: const BoxDecoration(
+            boxShadow: [
+              BoxShadow(
+                color: Colors.grey, // สีของเงา
+                offset: Offset(0, 4), // ตำแหน่งเงา (x, y)
+                blurRadius: 8.0, // ขนาดของเงา
+              ),
+            ],
+          ),
         ),
       ],
     );

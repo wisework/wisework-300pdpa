@@ -2,6 +2,7 @@
     "app": {
         "name": "แพลตฟอร์มการจัดการ PDPA",
         "language": "ภาษา",
+        "mode" : "โหมดกลางคืน",
         "day": "วันที่",
         "month": "เดือน",
         "year": "ปี",
@@ -14,12 +15,18 @@
         "features": {
             "home": "หน้าหลัก",
             "consentmanagement": "ระบบบริหารจัดการข้อมูลส่วนบุคคล",
-            "consentforms": "เอกสารแสดงความยินยอม",
+            "consent" : "ความยินยอม",
+            "createcsf" : "สร้างแบบฟอร์มใหม่",
+            "masterdatas" : "MasterData",
+            "consentforms": "แบบฟอร์มขอยินยอม",
             "userconsents": "ความยินยอมของผู้ใช้",
             "datasubjectright": "สิทธิของเจ้าของข้อมูล",
             "masterdata": "ข้อมูลหลัก",
             "setting": "การตั้งค่า",
-            "createNewConsentForm": "สร้างแบบฟอร์มยินยอมใหม่"
+            "createNewConsentForm": "สร้างแบบฟอร์มยินยอมใหม่",
+            "seeMore" : "เพิ่มเติม",
+            "resultNotFound" : "ไม่พบผลลัพธ์!",
+            "description" : "คุณยังไม่ได้สร้างแบบฟอร์ม เพิ่มแบบฟอร์มยินยอม เพียงคลิกปุ่มสร้างแบบฟอร์มยินยอมใหม่แล้วดำเนินการต่อ"
         },
         "search": "ค้นหา",
         "agree": "ยินยอม",
@@ -49,11 +56,11 @@
     },
     "general": {
         "home": {
-            "welcome": "ยินดีต้อนรับ",
+            "welcome": "ยินดีต้อนรับ :)",
             "hello": "สวัสดี",
             "tagline": "สิ่งที่คุณกำลังมองหาในวันนี้",
-            "explore": "สำรวจ",
-            "recentlyUsed": "ใช้ล่าสุด",
+            "explore": "สำรวจกิจกรรม",
+            "recentlyUsed": "รายการความยินยอมล่าสุด",
             "thisDataIsNotStored.": "ข้อมูลนี้ไม่ได้ถูกจัดเก็บ"
         }
     },
