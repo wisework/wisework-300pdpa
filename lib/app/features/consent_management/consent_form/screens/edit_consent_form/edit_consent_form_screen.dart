@@ -705,11 +705,13 @@ class _EditConsentFormViewState extends State<EditConsentFormView> {
     return Row(
       key: ValueKey(purposeCategory.id),
       children: <Widget>[
-        Padding(
-          padding: const EdgeInsets.all(UiConfig.actionSpacing),
-          child: Text(
-            title.text,
-            style: Theme.of(context).textTheme.bodyMedium,
+        Expanded(
+          child: Padding(
+            padding: const EdgeInsets.all(UiConfig.actionSpacing),
+            child: Text(
+              title.text,
+              style: Theme.of(context).textTheme.bodyMedium,
+            ),
           ),
         ),
       ],
