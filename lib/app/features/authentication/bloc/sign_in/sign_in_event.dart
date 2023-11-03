@@ -7,6 +7,19 @@ abstract class SignInEvent extends Equatable {
   List<Object> get props => [];
 }
 
+class SignInWithEmailAndPasswordEvent extends SignInEvent {
+  const SignInWithEmailAndPasswordEvent({
+    required this.email,
+    required this.password,
+  });
+
+  final String email;
+  final String password;
+
+  @override
+  List<Object> get props => [email, password];
+}
+
 class SignInWithGoogleEvent extends SignInEvent {
   const SignInWithGoogleEvent();
 
@@ -19,6 +32,17 @@ class SignOutEvent extends SignInEvent {
 
   @override
   List<Object> get props => [];
+}
+
+class SendPasswordResetEvent extends SignInEvent {
+  const SendPasswordResetEvent({
+    required this.email,
+  });
+
+  final String email;
+
+  @override
+  List<Object> get props => [email];
 }
 
 class GetCurrentUserEvent extends SignInEvent {

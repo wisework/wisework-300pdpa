@@ -1,3 +1,5 @@
+import 'dart:math';
+
 import 'package:path/path.dart';
 import 'package:pdpa/app/config/config.dart';
 import 'package:pdpa/app/data/models/authentication/company_model.dart';
@@ -236,5 +238,20 @@ class UtilFunctions {
     final folder = '${imageType.name}/';
 
     return [company, consent, folder].join('/');
+  }
+
+  //? Etc
+  static String generatePassword() {
+    String password = '';
+
+    for (int index = 0; index < AppConfig.generatePasswordLength; index++) {
+      final randomAlphabet = alphabets[Random().nextInt(alphabets.length)];
+      final randomNumber = numbers[Random().nextInt(numbers.length)];
+      final characters = [randomAlphabet.toUpperCase(), randomNumber];
+
+      password += characters[Random().nextInt(characters.length)];
+    }
+
+    return password;
   }
 }

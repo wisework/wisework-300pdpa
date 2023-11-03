@@ -12,6 +12,19 @@ class AuthenticationRepository {
   final AuthenticationApi _api;
 
   //? Authentication
+  ResultFuture<UserModel> signInWithEmailAndPassword(
+    String email,
+    String password,
+  ) async {
+    try {
+      final result = await _api.signInWithEmailAndPassword(email, password);
+
+      return Right(result);
+    } on ApiException catch (error) {
+      return Left(ApiFailure.fromException(error));
+    }
+  }
+
   ResultFuture<UserModel> signInWithGoogle() async {
     try {
       final result = await _api.signInWithGoogle();
@@ -31,9 +44,37 @@ class AuthenticationRepository {
     }
   }
 
+  ResultFuture<UserModel> signUpWithEmailAndPassword(
+    String email,
+    String password, {
+    UserModel? user,
+  }) async {
+    try {
+      final result = await _api.signUpWithEmailAndPassword(
+        email,
+        password,
+        user: user,
+      );
+
+      return Right(result);
+    } on ApiException catch (error) {
+      return Left(ApiFailure.fromException(error));
+    }
+  }
+
   ResultVoid signOut() async {
     try {
       await _api.signOut();
+
+      return const Right(null);
+    } on ApiException catch (error) {
+      return Left(ApiFailure.fromException(error));
+    }
+  }
+
+  ResultVoid sendPasswordResetEmail(String email) async {
+    try {
+      await _api.sendPasswordResetEmail(email);
 
       return const Right(null);
     } on ApiException catch (error) {
@@ -47,6 +88,29 @@ class AuthenticationRepository {
       final result = await _api.getCurrentUser();
 
       return Right(result);
+    } on ApiException catch (error) {
+      return Left(ApiFailure.fromException(error));
+    }
+  }
+
+  ResultVoid updatePassword(
+    String currentPassword,
+    String newPassword,
+  ) async {
+    try {
+      await _api.updatePassword(currentPassword, newPassword);
+
+      return const Right(null);
+    } on ApiException catch (error) {
+      return Left(ApiFailure.fromException(error));
+    }
+  }
+
+  ResultVoid verifyEmail() async {
+    try {
+      await _api.verifyEmail();
+
+      return const Right(null);
     } on ApiException catch (error) {
       return Left(ApiFailure.fromException(error));
     }

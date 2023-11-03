@@ -13,6 +13,7 @@ import 'package:pdpa/app/injection.dart';
 import 'package:pdpa/app/shared/widgets/customs/custom_button.dart';
 import 'package:pdpa/app/shared/widgets/customs/custom_icon_button.dart';
 import 'package:pdpa/app/shared/widgets/customs/custom_text_field.dart';
+import 'package:pdpa/app/shared/widgets/loading_indicator.dart';
 import 'package:pdpa/app/shared/widgets/templates/pdpa_app_bar.dart';
 
 class AcceptInviteScreen extends StatelessWidget {
@@ -169,13 +170,10 @@ class _AcceptInviteViewState extends State<AcceptInviteView> {
         },
         builder: (context, state) {
           if (state is SigningInWithGoogle) {
-            return SizedBox(
-              width: 24.0,
-              height: 24.0,
-              child: CircularProgressIndicator(
-                color: Theme.of(context).colorScheme.onPrimary,
-                strokeWidth: 3.0,
-              ),
+            return LoadingIndicator(
+              color: Theme.of(context).colorScheme.onPrimary,
+              size: 28.0,
+              loadingType: LoadingType.horizontalRotatingDots,
             );
           }
           return Text(

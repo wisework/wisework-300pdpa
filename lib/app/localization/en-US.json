@@ -31,12 +31,25 @@
         },
         "search": "Search",
         "agree": "Agree",
-        "decline": "Decline"
+        "decline": "Decline",
+        "confirm": "Confirm",
+        "back": "Back",
+        "poweredBy": "Powered by แสงอุษา ‘solutions Co.,Ltd.",
+        "copyright": "© 2023 wisework. All rights reserved"
     },
     "auth": {
         "signIn": {
+            "signInDescription": "Please sign in to continue.",
+            "email": "Email",
+            "password": "Password",
+            "rememberMe": "Remember me",
+            "forgotPassword": "Forgot password",
+            "signIn": "Sign in",
             "signInWithGoogle": "Sign in with Google",
-            "joinOverForGoal": "Join over 100,000 users smashing their goals!"
+            "signInSuccessful": "Sign in is successfully!",
+            "welcomeBack": "Welcome back!",
+            "forgotDescription": "Please enter an email linked to your account. We’ll send a link that will sign you into the app instantly.",
+            "passwordResetSent": "Password reset email sent."
         },
         "acceptInvite": {
             "title": "Accept the invitation",
