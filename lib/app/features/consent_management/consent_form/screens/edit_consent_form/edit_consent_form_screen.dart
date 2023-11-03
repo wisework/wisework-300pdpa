@@ -16,7 +16,9 @@ import 'package:pdpa/app/data/models/master_data/purpose_category_model.dart';
 import 'package:pdpa/app/data/models/master_data/purpose_model.dart';
 import 'package:pdpa/app/features/authentication/bloc/sign_in/sign_in_bloc.dart';
 import 'package:pdpa/app/features/consent_management/consent_form/bloc/consent_form/consent_form_bloc.dart';
+import 'package:pdpa/app/features/consent_management/consent_form/bloc/consent_form_detail/consent_form_detail_bloc.dart';
 import 'package:pdpa/app/features/consent_management/consent_form/bloc/edit_consent_form/edit_consent_form_bloc.dart';
+import 'package:pdpa/app/features/consent_management/consent_form/cubit/current_consent_form_detail/current_consent_form_detail_cubit.dart';
 import 'package:pdpa/app/features/consent_management/consent_form/screens/edit_consent_form/screens/create_consent_form_success.dart';
 import 'package:pdpa/app/injection.dart';
 import 'package:pdpa/app/shared/utils/constants.dart';
@@ -204,6 +206,8 @@ class _EditConsentFormViewState extends State<EditConsentFormView> {
 
   bool errorPurposeCategoryEmpty = false;
 
+  bool isSave = false;
+
   late String language;
 
   @override
@@ -227,8 +231,10 @@ class _EditConsentFormViewState extends State<EditConsentFormView> {
     purposeCategories =
         widget.purposeCategories.map((category) => category).toList();
 
-    purposeCategorySelected =
-        consentForm.purposeCategories.map((category) => category).toList();
+    purposeCategorySelected = consentForm.purposeCategories
+        .map((category) => category)
+        .toList()
+      ..sort((a, b) => a.priority.compareTo(b.priority));
 
     titleController = TextEditingController();
     descriptionController = TextEditingController();
@@ -376,16 +382,21 @@ class _EditConsentFormViewState extends State<EditConsentFormView> {
         context.read<EditConsentFormBloc>().add(event);
       }
     }
+    setState(() {
+      isSave = true;
+    });
   }
 
   void _goBackAndUpdate() {
     if (!widget.isNewConsentForm) {
-      final event = UpdateConsentFormEvent(
+      final event = UpdateConsentFormDetailEvent(
         consentForm: consentForm,
         updateType: UpdateType.updated,
       );
 
-      context.read<ConsentFormBloc>().add(event);
+      context.read<ConsentFormDetailBloc>().add(event);
+
+      context.read<CurrentConsentFormDetailCubit>().setConsentForm(consentForm);
     }
 
     context.pop();
@@ -577,10 +588,7 @@ class _EditConsentFormViewState extends State<EditConsentFormView> {
               ? ReorderableListView.builder(
                   itemBuilder: (context, index) {
                     return _buildItemTile(context,
-                        purposeCategory: UtilFunctions.getPurposeCategoryById(
-                          purposeCategories,
-                          purposeCategorySelected[index].id,
-                        ),
+                        purposeCategory: purposeCategorySelected[index],
                         language: widget.currentUser.defaultLanguage);
                   },
                   itemCount: purposeCategorySelected.length,
@@ -600,7 +608,7 @@ class _EditConsentFormViewState extends State<EditConsentFormView> {
                       );
                     });
                   },
-                  buildDefaultDragHandles: false,
+                  buildDefaultDragHandles: true,
                   physics: const NeverScrollableScrollPhysics(),
                   shrinkWrap: true,
                 )
@@ -697,25 +705,8 @@ class _EditConsentFormViewState extends State<EditConsentFormView> {
     return Row(
       key: ValueKey(purposeCategory.id),
       children: <Widget>[
-        // Padding(
-        //   padding: const EdgeInsets.all(UiConfig.actionSpacing),
-        //   child: Icon(
-        //     Icons.circle,
-        //     size: 8.0,
-        //     color: Theme.of(context).colorScheme.primary,
-        //   ),
-        // ),
         Padding(
           padding: const EdgeInsets.all(UiConfig.actionSpacing),
-          child: ReorderableDragStartListener(
-            index: purposeCategorySelected.indexOf(purposeCategory),
-            child: Icon(
-              Ionicons.reorder_two_outline,
-              color: Theme.of(context).colorScheme.primary,
-            ),
-          ),
-        ),
-        Expanded(
           child: Text(
             title.text,
             style: Theme.of(context).textTheme.bodyMedium,

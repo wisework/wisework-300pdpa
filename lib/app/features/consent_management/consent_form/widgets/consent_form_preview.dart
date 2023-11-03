@@ -308,10 +308,8 @@ class _ConsentFormPreviewState extends State<ConsentFormPreview> {
   }
 
   Visibility _buildPurposeCategorySection(BuildContext context) {
-    final purposeCategoryFiltered = UtilFunctions.filterPurposeCategoriesByIds(
-      widget.purposeCategories,
-      widget.consentForm.purposeCategories.map((item) => item.id).toList(),
-    );
+    final purposeCategoryFiltered = widget.consentForm.purposeCategories
+      ..sort(((a, b) => a.priority.compareTo(b.priority)));
 
     return Visibility(
       visible: purposeCategoryFiltered.isNotEmpty,

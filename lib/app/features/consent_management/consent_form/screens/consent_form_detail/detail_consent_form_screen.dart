@@ -11,11 +11,13 @@ import 'package:pdpa/app/data/models/master_data/mandatory_field_model.dart';
 import 'package:pdpa/app/data/models/master_data/purpose_category_model.dart';
 import 'package:pdpa/app/data/models/master_data/purpose_model.dart';
 import 'package:pdpa/app/features/authentication/bloc/sign_in/sign_in_bloc.dart';
+import 'package:pdpa/app/features/consent_management/consent_form/bloc/consent_form/consent_form_bloc.dart';
 import 'package:pdpa/app/features/consent_management/consent_form/bloc/consent_form_detail/consent_form_detail_bloc.dart';
+import 'package:pdpa/app/features/consent_management/consent_form/cubit/current_consent_form_detail/current_consent_form_detail_cubit.dart';
 import 'package:pdpa/app/features/consent_management/consent_form/routes/consent_form_route.dart';
 import 'package:pdpa/app/features/consent_management/consent_form/screens/consent_form_detail/tabs/consent_form_tab.dart';
 import 'package:pdpa/app/features/consent_management/consent_form/screens/consent_form_detail/tabs/consent_info_tab.dart';
-import 'package:pdpa/app/injection.dart';
+import 'package:pdpa/app/shared/utils/constants.dart';
 import 'package:pdpa/app/shared/widgets/customs/custom_icon_button.dart';
 import 'package:pdpa/app/shared/widgets/screens/loading_screen.dart';
 import 'package:pdpa/app/shared/widgets/templates/pdpa_app_bar.dart';
@@ -50,38 +52,44 @@ class _DetailConsentFormScreenState extends State<DetailConsentFormScreen> {
     } else {
       currentUser = UserModel.empty();
     }
+
+    final cubit = context.read<CurrentConsentFormDetailCubit>();
+    cubit.initialSettings(cubit.state.consentTheme);
+
+    _getConsentFormDetails();
+  }
+
+  void _getConsentFormDetails() {
+    final bloc = context.read<ConsentFormDetailBloc>();
+    bloc.add(
+      GetConsentFormDetailEvent(
+        consentFormId: widget.consentFormId,
+        companyId: currentUser.currentCompany,
+      ),
+    );
   }
 
   @override
   Widget build(BuildContext context) {
-    return BlocProvider<ConsentFormDetailBloc>(
-      create: (context) => serviceLocator<ConsentFormDetailBloc>()
-        ..add(
-          GetConsentFormEvent(
-            consentFormId: widget.consentFormId,
-            companyId: currentUser.currentCompany,
-          ),
-        ),
-      child: BlocBuilder<ConsentFormDetailBloc, ConsentFormDetailState>(
-        builder: (context, state) {
-          if (state is GotConsentFormDetail) {
-            return ConsentFormDetailView(
-              consentForm: state.consentForm,
-              mandatoryFields: state.mandatoryFields,
-              purposeCategories: state.purposeCategories,
-              purposes: state.purposes,
-              customFields: state.customFields,
-              consentTheme: state.consentTheme,
-              language: currentUser.defaultLanguage,
-            );
-          }
-          // if (state is ConsentFormDetailError) {
-          //   return ErrorMessageScreen(message: state.message);
-          // }
+    return BlocBuilder<ConsentFormDetailBloc, ConsentFormDetailState>(
+      builder: (context, state) {
+        if (state is GotConsentFormDetail) {
+          return ConsentFormDetailView(
+            consentForm: state.consentForm,
+            mandatoryFields: state.mandatoryFields,
+            purposeCategories: state.purposeCategories,
+            purposes: state.purposes,
+            customFields: state.customFields,
+            consentTheme: state.consentTheme,
+            language: currentUser.defaultLanguage,
+          );
+        }
+        // if (state is ConsentFormDetailError) {
+        //   return ErrorMessageScreen(message: state.message);
+        // }
 
-          return const LoadingScreen();
-        },
-      ),
+        return const LoadingScreen();
+      },
     );
   }
 }
@@ -123,6 +131,9 @@ class _ConsentFormDetailViewState extends State<ConsentFormDetailView> {
 
   @override
   Widget build(BuildContext context) {
+    final consentTheme = context.select(
+      (CurrentConsentFormDetailCubit cubit) => cubit.state.consentTheme,
+    );
     return DefaultTabController(
       length: 2,
       child: Scaffold(
@@ -130,6 +141,13 @@ class _ConsentFormDetailViewState extends State<ConsentFormDetailView> {
         appBar: PdpaAppBar(
           leadingIcon: CustomIconButton(
             onPressed: () {
+              final event = UpdateConsentFormEvent(
+                consentForm: widget.consentForm,
+                updateType: UpdateType.updated,
+              );
+
+              context.read<ConsentFormBloc>().add(event);
+
               context.pop();
             },
             icon: Icons.chevron_left_outlined,
@@ -198,7 +216,7 @@ class _ConsentFormDetailViewState extends State<ConsentFormDetailView> {
               purposeCategories: widget.purposeCategories,
               purposes: widget.purposes,
               customFields: widget.customFields,
-              consentTheme: widget.consentTheme,
+              consentTheme: consentTheme,
             ),
           ],
         ),
