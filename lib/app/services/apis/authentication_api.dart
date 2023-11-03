@@ -237,7 +237,7 @@ class AuthenticationApi {
       lastName: lastName,
       email: userCredential.user!.email,
       roles: [],
-      defaultLanguage: 'th-US',
+      defaultLanguage: 'th-TH',
       isEmailVerified: userCredential.user!.emailVerified,
       createdBy: '',
       createdDate: DateTime.now(),

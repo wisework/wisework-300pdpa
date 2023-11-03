@@ -10,6 +10,7 @@ class PdpaAppBar extends StatelessWidget implements PreferredSizeWidget {
     this.titleSpacing = UiConfig.appBarTitleSpacing,
     this.actions,
     this.bottom,
+    this.centerTitle,
   });
 
   final double appBarHeight;
@@ -18,6 +19,7 @@ class PdpaAppBar extends StatelessWidget implements PreferredSizeWidget {
   final double titleSpacing;
   final List<Widget>? actions;
   final PreferredSizeWidget? bottom;
+  final bool? centerTitle;
 
   @override
   Size get preferredSize =>
@@ -32,7 +34,14 @@ class PdpaAppBar extends StatelessWidget implements PreferredSizeWidget {
         children: <Widget>[
           if (leadingIcon != null) leadingIcon!,
           SizedBox(width: titleSpacing),
-          title,
+          Expanded(
+            child: (centerTitle ?? false)
+                ? Align(
+                    alignment: Alignment.center,
+                    child: title,
+                  )
+                : title,
+          ),
         ],
       ),
       actions: actions != null
