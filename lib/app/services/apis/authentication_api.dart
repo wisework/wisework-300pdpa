@@ -96,7 +96,10 @@ class AuthenticationApi {
       } else {
         if (user != null) {
           final ref = _firestore.collection('Users').doc();
-          final created = user.copyWith(id: ref.id);
+          final created = user.copyWith(
+            id: ref.id,
+            uid: userCredential.user!.uid,
+          );
 
           await ref.set(created.toMap());
 

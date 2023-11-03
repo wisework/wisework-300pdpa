@@ -3,6 +3,8 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:get_it/get_it.dart';
 import 'package:google_sign_in/google_sign_in.dart';
+import 'package:pdpa/app/data/repositories/emailjs_repository.dart';
+import 'package:pdpa/app/services/apis/emailjs_api.dart';
 
 import 'config/config.dart';
 import 'data/repositories/authentication_repository.dart';
@@ -339,6 +341,7 @@ Future<void> _user() async {
       () => EditUserBloc(
         authenticationRepository: serviceLocator(),
         userRepository: serviceLocator(),
+        emailJsRepository: serviceLocator(),
       ),
     )
     //? Repositories
@@ -372,10 +375,18 @@ Future<void> _other() async {
         serviceLocator(),
       ),
     )
+    ..registerLazySingleton(
+      () => EmailJsRepository(
+        serviceLocator(),
+      ),
+    )
     //? APIs
     ..registerLazySingleton(
       () => GeneralApi(
         serviceLocator(),
       ),
+    )
+    ..registerLazySingleton(
+      () => const EmailJsApi(),
     );
 }

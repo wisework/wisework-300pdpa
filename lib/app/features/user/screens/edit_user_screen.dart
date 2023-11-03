@@ -126,8 +126,6 @@ class _EditUserViewState extends State<EditUserView> {
 
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
 
-  final String adminEmail = 'test-admin-ww300@gmail.com';
-
   @override
   void initState() {
     super.initState();
@@ -196,7 +194,7 @@ class _EditUserViewState extends State<EditUserView> {
 
       if (widget.isNewUser) {
         user = user.setCreate(
-          adminEmail,
+          AppConfig.notificationEmail,
           DateTime.now(),
         );
 
@@ -204,7 +202,7 @@ class _EditUserViewState extends State<EditUserView> {
         context.read<EditUserBloc>().add(event);
       } else {
         user = user.setUpdate(
-          adminEmail,
+          AppConfig.notificationEmail,
           DateTime.now(),
         );
 

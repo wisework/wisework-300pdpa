@@ -2,7 +2,9 @@
 import 'package:bloc/bloc.dart';
 import 'package:equatable/equatable.dart';
 import 'package:pdpa/app/data/models/authentication/user_model.dart';
+import 'package:pdpa/app/data/models/etc/email_template_params.dart';
 import 'package:pdpa/app/data/repositories/authentication_repository.dart';
+import 'package:pdpa/app/data/repositories/emailjs_repository.dart';
 import 'package:pdpa/app/data/repositories/user_repository.dart';
 import 'package:pdpa/app/shared/utils/functions.dart';
 
@@ -13,8 +15,10 @@ class EditUserBloc extends Bloc<EditUserEvent, EditUserState> {
   EditUserBloc({
     required AuthenticationRepository authenticationRepository,
     required UserRepository userRepository,
-  })  : _userRepository = userRepository,
-        _authenticationRepository = authenticationRepository,
+    required EmailJsRepository emailJsRepository,
+  })  : _authenticationRepository = authenticationRepository,
+        _userRepository = userRepository,
+        _emailJsRepository = emailJsRepository,
         super(const EditUserInitial()) {
     on<GetCurrentUserEvent>(_getCurrentUserHandler);
     on<CreateCurrentUserEvent>(_createCurrentUserHandler);
@@ -24,6 +28,7 @@ class EditUserBloc extends Bloc<EditUserEvent, EditUserState> {
 
   final AuthenticationRepository _authenticationRepository;
   final UserRepository _userRepository;
+  final EmailJsRepository _emailJsRepository;
 
   Future<void> _getCurrentUserHandler(
     GetCurrentUserEvent event,
@@ -64,9 +69,24 @@ class EditUserBloc extends Bloc<EditUserEvent, EditUserState> {
 
     await Future.delayed(const Duration(milliseconds: 800));
 
-    result.fold(
-      (failure) => emit(EditUserError(failure.errorMessage)),
-      (user) => emit(CreatedCurrentUser(user)),
+    await result.fold(
+      (failure) {
+        emit(EditUserError(failure.errorMessage));
+      },
+      (user) async {
+        final params = EmailTemplateParams(
+          toName: user.firstName,
+          toEmail: user.email,
+          message: 'Email: ${user.email}\nPassword: $password',
+        );
+
+        final result = await _emailJsRepository.sendEmail(params);
+
+        result.fold(
+          (failure) => emit(EditUserError(failure.errorMessage)),
+          (_) => emit(CreatedCurrentUser(user)),
+        );
+      },
     );
   }
 
