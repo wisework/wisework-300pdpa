@@ -148,6 +148,8 @@ class EditConsentFormBloc
         gotConsentForm,
         gotMandatoryFields..sort((a, b) => a.priority.compareTo(b.priority)),
         gotPurposes,
+        // gotConsentForm.purposeCategories
+        //   ..sort((a, b) => a.priority.compareTo(b.priority)),
         gotPurposeCategories..sort((a, b) => a.priority.compareTo(b.priority)),
         gotCustomFields,
       ),

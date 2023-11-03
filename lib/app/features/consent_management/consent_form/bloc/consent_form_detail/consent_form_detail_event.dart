@@ -7,8 +7,8 @@ abstract class ConsentFormDetailEvent extends Equatable {
   List<Object> get props => [];
 }
 
-class GetConsentFormEvent extends ConsentFormDetailEvent {
-  const GetConsentFormEvent({
+class GetConsentFormDetailEvent extends ConsentFormDetailEvent {
+  const GetConsentFormDetailEvent({
     required this.consentFormId,
     required this.companyId,
   });

@@ -6,6 +6,7 @@ import 'package:go_router/go_router.dart';
 import 'package:pdpa/app/config/config.dart';
 import 'package:pdpa/app/data/models/consent_management/consent_form_model.dart';
 import 'package:pdpa/app/data/models/master_data/localized_model.dart';
+import 'package:pdpa/app/data/models/master_data/purpose_category_model.dart';
 import 'package:pdpa/app/features/authentication/bloc/sign_in/sign_in_bloc.dart';
 import 'package:pdpa/app/features/consent_management/consent_form/bloc/consent_form/consent_form_bloc.dart';
 import 'package:pdpa/app/features/consent_management/consent_form/cubit/consent_form/cubit/consent_form_cubit.dart';
@@ -299,6 +300,12 @@ class _ConsentFormViewState extends State<ConsentFormView> {
     final dateConsentForm =
         DateFormat("dd.MM.yy").format(consentForm.updatedDate);
 
+    final List<PurposeCategoryModel> purposeCategories =
+        consentForm.purposeCategories
+          ..sort(
+            (a, b) => a.priority.compareTo(b.priority),
+          );
+
     return Column(
       mainAxisSize: MainAxisSize.min,
       children: <Widget>[
@@ -338,7 +345,7 @@ class _ConsentFormViewState extends State<ConsentFormView> {
                         ],
                       ),
                       Visibility(
-                        visible: consentForm.purposeCategories.isNotEmpty,
+                        visible: purposeCategories.isNotEmpty,
                         child: Padding(
                           padding: const EdgeInsets.only(
                             top: UiConfig.textLineSpacing,
@@ -346,7 +353,7 @@ class _ConsentFormViewState extends State<ConsentFormView> {
                           child: ListView.builder(
                             shrinkWrap: true,
                             physics: const NeverScrollableScrollPhysics(),
-                            itemCount: consentForm.purposeCategories.length,
+                            itemCount: purposeCategories.length,
                             itemBuilder: (_, index) {
                               if (index <= 1) {
                                 final titlePurposeCategories =

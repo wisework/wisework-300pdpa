@@ -22,15 +22,15 @@ class ConsentFormDetailBloc
   })  : _consentRepository = consentRepository,
         _masterDataRepository = masterDataRepository,
         super(const ConsentFormDetailInitial()) {
-    on<GetConsentFormEvent>(_getConsentFormHandler);
+    on<GetConsentFormDetailEvent>(_getConsentFormDetailHandler);
     on<UpdateConsentFormDetailEvent>(_updateConsentFormDetailHandler);
   }
 
   final ConsentRepository _consentRepository;
   final MasterDataRepository _masterDataRepository;
 
-  Future<void> _getConsentFormHandler(
-    GetConsentFormEvent event,
+  Future<void> _getConsentFormDetailHandler(
+    GetConsentFormDetailEvent event,
     Emitter<ConsentFormDetailState> emit,
   ) async {
     if (event.consentFormId.isEmpty) {
@@ -162,7 +162,9 @@ class ConsentFormDetailBloc
         gotConsentForm,
         gotMandatoryFields..sort((a, b) => b.priority.compareTo(a.priority)),
         gotPurposes,
-        gotPurposeCategories..sort((a, b) => b.priority.compareTo(a.priority)),
+        gotConsentForm.purposeCategories
+          ..sort((a, b) => a.priority.compareTo(b.priority)),
+        // gotPurposeCategories..sort((a, b) => b.priority.compareTo(a.priority)),
         gotCustomFields,
         gotConsentTheme,
       ),
@@ -218,7 +220,8 @@ class ConsentFormDetailBloc
         consentFormUpdate,
         mandatoryFields..sort((a, b) => b.priority.compareTo(a.priority)),
         purposes,
-        purposeCategories..sort((a, b) => b.priority.compareTo(a.priority)),
+        purposeCategories,
+        // purposeCategories..sort((a, b) => b.priority.compareTo(a.priority)),
         customFields,
         consentThemeUpdate,
       ),
