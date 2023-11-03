@@ -159,8 +159,9 @@ class _UserConsentViewState extends State<UserConsentView> {
                           userConsents.sort(((a, b) =>
                               b.updatedDate.compareTo(a.updatedDate)));
                         }
-                        
-                        return consentForms.isNotEmpty || userConsents.isNotEmpty
+
+                        return consentForms.isNotEmpty ||
+                                userConsents.isNotEmpty
                             ? ListView.builder(
                                 shrinkWrap: true,
                                 itemCount: consentForms.length,
@@ -275,8 +276,8 @@ class _UserConsentViewState extends State<UserConsentView> {
         MaterialInkWell(
           onTap: () {
             context.push(
-              ConsentFormRoute.consentFormDetail.path
-                  .replaceFirst(':id', consentForm.id),
+              UserConsentRoute.userConsentDetail.path
+                  .replaceFirst(':id', userConsent.id),
             );
           },
           child: Padding(

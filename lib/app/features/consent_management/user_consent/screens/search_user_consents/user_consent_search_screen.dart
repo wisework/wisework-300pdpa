@@ -10,6 +10,7 @@ import 'package:pdpa/app/data/models/etc/user_input_text.dart';
 import 'package:pdpa/app/features/authentication/bloc/sign_in/sign_in_bloc.dart';
 import 'package:pdpa/app/features/consent_management/consent_form/routes/consent_form_route.dart';
 import 'package:pdpa/app/features/consent_management/user_consent/bloc/user_consent/user_consent_bloc.dart';
+import 'package:pdpa/app/features/consent_management/user_consent/routes/user_consent_route.dart';
 import 'package:pdpa/app/shared/widgets/customs/custom_icon_button.dart';
 import 'package:pdpa/app/shared/widgets/customs/custom_text_field.dart';
 import 'package:pdpa/app/shared/widgets/material_ink_well.dart';
@@ -210,8 +211,8 @@ class _UserConsentSearchViewState extends State<UserConsentSearchView> {
         MaterialInkWell(
           onTap: () {
             context.push(
-              ConsentFormRoute.consentFormDetail.path
-                  .replaceFirst(':id', consentForm.id),
+              UserConsentRoute.userConsentDetail.path
+                  .replaceFirst(':id', userConsent.id),
             );
           },
           child: Padding(
