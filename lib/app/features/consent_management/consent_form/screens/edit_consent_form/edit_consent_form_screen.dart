@@ -231,8 +231,10 @@ class _EditConsentFormViewState extends State<EditConsentFormView> {
     purposeCategories =
         widget.purposeCategories.map((category) => category).toList();
 
-    purposeCategorySelected =
-        consentForm.purposeCategories.map((category) => category).toList();
+    purposeCategorySelected = consentForm.purposeCategories
+        .map((category) => category)
+        .toList()
+      ..sort((a, b) => a.priority.compareTo(b.priority));
 
     titleController = TextEditingController();
     descriptionController = TextEditingController();
@@ -386,19 +388,18 @@ class _EditConsentFormViewState extends State<EditConsentFormView> {
   }
 
   void _goBackAndUpdate() {
-    // if (!widget.isNewConsentForm && isSave == true) {
-    //   final event = UpdateConsentFormDetailEvent(
-    //     consentForm: consentForm,
-    //     updateType: UpdateType.updated,
-    //   );
+    if (!widget.isNewConsentForm) {
+      final event = UpdateConsentFormDetailEvent(
+        consentForm: consentForm,
+        updateType: UpdateType.updated,
+      );
 
-    //   context.read<ConsentFormDetailBloc>().add(event);
+      context.read<ConsentFormDetailBloc>().add(event);
 
-    //   context.read<CurrentConsentFormDetailCubit>().setConsentForm(consentForm);
-    // }
+      context.read<CurrentConsentFormDetailCubit>().setConsentForm(consentForm);
+    }
 
-    // context.pop();
-    print(isSave);
+    context.pop();
   }
 
   void _updateEditConsentFormState(
@@ -422,20 +423,6 @@ class _EditConsentFormViewState extends State<EditConsentFormView> {
           style: Theme.of(context).textTheme.titleLarge,
         ),
         actions: [
-          // CustomIconButton(
-          //   onPressed: () {
-          //     // print(widget.consentForm.title);
-          //     // print("======================");
-          //     // print(consentForm.title);
-          //     // print("======================");
-          //     // print(widget.consentForm.description);
-          //     // print("======================");
-          //     // print(consentForm.description);
-          //   },
-          //   icon: Ionicons.save_outline,
-          //   iconColor: Theme.of(context).colorScheme.primary,
-          //   backgroundColor: Theme.of(context).colorScheme.onBackground,
-          // )
           _buildSaveButton(),
         ],
       ),
@@ -601,10 +588,7 @@ class _EditConsentFormViewState extends State<EditConsentFormView> {
               ? ReorderableListView.builder(
                   itemBuilder: (context, index) {
                     return _buildItemTile(context,
-                        purposeCategory: UtilFunctions.getPurposeCategoryById(
-                          purposeCategories,
-                          purposeCategorySelected[index].id,
-                        ),
+                        purposeCategory: purposeCategorySelected[index],
                         language: widget.currentUser.defaultLanguage);
                   },
                   itemCount: purposeCategorySelected.length,
@@ -624,7 +608,7 @@ class _EditConsentFormViewState extends State<EditConsentFormView> {
                       );
                     });
                   },
-                  buildDefaultDragHandles: false,
+                  buildDefaultDragHandles: true,
                   physics: const NeverScrollableScrollPhysics(),
                   shrinkWrap: true,
                 )
@@ -721,25 +705,8 @@ class _EditConsentFormViewState extends State<EditConsentFormView> {
     return Row(
       key: ValueKey(purposeCategory.id),
       children: <Widget>[
-        // Padding(
-        //   padding: const EdgeInsets.all(UiConfig.actionSpacing),
-        //   child: Icon(
-        //     Icons.circle,
-        //     size: 8.0,
-        //     color: Theme.of(context).colorScheme.primary,
-        //   ),
-        // ),
         Padding(
           padding: const EdgeInsets.all(UiConfig.actionSpacing),
-          child: ReorderableDragStartListener(
-            index: purposeCategorySelected.indexOf(purposeCategory),
-            child: Icon(
-              Ionicons.reorder_two_outline,
-              color: Theme.of(context).colorScheme.primary,
-            ),
-          ),
-        ),
-        Expanded(
           child: Text(
             title.text,
             style: Theme.of(context).textTheme.bodyMedium,

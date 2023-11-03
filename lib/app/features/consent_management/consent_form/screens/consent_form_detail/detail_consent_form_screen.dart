@@ -61,10 +61,12 @@ class _DetailConsentFormScreenState extends State<DetailConsentFormScreen> {
 
   void _getConsentFormDetails() {
     final bloc = context.read<ConsentFormDetailBloc>();
-    bloc.add(GetConsentFormEvent(
-      consentFormId: widget.consentFormId,
-      companyId: currentUser.currentCompany,
-    ));
+    bloc.add(
+      GetConsentFormDetailEvent(
+        consentFormId: widget.consentFormId,
+        companyId: currentUser.currentCompany,
+      ),
+    );
   }
 
   @override
