@@ -263,27 +263,4 @@ class ConsentFormBloc extends Bloc<ConsentFormEvent, ConsentFormState> {
     );
   }
 
-  // void _onGeneralConsentSortChanged(
-  //   GeneralConsentSortChanged event,
-  //   Emitter<GeneralConsentState> emit,
-  // ) {
-  //   final sortConsents = state.consents;
-  //   if (state.sort == SortConsentListView.asc) {
-  //     sortConsents.sort(
-  //       (a, b) => b.createdDate.toString().compareTo(a.createdDate.toString()),
-  //     );
-  //     emit(state.copyWith(
-  //       consents: sortConsents,
-  //       sort: SortConsentListView.desc,
-  //     ));
-  //   } else if (state.sort == SortConsentListView.desc) {
-  //     sortConsents.sort(
-  //       (a, b) => a.createdDate.toString().compareTo(b.createdDate.toString()),
-  //     );
-  //     emit(state.copyWith(
-  //       consents: sortConsents,
-  //       sort: SortConsentListView.asc,
-  //     ));
-  //   }
-  // }
 }

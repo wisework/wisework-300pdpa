@@ -2,6 +2,7 @@ import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
+import 'package:ionicons/ionicons.dart';
 import 'package:pdpa/app/config/config.dart';
 import 'package:pdpa/app/data/models/consent_management/consent_form_model.dart';
 import 'package:pdpa/app/data/models/consent_management/user_consent_model.dart';
@@ -9,6 +10,8 @@ import 'package:pdpa/app/data/models/etc/user_input_text.dart';
 import 'package:pdpa/app/features/authentication/bloc/sign_in/sign_in_bloc.dart';
 import 'package:pdpa/app/features/consent_management/consent_form/routes/consent_form_route.dart';
 import 'package:pdpa/app/features/consent_management/user_consent/bloc/user_consent/user_consent_bloc.dart';
+import 'package:pdpa/app/shared/widgets/customs/custom_icon_button.dart';
+import 'package:pdpa/app/shared/widgets/customs/custom_text_field.dart';
 import 'package:pdpa/app/shared/widgets/material_ink_well.dart';
 import 'package:pdpa/app/shared/widgets/screens/example_screen.dart';
 
@@ -76,71 +79,30 @@ class _UserConsentSearchViewState extends State<UserConsentSearchView> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
+        backgroundColor: Theme.of(context).colorScheme.onBackground,
         automaticallyImplyLeading: false,
         titleSpacing: 0,
         title: Row(
           children: <Widget>[
-            IconButton(
+            CustomIconButton(
               onPressed: () {
                 Navigator.pop(context);
+                context.read<UserConsentBloc>().add(
+                    SearchUserConsentSearchChanged(
+                        companyId: widget.companyId, search: ""));
               },
-              icon: Padding(
-                padding: const EdgeInsets.symmetric(vertical: 5.0),
-                child: Container(
-                  padding: const EdgeInsets.all(10.0),
-                  decoration: BoxDecoration(
-                    color: Theme.of(context).colorScheme.onSecondary,
-                    shape: BoxShape.circle,
-                  ),
-                  child: Icon(
-                    Icons.arrow_back_ios_rounded,
-                    size: 18,
-                    color: Theme.of(context).colorScheme.secondary,
-                  ),
-                ),
-              ),
-              color: Theme.of(context).colorScheme.secondary,
+              icon: Icons.chevron_left_outlined,
+              iconColor: Theme.of(context).colorScheme.primary,
+              backgroundColor: Theme.of(context).colorScheme.onBackground,
             ),
             Expanded(
               child: SizedBox(
                 width: double.infinity,
                 height: 40.0,
                 child: Builder(builder: (context) {
-                  return TextFormField(
-                    key: const Key('search_consent_field'),
+                  return CustomTextField(
                     controller: _searchController,
-                    minLines: 1,
-                    maxLines: 3,
-                    decoration: InputDecoration(
-                      enabledBorder: OutlineInputBorder(
-                          borderRadius:
-                              const BorderRadius.all(Radius.circular(10.0)),
-                          borderSide: BorderSide(
-                            color: Theme.of(context).colorScheme.outline,
-                          )),
-                      focusedBorder: OutlineInputBorder(
-                          borderRadius:
-                              const BorderRadius.all(Radius.circular(10.0)),
-                          borderSide: BorderSide(
-                            color: Theme.of(context).colorScheme.surface,
-                          )),
-                      hintText: "Search...",
-                      hintStyle: Theme.of(context)
-                          .textTheme
-                          .bodyText1
-                          ?.copyWith(
-                            fontStyle: FontStyle.italic,
-                            color:
-                                Theme.of(context).colorScheme.onSurfaceVariant,
-                          ),
-                      contentPadding: const EdgeInsets.symmetric(
-                        horizontal: 12.0,
-                        vertical: 10.0,
-                      ),
-                    ),
-                    style: Theme.of(context).textTheme.bodyText1?.copyWith(
-                          color: Theme.of(context).colorScheme.onPrimary,
-                        ),
+                    hintText: 'ค้นหา',
                     onChanged: (search) {
                       context.read<UserConsentBloc>().add(
                           SearchUserConsentSearchChanged(
@@ -150,28 +112,16 @@ class _UserConsentSearchViewState extends State<UserConsentSearchView> {
                 }),
               ),
             ),
-            IconButton(
+            CustomIconButton(
+              backgroundColor: Theme.of(context).colorScheme.onBackground,
+              icon: Ionicons.close_outline,
+              iconColor: Theme.of(context).colorScheme.primary,
               onPressed: () {
                 _searchController.clear();
-                // context
-                //     .read<SearchConsentBloc>()
-                //     .add(const SearchConsentSearchChanged(""));
+                context.read<UserConsentBloc>().add(
+                    SearchUserConsentSearchChanged(
+                        companyId: widget.companyId, search: ""));
               },
-              icon: Container(
-                padding: const EdgeInsets.symmetric(
-                  vertical: 6.0,
-                  horizontal: 8.0,
-                ),
-                decoration: BoxDecoration(
-                  color: Theme.of(context).colorScheme.onSecondary,
-                  shape: BoxShape.circle,
-                ),
-                child: Icon(
-                  Icons.close_outlined,
-                  size: 24,
-                  color: Theme.of(context).colorScheme.secondary,
-                ),
-              ),
             ),
           ],
         ),
@@ -188,7 +138,7 @@ class _UserConsentSearchViewState extends State<UserConsentSearchView> {
               child: BlocBuilder<UserConsentBloc, UserConsentState>(
                 builder: (context, state) {
                   if (state is GotUserConsents) {
-                    return state.userConsents.isNotEmpty
+                    return state.consentForms.isNotEmpty
                         ? ListView.builder(
                             itemCount: state.userConsents.length,
                             itemBuilder: (context, index) {
@@ -238,7 +188,7 @@ class _UserConsentSearchViewState extends State<UserConsentSearchView> {
     );
   }
 
-   _buildItemCard(
+  _buildItemCard(
     BuildContext context, {
     required UserConsentModel userConsent,
     required ConsentFormModel consentForm,

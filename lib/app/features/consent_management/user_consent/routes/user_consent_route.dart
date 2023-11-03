@@ -1,5 +1,5 @@
 import 'package:go_router/go_router.dart';
-import 'package:pdpa/app/features/consent_management/user_consent/screens/search/user_consent_search_screen.dart';
+import 'package:pdpa/app/features/consent_management/user_consent/screens/search_user_consents/user_consent_search_screen.dart';
 import 'package:pdpa/app/features/consent_management/user_consent/screens/user_consent_detail/user_consert_detail_screen.dart';
 import 'package:pdpa/app/features/consent_management/user_consent/screens/user_consent_screen.dart';
 

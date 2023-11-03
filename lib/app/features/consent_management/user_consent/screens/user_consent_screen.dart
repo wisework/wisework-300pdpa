@@ -60,6 +60,13 @@ class UserConsentView extends StatefulWidget {
 
 class _UserConsentViewState extends State<UserConsentView> {
   final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
+  bool _sortAscending = true;
+
+  void _sortProducts(bool ascending) {
+    setState(() {
+      _sortAscending = ascending;
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -136,15 +143,32 @@ class _UserConsentViewState extends State<UserConsentView> {
                   BlocBuilder<UserConsentBloc, UserConsentState>(
                     builder: (context, state) {
                       if (state is GotUserConsents) {
-                        return state.consentForms.isNotEmpty
+                        final consentForms = state.consentForms;
+                        if (_sortAscending == true) {
+                          consentForms.sort(((a, b) =>
+                              a.updatedDate.compareTo(b.updatedDate)));
+                        } else {
+                          consentForms.sort(((a, b) =>
+                              b.updatedDate.compareTo(a.updatedDate)));
+                        }
+                        final userConsents = state.userConsents;
+                        if (_sortAscending == true) {
+                          userConsents.sort(((a, b) =>
+                              a.updatedDate.compareTo(b.updatedDate)));
+                        } else {
+                          userConsents.sort(((a, b) =>
+                              b.updatedDate.compareTo(a.updatedDate)));
+                        }
+                        
+                        return consentForms.isNotEmpty || userConsents.isNotEmpty
                             ? ListView.builder(
                                 shrinkWrap: true,
-                                itemCount: state.consentForms.length,
+                                itemCount: consentForms.length,
                                 itemBuilder: (context, index) {
                                   return _buildItemCard(
                                     context,
                                     userConsent: state.userConsents[index],
-                                    consentForm: state.consentForms.firstWhere(
+                                    consentForm: consentForms.firstWhere(
                                       (role) =>
                                           role.id ==
                                           state.userConsents[index]
@@ -197,7 +221,9 @@ class _UserConsentViewState extends State<UserConsentView> {
 
   Widget _sortByDateButton(BuildContext context) {
     return IconButton(
-      onPressed: () {},
+      onPressed: () {
+        _sortProducts(!_sortAscending);
+      },
       padding: EdgeInsets.zero,
       icon: Column(
         children: [
@@ -208,11 +234,17 @@ class _UserConsentViewState extends State<UserConsentView> {
                   text: tr("consentManagement.listage.filter.date"),
                   style: Theme.of(context).textTheme.bodyMedium),
               WidgetSpan(
-                child: Icon(
-                  Icons.arrow_drop_down,
-                  size: 20,
-                  color: Theme.of(context).colorScheme.secondary,
-                ),
+                child: _sortAscending
+                    ? Icon(
+                        Icons.arrow_drop_down,
+                        size: 20,
+                        color: Theme.of(context).colorScheme.secondary,
+                      )
+                    : Icon(
+                        Icons.arrow_drop_up,
+                        size: 20,
+                        color: Theme.of(context).colorScheme.secondary,
+                      ),
               ),
             ],
           )),

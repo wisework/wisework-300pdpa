@@ -112,45 +112,75 @@ class UserConsentBloc extends Bloc<UserConsentEvent, UserConsentState> {
         );
 
         result.fold(
-          (failure) => emit(UserConsentError(failure.errorMessage)),
-          (mandatoryFields) async {
-            emit(
-              GotUserConsents(
-                userConsents
-                  ..sort((a, b) => b.updatedDate.compareTo(a.updatedDate)),
-                gotConsentForms,
-                mandatoryFields
-                  ..sort((a, b) => a.priority.compareTo(b.priority)),
-              ),
-            );
-            List<UserConsentModel> newUserConsent = [];
-            
-            for (UserConsentModel userConsent in userConsents) {
-              bool isTitleFound = false;
+            (failure) => emit(UserConsentError(failure.errorMessage)),
+            (mandatoryFields) => emit(
+                  GotUserConsents(
+                    userConsents
+                      ..sort((a, b) => b.updatedDate.compareTo(a.updatedDate)),
+                    gotConsentForms,
+                    mandatoryFields
+                      ..sort((a, b) => a.priority.compareTo(b.priority)),
+                  ),
+                ));
 
-              if (userConsent.mandatoryFields
-                  .toString()
-                  .contains(event.search)) {
-                isTitleFound = true;
-              }
+        // List<UserConsentModel> newUserConsent = [];
 
-              if (isTitleFound) {
-                newUserConsent.add(userConsent);
-              }
-            }
+        // for (UserConsentModel userConsent in userConsents) {
+        //   bool isTitleFound = false;
 
-            emit(
-              GotUserConsents(
-                newUserConsent
-                  ..sort((a, b) => b.updatedDate.compareTo(a.updatedDate)),
-                gotConsentForms,
-                mandatoryFields
-                  ..sort((a, b) => a.priority.compareTo(b.priority)),
-              ),
-            );
-          },
-        );
+        //   if (userConsent.mandatoryFields.toString().contains(event.search)) {
+        //     isTitleFound = true;
+        //   }
+
+        //   if (isTitleFound) {
+        //     newUserConsent.add(userConsent);
+        //   }
+        // }
+
+        // emit(
+        //   GotUserConsents(
+        //     newUserConsent
+        //       ..sort((a, b) => b.updatedDate.compareTo(a.updatedDate)),
+        //     gotConsentForms,
+        //     mandatoryFields..sort((a, b) => a.priority.compareTo(b.priority)),
+        //   ),
+        // );
       },
     );
+
+    // if (event.search.isEmpty) {
+    //   emit(
+    //     GotUserConsents(
+    //       userConsents..sort((a, b) => b.updatedDate.compareTo(a.updatedDate)),
+    //       gotConsentForms,
+    //       mandatoryFields..sort((a, b) => a.priority.compareTo(b.priority)),
+    //     ),
+    //   );
+    // }
+    // List<ConsentFormModel> newConsents = [];
+    // for (ConsentFormModel consent in gotConsentForms) {
+    //   bool isTitleFound = false;
+    //   bool isPurposeCategoryFound = false;
+
+    //   if (consent.title.toString().contains(event.search)) {
+    //     isTitleFound = true;
+    //   }
+    //   for (PurposeCategoryModel category in gotPurposeCategories) {
+    //     if (category.title.map((e) => e.text).first.contains(event.search)) {
+    //       isPurposeCategoryFound = true;
+    //     }
+    //   }
+    //   if (isTitleFound || isPurposeCategoryFound) {
+    //     newConsents.add(consent);
+    //   }
+    // }
+
+    // emit(
+    //   GotUserConsents(
+    //     userConsents..sort((a, b) => b.updatedDate.compareTo(a.updatedDate)),
+    //     gotConsentForms,
+    //     mandatoryFields..sort((a, b) => a.priority.compareTo(b.priority)),
+    //   ),
+    // );
   }
 }

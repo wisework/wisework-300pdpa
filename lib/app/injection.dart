@@ -3,7 +3,6 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:get_it/get_it.dart';
 import 'package:google_sign_in/google_sign_in.dart';
-import 'package:pdpa/app/features/consent_management/consent_form/cubit/consent_form/cubit/consent_form_cubit.dart';
 import 'package:pdpa/app/features/consent_management/consent_form/cubit/current_consent_form_detail/current_consent_form_detail_cubit.dart';
 
 import 'config/config.dart';
@@ -150,9 +149,6 @@ Future<void> _consentManagement() async {
     )
     ..registerFactory(
       () => CurrentConsentFormDetailCubit(),
-    )
-    ..registerFactory(
-      () => ConsentFormCubit(),
     )
     ..registerFactory(
       () => UserConsentFormBloc(
