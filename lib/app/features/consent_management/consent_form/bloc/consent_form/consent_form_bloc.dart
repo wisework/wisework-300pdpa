@@ -103,11 +103,22 @@ class ConsentFormBloc extends Bloc<ConsentFormEvent, ConsentFormState> {
       },
     );
 
-    emit(
-      GotConsentForms(
-        gotConsentForms..sort((a, b) => b.updatedDate.compareTo(a.updatedDate)),
-      ),
-    );
+    final sortConsents = event.sort;
+    if (sortConsents == SortType.desc) {
+      emit(
+        GotConsentForms(
+          gotConsentForms
+            ..sort((a, b) => b.updatedDate.compareTo(a.updatedDate)),
+        ),
+      );
+    } else {
+      emit(
+        GotConsentForms(
+          gotConsentForms
+            ..sort((a, b) => a.updatedDate.compareTo(b.updatedDate)),
+        ),
+      );
+    }
   }
 
   Future<void> _updateConsentFormsEvent(
@@ -238,7 +249,6 @@ class ConsentFormBloc extends Bloc<ConsentFormEvent, ConsentFormState> {
       for (PurposeCategoryModel category in gotPurposeCategories) {
         if (category.title.map((e) => e.text).first.contains(event.search)) {
           isPurposeCategoryFound = true;
-          print(isPurposeCategoryFound);
         }
       }
       if (isTitleFound || isPurposeCategoryFound) {
@@ -246,7 +256,6 @@ class ConsentFormBloc extends Bloc<ConsentFormEvent, ConsentFormState> {
       }
     }
 
-    
     emit(
       GotConsentForms(
         newConsents..sort((a, b) => b.updatedDate.compareTo(a.updatedDate)),
@@ -254,7 +263,7 @@ class ConsentFormBloc extends Bloc<ConsentFormEvent, ConsentFormState> {
     );
   }
 
-  //  void _onGeneralConsentSortChanged(
+  // void _onGeneralConsentSortChanged(
   //   GeneralConsentSortChanged event,
   //   Emitter<GeneralConsentState> emit,
   // ) {

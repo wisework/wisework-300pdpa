@@ -38,6 +38,7 @@ class _ConsentFormScreenState extends State<ConsentFormScreen> {
 
   void _initialData() {
     final bloc = context.read<SignInBloc>();
+    final cubit = context.read<ConsentFormCubit>();
 
     String companyId = '';
     if (bloc.state is SignedInUser) {
@@ -45,9 +46,8 @@ class _ConsentFormScreenState extends State<ConsentFormScreen> {
       language = (bloc.state as SignedInUser).user.defaultLanguage;
     }
 
-    context
-        .read<ConsentFormBloc>()
-        .add(GetConsentFormsEvent(companyId: companyId));
+    context.read<ConsentFormBloc>().add(
+        GetConsentFormsEvent(companyId: companyId, sort: cubit.state.sort));
   }
 
   @override
@@ -199,61 +199,65 @@ class _ConsentFormViewState extends State<ConsentFormView> {
     );
   }
 
-  Wrap _sortButtonGroup(BuildContext context) {
-    return Wrap(
-      direction: Axis.horizontal,
-      crossAxisAlignment: WrapCrossAlignment.center,
-      children: <Widget>[
-        IconButton(
-          onPressed: () {},
-          padding: EdgeInsets.zero,
-          icon: Container(
-            padding: const EdgeInsets.symmetric(
-              vertical: 6.0,
-              horizontal: 12.0,
-            ),
-            decoration: BoxDecoration(
-              color: Theme.of(context).colorScheme.surface,
-              borderRadius: BorderRadius.circular(10.0),
-            ),
-            child: Center(
-              child: Text(
-                tr("consentManagement.listage.filter.all"),
-                style: Theme.of(context).textTheme.bodySmall,
-              ),
-            ),
-          ),
-        ),
-        IconButton(
-          onPressed: () {},
-          padding: EdgeInsets.zero,
-          icon: Container(
-            padding: const EdgeInsets.symmetric(
-              vertical: 6.0,
-              horizontal: 12.0,
-            ),
-            decoration: BoxDecoration(
-              color: Theme.of(context).colorScheme.surface,
-              borderRadius: BorderRadius.circular(10.0),
-            ),
-            child: Text(
-              tr("consentManagement.listage.filter.problem"),
-              style: Theme.of(context).textTheme.bodySmall,
-            ),
-          ),
-        ),
-      ],
-    );
-  }
+  // Wrap _sortButtonGroup(BuildContext context) {
+  //   return Wrap(
+  //     direction: Axis.horizontal,
+  //     crossAxisAlignment: WrapCrossAlignment.center,
+  //     children: <Widget>[
+  //       IconButton(
+  //         onPressed: () {},
+  //         padding: EdgeInsets.zero,
+  //         icon: Container(
+  //           padding: const EdgeInsets.symmetric(
+  //             vertical: 6.0,
+  //             horizontal: 12.0,
+  //           ),
+  //           decoration: BoxDecoration(
+  //             color: Theme.of(context).colorScheme.surface,
+  //             borderRadius: BorderRadius.circular(10.0),
+  //           ),
+  //           child: Center(
+  //             child: Text(
+  //               tr("consentManagement.listage.filter.all"),
+  //               style: Theme.of(context).textTheme.bodySmall,
+  //             ),
+  //           ),
+  //         ),
+  //       ),
+  //       IconButton(
+  //         onPressed: () {},
+  //         padding: EdgeInsets.zero,
+  //         icon: Container(
+  //           padding: const EdgeInsets.symmetric(
+  //             vertical: 6.0,
+  //             horizontal: 12.0,
+  //           ),
+  //           decoration: BoxDecoration(
+  //             color: Theme.of(context).colorScheme.surface,
+  //             borderRadius: BorderRadius.circular(10.0),
+  //           ),
+  //           child: Text(
+  //             tr("consentManagement.listage.filter.problem"),
+  //             style: Theme.of(context).textTheme.bodySmall,
+  //           ),
+  //         ),
+  //       ),
+  //     ],
+  //   );
+  // }
 
   Widget _sortByDateButton(BuildContext context) {
     final cubit = context.read<ConsentFormCubit>();
     return IconButton(
       onPressed: () {
         if (cubit.state.sort == SortType.asc) {
-          cubit.sortConsentFormChange(SortType.desc);
+          setState(() {
+            cubit.sortConsentFormChange(SortType.desc);
+          });
         } else {
-          cubit.sortConsentFormChange(SortType.asc);
+          setState(() {
+            cubit.sortConsentFormChange(SortType.asc);
+          });
         }
       },
       padding: EdgeInsets.zero,

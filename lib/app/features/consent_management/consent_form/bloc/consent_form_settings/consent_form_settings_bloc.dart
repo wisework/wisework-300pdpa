@@ -244,6 +244,7 @@ class ConsentFormSettingsBloc
     ConsentFormModel consentForm = ConsentFormModel.empty();
     List<MandatoryFieldModel> mandatoryFields = [];
     List<PurposeModel> purposes = [];
+    // ignore: unused_local_variable
     List<PurposeCategoryModel> purposeCategories = [];
     List<CustomFieldModel> customFields = [];
     List<ConsentThemeModel> consentThemes = [];

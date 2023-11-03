@@ -1,3 +1,4 @@
+// ignore: depend_on_referenced_packages
 import 'package:bloc/bloc.dart';
 import 'package:equatable/equatable.dart';
 import 'package:pdpa/app/shared/utils/constants.dart';
@@ -13,6 +14,9 @@ class ConsentFormCubit extends Cubit<ConsentFormCubitState> {
   void sortConsentFormChange(
     SortType type,
   ) {
+
+    print(state.sort.toString());
+
     emit(
       state.copyWith(
         sort: type,

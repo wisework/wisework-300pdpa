@@ -10,12 +10,17 @@ abstract class ConsentFormEvent extends Equatable {
 class GetConsentFormsEvent extends ConsentFormEvent {
   const GetConsentFormsEvent({
     required this.companyId,
+    required this.sort,
   });
 
   final String companyId;
+  final SortType sort;
 
   @override
-  List<Object> get props => [companyId];
+  List<Object> get props => [
+        companyId,
+        sort,
+      ];
 }
 
 class GetPurposeCategoriesEvent extends ConsentFormEvent {
