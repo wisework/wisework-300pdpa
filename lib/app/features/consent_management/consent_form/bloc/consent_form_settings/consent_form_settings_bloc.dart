@@ -162,7 +162,8 @@ class ConsentFormSettingsBloc
         gotConsentForm,
         gotMandatoryFields..sort((a, b) => a.priority.compareTo(b.priority)),
         gotPurposes,
-        gotPurposeCategories..sort((a, b) => a.priority.compareTo(b.priority)),
+        gotPurposeCategories,
+        // gotPurposeCategories..sort((a, b) => a.priority.compareTo(b.priority)),
         gotCustomFields,
         gotConsentThemes
           ..sort((a, b) => b.updatedDate.compareTo(a.updatedDate)),
@@ -223,7 +224,8 @@ class ConsentFormSettingsBloc
           event.consentForm,
           mandatoryFields..sort((a, b) => a.priority.compareTo(b.priority)),
           purposes,
-          purposeCategories..sort((a, b) => a.priority.compareTo(b.priority)),
+          purposeCategories,
+          // purposeCategories..sort((a, b) => a.priority.compareTo(b.priority)),
           customFields,
           consentThemes..sort((a, b) => b.updatedDate.compareTo(a.updatedDate)),
           consentThemes.firstWhere(
@@ -305,7 +307,8 @@ class ConsentFormSettingsBloc
         consentForm,
         mandatoryFields..sort((a, b) => a.priority.compareTo(b.priority)),
         purposes,
-        purposeCategories..sort((a, b) => a.priority.compareTo(b.priority)),
+        consentForm.purposeCategories
+          ..sort((a, b) => a.priority.compareTo(b.priority)),
         customFields,
         updated..sort((a, b) => b.updatedDate.compareTo(a.updatedDate)),
         consentTheme,
