@@ -23,6 +23,7 @@ class AppConfig {
 
 class AppPreferences {
   static const String rememberEmail = 'remember_email';
+  static const String isFirstLaunch = 'is_first_launch';
 }
 
 class UiConfig {

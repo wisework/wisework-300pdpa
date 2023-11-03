@@ -12,14 +12,8 @@ import 'package:pdpa/app/features/consent_management/consent_form/bloc/consent_f
 import 'package:pdpa/app/features/consent_management/consent_form/routes/consent_form_route.dart';
 import 'package:pdpa/app/features/consent_management/user_consent/routes/user_consent_route.dart';
 import 'package:pdpa/app/features/master_data/routes/master_data_route.dart';
-import 'package:pdpa/app/shared/drawers/bloc/drawer_bloc.dart';
-import 'package:pdpa/app/shared/drawers/models/drawer_menu_models.dart';
 import 'package:pdpa/app/shared/drawers/pdpa_drawer.dart';
-import 'package:pdpa/app/shared/widgets/customs/custom_button.dart';
-import 'package:pdpa/app/shared/widgets/customs/custom_container.dart';
-import 'package:pdpa/app/shared/widgets/customs/custom_icon_button.dart';
 import 'package:pdpa/app/shared/widgets/material_ink_well.dart';
-import 'package:pdpa/app/shared/widgets/templates/pdpa_app_bar.dart';
 import 'dart:math';
 
 class HomeScreen extends StatefulWidget {
@@ -62,6 +56,8 @@ class _HomeScreenState extends State<HomeScreen> {
         .add(GetConsentFormsEvent(companyId: companyId));
   }
 
+  
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -71,7 +67,7 @@ class _HomeScreenState extends State<HomeScreen> {
         surfaceTintColor: Theme.of(context).colorScheme.onBackground,
         backgroundColor: Theme.of(context).colorScheme.onBackground,
         title: Image.asset(
-          'assets/images/wisework-logo-mini.png', // เปลี่ยนเป็นที่อยู่ของไฟล์โลโก้ของคุณ
+          'assets/images/general/wisework-logo-mini.png', // เปลี่ยนเป็นที่อยู่ของไฟล์โลโก้ของคุณ
           height: 30, // ปรับความสูงตามที่คุณต้องการ
         ),
         centerTitle: true,
@@ -171,7 +167,7 @@ class _HomeScreenState extends State<HomeScreen> {
                               right: UiConfig.defaultPaddingSpacing),
                           child: Text(
                             tr('general.home.explore'),
-                            style: Theme.of(context).textTheme.displaySmall,
+                            style: Theme.of(context).textTheme.headlineSmall,
                           ),
                         ),
                         const SizedBox(height: UiConfig.lineSpacing),
@@ -199,7 +195,8 @@ class _HomeScreenState extends State<HomeScreen> {
                             children: [
                               Text(
                                 tr('general.home.recentlyUsed'),
-                                style: Theme.of(context).textTheme.displaySmall,
+                                style:
+                                    Theme.of(context).textTheme.headlineSmall,
                               ),
                               MouseRegion(
                                 cursor: SystemMouseCursors.click,
@@ -387,26 +384,25 @@ class _HomeScreenState extends State<HomeScreen> {
               final screenWidth = constraints.maxWidth;
 
               return Column(
-               mainAxisAlignment :MainAxisAlignment.center,
-                          crossAxisAlignment: CrossAxisAlignment.center,
+                mainAxisAlignment: MainAxisAlignment.center,
+                crossAxisAlignment: CrossAxisAlignment.center,
                 children: [
                   Row(
                     crossAxisAlignment: CrossAxisAlignment.center,
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
-                      if (screenWidth <= 726)
+                      if (screenWidth <= 850)
                         // Display this when screen width is 600 or more
                         Column(
-                          mainAxisAlignment :MainAxisAlignment.center,
+                          mainAxisAlignment: MainAxisAlignment.center,
                           crossAxisAlignment: CrossAxisAlignment.center,
                           children: [
                             Row(
-                              mainAxisAlignment:
-                                  MainAxisAlignment.spaceEvenly,
+                              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                               children: [
                                 SizedBox(
                                   height: 136,
-                                  width: 200,
+                                  width: 164,
                                   child: InkWell(
                                     onTap: () {
                                       context.push(ConsentFormRoute
@@ -426,23 +422,18 @@ class _HomeScreenState extends State<HomeScreen> {
                                           crossAxisAlignment:
                                               CrossAxisAlignment.start,
                                           mainAxisAlignment:
-                                              MainAxisAlignment
-                                                  .spaceBetween,
+                                              MainAxisAlignment.spaceBetween,
                                           children: [
                                             Container(
                                               decoration: BoxDecoration(
-                                                color:
-                                                    const Color(0xff262626),
+                                                color: const Color(0xff262626),
                                                 borderRadius:
-                                                    BorderRadius.circular(
-                                                        8.0),
+                                                    BorderRadius.circular(8.0),
                                               ),
                                               child: const Padding(
-                                                padding:
-                                                    EdgeInsets.all(5.0),
+                                                padding: EdgeInsets.all(5.0),
                                                 child: Icon(
-                                                  Ionicons
-                                                      .add_circle_outline,
+                                                  Ionicons.add_circle_outline,
                                                   color: Colors.white,
                                                   size: 20,
                                                 ),
@@ -472,10 +463,10 @@ class _HomeScreenState extends State<HomeScreen> {
                                     ),
                                   ),
                                 ),
-                                SizedBox(width: 10),
+                                const SizedBox(width: 10),
                                 SizedBox(
                                   height: 136,
-                                  width: 200,
+                                  width: 164,
                                   child: InkWell(
                                     onTap: () {
                                       context.push(UserConsentRoute
@@ -495,20 +486,16 @@ class _HomeScreenState extends State<HomeScreen> {
                                           crossAxisAlignment:
                                               CrossAxisAlignment.start,
                                           mainAxisAlignment:
-                                              MainAxisAlignment
-                                                  .spaceBetween,
+                                              MainAxisAlignment.spaceBetween,
                                           children: [
                                             Container(
                                               decoration: BoxDecoration(
-                                                color:
-                                                    const Color(0xff262626),
+                                                color: const Color(0xff262626),
                                                 borderRadius:
-                                                    BorderRadius.circular(
-                                                        8.0),
+                                                    BorderRadius.circular(8.0),
                                               ),
                                               child: const Padding(
-                                                padding:
-                                                    EdgeInsets.all(5.0),
+                                                padding: EdgeInsets.all(5.0),
                                                 child: Icon(
                                                   Ionicons.people_outline,
                                                   color: Colors.white,
@@ -544,16 +531,15 @@ class _HomeScreenState extends State<HomeScreen> {
                             ),
                             const SizedBox(height: 10),
                             Row(
-                              mainAxisAlignment:
-                                  MainAxisAlignment.spaceEvenly,
+                              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                               children: [
                                 SizedBox(
                                   height: 136,
-                                  width: 200,
+                                  width: 164,
                                   child: InkWell(
                                     onTap: () {
-                                      context.push(ConsentFormRoute
-                                          .consentForm.path);
+                                      context.push(
+                                          ConsentFormRoute.consentForm.path);
                                     },
                                     child: Ink(
                                       decoration: BoxDecoration(
@@ -569,23 +555,18 @@ class _HomeScreenState extends State<HomeScreen> {
                                           crossAxisAlignment:
                                               CrossAxisAlignment.start,
                                           mainAxisAlignment:
-                                              MainAxisAlignment
-                                                  .spaceBetween,
+                                              MainAxisAlignment.spaceBetween,
                                           children: [
                                             Container(
                                               decoration: BoxDecoration(
-                                                color:
-                                                    const Color(0xff262626),
+                                                color: const Color(0xff262626),
                                                 borderRadius:
-                                                    BorderRadius.circular(
-                                                        8.0),
+                                                    BorderRadius.circular(8.0),
                                               ),
                                               child: const Padding(
-                                                padding:
-                                                    EdgeInsets.all(5.0),
+                                                padding: EdgeInsets.all(5.0),
                                                 child: Icon(
-                                                  Ionicons
-                                                      .clipboard_outline,
+                                                  Ionicons.clipboard_outline,
                                                   color: Colors.white,
                                                   size: 20,
                                                 ),
@@ -615,10 +596,10 @@ class _HomeScreenState extends State<HomeScreen> {
                                     ),
                                   ),
                                 ),
-                                SizedBox(width: 10),
+                                const SizedBox(width: 10),
                                 SizedBox(
                                   height: 136,
-                                  width: 200,
+                                  width: 164,
                                   child: InkWell(
                                     onTap: () {
                                       context.push(MasterDataRoute
@@ -638,8 +619,7 @@ class _HomeScreenState extends State<HomeScreen> {
                                           crossAxisAlignment:
                                               CrossAxisAlignment.start,
                                           mainAxisAlignment:
-                                              MainAxisAlignment
-                                                  .spaceBetween,
+                                              MainAxisAlignment.spaceBetween,
                                           children: [
                                             Row(
                                               mainAxisAlignment:
@@ -647,18 +627,17 @@ class _HomeScreenState extends State<HomeScreen> {
                                               children: [
                                                 Container(
                                                   decoration: BoxDecoration(
-                                                    color: const Color(
-                                                        0xff262626),
+                                                    color:
+                                                        const Color(0xff262626),
                                                     borderRadius:
-                                                        BorderRadius
-                                                            .circular(8.0),
+                                                        BorderRadius.circular(
+                                                            8.0),
                                                   ),
                                                   child: const Padding(
                                                     padding:
                                                         EdgeInsets.all(5.0),
                                                     child: Icon(
-                                                      Ionicons
-                                                          .server_outline,
+                                                      Ionicons.server_outline,
                                                       color: Colors.white,
                                                       size: 20,
                                                     ),
@@ -694,16 +673,16 @@ class _HomeScreenState extends State<HomeScreen> {
                             ),
                           ],
                         ),
-                      if (screenWidth >= 726)
+                      if (screenWidth >= 850)
                         Column(
                           mainAxisAlignment: MainAxisAlignment.center,
                           children: [
                             Row(
-                              mainAxisAlignment:
-                                  MainAxisAlignment.spaceEvenly,
+                              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                               children: [
                                 SizedBox(
-                    
+                                  height: 136,
+                                  width: 200,
                                   child: InkWell(
                                     onTap: () {
                                       context.push(ConsentFormRoute
@@ -718,29 +697,23 @@ class _HomeScreenState extends State<HomeScreen> {
                                             BorderRadius.circular(16.0),
                                       ),
                                       child: Padding(
-                                        padding:
-                                            const EdgeInsets.all(10.0),
+                                        padding: const EdgeInsets.all(10.0),
                                         child: Column(
                                           crossAxisAlignment:
                                               CrossAxisAlignment.start,
                                           mainAxisAlignment:
-                                              MainAxisAlignment
-                                                  .spaceBetween,
+                                              MainAxisAlignment.spaceBetween,
                                           children: [
                                             Container(
                                               decoration: BoxDecoration(
-                                                color: const Color(
-                                                    0xff262626),
+                                                color: const Color(0xff262626),
                                                 borderRadius:
-                                                    BorderRadius
-                                                        .circular(8.0),
+                                                    BorderRadius.circular(8.0),
                                               ),
                                               child: const Padding(
-                                                padding:
-                                                    EdgeInsets.all(5.0),
+                                                padding: EdgeInsets.all(5.0),
                                                 child: Icon(
-                                                  Ionicons
-                                                      .add_circle_outline,
+                                                  Ionicons.add_circle_outline,
                                                   color: Colors.white,
                                                   size: 20,
                                                 ),
@@ -748,22 +721,19 @@ class _HomeScreenState extends State<HomeScreen> {
                                             ),
                                             Column(
                                               crossAxisAlignment:
-                                                  CrossAxisAlignment
-                                                      .start,
+                                                  CrossAxisAlignment.start,
                                               children: [
                                                 Text(
                                                   tr('app.features.consent'),
-                                                  style:
-                                                      Theme.of(context)
-                                                          .textTheme
-                                                          .bodySmall,
+                                                  style: Theme.of(context)
+                                                      .textTheme
+                                                      .bodySmall,
                                                 ),
                                                 Text(
                                                   tr('app.features.createcsf'),
-                                                  style:
-                                                      Theme.of(context)
-                                                          .textTheme
-                                                          .bodySmall,
+                                                  style: Theme.of(context)
+                                                      .textTheme
+                                                      .bodySmall,
                                                 ),
                                               ],
                                             ),
@@ -773,7 +743,7 @@ class _HomeScreenState extends State<HomeScreen> {
                                     ),
                                   ),
                                 ),
-                                SizedBox(width: 10),
+                                const SizedBox(width: 10),
                                 SizedBox(
                                   height: 136,
                                   width: 200,
@@ -791,29 +761,23 @@ class _HomeScreenState extends State<HomeScreen> {
                                             BorderRadius.circular(16.0),
                                       ),
                                       child: Padding(
-                                        padding:
-                                            const EdgeInsets.all(10.0),
+                                        padding: const EdgeInsets.all(10.0),
                                         child: Column(
                                           crossAxisAlignment:
                                               CrossAxisAlignment.start,
                                           mainAxisAlignment:
-                                              MainAxisAlignment
-                                                  .spaceBetween,
+                                              MainAxisAlignment.spaceBetween,
                                           children: [
                                             Container(
                                               decoration: BoxDecoration(
-                                                color: const Color(
-                                                    0xff262626),
+                                                color: const Color(0xff262626),
                                                 borderRadius:
-                                                    BorderRadius
-                                                        .circular(8.0),
+                                                    BorderRadius.circular(8.0),
                                               ),
                                               child: const Padding(
-                                                padding:
-                                                    EdgeInsets.all(5.0),
+                                                padding: EdgeInsets.all(5.0),
                                                 child: Icon(
-                                                  Ionicons
-                                                      .people_outline,
+                                                  Ionicons.people_outline,
                                                   color: Colors.white,
                                                   size: 20,
                                                 ),
@@ -821,22 +785,19 @@ class _HomeScreenState extends State<HomeScreen> {
                                             ),
                                             Column(
                                               crossAxisAlignment:
-                                                  CrossAxisAlignment
-                                                      .start,
+                                                  CrossAxisAlignment.start,
                                               children: [
                                                 Text(
                                                   tr('app.features.consent'),
-                                                  style:
-                                                      Theme.of(context)
-                                                          .textTheme
-                                                          .bodySmall,
+                                                  style: Theme.of(context)
+                                                      .textTheme
+                                                      .bodySmall,
                                                 ),
                                                 Text(
                                                   tr('app.features.userconsents'),
-                                                  style:
-                                                      Theme.of(context)
-                                                          .textTheme
-                                                          .bodySmall,
+                                                  style: Theme.of(context)
+                                                      .textTheme
+                                                      .bodySmall,
                                                 ),
                                               ],
                                             ),
@@ -846,14 +807,14 @@ class _HomeScreenState extends State<HomeScreen> {
                                     ),
                                   ),
                                 ),
-                                SizedBox(width: 10),
+                                const SizedBox(width: 10),
                                 SizedBox(
                                   height: 136,
                                   width: 200,
                                   child: InkWell(
                                     onTap: () {
-                                      context.push(ConsentFormRoute
-                                          .consentForm.path);
+                                      context.push(
+                                          ConsentFormRoute.consentForm.path);
                                     },
                                     child: Ink(
                                       decoration: BoxDecoration(
@@ -864,29 +825,23 @@ class _HomeScreenState extends State<HomeScreen> {
                                             BorderRadius.circular(16.0),
                                       ),
                                       child: Padding(
-                                        padding:
-                                            const EdgeInsets.all(10.0),
+                                        padding: const EdgeInsets.all(10.0),
                                         child: Column(
                                           crossAxisAlignment:
                                               CrossAxisAlignment.start,
                                           mainAxisAlignment:
-                                              MainAxisAlignment
-                                                  .spaceBetween,
+                                              MainAxisAlignment.spaceBetween,
                                           children: [
                                             Container(
                                               decoration: BoxDecoration(
-                                                color: const Color(
-                                                    0xff262626),
+                                                color: const Color(0xff262626),
                                                 borderRadius:
-                                                    BorderRadius
-                                                        .circular(8.0),
+                                                    BorderRadius.circular(8.0),
                                               ),
                                               child: const Padding(
-                                                padding:
-                                                    EdgeInsets.all(5.0),
+                                                padding: EdgeInsets.all(5.0),
                                                 child: Icon(
-                                                  Ionicons
-                                                      .clipboard_outline,
+                                                  Ionicons.clipboard_outline,
                                                   color: Colors.white,
                                                   size: 20,
                                                 ),
@@ -894,22 +849,19 @@ class _HomeScreenState extends State<HomeScreen> {
                                             ),
                                             Column(
                                               crossAxisAlignment:
-                                                  CrossAxisAlignment
-                                                      .start,
+                                                  CrossAxisAlignment.start,
                                               children: [
                                                 Text(
                                                   tr('app.features.consent'),
-                                                  style: Theme.of(
-                                                          context)
+                                                  style: Theme.of(context)
                                                       .textTheme
                                                       .bodySmall, // Adjust the font size as needed
                                                 ),
                                                 Text(
                                                   tr('app.features.consentforms'),
-                                                  style:
-                                                      Theme.of(context)
-                                                          .textTheme
-                                                          .bodySmall,
+                                                  style: Theme.of(context)
+                                                      .textTheme
+                                                      .bodySmall,
                                                 ),
                                               ],
                                             ),
@@ -919,7 +871,7 @@ class _HomeScreenState extends State<HomeScreen> {
                                     ),
                                   ),
                                 ),
-                                SizedBox(width: 10),
+                                const SizedBox(width: 10),
                                 SizedBox(
                                   height: 136,
                                   width: 200,
@@ -937,39 +889,31 @@ class _HomeScreenState extends State<HomeScreen> {
                                             BorderRadius.circular(16.0),
                                       ),
                                       child: Padding(
-                                        padding:
-                                            const EdgeInsets.all(10.0),
+                                        padding: const EdgeInsets.all(10.0),
                                         child: Column(
                                           crossAxisAlignment:
                                               CrossAxisAlignment.start,
                                           mainAxisAlignment:
-                                              MainAxisAlignment
-                                                  .spaceBetween,
+                                              MainAxisAlignment.spaceBetween,
                                           children: [
                                             Row(
                                               mainAxisAlignment:
-                                                  MainAxisAlignment
-                                                      .start,
+                                                  MainAxisAlignment.start,
                                               children: [
                                                 Container(
-                                                  decoration:
-                                                      BoxDecoration(
-                                                    color: const Color(
-                                                        0xff262626),
+                                                  decoration: BoxDecoration(
+                                                    color:
+                                                        const Color(0xff262626),
                                                     borderRadius:
-                                                        BorderRadius
-                                                            .circular(
-                                                                8.0),
+                                                        BorderRadius.circular(
+                                                            8.0),
                                                   ),
                                                   child: const Padding(
                                                     padding:
-                                                        EdgeInsets.all(
-                                                            5.0),
+                                                        EdgeInsets.all(5.0),
                                                     child: Icon(
-                                                      Ionicons
-                                                          .server_outline,
-                                                      color:
-                                                          Colors.white,
+                                                      Ionicons.server_outline,
+                                                      color: Colors.white,
                                                       size: 20,
                                                     ),
                                                   ),
@@ -978,22 +922,19 @@ class _HomeScreenState extends State<HomeScreen> {
                                             ),
                                             Column(
                                               crossAxisAlignment:
-                                                  CrossAxisAlignment
-                                                      .start,
+                                                  CrossAxisAlignment.start,
                                               children: [
                                                 Text(
                                                   tr('app.features.masterdata'),
-                                                  style:
-                                                      Theme.of(context)
-                                                          .textTheme
-                                                          .bodySmall,
+                                                  style: Theme.of(context)
+                                                      .textTheme
+                                                      .bodySmall,
                                                 ),
                                                 Text(
                                                   tr('masterData.cm.purposeCategory.title'),
-                                                  style:
-                                                      Theme.of(context)
-                                                          .textTheme
-                                                          .bodySmall,
+                                                  style: Theme.of(context)
+                                                      .textTheme
+                                                      .bodySmall,
                                                 ),
                                               ],
                                             ),
@@ -1104,16 +1045,14 @@ class _HomeScreenState extends State<HomeScreen> {
             height: UiConfig.defaultPaddingSpacing,
           ),
         ),
-        // เพิ่ม Container สำหรับเงาด้านล่าง
         Container(
-          margin:
-              const EdgeInsets.only(top: 8.0), // ระยะทางของ Container จากด้านบน
+          margin: const EdgeInsets.only(top: 8.0),
           decoration: const BoxDecoration(
             boxShadow: [
               BoxShadow(
-                color: Colors.grey, // สีของเงา
-                offset: Offset(0, 4), // ตำแหน่งเงา (x, y)
-                blurRadius: 8.0, // ขนาดของเงา
+                color: Colors.grey,
+                offset: Offset(0, 4),
+                blurRadius: 8.0,
               ),
             ],
           ),
