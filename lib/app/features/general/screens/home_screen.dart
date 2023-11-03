@@ -5,19 +5,21 @@ import 'package:go_router/go_router.dart';
 import 'package:ionicons/ionicons.dart';
 import 'package:pdpa/app/config/config.dart';
 import 'package:pdpa/app/data/models/authentication/company_model.dart';
+import 'package:pdpa/app/data/models/authentication/user_model.dart';
 import 'package:pdpa/app/data/models/consent_management/consent_form_model.dart';
+import 'package:pdpa/app/data/models/etc/explore_activity.dart';
 import 'package:pdpa/app/data/models/master_data/localized_model.dart';
 import 'package:pdpa/app/features/authentication/bloc/sign_in/sign_in_bloc.dart';
 import 'package:pdpa/app/features/consent_management/consent_form/bloc/consent_form/consent_form_bloc.dart';
 import 'package:pdpa/app/features/consent_management/consent_form/routes/consent_form_route.dart';
 import 'package:pdpa/app/features/consent_management/user_consent/routes/user_consent_route.dart';
 import 'package:pdpa/app/features/master_data/routes/master_data_route.dart';
-import 'package:pdpa/app/shared/drawers/bloc/drawer_bloc.dart';
-import 'package:pdpa/app/shared/drawers/models/drawer_menu_models.dart';
 import 'package:pdpa/app/shared/drawers/pdpa_drawer.dart';
+import 'package:pdpa/app/shared/utils/user_preferences.dart';
 import 'package:pdpa/app/shared/widgets/customs/custom_button.dart';
 import 'package:pdpa/app/shared/widgets/customs/custom_container.dart';
 import 'package:pdpa/app/shared/widgets/customs/custom_icon_button.dart';
+import 'package:pdpa/app/shared/widgets/loading_indicator.dart';
 import 'package:pdpa/app/shared/widgets/material_ink_well.dart';
 import 'package:pdpa/app/shared/widgets/templates/pdpa_app_bar.dart';
 import 'dart:math';
@@ -30,9 +32,8 @@ class HomeScreen extends StatefulWidget {
 }
 
 class _HomeScreenState extends State<HomeScreen> {
+  late UserModel currentUser;
   late CompanyModel currentCompany;
-
-  final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
 
   @override
   void initState() {
@@ -46,7 +47,8 @@ class _HomeScreenState extends State<HomeScreen> {
 
     String companyId = '';
     if (bloc.state is SignedInUser) {
-      companyId = (bloc.state as SignedInUser).user.currentCompany;
+      currentUser = (bloc.state as SignedInUser).user;
+      companyId = currentUser.currentCompany;
 
       final companies = (bloc.state as SignedInUser).companies;
       currentCompany = companies.firstWhere(
@@ -57,194 +59,146 @@ class _HomeScreenState extends State<HomeScreen> {
       currentCompany = CompanyModel.empty();
     }
 
-    context
-        .read<ConsentFormBloc>()
-        .add(GetConsentFormsEvent(companyId: companyId));
+    final event = GetConsentFormsEvent(companyId: companyId);
+    context.read<ConsentFormBloc>().add(event);
   }
 
   @override
   Widget build(BuildContext context) {
+    return HomeView(
+      currentUser: currentUser,
+      currentCompany: currentCompany,
+    );
+  }
+}
+
+class HomeView extends StatefulWidget {
+  const HomeView({
+    super.key,
+    required this.currentUser,
+    required this.currentCompany,
+  });
+
+  final UserModel currentUser;
+  final CompanyModel currentCompany;
+
+  @override
+  State<HomeView> createState() => _HomeViewState();
+}
+
+class _HomeViewState extends State<HomeView> {
+  late UserModel user;
+  late CompanyModel company;
+
+  final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
+
+  @override
+  void initState() {
+    super.initState();
+
+    user = widget.currentUser;
+    company = widget.currentCompany;
+
+    _checkIsFirstLaunch();
+  }
+
+  Future<void> _checkIsFirstLaunch() async {
+    final result = await UserPreferences.getBool(
+      AppPreferences.isFirstLaunch,
+    );
+
+    if (result != null || !(result ?? true)) return;
+
+    _showModalBottomSheet();
+  }
+
+  void _showModalBottomSheet() {
+    showModalBottomSheet(
+      context: context,
+      backgroundColor: Colors.transparent,
+      builder: (context) {
+        return SingleChildScrollView(
+          child: Container(
+            width: double.infinity,
+            decoration: BoxDecoration(
+              color: Theme.of(context).colorScheme.onBackground,
+              borderRadius: const BorderRadius.only(
+                topLeft: Radius.circular(16.0),
+                topRight: Radius.circular(16.0),
+              ),
+            ),
+            child: _buildModalInfo(context),
+          ),
+        );
+      },
+    );
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    final screenSize = MediaQuery.of(context).size;
+
     return Scaffold(
       key: _scaffoldKey,
-      appBar: AppBar(
-        shadowColor: Theme.of(context).colorScheme.background,
-        surfaceTintColor: Theme.of(context).colorScheme.onBackground,
-        backgroundColor: Theme.of(context).colorScheme.onBackground,
-        title: Image.asset(
-          'assets/images/wisework-logo-mini.png', // เปลี่ยนเป็นที่อยู่ของไฟล์โลโก้ของคุณ
-          height: 30, // ปรับความสูงตามที่คุณต้องการ
+      appBar: PdpaAppBar(
+        leadingIcon: CustomIconButton(
+          onPressed: () {
+            _scaffoldKey.currentState?.openDrawer();
+          },
+          icon: Ionicons.menu_outline,
+          iconColor: Theme.of(context).colorScheme.primary,
+          backgroundColor: Theme.of(context).colorScheme.onBackground,
         ),
-        centerTitle: true,
-        leading: Builder(
-          builder: (context) => IconButton(
-            icon: Icon(
-              Ionicons.menu_outline,
-              color: Theme.of(context).colorScheme.primary,
+        title: Padding(
+          padding: const EdgeInsets.only(right: 40.0),
+          child: SizedBox(
+            width: 110.0,
+            child: Image.asset(
+              'assets/images/general/wisework-logo-mini.png',
+              fit: BoxFit.contain,
             ),
-            onPressed: () {
-              _scaffoldKey.currentState?.openDrawer();
-            },
-            splashColor:
-                Theme.of(context).colorScheme.surfaceTint.withOpacity(0.3),
           ),
         ),
+        centerTitle: true,
       ),
-      // AppBar(
-      //   shadowColor: Theme.of(context).colorScheme.background,
-      //   surfaceTintColor: Theme.of(context).colorScheme.onBackground,
-      //   backgroundColor: Theme.of(context).colorScheme.onBackground,
-      //   automaticallyImplyLeading: false,
-      //   title: Row(
-      //     mainAxisAlignment:
-      //         MainAxisAlignment.start, // Align items to the start (left)
-      //     children: <Widget>[
-      //       InkWell(
-      //         onTap: () {
-      //           _scaffoldKey.currentState?.openDrawer();
-      //         },
-      //         splashColor:
-      //             Theme.of(context).colorScheme.surfaceTint.withOpacity(0.3),
-      //         borderRadius: BorderRadius.circular(8.0),
-      //         child: Padding(
-      //           padding: const EdgeInsets.all(8.0),
-      //           child: Icon(
-      //             Ionicons.menu_outline,
-      //             color: Theme.of(context).colorScheme.primary,
-      //           ),
-      //         ),
-      //       ),
-      //       Expanded(
-      //         child: SizedBox(
-      //           height: 50,
-      //           width: 50,
-      //           child: Image.asset(
-      //             'assets/images/wisework-logo-mini.png',
-      //           ),
-      //         ),
-      //       ),
-      //     ],
-      //   ),
-      // ),
-      body: SingleChildScrollView(
-        child: BlocBuilder<SignInBloc, SignInState>(
-          builder: (context, state) {
-            if (state is SignedInUser) {
-              return Column(
-                children: [
-                  const SizedBox(
-                    height: UiConfig.textSpacing,
-                  ),
-                  Container(
-                    height: 150,
-                    width: double.infinity,
-                    decoration: BoxDecoration(
-                      borderRadius: BorderRadius.circular(10.0),
-                      image: const DecorationImage(
-                        image: AssetImage("assets/images/3.png"),
-                        fit: BoxFit
-                            .fill, // Use BoxFit.cover to make the image fill the container without distorting the aspect ratio
-                      ),
+      body: BlocBuilder<SignInBloc, SignInState>(
+        builder: (context, state) {
+          if (state is SignedInUser) {
+            return SingleChildScrollView(
+              child: Center(
+                child: Column(
+                  children: <Widget>[
+                    const SizedBox(height: UiConfig.lineSpacing),
+                    _buildBannerSection(
+                      context,
+                      screenSize: screenSize,
                     ),
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: <Widget>[
-                        _buildGreetingUser(context),
-                      ],
+                    const SizedBox(height: UiConfig.lineSpacing),
+                    _buildExploreSection(
+                      context,
+                      screenSize: screenSize,
                     ),
-                  ),
-                  const SizedBox(
-                    height: UiConfig.defaultPaddingSpacing,
-                  ),
-                  Container(
-                    decoration: BoxDecoration(
-                      borderRadius: BorderRadius.circular(10.0),
+                    const SizedBox(height: UiConfig.lineSpacing),
+                    _buildRecentlyUsedSection(
+                      context,
+                      screenSize: screenSize,
                     ),
-                    margin: const EdgeInsets.symmetric(
-                      horizontal: UiConfig.lineGap,
-                    ),
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: <Widget>[
-                        Padding(
-                          padding: const EdgeInsets.only(
-                              left: UiConfig.defaultPaddingSpacing,
-                              right: UiConfig.defaultPaddingSpacing),
-                          child: Text(
-                            tr('general.home.explore'),
-                            style: Theme.of(context).textTheme.displaySmall,
-                          ),
-                        ),
-                        const SizedBox(height: UiConfig.lineSpacing),
-                        _buildExplore(context),
-                        const SizedBox(height: UiConfig.lineSpacing),
-                      ],
-                    ),
-                  ),
-                  Container(
-                    decoration: BoxDecoration(
-                      borderRadius: BorderRadius.circular(10.0),
-                    ),
-                    margin: const EdgeInsets.symmetric(
-                      horizontal: UiConfig.lineGap,
-                    ),
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: <Widget>[
-                        Padding(
-                          padding: const EdgeInsets.only(
-                              left: UiConfig.defaultPaddingSpacing,
-                              right: UiConfig.defaultPaddingSpacing),
-                          child: Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                            children: [
-                              Text(
-                                tr('general.home.recentlyUsed'),
-                                style: Theme.of(context).textTheme.displaySmall,
-                              ),
-                              MouseRegion(
-                                cursor: SystemMouseCursors.click,
-                                child: GestureDetector(
-                                  onTap: () {
-                                    context.push(
-                                      ConsentFormRoute.consentForm.path,
-                                    );
-                                  },
-                                  child: Text(
-                                    tr('app.features.seeMore'),
-                                    style: Theme.of(context)
-                                        .textTheme
-                                        .titleSmall
-                                        ?.copyWith(
-                                          decoration: TextDecoration.underline,
-                                          decorationColor: Theme.of(context)
-                                              .colorScheme
-                                              .primary,
-                                          color: Theme.of(context)
-                                              .colorScheme
-                                              .primary,
-                                        ),
-                                  ),
-                                ),
-                              ),
-                            ],
-                          ),
-                        ),
-                        _buildRecentlyUsed(context),
-                      ],
-                    ),
-                  ),
-                  const SizedBox(
-                    height: UiConfig.defaultPaddingSpacing,
-                  ),
-                ],
-              );
-            }
-            return Text(
-              tr('general.home.hello'),
-              style: Theme.of(context).textTheme.titleMedium,
+                    const SizedBox(height: UiConfig.lineSpacing),
+                  ],
+                ),
+              ),
             );
-          },
-        ),
+          }
+          return const CustomContainer(
+            padding: EdgeInsets.symmetric(
+              vertical: UiConfig.defaultPaddingSpacing * 4,
+            ),
+            margin: EdgeInsets.all(UiConfig.defaultPaddingSpacing),
+            child: Center(
+              child: LoadingIndicator(),
+            ),
+          );
+        },
       ),
       drawer: PdpaDrawer(
         onClosed: () {
@@ -254,87 +208,237 @@ class _HomeScreenState extends State<HomeScreen> {
     );
   }
 
-  Container _buildRecentlyUsed(BuildContext context) {
+  Container _buildModalInfo(BuildContext context) {
     return Container(
-      padding: const EdgeInsets.all(UiConfig.defaultPaddingSpacing),
-      child: BlocBuilder<ConsentFormBloc, ConsentFormState>(
-        builder: (context, state) {
-          if (state is GotConsentForms) {
-            return state.consentForms.isNotEmpty
-                ? ListView.builder(
-                    physics: const NeverScrollableScrollPhysics(),
-                    shrinkWrap: true,
-                    itemCount: min(3, state.consentForms.length),
-                    itemBuilder: (context, index) {
-                      return _buildItemCard(
-                        context,
-                        consentForm: state.consentForms[index],
-                      );
-                    },
-                  )
-                : Center(
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.center,
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        const SizedBox(height: UiConfig.lineSpacing),
-                        Image.asset(
-                          'assets/images/4.png',
-                        ),
-                        Text(tr('app.features.resultNotFound'),
-                            style: Theme.of(context).textTheme.titleMedium),
-                        const SizedBox(height: UiConfig.lineSpacing),
-                        Text(tr('app.features.description'),
-                            textAlign: TextAlign.center,
-                            style: Theme.of(context).textTheme.labelLarge),
-                        const SizedBox(
-                          height: UiConfig.defaultPaddingSpacing,
-                        ),
-                      ],
-                    ),
-                  );
-          }
-          if (state is ConsentFormError) {
-            return Center(
-              child: Text(
-                state.message,
-                style: Theme.of(context).textTheme.bodyMedium,
+      padding: const EdgeInsets.all(
+        UiConfig.defaultPaddingSpacing,
+      ),
+      child: Column(
+        children: <Widget>[
+          Align(
+            alignment: Alignment.topRight,
+            child: MaterialInkWell(
+              borderRadius: BorderRadius.circular(13.0),
+              backgroundColor:
+                  Theme.of(context).colorScheme.outlineVariant.withOpacity(0.4),
+              onTap: () async {
+                await UserPreferences.setBool(
+                  AppPreferences.isFirstLaunch,
+                  false,
+                ).then((_) => Navigator.of(context).pop());
+              },
+              child: Padding(
+                padding: const EdgeInsets.only(
+                  left: 2.0,
+                  top: 1.0,
+                  right: 2.0,
+                  bottom: 3.0,
+                ),
+                child: Icon(
+                  Ionicons.close_outline,
+                  size: 16.0,
+                  color: Theme.of(context).colorScheme.onPrimary,
+                ),
               ),
-            );
-          }
-          return const Center(
-            child: CircularProgressIndicator(),
-          );
-        },
+            ),
+          ),
+          Row(
+            children: <Widget>[
+              const SizedBox(height: UiConfig.lineGap),
+              Text(
+                'Discover What’s New',
+                style: Theme.of(context).textTheme.headlineMedium,
+              ),
+            ],
+          ),
+          const SizedBox(height: UiConfig.lineGap * 2),
+          Text(
+            'Celebrate the start of your journey with our data management tools. This brief guide will get you started swiftly on our platform.',
+            style: Theme.of(context).textTheme.bodySmall,
+          ),
+          const SizedBox(height: UiConfig.lineGap * 2),
+          _buildAppMenuInfo(),
+          const SizedBox(height: UiConfig.lineGap * 2),
+          CustomButton(
+            width: 210.0,
+            height: 45.0,
+            onPressed: () {},
+            child: Text(
+              'See What’s New!',
+              style: Theme.of(context)
+                  .textTheme
+                  .titleMedium
+                  ?.copyWith(color: Theme.of(context).colorScheme.onPrimary),
+            ),
+          ),
+          const SizedBox(height: UiConfig.lineGap * 2),
+        ],
       ),
     );
   }
 
-  BlocBuilder _buildGreetingUser(BuildContext context) {
-    return BlocBuilder<SignInBloc, SignInState>(
-      builder: (context, state) {
-        if (state is SignedInUser) {
-          return Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: <Widget>[
-              Padding(
-                padding: const EdgeInsets.only(left: 20.0, right: 20),
-                child: Column(
+  Column _buildAppMenuInfo() {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: <Widget>[
+        Row(
+          mainAxisAlignment: MainAxisAlignment.start,
+          mainAxisSize: MainAxisSize.min,
+          children: <Widget>[
+            Padding(
+              padding: const EdgeInsets.only(
+                right: UiConfig.defaultPaddingSpacing,
+                bottom: 4.0,
+              ),
+              child: Icon(
+                Ionicons.home_outline,
+                size: 20.0,
+                color: Theme.of(context).colorScheme.onSurface,
+              ),
+            ),
+            Text(
+              'Home',
+              style: Theme.of(context).textTheme.titleMedium,
+            ),
+          ],
+        ),
+        const SizedBox(height: UiConfig.lineGap),
+        Row(
+          mainAxisAlignment: MainAxisAlignment.start,
+          mainAxisSize: MainAxisSize.min,
+          children: <Widget>[
+            Padding(
+              padding: const EdgeInsets.only(
+                right: UiConfig.defaultPaddingSpacing,
+                bottom: 4.0,
+              ),
+              child: Icon(
+                Ionicons.reader_outline,
+                size: 20.0,
+                color: Theme.of(context).colorScheme.onSurface,
+              ),
+            ),
+            Text(
+              'Consent Management',
+              style: Theme.of(context).textTheme.titleMedium,
+            ),
+          ],
+        ),
+        const SizedBox(height: UiConfig.lineGap),
+        Row(
+          mainAxisAlignment: MainAxisAlignment.start,
+          mainAxisSize: MainAxisSize.min,
+          children: <Widget>[
+            Padding(
+              padding: const EdgeInsets.only(
+                right: UiConfig.defaultPaddingSpacing,
+                bottom: 4.0,
+              ),
+              child: Icon(
+                Ionicons.server_outline,
+                size: 20.0,
+                color: Theme.of(context).colorScheme.onSurface,
+              ),
+            ),
+            Text(
+              'Master Data',
+              style: Theme.of(context).textTheme.titleMedium,
+            ),
+          ],
+        ),
+        const SizedBox(height: UiConfig.lineGap),
+        Row(
+          mainAxisAlignment: MainAxisAlignment.start,
+          mainAxisSize: MainAxisSize.min,
+          children: <Widget>[
+            Padding(
+              padding: const EdgeInsets.only(
+                right: UiConfig.defaultPaddingSpacing,
+                bottom: 4.0,
+              ),
+              child: Icon(
+                Ionicons.settings_outline,
+                size: 20.0,
+                color: Theme.of(context).colorScheme.onSurface,
+              ),
+            ),
+            Text(
+              'Settings',
+              style: Theme.of(context).textTheme.titleMedium,
+            ),
+          ],
+        ),
+      ],
+    );
+  }
+
+  Padding _buildBannerSection(
+    BuildContext context, {
+    required Size screenSize,
+  }) {
+    return Padding(
+      padding: const EdgeInsets.symmetric(
+        horizontal: UiConfig.defaultPaddingSpacing,
+      ),
+      child: ClipRRect(
+        borderRadius: BorderRadius.circular(10.0),
+        child: Stack(
+          children: <Widget>[
+            Container(
+              width: screenSize.width,
+              height: 165.0 + (165.0 * screenSize.width * 0.15),
+              constraints: const BoxConstraints(
+                maxWidth: UiConfig.maxWidthContent,
+                maxHeight: 200.0,
+              ),
+              color: const Color(0xFFE2F3FB),
+            ),
+            Positioned(
+              left: 0,
+              right: 0,
+              bottom: 0,
+              child: Container(
+                width: screenSize.width,
+                constraints: const BoxConstraints(
+                  maxWidth: UiConfig.maxWidthContent,
+                  maxHeight: 200.0,
+                ),
+                child: Image.asset(
+                  'assets/images/general/city.png',
+                  fit: BoxFit.contain,
+                ),
+              ),
+            ),
+            Positioned(
+              left: 0,
+              top: 0,
+              right: 0,
+              child: Container(
+                padding: const EdgeInsets.all(UiConfig.defaultPaddingSpacing),
+                width: screenSize.width,
+                constraints: const BoxConstraints(
+                  maxWidth: UiConfig.maxWidthContent,
+                  maxHeight: 200.0,
+                ),
+                child: Row(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: <Widget>[
-                    const SizedBox(height: UiConfig.defaultPaddingSpacing),
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    Expanded(
+                      child: Text(
+                        tr('general.home.welcome'),
+                        style: Theme.of(context).textTheme.headlineSmall,
+                      ),
+                    ),
+                    Column(
+                      mainAxisSize: MainAxisSize.min,
+                      crossAxisAlignment: CrossAxisAlignment.end,
                       children: <Widget>[
-                        Text(
-                          tr('general.home.welcome'),
-                          style: Theme.of(context).textTheme.displaySmall,
-                        ),
                         Row(
+                          mainAxisSize: MainAxisSize.min,
                           children: <Widget>[
                             Text(
-                              state.user.firstName,
-                              style: Theme.of(context).textTheme.bodyMedium,
+                              user.firstName,
+                              style: Theme.of(context).textTheme.titleLarge,
                             ),
                             const SizedBox(width: 8.0),
                             Padding(
@@ -346,625 +450,254 @@ class _HomeScreenState extends State<HomeScreen> {
                             ),
                           ],
                         ),
-                      ],
-                    ),
-                    Visibility(
-                      visible: currentCompany.name.isNotEmpty,
-                      child: Padding(
-                        padding:
-                            const EdgeInsets.only(top: UiConfig.textSpacing),
-                        child: Row(
-                          mainAxisAlignment: MainAxisAlignment.end,
-                          children: <Widget>[
-                            Text(
-                              currentCompany.name,
-                              style: Theme.of(context).textTheme.bodySmall,
-                            ),
-                          ],
+                        Text(
+                          company.name,
+                          style: Theme.of(context).textTheme.bodySmall,
                         ),
-                      ),
+                      ],
                     ),
                   ],
                 ),
               ),
-            ],
-          );
-        }
-        return Text(
-          tr('general.home.hello'),
-          style: Theme.of(context).textTheme.titleMedium,
-        );
-      },
+            ),
+          ],
+        ),
+      ),
     );
   }
 
-  BlocBuilder _buildExplore(BuildContext context) {
-    return BlocBuilder<SignInBloc, SignInState>(
-      builder: (context, state) {
-        if (state is SignedInUser) {
-          return LayoutBuilder(
-            builder: (context, constraints) {
-              final screenWidth = constraints.maxWidth;
+  Container _buildExploreSection(
+    BuildContext context, {
+    required Size screenSize,
+  }) {
+    final List<ExploreActivity> activities = [
+      ExploreActivity(
+        title: tr('app.features.consent'),
+        subTitle: tr('app.features.createcsf'),
+        icon: Ionicons.add_circle_outline,
+        path: ConsentFormRoute.createConsentForm.path,
+      ),
+      ExploreActivity(
+        title: tr('app.features.consent'),
+        subTitle: tr('app.features.userconsents'),
+        icon: Ionicons.people_outline,
+        path: UserConsentRoute.userConsentScreen.path,
+      ),
+      ExploreActivity(
+        title: tr('app.features.consent'),
+        subTitle: tr('app.features.consentforms'),
+        icon: Ionicons.clipboard_outline,
+        path: ConsentFormRoute.consentForm.path,
+      ),
+      ExploreActivity(
+        title: tr('app.features.masterdata'),
+        subTitle: tr('masterData.cm.purposeCategory.title'),
+        icon: Ionicons.server_outline,
+        path: MasterDataRoute.purposesCategories.path,
+      ),
+    ];
 
-              return Column(
-                mainAxisAlignment: MainAxisAlignment.center,
-                crossAxisAlignment: CrossAxisAlignment.center,
-                children: [
-                  Row(
-                    crossAxisAlignment: CrossAxisAlignment.center,
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      if (screenWidth <= 726)
-                        // Display this when screen width is 600 or more
-                        Column(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          crossAxisAlignment: CrossAxisAlignment.center,
-                          children: [
-                            Row(
-                              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                              children: [
-                                SizedBox(
-                                  height: 136,
-                                  width: 200,
-                                  child: InkWell(
-                                    onTap: () {
-                                      context.push(ConsentFormRoute
-                                          .createConsentForm.path);
-                                    },
-                                    child: Ink(
-                                      decoration: BoxDecoration(
-                                        color: Theme.of(context)
-                                            .colorScheme
-                                            .onBackground,
-                                        borderRadius:
-                                            BorderRadius.circular(16.0),
-                                      ),
-                                      child: Padding(
-                                        padding: const EdgeInsets.all(10.0),
-                                        child: Column(
-                                          crossAxisAlignment:
-                                              CrossAxisAlignment.start,
-                                          mainAxisAlignment:
-                                              MainAxisAlignment.spaceBetween,
-                                          children: [
-                                            Container(
-                                              decoration: BoxDecoration(
-                                                color: const Color(0xff262626),
-                                                borderRadius:
-                                                    BorderRadius.circular(8.0),
-                                              ),
-                                              child: const Padding(
-                                                padding: EdgeInsets.all(5.0),
-                                                child: Icon(
-                                                  Ionicons.add_circle_outline,
-                                                  color: Colors.white,
-                                                  size: 20,
-                                                ),
-                                              ),
-                                            ),
-                                            Column(
-                                              crossAxisAlignment:
-                                                  CrossAxisAlignment.start,
-                                              children: [
-                                                Text(
-                                                  tr('app.features.consent'),
-                                                  style: Theme.of(context)
-                                                      .textTheme
-                                                      .bodySmall,
-                                                ),
-                                                Text(
-                                                  tr('app.features.createcsf'),
-                                                  style: Theme.of(context)
-                                                      .textTheme
-                                                      .bodySmall,
-                                                ),
-                                              ],
-                                            ),
-                                          ],
-                                        ),
-                                      ),
-                                    ),
-                                  ),
-                                ),
-                                SizedBox(width: 10),
-                                SizedBox(
-                                  height: 136,
-                                  width: 200,
-                                  child: InkWell(
-                                    onTap: () {
-                                      context.push(UserConsentRoute
-                                          .userConsentScreen.path);
-                                    },
-                                    child: Ink(
-                                      decoration: BoxDecoration(
-                                        color: Theme.of(context)
-                                            .colorScheme
-                                            .onBackground, // Set your button color here
-                                        borderRadius:
-                                            BorderRadius.circular(16.0),
-                                      ),
-                                      child: Padding(
-                                        padding: const EdgeInsets.all(10.0),
-                                        child: Column(
-                                          crossAxisAlignment:
-                                              CrossAxisAlignment.start,
-                                          mainAxisAlignment:
-                                              MainAxisAlignment.spaceBetween,
-                                          children: [
-                                            Container(
-                                              decoration: BoxDecoration(
-                                                color: const Color(0xff262626),
-                                                borderRadius:
-                                                    BorderRadius.circular(8.0),
-                                              ),
-                                              child: const Padding(
-                                                padding: EdgeInsets.all(5.0),
-                                                child: Icon(
-                                                  Ionicons.people_outline,
-                                                  color: Colors.white,
-                                                  size: 20,
-                                                ),
-                                              ),
-                                            ),
-                                            Column(
-                                              crossAxisAlignment:
-                                                  CrossAxisAlignment.start,
-                                              children: [
-                                                Text(
-                                                  tr('app.features.consent'),
-                                                  style: Theme.of(context)
-                                                      .textTheme
-                                                      .bodySmall,
-                                                ),
-                                                Text(
-                                                  tr('app.features.userconsents'),
-                                                  style: Theme.of(context)
-                                                      .textTheme
-                                                      .bodySmall,
-                                                ),
-                                              ],
-                                            ),
-                                          ],
-                                        ),
-                                      ),
-                                    ),
-                                  ),
-                                ),
-                              ],
-                            ),
-                            const SizedBox(height: 10),
-                            Row(
-                              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                              children: [
-                                SizedBox(
-                                  height: 136,
-                                  width: 200,
-                                  child: InkWell(
-                                    onTap: () {
-                                      context.push(
-                                          ConsentFormRoute.consentForm.path);
-                                    },
-                                    child: Ink(
-                                      decoration: BoxDecoration(
-                                        color: Theme.of(context)
-                                            .colorScheme
-                                            .onBackground, // Set your button color here
-                                        borderRadius:
-                                            BorderRadius.circular(16.0),
-                                      ),
-                                      child: Padding(
-                                        padding: const EdgeInsets.all(10.0),
-                                        child: Column(
-                                          crossAxisAlignment:
-                                              CrossAxisAlignment.start,
-                                          mainAxisAlignment:
-                                              MainAxisAlignment.spaceBetween,
-                                          children: [
-                                            Container(
-                                              decoration: BoxDecoration(
-                                                color: const Color(0xff262626),
-                                                borderRadius:
-                                                    BorderRadius.circular(8.0),
-                                              ),
-                                              child: const Padding(
-                                                padding: EdgeInsets.all(5.0),
-                                                child: Icon(
-                                                  Ionicons.clipboard_outline,
-                                                  color: Colors.white,
-                                                  size: 20,
-                                                ),
-                                              ),
-                                            ),
-                                            Column(
-                                              crossAxisAlignment:
-                                                  CrossAxisAlignment.start,
-                                              children: [
-                                                Text(
-                                                  tr('app.features.consent'),
-                                                  style: Theme.of(context)
-                                                      .textTheme
-                                                      .bodySmall, // Adjust the font size as needed
-                                                ),
-                                                Text(
-                                                  tr('app.features.consentforms'),
-                                                  style: Theme.of(context)
-                                                      .textTheme
-                                                      .bodySmall,
-                                                ),
-                                              ],
-                                            ),
-                                          ],
-                                        ),
-                                      ),
-                                    ),
-                                  ),
-                                ),
-                                SizedBox(width: 10),
-                                SizedBox(
-                                  height: 136,
-                                  width: 200,
-                                  child: InkWell(
-                                    onTap: () {
-                                      context.push(MasterDataRoute
-                                          .purposesCategories.path);
-                                    },
-                                    child: Ink(
-                                      decoration: BoxDecoration(
-                                        color: Theme.of(context)
-                                            .colorScheme
-                                            .onBackground, // Set your button color here
-                                        borderRadius:
-                                            BorderRadius.circular(16.0),
-                                      ),
-                                      child: Padding(
-                                        padding: const EdgeInsets.all(10.0),
-                                        child: Column(
-                                          crossAxisAlignment:
-                                              CrossAxisAlignment.start,
-                                          mainAxisAlignment:
-                                              MainAxisAlignment.spaceBetween,
-                                          children: [
-                                            Row(
-                                              mainAxisAlignment:
-                                                  MainAxisAlignment.start,
-                                              children: [
-                                                Container(
-                                                  decoration: BoxDecoration(
-                                                    color:
-                                                        const Color(0xff262626),
-                                                    borderRadius:
-                                                        BorderRadius.circular(
-                                                            8.0),
-                                                  ),
-                                                  child: const Padding(
-                                                    padding:
-                                                        EdgeInsets.all(5.0),
-                                                    child: Icon(
-                                                      Ionicons.server_outline,
-                                                      color: Colors.white,
-                                                      size: 20,
-                                                    ),
-                                                  ),
-                                                ),
-                                              ],
-                                            ),
-                                            Column(
-                                              crossAxisAlignment:
-                                                  CrossAxisAlignment.start,
-                                              children: [
-                                                Text(
-                                                  tr('app.features.masterdata'),
-                                                  style: Theme.of(context)
-                                                      .textTheme
-                                                      .bodySmall,
-                                                ),
-                                                Text(
-                                                  tr('masterData.cm.purposeCategory.title'),
-                                                  style: Theme.of(context)
-                                                      .textTheme
-                                                      .bodySmall,
-                                                ),
-                                              ],
-                                            ),
-                                          ],
-                                        ),
-                                      ),
-                                    ),
-                                  ),
-                                ),
-                              ],
-                            ),
-                          ],
-                        ),
-                      if (screenWidth >= 726)
-                        Column(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          children: [
-                            Row(
-                              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                              children: [
-                                SizedBox(
-                                  child: InkWell(
-                                    onTap: () {
-                                      context.push(ConsentFormRoute
-                                          .createConsentForm.path);
-                                    },
-                                    child: Ink(
-                                      decoration: BoxDecoration(
-                                        color: Theme.of(context)
-                                            .colorScheme
-                                            .onBackground,
-                                        borderRadius:
-                                            BorderRadius.circular(16.0),
-                                      ),
-                                      child: Padding(
-                                        padding: const EdgeInsets.all(10.0),
-                                        child: Column(
-                                          crossAxisAlignment:
-                                              CrossAxisAlignment.start,
-                                          mainAxisAlignment:
-                                              MainAxisAlignment.spaceBetween,
-                                          children: [
-                                            Container(
-                                              decoration: BoxDecoration(
-                                                color: const Color(0xff262626),
-                                                borderRadius:
-                                                    BorderRadius.circular(8.0),
-                                              ),
-                                              child: const Padding(
-                                                padding: EdgeInsets.all(5.0),
-                                                child: Icon(
-                                                  Ionicons.add_circle_outline,
-                                                  color: Colors.white,
-                                                  size: 20,
-                                                ),
-                                              ),
-                                            ),
-                                            Column(
-                                              crossAxisAlignment:
-                                                  CrossAxisAlignment.start,
-                                              children: [
-                                                Text(
-                                                  tr('app.features.consent'),
-                                                  style: Theme.of(context)
-                                                      .textTheme
-                                                      .bodySmall,
-                                                ),
-                                                Text(
-                                                  tr('app.features.createcsf'),
-                                                  style: Theme.of(context)
-                                                      .textTheme
-                                                      .bodySmall,
-                                                ),
-                                              ],
-                                            ),
-                                          ],
-                                        ),
-                                      ),
-                                    ),
-                                  ),
-                                ),
-                                SizedBox(width: 10),
-                                SizedBox(
-                                  height: 136,
-                                  width: 200,
-                                  child: InkWell(
-                                    onTap: () {
-                                      context.push(UserConsentRoute
-                                          .userConsentScreen.path);
-                                    },
-                                    child: Ink(
-                                      decoration: BoxDecoration(
-                                        color: Theme.of(context)
-                                            .colorScheme
-                                            .onBackground, // Set your button color here
-                                        borderRadius:
-                                            BorderRadius.circular(16.0),
-                                      ),
-                                      child: Padding(
-                                        padding: const EdgeInsets.all(10.0),
-                                        child: Column(
-                                          crossAxisAlignment:
-                                              CrossAxisAlignment.start,
-                                          mainAxisAlignment:
-                                              MainAxisAlignment.spaceBetween,
-                                          children: [
-                                            Container(
-                                              decoration: BoxDecoration(
-                                                color: const Color(0xff262626),
-                                                borderRadius:
-                                                    BorderRadius.circular(8.0),
-                                              ),
-                                              child: const Padding(
-                                                padding: EdgeInsets.all(5.0),
-                                                child: Icon(
-                                                  Ionicons.people_outline,
-                                                  color: Colors.white,
-                                                  size: 20,
-                                                ),
-                                              ),
-                                            ),
-                                            Column(
-                                              crossAxisAlignment:
-                                                  CrossAxisAlignment.start,
-                                              children: [
-                                                Text(
-                                                  tr('app.features.consent'),
-                                                  style: Theme.of(context)
-                                                      .textTheme
-                                                      .bodySmall,
-                                                ),
-                                                Text(
-                                                  tr('app.features.userconsents'),
-                                                  style: Theme.of(context)
-                                                      .textTheme
-                                                      .bodySmall,
-                                                ),
-                                              ],
-                                            ),
-                                          ],
-                                        ),
-                                      ),
-                                    ),
-                                  ),
-                                ),
-                                SizedBox(width: 10),
-                                SizedBox(
-                                  height: 136,
-                                  width: 200,
-                                  child: InkWell(
-                                    onTap: () {
-                                      context.push(
-                                          ConsentFormRoute.consentForm.path);
-                                    },
-                                    child: Ink(
-                                      decoration: BoxDecoration(
-                                        color: Theme.of(context)
-                                            .colorScheme
-                                            .onBackground, // Set your button color here
-                                        borderRadius:
-                                            BorderRadius.circular(16.0),
-                                      ),
-                                      child: Padding(
-                                        padding: const EdgeInsets.all(10.0),
-                                        child: Column(
-                                          crossAxisAlignment:
-                                              CrossAxisAlignment.start,
-                                          mainAxisAlignment:
-                                              MainAxisAlignment.spaceBetween,
-                                          children: [
-                                            Container(
-                                              decoration: BoxDecoration(
-                                                color: const Color(0xff262626),
-                                                borderRadius:
-                                                    BorderRadius.circular(8.0),
-                                              ),
-                                              child: const Padding(
-                                                padding: EdgeInsets.all(5.0),
-                                                child: Icon(
-                                                  Ionicons.clipboard_outline,
-                                                  color: Colors.white,
-                                                  size: 20,
-                                                ),
-                                              ),
-                                            ),
-                                            Column(
-                                              crossAxisAlignment:
-                                                  CrossAxisAlignment.start,
-                                              children: [
-                                                Text(
-                                                  tr('app.features.consent'),
-                                                  style: Theme.of(context)
-                                                      .textTheme
-                                                      .bodySmall, // Adjust the font size as needed
-                                                ),
-                                                Text(
-                                                  tr('app.features.consentforms'),
-                                                  style: Theme.of(context)
-                                                      .textTheme
-                                                      .bodySmall,
-                                                ),
-                                              ],
-                                            ),
-                                          ],
-                                        ),
-                                      ),
-                                    ),
-                                  ),
-                                ),
-                                SizedBox(width: 10),
-                                SizedBox(
-                                  height: 136,
-                                  width: 200,
-                                  child: InkWell(
-                                    onTap: () {
-                                      context.push(MasterDataRoute
-                                          .purposesCategories.path);
-                                    },
-                                    child: Ink(
-                                      decoration: BoxDecoration(
-                                        color: Theme.of(context)
-                                            .colorScheme
-                                            .onBackground, // Set your button color here
-                                        borderRadius:
-                                            BorderRadius.circular(16.0),
-                                      ),
-                                      child: Padding(
-                                        padding: const EdgeInsets.all(10.0),
-                                        child: Column(
-                                          crossAxisAlignment:
-                                              CrossAxisAlignment.start,
-                                          mainAxisAlignment:
-                                              MainAxisAlignment.spaceBetween,
-                                          children: [
-                                            Row(
-                                              mainAxisAlignment:
-                                                  MainAxisAlignment.start,
-                                              children: [
-                                                Container(
-                                                  decoration: BoxDecoration(
-                                                    color:
-                                                        const Color(0xff262626),
-                                                    borderRadius:
-                                                        BorderRadius.circular(
-                                                            8.0),
-                                                  ),
-                                                  child: const Padding(
-                                                    padding:
-                                                        EdgeInsets.all(5.0),
-                                                    child: Icon(
-                                                      Ionicons.server_outline,
-                                                      color: Colors.white,
-                                                      size: 20,
-                                                    ),
-                                                  ),
-                                                ),
-                                              ],
-                                            ),
-                                            Column(
-                                              crossAxisAlignment:
-                                                  CrossAxisAlignment.start,
-                                              children: [
-                                                Text(
-                                                  tr('app.features.masterdata'),
-                                                  style: Theme.of(context)
-                                                      .textTheme
-                                                      .bodySmall,
-                                                ),
-                                                Text(
-                                                  tr('masterData.cm.purposeCategory.title'),
-                                                  style: Theme.of(context)
-                                                      .textTheme
-                                                      .bodySmall,
-                                                ),
-                                              ],
-                                            ),
-                                          ],
-                                        ),
-                                      ),
-                                    ),
-                                  ),
-                                ),
-                              ],
-                            ),
-                          ],
-                        ),
-                    ],
+    return Container(
+      width: screenSize.width,
+      constraints: const BoxConstraints(
+        maxWidth: UiConfig.maxWidthContent,
+      ),
+      margin: const EdgeInsets.symmetric(
+        horizontal: UiConfig.defaultPaddingSpacing + UiConfig.textSpacing,
+      ),
+      child: Column(
+        children: <Widget>[
+          Row(
+            children: <Widget>[
+              Text(
+                tr('general.home.explore'),
+                style: Theme.of(context).textTheme.headlineSmall,
+              ),
+            ],
+          ),
+          const SizedBox(height: UiConfig.lineSpacing),
+          Wrap(
+            spacing: UiConfig.lineSpacing,
+            runSpacing: UiConfig.lineSpacing,
+            children: activities.map((activity) {
+              return _buildExploreCard(context, activity: activity);
+            }).toList(),
+          ),
+        ],
+      ),
+    );
+  }
+
+  SizedBox _buildExploreCard(
+    BuildContext context, {
+    required ExploreActivity activity,
+  }) {
+    return SizedBox(
+      width: 160.0,
+      child: MaterialInkWell(
+        onTap: () {
+          context.push(activity.path);
+        },
+        hoverColor: Theme.of(context).colorScheme.primary.withOpacity(0.15),
+        child: Padding(
+          padding: const EdgeInsets.all(UiConfig.defaultPaddingSpacing),
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: <Widget>[
+              Container(
+                padding: const EdgeInsets.symmetric(
+                  vertical: 5.0,
+                  horizontal: 6.0,
+                ),
+                decoration: BoxDecoration(
+                  color: const Color(0xFF262626),
+                  borderRadius: BorderRadius.circular(8.0),
+                ),
+                child: Padding(
+                  padding: const EdgeInsets.only(bottom: 2.0),
+                  child: Icon(
+                    activity.icon,
+                    color: Colors.white,
+                    size: 18.0,
                   ),
-                ],
+                ),
+              ),
+              const SizedBox(height: UiConfig.lineSpacing * 2.5),
+              Text(
+                activity.title,
+                style: Theme.of(context).textTheme.bodySmall,
+                overflow: TextOverflow.ellipsis,
+                maxLines: 1,
+              ),
+              Text(
+                activity.subTitle,
+                style: Theme.of(context).textTheme.bodySmall,
+                overflow: TextOverflow.ellipsis,
+                maxLines: 1,
+              ),
+            ],
+          ),
+        ),
+      ),
+    );
+  }
+
+  Container _buildRecentlyUsedSection(
+    BuildContext context, {
+    required Size screenSize,
+  }) {
+    return Container(
+      width: screenSize.width,
+      constraints: const BoxConstraints(
+        maxWidth: UiConfig.maxWidthContent,
+      ),
+      margin: const EdgeInsets.symmetric(
+        horizontal: UiConfig.defaultPaddingSpacing + UiConfig.textSpacing,
+      ),
+      child: Column(
+        children: <Widget>[
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: <Widget>[
+              Text(
+                tr('general.home.recentlyUsed'),
+                style: Theme.of(context).textTheme.headlineSmall,
+              ),
+              BlocBuilder<ConsentFormBloc, ConsentFormState>(
+                builder: (context, state) {
+                  if (state is GotConsentForms) {
+                    if (state.consentForms.isNotEmpty) {
+                      return MouseRegion(
+                        cursor: SystemMouseCursors.click,
+                        child: GestureDetector(
+                          onTap: () {
+                            context.push(
+                              ConsentFormRoute.consentForm.path,
+                            );
+                          },
+                          child: Text(
+                            tr('app.features.seeMore'),
+                            style: Theme.of(context)
+                                .textTheme
+                                .titleSmall
+                                ?.copyWith(
+                                  decoration: TextDecoration.underline,
+                                  decorationColor:
+                                      Theme.of(context).colorScheme.primary,
+                                  color: Theme.of(context).colorScheme.primary,
+                                ),
+                          ),
+                        ),
+                      );
+                    }
+                  }
+                  return const SizedBox();
+                },
+              ),
+            ],
+          ),
+          const SizedBox(height: UiConfig.lineSpacing),
+          BlocBuilder<ConsentFormBloc, ConsentFormState>(
+            builder: (context, state) {
+              if (state is GotConsentForms) {
+                if (state.consentForms.isEmpty) {
+                  return _buildResultNotFound(context);
+                }
+                return ListView.separated(
+                  physics: const NeverScrollableScrollPhysics(),
+                  shrinkWrap: true,
+                  itemCount: min(3, state.consentForms.length),
+                  itemBuilder: (context, index) {
+                    return _buildItemCard(
+                      context,
+                      consentForm: state.consentForms[index],
+                    );
+                  },
+                  separatorBuilder: (context, index) => const SizedBox(
+                    height: UiConfig.lineSpacing,
+                  ),
+                );
+              }
+              return const Center(
+                child: CircularProgressIndicator(),
               );
             },
-          );
-        }
-        return Text(
-          tr('general.home.hello'),
-          style: Theme.of(context).textTheme.titleMedium,
-        );
-      },
+          ),
+        ],
+      ),
     );
   }
 
-  Column _buildItemCard(
+  Column _buildResultNotFound(BuildContext context) {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.center,
+      mainAxisAlignment: MainAxisAlignment.center,
+      children: [
+        const SizedBox(height: UiConfig.lineSpacing),
+        Image.asset(
+          'assets/images/general/result-not-found.png',
+        ),
+        Text(
+          tr('app.features.resultNotFound'),
+          style: Theme.of(context).textTheme.titleMedium,
+        ),
+        const SizedBox(height: UiConfig.lineSpacing),
+        Padding(
+          padding: const EdgeInsets.symmetric(
+            horizontal: UiConfig.defaultPaddingSpacing * 2,
+          ),
+          child: Text(
+            tr('app.features.description'),
+            textAlign: TextAlign.center,
+            style: Theme.of(context).textTheme.labelLarge,
+          ),
+        ),
+      ],
+    );
+  }
+
+  Container _buildItemCard(
     BuildContext context, {
     required ConsentFormModel consentForm,
   }) {
@@ -980,87 +713,71 @@ class _HomeScreenState extends State<HomeScreen> {
       consentForm.updatedDate,
     );
 
-    return Column(
-      mainAxisSize: MainAxisSize.min,
-      children: <Widget>[
-        MaterialInkWell(
-          onTap: () {
-            context.push(
-              ConsentFormRoute.consentFormDetail.path
-                  .replaceFirst(':id', consentForm.id),
-            );
-          },
-          child: Padding(
-            padding: const EdgeInsets.symmetric(
-                vertical: UiConfig.defaultPaddingSpacing),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: <Widget>[
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: <Widget>[
-                    Expanded(
-                      child: Text(
-                        title.isNotEmpty
-                            ? title
-                            : tr('general.home.thisDataIsNotStored'),
-                        style: Theme.of(context).textTheme.titleMedium,
-                      ),
-                    ),
-                    Padding(
-                      padding: const EdgeInsets.only(left: 40.0),
-                      child: Text(
-                        dateConsentForm,
-                        style: Theme.of(context).textTheme.bodyMedium,
-                      ),
-                    ),
-                  ],
-                ),
-                Visibility(
-                  visible: consentForm.purposeCategories.isNotEmpty,
-                  child: Padding(
-                    padding: const EdgeInsets.only(
-                      top: UiConfig.textLineSpacing,
-                    ),
+    return Container(
+      decoration: BoxDecoration(
+        boxShadow: [
+          BoxShadow(
+            color: Theme.of(context).colorScheme.outline,
+            blurRadius: 6.0,
+            offset: const Offset(0, 4.0),
+          ),
+        ],
+      ),
+      child: MaterialInkWell(
+        onTap: () {
+          context.push(
+            ConsentFormRoute.consentFormDetail.path
+                .replaceFirst(':id', consentForm.id),
+          );
+        },
+        hoverColor: Theme.of(context).colorScheme.primary.withOpacity(0.15),
+        child: Padding(
+          padding: const EdgeInsets.all(UiConfig.defaultPaddingSpacing),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: <Widget>[
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: <Widget>[
+                  Expanded(
                     child: Text(
-                      consentForm.purposeCategories.first.title
-                          .firstWhere(
-                            (item) => item.language == language,
-                            orElse: LocalizedModel.empty,
-                          )
-                          .text,
-                      style: Theme.of(context).textTheme.bodySmall,
+                      title.isNotEmpty
+                          ? title
+                          : tr('general.home.thisDataIsNotStored'),
+                      style: Theme.of(context).textTheme.titleMedium,
                     ),
                   ),
+                  Padding(
+                    padding: const EdgeInsets.only(left: 40.0),
+                    child: Text(
+                      dateConsentForm,
+                      style: Theme.of(context).textTheme.bodyMedium,
+                    ),
+                  ),
+                ],
+              ),
+              Visibility(
+                visible: consentForm.purposeCategories.isNotEmpty,
+                child: Padding(
+                  padding: const EdgeInsets.only(
+                    top: UiConfig.textLineSpacing,
+                  ),
+                  child: Text(
+                    consentForm.purposeCategories.first.title
+                        .firstWhere(
+                          (item) => item.language == language,
+                          orElse: LocalizedModel.empty,
+                        )
+                        .text,
+                    style: Theme.of(context).textTheme.bodySmall,
+                  ),
                 ),
-              ],
-            ),
-          ),
-        ),
-        const Padding(
-          padding: EdgeInsets.symmetric(
-            horizontal: UiConfig.defaultPaddingSpacing,
-          ),
-          child: SizedBox(
-            height: UiConfig.defaultPaddingSpacing,
-          ),
-        ),
-        // เพิ่ม Container สำหรับเงาด้านล่าง
-        Container(
-          margin:
-              const EdgeInsets.only(top: 8.0), // ระยะทางของ Container จากด้านบน
-          decoration: const BoxDecoration(
-            boxShadow: [
-              BoxShadow(
-                color: Colors.grey, // สีของเงา
-                offset: Offset(0, 4), // ตำแหน่งเงา (x, y)
-                blurRadius: 8.0, // ขนาดของเงา
               ),
             ],
           ),
         ),
-      ],
+      ),
     );
   }
 }

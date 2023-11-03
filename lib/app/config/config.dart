@@ -23,9 +23,11 @@ class AppConfig {
 
 class AppPreferences {
   static const String rememberEmail = 'remember_email';
+  static const String isFirstLaunch = 'check_is_first_launch';
 }
 
 class UiConfig {
+  static const double maxWidthContent = 768.0;
   static const double appBarTitleSpacing = 10.0;
   static const double defaultPaddingSpacing = 15.0;
   static const double lineSpacing = 15.0;
