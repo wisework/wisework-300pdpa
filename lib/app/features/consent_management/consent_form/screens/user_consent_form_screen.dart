@@ -121,7 +121,7 @@ class _UserConsentFormScreenState extends State<UserConsentFormScreen> {
         title: SizedBox(
           width: 110.0,
           child: Image.asset(
-            'assets/images/wisework-logo-mini.png',
+            'assets/images/general/wisework-logo-mini.png',
             fit: BoxFit.contain,
           ),
         ),
@@ -214,7 +214,7 @@ class _UserConsentFormViewState extends State<UserConsentFormView> {
         title: SizedBox(
           width: 110.0,
           child: Image.asset(
-            'assets/images/wisework-logo-mini.png',
+            'assets/images/general/wisework-logo-mini.png',
             fit: BoxFit.contain,
           ),
         ),

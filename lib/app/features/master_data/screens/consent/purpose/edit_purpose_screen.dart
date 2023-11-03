@@ -312,7 +312,7 @@ class _EditPurposeViewState extends State<EditPurposeView> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: PdpaAppBar(
-        leadingIcon: _buildPopButton(widget.initialPurpose),
+        leadingIcon: _buildPopButton(),
         title: Text(
           widget.isNewPurpose
               ? tr('masterData.cm.purpose.create') //!
@@ -342,7 +342,7 @@ class _EditPurposeViewState extends State<EditPurposeView> {
     );
   }
 
-  CustomIconButton _buildPopButton(PurposeModel purpose) {
+  CustomIconButton _buildPopButton() {
     return CustomIconButton(
       onPressed: _goBackAndUpdate,
       icon: Icons.chevron_left_outlined,

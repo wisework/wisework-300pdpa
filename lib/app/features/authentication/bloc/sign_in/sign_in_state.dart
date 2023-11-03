@@ -36,6 +36,13 @@ class SignedInUser extends SignInState {
   List<Object> get props => [user, companies];
 }
 
+class SigningInWithEmailAndPassword extends SignInState {
+  const SigningInWithEmailAndPassword();
+
+  @override
+  List<Object> get props => [];
+}
+
 class SigningInWithGoogle extends SignInState {
   const SigningInWithGoogle();
 
@@ -45,6 +52,20 @@ class SigningInWithGoogle extends SignInState {
 
 class SigningOut extends SignInState {
   const SigningOut();
+
+  @override
+  List<Object> get props => [];
+}
+
+class SendingPasswordReset extends SignInState {
+  const SendingPasswordReset();
+
+  @override
+  List<Object> get props => [];
+}
+
+class SentPasswordReset extends SignInState {
+  const SentPasswordReset();
 
   @override
   List<Object> get props => [];

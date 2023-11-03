@@ -83,7 +83,7 @@ class _HomeScreenState extends State<HomeScreen> {
         title: SizedBox(
           width: 110.0,
           child: Image.asset(
-            'assets/images/wisework-logo-mini.png',
+            'assets/images/general/wisework-logo-mini.png',
             fit: BoxFit.contain,
           ),
         ),

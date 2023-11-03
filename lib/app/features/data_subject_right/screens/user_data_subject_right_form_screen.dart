@@ -47,7 +47,8 @@ class _UserDataSubjectRightFormScreenState
       listener: (context, state) {
         if (state is SubmittedUserDataSubjectRightForm) {
           BotToast.showText(
-            text: tr('consentManagement.consentForm.consentFormDetails.edit.submitSuccess'), //!
+            text: tr(
+                'consentManagement.consentForm.consentFormDetails.edit.submitSuccess'), //!
             contentColor:
                 Theme.of(context).colorScheme.secondary.withOpacity(0.75),
             borderRadius: BorderRadius.circular(8.0),
@@ -100,7 +101,7 @@ class _UserDataSubjectRightFormScreenState
         title: SizedBox(
           width: 110.0,
           child: Image.asset(
-            'assets/images/wisework-logo-mini.png',
+            'assets/images/general/wisework-logo-mini.png',
             fit: BoxFit.contain,
           ),
         ),

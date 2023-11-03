@@ -1,5 +1,6 @@
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
+import 'package:ionicons/ionicons.dart';
 import 'package:pdpa/app/shared/utils/constants.dart';
 
 class CustomTextField extends StatefulWidget {
@@ -8,7 +9,6 @@ class CustomTextField extends StatefulWidget {
     this.controller,
     this.initialValue,
     this.hintText,
-    this.suffix,
     this.keyboardType = TextInputType.text,
     this.maxLines,
     this.minLines,
@@ -17,12 +17,12 @@ class CustomTextField extends StatefulWidget {
     this.readOnly = false,
     this.required = false,
     this.errorText,
+    this.obscureText = false,
   });
 
   final TextEditingController? controller;
   final String? initialValue;
   final String? hintText;
-  final Widget? suffix;
   final TextInputType keyboardType;
   final int? maxLines;
   final int? minLines;
@@ -31,12 +31,22 @@ class CustomTextField extends StatefulWidget {
   final bool readOnly;
   final bool required;
   final String? errorText;
+  final bool obscureText;
 
   @override
   State<CustomTextField> createState() => _CustomTextFieldState();
 }
 
 class _CustomTextFieldState extends State<CustomTextField> {
+  late bool isObscured;
+
+  @override
+  void initState() {
+    super.initState();
+
+    isObscured = widget.obscureText;
+  }
+
   String? _validateInput(String? value) {
     if (value == null || value.isEmpty) {
       return widget.errorText ?? tr('masterData.etc.fieldCannotEmpty'); //!
@@ -45,6 +55,12 @@ class _CustomTextFieldState extends State<CustomTextField> {
       return widget.errorText ?? tr('masterData.etc.pleaseEnterValidEmail'); //!
     }
     return null;
+  }
+
+  void _setObscure() {
+    setState(() {
+      isObscured = !isObscured;
+    });
   }
 
   @override
@@ -61,11 +77,12 @@ class _CustomTextFieldState extends State<CustomTextField> {
             initialValue: widget.initialValue,
             decoration: _buildInputDecoration(context),
             keyboardType: widget.keyboardType,
+            readOnly: widget.readOnly,
+            obscureText: isObscured,
             maxLines: widget.maxLines,
             minLines: widget.minLines ?? 1,
             maxLength: widget.maxLength,
             onChanged: widget.onChanged,
-            readOnly: widget.readOnly,
             validator: _validateInput,
             autovalidateMode: AutovalidateMode.onUserInteraction,
           )
@@ -74,10 +91,11 @@ class _CustomTextFieldState extends State<CustomTextField> {
             initialValue: widget.initialValue,
             decoration: _buildInputDecoration(context),
             keyboardType: widget.keyboardType,
+            readOnly: widget.readOnly,
+            obscureText: isObscured,
             minLines: widget.minLines ?? 1,
             maxLength: widget.maxLength,
             onChanged: widget.onChanged,
-            readOnly: widget.readOnly,
             validator: _validateInput,
             autovalidateMode: AutovalidateMode.onUserInteraction,
           );
@@ -89,20 +107,22 @@ class _CustomTextFieldState extends State<CustomTextField> {
             controller: widget.controller,
             decoration: _buildInputDecoration(context),
             keyboardType: widget.keyboardType,
+            readOnly: widget.readOnly,
+            obscureText: isObscured,
             maxLines: widget.maxLines,
             minLines: widget.minLines ?? 1,
             maxLength: widget.maxLength,
             onChanged: widget.onChanged,
-            readOnly: widget.readOnly,
           )
         : TextField(
             controller: widget.controller,
             decoration: _buildInputDecoration(context),
             keyboardType: widget.keyboardType,
+            readOnly: widget.readOnly,
+            obscureText: isObscured,
             minLines: widget.minLines ?? 1,
             maxLength: widget.maxLength,
             onChanged: widget.onChanged,
-            readOnly: widget.readOnly,
           );
   }
 
@@ -121,10 +141,19 @@ class _CustomTextFieldState extends State<CustomTextField> {
         vertical: 4.0,
         horizontal: 12.0,
       ),
-      suffix: widget.suffix != null
+      suffixIcon: widget.obscureText
           ? Padding(
               padding: const EdgeInsets.only(right: 4.0),
-              child: widget.suffix,
+              child: IconButton(
+                onPressed: _setObscure,
+                icon: Icon(
+                  isObscured ? Ionicons.eye_off_outline : Ionicons.eye_outline,
+                  size: 18.0,
+                  color: isObscured
+                      ? Theme.of(context).colorScheme.outlineVariant
+                      : Theme.of(context).colorScheme.primary,
+                ),
+              ),
             )
           : null,
       filled: true,

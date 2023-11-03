@@ -10,6 +10,16 @@ class UserRepository {
 
   final UserApi _api;
 
+  ResultFuture<List<UserModel>> getUsers() async {
+    try {
+      final user = await _api.getUsers();
+
+      return Right(user);
+    } on ApiException catch (error) {
+      return Left(ApiFailure.fromException(error));
+    }
+  }
+
   ResultFuture<UserModel> getUserById(String userId) async {
     try {
       final user = await _api.getUserById(userId);
@@ -19,6 +29,36 @@ class UserRepository {
       return const Left(
         ApiFailure(message: 'User not found', statusCode: 404),
       );
+    } on ApiException catch (error) {
+      return Left(ApiFailure.fromException(error));
+    }
+  }
+
+  ResultFuture<UserModel> createUser(UserModel user) async {
+    try {
+      final result = await _api.createUser(user);
+
+      return Right(result);
+    } on ApiException catch (error) {
+      return Left(ApiFailure.fromException(error));
+    }
+  }
+
+  ResultVoid updateUser(UserModel user) async {
+    try {
+      await _api.updateUser(user);
+
+      return const Right(null);
+    } on ApiException catch (error) {
+      return Left(ApiFailure.fromException(error));
+    }
+  }
+
+  ResultVoid deleteUser(String userId) async {
+    try {
+      await _api.deleteUser(userId);
+
+      return const Right(null);
     } on ApiException catch (error) {
       return Left(ApiFailure.fromException(error));
     }
