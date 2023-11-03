@@ -5,6 +5,7 @@ class MaterialInkWell extends StatelessWidget {
     super.key,
     this.borderRadius,
     this.backgroundColor,
+    this.hoverColor,
     this.splashColor,
     required this.onTap,
     required this.child,
@@ -12,6 +13,7 @@ class MaterialInkWell extends StatelessWidget {
 
   final BorderRadius? borderRadius;
   final Color? backgroundColor;
+  final Color? hoverColor;
   final Color? splashColor;
   final VoidCallback onTap;
   final Widget child;
@@ -23,6 +25,7 @@ class MaterialInkWell extends StatelessWidget {
       borderRadius: borderRadius ?? BorderRadius.circular(8.0),
       child: InkWell(
         onTap: onTap,
+        hoverColor: hoverColor,
         splashColor: splashColor ??
             Theme.of(context).colorScheme.primary.withOpacity(0.3),
         borderRadius: borderRadius ?? BorderRadius.circular(8.0),

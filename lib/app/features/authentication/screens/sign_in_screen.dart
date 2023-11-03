@@ -57,7 +57,7 @@ class _SignInScreenState extends State<SignInScreen> {
 
     if (result != null) {
       setState(() {
-        isRememberMe = true;
+        isRememberMe = result.isNotEmpty;
         emailController.text = result;
       });
     }

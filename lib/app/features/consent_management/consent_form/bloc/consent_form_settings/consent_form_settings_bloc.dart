@@ -244,8 +244,6 @@ class ConsentFormSettingsBloc
     ConsentFormModel consentForm = ConsentFormModel.empty();
     List<MandatoryFieldModel> mandatoryFields = [];
     List<PurposeModel> purposes = [];
-    // ignore: unused_local_variable
-    List<PurposeCategoryModel> purposeCategories = [];
     List<CustomFieldModel> customFields = [];
     List<ConsentThemeModel> consentThemes = [];
     ConsentThemeModel consentTheme = ConsentThemeModel.initial();
@@ -256,7 +254,6 @@ class ConsentFormSettingsBloc
       consentForm = settings.consentForm;
       mandatoryFields = settings.mandatoryFields;
       purposes = settings.purposes;
-      purposeCategories = settings.purposeCategories;
       customFields = settings.customFields;
       consentThemes = settings.consentThemes;
       consentTheme = settings.consentTheme;
@@ -266,7 +263,6 @@ class ConsentFormSettingsBloc
       consentForm = settings.consentForm;
       mandatoryFields = settings.mandatoryFields;
       purposes = settings.purposes;
-      purposeCategories = settings.purposeCategories;
       customFields = settings.customFields;
       consentThemes = settings.consentThemes;
       consentTheme = settings.consentTheme;

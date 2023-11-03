@@ -44,6 +44,24 @@ class AuthenticationRepository {
     }
   }
 
+  ResultFuture<UserModel> signUpWithEmailAndPassword(
+    String email,
+    String password, {
+    UserModel? user,
+  }) async {
+    try {
+      final result = await _api.signUpWithEmailAndPassword(
+        email,
+        password,
+        user: user,
+      );
+
+      return Right(result);
+    } on ApiException catch (error) {
+      return Left(ApiFailure.fromException(error));
+    }
+  }
+
   ResultVoid signOut() async {
     try {
       await _api.signOut();

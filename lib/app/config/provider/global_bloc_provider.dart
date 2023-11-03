@@ -23,6 +23,7 @@ import 'package:pdpa/app/features/master_data/bloc/data_subject_right/request_re
 import 'package:pdpa/app/features/master_data/bloc/data_subject_right/request_type/request_type_bloc.dart';
 import 'package:pdpa/app/features/master_data/cubit/consent/purpose_category/purpose_category_cubit.dart';
 import 'package:pdpa/app/features/master_data/bloc/mandatory/mandatory_field/mandatory_field_bloc.dart';
+import 'package:pdpa/app/features/user/bloc/user/user_bloc.dart';
 import 'package:pdpa/app/injection.dart';
 import 'package:pdpa/app/shared/drawers/bloc/drawer_bloc.dart';
 import 'package:pdpa/app/shared/drawers/models/drawer_menu_models.dart';
@@ -103,6 +104,9 @@ class GlobalBlocProvider {
       ),
       BlocProvider<PurposeCategoryCubit>(
         create: (context) => serviceLocator<PurposeCategoryCubit>(),
+      ),
+      BlocProvider<UserBloc>(
+        create: (context) => serviceLocator<UserBloc>(),
       ),
     ];
   }

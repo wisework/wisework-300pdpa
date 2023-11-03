@@ -33,4 +33,34 @@ class UserRepository {
       return Left(ApiFailure.fromException(error));
     }
   }
+
+  ResultFuture<UserModel> createUser(UserModel user) async {
+    try {
+      final result = await _api.createUser(user);
+
+      return Right(result);
+    } on ApiException catch (error) {
+      return Left(ApiFailure.fromException(error));
+    }
+  }
+
+  ResultVoid updateUser(UserModel user) async {
+    try {
+      await _api.updateUser(user);
+
+      return const Right(null);
+    } on ApiException catch (error) {
+      return Left(ApiFailure.fromException(error));
+    }
+  }
+
+  ResultVoid deleteUser(String userId) async {
+    try {
+      await _api.deleteUser(userId);
+
+      return const Right(null);
+    } on ApiException catch (error) {
+      return Left(ApiFailure.fromException(error));
+    }
+  }
 }

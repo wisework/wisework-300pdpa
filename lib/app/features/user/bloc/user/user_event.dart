@@ -13,3 +13,16 @@ class GetUsersEvent extends UserEvent {
   @override
   List<Object> get props => [];
 }
+
+class UpdateUsersChangedEvent extends UserEvent {
+  const UpdateUsersChangedEvent({
+    required this.user,
+    required this.updateType,
+  });
+
+  final UserModel user;
+  final UpdateType updateType;
+
+  @override
+  List<Object> get props => [user, updateType];
+}
