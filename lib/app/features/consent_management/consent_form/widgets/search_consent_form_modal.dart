@@ -10,6 +10,7 @@ import 'package:pdpa/app/data/models/master_data/localized_model.dart';
 import 'package:pdpa/app/features/authentication/bloc/sign_in/sign_in_bloc.dart';
 import 'package:pdpa/app/features/consent_management/consent_form/cubit/search_consent_form/search_consent_form_cubit.dart';
 import 'package:pdpa/app/features/consent_management/consent_form/routes/consent_form_route.dart';
+import 'package:pdpa/app/shared/widgets/customs/custom_container.dart';
 import 'package:pdpa/app/shared/widgets/customs/custom_icon_button.dart';
 import 'package:pdpa/app/shared/widgets/customs/custom_text_field.dart';
 import 'package:pdpa/app/shared/widgets/material_ink_well.dart';
@@ -63,12 +64,16 @@ class _SearchConsentFormModalState extends State<SearchConsentFormModal> {
         ..initialConsentForm(
           widget.initialConsentForms,
         ),
-      child: Scaffold(
-        appBar: AppBar(
-          backgroundColor: Theme.of(context).colorScheme.onBackground,
-          automaticallyImplyLeading: false,
-          titleSpacing: 0,
-          title: Row(
+      child: _buildSearchScreen(context),
+    );
+  }
+
+  Widget _buildSearchScreen(BuildContext context) {
+    return CustomContainer(
+      margin: EdgeInsets.zero,
+      child: Column(
+        children: [
+          Row(
             children: <Widget>[
               CustomIconButton(
                 onPressed: () {
@@ -85,15 +90,10 @@ class _SearchConsentFormModalState extends State<SearchConsentFormModal> {
                   child: Builder(builder: (context) {
                     return CustomTextField(
                       controller: searchController,
-                      hintText: 'ค้นหา',
+                      hintText: 'ค้นหา', //!
                       onChanged: (search) {
                         final cubit = context.read<SearchConsentFormCubit>();
                         cubit.searchConsentForm(search, widget.language);
-                        // final event = SearchConsentSearchChanged(
-                        //   companyId: user.currentCompany,
-                        //   search: search,
-                        // );
-                        // context.read<ConsentFormBloc>().add(event);
                       },
                     );
                   }),
@@ -114,52 +114,49 @@ class _SearchConsentFormModalState extends State<SearchConsentFormModal> {
               }),
             ],
           ),
-        ),
-        body: Column(
-          children: [
-            const SizedBox(height: UiConfig.lineSpacing),
-            Expanded(
-              child: Container(
-                padding: const EdgeInsets.all(UiConfig.defaultPaddingSpacing),
-                decoration: BoxDecoration(
-                  color: Theme.of(context).colorScheme.onBackground,
-                ),
-                child:
-                    BlocBuilder<SearchConsentFormCubit, SearchConsentFormState>(
-                  builder: (context, state) {
-                    if (state.consentForms.isNotEmpty) {
-                      return ListView.builder(
-                        shrinkWrap: true,
-                        itemCount: state.consentForms.length,
-                        itemBuilder: (context, index) {
-                          return _buildItemCard(
-                            context,
-                            consentForm: state.consentForms[index],
-                            language: widget.language,
-                          );
-                        },
-                      );
-                    }
-
-                    return ExampleScreen(
-                      headderText:
-                          tr('consentManagement.consentForm.consentForms'),
-                      buttonText:
-                          tr('consentManagement.consentForm.createForm.create'),
-                      descriptionText:
-                          tr('consentManagement.consentForm.explain'),
-                      onPress: () {
-                        context.push(
-                          ConsentFormRoute.createConsentForm.path,
+          const SizedBox(height: UiConfig.lineSpacing),
+          Expanded(
+            child: Container(
+              padding: const EdgeInsets.all(UiConfig.defaultPaddingSpacing),
+              decoration: BoxDecoration(
+                color: Theme.of(context).colorScheme.onBackground,
+              ),
+              child:
+                  BlocBuilder<SearchConsentFormCubit, SearchConsentFormState>(
+                builder: (context, state) {
+                  if (state.consentForms.isNotEmpty) {
+                    return ListView.builder(
+                      shrinkWrap: true,
+                      itemCount: state.consentForms.length,
+                      itemBuilder: (context, index) {
+                        return _buildItemCard(
+                          context,
+                          consentForm: state.consentForms[index],
+                          language: widget.language,
                         );
                       },
                     );
-                  },
-                ),
+                  }
+
+                  return ExampleScreen(
+                    //! FIX
+                    headderText:
+                        tr('consentManagement.consentForm.consentForms'),
+                    buttonText:
+                        tr('consentManagement.consentForm.createForm.create'),
+                    descriptionText:
+                        tr('consentManagement.consentForm.explain'),
+                    onPress: () {
+                      context.push(
+                        ConsentFormRoute.createConsentForm.path,
+                      );
+                    },
+                  );
+                },
               ),
             ),
-          ],
-        ),
+          ),
+        ],
       ),
     );
   }

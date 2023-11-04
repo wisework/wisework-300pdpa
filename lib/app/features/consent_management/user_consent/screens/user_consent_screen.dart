@@ -2,6 +2,8 @@ import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
+import 'package:ionicons/ionicons.dart';
+import 'package:modal_bottom_sheet/modal_bottom_sheet.dart';
 
 import 'package:pdpa/app/config/config.dart';
 import 'package:pdpa/app/data/models/consent_management/consent_form_model.dart';
@@ -11,6 +13,7 @@ import 'package:pdpa/app/features/authentication/bloc/sign_in/sign_in_bloc.dart'
 import 'package:pdpa/app/features/consent_management/consent_form/routes/consent_form_route.dart';
 import 'package:pdpa/app/features/consent_management/user_consent/bloc/user_consent/user_consent_bloc.dart';
 import 'package:pdpa/app/features/consent_management/user_consent/routes/user_consent_route.dart';
+import 'package:pdpa/app/features/consent_management/user_consent/widgets/search_user_consent_modal.dart';
 import 'package:pdpa/app/shared/drawers/pdpa_drawer.dart';
 import 'package:pdpa/app/shared/widgets/customs/custom_icon_button.dart';
 import 'package:pdpa/app/shared/widgets/material_ink_well.dart';
@@ -25,6 +28,8 @@ class UserConsentScreen extends StatefulWidget {
 }
 
 class _UserConsentScreenState extends State<UserConsentScreen> {
+  late String language;
+
   @override
   void initState() {
     super.initState();
@@ -35,9 +40,10 @@ class _UserConsentScreenState extends State<UserConsentScreen> {
   void _initialData() {
     final bloc = context.read<SignInBloc>();
 
-    String companyId = '';
+String companyId = '';
     if (bloc.state is SignedInUser) {
       companyId = (bloc.state as SignedInUser).user.currentCompany;
+      language = (bloc.state as SignedInUser).user.defaultLanguage;
     }
 
     context
@@ -47,12 +53,14 @@ class _UserConsentScreenState extends State<UserConsentScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return const UserConsentView();
+    return UserConsentView(language: language);
   }
 }
 
 class UserConsentView extends StatefulWidget {
-  const UserConsentView({super.key});
+  const UserConsentView({super.key, required this.language});
+
+  final String language;
 
   @override
   State<UserConsentView> createState() => _UserConsentViewState();
@@ -60,7 +68,26 @@ class UserConsentView extends StatefulWidget {
 
 class _UserConsentViewState extends State<UserConsentView> {
   final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
+
   bool _sortAscending = true;
+
+  void _openSeachConsentFormModal() {
+    final bloc = context.read<UserConsentBloc>();
+
+    List<UserConsentModel> userConsents = [];
+    if (bloc.state is GotUserConsents) {
+      userConsents = (bloc.state as GotUserConsents).userConsents;
+    }
+
+    showBarModalBottomSheet(
+      context: context,
+      backgroundColor: Colors.transparent,
+      builder: (context) => SearchUserConsentModal(
+        initialUserConsents: userConsents,
+        language: widget.language,
+      ),
+    );
+  }
 
   void _sortProducts(bool ascending) {
     setState(() {
@@ -86,41 +113,15 @@ class _UserConsentViewState extends State<UserConsentView> {
           style: Theme.of(context).textTheme.titleLarge,
         ),
         actions: [
-          IconButton(
-            onPressed: () {
-              context.push(UserConsentRoute.userConsentSearch.path);
-            },
-            icon: Container(
-              padding: const EdgeInsets.symmetric(
-                vertical: 6.0,
-                horizontal: 12.0,
-              ),
-              decoration: BoxDecoration(
-                color: Theme.of(context).colorScheme.primary,
-                borderRadius: BorderRadius.circular(10.0),
-              ),
-              child: RichText(
-                text: TextSpan(children: [
-                  WidgetSpan(
-                      child: Icon(
-                    Icons.search_rounded,
-                    size: 16,
-                    color: Theme.of(context).colorScheme.onPrimary,
-                  )),
-                  const WidgetSpan(child: SizedBox(width: 4.0)),
-                  TextSpan(
-                    text: tr('app.search'),
-                    style: Theme.of(context).textTheme.bodySmall?.copyWith(
-                        color: Theme.of(context).colorScheme.onPrimary),
-                  ),
-                ]),
-              ),
-            ),
+          CustomIconButton(
+            onPressed: _openSeachConsentFormModal,
+            icon: Ionicons.search,
+            iconColor: Theme.of(context).colorScheme.primary,
+            backgroundColor: Theme.of(context).colorScheme.onBackground,
           ),
         ],
       ),
       body: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
         children: <Widget>[
           const SizedBox(height: UiConfig.lineSpacing),
           Expanded(
@@ -131,13 +132,21 @@ class _UserConsentViewState extends State<UserConsentView> {
               ),
               child: Column(
                 children: <Widget>[
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    crossAxisAlignment: CrossAxisAlignment.center,
-                    children: <Widget>[
-                      const Text('รายการความยินยอมที่ได้รับ'),
-                      _sortByDateButton(context),
-                    ],
+                  Padding(
+                    padding: const EdgeInsets.only(
+                        left: UiConfig.defaultPaddingSpacing,
+                        right: UiConfig.defaultPaddingSpacing),
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      crossAxisAlignment: CrossAxisAlignment.center,
+                      children: <Widget>[
+                        Text(
+                          'รายการความยินยอมที่ได้รับ', //!
+                          style: Theme.of(context).textTheme.titleMedium,
+                        ),
+                        _sortByDateButton(context),
+                      ],
+                    ),
                   ),
                   const SizedBox(height: UiConfig.lineSpacing),
                   BlocBuilder<UserConsentBloc, UserConsentState>(
