@@ -70,6 +70,7 @@ dependencies:
   flutter_colorpicker: ^1.0.3
   cached_network_image: ^3.3.0
   modal_bottom_sheet: ^3.0.0-pre
+  carousel_slider: ^4.2.1
 
   # Image packages
   image_picker: ^1.0.4
