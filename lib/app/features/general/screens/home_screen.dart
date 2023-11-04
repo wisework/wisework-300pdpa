@@ -247,14 +247,14 @@ class _HomeViewState extends State<HomeView> {
             children: <Widget>[
               const SizedBox(height: UiConfig.lineGap),
               Text(
-                'Discover What’s New',
+                tr('app.disvover.discover'),
                 style: Theme.of(context).textTheme.headlineMedium,
               ),
             ],
           ),
           const SizedBox(height: UiConfig.lineGap * 2),
           Text(
-            'Celebrate the start of your journey with our data management tools. This brief guide will get you started swiftly on our platform.',
+            tr('app.disvover.description'),
             style: Theme.of(context).textTheme.bodySmall,
           ),
           const SizedBox(height: UiConfig.lineGap * 2),
@@ -267,7 +267,7 @@ class _HomeViewState extends State<HomeView> {
               GoRouter.of(context).go(GeneralRoute.board.path);
             },
             child: Text(
-              'See What’s New!',
+              tr('app.disvover.seewhatnew'),
               style: Theme.of(context)
                   .textTheme
                   .titleMedium
@@ -300,7 +300,7 @@ class _HomeViewState extends State<HomeView> {
               ),
             ),
             Text(
-              'Home',
+              tr('app.features.home'),
               style: Theme.of(context).textTheme.titleMedium,
             ),
           ],
@@ -322,7 +322,7 @@ class _HomeViewState extends State<HomeView> {
               ),
             ),
             Text(
-              'Consent Management',
+              tr('app.features.consentmanagement'),
               style: Theme.of(context).textTheme.titleMedium,
             ),
           ],
@@ -344,7 +344,7 @@ class _HomeViewState extends State<HomeView> {
               ),
             ),
             Text(
-              'Master Data',
+              tr('app.features.masterdata'),
               style: Theme.of(context).textTheme.titleMedium,
             ),
           ],
@@ -366,7 +366,7 @@ class _HomeViewState extends State<HomeView> {
               ),
             ),
             Text(
-              'Settings',
+               tr('app.features.setting'),
               style: Theme.of(context).textTheme.titleMedium,
             ),
           ],

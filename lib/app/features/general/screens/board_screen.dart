@@ -1,4 +1,5 @@
 import 'package:carousel_slider/carousel_slider.dart';
+import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:pdpa/app/features/general/routes/general_route.dart';
@@ -31,9 +32,7 @@ class _BoardScreenState extends State<BoardScreen> {
             child: IconButton(
               color: Colors.black,
               icon: const Icon(Icons.arrow_back_ios),
-              onPressed: () {
-                // Navigate back
-              },
+              onPressed: previous,
             ),
           ),
         ),
@@ -43,9 +42,11 @@ class _BoardScreenState extends State<BoardScreen> {
             child: Ink(
               padding: const EdgeInsets.all(8.0),
               child: TextButton(
-                onPressed: () {},
+                onPressed: () {
+                  GoRouter.of(context).go(GeneralRoute.home.path);
+                },
                 child: Text(
-                  'Skip',
+                  tr('app.board.skip'),
                   style: Theme.of(context)
                       .textTheme
                       .titleMedium
@@ -129,12 +130,12 @@ class _BoardScreenState extends State<BoardScreen> {
               child: Column(
                 children: [
                   Text(
-                    'Consent Management',
+                    tr('app.features.consentmanagement'),
                     style: Theme.of(context).textTheme.titleLarge,
                   ),
                   const SizedBox(height: 16.0),
                   Text(
-                    'You can easily craft consent forms, and automatically generate them from specified master data. Tailor them to your needs, experiment with themes, and have the world at your fingertips with real-time previews. Then, share your creations effortlessly via QR codes or URLs.',
+                    tr('app.board.description'),
                     style: Theme.of(context).textTheme.bodySmall,
                     textAlign: TextAlign.center,
                   ),
@@ -147,7 +148,7 @@ class _BoardScreenState extends State<BoardScreen> {
                         width: 120,
                         onPressed: next,
                         child: Text(
-                          'Next',
+                          tr('app.board.next'),
                           style: TextStyle(
                             color: Theme.of(context).colorScheme.onPrimary,
                           ),
@@ -186,12 +187,12 @@ class _BoardScreenState extends State<BoardScreen> {
               child: Column(
                 children: [
                   Text(
-                    'Master Data',
+                    tr('app.features.masterdata'),
                     style: Theme.of(context).textTheme.titleLarge,
                   ),
                   const SizedBox(height: 16.0),
                   Text(
-                    'Control over consent-related parameters, including purpose, purpose categories, and mandatory fields, ensuring data integrity and accuracy in the system.',
+                    tr('app.board.decription2'),
                     style: Theme.of(context).textTheme.bodySmall,
                     textAlign: TextAlign.center,
                   ),
@@ -206,7 +207,7 @@ class _BoardScreenState extends State<BoardScreen> {
                           GoRouter.of(context).go(GeneralRoute.home.path);
                         },
                         child: Text(
-                          'Get Started',
+                          tr('app.board.getstared'),
                           style: TextStyle(
                             color: Theme.of(context).colorScheme.onPrimary,
                           ),
@@ -224,4 +225,6 @@ class _BoardScreenState extends State<BoardScreen> {
   }
 
   void next() => controller.nextPage();
+
+  void previous() => controller.previousPage();
 }
