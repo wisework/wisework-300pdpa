@@ -13,6 +13,7 @@ import 'package:pdpa/app/features/authentication/bloc/sign_in/sign_in_bloc.dart'
 import 'package:pdpa/app/features/consent_management/consent_form/bloc/consent_form/consent_form_bloc.dart';
 import 'package:pdpa/app/features/consent_management/consent_form/routes/consent_form_route.dart';
 import 'package:pdpa/app/features/consent_management/user_consent/routes/user_consent_route.dart';
+import 'package:pdpa/app/features/general/routes/general_route.dart';
 import 'package:pdpa/app/features/master_data/routes/master_data_route.dart';
 import 'package:pdpa/app/shared/drawers/pdpa_drawer.dart';
 import 'package:pdpa/app/shared/utils/user_preferences.dart';
@@ -262,7 +263,9 @@ class _HomeViewState extends State<HomeView> {
           CustomButton(
             width: 210.0,
             height: 45.0,
-            onPressed: () {},
+            onPressed: () {
+              GoRouter.of(context).go(GeneralRoute.board.path);
+            },
             child: Text(
               'See What’s New!',
               style: Theme.of(context)
