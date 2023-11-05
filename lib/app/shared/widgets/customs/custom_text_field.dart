@@ -17,6 +17,9 @@ class CustomTextField extends StatefulWidget {
     this.readOnly = false,
     this.required = false,
     this.errorText,
+    this.fillColor,
+    this.borderColor,
+    this.focusedBorderColor,
     this.obscureText = false,
   });
 
@@ -31,6 +34,9 @@ class CustomTextField extends StatefulWidget {
   final bool readOnly;
   final bool required;
   final String? errorText;
+  final Color? fillColor;
+  final Color? borderColor;
+  final Color? focusedBorderColor;
   final bool obscureText;
 
   @override
@@ -159,7 +165,7 @@ class _CustomTextFieldState extends State<CustomTextField> {
       filled: true,
       fillColor: widget.readOnly
           ? Theme.of(context).colorScheme.tertiary
-          : Theme.of(context).colorScheme.onBackground,
+          : widget.fillColor ?? Theme.of(context).colorScheme.onBackground,
       errorBorder: OutlineInputBorder(
         borderRadius: BorderRadius.circular(8.0),
         borderSide: BorderSide(
@@ -171,7 +177,8 @@ class _CustomTextFieldState extends State<CustomTextField> {
         borderSide: BorderSide(
           color: widget.readOnly
               ? Theme.of(context).colorScheme.outlineVariant
-              : Theme.of(context).colorScheme.primary,
+              : widget.focusedBorderColor ??
+                  Theme.of(context).colorScheme.primary,
         ),
       ),
       focusedErrorBorder: OutlineInputBorder(
@@ -183,13 +190,15 @@ class _CustomTextFieldState extends State<CustomTextField> {
       disabledBorder: OutlineInputBorder(
         borderRadius: BorderRadius.circular(8.0),
         borderSide: BorderSide(
-          color: Theme.of(context).colorScheme.outlineVariant,
+          color: widget.borderColor ??
+              Theme.of(context).colorScheme.outlineVariant,
         ),
       ),
       enabledBorder: OutlineInputBorder(
         borderRadius: BorderRadius.circular(8.0),
         borderSide: BorderSide(
-          color: Theme.of(context).colorScheme.outlineVariant,
+          color: widget.borderColor ??
+              Theme.of(context).colorScheme.outlineVariant,
         ),
       ),
     );
