@@ -1,5 +1,3 @@
-// ignore_for_file: library_private_types_in_public_api
-
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
@@ -13,11 +11,11 @@ class BoardScreen extends StatefulWidget {
   const BoardScreen({super.key});
 
   @override
-  _BoardScreenState createState() => _BoardScreenState();
+  State<BoardScreen> createState() => _BoardScreenState();
 }
 
 class _BoardScreenState extends State<BoardScreen> {
-  int _currentIndex = 0;
+  // int _currentIndex = 0;
   final controller = CarouselController();
 
   @override
@@ -34,12 +32,11 @@ class _BoardScreenState extends State<BoardScreen> {
               color: Theme.of(context).colorScheme.onSurface,
               icon: const Icon(Icons.arrow_back_ios),
               onPressed: () async {
-                  await UserPreferences.setBool(
-                    AppPreferences.isFirstLaunch,
-                    false,
-                  ).then(
-                      (_) => GoRouter.of(context).go(GeneralRoute.home.path));
-                },
+                await UserPreferences.setBool(
+                  AppPreferences.isFirstLaunch,
+                  false,
+                ).then((_) => GoRouter.of(context).go(GeneralRoute.home.path));
+              },
             ),
           ),
         ),
@@ -86,34 +83,30 @@ class _BoardScreenState extends State<BoardScreen> {
               enableInfiniteScroll: false,
               viewportFraction: 1.0,
               onPageChanged: (index, reason) {
-                setState(() {
-                  _currentIndex = index;
-                });
+                // setState(() {
+                //   _currentIndex = index;
+                // });
               },
             ),
           ),
         ),
-        Stack(
-          children: [
-            Positioned(
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: List.generate(
-                  2, // Change this to the number of screens
-                  (index) => Padding(
-                    padding: const EdgeInsets.all(8.0),
-                    child: CircleAvatar(
-                      radius: 6,
-                      backgroundColor: _currentIndex == index
-                          ? Theme.of(context).colorScheme.primary
-                          : Theme.of(context).colorScheme.onTertiary, // Change these colors as needed
-                    ),
-                  ),
-                ),
-              ),
-            ),
-          ],
-        ),
+        // Row(
+        //   mainAxisAlignment: MainAxisAlignment.center,
+        //   children: List.generate(
+        //     2, // Change this to the number of screens
+        //     (index) => Padding(
+        //       padding: const EdgeInsets.all(8.0),
+        //       child: CircleAvatar(
+        //         radius: 6,
+        //         backgroundColor: _currentIndex == index
+        //             ? Theme.of(context).colorScheme.primary
+        //             : Theme.of(context)
+        //                 .colorScheme
+        //                 .onTertiary, // Change these colors as needed
+        //       ),
+        //     ),
+        //   ),
+        // ),
       ],
     );
   }
@@ -129,7 +122,7 @@ class _BoardScreenState extends State<BoardScreen> {
         ),
         Expanded(
           child: Container(
-            decoration:  BoxDecoration(
+            decoration: BoxDecoration(
               color: Theme.of(context).colorScheme.background,
               borderRadius: const BorderRadius.only(
                 topLeft: Radius.circular(20),
@@ -187,7 +180,7 @@ class _BoardScreenState extends State<BoardScreen> {
         ),
         Expanded(
           child: Container(
-            decoration:  BoxDecoration(
+            decoration: BoxDecoration(
               color: Theme.of(context).colorScheme.background,
               borderRadius: const BorderRadius.only(
                 topLeft: Radius.circular(20),
