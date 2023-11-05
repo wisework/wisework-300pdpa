@@ -13,6 +13,7 @@ import 'package:pdpa/app/shared/drawers/bloc/drawer_bloc.dart';
 import 'package:pdpa/app/shared/drawers/models/drawer_menu_models.dart';
 import 'package:pdpa/app/shared/drawers/pdpa_drawer.dart';
 import 'package:pdpa/app/shared/utils/constants.dart';
+import 'package:pdpa/app/shared/utils/user_preferences.dart';
 import 'package:pdpa/app/shared/widgets/customs/custom_container.dart';
 import 'package:pdpa/app/shared/widgets/customs/custom_dropdown_button.dart';
 import 'package:pdpa/app/shared/widgets/customs/custom_icon_button.dart';
@@ -163,7 +164,11 @@ class _SettingViewState extends State<SettingView> {
           Switch(
             value: context.watch<ThemeProvider>().currentTheme ==
                 PdpaThemeData.darkThemeData,
-            onChanged: (value) {
+            onChanged: (value) async {
+              await UserPreferences.setBool(
+                AppPreferences.isDarkMode,
+                value,
+              );
               _toggleTheme();
             },
           ),
