@@ -72,7 +72,7 @@ class _ResetPasswordViewState extends State<ResetPasswordView> {
     super.dispose();
   }
 
-  void _onChangePressed() {
+  void _onSavePressed() {
     if (_formKey.currentState!.validate()) {
       if (newPasswordController.text != confirmPasswordController.text) {
         setState(() {
@@ -113,7 +113,7 @@ class _ResetPasswordViewState extends State<ResetPasswordView> {
     return Scaffold(
       appBar: PdpaAppBar(
         title: Text(
-          'Reset Password',
+          tr('auth.resetPassword.title'),
           style: Theme.of(context).textTheme.titleLarge,
         ),
         actions: [
@@ -144,49 +144,46 @@ class _ResetPasswordViewState extends State<ResetPasswordView> {
                 _buildGreetingUser(context),
                 const SizedBox(height: UiConfig.textSpacing),
                 Text(
-                  'Please reset your password for enhanced security.',
+                  tr('auth.resetPassword.description'),
                   style: Theme.of(context).textTheme.bodyMedium,
                 ),
                 const SizedBox(height: UiConfig.lineSpacing),
-                const TitleRequiredText(
-                  text: 'Current Password',
+                TitleRequiredText(
+                  text: tr('auth.resetPassword.currentPassword'),
                   required: true,
                 ),
                 CustomTextField(
                   controller: currentPasswordController,
-                  hintText: 'Enter your current password',
-                  onChanged: (value) {},
+                  hintText: tr('auth.resetPassword.currentPasswordHint'),
                   required: true,
                   obscureText: true,
                 ),
                 const SizedBox(height: UiConfig.lineSpacing),
-                const TitleRequiredText(
-                  text: 'New Password',
+                TitleRequiredText(
+                  text: tr('auth.resetPassword.newPassword'),
                   required: true,
                 ),
                 CustomTextField(
                   controller: newPasswordController,
-                  hintText: 'Enter your new password',
-                  onChanged: (value) {},
+                  hintText: tr('auth.resetPassword.newPasswordHint'),
                   required: true,
                   obscureText: true,
                 ),
                 const SizedBox(height: UiConfig.lineSpacing),
-                const TitleRequiredText(
-                  text: 'Confirm Password',
+                TitleRequiredText(
+                  text: tr('auth.resetPassword.confirmPassword'),
                   required: true,
                 ),
                 CustomTextField(
                   controller: confirmPasswordController,
-                  hintText: 'Confirm your password',
-                  onChanged: (value) {},
+                  hintText: tr('auth.resetPassword.confirmPasswordHint'),
                   required: true,
                   obscureText: true,
                 ),
                 const SizedBox(height: UiConfig.lineGap),
                 _buildWarningContainer(context),
                 const SizedBox(height: UiConfig.lineGap),
-                _buildChangeButton(context),
+                _buildSaveButton(context),
               ],
             ),
           ),
@@ -223,7 +220,7 @@ class _ResetPasswordViewState extends State<ResetPasswordView> {
             const SizedBox(width: UiConfig.textSpacing),
             Expanded(
               child: Text(
-                'New password and confirm password do not match. Please make sure they are identical.',
+                tr('auth.resetPassword.passwordNotMatch'),
                 style: Theme.of(context)
                     .textTheme
                     .bodyMedium
@@ -243,7 +240,7 @@ class _ResetPasswordViewState extends State<ResetPasswordView> {
           return Row(
             children: <Widget>[
               Text(
-                tr('auth.acceptInvite.hello'),
+                tr('auth.resetPassword.hello'),
                 style: Theme.of(context).textTheme.titleMedium,
               ),
               Text(
@@ -259,17 +256,17 @@ class _ResetPasswordViewState extends State<ResetPasswordView> {
           );
         }
         return Text(
-          tr('auth.acceptInvite.hello'),
+          tr('auth.resetPassword.hello'),
           style: Theme.of(context).textTheme.titleMedium,
         );
       },
     );
   }
 
-  CustomButton _buildChangeButton(BuildContext context) {
+  CustomButton _buildSaveButton(BuildContext context) {
     return CustomButton(
       height: 48,
-      onPressed: _onChangePressed,
+      onPressed: _onSavePressed,
       child: BlocConsumer<ResetPasswordBloc, ResetPasswordState>(
         listener: (context, state) {
           if (state is ChangedPassword) {
@@ -294,7 +291,7 @@ class _ResetPasswordViewState extends State<ResetPasswordView> {
             );
           }
           return Text(
-            tr('auth.acceptInvite.continueButton'),
+            tr('auth.resetPassword.saveButton'),
             style: Theme.of(context)
                 .textTheme
                 .titleMedium

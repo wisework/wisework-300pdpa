@@ -50,6 +50,19 @@
             "forgotDescription": "Please enter an email linked to your account. We’ll send a link that will sign you into the app instantly.",
             "passwordResetSent": "Password reset email sent."
         },
+        "resetPassword": {
+            "title": "Reset Password",
+            "description": "Please reset your password for enhanced security.",
+            "hello": "Hello",
+            "currentPassword": "Current Password",
+            "currentPasswordHint": "Enter your current password",
+            "newPassword": "New Password",
+            "newPasswordHint": "Enter your new password",
+            "confirmPassword": "Confirm Password",
+            "confirmPasswordHint": "Confirm your password",
+            "passwordNotMatch": "New password and confirm password do not match. Please make sure they are identical.",
+            "saveButton": "Save"
+        },
         "acceptInvite": {
             "title": "Accept the invitation",
             "hello": "Hello",
