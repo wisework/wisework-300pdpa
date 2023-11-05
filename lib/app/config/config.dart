@@ -24,6 +24,7 @@ class AppConfig {
 class AppPreferences {
   static const String rememberEmail = 'remember_email';
   static const String isFirstLaunch = 'check_is_first_launch';
+  static const String rememberThemeMode = 'remember_theme_mode';
 }
 
 class UiConfig {

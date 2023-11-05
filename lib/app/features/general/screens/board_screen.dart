@@ -1,3 +1,5 @@
+// ignore_for_file: library_private_types_in_public_api
+
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
@@ -26,22 +28,23 @@ class _BoardScreenState extends State<BoardScreen> {
         backgroundColor: Colors.transparent,
         elevation: 0,
         leading: InkResponse(
-          onTap: () {
-            // Navigate back
-            Navigator.of(context).pop();
-          },
           child: Ink(
             padding: const EdgeInsets.all(8.0),
             child: IconButton(
-              color: Colors.black,
+              color: Theme.of(context).colorScheme.onSurface,
               icon: const Icon(Icons.arrow_back_ios),
-              onPressed: previous,
+              onPressed: () async {
+                  await UserPreferences.setBool(
+                    AppPreferences.isFirstLaunch,
+                    false,
+                  ).then(
+                      (_) => GoRouter.of(context).go(GeneralRoute.home.path));
+                },
             ),
           ),
         ),
         actions: [
           InkResponse(
-            onTap: () {},
             child: Ink(
               padding: const EdgeInsets.all(8.0),
               child: TextButton(
@@ -64,11 +67,11 @@ class _BoardScreenState extends State<BoardScreen> {
           ),
         ],
       ),
-      body: board_screen(context),
+      body: boardscreen(context),
     );
   }
 
-  Widget board_screen(BuildContext context) {
+  Widget boardscreen(BuildContext context) {
     return Column(
       children: [
         Expanded(
@@ -102,8 +105,8 @@ class _BoardScreenState extends State<BoardScreen> {
                     child: CircleAvatar(
                       radius: 6,
                       backgroundColor: _currentIndex == index
-                          ? Colors.blue
-                          : Colors.grey, // Change these colors as needed
+                          ? Theme.of(context).colorScheme.primary
+                          : Theme.of(context).colorScheme.onTertiary, // Change these colors as needed
                     ),
                   ),
                 ),
@@ -126,8 +129,9 @@ class _BoardScreenState extends State<BoardScreen> {
         ),
         Expanded(
           child: Container(
-            decoration: const BoxDecoration(
-              borderRadius: BorderRadius.only(
+            decoration:  BoxDecoration(
+              color: Theme.of(context).colorScheme.background,
+              borderRadius: const BorderRadius.only(
                 topLeft: Radius.circular(20),
                 topRight: Radius.circular(20),
               ),
@@ -183,8 +187,9 @@ class _BoardScreenState extends State<BoardScreen> {
         ),
         Expanded(
           child: Container(
-            decoration: const BoxDecoration(
-              borderRadius: BorderRadius.only(
+            decoration:  BoxDecoration(
+              color: Theme.of(context).colorScheme.background,
+              borderRadius: const BorderRadius.only(
                 topLeft: Radius.circular(20),
                 topRight: Radius.circular(20),
               ),
