@@ -270,7 +270,7 @@ class _ResetPasswordViewState extends State<ResetPasswordView> {
       child: BlocConsumer<ResetPasswordBloc, ResetPasswordState>(
         listener: (context, state) {
           if (state is ChangedPassword) {
-            final event = UpdateCurrentUserEvent(
+            final event = UpdateSignedUserEvent(
               user: state.user,
               companies: state.companies,
             );

@@ -27,7 +27,7 @@ class _SplashScreenState extends State<SplashScreen> {
   }
 
   void _getCurrentUser() {
-    context.read<SignInBloc>().add(const GetCurrentUserEvent());
+    context.read<SignInBloc>().add(const GetSignedUserEvent());
   }
 
   void _alreadySignedIn(UserModel user) {

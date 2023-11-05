@@ -19,6 +19,15 @@ class AppConfig {
   static const String templateId = 'template_638hul8';
   static const String userId = 'zAusZtWTuLIJ5NRsW';
   static const String notificationEmail = 'notifications.wisework@gmail.com';
+  static const List<String> godIds = [
+    'm23GKVPRbjVtZv5PjURy',
+    'gNL33nfdaXycVAMqwTHG',
+    'eR4l6QOXAUvmyaL3TFHj',
+    'DNx3u82tT1QoVWwO9a0j',
+    '0nJUnuW765fkHuw0NlQC',
+    '2bKRYP8z1Qf2dLKK2UGk',
+    'yMaDeJIa8kkvHxapqXjd',
+  ];
 }
 
 class AppPreferences {

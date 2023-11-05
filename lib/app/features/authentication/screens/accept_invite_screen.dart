@@ -163,7 +163,7 @@ class _AcceptInviteViewState extends State<AcceptInviteView> {
       child: BlocConsumer<InvitationBloc, InvitationState>(
         listener: (context, state) {
           if (state is AcceptedInvitation) {
-            context.read<SignInBloc>().add(UpdateCurrentUserEvent(
+            context.read<SignInBloc>().add(UpdateSignedUserEvent(
                 user: state.user, companies: state.companies));
             context.pushReplacement(GeneralRoute.home.path);
           }

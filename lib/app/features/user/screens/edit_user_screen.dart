@@ -6,6 +6,8 @@ import 'package:pdpa/app/config/config.dart';
 import 'package:pdpa/app/data/models/authentication/user_model.dart';
 import 'package:pdpa/app/data/models/etc/updated_return.dart';
 import 'package:pdpa/app/data/models/etc/user_company_role.dart';
+import 'package:pdpa/app/features/authentication/bloc/sign_in/sign_in_bloc.dart';
+import 'package:pdpa/app/features/authentication/routes/authentication_route.dart';
 import 'package:pdpa/app/features/user/bloc/edit_user/edit_user_bloc.dart';
 import 'package:pdpa/app/injection.dart';
 import 'package:pdpa/app/shared/utils/constants.dart';
@@ -19,7 +21,7 @@ import 'package:pdpa/app/shared/widgets/screens/loading_screen.dart';
 import 'package:pdpa/app/shared/widgets/templates/pdpa_app_bar.dart';
 import 'package:pdpa/app/shared/widgets/title_required_text.dart';
 
-class EditUserScreen extends StatelessWidget {
+class EditUserScreen extends StatefulWidget {
   const EditUserScreen({
     super.key,
     required this.userId,
@@ -28,10 +30,41 @@ class EditUserScreen extends StatelessWidget {
   final String userId;
 
   @override
+  State<EditUserScreen> createState() => _EditUserScreenState();
+}
+
+class _EditUserScreenState extends State<EditUserScreen> {
+  late UserModel currentUser;
+
+  @override
+  void initState() {
+    super.initState();
+
+    _initialData();
+  }
+
+  Future<void> _initialData() async {
+    final bloc = context.read<SignInBloc>();
+    if (bloc.state is SignedInUser) {
+      currentUser = (bloc.state as SignedInUser).user;
+    } else {
+      currentUser = UserModel.empty();
+
+      context.pushReplacement(AuthenticationRoute.signIn.path);
+      return;
+    }
+
+    if (!AppConfig.godIds.contains(currentUser.id)) {
+      await Future.delayed(const Duration(microseconds: 100)).then(
+          (_) => context.pushReplacement(AuthenticationRoute.splash.path));
+    }
+  }
+
+  @override
   Widget build(BuildContext context) {
     return BlocProvider<EditUserBloc>(
       create: (context) => serviceLocator<EditUserBloc>()
-        ..add(GetCurrentUserEvent(userId: userId)),
+        ..add(GetCurrentUserEvent(userId: widget.userId)),
       child: BlocConsumer<EditUserBloc, EditUserState>(
         listener: (context, state) {
           if (state is CreatedCurrentUser) {
@@ -76,13 +109,13 @@ class EditUserScreen extends StatelessWidget {
           if (state is GotCurrentUser) {
             return EditUserView(
               initialUser: state.user,
-              isNewUser: userId.isEmpty,
+              isNewUser: widget.userId.isEmpty,
             );
           }
           if (state is UpdatedCurrentUser) {
             return EditUserView(
               initialUser: state.user,
-              isNewUser: userId.isEmpty,
+              isNewUser: widget.userId.isEmpty,
             );
           }
           if (state is EditUserError) {
