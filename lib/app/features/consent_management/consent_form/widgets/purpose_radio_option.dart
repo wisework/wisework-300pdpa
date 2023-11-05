@@ -56,7 +56,10 @@ class _PurposeRadioOptionState extends State<PurposeRadioOption> {
                   orElse: () => const LocalizedModel.empty(),
                 )
                 .text,
-            style: Theme.of(context).textTheme.bodyMedium,
+            style: Theme.of(context)
+                .textTheme
+                .bodyMedium
+                ?.copyWith(color: Colors.black),
           ),
           const SizedBox(width: UiConfig.lineSpacing),
           Wrap(
@@ -83,7 +86,10 @@ class _PurposeRadioOptionState extends State<PurposeRadioOption> {
                   const SizedBox(width: UiConfig.actionSpacing),
                   Text(
                     tr('app.agree'),
-                    style: Theme.of(context).textTheme.bodyMedium,
+                    style: Theme.of(context)
+                        .textTheme
+                        .bodyMedium
+                        ?.copyWith(color: Colors.black),
                   ),
                 ],
               ),
@@ -110,7 +116,10 @@ class _PurposeRadioOptionState extends State<PurposeRadioOption> {
                   const SizedBox(width: UiConfig.actionSpacing),
                   Text(
                     tr('app.decline'),
-                    style: Theme.of(context).textTheme.bodyMedium,
+                    style: Theme.of(context)
+                        .textTheme
+                        .bodyMedium
+                        ?.copyWith(color: Colors.black),
                   ),
                 ],
               ),
@@ -125,7 +134,7 @@ class _PurposeRadioOptionState extends State<PurposeRadioOption> {
                 Container(
                   padding: const EdgeInsets.all(10.0),
                   decoration: BoxDecoration(
-                    color: Theme.of(context).colorScheme.onBackground,
+                    color: Colors.white,
                     border: Border.all(
                       color: Theme.of(context).colorScheme.onError,
                       width: 1.0,
@@ -153,9 +162,7 @@ class _PurposeRadioOptionState extends State<PurposeRadioOption> {
                           style: Theme.of(context)
                               .textTheme
                               .bodyMedium
-                              ?.copyWith(
-                                  color:
-                                      Theme.of(context).colorScheme.secondary),
+                              ?.copyWith(color: Colors.black),
                         ),
                       ),
                     ],

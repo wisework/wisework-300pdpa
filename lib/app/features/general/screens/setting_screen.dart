@@ -1,20 +1,12 @@
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
-import 'package:go_router/go_router.dart';
-import 'package:ionicons/ionicons.dart';
 import 'package:pdpa/app/config/config.dart';
 import 'package:pdpa/app/features/general/bloc/theme_provider.dart';
 import 'package:pdpa/app/config/themes/pdpa_theme_data.dart';
 import 'package:pdpa/app/data/models/authentication/user_model.dart';
 import 'package:pdpa/app/features/authentication/bloc/sign_in/sign_in_bloc.dart';
-import 'package:pdpa/app/features/general/bloc/app_settings/app_settings_bloc.dart';
-import 'package:pdpa/app/features/general/routes/general_route.dart';
-import 'package:pdpa/app/shared/drawers/bloc/drawer_bloc.dart';
-import 'package:pdpa/app/shared/drawers/models/drawer_menu_models.dart';
 import 'package:pdpa/app/shared/drawers/pdpa_drawer.dart';
-import 'package:pdpa/app/shared/utils/constants.dart';
 import 'package:pdpa/app/shared/widgets/customs/custom_container.dart';
-import 'package:pdpa/app/shared/widgets/customs/custom_dropdown_button.dart';
 import 'package:pdpa/app/shared/widgets/customs/custom_icon_button.dart';
 import 'package:pdpa/app/shared/widgets/templates/pdpa_app_bar.dart';
 import 'package:provider/provider.dart';
@@ -77,39 +69,39 @@ class _SettingViewState extends State<SettingView> {
     currentLanguage = widget.currentUser.defaultLanguage;
   }
 
-  void _selectMenuDrawer(DrawerMenuModel menu) {
-    context.read<DrawerBloc>().add(SelectMenuDrawerEvent(menu: menu));
-    context.pushReplacement(menu.route.path);
-  }
+  // void _selectMenuDrawer(DrawerMenuModel menu) {
+  //   context.read<DrawerBloc>().add(SelectMenuDrawerEvent(menu: menu));
+  //   context.pushReplacement(menu.route.path);
+  // }
 
-  void _setCurrentLanguage(String? value) {
-    if (value != null && value != currentLanguage) {
-      currentLanguage = value;
+  // void _setCurrentLanguage(String? value) {
+  //   if (value != null && value != currentLanguage) {
+  //     currentLanguage = value;
 
-      final locales = value.split('-');
-      context.setLocale(
-        Locale(locales.first, locales.last),
-      );
+  //     final locales = value.split('-');
+  //     context.setLocale(
+  //       Locale(locales.first, locales.last),
+  //     );
 
-      // EasyLocalization.of(context)?.setLocale(
-      //   Locale(locales.first, locales.last),
-      // );
+  //     // EasyLocalization.of(context)?.setLocale(
+  //     //   Locale(locales.first, locales.last),
+  //     // );
 
-      final setDeviceLanguage = SetDeviceLanguageEvent(
-        language: value,
-        user: widget.currentUser.copyWith(defaultLanguage: value),
-      );
-      context.read<AppSettingsBloc>().add(setDeviceLanguage);
-      _selectMenuDrawer(
-        DrawerMenuModel(
-          value: 'home',
-          title: tr('app.features.home'),
-          icon: Ionicons.home_outline,
-          route: GeneralRoute.home,
-        ),
-      );
-    }
-  }
+  //     final setDeviceLanguage = SetDeviceLanguageEvent(
+  //       language: value,
+  //       user: widget.currentUser.copyWith(defaultLanguage: value),
+  //     );
+  //     context.read<AppSettingsBloc>().add(setDeviceLanguage);
+  //     _selectMenuDrawer(
+  //       DrawerMenuModel(
+  //         value: 'home',
+  //         title: tr('app.features.home'),
+  //         icon: Ionicons.home_outline,
+  //         route: GeneralRoute.home,
+  //       ),
+  //     );
+  //   }
+  // }
 
   void _toggleTheme() {
     Provider.of<ThemeProvider>(context, listen: false).toggleTheme();
@@ -136,8 +128,8 @@ class _SettingViewState extends State<SettingView> {
       body: SingleChildScrollView(
         child: Column(
           children: <Widget>[
-            const SizedBox(height: UiConfig.lineSpacing),
-            _buildGeneralSection(),
+            // const SizedBox(height: UiConfig.lineSpacing),
+            // _buildGeneralSection(),
             const SizedBox(height: UiConfig.lineSpacing),
             _buildThemeSwitchButton(),
           ],
@@ -172,46 +164,46 @@ class _SettingViewState extends State<SettingView> {
     );
   }
 
-  CustomContainer _buildGeneralSection() {
-    return CustomContainer(
-      child: Column(
-        children: <Widget>[
-          const SizedBox(height: UiConfig.lineSpacing),
-          Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: <Widget>[
-              Text(
-                tr('app.language'),
-                style: Theme.of(context).textTheme.bodyMedium,
-              ),
-              SizedBox(
-                width: 120,
-                child: CustomDropdownButton<String>(
-                  colorBorder: Theme.of(context).colorScheme.onPrimary,
-                  value: currentLanguage,
-                  items: languages.map(
-                    (language) {
-                      return DropdownMenuItem(
-                        value: language,
-                        child: Text(
-                          language,
-                          style: Theme.of(context).textTheme.bodyMedium,
-                        ),
-                      );
-                    },
-                  ).toList(),
-                  onSelected: _setCurrentLanguage,
-                ),
-              ),
-            ],
-          ),
-          Divider(
-            color:
-                Theme.of(context).colorScheme.outlineVariant.withOpacity(0.5),
-          ),
-          const SizedBox(height: UiConfig.lineSpacing),
-        ],
-      ),
-    );
-  }
+  // CustomContainer _buildGeneralSection() {
+  //   return CustomContainer(
+  //     child: Column(
+  //       children: <Widget>[
+  //         const SizedBox(height: UiConfig.lineSpacing),
+  //         Row(
+  //           mainAxisAlignment: MainAxisAlignment.spaceBetween,
+  //           children: <Widget>[
+  //             Text(
+  //               tr('app.language'),
+  //               style: Theme.of(context).textTheme.bodyMedium,
+  //             ),
+  //             SizedBox(
+  //               width: 120,
+  //               child: CustomDropdownButton<String>(
+  //                 colorBorder: Theme.of(context).colorScheme.onPrimary,
+  //                 value: currentLanguage,
+  //                 items: languages.map(
+  //                   (language) {
+  //                     return DropdownMenuItem(
+  //                       value: language,
+  //                       child: Text(
+  //                         language,
+  //                         style: Theme.of(context).textTheme.bodyMedium,
+  //                       ),
+  //                     );
+  //                   },
+  //                 ).toList(),
+  //                 onSelected: _setCurrentLanguage,
+  //               ),
+  //             ),
+  //           ],
+  //         ),
+  //         Divider(
+  //           color:
+  //               Theme.of(context).colorScheme.outlineVariant.withOpacity(0.5),
+  //         ),
+  //         const SizedBox(height: UiConfig.lineSpacing),
+  //       ],
+  //     ),
+  //   );
+  // }
 }

@@ -13,6 +13,7 @@ import 'package:pdpa/app/features/authentication/bloc/sign_in/sign_in_bloc.dart'
 import 'package:pdpa/app/features/consent_management/consent_form/bloc/consent_form/consent_form_bloc.dart';
 import 'package:pdpa/app/features/consent_management/consent_form/routes/consent_form_route.dart';
 import 'package:pdpa/app/features/consent_management/user_consent/routes/user_consent_route.dart';
+import 'package:pdpa/app/features/general/routes/general_route.dart';
 import 'package:pdpa/app/features/master_data/routes/master_data_route.dart';
 import 'package:pdpa/app/shared/drawers/pdpa_drawer.dart';
 import 'package:pdpa/app/shared/utils/user_preferences.dart';
@@ -246,14 +247,14 @@ class _HomeViewState extends State<HomeView> {
             children: <Widget>[
               const SizedBox(height: UiConfig.lineGap),
               Text(
-                'Discover What’s New',
+                tr('app.disvover.discover'),
                 style: Theme.of(context).textTheme.headlineMedium,
               ),
             ],
           ),
           const SizedBox(height: UiConfig.lineGap * 2),
           Text(
-            'Celebrate the start of your journey with our data management tools. This brief guide will get you started swiftly on our platform.',
+            tr('app.disvover.description'),
             style: Theme.of(context).textTheme.bodySmall,
           ),
           const SizedBox(height: UiConfig.lineGap * 2),
@@ -262,9 +263,11 @@ class _HomeViewState extends State<HomeView> {
           CustomButton(
             width: 210.0,
             height: 45.0,
-            onPressed: () {},
+            onPressed: () {
+              GoRouter.of(context).go(GeneralRoute.board.path);
+            },
             child: Text(
-              'See What’s New!',
+              tr('app.disvover.seewhatnew'),
               style: Theme.of(context)
                   .textTheme
                   .titleMedium
@@ -297,7 +300,7 @@ class _HomeViewState extends State<HomeView> {
               ),
             ),
             Text(
-              'Home',
+              tr('app.features.home'),
               style: Theme.of(context).textTheme.titleMedium,
             ),
           ],
@@ -319,7 +322,7 @@ class _HomeViewState extends State<HomeView> {
               ),
             ),
             Text(
-              'Consent Management',
+              tr('app.features.consentmanagement'),
               style: Theme.of(context).textTheme.titleMedium,
             ),
           ],
@@ -341,7 +344,7 @@ class _HomeViewState extends State<HomeView> {
               ),
             ),
             Text(
-              'Master Data',
+              tr('app.features.masterdata'),
               style: Theme.of(context).textTheme.titleMedium,
             ),
           ],
@@ -363,7 +366,7 @@ class _HomeViewState extends State<HomeView> {
               ),
             ),
             Text(
-              'Settings',
+              tr('app.features.setting'),
               style: Theme.of(context).textTheme.titleMedium,
             ),
           ],
@@ -391,7 +394,9 @@ class _HomeViewState extends State<HomeView> {
                 maxWidth: UiConfig.maxWidthContent,
                 maxHeight: 200.0,
               ),
-              color: const Color(0xFFE2F3FB),
+              color: (Theme.of(context).brightness == Brightness.light)
+                  ? const Color(0xFFE2F3FB)
+                  : const Color(0xFF171A1F),
             ),
             Positioned(
               left: 0,
@@ -404,9 +409,10 @@ class _HomeViewState extends State<HomeView> {
                   maxHeight: 200.0,
                 ),
                 child: Image.asset(
-                  'assets/images/general/city.png',
-                  fit: BoxFit.contain,
-                ),
+                    (Theme.of(context).brightness == Brightness.light)
+                        ? 'assets/images/general/city-light.png'
+                        : 'assets/images/general/city-dark.png',
+                    fit: BoxFit.contain),
               ),
             ),
             Positioned(

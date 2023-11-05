@@ -272,14 +272,17 @@ class _ConsentFormPreviewState extends State<ConsentFormPreview> {
       mainAxisSize: MainAxisSize.min,
       children: <Widget>[
         TitleRequiredText(
-          text: mandatoryField.title
-              .firstWhere(
-                (item) => item.language == language,
-                orElse: () => const LocalizedModel.empty(),
-              )
-              .text,
-          required: true,
-        ),
+            text: mandatoryField.title
+                .firstWhere(
+                  (item) => item.language == language,
+                  orElse: () => const LocalizedModel.empty(),
+                )
+                .text,
+            required: true,
+            textStyle: Theme.of(context)
+                .textTheme
+                .bodyMedium
+                ?.copyWith(color: Colors.black)),
         CustomTextField(
           initialValue: widget.userConsent != null
               ? UtilFunctions.getValueFromUserInputText(
@@ -302,6 +305,9 @@ class _ConsentFormPreviewState extends State<ConsentFormPreview> {
           readOnly: widget.isReadOnly,
           required: true,
           maxLength: mandatoryField.lengthLimit,
+          fillColor: Colors.white,
+          borderColor: const Color(0xFFC4C4C6),
+          focusedBorderColor: const Color(0xFF0172E6),
         ),
       ],
     );
@@ -332,10 +338,7 @@ class _ConsentFormPreviewState extends State<ConsentFormPreview> {
               ),
               child: Divider(
                 height: 0.1,
-                color: Theme.of(context)
-                    .colorScheme
-                    .outlineVariant
-                    .withOpacity(0.6),
+                color: const Color(0xFFC4C4C6).withOpacity(0.6),
               ),
             ),
           ),
@@ -364,7 +367,7 @@ class _ConsentFormPreviewState extends State<ConsentFormPreview> {
             style: Theme.of(context)
                 .textTheme
                 .bodyMedium
-                ?.copyWith(color: Theme.of(context).colorScheme.onPrimary),
+                ?.copyWith(color: Colors.white),
           ),
         ),
         const SizedBox(width: UiConfig.actionSpacing),
