@@ -366,7 +366,7 @@ class _HomeViewState extends State<HomeView> {
               ),
             ),
             Text(
-               tr('app.features.setting'),
+              tr('app.features.setting'),
               style: Theme.of(context).textTheme.titleMedium,
             ),
           ],
@@ -394,7 +394,9 @@ class _HomeViewState extends State<HomeView> {
                 maxWidth: UiConfig.maxWidthContent,
                 maxHeight: 200.0,
               ),
-              color: const Color(0xFFE2F3FB),
+              color: (Theme.of(context).brightness == Brightness.light)
+                  ? const Color(0xFFE2F3FB)
+                  : const Color(0xFF171A1F),
             ),
             Positioned(
               left: 0,
@@ -407,9 +409,10 @@ class _HomeViewState extends State<HomeView> {
                   maxHeight: 200.0,
                 ),
                 child: Image.asset(
-                  'assets/images/general/city.png',
-                  fit: BoxFit.contain,
-                ),
+                    (Theme.of(context).brightness == Brightness.light)
+                        ? 'assets/images/general/city-light.png'
+                        : 'assets/images/general/city-dark.png',
+                    fit: BoxFit.contain),
               ),
             ),
             Positioned(

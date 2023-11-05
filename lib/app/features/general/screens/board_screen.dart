@@ -28,6 +28,7 @@ class _BoardScreenState extends State<BoardScreen> {
         leading: InkResponse(
           onTap: () {
             // Navigate back
+            Navigator.of(context).pop();
           },
           child: Ink(
             padding: const EdgeInsets.all(8.0),
@@ -142,10 +143,10 @@ class _BoardScreenState extends State<BoardScreen> {
                   const SizedBox(height: 16.0),
                   Text(
                     tr('app.board.description'),
-                    style: Theme.of(context).textTheme.bodySmall,
+                    style: Theme.of(context).textTheme.bodyMedium,
                     textAlign: TextAlign.center,
                   ),
-                  const SizedBox(height: 16.0),
+                  const Spacer(),
                   Row(
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
@@ -199,10 +200,10 @@ class _BoardScreenState extends State<BoardScreen> {
                   const SizedBox(height: 16.0),
                   Text(
                     tr('app.board.decription2'),
-                    style: Theme.of(context).textTheme.bodySmall,
+                    style: Theme.of(context).textTheme.bodyMedium,
                     textAlign: TextAlign.center,
                   ),
-                  const SizedBox(height: 16.0),
+                  const Spacer(),
                   Row(
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
