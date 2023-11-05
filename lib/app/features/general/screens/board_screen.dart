@@ -2,7 +2,9 @@ import 'package:carousel_slider/carousel_slider.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
+import 'package:pdpa/app/config/config.dart';
 import 'package:pdpa/app/features/general/routes/general_route.dart';
+import 'package:pdpa/app/shared/utils/user_preferences.dart';
 import 'package:pdpa/app/shared/widgets/customs/custom_button.dart';
 
 class BoardScreen extends StatefulWidget {
@@ -42,8 +44,12 @@ class _BoardScreenState extends State<BoardScreen> {
             child: Ink(
               padding: const EdgeInsets.all(8.0),
               child: TextButton(
-                onPressed: () {
-                  GoRouter.of(context).go(GeneralRoute.home.path);
+                onPressed: () async {
+                  await UserPreferences.setBool(
+                    AppPreferences.isFirstLaunch,
+                    false,
+                  ).then(
+                      (_) => GoRouter.of(context).go(GeneralRoute.home.path));
                 },
                 child: Text(
                   tr('app.board.skip'),
@@ -203,8 +209,12 @@ class _BoardScreenState extends State<BoardScreen> {
                       CustomButton(
                         height: 40.0,
                         width: 120,
-                        onPressed: () {
-                          GoRouter.of(context).go(GeneralRoute.home.path);
+                        onPressed: () async {
+                          await UserPreferences.setBool(
+                            AppPreferences.isFirstLaunch,
+                            false,
+                          ).then((_) =>
+                              GoRouter.of(context).go(GeneralRoute.home.path));
                         },
                         child: Text(
                           tr('app.board.getstared'),
