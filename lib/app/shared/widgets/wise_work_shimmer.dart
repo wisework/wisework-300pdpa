@@ -14,7 +14,9 @@ class WiseWorkShimmer extends StatelessWidget {
     final logo = SizedBox(
       width: width,
       child: Image.asset(
-        'assets/images/general/wisework-logo.png',
+        Theme.of(context).brightness == Brightness.light
+            ? 'assets/images/general/wisework-logo.png'
+            : 'assets/images/general/wisework-logo-dark.png',
         fit: BoxFit.contain,
       ),
     );

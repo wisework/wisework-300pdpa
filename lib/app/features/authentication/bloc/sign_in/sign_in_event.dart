@@ -45,15 +45,15 @@ class SendPasswordResetEvent extends SignInEvent {
   List<Object> get props => [email];
 }
 
-class GetCurrentUserEvent extends SignInEvent {
-  const GetCurrentUserEvent();
+class GetSignedUserEvent extends SignInEvent {
+  const GetSignedUserEvent();
 
   @override
   List<Object> get props => [];
 }
 
-class UpdateCurrentUserEvent extends SignInEvent {
-  const UpdateCurrentUserEvent({
+class UpdateSignedUserEvent extends SignInEvent {
+  const UpdateSignedUserEvent({
     required this.user,
     required this.companies,
   });

@@ -6,6 +6,7 @@ import 'package:pdpa/app/config/themes/pdpa_theme_data.dart';
 import 'package:pdpa/app/data/models/authentication/user_model.dart';
 import 'package:pdpa/app/features/authentication/bloc/sign_in/sign_in_bloc.dart';
 import 'package:pdpa/app/shared/drawers/pdpa_drawer.dart';
+import 'package:pdpa/app/shared/utils/user_preferences.dart';
 import 'package:pdpa/app/shared/widgets/customs/custom_container.dart';
 import 'package:pdpa/app/shared/widgets/customs/custom_icon_button.dart';
 import 'package:pdpa/app/shared/widgets/templates/pdpa_app_bar.dart';
@@ -155,7 +156,11 @@ class _SettingViewState extends State<SettingView> {
           Switch(
             value: context.watch<ThemeProvider>().currentTheme ==
                 PdpaThemeData.darkThemeData,
-            onChanged: (value) {
+            onChanged: (value) async {
+              await UserPreferences.setBool(
+                AppPreferences.isDarkMode,
+                value,
+              );
               _toggleTheme();
             },
           ),

@@ -4,6 +4,8 @@ import 'package:go_router/go_router.dart';
 import 'package:pdpa/app/config/config.dart';
 import 'package:pdpa/app/data/models/authentication/user_model.dart';
 import 'package:pdpa/app/data/models/etc/updated_return.dart';
+import 'package:pdpa/app/features/authentication/bloc/sign_in/sign_in_bloc.dart';
+import 'package:pdpa/app/features/authentication/routes/authentication_route.dart';
 import 'package:pdpa/app/features/user/bloc/user/user_bloc.dart';
 import 'package:pdpa/app/features/user/routes/user_route.dart';
 import 'package:pdpa/app/shared/widgets/loading_indicator.dart';
@@ -18,6 +20,8 @@ class UserScreen extends StatefulWidget {
 }
 
 class _UserScreenState extends State<UserScreen> {
+  late UserModel currentUser;
+
   @override
   void initState() {
     super.initState();
@@ -25,7 +29,23 @@ class _UserScreenState extends State<UserScreen> {
     _initialData();
   }
 
-  void _initialData() {
+  Future<void> _initialData() async {
+    final bloc = context.read<SignInBloc>();
+    if (bloc.state is SignedInUser) {
+      currentUser = (bloc.state as SignedInUser).user;
+    } else {
+      currentUser = UserModel.empty();
+
+      context.pushReplacement(AuthenticationRoute.signIn.path);
+      return;
+    }
+
+    if (!AppConfig.godIds.contains(currentUser.id)) {
+      await Future.delayed(const Duration(microseconds: 100)).then(
+          (_) => context.pushReplacement(AuthenticationRoute.splash.path));
+      return;
+    }
+
     context.read<UserBloc>().add(const GetUsersEvent());
   }
 

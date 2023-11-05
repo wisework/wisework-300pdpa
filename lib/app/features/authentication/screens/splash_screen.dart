@@ -27,7 +27,7 @@ class _SplashScreenState extends State<SplashScreen> {
   }
 
   void _getCurrentUser() {
-    context.read<SignInBloc>().add(const GetCurrentUserEvent());
+    context.read<SignInBloc>().add(const GetSignedUserEvent());
   }
 
   void _alreadySignedIn(UserModel user) {
@@ -51,38 +51,40 @@ class _SplashScreenState extends State<SplashScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      body: Padding(
-        padding: const EdgeInsets.all(UiConfig.defaultPaddingSpacing * 2),
-        child: Column(
-          children: <Widget>[
-            _buildLogoApp(),
-            const Spacer(),
-            Align(
-              alignment: Alignment.center,
-              child: Column(
-                children: <Widget>[
-                  Text(
-                    tr('app.poweredBy'),
-                    style: Theme.of(context).textTheme.bodySmall?.copyWith(
-                        color: Theme.of(context).colorScheme.onTertiary),
-                    textAlign: TextAlign.center,
-                  ),
-                  const SizedBox(height: UiConfig.textSpacing),
-                  Text(
-                    tr('app.copyright'),
-                    style: Theme.of(context).textTheme.bodySmall?.copyWith(
-                        color: Theme.of(context).colorScheme.onTertiary),
-                    textAlign: TextAlign.center,
-                  ),
-                ],
+    return Builder(builder: (context) {
+      return Scaffold(
+        body: Padding(
+          padding: const EdgeInsets.all(UiConfig.defaultPaddingSpacing * 2),
+          child: Column(
+            children: <Widget>[
+              _buildLogoApp(),
+              const Spacer(),
+              Align(
+                alignment: Alignment.center,
+                child: Column(
+                  children: <Widget>[
+                    Text(
+                      tr('app.poweredBy'),
+                      style: Theme.of(context).textTheme.bodySmall?.copyWith(
+                          color: Theme.of(context).colorScheme.onTertiary),
+                      textAlign: TextAlign.center,
+                    ),
+                    const SizedBox(height: UiConfig.textSpacing),
+                    Text(
+                      tr('app.copyright'),
+                      style: Theme.of(context).textTheme.bodySmall?.copyWith(
+                          color: Theme.of(context).colorScheme.onTertiary),
+                      textAlign: TextAlign.center,
+                    ),
+                  ],
+                ),
               ),
-            ),
-          ],
+            ],
+          ),
         ),
-      ),
-      backgroundColor: Theme.of(context).colorScheme.onBackground,
-    );
+        backgroundColor: Theme.of(context).colorScheme.onBackground,
+      );
+    });
   }
 
   BlocListener _buildLogoApp() {

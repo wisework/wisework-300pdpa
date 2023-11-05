@@ -17,8 +17,8 @@ class SignInBloc extends Bloc<SignInEvent, SignInState> {
     on<SignInWithGoogleEvent>(_signInWithGoogleHandler);
     on<SignOutEvent>(_signOutEventHandler);
     on<SendPasswordResetEvent>(_sendPasswordResetHandler);
-    on<GetCurrentUserEvent>(_getCurrentUserHandler);
-    on<UpdateCurrentUserEvent>(_updateCurrentUserHandler);
+    on<GetSignedUserEvent>(_getSignedUserHandler);
+    on<UpdateSignedUserEvent>(_updateSignedUserHandler);
   }
 
   final AuthenticationRepository _authenticationRepository;
@@ -140,8 +140,8 @@ class SignInBloc extends Bloc<SignInEvent, SignInState> {
     );
   }
 
-  Future<void> _getCurrentUserHandler(
-    GetCurrentUserEvent event,
+  Future<void> _getSignedUserHandler(
+    GetSignedUserEvent event,
     Emitter<SignInState> emit,
   ) async {
     emit(const GettingCurrentUser());
@@ -171,8 +171,8 @@ class SignInBloc extends Bloc<SignInEvent, SignInState> {
     );
   }
 
-  void _updateCurrentUserHandler(
-    UpdateCurrentUserEvent event,
+  void _updateSignedUserHandler(
+    UpdateSignedUserEvent event,
     Emitter<SignInState> emit,
   ) {
     emit(SignedInUser(event.user, event.companies));
