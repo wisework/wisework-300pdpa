@@ -34,6 +34,8 @@ final List<String> numbers = ['0', '1', '2', '3', '4', '5', '6', '7', '8', '9'];
 
 final List<String> languages = ['en-US', 'th-TH'];
 
+enum SortType { asc, desc }
+
 enum ActiveStatus { active, inactive }
 
 enum UserRoles { owner, editor, viewer }

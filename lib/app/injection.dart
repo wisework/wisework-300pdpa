@@ -144,13 +144,13 @@ Future<void> _consentManagement() async {
       ),
     )
     ..registerFactory(
-      () => CurrentConsentFormDetailCubit(),
-    )
-    ..registerFactory(
       () => ConsentFormSettingsBloc(
         consentRepository: serviceLocator(),
         masterDataRepository: serviceLocator(),
       ),
+    )
+    ..registerFactory(
+      () => CurrentConsentFormDetailCubit(),
     )
     ..registerFactory(
       () => UserConsentFormBloc(
