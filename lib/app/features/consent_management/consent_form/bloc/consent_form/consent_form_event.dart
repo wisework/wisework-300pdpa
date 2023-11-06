@@ -8,9 +8,7 @@ abstract class ConsentFormEvent extends Equatable {
 }
 
 class GetConsentFormsEvent extends ConsentFormEvent {
-  const GetConsentFormsEvent({
-    required this.companyId,
-  });
+  const GetConsentFormsEvent({required this.companyId});
 
   final String companyId;
 
