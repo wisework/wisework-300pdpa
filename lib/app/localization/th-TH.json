@@ -12,6 +12,7 @@
         "phone": "เบอร์โทรศัพท์",
         "emailAddress": "อีเมล",
         "url": "URL",
+        "done": "เรียบร้อบ",
         "features": {
             "home": "หน้าหลัก",
             "consentmanagement": "ระบบบริหารจัดการข้อมูลส่วนบุคคล",
