@@ -159,15 +159,15 @@ class PdpaThemeData {
       fontSize: 14.0,
     ),
     labelLarge: GoogleFonts.ibmPlexSansThai(
-      fontWeight: _light,
+      fontWeight: _regular,
       fontSize: 14.0,
     ),
     labelMedium: GoogleFonts.ibmPlexSansThai(
-      fontWeight: _light,
+      fontWeight: _regular,
       fontSize: 12.0,
     ),
     labelSmall: GoogleFonts.ibmPlexSansThai(
-      fontWeight: _light,
+      fontWeight: _regular,
       fontSize: 10.0,
     ),
   );

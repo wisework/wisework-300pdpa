@@ -72,21 +72,24 @@ class _BoardScreenState extends State<BoardScreen> {
     return Column(
       children: [
         Expanded(
-          child: CarouselSlider(
-            items: [
-              buildBoard1(context),
-              buildBoard2(context),
-            ],
-            carouselController: controller,
-            options: CarouselOptions(
-              height: MediaQuery.of(context).size.height,
-              enableInfiniteScroll: false,
-              viewportFraction: 1.0,
-              onPageChanged: (index, reason) {
-                // setState(() {
-                //   _currentIndex = index;
-                // });
-              },
+          child: Container(
+            constraints: BoxConstraints(maxHeight: 500),
+            child: CarouselSlider(
+              items: [
+                buildBoard1(context),
+                buildBoard2(context),
+              ],
+              carouselController: controller,
+              options: CarouselOptions(
+                height: MediaQuery.of(context).size.height,
+                enableInfiniteScroll: false,
+                viewportFraction: 1.0,
+                onPageChanged: (index, reason) {
+                  // setState(() {
+                  //   _currentIndex = index;
+                  // });
+                },
+              ),
             ),
           ),
         ),
@@ -114,11 +117,12 @@ class _BoardScreenState extends State<BoardScreen> {
   Column buildBoard1(BuildContext context) {
     return Column(
       children: [
-        Image.asset(
-          'assets/images/consent_management/onboarding.png',
-          width: 700,
-          height: 500,
-          fit: BoxFit.cover,
+        Flexible(
+          child: Image.asset(
+            'assets/images/consent_management/onboarding.png',
+            width: 700,
+            fit: BoxFit.cover,
+          ),
         ),
         Expanded(
           child: Container(
@@ -172,11 +176,12 @@ class _BoardScreenState extends State<BoardScreen> {
   Column buildBoard2(BuildContext context) {
     return Column(
       children: [
-        Image.asset(
-          'assets/images/master_data/onboarding.png',
-          width: 700,
-          height: 500,
-          fit: BoxFit.cover,
+        Flexible(
+          child: Image.asset(
+            'assets/images/master_data/onboarding.png',
+            width: 700,
+            fit: BoxFit.cover,
+          ),
         ),
         Expanded(
           child: Container(

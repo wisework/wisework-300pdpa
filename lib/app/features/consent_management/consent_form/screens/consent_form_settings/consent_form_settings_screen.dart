@@ -310,6 +310,7 @@ class _ConsentFormSettingViewState extends State<ConsentFormSettingView> {
 
   TabBar _buildTabBar(BuildContext context) {
     return TabBar(
+      isScrollable: true,
       tabs: [
         Tab(text: tr('consentManagement.consentForm.consentFormsetting.url')),
         Tab(

@@ -551,75 +551,77 @@ class _HomeViewState extends State<HomeView> {
     required ExploreActivity activity,
   }) {
     return SizedBox(
-      width: 160.0,
-      child: MaterialInkWell(
-        onTap: () {
-          if (activity.path == "/user-consents") {
-            final DrawerMenuModel menuSelect;
-            menuSelect = DrawerMenuModel(
-              value: 'user_consents',
-              title: tr('app.features.userconsents'),
-              icon: Ionicons.people_outline,
-              route: UserConsentRoute.userConsentScreen,
-              parent: 'consent_management',
-            );
-            context
-                .read<DrawerBloc>()
-                .add(SelectMenuDrawerEvent(menu: menuSelect));
-          }
+      width: 159.0,
+      child: Flexible(
+        child: MaterialInkWell(
+          onTap: () {
+            if (activity.path == "/user-consents") {
+              final DrawerMenuModel menuSelect;
+              menuSelect = DrawerMenuModel(
+                value: 'user_consents',
+                title: tr('app.features.userconsents'),
+                icon: Ionicons.people_outline,
+                route: UserConsentRoute.userConsentScreen,
+                parent: 'consent_management',
+              );
+              context
+                  .read<DrawerBloc>()
+                  .add(SelectMenuDrawerEvent(menu: menuSelect));
+            }
 
-          if (activity.path == "/consent-form") {
-            final DrawerMenuModel menuSelect;
-            menuSelect = DrawerMenuModel(
-              value: 'consent_forms',
-              title: tr('app.features.consentforms'),
-              icon: Ionicons.clipboard_outline,
-              route: ConsentFormRoute.consentForm,
-              parent: 'consent_management',
-            );
-            context
-                .read<DrawerBloc>()
-                .add(SelectMenuDrawerEvent(menu: menuSelect));
-          }
+            if (activity.path == "/consent-form") {
+              final DrawerMenuModel menuSelect;
+              menuSelect = DrawerMenuModel(
+                value: 'consent_forms',
+                title: tr('app.features.consentforms'),
+                icon: Ionicons.clipboard_outline,
+                route: ConsentFormRoute.consentForm,
+                parent: 'consent_management',
+              );
+              context
+                  .read<DrawerBloc>()
+                  .add(SelectMenuDrawerEvent(menu: menuSelect));
+            }
 
-          context.push(activity.path);
-        },
-        hoverColor: Theme.of(context).colorScheme.primary.withOpacity(0.15),
-        child: Padding(
-          padding: const EdgeInsets.all(UiConfig.defaultPaddingSpacing),
-          child: Column(
-            mainAxisSize: MainAxisSize.min,
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: <Widget>[
-              Container(
-                padding: const EdgeInsets.symmetric(
-                  vertical: 5.0,
-                  horizontal: 6.0,
+            context.pushReplacement(activity.path);
+          },
+          hoverColor: Theme.of(context).colorScheme.primary.withOpacity(0.15),
+          child: Padding(
+            padding: const EdgeInsets.all(UiConfig.defaultPaddingSpacing),
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: <Widget>[
+                Container(
+                  padding: const EdgeInsets.symmetric(
+                    vertical: 5.0,
+                    horizontal: 6.0,
+                  ),
+                  decoration: BoxDecoration(
+                    color: const Color(0xFF0172E6),
+                    borderRadius: BorderRadius.circular(8.0),
+                  ),
+                  child: Icon(
+                    activity.icon,
+                    color: Colors.white,
+                    size: 18.0,
+                  ),
                 ),
-                decoration: BoxDecoration(
-                  color: const Color(0xFF0172E6),
-                  borderRadius: BorderRadius.circular(8.0),
+                const SizedBox(height: UiConfig.lineSpacing),
+                Text(
+                  activity.title,
+                  style: Theme.of(context).textTheme.bodySmall,
+                  overflow: TextOverflow.ellipsis,
+                  maxLines: 1,
                 ),
-                child: Icon(
-                  activity.icon,
-                  color: Colors.white,
-                  size: 18.0,
+                Text(
+                  activity.subTitle,
+                  style: Theme.of(context).textTheme.bodySmall,
+                  overflow: TextOverflow.ellipsis,
+                  maxLines: 1,
                 ),
-              ),
-              const SizedBox(height: UiConfig.lineSpacing),
-              Text(
-                activity.title,
-                style: Theme.of(context).textTheme.bodySmall,
-                overflow: TextOverflow.ellipsis,
-                maxLines: 1,
-              ),
-              Text(
-                activity.subTitle,
-                style: Theme.of(context).textTheme.bodySmall,
-                overflow: TextOverflow.ellipsis,
-                maxLines: 1,
-              ),
-            ],
+              ],
+            ),
           ),
         ),
       ),
@@ -643,9 +645,13 @@ class _HomeViewState extends State<HomeView> {
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: <Widget>[
-              Text(
-                tr('general.home.recentlyUsed'),
-                style: Theme.of(context).textTheme.headlineSmall,
+              Expanded(
+                child: Text(
+                  tr('general.home.recentlyUsed'),
+                  style: Theme.of(context).textTheme.headlineSmall,
+                  overflow:
+                      TextOverflow.clip, // Add this line to handle overflow
+                ),
               ),
               BlocBuilder<UserConsentBloc, UserConsentState>(
                 builder: (context, state) {
@@ -664,9 +670,11 @@ class _HomeViewState extends State<HomeView> {
                             );
 
                             context.read<DrawerBloc>().add(
-                                SelectMenuDrawerEvent(menu: userConsentMenu));
+                                  SelectMenuDrawerEvent(menu: userConsentMenu),
+                                );
                             context.pushReplacement(
-                                UserConsentRoute.userConsentScreen.path);
+                              UserConsentRoute.userConsentScreen.path,
+                            );
                           },
                           child: Text(
                             tr('app.features.seeMore'),
@@ -679,6 +687,8 @@ class _HomeViewState extends State<HomeView> {
                                       Theme.of(context).colorScheme.primary,
                                   color: Theme.of(context).colorScheme.primary,
                                 ),
+                            overflow: TextOverflow
+                                .clip, // Add this line to handle overflow
                           ),
                         ),
                       );
@@ -816,7 +826,7 @@ class _HomeViewState extends State<HomeView> {
                               Text(
                                 title.isNotEmpty
                                     ? title
-                                    : 'This data is not stored.',
+                                    : tr('general.home.thisDataIsNotStored'),
                                 style: Theme.of(context).textTheme.titleMedium,
                               ),
                               Visibility(
