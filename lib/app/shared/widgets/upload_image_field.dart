@@ -20,7 +20,6 @@ class UploadImageField extends StatefulWidget {
   });
 
   final String imageUrl;
-  // final Function(File image) onUploaded;
   final Function(
     File? image,
     Uint8List? data,
@@ -36,16 +35,17 @@ class _UploadImageFieldState extends State<UploadImageField> {
   void _pickImage() async {
     final imagePicker = ImagePicker();
     final result = await imagePicker.pickImage(source: ImageSource.gallery);
+
     Uint8List data = Uint8List(10);
     if (result != null) {
       data = await result.readAsBytes();
     }
 
     if (result == null) return;
+
     if (kIsWeb) {
       widget.onUploaded(null, data, result.path);
-    }
-    if (!kIsWeb) {
+    } else {
       widget.onUploaded(File(result.path), null, result.path);
     }
   }

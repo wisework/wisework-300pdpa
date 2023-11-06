@@ -89,9 +89,9 @@ class _SignInScreenState extends State<SignInScreen> {
     context.read<SignInBloc>().add(event);
   }
 
-  void _signInWithGoogle() {
-    context.read<SignInBloc>().add(const SignInWithGoogleEvent());
-  }
+  // void _signInWithGoogle() {
+  //   context.read<SignInBloc>().add(const SignInWithGoogleEvent());
+  // }
 
   void _signInSuccessful(UserModel user) {
     showToast(context, text: tr('auth.signIn.signInSuccessful'));
