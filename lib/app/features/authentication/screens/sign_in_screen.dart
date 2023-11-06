@@ -316,35 +316,35 @@ class _SignInScreenState extends State<SignInScreen> {
                 },
               ),
             ),
-            const SizedBox(height: UiConfig.lineGap),
-            CustomButton(
-              height: 50.0,
-              onPressed: _signInWithGoogle,
-              buttonType: CustomButtonType.outlined,
-              child: BlocConsumer<SignInBloc, SignInState>(
-                listener: (context, state) {
-                  if (state is SignInError) {
-                    showToast(context, text: state.message);
-                  } else if (state is SignedInUser) {
-                    _signInSuccessful(state.user);
-                  }
-                },
-                builder: (context, state) {
-                  if (state is SigningInWithGoogle) {
-                    return LoadingIndicator(
-                      color: Theme.of(context).colorScheme.primary,
-                      size: 28.0,
-                      loadingType: LoadingType.horizontalRotatingDots,
-                    );
-                  }
-                  return Text(
-                    tr('auth.signIn.signInWithGoogle'),
-                    style: Theme.of(context).textTheme.titleMedium?.copyWith(
-                        color: Theme.of(context).colorScheme.primary),
-                  );
-                },
-              ),
-            ),
+            // const SizedBox(height: UiConfig.lineGap),
+            // CustomButton(
+            //   height: 50.0,
+            //   onPressed: _signInWithGoogle,
+            //   buttonType: CustomButtonType.outlined,
+            //   child: BlocConsumer<SignInBloc, SignInState>(
+            //     listener: (context, state) {
+            //       if (state is SignInError) {
+            //         showToast(context, text: state.message);
+            //       } else if (state is SignedInUser) {
+            //         _signInSuccessful(state.user);
+            //       }
+            //     },
+            //     builder: (context, state) {
+            //       if (state is SigningInWithGoogle) {
+            //         return LoadingIndicator(
+            //           color: Theme.of(context).colorScheme.primary,
+            //           size: 28.0,
+            //           loadingType: LoadingType.horizontalRotatingDots,
+            //         );
+            //       }
+            //       return Text(
+            //         tr('auth.signIn.signInWithGoogle'),
+            //         style: Theme.of(context).textTheme.titleMedium?.copyWith(
+            //             color: Theme.of(context).colorScheme.primary),
+            //       );
+            //     },
+            //   ),
+            // ),
           ],
         ),
       ),

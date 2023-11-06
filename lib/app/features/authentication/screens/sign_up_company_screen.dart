@@ -175,7 +175,7 @@ class _SignUpCompanyViewState extends State<SignUpCompanyView> {
             );
             context.read<AppSettingsBloc>().add(initialAppSettings);
 
-            final updateCurrentUser = UpdateCurrentUserEvent(
+            final updateCurrentUser = UpdateSignedUserEvent(
               user: state.user,
               companies: state.companies,
             );

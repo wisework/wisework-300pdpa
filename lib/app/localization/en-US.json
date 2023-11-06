@@ -2,7 +2,7 @@
     "app": {
         "name": "PDPA Management Platform",
         "language": "Language",
-        "mode" : "Dark Mode",
+        "mode": "Dark Mode",
         "day": "Day",
         "month": "Month",
         "year": "Year",
@@ -15,18 +15,30 @@
         "features": {
             "home": "Home",
             "consentmanagement": "Consent Management",
-            "consent" : "Consent",
-            "createcsf" : "Add new consent",
-            "masterdatas" : "MasterData",
+            "consent": "Consent",
+            "createcsf": "Add new consent",
+            "masterdatas": "MasterData",
             "consentforms": "Consent Forms",
             "userconsents": "User Consents",
             "datasubjectright": "Data Subject Right",
             "masterdata": "Master Data",
             "setting": "Setting",
             "createNewConsentForm": "Create New Consent Form",
-            "seeMore" : "See more",
-            "resultNotFound" : "Result Not Found!",
-            "description" : "You have not created the form yet. Add some consent form, just click create new consent form button and go ahead."
+            "seeMore": "See more",
+            "resultNotFound": "Result Not Found!",
+            "description": "You have not created the form yet. Add some consent form, just click create new consent form button and go ahead."
+        },
+        "disvover": {
+            "discover": "Discover What’s New",
+            "description": "Celebrate the start of your journey with our data management tools. This brief guide will get you started swiftly on our platform.",
+            "seewhatnew" : "See What’s New!"
+        },
+        "board": {
+            "skip" : "Skip",
+            "description": "You can easily craft consent forms, and automatically generate them from specified master data. Tailor them to your needs, experiment with themes, and have the world at your fingertips with real-time previews. Then, share your creations effortlessly via QR codes or URLs.",
+            "decription2": "Control over consent-related parameters, including purpose, purpose categories, and mandatory fields, ensuring data integrity and accuracy in the system.",
+            "next": "Next",
+            "getstared": "Get Started"
         },
         "search": "Search",
         "agree": "Agree",
@@ -49,6 +61,19 @@
             "welcomeBack": "Welcome back!",
             "forgotDescription": "Please enter an email linked to your account. We’ll send a link that will sign you into the app instantly.",
             "passwordResetSent": "Password reset email sent."
+        },
+        "resetPassword": {
+            "title": "Reset Password",
+            "description": "Please reset your password for enhanced security.",
+            "hello": "Hello",
+            "currentPassword": "Current Password",
+            "currentPasswordHint": "Enter your current password",
+            "newPassword": "New Password",
+            "newPasswordHint": "Enter your new password",
+            "confirmPassword": "Confirm Password",
+            "confirmPasswordHint": "Confirm your password",
+            "passwordNotMatch": "New password and confirm password do not match. Please make sure they are identical.",
+            "saveButton": "Save"
         },
         "acceptInvite": {
             "title": "Accept the invitation",
