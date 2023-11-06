@@ -64,6 +64,14 @@ class _HomeScreenState extends State<HomeScreen> {
       currentCompany = CompanyModel.empty();
     }
 
+    final menuSelect = DrawerMenuModel(
+      value: 'home',
+      title: tr('app.features.home'),
+      icon: Ionicons.home_outline,
+      route: GeneralRoute.home,
+    );
+    context.read<DrawerBloc>().add(SelectMenuDrawerEvent(menu: menuSelect));
+
     context
         .read<UserConsentBloc>()
         .add(GetUserConsentsEvent(companyId: companyId));
@@ -593,7 +601,7 @@ class _HomeViewState extends State<HomeView> {
                 .add(SelectMenuDrawerEvent(menu: menuSelect));
           }
 
-          context.pushReplacement(activity.path);
+          context.push(activity.path);
         },
         hoverColor: Theme.of(context).colorScheme.primary.withOpacity(0.15),
         child: Padding(
