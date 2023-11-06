@@ -210,9 +210,13 @@ class _ConsentFormSettingViewState extends State<ConsentFormSettingView> {
             iconColor: Theme.of(context).colorScheme.primary,
             backgroundColor: Theme.of(context).colorScheme.onBackground,
           ),
-          title: Text(
-            tr('consentManagement.consentForm.consentFormsetting.consentFormSettings'),
-            style: Theme.of(context).textTheme.titleLarge,
+          title: Expanded(
+            child: Text(
+              tr('consentManagement.consentForm.consentFormsetting.consentFormSettings'),
+              style: Theme.of(context).textTheme.titleLarge,
+              overflow: TextOverflow.ellipsis,
+              maxLines: 1,
+            ),
           ),
           actions: [
             _buildSaveButton(consentForm),
@@ -310,6 +314,7 @@ class _ConsentFormSettingViewState extends State<ConsentFormSettingView> {
 
   TabBar _buildTabBar(BuildContext context) {
     return TabBar(
+      isScrollable: MediaQuery.of(context).size.width > 400 ? false : true,
       tabs: [
         Tab(text: tr('consentManagement.consentForm.consentFormsetting.url')),
         Tab(

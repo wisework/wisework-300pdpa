@@ -713,13 +713,11 @@ class _EditConsentFormViewState extends State<EditConsentFormView> {
         Expanded(
           child: Padding(
             padding: const EdgeInsets.all(UiConfig.actionSpacing),
-            child: Expanded(
-              child: Text(
-                title.text,
-                style: Theme.of(context).textTheme.bodyMedium,
-                overflow: TextOverflow.ellipsis,
-                maxLines: 1,
-              ),
+            child: Text(
+              title.text,
+              style: Theme.of(context).textTheme.bodyMedium,
+              overflow: TextOverflow.ellipsis,
+              maxLines: 1,
             ),
           ),
         ),

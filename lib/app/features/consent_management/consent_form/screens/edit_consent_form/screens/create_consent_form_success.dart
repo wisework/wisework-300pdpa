@@ -63,7 +63,7 @@ class _CreateConsentFormSuccessScreenState
               style: Theme.of(context)
                   .textTheme
                   .titleLarge
-                  ?.copyWith(color: Theme.of(context).colorScheme.primary),
+                  ?.copyWith(color: Theme.of(context).colorScheme.onSurface),
               textAlign: TextAlign.center,
             ),
           ],
@@ -390,7 +390,7 @@ class _CreateConsentFormSuccessScreenState
           style: Theme.of(context)
               .textTheme
               .bodyMedium
-              ?.copyWith(color: Theme.of(context).colorScheme.secondary),
+              ?.copyWith(color: Theme.of(context).colorScheme.onSurface),
         ),
         const SizedBox(height: UiConfig.lineSpacing),
         Row(
@@ -404,7 +404,7 @@ class _CreateConsentFormSuccessScreenState
               },
               style: ButtonStyle(
                   backgroundColor: MaterialStateProperty.all<Color>(
-                    Theme.of(context).colorScheme.onPrimary,
+                    Theme.of(context).colorScheme.onBackground,
                   ),
                   shape: MaterialStateProperty.all<RoundedRectangleBorder>(
                     RoundedRectangleBorder(
@@ -416,7 +416,7 @@ class _CreateConsentFormSuccessScreenState
                 style: Theme.of(context)
                     .textTheme
                     .bodyMedium
-                    ?.copyWith(color: Theme.of(context).colorScheme.secondary),
+                    ?.copyWith(color: Theme.of(context).colorScheme.onSurface),
               ),
             ),
             const SizedBox(width: 10.0),
