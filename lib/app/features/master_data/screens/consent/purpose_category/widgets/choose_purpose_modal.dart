@@ -8,6 +8,7 @@ import 'package:pdpa/app/data/models/etc/updated_return.dart';
 import 'package:pdpa/app/data/models/master_data/localized_model.dart';
 import 'package:pdpa/app/data/models/master_data/purpose_model.dart';
 import 'package:pdpa/app/features/master_data/routes/master_data_route.dart';
+import 'package:pdpa/app/shared/widgets/customs/custom_button.dart';
 import 'package:pdpa/app/shared/widgets/customs/custom_checkbox.dart';
 import 'package:pdpa/app/shared/widgets/customs/custom_icon_button.dart';
 
@@ -103,6 +104,21 @@ class _ChoosePurposeModalState extends State<ChoosePurposeModal> {
                 ConstrainedBox(
                   constraints: const BoxConstraints(maxWidth: 200.0),
                   child: _buildAddButton(context),
+                ),
+                const SizedBox(width: UiConfig.defaultPaddingSpacing),
+                ConstrainedBox(
+                  constraints: const BoxConstraints(maxWidth: 95.0),
+                  child: CustomButton(
+                    height: 40.0,
+                    onPressed: () {
+                      Navigator.pop(context);
+                    },
+                    child: Text(
+                      tr('app.done'),
+                      style: Theme.of(context).textTheme.bodyMedium?.copyWith(
+                          color: Theme.of(context).colorScheme.onPrimary),
+                    ),
+                  ),
                 ),
               ],
             ),

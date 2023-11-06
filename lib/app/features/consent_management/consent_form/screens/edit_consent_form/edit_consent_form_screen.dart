@@ -659,7 +659,8 @@ class _EditConsentFormViewState extends State<EditConsentFormView> {
               );
             },
             buttonType: CustomButtonType.outlined,
-            buttonColor: Theme.of(context).colorScheme.outlineVariant,
+            backgroundColor: Theme.of(context).colorScheme.onBackground,
+            borderColor: Theme.of(context).colorScheme.outlineVariant,
             child: Padding(
               padding: const EdgeInsets.symmetric(
                 horizontal: UiConfig.defaultPaddingSpacing,

@@ -198,7 +198,7 @@ class _ConsentThemeTileState extends State<ConsentThemeTile> {
               CustomButton(
                 height: 40.0,
                 onPressed: () {},
-                buttonColor: widget.consentTheme.submitButtonColor,
+                backgroundColor: widget.consentTheme.submitButtonColor,
                 splashColor: widget.consentTheme.submitTextColor,
                 child: Text(
                   tr('consentManagement.consentForm.consentThemeTile.submit'), //!
@@ -212,7 +212,7 @@ class _ConsentThemeTileState extends State<ConsentThemeTile> {
               CustomButton(
                 height: 40.0,
                 onPressed: () {},
-                buttonColor: widget.consentTheme.cancelButtonColor,
+                backgroundColor: widget.consentTheme.cancelButtonColor,
                 splashColor: widget.consentTheme.cancelTextColor,
                 child: Text(
                   tr('consentManagement.consentForm.consentThemeTile.cancel'), //!

@@ -113,11 +113,11 @@ class _ChoosePurposeCategoryModalState
                   constraints: const BoxConstraints(maxWidth: 200.0),
                   child: _buildAddButton(context),
                 ),
+                const SizedBox(width: UiConfig.defaultPaddingSpacing),
                 ConstrainedBox(
                   constraints: const BoxConstraints(maxWidth: 95.0),
                   child: CustomButton(
-                    padding: const EdgeInsets.symmetric(
-                        vertical: UiConfig.textLineSpacing + 1),
+                    height: 40.0,
                     onPressed: () {
                       Navigator.pop(context);
                     },
@@ -164,53 +164,51 @@ class _ChoosePurposeCategoryModalState
                           .withOpacity(0.5),
                     ),
                   ),
-                  if (purposeCategories[index] == purposeCategories.last)
-                    CustomButton(
-                      buttonColor: Theme.of(context).colorScheme.onPrimary,
-                      onPressed: () async {
-                        await context
-                            .push(MasterDataRoute.createPurposeCategory.path)
-                            .then((value) {
-                          if (value != null) {
-                            final updated =
-                                value as UpdatedReturn<PurposeCategoryModel>;
+                  // if (purposeCategories[index] == purposeCategories.last)
+                  //   CustomButton(
+                  //     height: 50.0,
+                  //     onPressed: () async {
+                  //       await context
+                  //           .push(MasterDataRoute.createPurposeCategory.path)
+                  //           .then((value) {
+                  //         if (value != null) {
+                  //           final updated =
+                  //               value as UpdatedReturn<PurposeCategoryModel>;
 
-                            purposeCategories = purposeCategories
-                              ..add(updated.object);
-                            _selectPurposeCategory(updated.object);
+                  //           purposeCategories = purposeCategories
+                  //             ..add(updated.object);
+                  //           _selectPurposeCategory(updated.object);
 
-                            widget.onUpdated(updated);
-                          }
-                        });
-                      },
-                      child: Row(
-                        children: [
-                          Padding(
-                            padding: const EdgeInsets.only(
-                              left: 4.0,
-                              right: UiConfig.actionSpacing,
-                            ),
-                            child: Icon(
-                              Icons.add,
-                              color: Theme.of(context).colorScheme.primary,
-                            ),
-                          ),
-                          Padding(
-                            padding: const EdgeInsets.all(5.0),
-                            child: Text(
-                              "เพิ่มหมวดหมู่วัตถุประสงค์",
-                              style: Theme.of(context)
-                                  .textTheme
-                                  .bodyMedium
-                                  ?.copyWith(
-                                      color: Theme.of(context)
-                                          .colorScheme
-                                          .secondary),
-                            ),
-                          ),
-                        ],
-                      ),
-                    )
+                  //           widget.onUpdated(updated);
+                  //         }
+                  //       });
+                  //     },
+                  //     buttonType: CustomButtonType.outlined,
+                  //     backgroundColor:
+                  //         Theme.of(context).colorScheme.onBackground,
+                  //     borderColor: Theme.of(context).colorScheme.outlineVariant,
+                  //     child: Row(
+                  //       children: [
+                  //         Padding(
+                  //           padding: const EdgeInsets.only(
+                  //             left: 4.0,
+                  //             right: UiConfig.actionSpacing,
+                  //           ),
+                  //           child: Icon(
+                  //             Icons.add,
+                  //             color: Theme.of(context).colorScheme.primary,
+                  //           ),
+                  //         ),
+                  //         Padding(
+                  //           padding: const EdgeInsets.all(5.0),
+                  //           child: Text(
+                  //             "เพิ่มหมวดหมู่วัตถุประสงค์",
+                  //             style: Theme.of(context).textTheme.bodyMedium,
+                  //           ),
+                  //         ),
+                  //       ],
+                  //     ),
+                  //   )
                 ],
               );
             },
