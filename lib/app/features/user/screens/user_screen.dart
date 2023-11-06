@@ -4,12 +4,13 @@ import 'package:go_router/go_router.dart';
 import 'package:pdpa/app/config/config.dart';
 import 'package:pdpa/app/data/models/authentication/user_model.dart';
 import 'package:pdpa/app/data/models/etc/updated_return.dart';
-import 'package:pdpa/app/features/authentication/bloc/sign_in/sign_in_bloc.dart';
 import 'package:pdpa/app/features/authentication/routes/authentication_route.dart';
 import 'package:pdpa/app/features/user/bloc/user/user_bloc.dart';
 import 'package:pdpa/app/features/user/routes/user_route.dart';
 import 'package:pdpa/app/shared/widgets/loading_indicator.dart';
 import 'package:pdpa/app/shared/widgets/material_ink_well.dart';
+import 'package:pdpa/app/shared/widgets/screens/error_message_screen.dart';
+import 'package:pdpa/app/shared/widgets/screens/loading_screen.dart';
 import 'package:pdpa/app/shared/widgets/templates/pdpa_app_bar.dart';
 
 class UserScreen extends StatefulWidget {
@@ -29,29 +30,28 @@ class _UserScreenState extends State<UserScreen> {
     _initialData();
   }
 
-  Future<void> _initialData() async {
-    final bloc = context.read<SignInBloc>();
-    if (bloc.state is SignedInUser) {
-      currentUser = (bloc.state as SignedInUser).user;
-    } else {
-      currentUser = UserModel.empty();
-
-      context.pushReplacement(AuthenticationRoute.signIn.path);
-      return;
-    }
-
-    if (!AppConfig.godIds.contains(currentUser.id)) {
-      await Future.delayed(const Duration(microseconds: 100)).then(
-          (_) => context.pushReplacement(AuthenticationRoute.splash.path));
-      return;
-    }
-
+  void _initialData() {
     context.read<UserBloc>().add(const GetUsersEvent());
   }
 
   @override
   Widget build(BuildContext context) {
-    return const UserView();
+    return BlocConsumer<UserBloc, UserState>(
+      listener: (context, state) {
+        if (state is UserNoAccess) {
+          context.pushReplacement(AuthenticationRoute.splash.path);
+        }
+      },
+      builder: (context, state) {
+        if (state is GotUsers) {
+          return const UserView();
+        }
+        if (state is UserError) {
+          return ErrorMessageScreen(message: state.message);
+        }
+        return const LoadingScreen();
+      },
+    );
   }
 }
 

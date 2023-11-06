@@ -19,12 +19,14 @@ class GetCurrentUserEvent extends EditUserEvent {
 class CreateCurrentUserEvent extends EditUserEvent {
   const CreateCurrentUserEvent({
     required this.user,
+    required this.companyName,
   });
 
   final UserModel user;
+  final String companyName;
 
   @override
-  List<Object> get props => [user];
+  List<Object> get props => [user, companyName];
 }
 
 class UpdateCurrentUserEvent extends EditUserEvent {

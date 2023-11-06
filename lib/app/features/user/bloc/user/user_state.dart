@@ -23,6 +23,13 @@ class UserError extends UserState {
   List<Object> get props => [message];
 }
 
+class UserNoAccess extends UserState {
+  const UserNoAccess();
+
+  @override
+  List<Object> get props => [];
+}
+
 class GettingUsers extends UserState {
   const GettingUsers();
 

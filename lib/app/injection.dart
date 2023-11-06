@@ -338,12 +338,14 @@ Future<void> _user() async {
     //? App logic
     ..registerFactory(
       () => UserBloc(
+        authenticationRepository: serviceLocator(),
         userRepository: serviceLocator(),
       ),
     )
     ..registerFactory(
       () => EditUserBloc(
         authenticationRepository: serviceLocator(),
+        masterDataRepository: serviceLocator(),
         userRepository: serviceLocator(),
         emailJsRepository: serviceLocator(),
       ),
