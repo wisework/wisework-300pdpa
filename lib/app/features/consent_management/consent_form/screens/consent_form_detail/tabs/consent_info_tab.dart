@@ -337,7 +337,9 @@ class _ConsentInfoTabState extends State<ConsentInfoTab> {
         Padding(
           padding: const EdgeInsets.symmetric(vertical: 8.0),
           child: Text(
-            title.text,
+            title.text == ''
+                ? tr('consentManagement.consentForm.titleNull')
+                : title.text,
             style: Theme.of(context).textTheme.titleMedium?.copyWith(
                   height: 1.6,
                   color: Theme.of(context).colorScheme.onSurface,
