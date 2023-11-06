@@ -158,53 +158,55 @@ class _ConsentFormViewState extends State<ConsentFormView> {
                     ),
                   ),
                   const SizedBox(height: UiConfig.lineSpacing),
-                  BlocBuilder<ConsentFormBloc, ConsentFormState>(
-                    builder: (context, state) {
-                      if (state is GotConsentForms) {
-                        final consentForms = state.consentForms;
-                        if (_sortAscending == true) {
-                          consentForms.sort(((a, b) =>
-                              a.updatedDate.compareTo(b.updatedDate)));
-                        } else {
-                          consentForms.sort(((a, b) =>
-                              b.updatedDate.compareTo(a.updatedDate)));
+                  Expanded(
+                    child: BlocBuilder<ConsentFormBloc, ConsentFormState>(
+                      builder: (context, state) {
+                        if (state is GotConsentForms) {
+                          final consentForms = state.consentForms;
+                          if (_sortAscending == true) {
+                            consentForms.sort(((a, b) =>
+                                a.updatedDate.compareTo(b.updatedDate)));
+                          } else {
+                            consentForms.sort(((a, b) =>
+                                b.updatedDate.compareTo(a.updatedDate)));
+                          }
+                          return state.consentForms.isNotEmpty
+                              ? ListView.builder(
+                                  shrinkWrap: true,
+                                  itemCount: consentForms.length,
+                                  itemBuilder: (context, index) {
+                                    return _buildItemCard(
+                                      context,
+                                      consentForm: consentForms[index],
+                                      language: widget.language,
+                                    );
+                                  },
+                                )
+                              : ExampleScreen(
+                                  headderText: tr(
+                                      'consentManagement.consentForm.consentForms'),
+                                  buttonText: tr(
+                                      'consentManagement.consentForm.createForm.create'),
+                                  descriptionText:
+                                      tr('consentManagement.consentForm.explain'),
+                                  onPress: () {
+                                    context.push(
+                                        ConsentFormRoute.createConsentForm.path);
+                                  });
                         }
-                        return state.consentForms.isNotEmpty
-                            ? ListView.builder(
-                                shrinkWrap: true,
-                                itemCount: consentForms.length,
-                                itemBuilder: (context, index) {
-                                  return _buildItemCard(
-                                    context,
-                                    consentForm: consentForms[index],
-                                    language: widget.language,
-                                  );
-                                },
-                              )
-                            : ExampleScreen(
-                                headderText: tr(
-                                    'consentManagement.consentForm.consentForms'),
-                                buttonText: tr(
-                                    'consentManagement.consentForm.createForm.create'),
-                                descriptionText:
-                                    tr('consentManagement.consentForm.explain'),
-                                onPress: () {
-                                  context.push(
-                                      ConsentFormRoute.createConsentForm.path);
-                                });
-                      }
-                      if (state is ConsentFormError) {
-                        return Center(
-                          child: Text(
-                            state.message,
-                            style: Theme.of(context).textTheme.bodyMedium,
-                          ),
+                        if (state is ConsentFormError) {
+                          return Center(
+                            child: Text(
+                              state.message,
+                              style: Theme.of(context).textTheme.bodyMedium,
+                            ),
+                          );
+                        }
+                        return const Center(
+                          child: CircularProgressIndicator(),
                         );
-                      }
-                      return const Center(
-                        child: CircularProgressIndicator(),
-                      );
-                    },
+                      },
+                    ),
                   ),
                 ],
               ),

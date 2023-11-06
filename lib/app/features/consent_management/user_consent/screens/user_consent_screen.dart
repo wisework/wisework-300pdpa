@@ -115,9 +115,11 @@ class _UserConsentViewState extends State<UserConsentView> {
           iconColor: Theme.of(context).colorScheme.primary,
           backgroundColor: Theme.of(context).colorScheme.onBackground,
         ),
-        title: Text(
-          tr('app.features.userconsents'),
-          style: Theme.of(context).textTheme.titleLarge,
+        title: Expanded(
+          child: Text(
+            tr('app.features.userconsents'),
+            style: Theme.of(context).textTheme.titleLarge,
+          ),
         ),
         actions: [
           CustomIconButton(
@@ -147,80 +149,84 @@ class _UserConsentViewState extends State<UserConsentView> {
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       crossAxisAlignment: CrossAxisAlignment.center,
                       children: <Widget>[
-                        Text(
-                          'รายการความยินยอมที่ได้รับ', //!
-                          style: Theme.of(context).textTheme.titleMedium,
+                        Expanded(
+                          child: Text(
+                            'รายการความยินยอมที่ได้รับ', //!
+                            style: Theme.of(context).textTheme.titleMedium,
+                          ),
                         ),
                         _sortByDateButton(context),
                       ],
                     ),
                   ),
                   const SizedBox(height: UiConfig.lineSpacing),
-                  BlocBuilder<UserConsentBloc, UserConsentState>(
-                    builder: (context, state) {
-                      if (state is GotUserConsents) {
-                        final consentForms = state.consentForms;
-                        if (_sortAscending == true) {
-                          consentForms.sort(((a, b) =>
-                              a.updatedDate.compareTo(b.updatedDate)));
-                        } else {
-                          consentForms.sort(((a, b) =>
-                              b.updatedDate.compareTo(a.updatedDate)));
+                  Expanded(
+                    child: BlocBuilder<UserConsentBloc, UserConsentState>(
+                      builder: (context, state) {
+                        if (state is GotUserConsents) {
+                          final consentForms = state.consentForms;
+                          if (_sortAscending == true) {
+                            consentForms.sort(((a, b) =>
+                                a.updatedDate.compareTo(b.updatedDate)));
+                          } else {
+                            consentForms.sort(((a, b) =>
+                                b.updatedDate.compareTo(a.updatedDate)));
+                          }
+                          final userConsents = state.userConsents;
+                          if (_sortAscending == true) {
+                            userConsents.sort(((a, b) =>
+                                a.updatedDate.compareTo(b.updatedDate)));
+                          } else {
+                            userConsents.sort(((a, b) =>
+                                b.updatedDate.compareTo(a.updatedDate)));
+                          }
+                  
+                          return consentForms.isNotEmpty ||
+                                  userConsents.isNotEmpty
+                              ? ListView.builder(
+                                  shrinkWrap: true,
+                                  itemCount: consentForms.length,
+                                  itemBuilder: (context, index) {
+                                    return _buildItemCard(
+                                      context,
+                                      userConsent: state.userConsents[index],
+                                      consentForm: consentForms.firstWhere(
+                                        (role) =>
+                                            role.id ==
+                                            state.userConsents[index]
+                                                .consentFormId,
+                                        orElse: () => ConsentFormModel.empty(),
+                                      ),
+                                      mandatorySelected:
+                                          state.mandatoryFields.first.id,
+                                    );
+                                  },
+                                )
+                              : ExampleScreen(
+                                  headderText: tr(
+                                      'consentManagement.consentForm.consentForms'),
+                                  buttonText: tr(
+                                      'consentManagement.consentForm.createForm.create'),
+                                  descriptionText:
+                                      tr('consentManagement.consentForm.explain'),
+                                  onPress: () {
+                                    context.push(
+                                        ConsentFormRoute.createConsentForm.path);
+                                  });
                         }
-                        final userConsents = state.userConsents;
-                        if (_sortAscending == true) {
-                          userConsents.sort(((a, b) =>
-                              a.updatedDate.compareTo(b.updatedDate)));
-                        } else {
-                          userConsents.sort(((a, b) =>
-                              b.updatedDate.compareTo(a.updatedDate)));
+                        if (state is UserConsentError) {
+                          return Center(
+                            child: Text(
+                              state.message,
+                              style: Theme.of(context).textTheme.bodyMedium,
+                            ),
+                          );
                         }
-
-                        return consentForms.isNotEmpty ||
-                                userConsents.isNotEmpty
-                            ? ListView.builder(
-                                shrinkWrap: true,
-                                itemCount: consentForms.length,
-                                itemBuilder: (context, index) {
-                                  return _buildItemCard(
-                                    context,
-                                    userConsent: state.userConsents[index],
-                                    consentForm: consentForms.firstWhere(
-                                      (role) =>
-                                          role.id ==
-                                          state.userConsents[index]
-                                              .consentFormId,
-                                      orElse: () => ConsentFormModel.empty(),
-                                    ),
-                                    mandatorySelected:
-                                        state.mandatoryFields.first.id,
-                                  );
-                                },
-                              )
-                            : ExampleScreen(
-                                headderText: tr(
-                                    'consentManagement.consentForm.consentForms'),
-                                buttonText: tr(
-                                    'consentManagement.consentForm.createForm.create'),
-                                descriptionText:
-                                    tr('consentManagement.consentForm.explain'),
-                                onPress: () {
-                                  context.push(
-                                      ConsentFormRoute.createConsentForm.path);
-                                });
-                      }
-                      if (state is UserConsentError) {
-                        return Center(
-                          child: Text(
-                            state.message,
-                            style: Theme.of(context).textTheme.bodyMedium,
-                          ),
+                        return const Center(
+                          child: CircularProgressIndicator(),
                         );
-                      }
-                      return const Center(
-                        child: CircularProgressIndicator(),
-                      );
-                    },
+                      },
+                    ),
                   ),
                 ],
               ),
@@ -237,35 +243,37 @@ class _UserConsentViewState extends State<UserConsentView> {
   }
 
   Widget _sortByDateButton(BuildContext context) {
-    return IconButton(
-      onPressed: () {
-        _sortProducts(!_sortAscending);
-      },
-      padding: EdgeInsets.zero,
-      icon: Column(
-        children: [
-          RichText(
-              text: TextSpan(
-            children: [
-              TextSpan(
-                  text: tr("consentManagement.listage.filter.date"),
-                  style: Theme.of(context).textTheme.bodyMedium),
-              WidgetSpan(
-                child: _sortAscending
-                    ? Icon(
-                        Icons.arrow_drop_down,
-                        size: 20,
-                        color: Theme.of(context).colorScheme.secondary,
-                      )
-                    : Icon(
-                        Icons.arrow_drop_up,
-                        size: 20,
-                        color: Theme.of(context).colorScheme.secondary,
-                      ),
-              ),
-            ],
-          )),
-        ],
+    return Expanded(
+      child: IconButton(
+        onPressed: () {
+          _sortProducts(!_sortAscending);
+        },
+        padding: EdgeInsets.zero,
+        icon: Column(
+          children: [
+            RichText(
+                text: TextSpan(
+              children: [
+                TextSpan(
+                    text: tr("consentManagement.listage.filter.date"),
+                    style: Theme.of(context).textTheme.bodyMedium),
+                WidgetSpan(
+                  child: _sortAscending
+                      ? Icon(
+                          Icons.arrow_drop_down,
+                          size: 20,
+                          color: Theme.of(context).colorScheme.secondary,
+                        )
+                      : Icon(
+                          Icons.arrow_drop_up,
+                          size: 20,
+                          color: Theme.of(context).colorScheme.secondary,
+                        ),
+                ),
+              ],
+            )),
+          ],
+        ),
       ),
     );
   }

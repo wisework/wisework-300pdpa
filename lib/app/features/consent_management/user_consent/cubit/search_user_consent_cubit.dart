@@ -88,7 +88,6 @@ class SearchUserConsentCubit extends Cubit<SearchUserConsentState> {
         searchResult.add(userConsent);
       }
     }
-
     emit(
       state.copyWith(
         userConsents: searchResult

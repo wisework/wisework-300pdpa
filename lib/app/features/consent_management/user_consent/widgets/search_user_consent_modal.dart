@@ -88,13 +88,18 @@ class _SearchUserConsentModalState extends State<SearchUserConsentModal> {
                     width: double.infinity,
                     height: 40.0,
                     child: Builder(builder: (context) {
-                      return CustomTextField(
-                        controller: searchController,
-                        hintText: 'ค้นหา', //!
-                        onChanged: (search) {
-                          final cubit = context.read<SearchUserConsentCubit>();
-                          cubit.searchUserConsent(search, widget.language);
-                        },
+                      return Padding(
+                        padding: const EdgeInsets.symmetric(
+                            horizontal: UiConfig.actionSpacing),
+                        child: CustomTextField(
+                          controller: searchController,
+                          hintText: 'ค้นหา', //!
+                          onChanged: (search) {
+                            final cubit =
+                                context.read<SearchUserConsentCubit>();
+                            cubit.searchUserConsent(search, widget.language);
+                          },
+                        ),
                       );
                     }),
                   ),

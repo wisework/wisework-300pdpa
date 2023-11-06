@@ -87,13 +87,17 @@ class _SearchConsentFormModalState extends State<SearchConsentFormModal> {
                   width: double.infinity,
                   height: 40.0,
                   child: Builder(builder: (context) {
-                    return CustomTextField(
-                      controller: searchController,
-                      hintText: 'ค้นหา', //!
-                      onChanged: (search) {
-                        final cubit = context.read<SearchConsentFormCubit>();
-                        cubit.searchConsentForm(search, widget.language);
-                      },
+                    return Padding(
+                      padding: const EdgeInsets.symmetric(
+                          horizontal: UiConfig.actionSpacing),
+                      child: CustomTextField(
+                        controller: searchController,
+                        hintText: 'ค้นหา', //!
+                        onChanged: (search) {
+                          final cubit = context.read<SearchConsentFormCubit>();
+                          cubit.searchConsentForm(search, widget.language);
+                        },
+                      ),
                     );
                   }),
                 ),
