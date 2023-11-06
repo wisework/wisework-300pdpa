@@ -7,14 +7,17 @@ import 'package:pdpa/app/config/config.dart';
 import 'package:pdpa/app/data/models/authentication/company_model.dart';
 import 'package:pdpa/app/data/models/authentication/user_model.dart';
 import 'package:pdpa/app/data/models/consent_management/consent_form_model.dart';
+import 'package:pdpa/app/data/models/consent_management/user_consent_model.dart';
 import 'package:pdpa/app/data/models/etc/explore_activity.dart';
-import 'package:pdpa/app/data/models/master_data/localized_model.dart';
+import 'package:pdpa/app/data/models/etc/user_input_text.dart';
 import 'package:pdpa/app/features/authentication/bloc/sign_in/sign_in_bloc.dart';
-import 'package:pdpa/app/features/consent_management/consent_form/bloc/consent_form/consent_form_bloc.dart';
 import 'package:pdpa/app/features/consent_management/consent_form/routes/consent_form_route.dart';
+import 'package:pdpa/app/features/consent_management/user_consent/bloc/user_consent/user_consent_bloc.dart';
 import 'package:pdpa/app/features/consent_management/user_consent/routes/user_consent_route.dart';
 import 'package:pdpa/app/features/general/routes/general_route.dart';
 import 'package:pdpa/app/features/master_data/routes/master_data_route.dart';
+import 'package:pdpa/app/shared/drawers/bloc/drawer_bloc.dart';
+import 'package:pdpa/app/shared/drawers/models/drawer_menu_models.dart';
 import 'package:pdpa/app/shared/drawers/pdpa_drawer.dart';
 import 'package:pdpa/app/shared/utils/constants.dart';
 import 'package:pdpa/app/shared/utils/user_preferences.dart';
@@ -61,8 +64,17 @@ class _HomeScreenState extends State<HomeScreen> {
       currentCompany = CompanyModel.empty();
     }
 
-    final event = GetConsentFormsEvent(companyId: companyId,sort: SortType.desc);
-    context.read<ConsentFormBloc>().add(event);
+    final menuSelect = DrawerMenuModel(
+      value: 'home',
+      title: tr('app.features.home'),
+      icon: Ionicons.home_outline,
+      route: GeneralRoute.home,
+    );
+    context.read<DrawerBloc>().add(SelectMenuDrawerEvent(menu: menuSelect));
+
+    context
+        .read<UserConsentBloc>()
+        .add(GetUserConsentsEvent(companyId: companyId));
   }
 
   @override
@@ -170,22 +182,22 @@ class _HomeViewState extends State<HomeView> {
               child: Center(
                 child: Column(
                   children: <Widget>[
-                    const SizedBox(height: UiConfig.lineSpacing),
+                    const SizedBox(height: UiConfig.lineSpacing + 5),
                     _buildBannerSection(
                       context,
                       screenSize: screenSize,
                     ),
-                    const SizedBox(height: UiConfig.lineSpacing),
+                    const SizedBox(height: UiConfig.lineSpacing + 5),
                     _buildExploreSection(
                       context,
                       screenSize: screenSize,
                     ),
-                    const SizedBox(height: UiConfig.lineSpacing),
+                    const SizedBox(height: UiConfig.lineSpacing + 5),
                     _buildRecentlyUsedSection(
                       context,
                       screenSize: screenSize,
                     ),
-                    const SizedBox(height: UiConfig.lineSpacing),
+                    const SizedBox(height: UiConfig.lineSpacing + 5),
                   ],
                 ),
               ),
@@ -543,6 +555,34 @@ class _HomeViewState extends State<HomeView> {
       width: 160.0,
       child: MaterialInkWell(
         onTap: () {
+          if (activity.path == "/user-consents") {
+            final DrawerMenuModel menuSelect;
+            menuSelect = DrawerMenuModel(
+              value: 'user_consents',
+              title: tr('app.features.userconsents'),
+              icon: Ionicons.people_outline,
+              route: UserConsentRoute.userConsentScreen,
+              parent: 'consent_management',
+            );
+            context
+                .read<DrawerBloc>()
+                .add(SelectMenuDrawerEvent(menu: menuSelect));
+          }
+
+          if (activity.path == "/consent-form") {
+            final DrawerMenuModel menuSelect;
+            menuSelect = DrawerMenuModel(
+              value: 'consent_forms',
+              title: tr('app.features.consentforms'),
+              icon: Ionicons.clipboard_outline,
+              route: ConsentFormRoute.consentForm,
+              parent: 'consent_management',
+            );
+            context
+                .read<DrawerBloc>()
+                .add(SelectMenuDrawerEvent(menu: menuSelect));
+          }
+
           context.push(activity.path);
         },
         hoverColor: Theme.of(context).colorScheme.primary.withOpacity(0.15),
@@ -558,19 +598,16 @@ class _HomeViewState extends State<HomeView> {
                   horizontal: 6.0,
                 ),
                 decoration: BoxDecoration(
-                  color: const Color(0xFF262626),
+                  color: const Color(0xFF0172E6),
                   borderRadius: BorderRadius.circular(8.0),
                 ),
-                child: Padding(
-                  padding: const EdgeInsets.only(bottom: 2.0),
-                  child: Icon(
-                    activity.icon,
-                    color: Colors.white,
-                    size: 18.0,
-                  ),
+                child: Icon(
+                  activity.icon,
+                  color: Colors.white,
+                  size: 18.0,
                 ),
               ),
-              const SizedBox(height: UiConfig.lineSpacing * 2.5),
+              const SizedBox(height: UiConfig.lineSpacing),
               Text(
                 activity.title,
                 style: Theme.of(context).textTheme.bodySmall,
@@ -611,17 +648,26 @@ class _HomeViewState extends State<HomeView> {
                 tr('general.home.recentlyUsed'),
                 style: Theme.of(context).textTheme.headlineSmall,
               ),
-              BlocBuilder<ConsentFormBloc, ConsentFormState>(
+              BlocBuilder<UserConsentBloc, UserConsentState>(
                 builder: (context, state) {
-                  if (state is GotConsentForms) {
-                    if (state.consentForms.isNotEmpty) {
+                  if (state is GotUserConsents) {
+                    if (state.userConsents.isNotEmpty) {
                       return MouseRegion(
                         cursor: SystemMouseCursors.click,
                         child: GestureDetector(
                           onTap: () {
-                            context.push(
-                              ConsentFormRoute.consentForm.path,
+                            final userConsentMenu = DrawerMenuModel(
+                              value: 'user_consents',
+                              title: tr('app.features.userconsents'),
+                              icon: Ionicons.people_outline,
+                              route: UserConsentRoute.userConsentScreen,
+                              parent: 'consent_management',
                             );
+
+                            context.read<DrawerBloc>().add(
+                                SelectMenuDrawerEvent(menu: userConsentMenu));
+                            context.pushReplacement(
+                                UserConsentRoute.userConsentScreen.path);
                           },
                           child: Text(
                             tr('app.features.seeMore'),
@@ -645,20 +691,26 @@ class _HomeViewState extends State<HomeView> {
             ],
           ),
           const SizedBox(height: UiConfig.lineSpacing),
-          BlocBuilder<ConsentFormBloc, ConsentFormState>(
+          BlocBuilder<UserConsentBloc, UserConsentState>(
             builder: (context, state) {
-              if (state is GotConsentForms) {
-                if (state.consentForms.isEmpty) {
+              if (state is GotUserConsents) {
+                if (state.userConsents.isEmpty) {
                   return _buildResultNotFound(context);
                 }
                 return ListView.separated(
                   physics: const NeverScrollableScrollPhysics(),
                   shrinkWrap: true,
-                  itemCount: min(3, state.consentForms.length),
+                  itemCount: min(3, state.userConsents.length),
                   itemBuilder: (context, index) {
                     return _buildItemCard(
                       context,
-                      consentForm: state.consentForms[index],
+                      userConsent: state.userConsents[index],
+                      consentForm: state.consentForms.firstWhere(
+                        (role) =>
+                            role.id == state.userConsents[index].consentFormId,
+                        orElse: () => ConsentFormModel.empty(),
+                      ),
+                      mandatorySelected: state.mandatoryFields.first.id,
                     );
                   },
                   separatorBuilder: (context, index) => const SizedBox(
@@ -706,19 +758,19 @@ class _HomeViewState extends State<HomeView> {
 
   Container _buildItemCard(
     BuildContext context, {
+    required UserConsentModel userConsent,
     required ConsentFormModel consentForm,
+    required String mandatorySelected,
   }) {
-    const language = 'en-US';
-
-    final title = consentForm.title
+    final title = userConsent.mandatoryFields
         .firstWhere(
-          (item) => item.language == language,
-          orElse: () => const LocalizedModel.empty(),
+          (mandatoryField) => mandatoryField.id == mandatorySelected,
+          orElse: () => const UserInputText.empty(),
         )
         .text;
-    final dateConsentForm = DateFormat("dd.MM.yy").format(
-      consentForm.updatedDate,
-    );
+
+    final dateConsentForm =
+        DateFormat("dd.MM.yy").format(userConsent.updatedDate);
 
     return Container(
       decoration: BoxDecoration(
@@ -741,44 +793,59 @@ class _HomeViewState extends State<HomeView> {
         child: Padding(
           padding: const EdgeInsets.all(UiConfig.defaultPaddingSpacing),
           child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
+            mainAxisSize: MainAxisSize.min,
             children: <Widget>[
-              Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: <Widget>[
-                  Expanded(
-                    child: Text(
-                      title.isNotEmpty
-                          ? title
-                          : tr('general.home.thisDataIsNotStored'),
-                      style: Theme.of(context).textTheme.titleMedium,
+              MaterialInkWell(
+                onTap: () {
+                  context.push(
+                    UserConsentRoute.userConsentDetail.path
+                        .replaceFirst(':id', userConsent.id),
+                  );
+                },
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: <Widget>[
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: <Widget>[
+                        Expanded(
+                          child: Column(
+                            mainAxisSize: MainAxisSize.min,
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: <Widget>[
+                              Text(
+                                title.isNotEmpty
+                                    ? title
+                                    : 'This data is not stored.',
+                                style: Theme.of(context).textTheme.titleMedium,
+                              ),
+                              Visibility(
+                                visible: consentForm.title.isNotEmpty,
+                                child: Padding(
+                                  padding: const EdgeInsets.only(
+                                    top: UiConfig.textLineSpacing,
+                                  ),
+                                  child: Text(
+                                    consentForm.title.first.text,
+                                    style:
+                                        Theme.of(context).textTheme.bodySmall,
+                                  ),
+                                ),
+                              ),
+                            ],
+                          ),
+                        ),
+                        Padding(
+                          padding: const EdgeInsets.only(left: 40.0),
+                          child: Text(
+                            dateConsentForm,
+                            style: Theme.of(context).textTheme.bodySmall,
+                          ),
+                        ),
+                      ],
                     ),
-                  ),
-                  Padding(
-                    padding: const EdgeInsets.only(left: 40.0),
-                    child: Text(
-                      dateConsentForm,
-                      style: Theme.of(context).textTheme.bodyMedium,
-                    ),
-                  ),
-                ],
-              ),
-              Visibility(
-                visible: consentForm.purposeCategories.isNotEmpty,
-                child: Padding(
-                  padding: const EdgeInsets.only(
-                    top: UiConfig.textLineSpacing,
-                  ),
-                  child: Text(
-                    consentForm.purposeCategories.first.title
-                        .firstWhere(
-                          (item) => item.language == language,
-                          orElse: LocalizedModel.empty,
-                        )
-                        .text,
-                    style: Theme.of(context).textTheme.bodySmall,
-                  ),
+                  ],
                 ),
               ),
             ],

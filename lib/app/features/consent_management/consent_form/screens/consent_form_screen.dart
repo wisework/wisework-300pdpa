@@ -344,14 +344,17 @@ class _ConsentFormViewState extends State<ConsentFormView> {
                         children: [
                           Expanded(
                             child: Text(
-                              title,
+                              title == ''
+                                  ? tr(
+                                      'consentManagement.consentForm.titleNull')
+                                  : title,
                               style: Theme.of(context).textTheme.titleMedium,
                               maxLines: 3,
                             ),
                           ),
                           Text(
                             dateConsentForm,
-                            style: Theme.of(context).textTheme.bodyMedium,
+                            style: Theme.of(context).textTheme.bodySmall,
                           ),
                         ],
                       ),
