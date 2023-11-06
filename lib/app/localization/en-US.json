@@ -12,6 +12,7 @@
         "phone": "Phone",
         "emailAddress": "Email Address",
         "url": "URL",
+        "done": "Done",
         "features": {
             "home": "Home",
             "consentmanagement": "Consent Management",

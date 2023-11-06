@@ -87,7 +87,7 @@ class _ConsentFormTabState extends State<ConsentFormTab> {
                                 border: Border.all(
                                   width: 1.0,
                                   color:
-                                      Theme.of(context).colorScheme.primary,
+                                      Theme.of(context).colorScheme.background,
                                 )),
                             child: Align(
                               alignment: Alignment.centerLeft,

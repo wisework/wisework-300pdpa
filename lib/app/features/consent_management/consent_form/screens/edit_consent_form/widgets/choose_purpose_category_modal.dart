@@ -114,15 +114,15 @@ class _ChoosePurposeCategoryModalState
                   child: _buildAddButton(context),
                 ),
                 ConstrainedBox(
-                  constraints: const BoxConstraints(maxWidth: 200.0),
+                  constraints: const BoxConstraints(maxWidth: 95.0),
                   child: CustomButton(
-                    width: 80,
-                    height: 22,
+                    padding: const EdgeInsets.symmetric(
+                        vertical: UiConfig.textLineSpacing + 1),
                     onPressed: () {
                       Navigator.pop(context);
                     },
                     child: Text(
-                      "done",
+                      tr('app.done'),
                       style: Theme.of(context).textTheme.bodyMedium?.copyWith(
                           color: Theme.of(context).colorScheme.onPrimary),
                     ),

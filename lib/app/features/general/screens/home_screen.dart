@@ -582,7 +582,7 @@ class _HomeViewState extends State<HomeView> {
                 .add(SelectMenuDrawerEvent(menu: menuSelect));
           }
 
-          context.pushReplacement(activity.path);
+          context.push(activity.path);
         },
         hoverColor: Theme.of(context).colorScheme.primary.withOpacity(0.15),
         child: Padding(
