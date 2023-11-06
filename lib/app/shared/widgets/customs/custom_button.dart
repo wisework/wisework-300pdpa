@@ -12,7 +12,8 @@ class CustomButton extends StatelessWidget {
     this.margin,
     required this.onPressed,
     this.buttonType = CustomButtonType.filled,
-    this.buttonColor,
+    this.backgroundColor,
+    this.borderColor,
     this.splashColor,
     required this.child,
   });
@@ -23,7 +24,8 @@ class CustomButton extends StatelessWidget {
   final EdgeInsets? margin;
   final VoidCallback onPressed;
   final CustomButtonType buttonType;
-  final Color? buttonColor;
+  final Color? backgroundColor;
+  final Color? borderColor;
   final Color? splashColor;
   final Widget child;
 
@@ -37,9 +39,10 @@ class CustomButton extends StatelessWidget {
             padding: const EdgeInsets.all(1.0),
             decoration: BoxDecoration(
               borderRadius: BorderRadius.circular(9.0),
-              color: buttonColor ?? Theme.of(context).colorScheme.primary,
+              color: borderColor ?? Theme.of(context).colorScheme.primary,
             ),
             child: MaterialInkWell(
+              backgroundColor: backgroundColor,
               onTap: onPressed,
               child: Container(
                 width: width,
@@ -62,7 +65,8 @@ class CustomButton extends StatelessWidget {
           );
         }
         return MaterialInkWell(
-          backgroundColor: buttonColor ?? Theme.of(context).colorScheme.primary,
+          backgroundColor:
+              backgroundColor ?? Theme.of(context).colorScheme.primary,
           splashColor: (splashColor ?? Theme.of(context).colorScheme.onPrimary)
               .withOpacity(0.1),
           onTap: onPressed,

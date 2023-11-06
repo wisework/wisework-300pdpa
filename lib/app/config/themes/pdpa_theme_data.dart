@@ -68,11 +68,11 @@ class PdpaThemeData {
 
   static const ColorScheme darkColorScheme = ColorScheme(
     brightness: Brightness.dark,
-    primary: Color(0xFFF0F0F0), // primary
-    onPrimary: Color(0xFF373737),
-    secondary: Color(0xFFC9DBFC), // secondary
+    primary: Color(0xFF0172E6), // primary
+    onPrimary: Colors.white,
+    secondary: Color(0xFF2F3853), // secondary
     onSecondary: Color(0xFFC9DBFC),
-    tertiary: Color(0xFFF0F0F0), // disable field
+    tertiary: Color(0xFF484848), // disable field
     onTertiary: Color(0xFF96A7AF), // hint text
     error: Color(0xFFF22525), // error
     onError: Color(0xFFF9C132), // warning
@@ -80,31 +80,12 @@ class PdpaThemeData {
     onBackground: Color(0xFF373737), // app bar | container | cards | drawer
     surface: Color(0xFF373737), // card
     onSurface: Colors.white, // text
-    outline: Color(0xFF121212), // outline 1
+    outline: Color(0xFF181818), // outline 1
     outlineVariant: Color(0xFF121212), // outline 2
     surfaceTint: Color(0xFF3A9FFD), // splash color
   );
 
-  // static const ColorScheme darkColorScheme = ColorScheme(
-  //   brightness: Brightness.dark,
-  //   primary: Color(0xFF0172E6), // primary
-  //   onPrimary: Colors.white,
-  //   secondary: Color(0xFF2F3853), // secondary
-  //   onSecondary: Color(0xFFC9DBFC),
-  //   tertiary: Color(0xFFD9D9D9), // disable field
-  //   onTertiary: Color(0xFF96A7AF), // hint text
-  //   error: Color(0xFFF22525), // error
-  //   onError: Color(0xFFF9C132), // warning
-  //   background: Color(0xFFF3F2F2), // background (0xFF121212)
-  //   onBackground: Colors.white, // container
-  //   surface: Colors.white, // card
-  //   onSurface: Colors.black, // text
-  //   outline: Color(0xFFC4C4C6), // outline 1
-  //   outlineVariant: Color(0xFF909090), // outline 2
-  //   surfaceTint: Color(0xFF3A9FFD), // splash color
-  // );
-
-  static const _light = FontWeight.w300;
+  static const _light = FontWeight.w400;
   static const _regular = FontWeight.w400;
   static const _semiBold = FontWeight.w500;
   // static const _bold = FontWeight.w600;

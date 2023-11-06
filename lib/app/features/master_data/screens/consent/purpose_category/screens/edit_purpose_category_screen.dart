@@ -309,11 +309,15 @@ class _EditPurposeCategoryViewState extends State<EditPurposeCategoryView> {
     return Scaffold(
       appBar: PdpaAppBar(
         leadingIcon: _buildPopButton(),
-        title: Text(
-          widget.isNewPurposeCategory
-              ? tr('masterData.cm.purposeCategory.create') //!
-              : tr('masterData.cm.purposeCategory.edit'), //!
-          style: Theme.of(context).textTheme.titleLarge,
+        title: Expanded(
+          child: Text(
+            widget.isNewPurposeCategory
+                ? tr('masterData.cm.purposeCategory.create') //!
+                : tr('masterData.cm.purposeCategory.edit'), //!
+            style: Theme.of(context).textTheme.titleLarge,
+            overflow: TextOverflow.ellipsis,
+            maxLines: 1,
+          ),
         ),
         actions: [
           _buildSaveButton(),
@@ -363,7 +367,7 @@ class _EditPurposeCategoryViewState extends State<EditPurposeCategoryView> {
       }
       return CustomIconButton(
         icon: Ionicons.save_outline,
-        iconColor: Theme.of(context).colorScheme.outlineVariant,
+        iconColor: Theme.of(context).colorScheme.onTertiary,
         backgroundColor: Theme.of(context).colorScheme.onBackground,
       );
     });
@@ -520,7 +524,8 @@ class _EditPurposeCategoryViewState extends State<EditPurposeCategoryView> {
         );
       },
       buttonType: CustomButtonType.outlined,
-      buttonColor: Theme.of(context).colorScheme.outlineVariant,
+      backgroundColor: Theme.of(context).colorScheme.onBackground,
+      borderColor: Theme.of(context).colorScheme.outlineVariant,
       child: Padding(
         padding: const EdgeInsets.symmetric(
           horizontal: UiConfig.defaultPaddingSpacing,

@@ -29,7 +29,7 @@ class _BoardScreenState extends State<BoardScreen> {
           child: Ink(
             padding: const EdgeInsets.all(8.0),
             child: IconButton(
-              color: Theme.of(context).colorScheme.onSurface,
+              color: Theme.of(context).colorScheme.primary,
               icon: const Icon(Icons.arrow_back_ios),
               onPressed: () async {
                 await UserPreferences.setBool(

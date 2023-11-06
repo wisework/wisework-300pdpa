@@ -127,50 +127,49 @@ class _UserConsentFormScreenState extends State<UserConsentFormScreen> {
         ),
       ),
       body: SingleChildScrollView(
-        child: Column(
-          mainAxisSize: MainAxisSize.min,
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: <Widget>[
-            const SizedBox(height: UiConfig.lineSpacing),
-            CustomContainer(
-              child: Column(
-                mainAxisSize: MainAxisSize.min,
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: <Widget>[
-                  Text(
-                    tr('consentManagement.userConsent.consentFormDetails.edit.decription'),
-                    style: Theme.of(context).textTheme.bodyMedium,
-                  ),
-                  const SizedBox(height: UiConfig.lineGap),
-                  Text(
-                    consentForm.headerText.first.text,
-                    style: Theme.of(context).textTheme.titleLarge?.copyWith(
-                        color: Theme.of(context).colorScheme.primary),
-                  ),
-                  const SizedBox(height: UiConfig.lineSpacing),
-                  ConstrainedBox(
-                    constraints: const BoxConstraints(maxWidth: 260.0),
-                    child: CustomButton(
-                      height: 40.0,
-                      onPressed: () {
-                        final event = GetUserConsentFormEvent(
-                          consentFormId: consentForm.id,
-                          companyId: widget.companyId,
-                        );
-                        context.read<UserConsentFormBloc>().add(event);
-                      },
-                      child: Text(
-                        tr('consentManagement.userConsent.consentFormDetails.edit.fillOutTheFormAgain'),
-                        style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                            color: Theme.of(context).colorScheme.onPrimary),
-                      ),
+        child: Center(
+          child: CustomContainer(
+            margin: const EdgeInsets.all(UiConfig.lineSpacing),
+            constraints: const BoxConstraints(maxWidth: 500.0),
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              crossAxisAlignment: CrossAxisAlignment.center,
+              children: <Widget>[
+                Text(
+                  tr('consentManagement.userConsent.consentFormDetails.edit.decription'),
+                  style: Theme.of(context).textTheme.bodyMedium,
+                  textAlign: TextAlign.center,
+                ),
+                const SizedBox(height: UiConfig.lineGap),
+                Text(
+                  consentForm.headerText.first.text,
+                  style: Theme.of(context)
+                      .textTheme
+                      .titleLarge
+                      ?.copyWith(color: Theme.of(context).colorScheme.primary),
+                ),
+                const SizedBox(height: UiConfig.lineSpacing),
+                ConstrainedBox(
+                  constraints: const BoxConstraints(maxWidth: 260.0),
+                  child: CustomButton(
+                    height: 40.0,
+                    onPressed: () {
+                      final event = GetUserConsentFormEvent(
+                        consentFormId: consentForm.id,
+                        companyId: widget.companyId,
+                      );
+                      context.read<UserConsentFormBloc>().add(event);
+                    },
+                    child: Text(
+                      tr('consentManagement.userConsent.consentFormDetails.edit.fillOutTheFormAgain'),
+                      style: Theme.of(context).textTheme.bodyMedium?.copyWith(
+                          color: Theme.of(context).colorScheme.onPrimary),
                     ),
                   ),
-                ],
-              ),
+                ),
+              ],
             ),
-            const SizedBox(height: UiConfig.lineSpacing),
-          ],
+          ),
         ),
       ),
     );

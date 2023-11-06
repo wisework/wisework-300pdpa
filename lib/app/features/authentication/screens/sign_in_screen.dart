@@ -140,7 +140,9 @@ class _SignInScreenState extends State<SignInScreen> {
     final screenSize = MediaQuery.of(context).size;
 
     return Scaffold(
-      backgroundColor: Theme.of(context).colorScheme.onPrimary,
+      backgroundColor: Theme.of(context).brightness == Brightness.dark
+          ? Theme.of(context).colorScheme.background
+          : Theme.of(context).colorScheme.onBackground,
       body: SingleChildScrollView(
         child: Center(
           child: ConstrainedBox(

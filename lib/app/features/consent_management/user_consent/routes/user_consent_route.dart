@@ -17,6 +17,6 @@ class UserConsentRoute {
 
   static final List<GoRoute> routes = <GoRoute>[
     userConsentScreen,
-    userConsentDetail
+    userConsentDetail,
   ];
 }

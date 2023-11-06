@@ -144,13 +144,13 @@ Future<void> _consentManagement() async {
       ),
     )
     ..registerFactory(
-      () => CurrentConsentFormDetailCubit(),
-    )
-    ..registerFactory(
       () => ConsentFormSettingsBloc(
         consentRepository: serviceLocator(),
         masterDataRepository: serviceLocator(),
       ),
+    )
+    ..registerFactory(
+      () => CurrentConsentFormDetailCubit(),
     )
     ..registerFactory(
       () => UserConsentFormBloc(
@@ -338,12 +338,14 @@ Future<void> _user() async {
     //? App logic
     ..registerFactory(
       () => UserBloc(
+        authenticationRepository: serviceLocator(),
         userRepository: serviceLocator(),
       ),
     )
     ..registerFactory(
       () => EditUserBloc(
         authenticationRepository: serviceLocator(),
+        masterDataRepository: serviceLocator(),
         userRepository: serviceLocator(),
         emailJsRepository: serviceLocator(),
       ),

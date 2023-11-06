@@ -112,10 +112,7 @@ class _CreateConsentFormSuccessScreenState
       children: [
         Text(
           tr('consentManagement.consentForm.congratulations.created'),
-          style: Theme.of(context)
-              .textTheme
-              .titleMedium
-              ?.copyWith(color: Theme.of(context).colorScheme.secondary),
+          style: Theme.of(context).textTheme.titleMedium,
         ),
         widget.consentForm.id.isNotEmpty
             ? _buildConsentInfo(context)
@@ -124,8 +121,7 @@ class _CreateConsentFormSuccessScreenState
                 child: Center(
                   child: Text(
                     tr('consentManagement.consentForm.congratulations.noConsentDetails'),
-                    style: Theme.of(context).textTheme.labelLarge?.copyWith(
-                        color: Theme.of(context).colorScheme.secondary),
+                    style: Theme.of(context).textTheme.labelLarge,
                   ),
                 ),
               ),
@@ -151,29 +147,21 @@ class _CreateConsentFormSuccessScreenState
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: <Widget>[
-        Text(
-          "ID: ${widget.consentForm.id}",
-          style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                color: Theme.of(context).colorScheme.secondary,
-              ),
-        ),
+        Text("ID: ${widget.consentForm.id}",
+            style: Theme.of(context).textTheme.bodyMedium),
         Padding(
           padding: const EdgeInsets.symmetric(vertical: 8.0),
           child: Text(
             title.text,
-            style: Theme.of(context).textTheme.titleMedium?.copyWith(
-                  height: 1.6,
-                  color: Theme.of(context).colorScheme.onSurface,
-                ),
+            style:
+                Theme.of(context).textTheme.titleMedium?.copyWith(height: 1.6),
           ),
         ),
         if (description.text.isNotEmpty)
           Text(
             description.text,
-            style: Theme.of(context).textTheme.labelLarge?.copyWith(
-                  height: 1.8,
-                  color: Theme.of(context).colorScheme.secondary,
-                ),
+            style:
+                Theme.of(context).textTheme.labelLarge?.copyWith(height: 1.8),
           ),
       ],
     );
@@ -223,18 +211,13 @@ class _CreateConsentFormSuccessScreenState
                       children: <Widget>[
                         Icon(
                           Icons.circle,
-                          size: 8,
-                          color: Theme.of(context).colorScheme.secondary,
+                          size: 8.0,
+                          color: Theme.of(context).colorScheme.onSurface,
                         ),
                         const SizedBox(width: 10.0),
                         Text(
                           title.text,
-                          style: Theme.of(context)
-                              .textTheme
-                              .labelLarge
-                              ?.copyWith(
-                                color: Theme.of(context).colorScheme.secondary,
-                              ),
+                          style: Theme.of(context).textTheme.labelLarge,
                         ),
                       ],
                     ),
@@ -246,8 +229,7 @@ class _CreateConsentFormSuccessScreenState
                 child: Center(
                   child: Text(
                     tr('consentManagement.consentForm.consentFormDetails.noInputField'),
-                    style: Theme.of(context).textTheme.labelLarge?.copyWith(
-                        color: Theme.of(context).colorScheme.onSurface),
+                    style: Theme.of(context).textTheme.labelLarge,
                   ),
                 ),
               ),
@@ -294,8 +276,8 @@ class _CreateConsentFormSuccessScreenState
                         padding: const EdgeInsets.only(top: 6.0),
                         child: Icon(
                           Icons.circle,
-                          size: 8,
-                          color: Theme.of(context).colorScheme.secondary,
+                          size: 8.0,
+                          color: Theme.of(context).colorScheme.onSurface,
                         ),
                       ),
                       const SizedBox(width: 10.0),
@@ -310,12 +292,7 @@ class _CreateConsentFormSuccessScreenState
                                 style: Theme.of(context)
                                     .textTheme
                                     .titleSmall
-                                    ?.copyWith(
-                                      height: 1.6,
-                                      color: Theme.of(context)
-                                          .colorScheme
-                                          .secondary,
-                                    ),
+                                    ?.copyWith(height: 1.6),
                               ),
                             ),
                             _buildPurposesInfo(
@@ -337,8 +314,7 @@ class _CreateConsentFormSuccessScreenState
                 child: Center(
                   child: Text(
                     tr('consentManagement.consentForm.consentFormDetails.noPurposes'),
-                    style: Theme.of(context).textTheme.labelLarge?.copyWith(
-                        color: Theme.of(context).colorScheme.secondary),
+                    style: Theme.of(context).textTheme.labelLarge,
                   ),
                 ),
               ),
@@ -374,19 +350,17 @@ class _CreateConsentFormSuccessScreenState
                 Expanded(
                   child: Text(
                     description.text,
-                    style: Theme.of(context).textTheme.labelLarge?.copyWith(
-                          height: 1.8,
-                          color: Theme.of(context).colorScheme.secondary,
-                        ),
+                    style: Theme.of(context)
+                        .textTheme
+                        .labelLarge
+                        ?.copyWith(height: 1.8),
                   ),
                 ),
                 Padding(
                   padding: const EdgeInsets.only(left: 30.0),
                   child: Text(
                     "${purposeFiltered[index].retentionPeriod} ${purposeFiltered[index].periodUnit}",
-                    style: Theme.of(context).textTheme.labelLarge?.copyWith(
-                          color: Theme.of(context).colorScheme.secondary,
-                        ),
+                    style: Theme.of(context).textTheme.labelLarge,
                   ),
                 ),
               ],

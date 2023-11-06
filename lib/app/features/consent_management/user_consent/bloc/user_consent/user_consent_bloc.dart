@@ -19,6 +19,7 @@ class UserConsentBloc extends Bloc<UserConsentEvent, UserConsentState> {
         _masterDataRepository = masterDataRepository,
         super(const UserConsentInitial()) {
     on<GetUserConsentsEvent>(_getUserConsentsHandler);
+    on<SearchUserConsentSearchChanged>(_getUserConsentsSearching);
   }
   final ConsentRepository _consentRepository;
   final MasterDataRepository _masterDataRepository;
@@ -71,6 +72,120 @@ class UserConsentBloc extends Bloc<UserConsentEvent, UserConsentState> {
           ),
         );
       },
+    );
+  }
+
+  Future<void> _getUserConsentsSearching(
+    SearchUserConsentSearchChanged event,
+    Emitter<UserConsentState> emit,
+  ) async {
+    if (event.companyId.isEmpty) {
+      emit(const UserConsentError('Required company ID'));
+      return;
+    }
+
+    emit(const GettingUserConsents());
+
+    List<UserConsentModel> gotUserConsents = [];
+    List<ConsentFormModel> gotConsentForms = [];
+    List<MandatoryFieldModel> gotMadatoryFields = [];
+
+    // SET UserConsents
+    final userConsentResult =
+        await _consentRepository.getUserConsents(event.companyId);
+
+    await userConsentResult.fold(
+      (failure) {
+        emit(UserConsentError(failure.errorMessage));
+        return;
+      },
+      (userConsents) async {
+        gotUserConsents = userConsents;
+      },
+    );
+
+    //SET ConsentForms
+    for (UserConsentModel userConsent in gotUserConsents) {
+      final consentFormResult = await _consentRepository.getConsentFormById(
+        userConsent.consentFormId,
+        event.companyId,
+      );
+
+      consentFormResult.fold(
+        (failure) => emit(UserConsentError(failure.errorMessage)),
+        (consentForm) => gotConsentForms.add(consentForm),
+      );
+    }
+
+    //SET MadatoryFields
+
+    final madatoryResult = await _masterDataRepository.getMandatoryFields(
+      event.companyId,
+    );
+
+    madatoryResult.fold(
+      (failure) => emit(UserConsentError(failure.errorMessage)),
+      (mandatoryFields) async {
+        gotMadatoryFields = mandatoryFields;
+      },
+    );
+
+    if (event.search.isEmpty) {
+      emit(
+        GotUserConsents(
+          gotUserConsents
+            ..sort((a, b) => b.updatedDate.compareTo(a.updatedDate)),
+          gotConsentForms,
+          gotMadatoryFields..sort((a, b) => a.priority.compareTo(b.priority)),
+        ),
+      );
+    }
+
+    List<UserConsentModel> newUserConsents = [];
+    for (UserConsentModel userConsent in gotUserConsents) {
+      bool isTitleFound = false;
+
+      if (userConsent.toString().contains(event.search)) {
+        isTitleFound = true;
+      }
+
+      if (isTitleFound) {
+        newUserConsents.add(userConsent);
+      }
+    }
+
+    List<ConsentFormModel> newConsents = [];
+    for (ConsentFormModel consent in gotConsentForms) {
+      bool isTitleFound = false;
+
+      if (consent.title.toString().contains(event.search)) {
+        isTitleFound = true;
+      }
+
+      if (isTitleFound) {
+        newConsents.add(consent);
+      }
+    }
+
+    List<MandatoryFieldModel> newMadatory = [];
+    for (MandatoryFieldModel mandatory in gotMadatoryFields) {
+      bool isTitleFound = false;
+
+      if (mandatory.toString().contains(event.search)) {
+        isTitleFound = true;
+      }
+
+      if (isTitleFound) {
+        newMadatory.add(mandatory);
+      }
+    }
+
+    emit(
+      GotUserConsents(
+        newUserConsents..sort((a, b) => b.updatedDate.compareTo(a.updatedDate)),
+        newConsents,
+        newMadatory..sort((a, b) => a.priority.compareTo(b.priority)),
+      ),
     );
   }
 }

@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:pdpa/app/config/config.dart';
+import 'package:pdpa/app/config/themes/pdpa_theme_data.dart';
 import 'package:pdpa/app/data/models/consent_management/consent_form_model.dart';
 import 'package:pdpa/app/data/models/consent_management/consent_theme_model.dart';
 import 'package:pdpa/app/data/models/consent_management/user_consent_model.dart';
@@ -70,31 +71,37 @@ class _ConsentFormPreviewState extends State<ConsentFormPreview> {
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      padding: const EdgeInsets.all(UiConfig.defaultPaddingSpacing),
-      decoration: BoxDecoration(
-        color: widget.consentTheme.backgroundColor,
+    return Theme(
+      data: PdpaThemeData.themeData(
+        PdpaThemeData.lightColorScheme,
+        Colors.black.withOpacity(0.12),
       ),
       child: Container(
+        padding: const EdgeInsets.all(UiConfig.defaultPaddingSpacing),
         decoration: BoxDecoration(
-          color: widget.consentTheme.bodyBackgroundColor,
+          color: widget.consentTheme.backgroundColor,
         ),
-        child: Column(
-          children: <Widget>[
-            Visibility(
-              visible: widget.consentForm.logoImage.isNotEmpty ||
-                  widget.consentForm.headerBackgroundImage.isNotEmpty,
-              child: _buildHeaderImage(),
-            ),
-            _buildConsentForm(context),
-            Visibility(
-              visible: widget.isShowActionButton,
-              child: Padding(
-                padding: const EdgeInsets.only(top: UiConfig.lineGap),
-                child: _buidActionButton(context),
+        child: Container(
+          decoration: BoxDecoration(
+            color: widget.consentTheme.bodyBackgroundColor,
+          ),
+          child: Column(
+            children: <Widget>[
+              Visibility(
+                visible: widget.consentForm.logoImage.isNotEmpty ||
+                    widget.consentForm.headerBackgroundImage.isNotEmpty,
+                child: _buildHeaderImage(),
               ),
-            ),
-          ],
+              _buildConsentForm(context),
+              Visibility(
+                visible: widget.isShowActionButton,
+                child: Padding(
+                  padding: const EdgeInsets.only(top: UiConfig.lineGap),
+                  child: _buidActionButton(context),
+                ),
+              ),
+            ],
+          ),
         ),
       ),
     );
@@ -305,9 +312,8 @@ class _ConsentFormPreviewState extends State<ConsentFormPreview> {
           readOnly: widget.isReadOnly,
           required: true,
           maxLength: mandatoryField.lengthLimit,
-          fillColor: Colors.white,
-          borderColor: const Color(0xFFC4C4C6),
-          focusedBorderColor: const Color(0xFF0172E6),
+          fillColor: widget.consentTheme.bodyBackgroundColor,
+          focusedBorderColor: widget.consentTheme.actionButtonColor,
         ),
       ],
     );
@@ -542,7 +548,7 @@ class _ConsentFormPreviewState extends State<ConsentFormPreview> {
             }
           }
         },
-        buttonColor: widget.consentTheme.submitButtonColor,
+        backgroundColor: widget.consentTheme.submitButtonColor,
         splashColor: widget.consentTheme.submitTextColor,
         child: Text(
           widget.consentForm.submitText.first.text,

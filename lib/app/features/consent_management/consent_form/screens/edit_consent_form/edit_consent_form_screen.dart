@@ -416,11 +416,15 @@ class _EditConsentFormViewState extends State<EditConsentFormView> {
     return Scaffold(
       appBar: PdpaAppBar(
         leadingIcon: _buildPopButton(widget.consentForm),
-        title: Text(
-          widget.isNewConsentForm
-              ? tr('consentManagement.consentForm.createForm.create')
-              : tr('consentManagement.consentForm.createForm.edit'),
-          style: Theme.of(context).textTheme.titleLarge,
+        title: Expanded(
+          child: Text(
+            widget.isNewConsentForm
+                ? tr('consentManagement.consentForm.createForm.create')
+                : tr('consentManagement.consentForm.createForm.edit'),
+            style: Theme.of(context).textTheme.titleLarge,
+            overflow: TextOverflow.ellipsis,
+            maxLines: 1,
+          ),
         ),
         actions: [
           _buildSaveButton(),
@@ -471,7 +475,7 @@ class _EditConsentFormViewState extends State<EditConsentFormView> {
       }
       return CustomIconButton(
         icon: Ionicons.save_outline,
-        iconColor: Theme.of(context).colorScheme.outlineVariant,
+        iconColor: Theme.of(context).colorScheme.onTertiary,
         backgroundColor: Theme.of(context).colorScheme.onBackground,
       );
     });
@@ -659,7 +663,8 @@ class _EditConsentFormViewState extends State<EditConsentFormView> {
               );
             },
             buttonType: CustomButtonType.outlined,
-            buttonColor: Theme.of(context).colorScheme.outlineVariant,
+            backgroundColor: Theme.of(context).colorScheme.onBackground,
+            borderColor: Theme.of(context).colorScheme.outlineVariant,
             child: Padding(
               padding: const EdgeInsets.symmetric(
                 horizontal: UiConfig.defaultPaddingSpacing,
@@ -705,11 +710,17 @@ class _EditConsentFormViewState extends State<EditConsentFormView> {
     return Row(
       key: ValueKey(purposeCategory.id),
       children: <Widget>[
-        Padding(
-          padding: const EdgeInsets.all(UiConfig.actionSpacing),
-          child: Text(
-            title.text,
-            style: Theme.of(context).textTheme.bodyMedium,
+        Expanded(
+          child: Padding(
+            padding: const EdgeInsets.all(UiConfig.actionSpacing),
+            child: Expanded(
+              child: Text(
+                title.text,
+                style: Theme.of(context).textTheme.bodyMedium,
+                overflow: TextOverflow.ellipsis,
+                maxLines: 1,
+              ),
+            ),
           ),
         ),
       ],
