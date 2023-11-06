@@ -309,11 +309,15 @@ class _EditPurposeCategoryViewState extends State<EditPurposeCategoryView> {
     return Scaffold(
       appBar: PdpaAppBar(
         leadingIcon: _buildPopButton(),
-        title: Text(
-          widget.isNewPurposeCategory
-              ? tr('masterData.cm.purposeCategory.create') //!
-              : tr('masterData.cm.purposeCategory.edit'), //!
-          style: Theme.of(context).textTheme.titleLarge,
+        title: Expanded(
+          child: Text(
+            widget.isNewPurposeCategory
+                ? tr('masterData.cm.purposeCategory.create') //!
+                : tr('masterData.cm.purposeCategory.edit'), //!
+            style: Theme.of(context).textTheme.titleLarge,
+            overflow: TextOverflow.ellipsis,
+            maxLines: 1,
+          ),
         ),
         actions: [
           _buildSaveButton(),

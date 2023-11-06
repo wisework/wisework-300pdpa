@@ -131,7 +131,7 @@ class _UserConsentViewState extends State<UserConsentView> {
         ],
       ),
       body: Column(
-        children: <Widget>[
+        children: [
           const SizedBox(height: UiConfig.lineSpacing),
           Expanded(
             child: Container(
@@ -142,24 +142,36 @@ class _UserConsentViewState extends State<UserConsentView> {
               child: Column(
                 children: <Widget>[
                   Padding(
-                    padding: const EdgeInsets.only(
-                        left: UiConfig.defaultPaddingSpacing,
-                        right: UiConfig.defaultPaddingSpacing),
+                    padding: const EdgeInsets.symmetric(
+                        horizontal: UiConfig.defaultPaddingSpacing),
                     child: Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       crossAxisAlignment: CrossAxisAlignment.center,
                       children: <Widget>[
                         Expanded(
-                          child: Text(
-                            'รายการความยินยอมที่ได้รับ', //!
-                            style: Theme.of(context).textTheme.titleMedium,
+                          child: Row(
+                            mainAxisAlignment: MainAxisAlignment.start,
+                            children: [
+                              Expanded(
+                                child: Text(
+                                  'รายการความยินยอมที่ได้รับ', //!
+                                  style: Theme.of(context).textTheme.titleMedium,
+                                  overflow: TextOverflow.ellipsis,
+                                  maxLines: 1,
+                                ),
+                              ),
+                            ],
                           ),
                         ),
-                        _sortByDateButton(context),
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.end,
+                          children: [
+                            _sortByDateButton(context),
+                          ],
+                        ),
                       ],
                     ),
                   ),
-                  const SizedBox(height: UiConfig.lineSpacing),
                   Expanded(
                     child: BlocBuilder<UserConsentBloc, UserConsentState>(
                       builder: (context, state) {
@@ -180,7 +192,7 @@ class _UserConsentViewState extends State<UserConsentView> {
                             userConsents.sort(((a, b) =>
                                 b.updatedDate.compareTo(a.updatedDate)));
                           }
-                  
+
                           return consentForms.isNotEmpty ||
                                   userConsents.isNotEmpty
                               ? ListView.builder(
@@ -207,11 +219,11 @@ class _UserConsentViewState extends State<UserConsentView> {
                                       'consentManagement.consentForm.consentForms'),
                                   buttonText: tr(
                                       'consentManagement.consentForm.createForm.create'),
-                                  descriptionText:
-                                      tr('consentManagement.consentForm.explain'),
+                                  descriptionText: tr(
+                                      'consentManagement.consentForm.explain'),
                                   onPress: () {
-                                    context.push(
-                                        ConsentFormRoute.createConsentForm.path);
+                                    context.push(ConsentFormRoute
+                                        .createConsentForm.path);
                                   });
                         }
                         if (state is UserConsentError) {
@@ -243,37 +255,35 @@ class _UserConsentViewState extends State<UserConsentView> {
   }
 
   Widget _sortByDateButton(BuildContext context) {
-    return Expanded(
-      child: IconButton(
-        onPressed: () {
-          _sortProducts(!_sortAscending);
-        },
-        padding: EdgeInsets.zero,
-        icon: Column(
-          children: [
-            RichText(
-                text: TextSpan(
-              children: [
-                TextSpan(
-                    text: tr("consentManagement.listage.filter.date"),
-                    style: Theme.of(context).textTheme.bodyMedium),
-                WidgetSpan(
-                  child: _sortAscending
-                      ? Icon(
-                          Icons.arrow_drop_down,
-                          size: 20,
-                          color: Theme.of(context).colorScheme.secondary,
-                        )
-                      : Icon(
-                          Icons.arrow_drop_up,
-                          size: 20,
-                          color: Theme.of(context).colorScheme.secondary,
-                        ),
-                ),
-              ],
-            )),
-          ],
-        ),
+    return IconButton(
+      onPressed: () {
+        _sortProducts(!_sortAscending);
+      },
+      padding: EdgeInsets.zero,
+      icon: Column(
+        children: [
+          RichText(
+              text: TextSpan(
+            children: [
+              TextSpan(
+                  text: tr("consentManagement.listage.filter.date"),
+                  style: Theme.of(context).textTheme.bodyMedium),
+              WidgetSpan(
+                child: _sortAscending
+                    ? Icon(
+                        Icons.arrow_drop_down,
+                        size: 20,
+                        color: Theme.of(context).colorScheme.secondary,
+                      )
+                    : Icon(
+                        Icons.arrow_drop_up,
+                        size: 20,
+                        color: Theme.of(context).colorScheme.secondary,
+                      ),
+              ),
+            ],
+          )),
+        ],
       ),
     );
   }
@@ -321,14 +331,17 @@ class _UserConsentViewState extends State<UserConsentView> {
                         children: [
                           Expanded(
                             child: Text(
-                              title,
+                              title == ''
+                                  ? tr(
+                                      'consentManagement.consentForm.titleNull')
+                                  : title,
                               style: Theme.of(context).textTheme.titleMedium,
                               maxLines: 3,
                             ),
                           ),
                           Text(
                             dateConsentForm,
-                            style: Theme.of(context).textTheme.bodyMedium,
+                            style: Theme.of(context).textTheme.bodySmall,
                           ),
                         ],
                       ),
