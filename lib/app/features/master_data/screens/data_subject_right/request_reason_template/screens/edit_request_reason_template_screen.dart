@@ -674,7 +674,7 @@ class _EditRequestReasonTemplateViewState
       }
       return CustomIconButton(
         icon: Ionicons.save_outline,
-        iconColor: Theme.of(context).colorScheme.outlineVariant,
+        iconColor: Theme.of(context).colorScheme.onTertiary,
         backgroundColor: Theme.of(context).colorScheme.onBackground,
       );
     });
