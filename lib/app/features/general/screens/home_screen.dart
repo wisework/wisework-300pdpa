@@ -798,68 +798,52 @@ class _HomeViewState extends State<HomeView> {
       child: MaterialInkWell(
         onTap: () {
           context.push(
-            ConsentFormRoute.consentFormDetail.path
-                .replaceFirst(':id', consentForm.id),
+            UserConsentRoute.userConsentDetail.path
+                .replaceFirst(':id', userConsent.id),
           );
         },
         hoverColor: Theme.of(context).colorScheme.primary.withOpacity(0.15),
         child: Padding(
           padding: const EdgeInsets.all(UiConfig.defaultPaddingSpacing),
           child: Column(
-            mainAxisSize: MainAxisSize.min,
+            crossAxisAlignment: CrossAxisAlignment.start,
             children: <Widget>[
-              MaterialInkWell(
-                onTap: () {
-                  context.push(
-                    UserConsentRoute.userConsentDetail.path
-                        .replaceFirst(':id', userConsent.id),
-                  );
-                },
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: <Widget>[
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: <Widget>[
+                  Expanded(
+                    child: Column(
+                      mainAxisSize: MainAxisSize.min,
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: <Widget>[
-                        Expanded(
-                          child: Column(
-                            mainAxisSize: MainAxisSize.min,
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: <Widget>[
-                              Text(
-                                title.isNotEmpty
-                                    ? title
-                                    : 'This data is not stored.',
-                                style: Theme.of(context).textTheme.titleMedium,
-                              ),
-                              Visibility(
-                                visible: consentForm.title.isNotEmpty,
-                                child: Padding(
-                                  padding: const EdgeInsets.only(
-                                    top: UiConfig.textLineSpacing,
-                                  ),
-                                  child: Text(
-                                    consentForm.title.first.text,
-                                    style:
-                                        Theme.of(context).textTheme.bodySmall,
-                                  ),
-                                ),
-                              ),
-                            ],
-                          ),
+                        Text(
+                          title.isNotEmpty ? title : 'This data is not stored.',
+                          style: Theme.of(context).textTheme.titleMedium,
                         ),
-                        Padding(
-                          padding: const EdgeInsets.only(left: 40.0),
-                          child: Text(
-                            dateConsentForm,
-                            style: Theme.of(context).textTheme.bodySmall,
+                        Visibility(
+                          visible: consentForm.title.isNotEmpty,
+                          child: Padding(
+                            padding: const EdgeInsets.only(
+                              top: UiConfig.textLineSpacing,
+                            ),
+                            child: Text(
+                              consentForm.title.first.text,
+                              style: Theme.of(context).textTheme.bodySmall,
+                            ),
                           ),
                         ),
                       ],
                     ),
-                  ],
-                ),
+                  ),
+                  Padding(
+                    padding: const EdgeInsets.only(left: 40.0),
+                    child: Text(
+                      dateConsentForm,
+                      style: Theme.of(context).textTheme.bodySmall,
+                    ),
+                  ),
+                ],
               ),
             ],
           ),
