@@ -548,7 +548,7 @@ class _ConsentFormPreviewState extends State<ConsentFormPreview> {
             }
           }
         },
-        buttonColor: widget.consentTheme.submitButtonColor,
+        backgroundColor: widget.consentTheme.submitButtonColor,
         splashColor: widget.consentTheme.submitTextColor,
         child: Text(
           widget.consentForm.submitText.first.text,
