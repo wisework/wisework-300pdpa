@@ -114,11 +114,12 @@ class _BoardScreenState extends State<BoardScreen> {
   Column buildBoard1(BuildContext context) {
     return Column(
       children: [
-        Image.asset(
-          'assets/images/consent_management/onboarding.png',
-          width: 700,
-          height: 500,
-          fit: BoxFit.cover,
+        Flexible(
+          child: Image.asset(
+            'assets/images/consent_management/onboarding.png',
+            width: 700,
+            fit: BoxFit.cover,
+          ),
         ),
         Expanded(
           child: Container(
@@ -172,11 +173,12 @@ class _BoardScreenState extends State<BoardScreen> {
   Column buildBoard2(BuildContext context) {
     return Column(
       children: [
-        Image.asset(
-          'assets/images/master_data/onboarding.png',
-          width: 700,
-          height: 500,
-          fit: BoxFit.cover,
+        Flexible(
+          child: Image.asset(
+            'assets/images/master_data/onboarding.png',
+            width: 700,
+            fit: BoxFit.cover,
+          ),
         ),
         Expanded(
           child: Container(
