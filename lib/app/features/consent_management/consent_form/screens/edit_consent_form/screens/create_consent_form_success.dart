@@ -423,7 +423,7 @@ class _CreateConsentFormSuccessScreenState
             ElevatedButton(
               onPressed: () async {
                 context.pushReplacement(
-                  ConsentFormRoute.consentFormSettings.path
+                  ConsentFormRoute.consentFormQuickSettings.path
                       .replaceFirst(':id', widget.consentForm.id),
                 );
               },

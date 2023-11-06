@@ -34,7 +34,15 @@ class ConsentFormRoute {
   static final GoRoute consentFormSettings = GoRoute(
     path: '/consent-forms/:id/settings',
     builder: (context, state) => ConsentFormSettingScreen(
-      consentFormId: state.pathParameters['id'] ?? 'a3otPSo80xnoMlX4zhIA',
+      consentFormId: state.pathParameters['id'] ?? '',
+    ),
+  );
+
+  static final GoRoute consentFormQuickSettings = GoRoute(
+    path: '/consent-forms/:id/quick-settings',
+    builder: (context, state) => ConsentFormSettingScreen(
+      consentFormId: state.pathParameters['id'] ?? '',
+      isQuickSetting: true,
     ),
   );
 
@@ -74,6 +82,7 @@ class ConsentFormRoute {
     consentFormDetail,
     editConsentForm,
     consentFormSettings,
+    consentFormQuickSettings,
     createConsentTheme,
     editConsentTheme,
     copyConsentTheme,
