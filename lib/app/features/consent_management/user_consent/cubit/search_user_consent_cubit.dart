@@ -1,3 +1,4 @@
+// ignore: depend_on_referenced_packages
 import 'package:bloc/bloc.dart';
 import 'package:equatable/equatable.dart';
 import 'package:pdpa/app/data/models/consent_management/consent_form_model.dart';
@@ -39,50 +40,52 @@ class SearchUserConsentCubit extends Cubit<SearchUserConsentState> {
   void searchUserConsent(String search, String language) {
     if (search.isEmpty) {
       emit(state.copyWith(userConsents: state.initialUserConsents));
-      emit(state.copyWith(consentForms: state.initialConsentForms));
-      emit(state.copyWith(mandatoryFields: state.initialMandatoryFields));
       return;
     }
 
+    final firstMandatory = state.mandatoryFields.firstWhere(
+        (mandatory) => mandatory.priority == 1,
+        orElse: () => state.mandatoryFields.first);
+
     List<UserConsentModel> searchResult = [];
-// !
 
     searchResult = state.userConsents.where((userConsent) {
       if (userConsent.mandatoryFields.isNotEmpty) {
-        final title = userConsent.mandatoryFields
+        final firstMandatoryText = userConsent.mandatoryFields
             .firstWhere(
-              (mandatoryField) =>
-                  mandatoryField.id == state.mandatoryFields.first.id,
+              (mandatoryField) => mandatoryField.id == firstMandatory.id,
               orElse: () => const UserInputText.empty(),
             )
             .text;
 
-        if (title.contains(search)) return true;
+        if (firstMandatoryText.contains(search)) return true;
       }
 
       return false;
     }).toList();
 
-    final searchAtConsentForm = state.userConsents.where((consentForm) {
+    final searchAtConsentForm = state.userConsents.where((userConsent) {
       for (ConsentFormModel consent in state.consentForms) {
-        final title = consent.title
-            .firstWhere(
-              (item) => item.language == language,
-              orElse: () => const LocalizedModel.empty(),
-            )
-            .text;
+        if (consent.id == userConsent.consentFormId) {
+          final title = consent.title
+              .firstWhere(
+                (item) => item.language == language,
+                orElse: () => const LocalizedModel.empty(),
+              )
+              .text;
 
-        if (title.contains(search)) return true;
+          if (title.contains(search)) return true;
+        }
       }
 
       return false;
     }).toList();
 
     final currentResultIds =
-        searchResult.map((mandatory) => mandatory.consentFormId).toList();
-    for (UserConsentModel consentForm in searchAtConsentForm) {
-      if (!currentResultIds.contains(consentForm.id)) {
-        searchResult.add(consentForm);
+        searchResult.map((userConsent) => userConsent.id).toList();
+    for (UserConsentModel userConsent in searchAtConsentForm) {
+      if (!currentResultIds.contains(userConsent.id)) {
+        searchResult.add(userConsent);
       }
     }
 

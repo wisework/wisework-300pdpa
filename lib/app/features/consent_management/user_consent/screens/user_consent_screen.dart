@@ -182,7 +182,6 @@ class _UserConsentViewState extends State<UserConsentView> {
                                 shrinkWrap: true,
                                 itemCount: consentForms.length,
                                 itemBuilder: (context, index) {
-                                  print(state.userConsents[index]);
                                   return _buildItemCard(
                                     context,
                                     userConsent: state.userConsents[index],
