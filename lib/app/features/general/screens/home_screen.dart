@@ -10,7 +10,6 @@ import 'package:pdpa/app/data/models/consent_management/consent_form_model.dart'
 import 'package:pdpa/app/data/models/consent_management/user_consent_model.dart';
 import 'package:pdpa/app/data/models/etc/explore_activity.dart';
 import 'package:pdpa/app/data/models/etc/user_input_text.dart';
-import 'package:pdpa/app/data/models/master_data/localized_model.dart';
 import 'package:pdpa/app/features/authentication/bloc/sign_in/sign_in_bloc.dart';
 import 'package:pdpa/app/features/consent_management/consent_form/routes/consent_form_route.dart';
 import 'package:pdpa/app/features/consent_management/user_consent/bloc/user_consent/user_consent_bloc.dart';
@@ -63,6 +62,14 @@ class _HomeScreenState extends State<HomeScreen> {
     } else {
       currentCompany = CompanyModel.empty();
     }
+
+    final menuSelect = DrawerMenuModel(
+      value: 'home',
+      title: tr('app.features.home'),
+      icon: Ionicons.home_outline,
+      route: GeneralRoute.home,
+    );
+    context.read<DrawerBloc>().add(SelectMenuDrawerEvent(menu: menuSelect));
 
     context
         .read<UserConsentBloc>()
