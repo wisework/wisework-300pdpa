@@ -101,22 +101,11 @@ class ConsentFormBloc extends Bloc<ConsentFormEvent, ConsentFormState> {
       },
     );
 
-    final sortConsents = event.sort;
-    if (sortConsents == SortType.desc) {
-      emit(
-        GotConsentForms(
-          gotConsentForms
-            ..sort((a, b) => b.updatedDate.compareTo(a.updatedDate)),
-        ),
-      );
-    } else {
-      emit(
-        GotConsentForms(
-          gotConsentForms
-            ..sort((a, b) => a.updatedDate.compareTo(b.updatedDate)),
-        ),
-      );
-    }
+    emit(
+      GotConsentForms(
+        gotConsentForms..sort((a, b) => b.updatedDate.compareTo(a.updatedDate)),
+      ),
+    );
   }
 
   Future<void> _updateConsentFormsEvent(

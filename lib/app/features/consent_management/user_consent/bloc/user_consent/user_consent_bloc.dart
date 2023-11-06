@@ -187,30 +187,5 @@ class UserConsentBloc extends Bloc<UserConsentEvent, UserConsentState> {
         newMadatory..sort((a, b) => a.priority.compareTo(b.priority)),
       ),
     );
-
-    // List<UserConsentModel> newUserConsent = [];
-
-    // for (UserConsentModel userConsent in userConsents) {
-    //   bool isTitleFound = false;
-
-    //   if (userConsent.mandatoryFields.toString().contains(event.search)) {
-    //     isTitleFound = true;
-    //   }
-
-    //   if (isTitleFound) {
-    //     newUserConsent.add(userConsent);
-    //   }
-    // }
-
-    // emit(
-    //   GotUserConsents(
-    //     newUserConsent
-    //       ..sort((a, b) => b.updatedDate.compareTo(a.updatedDate)),
-    //     gotConsentForms,
-    //     mandatoryFields..sort((a, b) => a.priority.compareTo(b.priority)),
-    //   ),
-    // );
-    //   },
-    // );
   }
 }

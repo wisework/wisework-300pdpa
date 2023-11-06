@@ -39,12 +39,18 @@ class _ConsentFormScreenState extends State<ConsentFormScreen> {
     _initialData();
   }
 
-  void _initialData() {
+    void _initialData() {
     final bloc = context.read<SignInBloc>();
 
+    String companyId = '';
     if (bloc.state is SignedInUser) {
+      companyId = (bloc.state as SignedInUser).user.currentCompany;
       language = (bloc.state as SignedInUser).user.defaultLanguage;
     }
+
+    context
+        .read<ConsentFormBloc>()
+        .add(GetConsentFormsEvent(companyId: companyId));
   }
 
   @override

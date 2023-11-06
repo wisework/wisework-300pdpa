@@ -9,6 +9,7 @@ import 'package:pdpa/app/config/config.dart';
 import 'package:pdpa/app/data/models/consent_management/consent_form_model.dart';
 import 'package:pdpa/app/data/models/consent_management/user_consent_model.dart';
 import 'package:pdpa/app/data/models/etc/user_input_text.dart';
+import 'package:pdpa/app/data/models/master_data/mandatory_field_model.dart';
 import 'package:pdpa/app/features/authentication/bloc/sign_in/sign_in_bloc.dart';
 import 'package:pdpa/app/features/consent_management/consent_form/routes/consent_form_route.dart';
 import 'package:pdpa/app/features/consent_management/user_consent/bloc/user_consent/user_consent_bloc.dart';
@@ -40,7 +41,7 @@ class _UserConsentScreenState extends State<UserConsentScreen> {
   void _initialData() {
     final bloc = context.read<SignInBloc>();
 
-String companyId = '';
+    String companyId = '';
     if (bloc.state is SignedInUser) {
       companyId = (bloc.state as SignedInUser).user.currentCompany;
       language = (bloc.state as SignedInUser).user.defaultLanguage;
@@ -75,8 +76,12 @@ class _UserConsentViewState extends State<UserConsentView> {
     final bloc = context.read<UserConsentBloc>();
 
     List<UserConsentModel> userConsents = [];
+    List<ConsentFormModel> consenForms = [];
+    List<MandatoryFieldModel> mandatoryFields = [];
     if (bloc.state is GotUserConsents) {
       userConsents = (bloc.state as GotUserConsents).userConsents;
+      consenForms = (bloc.state as GotUserConsents).consentForms;
+      mandatoryFields = (bloc.state as GotUserConsents).mandatoryFields;
     }
 
     showBarModalBottomSheet(
@@ -84,6 +89,8 @@ class _UserConsentViewState extends State<UserConsentView> {
       backgroundColor: Colors.transparent,
       builder: (context) => SearchUserConsentModal(
         initialUserConsents: userConsents,
+        initialConsentForms: consenForms,
+        initialMadatoryFields: mandatoryFields,
         language: widget.language,
       ),
     );
@@ -175,6 +182,7 @@ class _UserConsentViewState extends State<UserConsentView> {
                                 shrinkWrap: true,
                                 itemCount: consentForms.length,
                                 itemBuilder: (context, index) {
+                                  print(state.userConsents[index]);
                                   return _buildItemCard(
                                     context,
                                     userConsent: state.userConsents[index],

@@ -14,7 +14,6 @@ import 'package:pdpa/app/shared/widgets/customs/custom_container.dart';
 import 'package:pdpa/app/shared/widgets/customs/custom_icon_button.dart';
 import 'package:pdpa/app/shared/widgets/customs/custom_text_field.dart';
 import 'package:pdpa/app/shared/widgets/material_ink_well.dart';
-import 'package:pdpa/app/shared/widgets/screens/example_screen.dart';
 
 class SearchConsentFormModal extends StatefulWidget {
   const SearchConsentFormModal({
@@ -138,20 +137,7 @@ class _SearchConsentFormModalState extends State<SearchConsentFormModal> {
                     );
                   }
 
-                  return ExampleScreen(
-                    //! FIX
-                    headderText:
-                        tr('consentManagement.consentForm.consentForms'),
-                    buttonText:
-                        tr('consentManagement.consentForm.createForm.create'),
-                    descriptionText:
-                        tr('consentManagement.consentForm.explain'),
-                    onPress: () {
-                      context.push(
-                        ConsentFormRoute.createConsentForm.path,
-                      );
-                    },
-                  );
+                  return _buildResultNotFound(context);
                 },
               ),
             ),
@@ -273,6 +259,34 @@ class _SearchConsentFormModalState extends State<SearchConsentFormModal> {
           child: Divider(
             color:
                 Theme.of(context).colorScheme.outlineVariant.withOpacity(0.5),
+          ),
+        ),
+      ],
+    );
+  }
+
+  Column _buildResultNotFound(BuildContext context) {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.center,
+      mainAxisAlignment: MainAxisAlignment.center,
+      children: [
+        const SizedBox(height: UiConfig.lineSpacing),
+        Image.asset(
+          'assets/images/general/result-not-found.png',
+        ),
+        Text(
+          tr('app.features.resultNotFound'),
+          style: Theme.of(context).textTheme.titleMedium,
+        ),
+        const SizedBox(height: UiConfig.lineSpacing),
+        Padding(
+          padding: const EdgeInsets.symmetric(
+            horizontal: UiConfig.defaultPaddingSpacing * 2,
+          ),
+          child: Text(
+            tr('app.features.description'),
+            textAlign: TextAlign.center,
+            style: Theme.of(context).textTheme.labelLarge,
           ),
         ),
       ],

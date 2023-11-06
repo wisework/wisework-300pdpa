@@ -8,23 +8,26 @@ import 'package:pdpa/app/data/models/authentication/user_model.dart';
 import 'package:pdpa/app/data/models/consent_management/consent_form_model.dart';
 import 'package:pdpa/app/data/models/consent_management/user_consent_model.dart';
 import 'package:pdpa/app/data/models/etc/user_input_text.dart';
+import 'package:pdpa/app/data/models/master_data/mandatory_field_model.dart';
 import 'package:pdpa/app/features/authentication/bloc/sign_in/sign_in_bloc.dart';
-import 'package:pdpa/app/features/consent_management/consent_form/routes/consent_form_route.dart';
 import 'package:pdpa/app/features/consent_management/user_consent/cubit/search_user_consent_cubit.dart';
 import 'package:pdpa/app/features/consent_management/user_consent/routes/user_consent_route.dart';
 import 'package:pdpa/app/shared/widgets/customs/custom_container.dart';
 import 'package:pdpa/app/shared/widgets/customs/custom_icon_button.dart';
 import 'package:pdpa/app/shared/widgets/customs/custom_text_field.dart';
 import 'package:pdpa/app/shared/widgets/material_ink_well.dart';
-import 'package:pdpa/app/shared/widgets/screens/example_screen.dart';
 
 class SearchUserConsentModal extends StatefulWidget {
   const SearchUserConsentModal({
     super.key,
     required this.initialUserConsents,
+    required this.initialConsentForms,
+    required this.initialMadatoryFields,
     required this.language,
   });
   final List<UserConsentModel> initialUserConsents;
+  final List<ConsentFormModel> initialConsentForms;
+  final List<MandatoryFieldModel> initialMadatoryFields;
   final String language;
   @override
   State<SearchUserConsentModal> createState() => _SearchUserConsentModalState();
@@ -63,6 +66,8 @@ class _SearchUserConsentModalState extends State<SearchUserConsentModal> {
       create: (context) => SearchUserConsentCubit()
         ..initialUserConsent(
           widget.initialUserConsents,
+          widget.initialConsentForms,
+          widget.initialMadatoryFields,
         ),
       child: CustomContainer(
         margin: EdgeInsets.zero,
@@ -120,44 +125,26 @@ class _SearchUserConsentModalState extends State<SearchUserConsentModal> {
                     BlocBuilder<SearchUserConsentCubit, SearchUserConsentState>(
                   builder: (context, state) {
                     if (state.userConsents.isNotEmpty) {
-                      // final consentForms = state.userConsents //!
-                      //     .map((e) => e.consentFormId)
-                      //     .toList();
-
                       return ListView.builder(
                         shrinkWrap: true,
                         itemCount: state.userConsents.length,
                         itemBuilder: (context, index) {
-                          return Text('test'' $index'); //!
-                          // return _buildItemCard(
-                          //   context,
-                          //   userConsent: state.userConsents[index],
-                          //   consentForm: state.userConsents.firstWhere(
-                          //     (role) =>
-                          //         role.id ==
-                          //         state.userConsents[index].consentFormId,
-                          //     orElse: () => ConsentFormModel.empty(),
-                          //   ),
-                          //   mandatorySelected: state.mandatoryFields.first.id,
-                          // );
+                          return _buildItemCard(
+                            context,
+                            userConsent: state.userConsents[index],
+                            consentForm: state.consentForms.firstWhere(
+                              (role) =>
+                                  role.id ==
+                                  state.userConsents[index].consentFormId,
+                              orElse: () => ConsentFormModel.empty(),
+                            ),
+                            mandatorySelected: state.mandatoryFields.first.id,
+                          );
                         },
                       );
                     }
 
-                    return ExampleScreen(
-                      //! FIX
-                      headderText:
-                          tr('consentManagement.consentForm.consentForms'),
-                      buttonText:
-                          tr('consentManagement.consentForm.createForm.create'),
-                      descriptionText:
-                          tr('consentManagement.consentForm.explain'),
-                      onPress: () {
-                        context.push(
-                          ConsentFormRoute.createConsentForm.path,
-                        );
-                      },
-                    );
+                    return _buildResultNotFound(context);
                   },
                 ),
               ),
@@ -248,6 +235,34 @@ class _SearchUserConsentModalState extends State<SearchUserConsentModal> {
           child: Divider(
             color:
                 Theme.of(context).colorScheme.outlineVariant.withOpacity(0.5),
+          ),
+        ),
+      ],
+    );
+  }
+
+  Column _buildResultNotFound(BuildContext context) {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.center,
+      mainAxisAlignment: MainAxisAlignment.center,
+      children: [
+        const SizedBox(height: UiConfig.lineSpacing),
+        Image.asset(
+          'assets/images/general/result-not-found.png',
+        ),
+        Text(
+          tr('app.features.resultNotFound'),
+          style: Theme.of(context).textTheme.titleMedium,
+        ),
+        const SizedBox(height: UiConfig.lineSpacing),
+        Padding(
+          padding: const EdgeInsets.symmetric(
+            horizontal: UiConfig.defaultPaddingSpacing * 2,
+          ),
+          child: Text(
+            tr('app.features.description'),
+            textAlign: TextAlign.center,
+            style: Theme.of(context).textTheme.labelLarge,
           ),
         ),
       ],

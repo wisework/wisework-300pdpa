@@ -1,8 +1,10 @@
 import 'package:bloc/bloc.dart';
 import 'package:equatable/equatable.dart';
+import 'package:pdpa/app/data/models/consent_management/consent_form_model.dart';
 import 'package:pdpa/app/data/models/consent_management/user_consent_model.dart';
+import 'package:pdpa/app/data/models/etc/user_input_text.dart';
 import 'package:pdpa/app/data/models/master_data/localized_model.dart';
-import 'package:pdpa/app/data/models/master_data/purpose_category_model.dart';
+import 'package:pdpa/app/data/models/master_data/mandatory_field_model.dart';
 
 part 'search_user_consent_state.dart';
 
@@ -11,13 +13,25 @@ class SearchUserConsentCubit extends Cubit<SearchUserConsentState> {
       : super(const SearchUserConsentState(
           initialUserConsents: [],
           userConsents: [],
+          initialConsentForms: [],
+          consentForms: [],
+          initialMandatoryFields: [],
+          mandatoryFields: [],
         ));
 
-  void initialUserConsent(List<UserConsentModel> userConsents) {
+  void initialUserConsent(
+    List<UserConsentModel> userConsents,
+    List<ConsentFormModel> consentForms,
+    List<MandatoryFieldModel> mandatoryFields,
+  ) {
     emit(
       state.copyWith(
         initialUserConsents: userConsents,
         userConsents: userConsents,
+        initialConsentForms: consentForms,
+        consentForms: consentForms,
+        initialMandatoryFields: mandatoryFields,
+        mandatoryFields: mandatoryFields,
       ),
     );
   }
@@ -25,61 +39,52 @@ class SearchUserConsentCubit extends Cubit<SearchUserConsentState> {
   void searchUserConsent(String search, String language) {
     if (search.isEmpty) {
       emit(state.copyWith(userConsents: state.initialUserConsents));
+      emit(state.copyWith(consentForms: state.initialConsentForms));
+      emit(state.copyWith(mandatoryFields: state.initialMandatoryFields));
       return;
     }
 
     List<UserConsentModel> searchResult = [];
-//!
-    // searchResult = state.initialUserConsents.where((userConsent) {
-    //   if (userConsent.title.isNotEmpty) {
-    //     final title = userConsent.title
-    //         .firstWhere(
-    //           (item) => item.language == language,
-    //           orElse: () => const LocalizedModel.empty(),
-    //         )
-    //         .text;
-    //     final description = userConsent.description
-    //         .firstWhere(
-    //           (item) => item.language == language,
-    //           orElse: () => const LocalizedModel.empty(),
-    //         )
-    //         .text;
+// !
 
-    //     if (title.contains(search) || description.contains(search)) return true;
-    //   }
+    searchResult = state.userConsents.where((userConsent) {
+      if (userConsent.mandatoryFields.isNotEmpty) {
+        final title = userConsent.mandatoryFields
+            .firstWhere(
+              (mandatoryField) =>
+                  mandatoryField.id == state.mandatoryFields.first.id,
+              orElse: () => const UserInputText.empty(),
+            )
+            .text;
 
-    //   return false;
-    // }).toList();
+        if (title.contains(search)) return true;
+      }
 
-    // final searchAtPurposeCategory =
-    //     state.initialUserConsents.where((userConsent) {
-    //   for (PurposeCategoryModel category in userConsent.purposeCategories) {
-    //     final title = category.title
-    //         .firstWhere(
-    //           (item) => item.language == language,
-    //           orElse: () => const LocalizedModel.empty(),
-    //         )
-    //         .text;
-    //     final description = category.description
-    //         .firstWhere(
-    //           (item) => item.language == language,
-    //           orElse: () => const LocalizedModel.empty(),
-    //         )
-    //         .text;
+      return false;
+    }).toList();
 
-    //     if (title.contains(search) || description.contains(search)) return true;
-    //   }
+    final searchAtConsentForm = state.userConsents.where((consentForm) {
+      for (ConsentFormModel consent in state.consentForms) {
+        final title = consent.title
+            .firstWhere(
+              (item) => item.language == language,
+              orElse: () => const LocalizedModel.empty(),
+            )
+            .text;
 
-    //   return false;
-    // }).toList();
+        if (title.contains(search)) return true;
+      }
+
+      return false;
+    }).toList();
 
     final currentResultIds =
-        searchResult.map((userConsent) => userConsent.id).toList();
-    // for (UserConsentModel userConsent in searchAtPurposeCategory) {
-    //   if (!currentResultIds.contains(userConsent.id)) {
-    //     searchResult.add(userConsent);
-    //   }
-    // }
+        searchResult.map((mandatory) => mandatory.consentFormId).toList();
+    for (UserConsentModel consentForm in searchAtConsentForm) {
+      if (!currentResultIds.contains(consentForm.id)) {
+        searchResult.add(consentForm);
+      }
+    }
 
     emit(
       state.copyWith(
