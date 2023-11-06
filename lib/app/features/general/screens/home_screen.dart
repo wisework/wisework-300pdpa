@@ -665,9 +665,13 @@ class _HomeViewState extends State<HomeView> {
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: <Widget>[
-              Text(
-                tr('general.home.recentlyUsed'),
-                style: Theme.of(context).textTheme.titleLarge,
+              Expanded(
+                child: Text(
+                  tr('general.home.recentlyUsed'),
+                  style: Theme.of(context).textTheme.titleLarge,
+                  overflow: TextOverflow.ellipsis,
+                  maxLines: 1,
+                ),
               ),
               BlocBuilder<UserConsentBloc, UserConsentState>(
                 builder: (context, state) {

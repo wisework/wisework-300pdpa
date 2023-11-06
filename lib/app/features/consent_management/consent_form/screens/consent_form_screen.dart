@@ -39,7 +39,7 @@ class _ConsentFormScreenState extends State<ConsentFormScreen> {
     _initialData();
   }
 
-    void _initialData() {
+  void _initialData() {
     final bloc = context.read<SignInBloc>();
 
     String companyId = '';
@@ -142,22 +142,30 @@ class _ConsentFormViewState extends State<ConsentFormView> {
               child: Column(
                 children: <Widget>[
                   Padding(
-                    padding: const EdgeInsets.only(
-                        left: UiConfig.defaultPaddingSpacing,
-                        right: UiConfig.defaultPaddingSpacing),
+                    padding: const EdgeInsets.symmetric(
+                        horizontal: UiConfig.defaultPaddingSpacing),
                     child: Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       crossAxisAlignment: CrossAxisAlignment.center,
                       children: <Widget>[
-                        Text(
-                          'รายการความยินยอม', //!
-                          style: Theme.of(context).textTheme.titleMedium,
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.start,
+                          children: [
+                            Text(
+                              'รายการความยินยอม', //!
+                              style: Theme.of(context).textTheme.titleMedium,
+                            ),
+                          ],
                         ),
-                        _sortByDateButton(context),
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.end,
+                          children: [
+                            _sortByDateButton(context),
+                          ],
+                        ),
                       ],
                     ),
                   ),
-                  const SizedBox(height: UiConfig.lineSpacing),
                   Expanded(
                     child: BlocBuilder<ConsentFormBloc, ConsentFormState>(
                       builder: (context, state) {
@@ -187,11 +195,11 @@ class _ConsentFormViewState extends State<ConsentFormView> {
                                       'consentManagement.consentForm.consentForms'),
                                   buttonText: tr(
                                       'consentManagement.consentForm.createForm.create'),
-                                  descriptionText:
-                                      tr('consentManagement.consentForm.explain'),
+                                  descriptionText: tr(
+                                      'consentManagement.consentForm.explain'),
                                   onPress: () {
-                                    context.push(
-                                        ConsentFormRoute.createConsentForm.path);
+                                    context.push(ConsentFormRoute
+                                        .createConsentForm.path);
                                   });
                         }
                         if (state is ConsentFormError) {
