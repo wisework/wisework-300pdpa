@@ -1,12 +1,11 @@
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:pdpa/app/config/config.dart';
-import 'package:pdpa/app/features/general/bloc/theme_provider.dart';
+import 'package:pdpa/app/config/provider/theme_provider.dart';
 import 'package:pdpa/app/config/themes/pdpa_theme_data.dart';
 import 'package:pdpa/app/data/models/authentication/user_model.dart';
 import 'package:pdpa/app/features/authentication/bloc/sign_in/sign_in_bloc.dart';
 import 'package:pdpa/app/shared/drawers/pdpa_drawer.dart';
-import 'package:pdpa/app/shared/utils/user_preferences.dart';
 import 'package:pdpa/app/shared/widgets/customs/custom_container.dart';
 import 'package:pdpa/app/shared/widgets/customs/custom_icon_button.dart';
 import 'package:pdpa/app/shared/widgets/templates/pdpa_app_bar.dart';
@@ -104,12 +103,10 @@ class _SettingViewState extends State<SettingView> {
   //   }
   // }
 
-  void _toggleTheme() {
-    Provider.of<ThemeProvider>(context, listen: false).toggleTheme();
-  }
-
   @override
   Widget build(BuildContext context) {
+    final themeProvider = Provider.of<ThemeProvider>(context);
+
     return Scaffold(
       key: _scaffoldKey,
       appBar: PdpaAppBar(
@@ -132,7 +129,7 @@ class _SettingViewState extends State<SettingView> {
             // const SizedBox(height: UiConfig.lineSpacing),
             // _buildGeneralSection(),
             const SizedBox(height: UiConfig.lineSpacing),
-            _buildThemeSwitchButton(),
+            _buildThemeSwitchButton(themeProvider),
           ],
         ),
       ),
@@ -144,7 +141,7 @@ class _SettingViewState extends State<SettingView> {
     );
   }
 
-  Widget _buildThemeSwitchButton() {
+  Widget _buildThemeSwitchButton(ThemeProvider themeProvider) {
     return CustomContainer(
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -154,14 +151,9 @@ class _SettingViewState extends State<SettingView> {
             style: Theme.of(context).textTheme.bodyMedium,
           ),
           Switch(
-            value: context.watch<ThemeProvider>().currentTheme ==
-                PdpaThemeData.darkThemeData,
-            onChanged: (value) async {
-              await UserPreferences.setBool(
-                AppPreferences.isDarkMode,
-                value,
-              );
-              _toggleTheme();
+            value: themeProvider.currentTheme == PdpaThemeData.darkThemeData,
+            onChanged: (value) {
+              themeProvider.toggleTheme();
             },
           ),
         ],

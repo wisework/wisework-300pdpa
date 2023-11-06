@@ -6,7 +6,6 @@ import 'package:pdpa/app/config/config.dart';
 import 'package:pdpa/app/data/models/authentication/user_model.dart';
 import 'package:pdpa/app/data/models/etc/updated_return.dart';
 import 'package:pdpa/app/data/models/etc/user_company_role.dart';
-import 'package:pdpa/app/features/authentication/bloc/sign_in/sign_in_bloc.dart';
 import 'package:pdpa/app/features/authentication/routes/authentication_route.dart';
 import 'package:pdpa/app/features/user/bloc/edit_user/edit_user_bloc.dart';
 import 'package:pdpa/app/injection.dart';
@@ -15,13 +14,14 @@ import 'package:pdpa/app/shared/utils/toast.dart';
 import 'package:pdpa/app/shared/widgets/customs/custom_container.dart';
 import 'package:pdpa/app/shared/widgets/customs/custom_dropdown_button.dart';
 import 'package:pdpa/app/shared/widgets/customs/custom_icon_button.dart';
+import 'package:pdpa/app/shared/widgets/customs/custom_radio_button.dart';
 import 'package:pdpa/app/shared/widgets/customs/custom_text_field.dart';
 import 'package:pdpa/app/shared/widgets/screens/error_message_screen.dart';
 import 'package:pdpa/app/shared/widgets/screens/loading_screen.dart';
 import 'package:pdpa/app/shared/widgets/templates/pdpa_app_bar.dart';
 import 'package:pdpa/app/shared/widgets/title_required_text.dart';
 
-class EditUserScreen extends StatefulWidget {
+class EditUserScreen extends StatelessWidget {
   const EditUserScreen({
     super.key,
     required this.userId,
@@ -30,43 +30,16 @@ class EditUserScreen extends StatefulWidget {
   final String userId;
 
   @override
-  State<EditUserScreen> createState() => _EditUserScreenState();
-}
-
-class _EditUserScreenState extends State<EditUserScreen> {
-  late UserModel currentUser;
-
-  @override
-  void initState() {
-    super.initState();
-
-    _initialData();
-  }
-
-  Future<void> _initialData() async {
-    final bloc = context.read<SignInBloc>();
-    if (bloc.state is SignedInUser) {
-      currentUser = (bloc.state as SignedInUser).user;
-    } else {
-      currentUser = UserModel.empty();
-
-      context.pushReplacement(AuthenticationRoute.signIn.path);
-      return;
-    }
-
-    if (!AppConfig.godIds.contains(currentUser.id)) {
-      await Future.delayed(const Duration(microseconds: 100)).then(
-          (_) => context.pushReplacement(AuthenticationRoute.splash.path));
-    }
-  }
-
-  @override
   Widget build(BuildContext context) {
     return BlocProvider<EditUserBloc>(
       create: (context) => serviceLocator<EditUserBloc>()
-        ..add(GetCurrentUserEvent(userId: widget.userId)),
+        ..add(GetCurrentUserEvent(userId: userId)),
       child: BlocConsumer<EditUserBloc, EditUserState>(
         listener: (context, state) {
+          if (state is EditUserNoAccess) {
+            context.pushReplacement(AuthenticationRoute.splash.path);
+          }
+
           if (state is CreatedCurrentUser) {
             showToast(
               context,
@@ -109,13 +82,15 @@ class _EditUserScreenState extends State<EditUserScreen> {
           if (state is GotCurrentUser) {
             return EditUserView(
               initialUser: state.user,
-              isNewUser: widget.userId.isEmpty,
+              isNewUser: userId.isEmpty,
+              creator: state.creator,
             );
           }
           if (state is UpdatedCurrentUser) {
             return EditUserView(
               initialUser: state.user,
-              isNewUser: widget.userId.isEmpty,
+              isNewUser: userId.isEmpty,
+              creator: state.creator,
             );
           }
           if (state is EditUserError) {
@@ -134,10 +109,12 @@ class EditUserView extends StatefulWidget {
     super.key,
     required this.initialUser,
     required this.isNewUser,
+    required this.creator,
   });
 
   final UserModel initialUser;
   final bool isNewUser;
+  final UserModel creator;
 
   @override
   State<EditUserView> createState() => _EditUserViewState();
@@ -152,12 +129,15 @@ class _EditUserViewState extends State<EditUserView> {
   late TextEditingController phoneNumberController;
   late TextEditingController citizenIdController;
   late TextEditingController companyIdController;
+  late TextEditingController companyNameController;
 
   // late List<UserCompanyRole> userCompanyRoles;
   late int roleSelected;
   late bool isActivated;
 
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
+
+  int companyOption = 0;
 
   @override
   void initState() {
@@ -174,6 +154,7 @@ class _EditUserViewState extends State<EditUserView> {
     phoneNumberController.dispose();
     citizenIdController.dispose();
     companyIdController.dispose();
+    companyNameController.dispose();
 
     super.dispose();
   }
@@ -187,6 +168,7 @@ class _EditUserViewState extends State<EditUserView> {
     phoneNumberController = TextEditingController();
     citizenIdController = TextEditingController();
     companyIdController = TextEditingController();
+    companyNameController = TextEditingController();
 
     // userCompanyRoles = [];
     roleSelected = 2;
@@ -227,15 +209,18 @@ class _EditUserViewState extends State<EditUserView> {
 
       if (widget.isNewUser) {
         user = user.setCreate(
-          AppConfig.notificationEmail,
+          widget.creator.email,
           DateTime.now(),
         );
 
-        final event = CreateCurrentUserEvent(user: user);
+        final event = CreateCurrentUserEvent(
+          user: user,
+          companyName: companyNameController.text,
+        );
         context.read<EditUserBloc>().add(event);
       } else {
         user = user.setUpdate(
-          AppConfig.notificationEmail,
+          widget.creator.email,
           DateTime.now(),
         );
 
@@ -405,72 +390,128 @@ class _EditUserViewState extends State<EditUserView> {
           ],
         ),
         const SizedBox(height: UiConfig.lineSpacing),
-        Row(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: <Widget>[
-            Expanded(
-              child: CustomTextField(
-                controller: companyIdController,
-                hintText: 'Enter your company ID',
-                onChanged: (value) {
-                  setState(() {
-                    user = user.copyWith(
-                      roles: user.roles.isEmpty
-                          ? [
-                              UserCompanyRole(
-                                id: value,
-                                role: UserRoles.values[roleSelected],
-                              )
-                            ]
-                          : [user.roles.first.copyWith(id: value)],
-                      companies: [companyIdController.text],
-                      currentCompany: companyIdController.text,
-                    );
-                  });
-                },
-                required: true,
+        Visibility(
+          visible: widget.isNewUser,
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: <Widget>[
+              Row(
+                children: <Widget>[
+                  CustomRadioButton<int>(
+                    value: 0,
+                    selected: companyOption,
+                    onChanged: (value) {
+                      if (value != null) {
+                        setState(() {
+                          companyOption = value;
+                        });
+                      }
+                    },
+                  ),
+                  const SizedBox(width: UiConfig.actionSpacing),
+                  Text(
+                    'Add a company by existing ID',
+                    style: Theme.of(context).textTheme.bodyMedium,
+                  ),
+                ],
               ),
-            ),
-            const SizedBox(width: UiConfig.actionSpacing),
-            SizedBox(
-              width: 140.0,
-              child: CustomDropdownButton<int>(
-                value: roleSelected,
-                items: UserRoles.values.map(
-                  (role) {
-                    return DropdownMenuItem(
-                      value: role.index,
-                      child: Text(
-                        '${role.name[0].toUpperCase()}${role.name.substring(1)}',
-                        style: Theme.of(context).textTheme.bodyMedium,
-                      ),
-                    );
-                  },
-                ).toList(),
-                onSelected: (value) {
-                  if (value != null) {
-                    setState(() {
-                      roleSelected = value;
-                      user = user.copyWith(
-                        roles: user.roles.isEmpty
-                            ? [
-                                UserCompanyRole(
-                                  id: companyIdController.text,
-                                  role: UserRoles.values[roleSelected],
-                                )
-                              ]
-                            : [
-                                user.roles.first.copyWith(
-                                    role: UserRoles.values[roleSelected])
-                              ],
-                      );
-                    });
-                  }
-                },
+              const SizedBox(height: UiConfig.lineGap),
+              Row(
+                children: <Widget>[
+                  CustomRadioButton<int>(
+                    value: 1,
+                    selected: companyOption,
+                    onChanged: (value) {
+                      if (value != null) {
+                        setState(() {
+                          companyOption = value;
+                        });
+                      }
+                    },
+                  ),
+                  const SizedBox(width: UiConfig.actionSpacing),
+                  Text(
+                    'Add a new company',
+                    style: Theme.of(context).textTheme.bodyMedium,
+                  ),
+                ],
               ),
-            ),
-          ],
+              const SizedBox(height: UiConfig.lineSpacing),
+            ],
+          ),
         ),
+        companyOption == 0
+            ? Row(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: <Widget>[
+                  Expanded(
+                    child: CustomTextField(
+                      controller: companyIdController,
+                      hintText: 'Enter your company ID',
+                      onChanged: (value) {
+                        setState(() {
+                          user = user.copyWith(
+                            roles: user.roles.isEmpty
+                                ? [
+                                    UserCompanyRole(
+                                      id: value,
+                                      role: UserRoles.values[roleSelected],
+                                    )
+                                  ]
+                                : [user.roles.first.copyWith(id: value)],
+                            companies: [companyIdController.text],
+                            currentCompany: companyIdController.text,
+                          );
+                        });
+                      },
+                      required: true,
+                    ),
+                  ),
+                  const SizedBox(width: UiConfig.actionSpacing),
+                  SizedBox(
+                    width: 140.0,
+                    child: CustomDropdownButton<int>(
+                      value: roleSelected,
+                      items: UserRoles.values.map(
+                        (role) {
+                          return DropdownMenuItem(
+                            value: role.index,
+                            child: Text(
+                              '${role.name[0].toUpperCase()}${role.name.substring(1)}',
+                              style: Theme.of(context).textTheme.bodyMedium,
+                            ),
+                          );
+                        },
+                      ).toList(),
+                      onSelected: (value) {
+                        if (value != null) {
+                          setState(() {
+                            roleSelected = value;
+                            user = user.copyWith(
+                              roles: user.roles.isEmpty
+                                  ? [
+                                      UserCompanyRole(
+                                        id: companyIdController.text,
+                                        role: UserRoles.values[roleSelected],
+                                      )
+                                    ]
+                                  : [
+                                      user.roles.first.copyWith(
+                                          role: UserRoles.values[roleSelected])
+                                    ],
+                            );
+                          });
+                        }
+                      },
+                    ),
+                  ),
+                ],
+              )
+            : CustomTextField(
+                controller: companyNameController,
+                hintText: 'Enter your new company name',
+                required: companyOption == 1,
+              ),
         /*ListView.builder(
           physics: const NeverScrollableScrollPhysics(),
           shrinkWrap: true,

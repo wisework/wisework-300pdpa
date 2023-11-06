@@ -23,6 +23,13 @@ class EditUserError extends EditUserState {
   List<Object> get props => [message];
 }
 
+class EditUserNoAccess extends EditUserState {
+  const EditUserNoAccess();
+
+  @override
+  List<Object> get props => [];
+}
+
 class GettingCurrentUser extends EditUserState {
   const GettingCurrentUser();
 
@@ -31,12 +38,13 @@ class GettingCurrentUser extends EditUserState {
 }
 
 class GotCurrentUser extends EditUserState {
-  const GotCurrentUser(this.user);
+  const GotCurrentUser(this.user, this.creator);
 
   final UserModel user;
+  final UserModel creator;
 
   @override
-  List<Object> get props => [user];
+  List<Object> get props => [user, creator];
 }
 
 class CreatingCurrentUser extends EditUserState {
@@ -63,12 +71,13 @@ class UpdatingCurrentUser extends EditUserState {
 }
 
 class UpdatedCurrentUser extends EditUserState {
-  const UpdatedCurrentUser(this.user);
+  const UpdatedCurrentUser(this.user, this.creator);
 
   final UserModel user;
+  final UserModel creator;
 
   @override
-  List<Object> get props => [user];
+  List<Object> get props => [user, creator];
 }
 
 class DeletingCurrentUser extends EditUserState {

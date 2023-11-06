@@ -3,7 +3,8 @@ import 'package:easy_localization/easy_localization.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:pdpa/app/features/general/bloc/theme_provider.dart';
+import 'package:pdpa/app/config/provider/theme_provider.dart';
+import 'package:pdpa/app/shared/utils/user_preferences.dart';
 import 'package:provider/provider.dart';
 import 'app/config/config.dart';
 import 'app/config/provider/global_bloc_provider.dart';
@@ -19,9 +20,11 @@ void main() async {
 
   await initLocator();
 
+  final isDarkMode = await UserPreferences.getBool(AppPreferences.isDarkMode);
+
   runApp(
     ChangeNotifierProvider(
-      create: (context) => ThemeProvider(),
+      create: (context) => ThemeProvider(isDarkMode ?? false),
       child: EasyLocalization(
         supportedLocales: const [Locale('en', 'US'), Locale('th', 'TH')],
         path: 'lib/app/localization',

@@ -21,7 +21,6 @@ class AppConfig {
   static const String notificationEmail = 'notifications.wisework@gmail.com';
   static const List<String> godIds = [
     'm23GKVPRbjVtZv5PjURy',
-    'gNL33nfdaXycVAMqwTHG',
     'eR4l6QOXAUvmyaL3TFHj',
     'DNx3u82tT1QoVWwO9a0j',
     '0nJUnuW765fkHuw0NlQC',
