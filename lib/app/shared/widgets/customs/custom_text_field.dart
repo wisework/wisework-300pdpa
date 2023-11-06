@@ -156,7 +156,7 @@ class _CustomTextFieldState extends State<CustomTextField> {
                   isObscured ? Ionicons.eye_off_outline : Ionicons.eye_outline,
                   size: 18.0,
                   color: isObscured
-                      ? Theme.of(context).colorScheme.outlineVariant
+                      ? Theme.of(context).colorScheme.onTertiary
                       : Theme.of(context).colorScheme.primary,
                 ),
               ),

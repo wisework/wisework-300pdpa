@@ -37,8 +37,6 @@ class ConsentInfoTab extends StatefulWidget {
 
 class _ConsentInfoTabState extends State<ConsentInfoTab> {
   late UserModel currentUser;
-  late String consentId;
-  late String language;
 
   @override
   void initState() {
@@ -51,7 +49,6 @@ class _ConsentInfoTabState extends State<ConsentInfoTab> {
     final bloc = context.read<SignInBloc>();
     if (bloc.state is SignedInUser) {
       currentUser = (bloc.state as SignedInUser).user;
-      language = currentUser.defaultLanguage;
     } else {
       currentUser = UserModel.empty();
     }
@@ -59,75 +56,164 @@ class _ConsentInfoTabState extends State<ConsentInfoTab> {
 
   @override
   Widget build(BuildContext context) {
-    final title = widget.consentForm.title.firstWhere(
-      (item) => item.language == language,
-      orElse: () => const LocalizedModel.empty(),
-    );
-
-    final description = widget.consentForm.description.firstWhere(
-      (item) => item.language == language,
-      orElse: () => const LocalizedModel.empty(),
-    );
-
     return SingleChildScrollView(
       child: Column(
         children: <Widget>[
           const SizedBox(height: UiConfig.lineSpacing),
           CustomContainer(
-            child: widget.consentForm.id.isNotEmpty
-                ? _consentInfo(
-                    context,
-                    title,
-                    description,
-                  )
-                : Padding(
-                    padding: const EdgeInsets.all(20.0),
-                    child: Center(
-                      child: Text(
-                        tr('consentManagement.consentForm.congratulations.noConsentDetails'),
-                        style: Theme.of(context).textTheme.labelLarge?.copyWith(
-                            color: Theme.of(context).colorScheme.onSurface),
-                      ),
-                    ),
-                  ),
+            child: _buildConsentForm(context),
           ),
-          const SizedBox(height: UiConfig.lineSpacing),
-          // Padding(
-          //   padding: const EdgeInsets.symmetric(vertical: UiConfig.lineSpacing),
-          //   child: Divider(
-          //     color: Theme.of(context).colorScheme.outline,
-          //     thickness: 0.3,
-          //   ),
-          // ),
-          CustomContainer(child: _customFieldInfo(context, language)),
-          const SizedBox(height: UiConfig.lineSpacing),
-
-          // Padding(
-          //   padding: const EdgeInsets.symmetric(vertical: UiConfig.lineSpacing),
-          //   child: Divider(
-          //     color: Theme.of(context).colorScheme.outline,
-          //     thickness: 0.3,
-          //   ),
-          // ),
-          CustomContainer(child: _purposeCategoriesInfo(context, language)),
           const SizedBox(height: UiConfig.lineSpacing),
         ],
       ),
     );
   }
 
-  Column _purposeCategoriesInfo(BuildContext context, String language) {
-    final purposeCategoryFiltered = UtilFunctions.filterPurposeCategoriesByIds(
-      widget.purposeCategories,
-      widget.consentForm.purposeCategories.map((item) => item.id).toList(),
+  Column _buildConsentForm(BuildContext context) {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Text(
+          tr('consentManagement.consentForm.congratulations.created'),
+          style: Theme.of(context).textTheme.titleMedium,
+        ),
+        widget.consentForm.id.isNotEmpty
+            ? _buildConsentInfo(context)
+            : Padding(
+                padding: const EdgeInsets.all(20.0),
+                child: Center(
+                  child: Text(
+                    tr('consentManagement.consentForm.congratulations.noConsentDetails'),
+                    style: Theme.of(context).textTheme.labelLarge,
+                  ),
+                ),
+              ),
+        const SizedBox(height: UiConfig.lineSpacing),
+        _buildCustomFieldInfo(context),
+        const SizedBox(height: UiConfig.lineSpacing),
+        _buildPurposeCategoriesInfo(context),
+      ],
     );
+  }
+
+  Column _buildConsentInfo(BuildContext context) {
+    final title = widget.consentForm.title.firstWhere(
+      (item) => item.language == currentUser.defaultLanguage,
+      orElse: () => const LocalizedModel.empty(),
+    );
+
+    final description = widget.consentForm.description.firstWhere(
+      (item) => item.language == currentUser.defaultLanguage,
+      orElse: () => const LocalizedModel.empty(),
+    );
+
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: <Widget>[
+        Text("ID: ${widget.consentForm.id}",
+            style: Theme.of(context).textTheme.bodyMedium),
+        Padding(
+          padding: const EdgeInsets.symmetric(vertical: 8.0),
+          child: Text(
+            title.text,
+            style:
+                Theme.of(context).textTheme.titleMedium?.copyWith(height: 1.6),
+          ),
+        ),
+        if (description.text.isNotEmpty)
+          Text(
+            description.text,
+            style:
+                Theme.of(context).textTheme.labelLarge?.copyWith(height: 1.8),
+          ),
+      ],
+    );
+  }
+
+  Column _buildCustomFieldInfo(BuildContext context) {
+    final mandatoryFiltered = UtilFunctions.filterMandatoryFieldsByIds(
+      widget.mandatoryFields,
+      widget.consentForm.mandatoryFields,
+    );
+
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: <Widget>[
         Padding(
-          padding: const EdgeInsets.all(UiConfig.textLineSpacing),
+          padding: const EdgeInsets.only(bottom: 8.0),
           child: Text(
-            tr("consentManagement.consentForm.consentFormDetails.Purposes"),
+            tr('consentManagement.consentForm.consentFormDetails.storedInformation'),
+            style: Theme.of(context)
+                .textTheme
+                .bodyMedium
+                ?.copyWith(color: Theme.of(context).colorScheme.surfaceTint),
+          ),
+        ),
+        mandatoryFiltered.isNotEmpty
+            ? ListView.builder(
+                shrinkWrap: true,
+                physics: const NeverScrollableScrollPhysics(),
+                itemCount: mandatoryFiltered.length,
+                itemBuilder: (_, index) {
+                  final title = mandatoryFiltered[index].title.firstWhere(
+                        (item) => item.language == currentUser.defaultLanguage,
+                        orElse: () => const LocalizedModel.empty(),
+                      );
+
+                  return Padding(
+                    padding: EdgeInsets.only(
+                      bottom: widget.mandatoryFields.last !=
+                              widget.mandatoryFields[index]
+                          ? 8.0
+                          : 0.0,
+                    ),
+                    child: Wrap(
+                      direction: Axis.horizontal,
+                      crossAxisAlignment: WrapCrossAlignment.center,
+                      children: <Widget>[
+                        Icon(
+                          Icons.circle,
+                          size: 8.0,
+                          color: Theme.of(context).colorScheme.onSurface,
+                        ),
+                        const SizedBox(width: 10.0),
+                        Text(
+                          title.text,
+                          style: Theme.of(context).textTheme.labelLarge,
+                        ),
+                      ],
+                    ),
+                  );
+                },
+              )
+            : Padding(
+                padding: const EdgeInsets.all(20.0),
+                child: Center(
+                  child: Text(
+                    tr('consentManagement.consentForm.consentFormDetails.noInputField'),
+                    style: Theme.of(context).textTheme.labelLarge,
+                  ),
+                ),
+              ),
+      ],
+    );
+  }
+
+  Column _buildPurposeCategoriesInfo(BuildContext context) {
+    final purposeCategoryFiltered = UtilFunctions.filterPurposeCategoriesByIds(
+      widget.purposeCategories,
+      widget.consentForm.purposeCategories
+          .map((category) => category.id)
+          .toList(),
+    );
+
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: <Widget>[
+        Padding(
+          padding: const EdgeInsets.only(bottom: 8.0),
+          child: Text(
+            tr('consentManagement.consentForm.consentFormDetails.Purposes'),
             style: Theme.of(context).textTheme.bodyMedium?.copyWith(
                   color: Theme.of(context).colorScheme.surfaceTint,
                 ),
@@ -140,50 +226,56 @@ class _ConsentInfoTabState extends State<ConsentInfoTab> {
                 itemCount: purposeCategoryFiltered.length,
                 itemBuilder: (_, index) {
                   final title = purposeCategoryFiltered[index].title.firstWhere(
-                        (item) => item.language == language,
+                        (item) => item.language == currentUser.defaultLanguage,
                         orElse: () => const LocalizedModel.empty(),
                       );
-                  return Column(
+
+                  return Row(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: <Widget>[
                       Padding(
-                        padding: const EdgeInsets.only(bottom: 8.0),
-                        child: Text(
-                          title.text,
-                          style: Theme.of(context)
-                              .textTheme
-                              .titleSmall
-                              ?.copyWith(
-                                height: 1.6,
-                                color: Theme.of(context).colorScheme.secondary,
-                              ),
+                        padding: const EdgeInsets.only(top: 6.0),
+                        child: Icon(
+                          Icons.circle,
+                          size: 8.0,
+                          color: Theme.of(context).colorScheme.onSurface,
                         ),
                       ),
-                      _purposesInfo(
-                          language, context, purposeCategoryFiltered[index]),
+                      const SizedBox(width: 10.0),
+                      Expanded(
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: <Widget>[
+                            Padding(
+                              padding: const EdgeInsets.only(bottom: 8.0),
+                              child: Text(
+                                title.text,
+                                style: Theme.of(context)
+                                    .textTheme
+                                    .titleSmall
+                                    ?.copyWith(height: 1.6),
+                              ),
+                            ),
+                            _buildPurposesInfo(
+                              context,
+                              purposeCategory: purposeCategoryFiltered[index],
+                            ),
+                          ],
+                        ),
+                      ),
                     ],
                   );
                 },
-                separatorBuilder: (context, _) => Padding(
-                  padding: const EdgeInsets.symmetric(
-                    vertical: UiConfig.lineSpacing,
-                  ),
-                  child: Divider(
-                    height: 0.1,
-                    color: Theme.of(context)
-                        .colorScheme
-                        .outlineVariant
-                        .withOpacity(0.6),
-                  ),
+                separatorBuilder: (context, _) => const SizedBox(
+                  height: UiConfig.lineSpacing,
                 ),
               )
             : Padding(
                 padding: const EdgeInsets.all(20.0),
                 child: Center(
                   child: Text(
-                    tr("consentManagement.consentForm.noPurposesAdded"),
-                    style: Theme.of(context).textTheme.labelLarge?.copyWith(
-                        color: Theme.of(context).colorScheme.onSurface),
+                    tr('consentManagement.consentForm.consentFormDetails.noPurposes'),
+                    style: Theme.of(context).textTheme.labelLarge,
                   ),
                 ),
               ),
@@ -191,19 +283,22 @@ class _ConsentInfoTabState extends State<ConsentInfoTab> {
     );
   }
 
-  ListView _purposesInfo(String language, BuildContext context,
-      PurposeCategoryModel purposeCategory) {
+  ListView _buildPurposesInfo(
+    BuildContext context, {
+    required PurposeCategoryModel purposeCategory,
+  }) {
     final purposeFiltered = UtilFunctions.filterPurposeByIds(
       widget.purposes,
       purposeCategory.purposes.map((purpose) => purpose.id).toList(),
     );
+
     return ListView.separated(
       shrinkWrap: true,
       physics: const NeverScrollableScrollPhysics(),
       itemCount: purposeFiltered.length,
       itemBuilder: (_, index) {
         final description = purposeFiltered[index].description.firstWhere(
-              (item) => item.language == language,
+              (item) => item.language == currentUser.defaultLanguage,
               orElse: () => const LocalizedModel.empty(),
             );
 
@@ -216,19 +311,17 @@ class _ConsentInfoTabState extends State<ConsentInfoTab> {
                 Expanded(
                   child: Text(
                     description.text,
-                    style: Theme.of(context).textTheme.labelLarge?.copyWith(
-                          height: 1.8,
-                          color: Theme.of(context).colorScheme.secondary,
-                        ),
+                    style: Theme.of(context)
+                        .textTheme
+                        .labelLarge
+                        ?.copyWith(height: 1.8),
                   ),
                 ),
                 Padding(
                   padding: const EdgeInsets.only(left: 30.0),
                   child: Text(
                     "${purposeFiltered[index].retentionPeriod} ${purposeFiltered[index].periodUnit}",
-                    style: Theme.of(context).textTheme.labelLarge?.copyWith(
-                          color: Theme.of(context).colorScheme.secondary,
-                        ),
+                    style: Theme.of(context).textTheme.labelLarge,
                   ),
                 ),
               ],
@@ -242,119 +335,10 @@ class _ConsentInfoTabState extends State<ConsentInfoTab> {
         ),
         child: Divider(
           height: 0.1,
-          color: Theme.of(context).colorScheme.outlineVariant.withOpacity(0.6),
+          thickness: 0.3,
+          color: Theme.of(context).colorScheme.outlineVariant,
         ),
       ),
-    );
-  }
-
-  Column _customFieldInfo(BuildContext context, String language) {
-    final mandatoryFiltered = UtilFunctions.filterMandatoryFieldsByIds(
-      widget.mandatoryFields,
-      widget.consentForm.mandatoryFields,
-    );
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: <Widget>[
-        Padding(
-          padding: const EdgeInsets.only(bottom: 8.0),
-          child: Text(
-            tr("consentManagement.consentForm.consentFormDetails.storedInformation"),
-            style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                  color: Theme.of(context).colorScheme.surfaceTint,
-                ),
-          ),
-        ),
-        mandatoryFiltered.isNotEmpty
-            ? ListView.builder(
-                shrinkWrap: true,
-                physics: const NeverScrollableScrollPhysics(),
-                itemCount: mandatoryFiltered.length,
-                itemBuilder: (_, index) {
-                  final title = mandatoryFiltered[index].title.firstWhere(
-                        (item) => item.language == language,
-                        orElse: () => const LocalizedModel.empty(),
-                      );
-                  return Padding(
-                    padding: EdgeInsets.only(
-                        bottom: widget.mandatoryFields.last !=
-                                widget.mandatoryFields[index]
-                            ? 8.0
-                            : 0.0),
-                    child: Wrap(
-                      direction: Axis.horizontal,
-                      crossAxisAlignment: WrapCrossAlignment.center,
-                      children: <Widget>[
-                        Icon(
-                          Icons.circle,
-                          size: 8,
-                          color: Theme.of(context).colorScheme.secondary,
-                        ),
-                        const SizedBox(width: 10.0),
-                        Text(title.text,
-                            style: Theme.of(context)
-                                .textTheme
-                                .labelLarge
-                                ?.copyWith(
-                                    color: Theme.of(context)
-                                        .colorScheme
-                                        .secondary)),
-                      ],
-                    ),
-                  );
-                },
-              )
-            : Padding(
-                padding: const EdgeInsets.all(20.0),
-                child: Center(
-                  child: Text(
-                    tr("consentManagement.consentForm.noInputFieldsAdded"),
-                    style: Theme.of(context).textTheme.labelLarge?.copyWith(
-                        color: Theme.of(context).colorScheme.onSurface),
-                  ),
-                ),
-              ),
-      ],
-    );
-  }
-
-  Column _consentInfo(
-      BuildContext context, LocalizedModel title, LocalizedModel description) {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: <Widget>[
-        Row(
-          mainAxisAlignment: MainAxisAlignment.start,
-          children: [
-            Text(
-              "ID: ${widget.consentForm.id}",
-              style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                    color: Theme.of(context).colorScheme.secondary,
-                  ),
-            ),
-          ],
-        ),
-        Padding(
-          padding: const EdgeInsets.symmetric(vertical: 8.0),
-          child: Text(
-            title.text == ''
-                ? tr('consentManagement.consentForm.titleNull')
-                : title.text,
-            style: Theme.of(context).textTheme.titleMedium?.copyWith(
-                  height: 1.6,
-                  color: Theme.of(context).colorScheme.onSurface,
-                ),
-          ),
-        ),
-        if (description.text.isNotEmpty)
-          Text(
-            description.text,
-            style: Theme.of(context).textTheme.labelLarge?.copyWith(
-                  height: 1.8,
-                  color: Theme.of(context).colorScheme.secondary,
-                ),
-          ),
-      ],
     );
   }
 }

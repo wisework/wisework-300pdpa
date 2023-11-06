@@ -16,19 +16,11 @@ class CurrentConsentFormDetailCubit
           ),
         );
 
-  Future<void> initialSettings(
-    ConsentThemeModel consentTheme,
-  ) async {
-    emit(
-      state.copyWith(
-        consentTheme: consentTheme,
-      ),
-    );
+  void initialSettings(ConsentThemeModel consentTheme) {
+    emit(state.copyWith(consentTheme: consentTheme));
   }
 
-  void setConsentForm(
-    ConsentFormModel consentForm,
-  ) {
+  void setConsentForm(ConsentFormModel consentForm) {
     emit(state.copyWith(
       consentForm: consentForm,
     ));

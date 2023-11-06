@@ -21,7 +21,7 @@ class MaterialInkWell extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Material(
-      color: backgroundColor ?? Theme.of(context).colorScheme.onPrimary,
+      color: backgroundColor ?? Colors.transparent,
       borderRadius: borderRadius ?? BorderRadius.circular(8.0),
       child: InkWell(
         onTap: onTap,

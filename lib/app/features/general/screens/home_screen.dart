@@ -439,10 +439,9 @@ class _HomeViewState extends State<HomeView> {
                   maxHeight: 200.0,
                 ),
                 child: Image.asset(
-                    (Theme.of(context).brightness == Brightness.light)
-                        ? 'assets/images/general/city-light.png'
-                        : 'assets/images/general/city-dark.png',
-                    fit: BoxFit.contain),
+                  'assets/images/general/city.png',
+                  fit: BoxFit.contain,
+                ),
               ),
             ),
             Positioned(
@@ -572,6 +571,7 @@ class _HomeViewState extends State<HomeView> {
     return SizedBox(
       width: 160.0,
       child: MaterialInkWell(
+        backgroundColor: Theme.of(context).colorScheme.onBackground,
         onTap: () {
           if (activity.path == "/user-consents") {
             final DrawerMenuModel menuSelect;
@@ -612,7 +612,7 @@ class _HomeViewState extends State<HomeView> {
             children: <Widget>[
               Container(
                 padding: const EdgeInsets.symmetric(
-                  vertical: 4.0,
+                  vertical: 5.0,
                   horizontal: 7.0,
                 ),
                 decoration: BoxDecoration(
@@ -620,7 +620,7 @@ class _HomeViewState extends State<HomeView> {
                   borderRadius: BorderRadius.circular(8.0),
                 ),
                 child: Padding(
-                  padding: const EdgeInsets.only(bottom: 6.0),
+                  padding: const EdgeInsets.only(bottom: 3.0),
                   child: Icon(
                     activity.icon,
                     color: Colors.white,
@@ -804,6 +804,7 @@ class _HomeViewState extends State<HomeView> {
         ],
       ),
       child: MaterialInkWell(
+        backgroundColor: Theme.of(context).colorScheme.onBackground,
         onTap: () {
           context.push(
             UserConsentRoute.userConsentDetail.path

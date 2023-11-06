@@ -86,7 +86,7 @@ class _ColorPickerButtonState extends State<ColorPickerButton> {
                 child: Icon(
                   Ionicons.caret_down_outline,
                   size: 14.0,
-                  color: Theme.of(context).colorScheme.secondary,
+                  color: Theme.of(context).colorScheme.onSurface,
                 ),
               ),
             ],

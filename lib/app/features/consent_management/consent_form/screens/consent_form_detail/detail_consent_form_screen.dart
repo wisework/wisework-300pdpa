@@ -19,6 +19,7 @@ import 'package:pdpa/app/features/consent_management/consent_form/screens/consen
 import 'package:pdpa/app/features/consent_management/consent_form/screens/consent_form_detail/tabs/consent_info_tab.dart';
 import 'package:pdpa/app/shared/utils/constants.dart';
 import 'package:pdpa/app/shared/widgets/customs/custom_icon_button.dart';
+import 'package:pdpa/app/shared/widgets/screens/error_message_screen.dart';
 import 'package:pdpa/app/shared/widgets/screens/loading_screen.dart';
 import 'package:pdpa/app/shared/widgets/templates/pdpa_app_bar.dart';
 
@@ -53,9 +54,6 @@ class _DetailConsentFormScreenState extends State<DetailConsentFormScreen> {
       currentUser = UserModel.empty();
     }
 
-    final cubit = context.read<CurrentConsentFormDetailCubit>();
-    cubit.initialSettings(cubit.state.consentTheme);
-
     _getConsentFormDetails();
   }
 
@@ -71,7 +69,15 @@ class _DetailConsentFormScreenState extends State<DetailConsentFormScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return BlocBuilder<ConsentFormDetailBloc, ConsentFormDetailState>(
+    return BlocConsumer<ConsentFormDetailBloc, ConsentFormDetailState>(
+      listener: (context, state) {
+        if (state is GotConsentFormDetail) {
+          final cubit = context.read<CurrentConsentFormDetailCubit>();
+          cubit.setConsentTheme(
+            state.consentTheme,
+          );
+        }
+      },
       builder: (context, state) {
         if (state is GotConsentFormDetail) {
           return ConsentFormDetailView(
@@ -84,9 +90,9 @@ class _DetailConsentFormScreenState extends State<DetailConsentFormScreen> {
             language: currentUser.defaultLanguage,
           );
         }
-        // if (state is ConsentFormDetailError) {
-        //   return ErrorMessageScreen(message: state.message);
-        // }
+        if (state is ConsentFormDetailError) {
+          return ErrorMessageScreen(message: state.message);
+        }
 
         return const LoadingScreen();
       },
