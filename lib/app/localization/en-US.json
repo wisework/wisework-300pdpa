@@ -113,6 +113,7 @@
             }
         },
         "consentForm": {
+            "titleNull":"There is no consent form topic.",
             "explain": "This screen shows a list of forms created by the user. You can click on the form name to view more details about the form. If you want to create a consent form for a form, you can click the 'Create Consent Form' button.",
             "consentForms": "Consent Forms",
             "choosePurposeCategory": "Choose purpose category",
