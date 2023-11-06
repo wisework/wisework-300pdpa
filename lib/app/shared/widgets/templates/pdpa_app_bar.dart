@@ -34,14 +34,14 @@ class PdpaAppBar extends StatelessWidget implements PreferredSizeWidget {
         children: <Widget>[
           if (leadingIcon != null) leadingIcon!,
           SizedBox(width: titleSpacing),
-          Expanded(
-            child: (centerTitle ?? false)
-                ? Align(
+          (centerTitle ?? false)
+              ? Expanded(
+                  child: Align(
                     alignment: Alignment.center,
                     child: title,
-                  )
-                : title,
-          ),
+                  ),
+                )
+              : title,
         ],
       ),
       actions: actions != null
