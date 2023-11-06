@@ -1,6 +1,7 @@
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_staggered_grid_view/flutter_staggered_grid_view.dart';
 import 'package:go_router/go_router.dart';
 import 'package:ionicons/ionicons.dart';
 import 'package:pdpa/app/config/config.dart';
@@ -113,6 +114,18 @@ class _HomeViewState extends State<HomeView> {
     _showModalBottomSheet();
   }
 
+  int _getGridItemSize(Size screenSize) {
+    if (screenSize.width < 300) {
+      return 1;
+    } else if (screenSize.width < 500) {
+      return 2;
+    } else if (screenSize.width < 700) {
+      return 3;
+    } else {
+      return 4;
+    }
+  }
+
   void _showModalBottomSheet() {
     showModalBottomSheet(
       context: context,
@@ -174,12 +187,12 @@ class _HomeViewState extends State<HomeView> {
                       context,
                       screenSize: screenSize,
                     ),
-                    const SizedBox(height: UiConfig.lineSpacing),
+                    const SizedBox(height: UiConfig.lineGap * 2),
                     _buildExploreSection(
                       context,
                       screenSize: screenSize,
                     ),
-                    const SizedBox(height: UiConfig.lineSpacing),
+                    const SizedBox(height: UiConfig.lineGap * 2),
                     _buildRecentlyUsedSection(
                       context,
                       screenSize: screenSize,
@@ -258,20 +271,29 @@ class _HomeViewState extends State<HomeView> {
             style: Theme.of(context).textTheme.bodySmall,
           ),
           const SizedBox(height: UiConfig.lineGap * 2),
-          _buildAppMenuInfo(),
+          Padding(
+            padding: const EdgeInsets.symmetric(
+              horizontal: UiConfig.defaultPaddingSpacing,
+            ),
+            child: _buildAppMenuInfo(),
+          ),
           const SizedBox(height: UiConfig.lineGap * 2),
-          CustomButton(
-            width: 210.0,
-            height: 45.0,
-            onPressed: () {
-              GoRouter.of(context).go(GeneralRoute.board.path);
-            },
-            child: Text(
-              tr('app.disvover.seewhatnew'),
-              style: Theme.of(context)
-                  .textTheme
-                  .titleMedium
-                  ?.copyWith(color: Theme.of(context).colorScheme.onPrimary),
+          Padding(
+            padding: const EdgeInsets.symmetric(
+              horizontal: UiConfig.defaultPaddingSpacing,
+            ),
+            child: CustomButton(
+              height: 45.0,
+              onPressed: () {
+                GoRouter.of(context).go(GeneralRoute.board.path);
+              },
+              child: Text(
+                tr('app.disvover.seewhatnew'),
+                style: Theme.of(context)
+                    .textTheme
+                    .titleMedium
+                    ?.copyWith(color: Theme.of(context).colorScheme.onPrimary),
+              ),
             ),
           ),
           const SizedBox(height: UiConfig.lineGap * 2),
@@ -286,7 +308,6 @@ class _HomeViewState extends State<HomeView> {
       children: <Widget>[
         Row(
           mainAxisAlignment: MainAxisAlignment.start,
-          mainAxisSize: MainAxisSize.min,
           children: <Widget>[
             Padding(
               padding: const EdgeInsets.only(
@@ -308,7 +329,6 @@ class _HomeViewState extends State<HomeView> {
         const SizedBox(height: UiConfig.lineGap),
         Row(
           mainAxisAlignment: MainAxisAlignment.start,
-          mainAxisSize: MainAxisSize.min,
           children: <Widget>[
             Padding(
               padding: const EdgeInsets.only(
@@ -330,7 +350,6 @@ class _HomeViewState extends State<HomeView> {
         const SizedBox(height: UiConfig.lineGap),
         Row(
           mainAxisAlignment: MainAxisAlignment.start,
-          mainAxisSize: MainAxisSize.min,
           children: <Widget>[
             Padding(
               padding: const EdgeInsets.only(
@@ -352,7 +371,6 @@ class _HomeViewState extends State<HomeView> {
         const SizedBox(height: UiConfig.lineGap),
         Row(
           mainAxisAlignment: MainAxisAlignment.start,
-          mainAxisSize: MainAxisSize.min,
           children: <Widget>[
             Padding(
               padding: const EdgeInsets.only(
@@ -517,14 +535,15 @@ class _HomeViewState extends State<HomeView> {
             children: <Widget>[
               Text(
                 tr('general.home.explore'),
-                style: Theme.of(context).textTheme.headlineSmall,
+                style: Theme.of(context).textTheme.titleLarge,
               ),
             ],
           ),
           const SizedBox(height: UiConfig.lineSpacing),
-          Wrap(
-            spacing: UiConfig.lineSpacing,
-            runSpacing: UiConfig.lineSpacing,
+          StaggeredGrid.count(
+            crossAxisCount: _getGridItemSize(screenSize),
+            mainAxisSpacing: UiConfig.defaultPaddingSpacing,
+            crossAxisSpacing: UiConfig.defaultPaddingSpacing,
             children: activities.map((activity) {
               return _buildExploreCard(context, activity: activity);
             }).toList(),
@@ -553,15 +572,15 @@ class _HomeViewState extends State<HomeView> {
             children: <Widget>[
               Container(
                 padding: const EdgeInsets.symmetric(
-                  vertical: 5.0,
-                  horizontal: 6.0,
+                  vertical: 4.0,
+                  horizontal: 7.0,
                 ),
                 decoration: BoxDecoration(
-                  color: const Color(0xFF262626),
+                  color: Theme.of(context).colorScheme.primary,
                   borderRadius: BorderRadius.circular(8.0),
                 ),
                 child: Padding(
-                  padding: const EdgeInsets.only(bottom: 2.0),
+                  padding: const EdgeInsets.only(bottom: 6.0),
                   child: Icon(
                     activity.icon,
                     color: Colors.white,
@@ -569,7 +588,7 @@ class _HomeViewState extends State<HomeView> {
                   ),
                 ),
               ),
-              const SizedBox(height: UiConfig.lineSpacing * 2.5),
+              const SizedBox(height: UiConfig.lineSpacing),
               Text(
                 activity.title,
                 style: Theme.of(context).textTheme.bodySmall,
@@ -608,7 +627,7 @@ class _HomeViewState extends State<HomeView> {
             children: <Widget>[
               Text(
                 tr('general.home.recentlyUsed'),
-                style: Theme.of(context).textTheme.headlineSmall,
+                style: Theme.of(context).textTheme.titleLarge,
               ),
               BlocBuilder<ConsentFormBloc, ConsentFormState>(
                 builder: (context, state) {
@@ -758,7 +777,7 @@ class _HomeViewState extends State<HomeView> {
                     padding: const EdgeInsets.only(left: 40.0),
                     child: Text(
                       dateConsentForm,
-                      style: Theme.of(context).textTheme.bodyMedium,
+                      style: Theme.of(context).textTheme.bodySmall,
                     ),
                   ),
                 ],
