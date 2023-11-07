@@ -419,7 +419,7 @@ class _HomeViewState extends State<HomeView> {
           children: <Widget>[
             Container(
               width: screenSize.width,
-              height: 165.0 + (165.0 * screenSize.width * 0.15),
+              height: 80.0,
               constraints: const BoxConstraints(
                 maxWidth: UiConfig.maxWidthContent,
                 maxHeight: 200.0,
@@ -427,22 +427,6 @@ class _HomeViewState extends State<HomeView> {
               color: (Theme.of(context).brightness == Brightness.light)
                   ? const Color(0xFFE2F3FB)
                   : const Color(0xFF171A1F),
-            ),
-            Positioned(
-              left: 0,
-              right: 0,
-              bottom: 0,
-              child: Container(
-                width: screenSize.width,
-                constraints: const BoxConstraints(
-                  maxWidth: UiConfig.maxWidthContent,
-                  maxHeight: 200.0,
-                ),
-                child: Image.asset(
-                  'assets/images/general/city.png',
-                  fit: BoxFit.contain,
-                ),
-              ),
             ),
             Positioned(
               left: 0,
@@ -456,12 +440,11 @@ class _HomeViewState extends State<HomeView> {
                   maxHeight: 200.0,
                 ),
                 child: Row(
-                  crossAxisAlignment: CrossAxisAlignment.start,
                   children: <Widget>[
                     Expanded(
                       child: Text(
                         tr('general.home.welcome'),
-                        style: Theme.of(context).textTheme.headlineSmall,
+                        style: Theme.of(context).textTheme.headlineMedium,
                       ),
                     ),
                     Column(
