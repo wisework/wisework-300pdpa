@@ -93,19 +93,24 @@ class _AcceptConsentCheckboxState extends State<AcceptConsentCheckbox> {
                       .bodyMedium
                       ?.copyWith(color: widget.consentTheme.formTextColor),
                 ),
-                const WidgetSpan(
-                  child: SizedBox(width: UiConfig.textSpacing),
-                ),
-                TextSpan(
-                  text: widget.consentForm.linkToPolicyText.first.text,
-                  style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                        color: widget.consentTheme.linkToPolicyTextColor,
-                      ),
-                  recognizer: TapGestureRecognizer()
-                    ..onTap = () {
-                      _launchUrl(context, widget.consentForm.linkToPolicyUrl);
-                    },
-                ),
+                if (widget.consentForm.linkToPolicyText.first.text.isNotEmpty)
+                  const WidgetSpan(
+                    child: SizedBox(width: 2.0),
+                  ),
+                if (widget.consentForm.linkToPolicyText.first.text.isNotEmpty)
+                  TextSpan(
+                    text: widget.consentForm.linkToPolicyText.first.text,
+                    style: Theme.of(context).textTheme.bodyMedium?.copyWith(
+                          color: widget.consentTheme.linkToPolicyTextColor,
+                        ),
+                    recognizer: widget.consentForm.linkToPolicyUrl.isNotEmpty
+                        ? (TapGestureRecognizer()
+                          ..onTap = () {
+                            _launchUrl(
+                                context, widget.consentForm.linkToPolicyUrl);
+                          })
+                        : null,
+                  ),
               ],
             ),
           ),

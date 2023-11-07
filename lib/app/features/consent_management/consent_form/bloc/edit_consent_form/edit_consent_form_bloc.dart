@@ -7,6 +7,7 @@ import 'package:pdpa/app/data/models/master_data/localized_model.dart';
 import 'package:pdpa/app/data/models/master_data/mandatory_field_model.dart';
 import 'package:pdpa/app/data/models/master_data/purpose_category_model.dart';
 import 'package:pdpa/app/data/models/master_data/purpose_model.dart';
+import 'package:pdpa/app/data/presets/consent_form_setting_preset.dart';
 import 'package:pdpa/app/data/repositories/consent_repository.dart';
 import 'package:pdpa/app/data/repositories/master_data_repository.dart';
 
@@ -188,36 +189,21 @@ class EditConsentFormBloc
 
     emit(const CreatingCurrentConsentForm());
 
-    const headerText = [
-      LocalizedModel(language: 'en-US', text: 'Header'),
-    ];
-    const headerDescription = [
-      LocalizedModel(language: 'en-US', text: ''),
-    ];
-    const footerDescription = [
-      LocalizedModel(language: 'en-US', text: ''),
-    ];
-    const acceptConsentText = [
-      LocalizedModel(language: 'en-US', text: 'Accept consent')
-    ];
-    const linkToPolicyText = [
-      LocalizedModel(language: 'en-US', text: 'Link to policy'),
-    ];
-    const submitText = [
-      LocalizedModel(language: 'en-US', text: 'Submit'),
-    ];
-    const cancelText = [
-      LocalizedModel(language: 'en-US', text: 'Cancel'),
+    final headerText = [
+      LocalizedModel(
+        language: 'th-TH',
+        text: event.consentForm.title.first.text,
+      ),
     ];
 
     final consentForm = event.consentForm.copyWith(
       headerText: headerText,
-      headerDescription: headerDescription,
-      footerDescription: footerDescription,
-      acceptConsentText: acceptConsentText,
-      submitText: submitText,
-      cancelText: cancelText,
-      linkToPolicyText: linkToPolicyText,
+      headerDescription: headerDescriptionPreset,
+      footerDescription: footerDescriptionPreset,
+      acceptConsentText: acceptConsentPreset,
+      submitText: submitPreset,
+      cancelText: cancelPreset,
+      linkToPolicyText: linkToPolicyPreset,
       linkToPolicyUrl: '',
     );
 
