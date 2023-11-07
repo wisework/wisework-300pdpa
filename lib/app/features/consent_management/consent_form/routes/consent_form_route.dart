@@ -1,5 +1,5 @@
 import 'package:go_router/go_router.dart';
-import 'package:pdpa/app/features/consent_management/consent_form/screens/consent_form_detail/detail_consent_form_screen.dart';
+import 'package:pdpa/app/features/consent_management/consent_form/screens/consent_form_detail/consent_form_detail_screen.dart';
 import 'package:pdpa/app/features/consent_management/consent_form/screens/consent_form_screen.dart';
 import 'package:pdpa/app/features/consent_management/consent_form/screens/consent_form_settings/consent_form_settings_screen.dart';
 import 'package:pdpa/app/features/consent_management/consent_form/screens/consent_form_settings/screens/edit_consent_theme_screen.dart';
@@ -19,7 +19,7 @@ class ConsentFormRoute {
 
   static final GoRoute consentFormDetail = GoRoute(
     path: '/consent-forms/:id/detail',
-    builder: (context, state) => DetailConsentFormScreen(
+    builder: (context, state) => ConsentFormDetailScreen(
       consentFormId: state.pathParameters['id'] ?? '',
     ),
   );

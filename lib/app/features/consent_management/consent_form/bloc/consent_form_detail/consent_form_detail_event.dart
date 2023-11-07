@@ -4,7 +4,7 @@ abstract class ConsentFormDetailEvent extends Equatable {
   const ConsentFormDetailEvent();
 
   @override
-  List<Object> get props => [];
+  List<Object?> get props => [];
 }
 
 class GetConsentFormDetailEvent extends ConsentFormDetailEvent {
@@ -23,15 +23,12 @@ class GetConsentFormDetailEvent extends ConsentFormDetailEvent {
 class UpdateConsentFormDetailEvent extends ConsentFormDetailEvent {
   const UpdateConsentFormDetailEvent({
     required this.consentForm,
-    required this.updateType,
+    this.consentTheme,
   });
 
   final ConsentFormModel consentForm;
-  final UpdateType updateType;
+  final ConsentThemeModel? consentTheme;
 
   @override
-  List<Object> get props => [
-        consentForm,
-        updateType,
-      ];
+  List<Object?> get props => [consentForm, consentTheme];
 }

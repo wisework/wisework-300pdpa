@@ -15,11 +15,9 @@ import 'package:pdpa/app/data/models/master_data/purpose_model.dart';
 import 'package:pdpa/app/features/authentication/bloc/sign_in/sign_in_bloc.dart';
 import 'package:pdpa/app/features/consent_management/consent_form/bloc/consent_form_detail/consent_form_detail_bloc.dart';
 import 'package:pdpa/app/features/consent_management/consent_form/bloc/consent_form_settings/consent_form_settings_bloc.dart';
-import 'package:pdpa/app/features/consent_management/consent_form/cubit/current_consent_form_detail/current_consent_form_detail_cubit.dart';
 import 'package:pdpa/app/features/consent_management/consent_form/cubit/current_consent_form_settings/current_consent_form_settings_cubit.dart';
 import 'package:pdpa/app/features/consent_management/consent_form/routes/consent_form_route.dart';
 import 'package:pdpa/app/features/consent_management/consent_form/widgets/consent_form_preview.dart';
-import 'package:pdpa/app/shared/utils/constants.dart';
 import 'package:pdpa/app/shared/widgets/customs/custom_icon_button.dart';
 import 'package:pdpa/app/shared/widgets/screens/error_message_screen.dart';
 import 'package:pdpa/app/shared/widgets/screens/loading_screen.dart';
@@ -198,19 +196,11 @@ class _ConsentFormSettingViewState extends State<ConsentFormSettingView> {
             onPressed: () {
               if (!widget.isQuickSetting) {
                 final event = UpdateConsentFormDetailEvent(
-                  consentForm: consentForm,
-                  updateType: UpdateType.updated,
+                  consentForm: widget.consentForm,
+                  consentTheme: widget.consentTheme,
                 );
 
                 context.read<ConsentFormDetailBloc>().add(event);
-
-                context
-                    .read<CurrentConsentFormDetailCubit>()
-                    .setConsentForm(consentForm);
-
-                context
-                    .read<CurrentConsentFormDetailCubit>()
-                    .setConsentTheme(consentTheme);
 
                 context.pop();
               } else {

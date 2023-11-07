@@ -13,7 +13,6 @@ import 'package:pdpa/app/data/models/master_data/purpose_model.dart';
 import 'package:pdpa/app/features/authentication/bloc/sign_in/sign_in_bloc.dart';
 import 'package:pdpa/app/features/consent_management/consent_form/bloc/consent_form/consent_form_bloc.dart';
 import 'package:pdpa/app/features/consent_management/consent_form/bloc/consent_form_detail/consent_form_detail_bloc.dart';
-import 'package:pdpa/app/features/consent_management/consent_form/cubit/current_consent_form_detail/current_consent_form_detail_cubit.dart';
 import 'package:pdpa/app/features/consent_management/consent_form/routes/consent_form_route.dart';
 import 'package:pdpa/app/features/consent_management/consent_form/screens/consent_form_detail/tabs/consent_form_tab.dart';
 import 'package:pdpa/app/features/consent_management/consent_form/screens/consent_form_detail/tabs/consent_info_tab.dart';
@@ -23,8 +22,8 @@ import 'package:pdpa/app/shared/widgets/screens/error_message_screen.dart';
 import 'package:pdpa/app/shared/widgets/screens/loading_screen.dart';
 import 'package:pdpa/app/shared/widgets/templates/pdpa_app_bar.dart';
 
-class DetailConsentFormScreen extends StatefulWidget {
-  const DetailConsentFormScreen({
+class ConsentFormDetailScreen extends StatefulWidget {
+  const ConsentFormDetailScreen({
     super.key,
     required this.consentFormId,
   });
@@ -32,11 +31,11 @@ class DetailConsentFormScreen extends StatefulWidget {
   final String consentFormId;
 
   @override
-  State<DetailConsentFormScreen> createState() =>
-      _DetailConsentFormScreenState();
+  State<ConsentFormDetailScreen> createState() =>
+      _ConsentFormDetailScreenState();
 }
 
-class _DetailConsentFormScreenState extends State<DetailConsentFormScreen> {
+class _ConsentFormDetailScreenState extends State<ConsentFormDetailScreen> {
   late UserModel currentUser;
 
   @override
@@ -69,15 +68,7 @@ class _DetailConsentFormScreenState extends State<DetailConsentFormScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return BlocConsumer<ConsentFormDetailBloc, ConsentFormDetailState>(
-      listener: (context, state) {
-        if (state is GotConsentFormDetail) {
-          final cubit = context.read<CurrentConsentFormDetailCubit>();
-          cubit.setConsentTheme(
-            state.consentTheme,
-          );
-        }
-      },
+    return BlocBuilder<ConsentFormDetailBloc, ConsentFormDetailState>(
       builder: (context, state) {
         if (state is GotConsentFormDetail) {
           return ConsentFormDetailView(
@@ -137,9 +128,6 @@ class _ConsentFormDetailViewState extends State<ConsentFormDetailView> {
 
   @override
   Widget build(BuildContext context) {
-    final consentTheme = context.select(
-      (CurrentConsentFormDetailCubit cubit) => cubit.state.consentTheme,
-    );
     return DefaultTabController(
       length: 2,
       child: Scaffold(
@@ -222,7 +210,7 @@ class _ConsentFormDetailViewState extends State<ConsentFormDetailView> {
               purposeCategories: widget.purposeCategories,
               purposes: widget.purposes,
               customFields: widget.customFields,
-              consentTheme: consentTheme,
+              consentTheme: widget.consentTheme,
             ),
           ],
         ),
