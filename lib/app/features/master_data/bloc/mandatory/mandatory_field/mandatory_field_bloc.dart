@@ -37,7 +37,7 @@ class MandatoryFieldBloc
     result.fold(
       (failure) => emit(MandatoryFieldError(failure.errorMessage)),
       (mandatoryFields) => emit(GotMandatoryFields(
-        mandatoryFields..sort((a, b) => a.priority.compareTo(b.priority)),
+        mandatoryFields..sort((a, b) => b.priority.compareTo(a.priority)),
       )),
     );
   }
@@ -73,7 +73,7 @@ class MandatoryFieldBloc
 
     emit(
       GotMandatoryFields(
-        mandatoryFields..sort((a, b) => a.priority.compareTo(b.priority)),
+        mandatoryFields..sort((a, b) => b.priority.compareTo(a.priority)),
       ),
     );
   }
