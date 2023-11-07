@@ -30,7 +30,7 @@ class _SignInScreenState extends State<SignInScreen> {
   final GlobalKey<FormState> _forgotPasswordFormKey = GlobalKey<FormState>();
 
   bool isRememberMe = false;
-  bool isForgotPassword = false;
+  int formIndex = 0;
 
   @override
   void initState() {
@@ -120,9 +120,9 @@ class _SignInScreenState extends State<SignInScreen> {
     });
   }
 
-  void _setForgotPassword() {
+  void _setFormIndex(int index) {
     setState(() {
-      isForgotPassword = !isForgotPassword;
+      formIndex = index;
     });
   }
 
@@ -154,7 +154,7 @@ class _SignInScreenState extends State<SignInScreen> {
                 SizedBox(
                   width: screenSize.width,
                   child: Builder(builder: (context) {
-                    if (isForgotPassword) {
+                    if (formIndex != 0) {
                       return ConstrainedBox(
                         constraints: const BoxConstraints(
                           maxHeight: 402.0,
@@ -176,7 +176,7 @@ class _SignInScreenState extends State<SignInScreen> {
                     horizontal: UiConfig.defaultPaddingSpacing,
                   ),
                   child: Builder(builder: (context) {
-                    if (isForgotPassword) {
+                    if (formIndex != 0) {
                       return _buildResetPasswordWrapper(context);
                     }
                     return _buildLoginWrapper(context);
@@ -280,7 +280,9 @@ class _SignInScreenState extends State<SignInScreen> {
                     horizontal: 8.0,
                     vertical: 2.0,
                   ),
-                  onPressed: _setForgotPassword,
+                  onPressed: () {
+                    _setFormIndex(1);
+                  },
                   buttonType: CustomButtonType.text,
                   child: Text(
                     tr('auth.signIn.forgotPassword'),
@@ -369,11 +371,17 @@ class _SignInScreenState extends State<SignInScreen> {
             ),
             const SizedBox(height: UiConfig.lineGap),
             Text(
-              tr('auth.signIn.forgotDescription'),
+              formIndex == 2
+                  ? tr('auth.signIn.resendDescription')
+                  : tr('auth.signIn.forgotDescription'),
               style: Theme.of(context).textTheme.titleMedium,
             ),
             const SizedBox(height: UiConfig.lineSpacing * 2),
-            Center(child: _buildForgotPasswordForm(context)),
+            Center(
+              child: formIndex == 2
+                  ? _buildResentForgotPasswordForm(context)
+                  : _buildForgotPasswordForm(context),
+            ),
             const SizedBox(height: UiConfig.lineSpacing),
           ],
         ),
@@ -382,6 +390,81 @@ class _SignInScreenState extends State<SignInScreen> {
   }
 
   ConstrainedBox _buildForgotPasswordForm(BuildContext context) {
+    return ConstrainedBox(
+      constraints: const BoxConstraints(
+        maxWidth: 300.0,
+      ),
+      child: Form(
+        key: _forgotPasswordFormKey,
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: <Widget>[
+            CustomTextField(
+              key: const ValueKey('forgot_password_email_field'),
+              controller: emailController,
+              hintText: tr('auth.signIn.email'),
+              keyboardType: TextInputType.emailAddress,
+              required: true,
+            ),
+            const SizedBox(height: UiConfig.lineSpacing),
+            CustomButton(
+              height: 50.0,
+              onPressed: _sendPasswordReset,
+              child: BlocConsumer<SignInBloc, SignInState>(
+                listener: (context, state) {
+                  if (state is SentPasswordReset) {
+                    _setFormIndex(2);
+
+                    showToast(
+                      context,
+                      text: tr('auth.signIn.passwordResetSent'),
+                    );
+                  }
+                },
+                builder: (context, state) {
+                  if (state is SendingPasswordReset) {
+                    return LoadingIndicator(
+                      color: Theme.of(context).colorScheme.onPrimary,
+                      size: 28.0,
+                      loadingType: LoadingType.horizontalRotatingDots,
+                    );
+                  }
+                  return Text(
+                    tr('app.confirm'),
+                    style: Theme.of(context).textTheme.titleMedium?.copyWith(
+                        color: Theme.of(context).colorScheme.onPrimary),
+                  );
+                },
+              ),
+            ),
+            const SizedBox(height: UiConfig.lineSpacing),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: <Widget>[
+                CustomButton(
+                  padding: const EdgeInsets.symmetric(
+                    horizontal: 8.0,
+                    vertical: 2.0,
+                  ),
+                  onPressed: () {
+                    _setFormIndex(0);
+                  },
+                  buttonType: CustomButtonType.text,
+                  child: Text(
+                    tr('app.back'),
+                    style: Theme.of(context).textTheme.bodySmall?.copyWith(
+                        color: Theme.of(context).colorScheme.primary),
+                  ),
+                ),
+              ],
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+
+  ConstrainedBox _buildResentForgotPasswordForm(BuildContext context) {
     return ConstrainedBox(
       constraints: const BoxConstraints(
         maxWidth: 300.0,
@@ -420,7 +503,7 @@ class _SignInScreenState extends State<SignInScreen> {
                     );
                   }
                   return Text(
-                    tr('app.confirm'),
+                    tr('auth.signIn.sendAgain'),
                     style: Theme.of(context).textTheme.titleMedium?.copyWith(
                         color: Theme.of(context).colorScheme.onPrimary),
                   );
@@ -436,7 +519,9 @@ class _SignInScreenState extends State<SignInScreen> {
                     horizontal: 8.0,
                     vertical: 2.0,
                   ),
-                  onPressed: _setForgotPassword,
+                  onPressed: () {
+                    _setFormIndex(0);
+                  },
                   buttonType: CustomButtonType.text,
                   child: Text(
                     tr('app.back'),
