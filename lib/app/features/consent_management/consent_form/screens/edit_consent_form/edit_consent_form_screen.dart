@@ -18,7 +18,6 @@ import 'package:pdpa/app/features/authentication/bloc/sign_in/sign_in_bloc.dart'
 import 'package:pdpa/app/features/consent_management/consent_form/bloc/consent_form/consent_form_bloc.dart';
 import 'package:pdpa/app/features/consent_management/consent_form/bloc/consent_form_detail/consent_form_detail_bloc.dart';
 import 'package:pdpa/app/features/consent_management/consent_form/bloc/edit_consent_form/edit_consent_form_bloc.dart';
-import 'package:pdpa/app/features/consent_management/consent_form/cubit/current_consent_form_detail/current_consent_form_detail_cubit.dart';
 import 'package:pdpa/app/features/consent_management/consent_form/screens/edit_consent_form/screens/create_consent_form_success.dart';
 import 'package:pdpa/app/injection.dart';
 import 'package:pdpa/app/shared/utils/constants.dart';
@@ -381,12 +380,9 @@ class _EditConsentFormViewState extends State<EditConsentFormView> {
     if (!widget.isNewConsentForm) {
       final event = UpdateConsentFormDetailEvent(
         consentForm: consentForm,
-        updateType: UpdateType.updated,
       );
 
       context.read<ConsentFormDetailBloc>().add(event);
-
-      context.read<CurrentConsentFormDetailCubit>().setConsentForm(consentForm);
     }
 
     context.pop();

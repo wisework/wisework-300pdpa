@@ -211,7 +211,7 @@ class _ConsentFormPreviewState extends State<ConsentFormPreview> {
 
   Visibility _buildFooterDescription(BuildContext context) {
     return Visibility(
-      visible: widget.consentForm.headerDescription.first.text.isNotEmpty,
+      visible: widget.consentForm.footerDescription.first.text.isNotEmpty,
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: <Widget>[
