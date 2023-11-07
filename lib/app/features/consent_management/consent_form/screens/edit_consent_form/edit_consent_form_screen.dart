@@ -295,34 +295,24 @@ class _EditConsentFormViewState extends State<EditConsentFormView> {
 
   void _selectMandatoryField(int index) {
     setState(() {
+      List<String> updatedMandatoryFields =
+          List.from(consentForm.mandatoryFields);
       if (consentForm.mandatoryFields.contains(
         widget.mandatoryFields[index].id,
       )) {
-        consentForm.mandatoryFields.removeWhere(
+        updatedMandatoryFields.removeWhere(
           (item) => item == widget.mandatoryFields[index].id,
         );
       } else {
-        consentForm.mandatoryFields.add(
+        updatedMandatoryFields.add(
           widget.mandatoryFields[index].id,
         );
       }
+
+      consentForm =
+          consentForm.copyWith(mandatoryFields: updatedMandatoryFields);
     });
   }
-
-  // void _setPriority(int oldIndex, int newIndex) {
-  //   if (oldIndex < newIndex) {
-  //     newIndex -= 1;
-  //   }
-
-  //   final selected = purposeCategorySelected.removeAt(oldIndex);
-  //   purposeCategorySelected.insert(newIndex, selected);
-
-  //   consentForm = consentForm.copyWith(
-  //     purposeCategories: UtilFunctions.reorderPurposeCategories(
-  //       purposeCategorySelected,
-  //     ),
-  //   );
-  // }
 
   void _saveConsentForm() {
     if (_formKey.currentState!.validate()) {
@@ -502,7 +492,7 @@ class _EditConsentFormViewState extends State<EditConsentFormView> {
           CustomTextField(
             controller: titleController,
             hintText: tr('consentManagement.consentForm.createForm.hinttitle'),
-            onChanged: _setDescription,
+            onChanged: _setTitleController,
             required: true,
           ),
           const SizedBox(height: UiConfig.lineSpacing),
@@ -510,11 +500,10 @@ class _EditConsentFormViewState extends State<EditConsentFormView> {
             text: tr('consentManagement.consentForm.createForm.description'),
           ),
           CustomTextField(
-            controller: descriptionController,
-            hintText:
-                tr('consentManagement.consentForm.createForm.description'),
-            onChanged: _setTitleController,
-          ),
+              controller: descriptionController,
+              hintText:
+                  tr('consentManagement.consentForm.createForm.description'),
+              onChanged: _setDescription),
         ],
       ),
     );
