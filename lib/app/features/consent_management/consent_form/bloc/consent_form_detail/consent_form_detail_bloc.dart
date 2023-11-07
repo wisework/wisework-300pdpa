@@ -160,7 +160,7 @@ class ConsentFormDetailBloc
     emit(
       GotConsentFormDetail(
         gotConsentForm,
-        gotMandatoryFields..sort((a, b) => b.priority.compareTo(a.priority)),
+        gotMandatoryFields..sort((a, b) => a.priority.compareTo(b.priority)),
         gotPurposes,
         gotConsentForm.purposeCategories
           ..sort((a, b) => a.priority.compareTo(b.priority)),
@@ -218,7 +218,7 @@ class ConsentFormDetailBloc
     emit(
       GotConsentFormDetail(
         consentFormUpdate,
-        mandatoryFields..sort((a, b) => b.priority.compareTo(a.priority)),
+        mandatoryFields..sort((a, b) => a.priority.compareTo(b.priority)),
         purposes,
         purposeCategories,
         // purposeCategories..sort((a, b) => b.priority.compareTo(a.priority)),
