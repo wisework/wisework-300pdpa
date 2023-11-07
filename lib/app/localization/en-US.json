@@ -61,7 +61,9 @@
             "signInSuccessful": "Sign in is successfully!",
             "welcomeBack": "Welcome back!",
             "forgotDescription": "Please enter an email linked to your account. We’ll send a link that will sign you into the app instantly.",
-            "passwordResetSent": "Password reset email sent."
+            "passwordResetSent": "Password reset email sent.",
+            "resendDescription": "We have sent you an email to reset your password. If you do not receive another email Please press send again.",
+            "sendAgain": "Send again"
         },
         "resetPassword": {
             "title": "Reset Password",
