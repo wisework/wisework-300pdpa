@@ -180,6 +180,7 @@ class _UrlTabState extends State<UrlTab> {
                 });
               },
               buttonType: CustomButtonType.outlined,
+              backgroundColor: Theme.of(context).colorScheme.onBackground,
               child: Row(
                 mainAxisSize: MainAxisSize.min,
                 children: <Widget>[

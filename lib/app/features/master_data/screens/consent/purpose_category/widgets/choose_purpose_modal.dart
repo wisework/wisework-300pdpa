@@ -8,6 +8,7 @@ import 'package:pdpa/app/data/models/etc/updated_return.dart';
 import 'package:pdpa/app/data/models/master_data/localized_model.dart';
 import 'package:pdpa/app/data/models/master_data/purpose_model.dart';
 import 'package:pdpa/app/features/master_data/routes/master_data_route.dart';
+import 'package:pdpa/app/shared/utils/constants.dart';
 import 'package:pdpa/app/shared/widgets/customs/custom_button.dart';
 import 'package:pdpa/app/shared/widgets/customs/custom_checkbox.dart';
 import 'package:pdpa/app/shared/widgets/customs/custom_icon_button.dart';
@@ -44,8 +45,8 @@ class _ChoosePurposeModalState extends State<ChoosePurposeModal> {
   }
 
   void _initialData() {
-    purposes = widget.purposes.map((purpose) => purpose).toList();
-    selectPurposes = widget.initialPurposes.map((purpose) => purpose).toList();
+    purposes = widget.purposes.where((purpose) => purpose.status != ActiveStatus.inactive).map((purpose) => purpose).toList();
+    selectPurposes = widget.initialPurposes.where((purpose) => purpose.status != ActiveStatus.inactive).map((purpose) => purpose).toList();
   }
 
   void _selectPurpose(PurposeModel purpose) {

@@ -84,12 +84,16 @@ class _PurposeRadioOptionState extends State<PurposeRadioOption> {
                     activeColor: widget.consentTheme.actionButtonColor,
                   ),
                   const SizedBox(width: UiConfig.actionSpacing),
-                  Text(
-                    tr('app.agree'),
-                    style: Theme.of(context)
-                        .textTheme
-                        .bodyMedium
-                        ?.copyWith(color: Colors.black),
+                  Expanded(
+                    child: Text(
+                      tr('app.agree'),
+                      style: Theme.of(context)
+                          .textTheme
+                          .bodyMedium
+                          ?.copyWith(color: Colors.black),
+                          overflow: TextOverflow.ellipsis,
+                          maxLines: 1,
+                    ),
                   ),
                 ],
               ),
@@ -114,12 +118,16 @@ class _PurposeRadioOptionState extends State<PurposeRadioOption> {
                     activeColor: widget.consentTheme.actionButtonColor,
                   ),
                   const SizedBox(width: UiConfig.actionSpacing),
-                  Text(
-                    tr('app.decline'),
-                    style: Theme.of(context)
-                        .textTheme
-                        .bodyMedium
-                        ?.copyWith(color: Colors.black),
+                  Expanded(
+                    child: Text(
+                      tr('app.decline'),
+                      style: Theme.of(context)
+                          .textTheme
+                          .bodyMedium
+                          ?.copyWith(color: Colors.black),
+                          overflow: TextOverflow.ellipsis,
+                            maxLines: 1,
+                    ),
                   ),
                 ],
               ),

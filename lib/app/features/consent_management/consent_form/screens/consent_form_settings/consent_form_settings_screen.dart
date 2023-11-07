@@ -17,6 +17,7 @@ import 'package:pdpa/app/features/consent_management/consent_form/bloc/consent_f
 import 'package:pdpa/app/features/consent_management/consent_form/bloc/consent_form_settings/consent_form_settings_bloc.dart';
 import 'package:pdpa/app/features/consent_management/consent_form/cubit/current_consent_form_detail/current_consent_form_detail_cubit.dart';
 import 'package:pdpa/app/features/consent_management/consent_form/cubit/current_consent_form_settings/current_consent_form_settings_cubit.dart';
+import 'package:pdpa/app/features/consent_management/consent_form/routes/consent_form_route.dart';
 import 'package:pdpa/app/features/consent_management/consent_form/widgets/consent_form_preview.dart';
 import 'package:pdpa/app/shared/utils/constants.dart';
 import 'package:pdpa/app/shared/widgets/customs/custom_icon_button.dart';
@@ -34,9 +35,11 @@ class ConsentFormSettingScreen extends StatefulWidget {
   const ConsentFormSettingScreen({
     super.key,
     required this.consentFormId,
+    this.isQuickSetting = false,
   });
 
   final String consentFormId;
+  final bool isQuickSetting;
 
   @override
   State<ConsentFormSettingScreen> createState() =>
@@ -102,6 +105,7 @@ class _ConsentFormSettingScreenState extends State<ConsentFormSettingScreen> {
             consentThemes: state.consentThemes,
             consentTheme: state.consentTheme,
             currentUser: currentUser,
+            isQuickSetting: widget.isQuickSetting,
           );
         }
         if (state is UpdatedConsentFormSettings) {
@@ -114,6 +118,7 @@ class _ConsentFormSettingScreenState extends State<ConsentFormSettingScreen> {
             consentThemes: state.consentThemes,
             consentTheme: state.consentTheme,
             currentUser: currentUser,
+            isQuickSetting: widget.isQuickSetting,
           );
         }
         if (state is ConsentFormSettingsError) {
@@ -136,6 +141,7 @@ class ConsentFormSettingView extends StatefulWidget {
     required this.consentThemes,
     required this.consentTheme,
     required this.currentUser,
+    required this.isQuickSetting,
   });
 
   final ConsentFormModel consentForm;
@@ -146,6 +152,7 @@ class ConsentFormSettingView extends StatefulWidget {
   final List<ConsentThemeModel> consentThemes;
   final ConsentThemeModel consentTheme;
   final UserModel currentUser;
+  final bool isQuickSetting;
 
   @override
   State<ConsentFormSettingView> createState() => _ConsentFormSettingViewState();
@@ -189,30 +196,40 @@ class _ConsentFormSettingViewState extends State<ConsentFormSettingView> {
         appBar: PdpaAppBar(
           leadingIcon: CustomIconButton(
             onPressed: () {
-              final event = UpdateConsentFormDetailEvent(
-                consentForm: consentForm,
-                updateType: UpdateType.updated,
-              );
+              if (!widget.isQuickSetting) {
+                final event = UpdateConsentFormDetailEvent(
+                  consentForm: consentForm,
+                  updateType: UpdateType.updated,
+                );
 
-              context.read<ConsentFormDetailBloc>().add(event);
+                context.read<ConsentFormDetailBloc>().add(event);
 
-              context
-                  .read<CurrentConsentFormDetailCubit>()
-                  .setConsentForm(consentForm);
+                context
+                    .read<CurrentConsentFormDetailCubit>()
+                    .setConsentForm(consentForm);
 
-              context
-                  .read<CurrentConsentFormDetailCubit>()
-                  .setConsentTheme(consentTheme);
+                context
+                    .read<CurrentConsentFormDetailCubit>()
+                    .setConsentTheme(consentTheme);
 
-              context.pop();
+                context.pop();
+              } else {
+                context.pushReplacement(
+                  ConsentFormRoute.consentForm.path,
+                );
+              }
             },
             icon: Icons.chevron_left_outlined,
             iconColor: Theme.of(context).colorScheme.primary,
             backgroundColor: Theme.of(context).colorScheme.onBackground,
           ),
-          title: Text(
-            tr('consentManagement.consentForm.consentFormsetting.consentFormSettings'),
-            style: Theme.of(context).textTheme.titleLarge,
+          title: Expanded(
+            child: Text(
+              tr('consentManagement.consentForm.consentFormsetting.consentFormSettings'),
+              style: Theme.of(context).textTheme.titleLarge,
+              overflow: TextOverflow.ellipsis,
+              maxLines: 1,
+            ),
           ),
           actions: [
             _buildSaveButton(consentForm),
@@ -310,6 +327,7 @@ class _ConsentFormSettingViewState extends State<ConsentFormSettingView> {
 
   TabBar _buildTabBar(BuildContext context) {
     return TabBar(
+      isScrollable: MediaQuery.of(context).size.width > 400 ? false : true,
       tabs: [
         Tab(text: tr('consentManagement.consentForm.consentFormsetting.url')),
         Tab(
