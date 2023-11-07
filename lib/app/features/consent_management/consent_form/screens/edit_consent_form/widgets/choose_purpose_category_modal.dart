@@ -7,6 +7,7 @@ import 'package:pdpa/app/data/models/etc/updated_return.dart';
 import 'package:pdpa/app/data/models/master_data/localized_model.dart';
 import 'package:pdpa/app/data/models/master_data/purpose_category_model.dart';
 import 'package:pdpa/app/features/master_data/routes/master_data_route.dart';
+import 'package:pdpa/app/shared/utils/constants.dart';
 import 'package:pdpa/app/shared/widgets/customs/custom_button.dart';
 
 import 'package:pdpa/app/shared/widgets/customs/custom_checkbox.dart';
@@ -48,9 +49,9 @@ class _ChoosePurposeCategoryModalState
 
   void _initialData() {
     purposeCategories =
-        widget.purposeCategories.map((category) => category).toList();
+        widget.purposeCategories.where((category) => category.status != ActiveStatus.inactive).map((category) => category).toList();
     selectPurposeCategories =
-        widget.initialPurposeCategory.map((category) => category).toList();
+        widget.initialPurposeCategory.where((category) => category.status != ActiveStatus.inactive).map((category) => category).toList();
   }
 
   void _selectPurposeCategory(PurposeCategoryModel purposeCategory) {
