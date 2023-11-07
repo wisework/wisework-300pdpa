@@ -122,6 +122,7 @@
             "noPurposesAdded": "No purposes added.",
             "noInputFieldsAdded": "No input fields added.",
             "warningPurpose": "If you don't consent, we can't use your data for this purpose.",
+            "consentList" : "Consent List",
             "createForm": {
                 "create": "Create Consent Form",
                 "edit": "Edit consent form",
