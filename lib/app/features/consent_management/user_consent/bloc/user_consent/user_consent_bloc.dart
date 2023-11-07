@@ -67,7 +67,7 @@ class UserConsentBloc extends Bloc<UserConsentEvent, UserConsentState> {
               userConsents
                 ..sort((a, b) => b.updatedDate.compareTo(a.updatedDate)),
               gotConsentForms,
-              mandatoryFields..sort((a, b) => b.priority.compareTo(a.priority)),
+              mandatoryFields..sort((a, b) => a.priority.compareTo(b.priority)),
             ),
           ),
         );

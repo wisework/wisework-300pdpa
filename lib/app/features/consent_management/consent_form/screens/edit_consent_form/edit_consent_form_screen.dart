@@ -295,17 +295,22 @@ class _EditConsentFormViewState extends State<EditConsentFormView> {
 
   void _selectMandatoryField(int index) {
     setState(() {
+      List<String> updatedMandatoryFields =
+          List.from(consentForm.mandatoryFields);
       if (consentForm.mandatoryFields.contains(
         widget.mandatoryFields[index].id,
       )) {
-        consentForm.mandatoryFields.removeWhere(
+        updatedMandatoryFields.removeWhere(
           (item) => item == widget.mandatoryFields[index].id,
         );
       } else {
-        consentForm.mandatoryFields.add(
+        updatedMandatoryFields.add(
           widget.mandatoryFields[index].id,
         );
       }
+
+      consentForm =
+          consentForm.copyWith(mandatoryFields: updatedMandatoryFields);
     });
   }
 

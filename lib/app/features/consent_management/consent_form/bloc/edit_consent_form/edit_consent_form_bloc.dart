@@ -146,7 +146,7 @@ class EditConsentFormBloc
     emit(
       GotCurrentConsentForm(
         gotConsentForm,
-        gotMandatoryFields..sort((a, b) => b.priority.compareTo(a.priority)),
+        gotMandatoryFields..sort((a, b) => a.priority.compareTo(b.priority)),
         gotPurposes,
         // gotConsentForm.purposeCategories
         //   ..sort((a, b) => a.priority.compareTo(b.priority)),
