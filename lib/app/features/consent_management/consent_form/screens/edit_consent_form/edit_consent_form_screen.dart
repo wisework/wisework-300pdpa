@@ -309,21 +309,6 @@ class _EditConsentFormViewState extends State<EditConsentFormView> {
     });
   }
 
-  // void _setPriority(int oldIndex, int newIndex) {
-  //   if (oldIndex < newIndex) {
-  //     newIndex -= 1;
-  //   }
-
-  //   final selected = purposeCategorySelected.removeAt(oldIndex);
-  //   purposeCategorySelected.insert(newIndex, selected);
-
-  //   consentForm = consentForm.copyWith(
-  //     purposeCategories: UtilFunctions.reorderPurposeCategories(
-  //       purposeCategorySelected,
-  //     ),
-  //   );
-  // }
-
   void _saveConsentForm() {
     if (_formKey.currentState!.validate()) {
       if (consentForm.purposeCategories.isEmpty) {
@@ -502,7 +487,7 @@ class _EditConsentFormViewState extends State<EditConsentFormView> {
           CustomTextField(
             controller: titleController,
             hintText: tr('consentManagement.consentForm.createForm.hinttitle'),
-            onChanged: _setDescription,
+            onChanged: _setTitleController,
             required: true,
           ),
           const SizedBox(height: UiConfig.lineSpacing),
@@ -510,11 +495,10 @@ class _EditConsentFormViewState extends State<EditConsentFormView> {
             text: tr('consentManagement.consentForm.createForm.description'),
           ),
           CustomTextField(
-            controller: descriptionController,
-            hintText:
-                tr('consentManagement.consentForm.createForm.description'),
-            onChanged: _setTitleController,
-          ),
+              controller: descriptionController,
+              hintText:
+                  tr('consentManagement.consentForm.createForm.description'),
+              onChanged: _setDescription),
         ],
       ),
     );
