@@ -70,7 +70,7 @@ class UserConsentView extends StatefulWidget {
 class _UserConsentViewState extends State<UserConsentView> {
   final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
 
-  bool _sortAscending = true;
+  bool _sortAscending = false;
 
   void _openSeachConsentFormModal() {
     final bloc = context.read<UserConsentBloc>();
