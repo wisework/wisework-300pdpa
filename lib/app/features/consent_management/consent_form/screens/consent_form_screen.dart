@@ -16,8 +16,12 @@ import 'package:pdpa/app/features/consent_management/consent_form/routes/consent
 import 'package:pdpa/app/features/consent_management/consent_form/widgets/search_consent_form_modal.dart';
 
 import 'package:pdpa/app/shared/drawers/pdpa_drawer.dart';
+import 'package:pdpa/app/shared/widgets/content_wrapper.dart';
+import 'package:pdpa/app/shared/widgets/customs/custom_button.dart';
+import 'package:pdpa/app/shared/widgets/customs/custom_container.dart';
 
 import 'package:pdpa/app/shared/widgets/customs/custom_icon_button.dart';
+import 'package:pdpa/app/shared/widgets/loading_indicator.dart';
 import 'package:pdpa/app/shared/widgets/material_ink_well.dart';
 import 'package:pdpa/app/shared/widgets/screens/example_screen.dart';
 import 'package:pdpa/app/shared/widgets/templates/pdpa_app_bar.dart';
@@ -130,103 +134,150 @@ class _ConsentFormViewState extends State<ConsentFormView> {
           _scaffoldKey.currentState?.closeDrawer();
         },
       ),
-      body: Column(
-        children: [
-          const SizedBox(height: UiConfig.lineSpacing),
-          Expanded(
-            child: Container(
-              padding: const EdgeInsets.all(UiConfig.defaultPaddingSpacing),
-              decoration: BoxDecoration(
-                color: Theme.of(context).colorScheme.onBackground,
-              ),
-              child: Column(
-                children: <Widget>[
-                  Padding(
+      body: SingleChildScrollView(
+        child: ContentWrapper(
+          child: BlocBuilder<ConsentFormBloc, ConsentFormState>(
+            builder: (context, state) {
+              if (state is GotConsentForms) {
+                final consentForms = state.consentForms;
+
+                if (_sortAscending == true) {
+                  consentForms.sort(
+                    ((a, b) => a.updatedDate.compareTo(b.updatedDate)),
+                  );
+                } else {
+                  consentForms.sort(
+                    ((a, b) => b.updatedDate.compareTo(a.updatedDate)),
+                  );
+                }
+
+                return _buildConsentFormListView(
+                  context,
+                  consentForms: consentForms,
+                );
+              }
+              if (state is ConsentFormError) {
+                return CustomContainer(
+                  margin: const EdgeInsets.all(UiConfig.lineSpacing),
+                  child: Padding(
                     padding: const EdgeInsets.symmetric(
-                        horizontal: UiConfig.defaultPaddingSpacing),
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      crossAxisAlignment: CrossAxisAlignment.center,
-                      children: <Widget>[
-                        Row(
-                          mainAxisAlignment: MainAxisAlignment.start,
-                          children: [
-                            Text(
-                              'รายการความยินยอม', //!
-                              style: Theme.of(context).textTheme.titleMedium,
-                            ),
-                          ],
-                        ),
-                        Row(
-                          mainAxisAlignment: MainAxisAlignment.end,
-                          children: [
-                            _sortByDateButton(context),
-                          ],
-                        ),
-                      ],
+                      vertical: UiConfig.defaultPaddingSpacing * 4,
+                    ),
+                    child: Center(
+                      child: Text(
+                        state.message,
+                        style: Theme.of(context).textTheme.bodyMedium,
+                      ),
                     ),
                   ),
-                  Expanded(
-                    child: BlocBuilder<ConsentFormBloc, ConsentFormState>(
-                      builder: (context, state) {
-                        if (state is GotConsentForms) {
-                          final consentForms = state.consentForms;
-                          if (_sortAscending == true) {
-                            consentForms.sort(((a, b) =>
-                                a.updatedDate.compareTo(b.updatedDate)));
-                          } else {
-                            consentForms.sort(((a, b) =>
-                                b.updatedDate.compareTo(a.updatedDate)));
-                          }
-                          return state.consentForms.isNotEmpty
-                              ? ListView.builder(
-                                  shrinkWrap: true,
-                                  itemCount: consentForms.length,
-                                  itemBuilder: (context, index) {
-                                    return _buildItemCard(
-                                      context,
-                                      consentForm: consentForms[index],
-                                      language: widget.language,
-                                    );
-                                  },
-                                )
-                              : ExampleScreen(
-                                  headderText: tr(
-                                      'consentManagement.consentForm.consentForms'),
-                                  buttonText: tr(
-                                      'consentManagement.consentForm.createForm.create'),
-                                  descriptionText: tr(
-                                      'consentManagement.consentForm.explain'),
-                                  onPress: () {
-                                    context.push(ConsentFormRoute
-                                        .createConsentForm.path);
-                                  });
-                        }
-                        if (state is ConsentFormError) {
-                          return Center(
-                            child: Text(
-                              state.message,
-                              style: Theme.of(context).textTheme.bodyMedium,
-                            ),
-                          );
-                        }
-                        return const Center(
-                          child: CircularProgressIndicator(),
-                        );
-                      },
-                    ),
+                );
+              }
+              return const CustomContainer(
+                margin: EdgeInsets.all(UiConfig.lineSpacing),
+                child: Padding(
+                  padding: EdgeInsets.symmetric(
+                    vertical: UiConfig.defaultPaddingSpacing * 4,
                   ),
-                ],
-              ),
-            ),
+                  child: Center(
+                    child: LoadingIndicator(),
+                  ),
+                ),
+              );
+            },
           ),
-        ],
+        ),
       ),
       floatingActionButton: FloatingActionButton(
         onPressed: () {
           context.push(ConsentFormRoute.createConsentForm.path);
         },
         child: const Icon(Icons.add),
+      ),
+    );
+  }
+
+  CustomContainer _buildConsentFormListView(
+    BuildContext context, {
+    required List<ConsentFormModel> consentForms,
+  }) {
+    return CustomContainer(
+      margin: const EdgeInsets.all(UiConfig.lineSpacing),
+      child: Column(
+        children: <Widget>[
+          Padding(
+            padding: const EdgeInsets.symmetric(
+              horizontal: UiConfig.defaultPaddingSpacing,
+            ),
+            child: Row(
+              crossAxisAlignment: CrossAxisAlignment.center,
+              children: <Widget>[
+                Expanded(
+                  child: Text(
+                    'รายการความยินยอม', //!
+                    style: Theme.of(context).textTheme.titleMedium,
+                    overflow: TextOverflow.ellipsis,
+                    maxLines: 1,
+                  ),
+                ),
+                CustomButton(
+                  padding: const EdgeInsets.symmetric(
+                    vertical: 2.0,
+                    horizontal: 8.0,
+                  ),
+                  onPressed: () {
+                    _sortConsentForms(!_sortAscending);
+                  },
+                  buttonType: CustomButtonType.text,
+                  child: Row(
+                    mainAxisSize: MainAxisSize.min,
+                    children: <Widget>[
+                      Text(
+                        tr("consentManagement.listage.filter.date"),
+                        style: Theme.of(context).textTheme.titleMedium,
+                      ),
+                      const SizedBox(width: 2.0),
+                      Icon(
+                        _sortAscending
+                            ? Icons.arrow_drop_up
+                            : Icons.arrow_drop_down,
+                        size: 20.0,
+                        color: Theme.of(context).colorScheme.onSurface,
+                      ),
+                    ],
+                  ),
+                ),
+              ],
+            ),
+          ),
+          const SizedBox(height: UiConfig.textSpacing),
+          consentForms.isNotEmpty
+              ? ListView.builder(
+                  physics: const NeverScrollableScrollPhysics(),
+                  shrinkWrap: true,
+                  itemCount: consentForms.length,
+                  itemBuilder: (context, index) {
+                    return _buildItemCard(
+                      context,
+                      consentForm: consentForms[index],
+                      language: widget.language,
+                    );
+                  },
+                )
+              : ExampleScreen(
+                  headderText: tr(
+                    'consentManagement.consentForm.consentForms',
+                  ),
+                  buttonText: tr(
+                    'consentManagement.consentForm.createForm.create',
+                  ),
+                  descriptionText: tr(
+                    'consentManagement.consentForm.explain',
+                  ),
+                  onPress: () {
+                    context.push(ConsentFormRoute.createConsentForm.path);
+                  },
+                ),
+        ],
       ),
     );
   }
@@ -277,40 +328,6 @@ class _ConsentFormViewState extends State<ConsentFormView> {
   //     ],
   //   );
   // }
-
-  Widget _sortByDateButton(BuildContext context) {
-    return IconButton(
-      onPressed: () {
-        _sortConsentForms(!_sortAscending);
-      },
-      padding: EdgeInsets.zero,
-      icon: Column(
-        children: [
-          RichText(
-              text: TextSpan(
-            children: [
-              TextSpan(
-                  text: tr("consentManagement.listage.filter.date"),
-                  style: Theme.of(context).textTheme.titleMedium),
-              WidgetSpan(
-                child: _sortAscending
-                    ? Icon(
-                        Icons.arrow_drop_down,
-                        size: 20,
-                        color: Theme.of(context).colorScheme.onSurface,
-                      )
-                    : Icon(
-                        Icons.arrow_drop_up,
-                        size: 20,
-                        color: Theme.of(context).colorScheme.onSurface,
-                      ),
-              ),
-            ],
-          )),
-        ],
-      ),
-    );
-  }
 
   _buildItemCard(
     BuildContext context, {
@@ -381,8 +398,8 @@ class _ConsentFormViewState extends State<ConsentFormView> {
                             top: UiConfig.textLineSpacing,
                           ),
                           child: ListView.builder(
-                            shrinkWrap: true,
                             physics: const NeverScrollableScrollPhysics(),
+                            shrinkWrap: true,
                             itemCount: purposeCategories.length,
                             itemBuilder: (_, index) {
                               if (index <= 1) {

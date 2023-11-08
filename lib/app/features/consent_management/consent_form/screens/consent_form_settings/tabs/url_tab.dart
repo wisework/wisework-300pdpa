@@ -11,6 +11,7 @@ import 'package:pdpa/app/data/models/consent_management/consent_form_model.dart'
 import 'package:pdpa/app/features/consent_management/consent_form/cubit/current_consent_form_settings/current_consent_form_settings_cubit.dart';
 import 'package:pdpa/app/shared/utils/functions.dart';
 import 'package:pdpa/app/shared/utils/toast.dart';
+import 'package:pdpa/app/shared/widgets/content_wrapper.dart';
 import 'package:pdpa/app/shared/widgets/customs/custom_button.dart';
 import 'package:pdpa/app/shared/widgets/customs/custom_container.dart';
 import 'package:pdpa/app/shared/widgets/customs/custom_icon_button.dart';
@@ -42,14 +43,16 @@ class _UrlTabState extends State<UrlTab> {
   @override
   Widget build(BuildContext context) {
     return SingleChildScrollView(
-      child: Column(
-        children: <Widget>[
-          const SizedBox(height: UiConfig.lineSpacing),
-          _buildUrlSection(context),
-          const SizedBox(height: UiConfig.lineSpacing),
-          _buildQrCodeSection(context),
-          const SizedBox(height: UiConfig.lineSpacing),
-        ],
+      child: ContentWrapper(
+        child: Column(
+          children: <Widget>[
+            const SizedBox(height: UiConfig.lineSpacing),
+            _buildUrlSection(context),
+            const SizedBox(height: UiConfig.lineSpacing),
+            _buildQrCodeSection(context),
+            const SizedBox(height: UiConfig.lineSpacing),
+          ],
+        ),
       ),
     );
   }

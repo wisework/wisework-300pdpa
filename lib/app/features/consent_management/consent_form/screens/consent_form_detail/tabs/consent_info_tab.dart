@@ -11,6 +11,7 @@ import 'package:pdpa/app/data/models/master_data/purpose_category_model.dart';
 import 'package:pdpa/app/data/models/master_data/purpose_model.dart';
 import 'package:pdpa/app/features/authentication/bloc/sign_in/sign_in_bloc.dart';
 import 'package:pdpa/app/shared/utils/functions.dart';
+import 'package:pdpa/app/shared/widgets/content_wrapper.dart';
 import 'package:pdpa/app/shared/widgets/customs/custom_container.dart';
 
 class ConsentInfoTab extends StatefulWidget {
@@ -57,14 +58,16 @@ class _ConsentInfoTabState extends State<ConsentInfoTab> {
   @override
   Widget build(BuildContext context) {
     return SingleChildScrollView(
-      child: Column(
-        children: <Widget>[
-          const SizedBox(height: UiConfig.lineSpacing),
-          CustomContainer(
-            child: _buildConsentForm(context),
-          ),
-          const SizedBox(height: UiConfig.lineSpacing),
-        ],
+      child: ContentWrapper(
+        child: Column(
+          children: <Widget>[
+            const SizedBox(height: UiConfig.lineSpacing),
+            CustomContainer(
+              child: _buildConsentForm(context),
+            ),
+            const SizedBox(height: UiConfig.lineSpacing),
+          ],
+        ),
       ),
     );
   }

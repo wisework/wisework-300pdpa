@@ -104,22 +104,24 @@ class _SearchUserConsentModalState extends State<SearchUserConsentModal> {
                     }),
                   ),
                 ),
-                Builder(builder: (context) {
-                  return CustomIconButton(
-                    backgroundColor: Theme.of(context).colorScheme.onBackground,
-                    icon: Ionicons.close_outline,
-                    iconColor: Theme.of(context).colorScheme.primary,
-                    onPressed: () {
-                      final cubit = context.read<SearchUserConsentCubit>();
-                      cubit.searchUserConsent('', widget.language);
+                Builder(
+                  builder: (context) {
+                    return CustomIconButton(
+                      backgroundColor:
+                          Theme.of(context).colorScheme.onBackground,
+                      icon: Ionicons.close_outline,
+                      iconColor: Theme.of(context).colorScheme.primary,
+                      onPressed: () {
+                        final cubit = context.read<SearchUserConsentCubit>();
+                        cubit.searchUserConsent('', widget.language);
 
-                      searchController.clear();
-                    },
-                  );
-                }),
+                        searchController.clear();
+                      },
+                    );
+                  },
+                ),
               ],
             ),
-            const SizedBox(height: UiConfig.lineSpacing),
             Expanded(
               child: Container(
                 padding: const EdgeInsets.all(UiConfig.defaultPaddingSpacing),

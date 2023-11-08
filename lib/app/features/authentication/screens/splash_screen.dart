@@ -111,8 +111,9 @@ class _SplashViewState extends State<SplashView> {
         });
       },
       child: const Padding(
-        padding: EdgeInsets.symmetric(
-          vertical: UiConfig.defaultPaddingSpacing * 8,
+        padding: EdgeInsets.only(
+          top: UiConfig.defaultPaddingSpacing * 8,
+          bottom: UiConfig.defaultPaddingSpacing * 2,
         ),
         child: WiseWorkShimmer(),
       ),

@@ -228,7 +228,7 @@ class _UserConsentFormViewState extends State<UserConsentFormView> {
           consentTheme: widget.consentTheme,
           onMandatoryFieldChanged: (mandatoryFieldId, value) {
             List<UserInputText> mandatoryFields = [];
-            
+
             for (UserInputText mandatoryField in userConsent.mandatoryFields) {
               if (mandatoryField.id == mandatoryFieldId) {
                 mandatoryFields.add(

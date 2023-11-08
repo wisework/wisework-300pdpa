@@ -10,7 +10,10 @@ import 'package:pdpa/app/data/models/master_data/mandatory_field_model.dart';
 import 'package:pdpa/app/features/authentication/bloc/sign_in/sign_in_bloc.dart';
 import 'package:pdpa/app/features/master_data/bloc/mandatory/mandatory_field/mandatory_field_bloc.dart';
 import 'package:pdpa/app/features/master_data/widgets/master_data_item_card.dart';
+import 'package:pdpa/app/shared/widgets/content_wrapper.dart';
+import 'package:pdpa/app/shared/widgets/customs/custom_container.dart';
 import 'package:pdpa/app/shared/widgets/customs/custom_icon_button.dart';
+import 'package:pdpa/app/shared/widgets/loading_indicator.dart';
 import 'package:pdpa/app/shared/widgets/screens/example_screen.dart';
 import 'package:pdpa/app/shared/widgets/templates/pdpa_app_bar.dart';
 
@@ -147,70 +150,84 @@ class _MandatoryFieldViewState extends State<MandatoryFieldView> {
                 ),
         ],
       ),
-      body: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: <Widget>[
-          const SizedBox(height: UiConfig.lineSpacing),
-          Expanded(
-            child: Container(
-              padding: const EdgeInsets.all(UiConfig.defaultPaddingSpacing),
-              decoration: BoxDecoration(
-                color: Theme.of(context).colorScheme.onBackground,
-              ),
-              child: BlocBuilder<MandatoryFieldBloc, MandatoryFieldState>(
-                builder: (context, state) {
-                  if (state is GotMandatoryFields) {
-                    _initialMandatoryFields(state.mandatoryFields);
+      body: SingleChildScrollView(
+        child: ContentWrapper(
+          child: BlocBuilder<MandatoryFieldBloc, MandatoryFieldState>(
+            builder: (context, state) {
+              if (state is GotMandatoryFields) {
+                _initialMandatoryFields(state.mandatoryFields);
 
-                    if (isEditable) {
-                      return ReorderableListView.builder(
-                        itemBuilder: (context, index) {
-                          return _buildItemCard(
-                            context,
-                            mandatoryField: mandatoryFields[index],
-                          );
-                        },
-                        itemCount: mandatoryFields.length,
-                        onReorder: _setPriority,
-                        buildDefaultDragHandles: false,
-                        physics: const NeverScrollableScrollPhysics(),
-                        shrinkWrap: true,
-                      );
-                    }
+                if (isEditable) {
+                  return CustomContainer(
+                    margin: const EdgeInsets.all(UiConfig.lineSpacing),
+                    child: ReorderableListView.builder(
+                      itemBuilder: (context, index) {
+                        return _buildItemCard(
+                          context,
+                          mandatoryField: mandatoryFields[index],
+                        );
+                      },
+                      itemCount: mandatoryFields.length,
+                      onReorder: _setPriority,
+                      buildDefaultDragHandles: false,
+                      physics: const NeverScrollableScrollPhysics(),
+                      shrinkWrap: true,
+                    ),
+                  );
+                }
 
-                    return state.mandatoryFields.isNotEmpty
-                        ? ListView.builder(
-                            itemCount: mandatoryFields.length,
-                            itemBuilder: (context, index) {
-                              return _buildItemCard(
-                                context,
-                                mandatoryField: mandatoryFields[index],
-                              );
-                            },
-                          )
-                        : ExampleScreen(
-                            headderText: tr('masterData.main.mandatories'),
-                            buttonText: tr('masterData.main.create'),
-                            descriptionText: tr('masterData.main.create'),
-                            onPress: () {},
-                          );
-                  }
-                  if (state is MandatoryFieldError) {
-                    return Center(
+                return CustomContainer(
+                  margin: const EdgeInsets.all(UiConfig.lineSpacing),
+                  child: state.mandatoryFields.isNotEmpty
+                      ? ListView.builder(
+                          physics: const NeverScrollableScrollPhysics(),
+                          shrinkWrap: true,
+                          itemCount: mandatoryFields.length,
+                          itemBuilder: (context, index) {
+                            return _buildItemCard(
+                              context,
+                              mandatoryField: mandatoryFields[index],
+                            );
+                          },
+                        )
+                      : ExampleScreen(
+                          headderText: tr('masterData.main.mandatories'),
+                          buttonText: tr('masterData.main.create'),
+                          descriptionText: tr('masterData.main.create'),
+                          onPress: () {},
+                        ),
+                );
+              }
+              if (state is MandatoryFieldError) {
+                return CustomContainer(
+                  margin: const EdgeInsets.all(UiConfig.lineSpacing),
+                  child: Padding(
+                    padding: const EdgeInsets.symmetric(
+                      vertical: UiConfig.defaultPaddingSpacing * 4,
+                    ),
+                    child: Center(
                       child: Text(
                         state.message,
                         style: Theme.of(context).textTheme.bodyMedium,
                       ),
-                    );
-                  }
-                  return const Center(
-                    child: CircularProgressIndicator(),
-                  );
-                },
-              ),
-            ),
+                    ),
+                  ),
+                );
+              }
+              return const CustomContainer(
+                margin: EdgeInsets.all(UiConfig.lineSpacing),
+                child: Padding(
+                  padding: EdgeInsets.symmetric(
+                    vertical: UiConfig.defaultPaddingSpacing * 4,
+                  ),
+                  child: Center(
+                    child: LoadingIndicator(),
+                  ),
+                ),
+              );
+            },
           ),
-        ],
+        ),
       ),
     );
   }

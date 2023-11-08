@@ -89,7 +89,8 @@ class _SearchConsentFormModalState extends State<SearchConsentFormModal> {
                   child: Builder(builder: (context) {
                     return Padding(
                       padding: const EdgeInsets.symmetric(
-                          horizontal: UiConfig.actionSpacing),
+                        horizontal: UiConfig.actionSpacing,
+                      ),
                       child: CustomTextField(
                         controller: searchController,
                         hintText: 'ค้นหา', //!
@@ -102,22 +103,23 @@ class _SearchConsentFormModalState extends State<SearchConsentFormModal> {
                   }),
                 ),
               ),
-              Builder(builder: (context) {
-                return CustomIconButton(
-                  backgroundColor: Theme.of(context).colorScheme.onBackground,
-                  icon: Ionicons.close_outline,
-                  iconColor: Theme.of(context).colorScheme.primary,
-                  onPressed: () {
-                    final cubit = context.read<SearchConsentFormCubit>();
-                    cubit.searchConsentForm('', widget.language);
+              Builder(
+                builder: (context) {
+                  return CustomIconButton(
+                    backgroundColor: Theme.of(context).colorScheme.onBackground,
+                    icon: Ionicons.close_outline,
+                    iconColor: Theme.of(context).colorScheme.primary,
+                    onPressed: () {
+                      final cubit = context.read<SearchConsentFormCubit>();
+                      cubit.searchConsentForm('', widget.language);
 
-                    searchController.clear();
-                  },
-                );
-              }),
+                      searchController.clear();
+                    },
+                  );
+                },
+              ),
             ],
           ),
-          const SizedBox(height: UiConfig.lineSpacing),
           Expanded(
             child: Container(
               padding: const EdgeInsets.all(UiConfig.defaultPaddingSpacing),
