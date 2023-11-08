@@ -177,7 +177,7 @@ class ConsentFormDetailBloc
     ConsentFormModel consentForm = event.consentForm;
     List<MandatoryFieldModel> mandatoryFields = [];
     List<PurposeModel> purposes = [];
-    List<PurposeCategoryModel> purposeCategories = [];
+    // List<PurposeCategoryModel> purposeCategories = [];
     List<CustomFieldModel> customFields = [];
     ConsentThemeModel consentTheme = ConsentThemeModel.initial();
 
@@ -186,7 +186,7 @@ class ConsentFormDetailBloc
 
       mandatoryFields = settings.mandatoryFields;
       purposes = settings.purposes;
-      purposeCategories = settings.purposeCategories;
+      // purposeCategories = settings.purposeCategories;
       customFields = settings.customFields;
       consentTheme = event.consentTheme ?? settings.consentTheme;
     } else if (state is UpdatedConsentFormDetail) {
@@ -194,7 +194,7 @@ class ConsentFormDetailBloc
 
       mandatoryFields = settings.mandatoryFields;
       purposes = settings.purposes;
-      purposeCategories = settings.purposeCategories;
+      // purposeCategories = settings.purposeCategories;
       customFields = settings.customFields;
       consentTheme = event.consentTheme ?? settings.consentTheme;
     }

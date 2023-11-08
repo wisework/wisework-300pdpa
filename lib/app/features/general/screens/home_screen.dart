@@ -178,9 +178,9 @@ class _HomeViewState extends State<HomeView> {
         title: Padding(
           padding: const EdgeInsets.only(right: 40.0),
           child: SizedBox(
-            width: 110.0,
+            height: 40.0,
             child: Image.asset(
-              'assets/images/general/wisework-logo-mini.png',
+              'assets/images/general/dpo_online_mini.png',
               fit: BoxFit.contain,
             ),
           ),
