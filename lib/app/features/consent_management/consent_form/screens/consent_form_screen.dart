@@ -297,12 +297,12 @@ class _ConsentFormViewState extends State<ConsentFormView> {
                     ? Icon(
                         Icons.arrow_drop_down,
                         size: 20,
-                        color: Theme.of(context).colorScheme.secondary,
+                        color: Theme.of(context).colorScheme.onSurface,
                       )
                     : Icon(
                         Icons.arrow_drop_up,
                         size: 20,
-                        color: Theme.of(context).colorScheme.secondary,
+                        color: Theme.of(context).colorScheme.onSurface,
                       ),
               ),
             ],

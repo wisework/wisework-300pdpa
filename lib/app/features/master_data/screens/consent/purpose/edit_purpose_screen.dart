@@ -171,6 +171,8 @@ class _EditPurposeViewState extends State<EditPurposeView> {
   }
 
   void _initialData() {
+    const language = 'th-TH';
+
     purpose = widget.initialPurpose;
 
     descriptionController = TextEditingController();
@@ -182,13 +184,27 @@ class _EditPurposeViewState extends State<EditPurposeView> {
 
     if (purpose != PurposeModel.empty()) {
       if (purpose.description.isNotEmpty) {
+        final description = purpose.description
+            .firstWhere(
+              (item) => item.language == language,
+              orElse: () => const LocalizedModel.empty(),
+            )
+            .text;
+
         descriptionController = TextEditingController(
-          text: purpose.description.first.text,
+          text: description,
         );
       }
       if (purpose.warningDescription.isNotEmpty) {
+        final warningDescription = purpose.warningDescription
+            .firstWhere(
+              (item) => item.language == language,
+              orElse: () => const LocalizedModel.empty(),
+            )
+            .text;
+
         warningDescriptionController = TextEditingController(
-          text: purpose.warningDescription.first.text,
+          text: warningDescription,
         );
       }
 
