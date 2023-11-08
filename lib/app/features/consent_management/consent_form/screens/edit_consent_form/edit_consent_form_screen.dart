@@ -22,6 +22,7 @@ import 'package:pdpa/app/features/consent_management/consent_form/screens/edit_c
 import 'package:pdpa/app/injection.dart';
 import 'package:pdpa/app/shared/utils/constants.dart';
 import 'package:pdpa/app/shared/utils/functions.dart';
+import 'package:pdpa/app/shared/widgets/content_wrapper.dart';
 import 'package:pdpa/app/shared/widgets/customs/custom_button.dart';
 import 'package:pdpa/app/shared/widgets/customs/custom_container.dart';
 import 'package:pdpa/app/shared/widgets/customs/custom_icon_button.dart';
@@ -417,24 +418,26 @@ class _EditConsentFormViewState extends State<EditConsentFormView> {
         ],
       ),
       body: SingleChildScrollView(
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: <Widget>[
-            const SizedBox(height: UiConfig.lineSpacing),
-            Form(
-              key: _formKey,
-              child: Column(
-                children: <Widget>[
-                  _buildInformationSection(context),
-                  const SizedBox(height: UiConfig.lineSpacing),
-                  _buildMandatorySection(context),
-                  const SizedBox(height: UiConfig.lineSpacing),
-                  _buildPurposeCategorySection(context),
-                  const SizedBox(height: UiConfig.lineSpacing),
-                ],
+        child: ContentWrapper(
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: <Widget>[
+              const SizedBox(height: UiConfig.lineSpacing),
+              Form(
+                key: _formKey,
+                child: Column(
+                  children: <Widget>[
+                    _buildInformationSection(context),
+                    const SizedBox(height: UiConfig.lineSpacing),
+                    _buildMandatorySection(context),
+                    const SizedBox(height: UiConfig.lineSpacing),
+                    _buildPurposeCategorySection(context),
+                    const SizedBox(height: UiConfig.lineSpacing),
+                  ],
+                ),
               ),
-            ),
-          ],
+            ],
+          ),
         ),
       ),
     );

@@ -18,6 +18,7 @@ import 'package:pdpa/app/features/master_data/widgets/configuration_info.dart';
 import 'package:pdpa/app/injection.dart';
 import 'package:pdpa/app/shared/utils/constants.dart';
 import 'package:pdpa/app/shared/utils/toast.dart';
+import 'package:pdpa/app/shared/widgets/content_wrapper.dart';
 import 'package:pdpa/app/shared/widgets/customs/custom_button.dart';
 import 'package:pdpa/app/shared/widgets/customs/custom_container.dart';
 import 'package:pdpa/app/shared/widgets/customs/custom_icon_button.dart';
@@ -340,23 +341,25 @@ class _EditPurposeCategoryViewState extends State<EditPurposeCategoryView> {
         ],
       ),
       body: SingleChildScrollView(
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: <Widget>[
-            const SizedBox(height: UiConfig.lineSpacing),
-            CustomContainer(
-              child: _buildPurposeCategoryForm(context),
-            ),
-            const SizedBox(height: UiConfig.lineSpacing),
-            Visibility(
-              visible:
-                  widget.initialPurposeCategory != PurposeCategoryModel.empty(),
-              child: _buildConfigurationInfo(
-                context,
-                widget.initialPurposeCategory,
+        child: ContentWrapper(
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: <Widget>[
+              const SizedBox(height: UiConfig.lineSpacing),
+              CustomContainer(
+                child: _buildPurposeCategoryForm(context),
               ),
-            ),
-          ],
+              const SizedBox(height: UiConfig.lineSpacing),
+              Visibility(
+                visible: widget.initialPurposeCategory !=
+                    PurposeCategoryModel.empty(),
+                child: _buildConfigurationInfo(
+                  context,
+                  widget.initialPurposeCategory,
+                ),
+              ),
+            ],
+          ),
         ),
       ),
     );

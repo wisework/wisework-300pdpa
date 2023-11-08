@@ -45,8 +45,14 @@ class _ChoosePurposeModalState extends State<ChoosePurposeModal> {
   }
 
   void _initialData() {
-    purposes = widget.purposes.where((purpose) => purpose.status != ActiveStatus.inactive).map((purpose) => purpose).toList();
-    selectPurposes = widget.initialPurposes.where((purpose) => purpose.status != ActiveStatus.inactive).map((purpose) => purpose).toList();
+    purposes = widget.purposes
+        .where((purpose) => purpose.status != ActiveStatus.inactive)
+        .map((purpose) => purpose)
+        .toList();
+    selectPurposes = widget.initialPurposes
+        .where((purpose) => purpose.status != ActiveStatus.inactive)
+        .map((purpose) => purpose)
+        .toList();
   }
 
   void _selectPurpose(PurposeModel purpose) {

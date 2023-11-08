@@ -6,6 +6,7 @@ import 'package:pdpa/app/config/themes/pdpa_theme_data.dart';
 import 'package:pdpa/app/data/models/authentication/user_model.dart';
 import 'package:pdpa/app/features/authentication/bloc/sign_in/sign_in_bloc.dart';
 import 'package:pdpa/app/shared/drawers/pdpa_drawer.dart';
+import 'package:pdpa/app/shared/widgets/content_wrapper.dart';
 import 'package:pdpa/app/shared/widgets/customs/custom_container.dart';
 import 'package:pdpa/app/shared/widgets/customs/custom_icon_button.dart';
 import 'package:pdpa/app/shared/widgets/customs/custom_switch_button.dart';
@@ -125,39 +126,21 @@ class _SettingViewState extends State<SettingView> {
         ),
       ),
       body: SingleChildScrollView(
-        child: Column(
-          children: <Widget>[
-            // const SizedBox(height: UiConfig.lineSpacing),
-            // _buildGeneralSection(),
-            const SizedBox(height: UiConfig.lineSpacing),
-            _buildThemeSwitchButton(themeProvider),
-          ],
+        child: ContentWrapper(
+          child: Column(
+            children: <Widget>[
+              // const SizedBox(height: UiConfig.lineSpacing),
+              // _buildGeneralSection(),
+              const SizedBox(height: UiConfig.lineSpacing),
+              _buildThemeSwitchButton(themeProvider),
+            ],
+          ),
         ),
       ),
       drawer: PdpaDrawer(
         onClosed: () {
           _scaffoldKey.currentState?.closeDrawer();
         },
-      ),
-    );
-  }
-
-  Widget _buildThemeSwitchButton(ThemeProvider themeProvider) {
-    return CustomContainer(
-      child: Row(
-        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-        children: <Widget>[
-          Text(
-            tr('app.mode'),
-            style: Theme.of(context).textTheme.bodyMedium,
-          ),
-          CustomSwitchButton(
-            value: themeProvider.currentTheme == PdpaThemeData.darkThemeData,
-            onChanged: (value) {
-              themeProvider.toggleTheme();
-            },
-          ),
-        ],
       ),
     );
   }
@@ -204,4 +187,43 @@ class _SettingViewState extends State<SettingView> {
   //     ),
   //   );
   // }
+
+  CustomContainer _buildThemeSwitchButton(ThemeProvider themeProvider) {
+    return CustomContainer(
+      child: Column(
+        mainAxisSize: MainAxisSize.min,
+        children: <Widget>[
+          Row(
+            children: <Widget>[
+              Text(
+                'การตั้งค่าทั่วไป',
+                style: Theme.of(context).textTheme.titleLarge,
+              ),
+            ],
+          ),
+          const SizedBox(height: UiConfig.lineSpacing),
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: <Widget>[
+              Text(
+                tr('app.mode'),
+                style: Theme.of(context).textTheme.bodyMedium,
+              ),
+              CustomSwitchButton(
+                value:
+                    themeProvider.currentTheme == PdpaThemeData.darkThemeData,
+                onChanged: (value) {
+                  themeProvider.toggleTheme();
+                },
+              ),
+            ],
+          ),
+          Divider(
+            color:
+                Theme.of(context).colorScheme.outlineVariant.withOpacity(0.5),
+          ),
+        ],
+      ),
+    );
+  }
 }

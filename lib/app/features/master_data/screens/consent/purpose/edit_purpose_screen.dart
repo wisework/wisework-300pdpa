@@ -14,6 +14,7 @@ import 'package:pdpa/app/features/master_data/widgets/configuration_info.dart';
 import 'package:pdpa/app/injection.dart';
 import 'package:pdpa/app/shared/utils/constants.dart';
 import 'package:pdpa/app/shared/utils/toast.dart';
+import 'package:pdpa/app/shared/widgets/content_wrapper.dart';
 import 'package:pdpa/app/shared/widgets/customs/custom_container.dart';
 import 'package:pdpa/app/shared/widgets/customs/custom_dropdown_button.dart';
 import 'package:pdpa/app/shared/widgets/customs/custom_icon_button.dart';
@@ -340,19 +341,21 @@ class _EditPurposeViewState extends State<EditPurposeView> {
         ],
       ),
       body: SingleChildScrollView(
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: <Widget>[
-            const SizedBox(height: UiConfig.lineSpacing),
-            CustomContainer(
-              child: _buildPurposeForm(context),
-            ),
-            const SizedBox(height: UiConfig.lineSpacing),
-            Visibility(
-              visible: widget.initialPurpose != PurposeModel.empty(),
-              child: _buildConfigurationInfo(context, widget.initialPurpose),
-            ),
-          ],
+        child: ContentWrapper(
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: <Widget>[
+              const SizedBox(height: UiConfig.lineSpacing),
+              CustomContainer(
+                child: _buildPurposeForm(context),
+              ),
+              const SizedBox(height: UiConfig.lineSpacing),
+              Visibility(
+                visible: widget.initialPurpose != PurposeModel.empty(),
+                child: _buildConfigurationInfo(context, widget.initialPurpose),
+              ),
+            ],
+          ),
         ),
       ),
     );
