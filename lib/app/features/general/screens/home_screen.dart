@@ -731,8 +731,13 @@ class _HomeViewState extends State<HomeView> {
                   ),
                 );
               }
-              return const Center(
-                child: CircularProgressIndicator(),
+              return const Padding(
+                padding: EdgeInsets.symmetric(
+                  vertical: UiConfig.defaultPaddingSpacing * 4,
+                ),
+                child: Center(
+                  child: LoadingIndicator(),
+                ),
               );
             },
           ),

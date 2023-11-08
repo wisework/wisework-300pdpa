@@ -133,6 +133,7 @@
                 "title": "Title",
                 "hinttitle": "Enter title",
                 "description": "Description",
+                "hintdescription" : "กรอกรายละเอียด",
                 "address": "Address",
                 "telNumber": "Telephone number",
                 "nameSurename": "Name-Surname",

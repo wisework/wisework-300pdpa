@@ -133,6 +133,7 @@
                 "title": "หัวข้อ",
                 "hinttitle": "กรอกหัวข้อ",
                 "description": "รายละเอียด",
+                "hintdescription" : "กรอกรายละเอียด",
                 "address": "ที่อยู่",
                 "telNumber": "เบอร์โทรศัพท์",
                 "nameSurename": "ชื่อ-นามสกุล",

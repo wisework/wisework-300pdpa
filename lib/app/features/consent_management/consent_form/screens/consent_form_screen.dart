@@ -213,7 +213,7 @@ class _ConsentFormViewState extends State<ConsentFormView> {
               children: <Widget>[
                 Expanded(
                   child: Text(
-                    'รายการความยินยอม', //!
+                    tr('consentManagement.consentForm.consentList'), //!
                     style: Theme.of(context).textTheme.titleMedium,
                     overflow: TextOverflow.ellipsis,
                     maxLines: 1,
