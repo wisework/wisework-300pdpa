@@ -11,6 +11,8 @@ import 'package:pdpa/app/features/authentication/bloc/sign_in/sign_in_bloc.dart'
 import 'package:pdpa/app/features/master_data/bloc/consent/purpose_category/purpose_category_bloc.dart';
 import 'package:pdpa/app/features/master_data/routes/master_data_route.dart';
 import 'package:pdpa/app/features/master_data/widgets/master_data_item_card.dart';
+import 'package:pdpa/app/shared/widgets/content_wrapper.dart';
+import 'package:pdpa/app/shared/widgets/customs/custom_container.dart';
 import 'package:pdpa/app/shared/widgets/customs/custom_icon_button.dart';
 import 'package:pdpa/app/shared/widgets/loading_indicator.dart';
 import 'package:pdpa/app/shared/widgets/screens/example_screen.dart';
@@ -89,59 +91,74 @@ class _PurposeCategoryViewState extends State<PurposeCategoryView> {
           style: Theme.of(context).textTheme.titleLarge,
         ),
       ),
-      body: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: <Widget>[
-          const SizedBox(height: UiConfig.lineSpacing),
-          Expanded(
-            child: Container(
-              padding: const EdgeInsets.all(UiConfig.defaultPaddingSpacing),
-              decoration: BoxDecoration(
-                color: Theme.of(context).colorScheme.onBackground,
-              ),
-              child: BlocBuilder<PurposeCategoryBloc, PurposeCategoryState>(
-                builder: (context, state) {
-                  if (state is GotPurposeCategories) {
-                    if (state.purposeCategories.isEmpty) {
-                      return ExampleScreen(
-                        headderText: tr('masterData.cm.purposeCategory.list'),
-                        buttonText: tr('masterData.cm.purposeCategory.create'),
-                        descriptionText:
-                            tr('masterData.cm.purposeCategory.explain'),
-                        onPress: () {
-                          context
-                              .push(MasterDataRoute.createPurposeCategory.path);
-                        },
-                      );
-                    }
-                    return ListView.builder(
-                      itemCount: state.purposeCategories.length,
-                      itemBuilder: (context, index) {
-                        return _buildItemCard(
-                          context,
-                          purposeCategory: state.purposeCategories[index],
-                          onUpdated: _onUpdated,
-                          language: language,
-                        );
-                      },
-                    );
-                  }
-                  if (state is PurposeCategoryError) {
-                    return Center(
+      body: SingleChildScrollView(
+        child: ContentWrapper(
+          child: BlocBuilder<PurposeCategoryBloc, PurposeCategoryState>(
+            builder: (context, state) {
+              if (state is GotPurposeCategories) {
+                return CustomContainer(
+                  margin: const EdgeInsets.all(UiConfig.lineSpacing),
+                  child: state.purposeCategories.isNotEmpty
+                      ? ListView.builder(
+                          physics: const NeverScrollableScrollPhysics(),
+                          shrinkWrap: true,
+                          itemCount: state.purposeCategories.length,
+                          itemBuilder: (context, index) {
+                            return _buildItemCard(
+                              context,
+                              purposeCategory: state.purposeCategories[index],
+                              onUpdated: _onUpdated,
+                              language: language,
+                            );
+                          },
+                        )
+                      : ExampleScreen(
+                          headderText: tr(
+                            'masterData.cm.purposeCategory.list',
+                          ),
+                          buttonText: tr(
+                            'masterData.cm.purposeCategory.create',
+                          ),
+                          descriptionText: tr(
+                            'masterData.cm.purposeCategory.explain',
+                          ),
+                          onPress: () {
+                            context.push(
+                                MasterDataRoute.createPurposeCategory.path);
+                          },
+                        ),
+                );
+              }
+              if (state is PurposeCategoryError) {
+                return CustomContainer(
+                  margin: const EdgeInsets.all(UiConfig.lineSpacing),
+                  child: Padding(
+                    padding: const EdgeInsets.symmetric(
+                      vertical: UiConfig.defaultPaddingSpacing * 4,
+                    ),
+                    child: Center(
                       child: Text(
                         state.message,
                         style: Theme.of(context).textTheme.bodyMedium,
                       ),
-                    );
-                  }
-                  return const Center(
+                    ),
+                  ),
+                );
+              }
+              return const CustomContainer(
+                margin: EdgeInsets.all(UiConfig.lineSpacing),
+                child: Padding(
+                  padding: EdgeInsets.symmetric(
+                    vertical: UiConfig.defaultPaddingSpacing * 4,
+                  ),
+                  child: Center(
                     child: LoadingIndicator(),
-                  );
-                },
-              ),
-            ),
+                  ),
+                ),
+              );
+            },
           ),
-        ],
+        ),
       ),
       floatingActionButton: FloatingActionButton(
         onPressed: () async {

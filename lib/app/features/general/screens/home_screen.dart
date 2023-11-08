@@ -4,6 +4,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_staggered_grid_view/flutter_staggered_grid_view.dart';
 import 'package:go_router/go_router.dart';
 import 'package:ionicons/ionicons.dart';
+import 'package:modal_bottom_sheet/modal_bottom_sheet.dart';
 import 'package:pdpa/app/config/config.dart';
 import 'package:pdpa/app/data/models/authentication/company_model.dart';
 import 'package:pdpa/app/data/models/authentication/user_model.dart';
@@ -139,21 +140,25 @@ class _HomeViewState extends State<HomeView> {
   }
 
   void _showModalBottomSheet() {
-    showModalBottomSheet(
+    showMaterialModalBottomSheet(
       context: context,
       backgroundColor: Colors.transparent,
       builder: (context) {
         return SingleChildScrollView(
-          child: Container(
-            width: double.infinity,
-            decoration: BoxDecoration(
-              color: Theme.of(context).colorScheme.onBackground,
-              borderRadius: const BorderRadius.only(
-                topLeft: Radius.circular(16.0),
-                topRight: Radius.circular(16.0),
+          child: Center(
+            child: Container(
+              constraints: const BoxConstraints(
+                maxWidth: UiConfig.maxWidthContent,
               ),
+              decoration: BoxDecoration(
+                color: Theme.of(context).colorScheme.onBackground,
+                borderRadius: const BorderRadius.only(
+                  topLeft: Radius.circular(16.0),
+                  topRight: Radius.circular(16.0),
+                ),
+              ),
+              child: _buildModalInfo(context),
             ),
-            child: _buildModalInfo(context),
           ),
         );
       },
@@ -178,9 +183,9 @@ class _HomeViewState extends State<HomeView> {
         title: Padding(
           padding: const EdgeInsets.only(right: 40.0),
           child: SizedBox(
-            height: 40.0,
+            width: 110.0,
             child: Image.asset(
-              'assets/images/general/dpo_online_mini.png',
+              'assets/images/general/wisework-logo-mini.png',
               fit: BoxFit.contain,
             ),
           ),
@@ -297,7 +302,7 @@ class _HomeViewState extends State<HomeView> {
             child: CustomButton(
               height: 45.0,
               onPressed: () {
-                GoRouter.of(context).go(GeneralRoute.board.path);
+                context.push(GeneralRoute.board.path);
               },
               child: Text(
                 tr('app.disvover.seewhatnew'),

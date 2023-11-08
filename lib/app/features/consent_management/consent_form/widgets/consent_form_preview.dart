@@ -10,6 +10,7 @@ import 'package:pdpa/app/data/models/master_data/mandatory_field_model.dart';
 import 'package:pdpa/app/data/models/master_data/purpose_category_model.dart';
 import 'package:pdpa/app/data/models/master_data/purpose_model.dart';
 import 'package:pdpa/app/shared/utils/functions.dart';
+import 'package:pdpa/app/shared/widgets/content_wrapper.dart';
 import 'package:pdpa/app/shared/widgets/customs/custom_button.dart';
 import 'package:pdpa/app/shared/widgets/customs/custom_text_field.dart';
 import 'package:pdpa/app/shared/widgets/title_required_text.dart';
@@ -81,26 +82,28 @@ class _ConsentFormPreviewState extends State<ConsentFormPreview> {
         decoration: BoxDecoration(
           color: widget.consentTheme.backgroundColor,
         ),
-        child: Container(
-          decoration: BoxDecoration(
-            color: widget.consentTheme.bodyBackgroundColor,
-          ),
-          child: Column(
-            children: <Widget>[
-              Visibility(
-                visible: widget.consentForm.logoImage.isNotEmpty ||
-                    widget.consentForm.headerBackgroundImage.isNotEmpty,
-                child: _buildHeaderImage(),
-              ),
-              _buildConsentForm(context),
-              Visibility(
-                visible: widget.isShowActionButton,
-                child: Padding(
-                  padding: const EdgeInsets.only(top: UiConfig.lineGap),
-                  child: _buidActionButton(context),
+        child: ContentWrapper(
+          child: Container(
+            decoration: BoxDecoration(
+              color: widget.consentTheme.bodyBackgroundColor,
+            ),
+            child: Column(
+              children: <Widget>[
+                Visibility(
+                  visible: widget.consentForm.logoImage.isNotEmpty ||
+                      widget.consentForm.headerBackgroundImage.isNotEmpty,
+                  child: _buildHeaderImage(),
                 ),
-              ),
-            ],
+                _buildConsentForm(context),
+                Visibility(
+                  visible: widget.isShowActionButton,
+                  child: Padding(
+                    padding: const EdgeInsets.only(top: UiConfig.lineGap),
+                    child: _buidActionButton(context),
+                  ),
+                ),
+              ],
+            ),
           ),
         ),
       ),

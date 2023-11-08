@@ -15,6 +15,7 @@ import 'package:pdpa/app/features/master_data/widgets/configuration_info.dart';
 import 'package:pdpa/app/injection.dart';
 import 'package:pdpa/app/shared/utils/constants.dart';
 import 'package:pdpa/app/shared/widgets/color_picker_button.dart';
+import 'package:pdpa/app/shared/widgets/content_wrapper.dart';
 import 'package:pdpa/app/shared/widgets/customs/custom_container.dart';
 import 'package:pdpa/app/shared/widgets/customs/custom_icon_button.dart';
 import 'package:pdpa/app/shared/widgets/customs/custom_text_field.dart';
@@ -286,27 +287,29 @@ class _EditConsentThemeViewState extends State<EditConsentThemeView> {
         ],
       ),
       body: SingleChildScrollView(
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: <Widget>[
-            const SizedBox(height: UiConfig.lineSpacing),
-            _buildThemeInfoSection(context),
-            const SizedBox(height: UiConfig.lineSpacing),
-            _buildHeaderSection(context),
-            const SizedBox(height: UiConfig.lineSpacing),
-            _buildBodySection(context),
-            const SizedBox(height: UiConfig.lineSpacing),
-            _buildFooterSection(context),
-            const SizedBox(height: UiConfig.lineSpacing),
-            Visibility(
-              visible: !widget.isNewConsentTheme,
-              child: _buildConfigurationInfo(
-                context,
-                consentTheme: widget.initialConsentTheme,
+        child: ContentWrapper(
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: <Widget>[
+              const SizedBox(height: UiConfig.lineSpacing),
+              _buildThemeInfoSection(context),
+              const SizedBox(height: UiConfig.lineSpacing),
+              _buildHeaderSection(context),
+              const SizedBox(height: UiConfig.lineSpacing),
+              _buildBodySection(context),
+              const SizedBox(height: UiConfig.lineSpacing),
+              _buildFooterSection(context),
+              const SizedBox(height: UiConfig.lineSpacing),
+              Visibility(
+                visible: !widget.isNewConsentTheme,
+                child: _buildConfigurationInfo(
+                  context,
+                  consentTheme: widget.initialConsentTheme,
+                ),
               ),
-            ),
-            const SizedBox(height: UiConfig.lineSpacing),
-          ],
+              const SizedBox(height: UiConfig.lineSpacing),
+            ],
+          ),
         ),
       ),
     );

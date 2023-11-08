@@ -48,10 +48,14 @@ class _ChoosePurposeCategoryModalState
   }
 
   void _initialData() {
-    purposeCategories =
-        widget.purposeCategories.where((category) => category.status != ActiveStatus.inactive).map((category) => category).toList();
-    selectPurposeCategories =
-        widget.initialPurposeCategory.where((category) => category.status != ActiveStatus.inactive).map((category) => category).toList();
+    purposeCategories = widget.purposeCategories
+        .where((category) => category.status != ActiveStatus.inactive)
+        .map((category) => category)
+        .toList();
+    selectPurposeCategories = widget.initialPurposeCategory
+        .where((category) => category.status != ActiveStatus.inactive)
+        .map((category) => category)
+        .toList();
   }
 
   void _selectPurposeCategory(PurposeCategoryModel purposeCategory) {

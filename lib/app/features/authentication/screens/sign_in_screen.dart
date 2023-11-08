@@ -151,13 +151,14 @@ class _SignInScreenState extends State<SignInScreen> {
             ),
             child: Column(
               children: <Widget>[
+                const SizedBox(height: UiConfig.lineSpacing),
                 SizedBox(
                   width: screenSize.width,
                   child: Builder(builder: (context) {
                     if (formIndex != 0) {
                       return ConstrainedBox(
                         constraints: const BoxConstraints(
-                          maxHeight: 402.0,
+                          maxHeight: 342.0,
                         ),
                         child: Image.asset(
                           'assets/images/authentication/forgot-password.png',
@@ -365,6 +366,7 @@ class _SignInScreenState extends State<SignInScreen> {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: <Widget>[
+            const SizedBox(height: UiConfig.lineSpacing * 2),
             Text(
               '${tr('auth.signIn.forgotPassword')}?',
               style: Theme.of(context).textTheme.displayLarge,
@@ -381,6 +383,18 @@ class _SignInScreenState extends State<SignInScreen> {
               child: formIndex == 2
                   ? _buildResentForgotPasswordForm(context)
                   : _buildForgotPasswordForm(context),
+            ),
+            const SizedBox(height: UiConfig.lineSpacing * 2),
+            Align(
+              alignment: Alignment.center,
+              child: Text(
+                tr('app.copyright'),
+                style: Theme.of(context)
+                    .textTheme
+                    .bodySmall
+                    ?.copyWith(color: Theme.of(context).colorScheme.onTertiary),
+                textAlign: TextAlign.center,
+              ),
             ),
             const SizedBox(height: UiConfig.lineSpacing),
           ],

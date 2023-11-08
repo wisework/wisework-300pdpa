@@ -12,6 +12,7 @@ import 'package:pdpa/app/data/models/master_data/purpose_category_model.dart';
 import 'package:pdpa/app/data/models/master_data/purpose_model.dart';
 import 'package:pdpa/app/features/consent_management/consent_form/routes/consent_form_route.dart';
 import 'package:pdpa/app/shared/utils/functions.dart';
+import 'package:pdpa/app/shared/widgets/content_wrapper.dart';
 import 'package:pdpa/app/shared/widgets/customs/custom_container.dart';
 import 'package:pdpa/app/shared/widgets/customs/custom_icon_button.dart';
 import 'package:pdpa/app/shared/widgets/templates/pdpa_app_bar.dart';
@@ -73,33 +74,37 @@ class _CreateConsentFormSuccessScreenState
         children: <Widget>[
           Expanded(
             child: SingleChildScrollView(
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: <Widget>[
-                  const SizedBox(height: UiConfig.lineSpacing),
-                  CustomContainer(
-                    child: _buildConsentForm(context),
-                  ),
-                  const SizedBox(height: UiConfig.lineSpacing),
-                ],
+              child: ContentWrapper(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: <Widget>[
+                    const SizedBox(height: UiConfig.lineSpacing),
+                    CustomContainer(
+                      child: _buildConsentForm(context),
+                    ),
+                    const SizedBox(height: UiConfig.lineSpacing),
+                  ],
+                ),
               ),
             ),
           ),
-          Container(
-            padding: const EdgeInsets.all(
-              UiConfig.defaultPaddingSpacing,
+          ContentWrapper(
+            child: Container(
+              padding: const EdgeInsets.all(
+                UiConfig.defaultPaddingSpacing,
+              ),
+              decoration: BoxDecoration(
+                color: Theme.of(context).colorScheme.onBackground,
+                boxShadow: [
+                  BoxShadow(
+                    color: Theme.of(context).colorScheme.outline,
+                    blurRadius: 1.0,
+                    offset: const Offset(0, -2.0),
+                  ),
+                ],
+              ),
+              child: _buildShortcutSettingForm(context),
             ),
-            decoration: BoxDecoration(
-              color: Theme.of(context).colorScheme.onBackground,
-              boxShadow: [
-                BoxShadow(
-                  color: Theme.of(context).colorScheme.outline,
-                  blurRadius: 1.0,
-                  offset: const Offset(0, -2.0),
-                ),
-              ],
-            ),
-            child: _buildShortcutSettingForm(context),
           ),
         ],
       ),

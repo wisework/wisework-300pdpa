@@ -11,6 +11,8 @@ import 'package:pdpa/app/features/master_data/bloc/consent/purpose/purpose_bloc.
 import 'package:pdpa/app/features/master_data/routes/master_data_route.dart';
 import 'package:pdpa/app/features/master_data/widgets/master_data_item_card.dart';
 import 'package:pdpa/app/data/models/master_data/localized_model.dart';
+import 'package:pdpa/app/shared/widgets/content_wrapper.dart';
+import 'package:pdpa/app/shared/widgets/customs/custom_container.dart';
 import 'package:pdpa/app/shared/widgets/customs/custom_icon_button.dart';
 import 'package:pdpa/app/shared/widgets/loading_indicator.dart';
 import 'package:pdpa/app/shared/widgets/screens/example_screen.dart';
@@ -87,55 +89,67 @@ class _PurposeViewState extends State<PurposeView> {
           style: Theme.of(context).textTheme.titleLarge,
         ),
       ),
-      body: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: <Widget>[
-          const SizedBox(height: UiConfig.lineSpacing),
-          Expanded(
-            child: Container(
-              padding: const EdgeInsets.all(UiConfig.defaultPaddingSpacing),
-              decoration: BoxDecoration(
-                color: Theme.of(context).colorScheme.onBackground,
-              ),
-              child: BlocBuilder<PurposeBloc, PurposeState>(
-                builder: (context, state) {
-                  if (state is GotPurposes) {
-                    if (state.purposes.isEmpty) {
-                      return ExampleScreen(
-                        headderText: tr('masterData.cm.purpose.list'),
-                        buttonText: tr('masterData.cm.purpose.create'),
-                        descriptionText: tr('masterData.cm.purpose.explain'),
-                        onPress: () {
-                          context.push(MasterDataRoute.createPurpose.path);
-                        },
-                      );
-                    }
-                    return ListView.builder(
-                      itemCount: state.purposes.length,
-                      itemBuilder: (context, index) {
-                        return _buildItemCard(context,
-                            purpose: state.purposes[index],
-                            onUpdated: _onUpdated,
-                            language: language);
-                      },
-                    );
-                  }
-                  if (state is PurposeError) {
-                    return Center(
+      body: SingleChildScrollView(
+        child: ContentWrapper(
+          child: BlocBuilder<PurposeBloc, PurposeState>(
+            builder: (context, state) {
+              if (state is GotPurposes) {
+                return CustomContainer(
+                  margin: const EdgeInsets.all(UiConfig.lineSpacing),
+                  child: state.purposes.isNotEmpty
+                      ? ListView.builder(
+                          physics: const NeverScrollableScrollPhysics(),
+                          shrinkWrap: true,
+                          itemCount: state.purposes.length,
+                          itemBuilder: (context, index) {
+                            return _buildItemCard(
+                              context,
+                              purpose: state.purposes[index],
+                              onUpdated: _onUpdated,
+                              language: language,
+                            );
+                          },
+                        )
+                      : ExampleScreen(
+                          headderText: tr('masterData.cm.purpose.list'),
+                          buttonText: tr('masterData.cm.purpose.create'),
+                          descriptionText: tr('masterData.cm.purpose.explain'),
+                          onPress: () {
+                            context.push(MasterDataRoute.createPurpose.path);
+                          },
+                        ),
+                );
+              }
+              if (state is PurposeError) {
+                return CustomContainer(
+                  margin: const EdgeInsets.all(UiConfig.lineSpacing),
+                  child: Padding(
+                    padding: const EdgeInsets.symmetric(
+                      vertical: UiConfig.defaultPaddingSpacing * 4,
+                    ),
+                    child: Center(
                       child: Text(
                         state.message,
                         style: Theme.of(context).textTheme.bodyMedium,
                       ),
-                    );
-                  }
-                  return const Center(
+                    ),
+                  ),
+                );
+              }
+              return const CustomContainer(
+                margin: EdgeInsets.all(UiConfig.lineSpacing),
+                child: Padding(
+                  padding: EdgeInsets.symmetric(
+                    vertical: UiConfig.defaultPaddingSpacing * 4,
+                  ),
+                  child: Center(
                     child: LoadingIndicator(),
-                  );
-                },
-              ),
-            ),
+                  ),
+                ),
+              );
+            },
           ),
-        ],
+        ),
       ),
       floatingActionButton: FloatingActionButton(
         onPressed: () async {

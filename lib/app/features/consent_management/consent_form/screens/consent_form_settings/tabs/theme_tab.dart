@@ -9,6 +9,7 @@ import 'package:pdpa/app/data/models/consent_management/consent_theme_model.dart
 import 'package:pdpa/app/features/consent_management/consent_form/cubit/current_consent_form_settings/current_consent_form_settings_cubit.dart';
 import 'package:pdpa/app/features/consent_management/consent_form/routes/consent_form_route.dart';
 import 'package:pdpa/app/features/consent_management/consent_form/screens/consent_form_settings/widgets/consent_theme_tile.dart';
+import 'package:pdpa/app/shared/widgets/content_wrapper.dart';
 import 'package:pdpa/app/shared/widgets/customs/custom_container.dart';
 import 'package:pdpa/app/shared/widgets/material_ink_well.dart';
 
@@ -25,12 +26,14 @@ class ThemeTab extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return SingleChildScrollView(
-      child: Column(
-        children: <Widget>[
-          const SizedBox(height: UiConfig.lineSpacing),
-          _buildThemeSection(context),
-          const SizedBox(height: UiConfig.lineSpacing),
-        ],
+      child: ContentWrapper(
+        child: Column(
+          children: <Widget>[
+            const SizedBox(height: UiConfig.lineSpacing),
+            _buildThemeSection(context),
+            const SizedBox(height: UiConfig.lineSpacing),
+          ],
+        ),
       ),
     );
   }

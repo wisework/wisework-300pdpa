@@ -10,6 +10,7 @@ import 'package:pdpa/app/data/models/master_data/localized_model.dart';
 import 'package:pdpa/app/features/consent_management/consent_form/cubit/current_consent_form_settings/current_consent_form_settings_cubit.dart';
 import 'package:pdpa/app/shared/utils/constants.dart';
 import 'package:pdpa/app/shared/utils/functions.dart';
+import 'package:pdpa/app/shared/widgets/content_wrapper.dart';
 import 'package:pdpa/app/shared/widgets/customs/custom_container.dart';
 import 'package:pdpa/app/shared/widgets/customs/custom_text_field.dart';
 import 'package:pdpa/app/shared/widgets/recently_image_selector.dart';
@@ -108,16 +109,18 @@ class _HeaderTabState extends State<HeaderTab> {
   @override
   Widget build(BuildContext context) {
     return SingleChildScrollView(
-      child: Column(
-        children: <Widget>[
-          const SizedBox(height: UiConfig.lineSpacing),
-          _buildLogoSection(context),
-          const SizedBox(height: UiConfig.lineSpacing),
-          _buildHeaderSection(context),
-          const SizedBox(height: UiConfig.lineSpacing),
-          _buildBackgroundSection(context),
-          const SizedBox(height: 100),
-        ],
+      child: ContentWrapper(
+        child: Column(
+          children: <Widget>[
+            const SizedBox(height: UiConfig.lineSpacing),
+            _buildLogoSection(context),
+            const SizedBox(height: UiConfig.lineSpacing),
+            _buildHeaderSection(context),
+            const SizedBox(height: UiConfig.lineSpacing),
+            _buildBackgroundSection(context),
+            const SizedBox(height: 100),
+          ],
+        ),
       ),
     );
   }

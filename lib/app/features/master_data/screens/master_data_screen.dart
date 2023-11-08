@@ -6,6 +6,7 @@ import 'package:pdpa/app/config/config.dart';
 import 'package:pdpa/app/features/master_data/routes/master_data_route.dart';
 import 'package:pdpa/app/features/master_data/widgets/master_data_list_tile.dart';
 import 'package:pdpa/app/shared/drawers/pdpa_drawer.dart';
+import 'package:pdpa/app/shared/widgets/content_wrapper.dart';
 import 'package:pdpa/app/shared/widgets/customs/custom_container.dart';
 import 'package:pdpa/app/shared/widgets/customs/custom_icon_button.dart';
 import 'package:pdpa/app/shared/widgets/templates/pdpa_app_bar.dart';
@@ -34,16 +35,18 @@ class MasterDataScreen extends StatelessWidget {
         ),
       ),
       body: SingleChildScrollView(
-        child: Column(
-          children: <Widget>[
-            const SizedBox(height: UiConfig.lineSpacing),
-            _buildMandatorySection(context),
-            const SizedBox(height: UiConfig.lineSpacing),
-            _buildConsentSection(context),
-            const SizedBox(height: UiConfig.lineSpacing),
-            // _buildDataSubjectRightSection(context),
-            // const SizedBox(height: UiConfig.lineSpacing),
-          ],
+        child: ContentWrapper(
+          child: Column(
+            children: <Widget>[
+              const SizedBox(height: UiConfig.lineSpacing),
+              _buildMandatorySection(context),
+              const SizedBox(height: UiConfig.lineSpacing),
+              _buildConsentSection(context),
+              const SizedBox(height: UiConfig.lineSpacing),
+              // _buildDataSubjectRightSection(context),
+              // const SizedBox(height: UiConfig.lineSpacing),
+            ],
+          ),
         ),
       ),
       drawer: PdpaDrawer(
