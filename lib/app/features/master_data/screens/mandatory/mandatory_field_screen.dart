@@ -219,7 +219,7 @@ class _MandatoryFieldViewState extends State<MandatoryFieldView> {
     BuildContext context, {
     required MandatoryFieldModel mandatoryField,
   }) {
-    const language = 'en-US';
+    const language = 'th-TH';
     final title = mandatoryField.title.firstWhere(
       (item) => item.language == language,
       orElse: () => const LocalizedModel.empty(),

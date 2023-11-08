@@ -155,7 +155,8 @@ class _UserConsentViewState extends State<UserConsentView> {
                               Expanded(
                                 child: Text(
                                   'รายการความยินยอมที่ได้รับ', //!
-                                  style: Theme.of(context).textTheme.titleMedium,
+                                  style:
+                                      Theme.of(context).textTheme.titleMedium,
                                   overflow: TextOverflow.ellipsis,
                                   maxLines: 1,
                                 ),
@@ -273,12 +274,12 @@ class _UserConsentViewState extends State<UserConsentView> {
                     ? Icon(
                         Icons.arrow_drop_down,
                         size: 20,
-                        color: Theme.of(context).colorScheme.secondary,
+                        color: Theme.of(context).colorScheme.onSurface,
                       )
                     : Icon(
                         Icons.arrow_drop_up,
                         size: 20,
-                        color: Theme.of(context).colorScheme.secondary,
+                        color: Theme.of(context).colorScheme.onSurface,
                       ),
               ),
             ],
