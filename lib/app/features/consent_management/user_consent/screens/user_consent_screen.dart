@@ -70,7 +70,7 @@ class UserConsentView extends StatefulWidget {
 class _UserConsentViewState extends State<UserConsentView> {
   final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
 
-  bool _sortAscending = true;
+  bool _sortAscending = false;
 
   void _openSeachConsentFormModal() {
     final bloc = context.read<UserConsentBloc>();
@@ -155,7 +155,8 @@ class _UserConsentViewState extends State<UserConsentView> {
                               Expanded(
                                 child: Text(
                                   'รายการความยินยอมที่ได้รับ', //!
-                                  style: Theme.of(context).textTheme.titleMedium,
+                                  style:
+                                      Theme.of(context).textTheme.titleMedium,
                                   overflow: TextOverflow.ellipsis,
                                   maxLines: 1,
                                 ),
@@ -273,12 +274,12 @@ class _UserConsentViewState extends State<UserConsentView> {
                     ? Icon(
                         Icons.arrow_drop_down,
                         size: 20,
-                        color: Theme.of(context).colorScheme.secondary,
+                        color: Theme.of(context).colorScheme.onSurface,
                       )
                     : Icon(
                         Icons.arrow_drop_up,
                         size: 20,
-                        color: Theme.of(context).colorScheme.secondary,
+                        color: Theme.of(context).colorScheme.onSurface,
                       ),
               ),
             ],

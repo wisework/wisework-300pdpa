@@ -191,6 +191,8 @@ class _EditPurposeCategoryViewState extends State<EditPurposeCategoryView> {
   }
 
   void _initialData() {
+    const language = 'th-TH';
+
     purposeCategory = widget.initialPurposeCategory;
 
     titleController = TextEditingController();
@@ -200,13 +202,27 @@ class _EditPurposeCategoryViewState extends State<EditPurposeCategoryView> {
 
     if (purposeCategory != PurposeCategoryModel.empty()) {
       if (purposeCategory.title.isNotEmpty) {
+        final title = purposeCategory.title
+            .firstWhere(
+              (item) => item.language == language,
+              orElse: () => const LocalizedModel.empty(),
+            )
+            .text;
+
         titleController = TextEditingController(
-          text: purposeCategory.title.first.text,
+          text: title,
         );
       }
       if (purposeCategory.description.isNotEmpty) {
+        final description = purposeCategory.description
+            .firstWhere(
+              (item) => item.language == language,
+              orElse: () => const LocalizedModel.empty(),
+            )
+            .text;
+
         descriptionController = TextEditingController(
-          text: purposeCategory.description.first.text,
+          text: description,
         );
       }
 

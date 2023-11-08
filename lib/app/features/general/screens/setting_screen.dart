@@ -8,6 +8,7 @@ import 'package:pdpa/app/features/authentication/bloc/sign_in/sign_in_bloc.dart'
 import 'package:pdpa/app/shared/drawers/pdpa_drawer.dart';
 import 'package:pdpa/app/shared/widgets/customs/custom_container.dart';
 import 'package:pdpa/app/shared/widgets/customs/custom_icon_button.dart';
+import 'package:pdpa/app/shared/widgets/customs/custom_switch_button.dart';
 import 'package:pdpa/app/shared/widgets/templates/pdpa_app_bar.dart';
 import 'package:provider/provider.dart';
 
@@ -150,7 +151,7 @@ class _SettingViewState extends State<SettingView> {
             tr('app.mode'),
             style: Theme.of(context).textTheme.bodyMedium,
           ),
-          Switch(
+          CustomSwitchButton(
             value: themeProvider.currentTheme == PdpaThemeData.darkThemeData,
             onChanged: (value) {
               themeProvider.toggleTheme();
