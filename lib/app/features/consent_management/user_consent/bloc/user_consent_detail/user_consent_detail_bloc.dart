@@ -177,7 +177,7 @@ class UserConsentDetailBloc
       GotUserConsentDetail(
         gotUserConsent,
         gotConsentForm,
-        gotMandatoryFields,
+        gotMandatoryFields..sort((a, b) => a.priority.compareTo(b.priority)),
         gotPurposes,
         gotPurposeCategories,
         gotCustomFields,
