@@ -92,7 +92,7 @@ class _SearchConsentFormModalState extends State<SearchConsentFormModal> {
                           horizontal: UiConfig.actionSpacing),
                       child: CustomTextField(
                         controller: searchController,
-                        hintText: 'ค้นหา', //!
+                        hintText: tr('app.search'), //!
                         onChanged: (search) {
                           final cubit = context.read<SearchConsentFormCubit>();
                           cubit.searchConsentForm(search, widget.language);

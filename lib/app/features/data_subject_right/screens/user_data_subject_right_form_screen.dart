@@ -99,12 +99,12 @@ class _UserDataSubjectRightFormScreenState
     return Scaffold(
       appBar: PdpaAppBar(
         title: SizedBox(
-          width: 110.0,
-          child: Image.asset(
-            'assets/images/general/wisework-logo-mini.png',
-            fit: BoxFit.contain,
+            height: 40.0,
+            child: Image.asset(
+              'assets/images/general/dpo_online_mini.png',
+              fit: BoxFit.contain,
+            ),
           ),
-        ),
       ),
       body: SingleChildScrollView(
         child: Column(

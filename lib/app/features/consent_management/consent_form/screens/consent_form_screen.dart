@@ -152,7 +152,7 @@ class _ConsentFormViewState extends State<ConsentFormView> {
                           mainAxisAlignment: MainAxisAlignment.start,
                           children: [
                             Text(
-                              'รายการความยินยอม', //!
+                              tr('consentManagement.consentForm.consentList'), //!
                               style: Theme.of(context).textTheme.titleMedium,
                             ),
                           ],

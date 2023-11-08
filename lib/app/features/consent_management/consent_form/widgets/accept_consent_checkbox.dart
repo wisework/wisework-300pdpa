@@ -1,4 +1,5 @@
 import 'package:bot_toast/bot_toast.dart';
+import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:pdpa/app/config/config.dart';
@@ -58,7 +59,7 @@ class _AcceptConsentCheckboxState extends State<AcceptConsentCheckbox> {
         await launchUrl(uri);
       } else {
         BotToast.showText(
-          text: 'Could not launch $url', //!
+          text: tr('consentManagement.consentForm.couldNotLaunch $url'), //!
           contentColor:
               Theme.of(context).colorScheme.secondary.withOpacity(0.75),
           borderRadius: BorderRadius.circular(8.0),

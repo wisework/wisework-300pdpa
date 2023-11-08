@@ -119,9 +119,9 @@ class _UserConsentFormScreenState extends State<UserConsentFormScreen> {
     return Scaffold(
       appBar: PdpaAppBar(
         title: SizedBox(
-          width: 110.0,
+          height: 40.0,
           child: Image.asset(
-            'assets/images/general/wisework-logo-mini.png',
+            'assets/images/general/dpo_online_mini.png',
             fit: BoxFit.contain,
           ),
         ),
@@ -211,9 +211,9 @@ class _UserConsentFormViewState extends State<UserConsentFormView> {
     return Scaffold(
       appBar: PdpaAppBar(
         title: SizedBox(
-          width: 110.0,
+          height: 40.0,
           child: Image.asset(
-            'assets/images/general/wisework-logo-mini.png',
+            'assets/images/general/dpo_online_mini.png',
             fit: BoxFit.contain,
           ),
         ),
@@ -228,7 +228,7 @@ class _UserConsentFormViewState extends State<UserConsentFormView> {
           consentTheme: widget.consentTheme,
           onMandatoryFieldChanged: (mandatoryFieldId, value) {
             List<UserInputText> mandatoryFields = [];
-            
+
             for (UserInputText mandatoryField in userConsent.mandatoryFields) {
               if (mandatoryField.id == mandatoryFieldId) {
                 mandatoryFields.add(
