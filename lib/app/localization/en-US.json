@@ -32,10 +32,10 @@
         "disvover": {
             "discover": "Discover What’s New",
             "description": "Getting start of your journey with our data management tools. This brief guide will introduce you to our powerful PDPA application, helping you simplify data management and compliance with the PDPA Act.",
-            "seewhatnew" : "See What’s New!"
+            "seewhatnew": "See What’s New!"
         },
         "board": {
-            "skip" : "Skip",
+            "skip": "Skip",
             "description": "You can easily craft consent forms, and automatically generate them from specified master data. Tailor them to your needs, experiment with themes, and have the world at your fingertips with real-time previews. Then, share your creations effortlessly via QR codes or URLs.",
             "decription2": "Control over consent-related parameters, including purpose, purpose categories, and mandatory fields, ensuring data integrity and accuracy in the system.",
             "next": "Next",
@@ -47,7 +47,7 @@
         "confirm": "Confirm",
         "back": "Back",
         "poweredBy": "Powered by Aimer Co.,Ltd.",
-        "copyright": "© 2023 wisework. All rights reserved"
+        "copyright": "© 2023 Aimer. All rights reserved"
     },
     "auth": {
         "signIn": {
@@ -116,7 +116,7 @@
             }
         },
         "consentForm": {
-            "titleNull":"There is no consent form topic.",
+            "titleNull": "There is no consent form topic.",
             "explain": "This screen shows a list of forms created by the user. You can click on the form name to view more details about the form. If you want to create a consent form for a form, you can click the 'Create Consent Form' button.",
             "consentForms": "Consent Forms",
             "choosePurposeCategory": "Choose purpose category",
@@ -124,6 +124,8 @@
             "noPurposesAdded": "No purposes added.",
             "noInputFieldsAdded": "No input fields added.",
             "warningPurpose": "If you don't consent, we can't use your data for this purpose.",
+            "consentList": "Consent List",
+            "couldNotLaunch" : "Could not launch",
             "createForm": {
                 "create": "Create Consent Form",
                 "edit": "Edit consent form",
@@ -131,6 +133,7 @@
                 "title": "Title",
                 "hinttitle": "Enter title",
                 "description": "Description",
+                "hintdescription" : "กรอกรายละเอียด",
                 "address": "Address",
                 "telNumber": "Telephone number",
                 "nameSurename": "Name-Surname",
@@ -256,6 +259,7 @@
         "userConsent": {
             "explain": "This screen shows a list of consent forms received from users. You can view the information for each form",
             "userConsents": "User consents",
+            "listOfConsentsReceived" : "List of consents received",
             "createForm": {
                 "create": "Create Consent Form",
                 "section": "Request Form Information",
