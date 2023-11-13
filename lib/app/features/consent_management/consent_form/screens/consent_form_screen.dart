@@ -52,9 +52,8 @@ class _ConsentFormScreenState extends State<ConsentFormScreen> {
       language = (bloc.state as SignedInUser).user.defaultLanguage;
     }
 
-    context
-        .read<ConsentFormBloc>()
-        .add(GetConsentFormsEvent(companyId: companyId));
+    final event = GetConsentFormsEvent(companyId: companyId);
+    context.read<ConsentFormBloc>().add(event);
   }
 
   @override

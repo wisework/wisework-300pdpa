@@ -11,7 +11,12 @@ import 'package:pdpa/app/features/data_subject_right/routes/data_subject_right_r
 import 'package:pdpa/app/features/data_subject_right/widgets/data_subject_right_card.dart';
 import 'package:pdpa/app/shared/drawers/pdpa_drawer.dart';
 import 'package:pdpa/app/shared/utils/functions.dart';
+import 'package:pdpa/app/shared/widgets/content_wrapper.dart';
+import 'package:pdpa/app/shared/widgets/customs/custom_button.dart';
+import 'package:pdpa/app/shared/widgets/customs/custom_container.dart';
 import 'package:pdpa/app/shared/widgets/customs/custom_icon_button.dart';
+import 'package:pdpa/app/shared/widgets/loading_indicator.dart';
+import 'package:pdpa/app/shared/widgets/screens/example_screen.dart';
 import 'package:pdpa/app/shared/widgets/templates/pdpa_app_bar.dart';
 
 class DataSubjectRightScreen extends StatefulWidget {
@@ -22,6 +27,8 @@ class DataSubjectRightScreen extends StatefulWidget {
 }
 
 class _DataSubjectRightScreenState extends State<DataSubjectRightScreen> {
+  late String language;
+
   @override
   void initState() {
     super.initState();
@@ -35,21 +42,28 @@ class _DataSubjectRightScreenState extends State<DataSubjectRightScreen> {
     String companyId = '';
     if (bloc.state is SignedInUser) {
       companyId = (bloc.state as SignedInUser).user.currentCompany;
+      language = (bloc.state as SignedInUser).user.defaultLanguage;
     }
 
-    context
-        .read<DataSubjectRightBloc>()
-        .add(GetDataSubjectRightsEvent(companyId: companyId));
+    final event = GetDataSubjectRightsEvent(companyId: companyId);
+    context.read<DataSubjectRightBloc>().add(event);
   }
 
   @override
   Widget build(BuildContext context) {
-    return const DataSubjectRightView();
+    return DataSubjectRightView(
+      language: language,
+    );
   }
 }
 
 class DataSubjectRightView extends StatefulWidget {
-  const DataSubjectRightView({super.key});
+  const DataSubjectRightView({
+    super.key,
+    required this.language,
+  });
+
+  final String language;
 
   @override
   State<DataSubjectRightView> createState() => _DataSubjectRightViewState();
@@ -90,45 +104,46 @@ class _DataSubjectRightViewState extends State<DataSubjectRightView> {
           ),
         ],
       ),
-      body: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: <Widget>[
-          const SizedBox(height: UiConfig.lineSpacing),
-          Expanded(
-            child: Container(
-              padding: const EdgeInsets.all(UiConfig.defaultPaddingSpacing),
-              decoration: BoxDecoration(
-                color: Theme.of(context).colorScheme.onBackground,
-              ),
-              child: BlocBuilder<DataSubjectRightBloc, DataSubjectRightState>(
-                builder: (context, state) {
-                  if (state is GotDataSubjectRights) {
-                    return ListView.builder(
-                      itemCount: state.dataSubjectRights.length,
-                      itemBuilder: (context, index) {
-                        return _buildDataSubjectRightCard(
-                          context,
-                          dataSubjectRight: state.dataSubjectRights[index],
-                        );
-                      },
-                    );
-                  }
-                  if (state is DataSubjectRightError) {
-                    return Center(
+      body: SingleChildScrollView(
+        child: ContentWrapper(
+          child: BlocBuilder<DataSubjectRightBloc, DataSubjectRightState>(
+            builder: (context, state) {
+              if (state is GotDataSubjectRights) {
+                return _buildDataSubjectRightView(
+                  context,
+                  dataSubjectRights: state.dataSubjectRights,
+                );
+              }
+              if (state is DataSubjectRightError) {
+                return CustomContainer(
+                  margin: const EdgeInsets.all(UiConfig.lineSpacing),
+                  child: Padding(
+                    padding: const EdgeInsets.symmetric(
+                      vertical: UiConfig.defaultPaddingSpacing * 4,
+                    ),
+                    child: Center(
                       child: Text(
                         state.message,
                         style: Theme.of(context).textTheme.bodyMedium,
                       ),
-                    );
-                  }
-                  return const Center(
-                    child: CircularProgressIndicator(),
-                  );
-                },
-              ),
-            ),
+                    ),
+                  ),
+                );
+              }
+              return const CustomContainer(
+                margin: EdgeInsets.all(UiConfig.lineSpacing),
+                child: Padding(
+                  padding: EdgeInsets.symmetric(
+                    vertical: UiConfig.defaultPaddingSpacing * 4,
+                  ),
+                  child: Center(
+                    child: LoadingIndicator(),
+                  ),
+                ),
+              );
+            },
           ),
-        ],
+        ),
       ),
       floatingActionButton: FloatingActionButton(
         onPressed: () {
@@ -140,6 +155,93 @@ class _DataSubjectRightViewState extends State<DataSubjectRightView> {
         onClosed: () {
           _scaffoldKey.currentState?.closeDrawer();
         },
+      ),
+    );
+  }
+
+  CustomContainer _buildDataSubjectRightView(
+    BuildContext context, {
+    required List<DataSubjectRightModel> dataSubjectRights,
+  }) {
+    return CustomContainer(
+      margin: const EdgeInsets.all(UiConfig.lineSpacing),
+      child: Column(
+        children: <Widget>[
+          Padding(
+            padding: const EdgeInsets.symmetric(
+              horizontal: UiConfig.defaultPaddingSpacing,
+            ),
+            child: Row(
+              crossAxisAlignment: CrossAxisAlignment.center,
+              children: <Widget>[
+                Expanded(
+                  child: Text(
+                    tr('consentManagement.consentForm.consentList'), //!
+                    style: Theme.of(context).textTheme.titleMedium,
+                    overflow: TextOverflow.ellipsis,
+                    maxLines: 1,
+                  ),
+                ),
+                CustomButton(
+                  padding: const EdgeInsets.symmetric(
+                    vertical: 2.0,
+                    horizontal: 8.0,
+                  ),
+                  onPressed: () {
+                    // _sortConsentForms(!_sortAscending);
+                  },
+                  buttonType: CustomButtonType.text,
+                  child: Row(
+                    mainAxisSize: MainAxisSize.min,
+                    children: <Widget>[
+                      Text(
+                        tr("consentManagement.listage.filter.date"),
+                        style: Theme.of(context).textTheme.titleMedium,
+                      ),
+                      const SizedBox(width: 2.0),
+                      Icon(
+                        1 != 1 //_sortAscending
+                            ? Icons.arrow_drop_up
+                            : Icons.arrow_drop_down,
+                        size: 20.0,
+                        color: Theme.of(context).colorScheme.onSurface,
+                      ),
+                    ],
+                  ),
+                ),
+              ],
+            ),
+          ),
+          const SizedBox(height: UiConfig.textSpacing),
+          dataSubjectRights.isNotEmpty
+              ? ListView.builder(
+                  physics: const NeverScrollableScrollPhysics(),
+                  shrinkWrap: true,
+                  itemCount: dataSubjectRights.length,
+                  itemBuilder: (context, index) {
+                    return _buildDataSubjectRightCard(
+                      context,
+                      dataSubjectRight: dataSubjectRights[index],
+                    );
+                  },
+                )
+              : ExampleScreen(
+                  headderText: tr(
+                    'consentManagement.consentForm.consentForms',
+                  ),
+                  buttonText: tr(
+                    'consentManagement.consentForm.createForm.create',
+                  ),
+                  descriptionText: tr(
+                    'consentManagement.consentForm.explain',
+                  ),
+                  onPress: () {
+                    context.push(
+                      DataSubjectRightRoute.createDataSubjectRight.path,
+                    );
+                  },
+                ),
+        ],
       ),
     );
   }

@@ -1,8 +1,8 @@
 import 'package:equatable/equatable.dart';
 
 import 'package:pdpa/app/data/models/data_subject_right/process_request_model.dart';
-import 'package:pdpa/app/data/models/etc/user_input_text.dart';
-import 'package:pdpa/app/data/models/etc/user_verification.dart';
+import 'package:pdpa/app/data/models/data_subject_right/requester_input_model.dart';
+import 'package:pdpa/app/data/models/data_subject_right/requester_verification_model.dart';
 import 'package:pdpa/app/shared/utils/constants.dart';
 import 'package:pdpa/app/shared/utils/typedef.dart';
 
@@ -29,11 +29,11 @@ class DataSubjectRightModel extends Equatable {
   });
 
   final String id;
-  final List<UserInputText> dataRequester;
-  final List<UserInputText> dataOwner;
+  final List<RequesterInputModel> dataRequester;
+  final List<RequesterInputModel> dataOwner;
   final bool isDataOwner;
-  final List<UserVerification> powerVerifications;
-  final List<UserVerification> identityVerifications;
+  final List<RequesterVerificationModel> powerVerifications;
+  final List<RequesterVerificationModel> identityVerifications;
   final List<ProcessRequestModel> processRequests;
   final DateTime requestExpirationDate;
   final List<String> notifyEmail;
@@ -72,27 +72,30 @@ class DataSubjectRightModel extends Equatable {
   DataSubjectRightModel.fromMap(DataMap map)
       : this(
           id: map['id'] as String,
-          dataRequester: List<UserInputText>.from(
-            (map['dataRequester'] as DataMap).entries.map<UserInputText>(
-                (item) => UserInputText.fromMap(
-                    {'id': item.key, 'text': item.value})),
+          dataRequester: List<RequesterInputModel>.from(
+            (map['dataRequester'] as DataMap).entries.map<RequesterInputModel>(
+                (item) => RequesterInputModel.fromMap(
+                    {'id': item.key, ...item.value})),
           ),
-          dataOwner: List<UserInputText>.from(
-            (map['dataOwner'] as DataMap).entries.map<UserInputText>((item) =>
-                UserInputText.fromMap({'id': item.key, 'text': item.value})),
+          dataOwner: List<RequesterInputModel>.from(
+            (map['dataOwner'] as DataMap).entries.map<RequesterInputModel>(
+                (item) => RequesterInputModel.fromMap(
+                    {'id': item.key, ...item.value})),
           ),
           isDataOwner: map['isDataOwner'] as bool,
-          powerVerifications: List<UserVerification>.from(
+          powerVerifications: List<RequesterVerificationModel>.from(
             (map['powerVerifications'] as DataMap)
                 .entries
-                .map<UserVerification>((item) =>
-                    UserVerification.fromMap({'id': item.key, ...item.value})),
+                .map<RequesterVerificationModel>((item) =>
+                    RequesterVerificationModel.fromMap(
+                        {'id': item.key, ...item.value})),
           ),
-          identityVerifications: List<UserVerification>.from(
+          identityVerifications: List<RequesterVerificationModel>.from(
             (map['identityVerifications'] as DataMap)
                 .entries
-                .map<UserVerification>((item) =>
-                    UserVerification.fromMap({'id': item.key, ...item.value})),
+                .map<RequesterVerificationModel>((item) =>
+                    RequesterVerificationModel.fromMap(
+                        {'id': item.key, ...item.value})),
           ),
           processRequests: List<ProcessRequestModel>.from(
             (map['processRequests'] as DataMap)
@@ -125,20 +128,22 @@ class DataSubjectRightModel extends Equatable {
         'id': id,
         'dataRequester': dataRequester.fold(
           {},
-          (map, userInputField) => map..addAll(userInputField.toMap()),
+          (map, requesterInput) => map..addAll(requesterInput.toMap()),
         ),
         'dataOwner': dataOwner.fold(
           {},
-          (map, userInputField) => map..addAll(userInputField.toMap()),
+          (map, requesterInput) => map..addAll(requesterInput.toMap()),
         ),
         'isDataOwner': isDataOwner,
         'powerVerifications': powerVerifications.fold(
           {},
-          (map, userVerification) => map..addAll(userVerification.toMap()),
+          (map, requesterVerification) =>
+              map..addAll(requesterVerification.toMap()),
         ),
         'identityVerifications': identityVerifications.fold(
           {},
-          (map, userVerification) => map..addAll(userVerification.toMap()),
+          (map, requesterVerification) =>
+              map..addAll(requesterVerification.toMap()),
         ),
         'processRequests': processRequests.fold(
           {},
@@ -159,11 +164,11 @@ class DataSubjectRightModel extends Equatable {
 
   DataSubjectRightModel copyWith({
     String? id,
-    List<UserInputText>? dataRequester,
-    List<UserInputText>? dataOwner,
+    List<RequesterInputModel>? dataRequester,
+    List<RequesterInputModel>? dataOwner,
     bool? isDataOwner,
-    List<UserVerification>? powerVerifications,
-    List<UserVerification>? identityVerifications,
+    List<RequesterVerificationModel>? powerVerifications,
+    List<RequesterVerificationModel>? identityVerifications,
     List<ProcessRequestModel>? processRequests,
     DateTime? requestExpirationDate,
     List<String>? notifyEmail,
