@@ -73,7 +73,7 @@ class ProcessRequestModel extends Equatable {
           'requestAction': requestAction,
           'reasonTypes': reasonTypes.fold(
             {},
-            (map, userInputField) => map..addAll(userInputField.toMap()),
+            (map, userInputText) => map..addAll(userInputText.toMap()),
           ),
           'rejectType': rejectType,
           'rejectText': rejectText,
