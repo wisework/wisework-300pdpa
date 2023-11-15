@@ -56,7 +56,7 @@ class RejectTypeBloc extends Bloc<RejectTypeEvent, RejectTypeState> {
           break;
         case UpdateType.updated:
           for (RejectTypeModel rejectType in rejectTypes) {
-            if (rejectType.rejectTypeId == event.rejectType.rejectTypeId) {
+            if (rejectType.id == event.rejectType.id) {
               updated.add(event.rejectType);
             } else {
               updated.add(rejectType);
@@ -65,8 +65,7 @@ class RejectTypeBloc extends Bloc<RejectTypeEvent, RejectTypeState> {
           break;
         case UpdateType.deleted:
           updated = rejectTypes
-              .where((rejectType) =>
-                  rejectType.rejectTypeId != event.rejectType.rejectTypeId)
+              .where((rejectType) => rejectType.id != event.rejectType.id)
               .toList();
           break;
       }

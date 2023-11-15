@@ -59,8 +59,7 @@ class RequestRejectTpBloc
           break;
         case UpdateType.updated:
           for (RequestRejectTemplateModel requestRejects in requestRejects) {
-            if (requestRejects.requestRejectTemplateId ==
-                event.requestReject.requestRejectTemplateId) {
+            if (requestRejects.id == event.requestReject.id) {
               updated.add(event.requestReject);
             } else {
               updated.add(requestRejects);
@@ -70,8 +69,7 @@ class RequestRejectTpBloc
         case UpdateType.deleted:
           updated = requestRejects
               .where((requestRejects) =>
-                  requestRejects.requestRejectTemplateId !=
-                  event.requestReject.requestRejectTemplateId)
+                  requestRejects.id != event.requestReject.id)
               .toList();
           break;
       }
