@@ -75,9 +75,7 @@ final datetimeFormatter = DateFormat('dd-MM-yyyy HH:mm:ss');
 
 enum ConsentFormImageType { logo, header, body }
 
-enum RequestVerifyingStatus { pass, fail, none }
-
-enum ConsiderRequestStatus { pass, fail, none }
+enum RequestResultStatus { pass, fail, none }
 
 enum RequestProcessStatus {
   newRequest,

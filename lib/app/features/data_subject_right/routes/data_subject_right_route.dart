@@ -10,6 +10,7 @@ import 'package:pdpa/app/features/data_subject_right/screens/create_dsr/select_r
 
 import 'package:pdpa/app/features/data_subject_right/screens/data_subject_right_screen.dart';
 import 'package:pdpa/app/features/data_subject_right/screens/edit_data_subject_right/edit_data_subject_right_screen.dart';
+import 'package:pdpa/app/features/data_subject_right/screens/process_data_subject_right/process_data_subject_right.dart';
 import 'package:pdpa/app/features/data_subject_right/screens/user_data_subject_right_form_screen.dart';
 
 class DataSubjectRightRoute {
@@ -35,6 +36,13 @@ class DataSubjectRightRoute {
   static final GoRoute formDataSubjectRight = GoRoute(
     path: '/data-subject-rights/:id/form',
     builder: (context, state) => EditDataSubjectRightScreen(
+      dataSubjectRightId: state.pathParameters['id'] ?? '',
+    ),
+  );
+
+  static final GoRoute processDataSubjectRight = GoRoute(
+    path: '/data-subject-rights/:id/process',
+    builder: (context, state) => ProcessDataSubjectRightScreen(
       dataSubjectRightId: state.pathParameters['id'] ?? '',
     ),
   );
@@ -91,6 +99,7 @@ class DataSubjectRightRoute {
     createDataSubjectRight,
     editDataSubjectRight,
     formDataSubjectRight,
+    processDataSubjectRight,
     intro,
     stepOne,
     stepTwo,

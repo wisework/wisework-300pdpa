@@ -18,9 +18,9 @@ class DataSubjectRightModel extends Equatable {
     required this.requestExpirationDate,
     required this.notifyEmail,
     required this.requestFormVerified,
-    required this.requestVerifyingStatus,
-    required this.resultRequest,
-    required this.verifyReason,
+    required this.requestFormStatus,
+    required this.rejectFormReason,
+    required this.considerRequest,
     required this.lastSeenBy,
     required this.createdBy,
     required this.createdDate,
@@ -28,22 +28,57 @@ class DataSubjectRightModel extends Equatable {
     required this.updatedDate,
   });
 
+  /// Data subject right ID
   final String id;
+
+  /// The data about requester who requesting the form.
   final List<RequesterInputModel> dataRequester;
+
+  /// Requester data in case where the requester is not the owner of data.
   final List<RequesterInputModel> dataOwner;
+
+  /// Check whether the requester and the data owner are the same person or not?
   final bool isDataOwner;
+
+  /// Power of attorneys in case where the requester is not the owner of data.
   final List<RequesterVerificationModel> powerVerifications;
+
+  /// Identity proofs to confirm the identity of the requester.
   final List<RequesterVerificationModel> identityVerifications;
+
+  /// The request that the requester want to action in this form.
   final List<ProcessRequestModel> processRequests;
+
+  /// Expiration date of this form.
+  /// Starting from the requested date until the scheduled date [such as 30 days].
   final DateTime requestExpirationDate;
+
+  /// Email notification to relevant people.
   final List<String> notifyEmail;
+
+  /// Verify that the data subject right form is verified by operator or not.
   final bool requestFormVerified;
-  final RequestVerifyingStatus requestVerifyingStatus;
-  final bool resultRequest;
-  final String verifyReason;
+
+  /// The results of checking that this form is correct and complete.
+  /// Use in [Verify data subject right step].
+  final RequestResultStatus requestFormStatus;
+
+  /// Reason for rejecting this form.
+  /// Use in [Verify data subject right step].
+  final String rejectFormReason;
+
+  /// Consider the request whether to reject the request or continue action.
+  /// Use in [Considering step].
+  final bool considerRequest;
+
+  /// The lastest user who see the data subject right form.
   final String lastSeenBy;
+
+  /// The date and user who created the form.
   final String createdBy;
   final DateTime createdDate;
+
+  /// The date and operator who edited or updated the form.
   final String updatedBy;
   final DateTime updatedDate;
 
@@ -59,9 +94,9 @@ class DataSubjectRightModel extends Equatable {
           requestExpirationDate: DateTime.fromMillisecondsSinceEpoch(0),
           notifyEmail: [],
           requestFormVerified: false,
-          requestVerifyingStatus: RequestVerifyingStatus.none,
-          resultRequest: false,
-          verifyReason: '',
+          requestFormStatus: RequestResultStatus.none,
+          rejectFormReason: '',
+          considerRequest: false,
           lastSeenBy: '',
           createdBy: '',
           createdDate: DateTime.fromMillisecondsSinceEpoch(0),
@@ -107,10 +142,10 @@ class DataSubjectRightModel extends Equatable {
               DateTime.parse(map['requestExpirationDate'] as String),
           notifyEmail: List<String>.from(map['notifyEmail'] as List<dynamic>),
           requestFormVerified: map['requestFormVerified'] as bool,
-          requestVerifyingStatus: RequestVerifyingStatus
-              .values[map['requestVerifyingStatus'] as int],
-          resultRequest: map['resultRequest'] as bool,
-          verifyReason: map['verifyReason'] as String,
+          requestFormStatus:
+              RequestResultStatus.values[map['requestFormStatus'] as int],
+          rejectFormReason: map['rejectFormReason'] as String,
+          considerRequest: map['considerRequest'] as bool,
           lastSeenBy: map['lastSeenBy'] as String,
           createdBy: map['createdBy'] as String,
           createdDate: DateTime.parse(map['createdDate'] as String),
@@ -152,9 +187,9 @@ class DataSubjectRightModel extends Equatable {
         'requestExpirationDate': requestExpirationDate.toIso8601String(),
         'notifyEmail': notifyEmail,
         'requestFormVerified': requestFormVerified,
-        'requestVerifyingStatus': requestVerifyingStatus.index,
-        'resultRequest': resultRequest,
-        'verifyReason': verifyReason,
+        'requestFormStatus': requestFormStatus.index,
+        'rejectFormReason': rejectFormReason,
+        'considerRequest': considerRequest,
         'lastSeenBy': lastSeenBy,
         'createdBy': createdBy,
         'createdDate': createdDate.toIso8601String(),
@@ -173,9 +208,9 @@ class DataSubjectRightModel extends Equatable {
     DateTime? requestExpirationDate,
     List<String>? notifyEmail,
     bool? requestFormVerified,
-    RequestVerifyingStatus? requestVerifyingStatus,
-    bool? resultRequest,
-    String? verifyReason,
+    RequestResultStatus? requestFormStatus,
+    String? rejectFormReason,
+    bool? considerRequest,
     String? lastSeenBy,
     String? createdBy,
     DateTime? createdDate,
@@ -195,10 +230,9 @@ class DataSubjectRightModel extends Equatable {
           requestExpirationDate ?? this.requestExpirationDate,
       notifyEmail: notifyEmail ?? this.notifyEmail,
       requestFormVerified: requestFormVerified ?? this.requestFormVerified,
-      requestVerifyingStatus:
-          requestVerifyingStatus ?? this.requestVerifyingStatus,
-      resultRequest: resultRequest ?? this.resultRequest,
-      verifyReason: verifyReason ?? this.verifyReason,
+      requestFormStatus: requestFormStatus ?? this.requestFormStatus,
+      rejectFormReason: rejectFormReason ?? this.rejectFormReason,
+      considerRequest: considerRequest ?? this.considerRequest,
       lastSeenBy: lastSeenBy ?? this.lastSeenBy,
       createdBy: createdBy ?? this.createdBy,
       createdDate: createdDate ?? this.createdDate,
@@ -232,9 +266,9 @@ class DataSubjectRightModel extends Equatable {
       requestExpirationDate,
       notifyEmail,
       requestFormVerified,
-      requestVerifyingStatus,
-      resultRequest,
-      verifyReason,
+      requestFormStatus,
+      rejectFormReason,
+      considerRequest,
       lastSeenBy,
       createdBy,
       createdDate,
