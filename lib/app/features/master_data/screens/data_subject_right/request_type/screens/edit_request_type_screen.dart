@@ -113,8 +113,8 @@ class _EditRequestTypeScreenState extends State<EditRequestTypeScreen> {
               duration: UiConfig.toastDuration,
             );
 
-            final deleted = RequestTypeModel.empty()
-                .copyWith(requestTypeId: state.requestTypeId);
+            final deleted =
+                RequestTypeModel.empty().copyWith(id: state.requestTypeId);
 
             context.read<RequestTypeBloc>().add(UpdateRequestTypeEvent(
                 requestType: deleted, updateType: UpdateType.deleted));
@@ -268,7 +268,7 @@ class _EditRequestTypeViewState extends State<EditRequestTypeView> {
 
   void _deleteRequestType() {
     context.read<EditRequestTypeBloc>().add(DeleteCurrentRequestTypeEvent(
-          requestTypeId: requestType.requestTypeId,
+          requestTypeId: requestType.id,
           companyId: widget.currentUser.currentCompany,
         ));
   }

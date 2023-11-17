@@ -1,43 +1,35 @@
+import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
-import 'package:go_router/go_router.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:ionicons/ionicons.dart';
 import 'package:pdpa/app/config/config.dart';
-import 'package:pdpa/app/features/data_subject_right/routes/data_subject_right_route.dart';
-import 'package:pdpa/app/shared/widgets/customs/custom_button.dart';
+import 'package:pdpa/app/features/data_subject_right/cubit/form_data_subject_right/form_data_subject_right_cubit.dart';
+import 'package:pdpa/app/shared/widgets/content_wrapper.dart';
 import 'package:pdpa/app/shared/widgets/customs/custom_checkbox.dart';
 import 'package:pdpa/app/shared/widgets/customs/custom_container.dart';
 import 'package:pdpa/app/shared/widgets/customs/custom_icon_button.dart';
 import 'package:pdpa/app/shared/widgets/customs/custom_text_field.dart';
 import 'package:pdpa/app/shared/widgets/expanded_container.dart';
 import 'package:pdpa/app/shared/widgets/material_ink_well.dart';
-import 'package:pdpa/app/shared/widgets/templates/pdpa_app_bar.dart';
 import 'package:pdpa/app/shared/widgets/title_required_text.dart';
 
-class RequestIdentityVerificaiotnScreen extends StatefulWidget {
-  const RequestIdentityVerificaiotnScreen({super.key});
+class IdentityProofingPage extends StatefulWidget {
+  const IdentityProofingPage({
+    super.key,
+    required this.controller,
+    required this.currentPage,
+    required this.previousPage,
+  });
+
+  final PageController controller;
+  final int currentPage;
+  final int previousPage;
 
   @override
-  State<RequestIdentityVerificaiotnScreen> createState() =>
-      _RequestIdentityVerificaiotnScreenState();
+  State<IdentityProofingPage> createState() => _IdentityProofingPageState();
 }
 
-class _RequestIdentityVerificaiotnScreenState
-    extends State<RequestIdentityVerificaiotnScreen> {
-  @override
-  Widget build(BuildContext context) {
-    return const IdentityVerificationView();
-  }
-}
-
-class IdentityVerificationView extends StatefulWidget {
-  const IdentityVerificationView({super.key});
-
-  @override
-  State<IdentityVerificationView> createState() =>
-      _IdentityVerificationViewState();
-}
-
-class _IdentityVerificationViewState extends State<IdentityVerificationView> {
+class _IdentityProofingPageState extends State<IdentityProofingPage> {
   bool isExpanded = false;
 
   void _setExpand() {
@@ -54,81 +46,69 @@ class _IdentityVerificationViewState extends State<IdentityVerificationView> {
   ];
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: PdpaAppBar(
-        leadingIcon: CustomIconButton(
-          onPressed: () {
-            context.pop();
-          },
-          icon: Icons.chevron_left_outlined,
-          iconColor: Theme.of(context).colorScheme.primary,
-          backgroundColor: Theme.of(context).colorScheme.onBackground,
-        ),
-        title: Text(
-          'แบบฟอร์มขอใช้สิทธิ์ตามกฏหมาย', //!
-          style: Theme.of(context).textTheme.titleLarge,
-        ),
-      ),
-      body: _buildPowerVerificationForm(context),
-    );
-  }
-
-  //? Content
-  Widget _buildPowerVerificationForm(BuildContext context) {
-    return SingleChildScrollView(
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          const SizedBox(height: UiConfig.lineSpacing),
-          CustomContainer(
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              mainAxisAlignment: MainAxisAlignment.start,
-              children: [
-                const SizedBox(height: UiConfig.lineSpacing),
-                Text(
-                  'เอกสารพิสูจน์ตัวตนและพิสูจน์ถิ่นที่อยู่เจ้าของข้อมูล', //!
-                  textAlign: TextAlign.left,
-                  style: Theme.of(context)
-                      .textTheme
-                      .titleLarge
-                      ?.copyWith(color: Theme.of(context).colorScheme.primary),
-                ),
-                const SizedBox(height: UiConfig.lineSpacing),
-                Text(
-                  'ข้าพเจ้าได้แนบเอกสารดังต่อไปนี้เพื่อการตรวจสอบตัวตน', //!
-                  textAlign: TextAlign.left,
-                  style: Theme.of(context).textTheme.bodySmall?.copyWith(
-                      color: Theme.of(context).colorScheme.onSurface),
-                ),
-                const SizedBox(height: UiConfig.lineSpacing),
-                Column(
-                  children: power
-                      .map((menu) => Padding(
-                            padding: const EdgeInsets.only(
-                              bottom: UiConfig.lineGap,
-                            ),
-                            child: _buildCheckBoxTile(context, menu),
-                          ))
-                      .toList(),
-                ),
-                const SizedBox(height: UiConfig.lineSpacing),
-                CustomButton(
-                  height: 40.0,
-                  onPressed: () {
-                    context.push(DataSubjectRightRoute.stepFive.path);
-                  },
-                  child: Text(
-                    'ถัดไป', //!
-                    style: Theme.of(context).textTheme.titleMedium?.copyWith(
-                        color: Theme.of(context).colorScheme.onPrimary),
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Expanded(
+          child: SingleChildScrollView(
+            child: CustomContainer(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                mainAxisAlignment: MainAxisAlignment.start,
+                children: [
+                  const SizedBox(height: UiConfig.lineSpacing),
+                  Text(
+                    'เอกสารพิสูจน์ตัวตนและพิสูจน์ถิ่นที่อยู่เจ้าของข้อมูล', //!
+                    textAlign: TextAlign.left,
+                    style: Theme.of(context).textTheme.titleLarge?.copyWith(
+                        color: Theme.of(context).colorScheme.primary),
                   ),
+                  const SizedBox(height: UiConfig.lineSpacing),
+                  Text(
+                    'ข้าพเจ้าได้แนบเอกสารดังต่อไปนี้เพื่อการตรวจสอบตัวตน', //!
+                    textAlign: TextAlign.left,
+                    style: Theme.of(context).textTheme.bodySmall?.copyWith(
+                        color: Theme.of(context).colorScheme.onSurface),
+                  ),
+                  const SizedBox(height: UiConfig.lineSpacing),
+                  Column(
+                    children: power
+                        .map((menu) => Padding(
+                              padding: const EdgeInsets.only(
+                                bottom: UiConfig.lineGap,
+                              ),
+                              child: _buildCheckBoxTile(context, menu),
+                            ))
+                        .toList(),
+                  ),
+                ],
+              ),
+            ),
+          ),
+        ),
+        ContentWrapper(
+          child: Container(
+            padding: const EdgeInsets.all(
+              UiConfig.defaultPaddingSpacing,
+            ),
+            decoration: BoxDecoration(
+              color: Theme.of(context).colorScheme.onBackground,
+              boxShadow: [
+                BoxShadow(
+                  color: Theme.of(context).colorScheme.outline,
+                  blurRadius: 1.0,
+                  offset: const Offset(0, -2.0),
                 ),
               ],
             ),
+            child: _buildPageViewController(
+              context,
+              widget.controller,
+              widget.currentPage,
+            ),
           ),
-        ],
-      ),
+        ),
+      ],
     );
   }
 
@@ -175,6 +155,62 @@ class _IdentityVerificationViewState extends State<IdentityVerificationView> {
         ),
       ],
     );
+  }
+
+  Row _buildPageViewController(
+    BuildContext context,
+    PageController controller,
+    int currentpage,
+  ) {
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+      children: [
+        TextButton(
+          style: TextButton.styleFrom(
+            textStyle: Theme.of(context).textTheme.bodyMedium?.copyWith(
+                  color: Theme.of(context).colorScheme.primary,
+                ),
+          ),
+          onPressed: previousPage,
+          child: Text(
+            tr("app.previous"),
+          ),
+        ),
+        Text("$currentpage/7"),
+        TextButton(
+            style: TextButton.styleFrom(
+              textStyle: Theme.of(context).textTheme.bodyMedium?.copyWith(
+                    color: Theme.of(context).colorScheme.primary,
+                  ),
+            ),
+            onPressed: nextPage,
+            child: currentpage != 7
+                ? Text(
+                    tr("app.next"),
+                  )
+                : const Text("ส่งแบบคำร้อง")),
+      ],
+    );
+  }
+
+  void nextPage() {
+    widget.controller.animateToPage(widget.currentPage + 1,
+        duration: const Duration(milliseconds: 250), curve: Curves.easeIn);
+    context.read<FormDataSubjectRightCubit>().nextPage(widget.currentPage + 1);
+  }
+
+  void previousPage() {
+    if (widget.previousPage == 1) {
+      widget.controller.animateToPage(1,
+          duration: const Duration(milliseconds: 250), curve: Curves.easeIn);
+      context.read<FormDataSubjectRightCubit>().nextPage(1);
+    } else {
+      widget.controller.animateToPage(widget.currentPage - 1,
+          duration: const Duration(milliseconds: 250), curve: Curves.easeIn);
+      context
+          .read<FormDataSubjectRightCubit>()
+          .nextPage(widget.currentPage - 1);
+    }
   }
 
   //? Expanded Children

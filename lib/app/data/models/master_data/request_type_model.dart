@@ -5,7 +5,7 @@ import 'package:pdpa/app/shared/utils/typedef.dart';
 
 class RequestTypeModel extends Equatable {
   const RequestTypeModel({
-    required this.requestTypeId,
+    required this.id,
     required this.requestCode,
     required this.description,
     required this.status,
@@ -15,7 +15,7 @@ class RequestTypeModel extends Equatable {
     required this.updatedDate,
   });
 
-  final String requestTypeId;
+  final String id;
   final String requestCode;
   final List<LocalizedModel> description;
   final ActiveStatus status;
@@ -26,7 +26,7 @@ class RequestTypeModel extends Equatable {
 
   RequestTypeModel.empty()
       : this(
-          requestTypeId: '',
+          id: '',
           requestCode: '',
           description: [],
           status: ActiveStatus.active,
@@ -38,7 +38,7 @@ class RequestTypeModel extends Equatable {
 
   RequestTypeModel.fromMap(DataMap map)
       : this(
-          requestTypeId: map['requestTypeId'] as String,
+          id: map['id'] as String,
           requestCode: map['requestCode'] as String,
           description: List<LocalizedModel>.from(
             (map['description'] as List<dynamic>).map<LocalizedModel>(
@@ -53,7 +53,7 @@ class RequestTypeModel extends Equatable {
         );
 
   DataMap toMap() => {
-        'requestTypeId': requestTypeId,
+        'id': id,
         'requestCode': requestCode,
         'description': description.map((item) => item.toMap()).toList(),
         'status': status.index,
@@ -70,7 +70,7 @@ class RequestTypeModel extends Equatable {
   }
 
   RequestTypeModel copyWith({
-    String? requestTypeId,
+    String? id,
     String? requestCode,
     List<LocalizedModel>? description,
     ActiveStatus? status,
@@ -80,7 +80,7 @@ class RequestTypeModel extends Equatable {
     DateTime? updatedDate,
   }) {
     return RequestTypeModel(
-      requestTypeId: requestTypeId ?? this.requestTypeId,
+      id: id ?? this.id,
       requestCode: requestCode ?? this.requestCode,
       description: description ?? this.description,
       status: status ?? this.status,
@@ -105,7 +105,7 @@ class RequestTypeModel extends Equatable {
   @override
   List<Object> get props {
     return [
-      requestTypeId,
+      id,
       requestCode,
       description,
       status,

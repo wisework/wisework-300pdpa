@@ -155,22 +155,22 @@ class UtilFunctions {
     final isNewRequested = dataSubjectRight.lastSeenBy.isEmpty;
     final isRequestFormVerified = dataSubjectRight.requestFormVerified;
     final isVerifying =
-        dataSubjectRight.requestVerifyingStatus == RequestVerifyingStatus.none;
-    final isConsidering = dataSubjectRight.processRequests.any((process) =>
-        process.considerRequestStatus == ConsiderRequestStatus.none);
+        dataSubjectRight.requestFormStatus == RequestResultStatus.none;
+    final isConsidering = dataSubjectRight.processRequests.any(
+        (process) => process.considerRequestStatus == RequestResultStatus.none);
     final isProofFileUploading = dataSubjectRight.processRequests
         .any((process) => process.proofOfActionFile.isEmpty);
     final isProofTextWriting = dataSubjectRight.processRequests
         .any((process) => process.proofOfActionText.isEmpty);
     final isProofFileUploaded = dataSubjectRight.processRequests
         .where((process) =>
-            process.considerRequestStatus == ConsiderRequestStatus.pass)
+            process.considerRequestStatus == RequestResultStatus.pass)
         .any((process) => process.proofOfActionFile.isEmpty);
     final isProofTextWritten = dataSubjectRight.processRequests
         .where((process) =>
-            process.considerRequestStatus == ConsiderRequestStatus.pass)
+            process.considerRequestStatus == RequestResultStatus.pass)
         .any((process) => process.proofOfActionText.isEmpty);
-    final isDone = dataSubjectRight.resultRequest;
+    final isDone = dataSubjectRight.considerRequest;
 
     RequestProcessStatus status = RequestProcessStatus.newRequest;
     if (isNewRequested) {

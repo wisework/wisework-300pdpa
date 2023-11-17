@@ -135,7 +135,7 @@ class _RequestRejectTemplateViewState extends State<RequestRejectTemplateView> {
       onTap: () {
         context.push(
           MasterDataRoute.editRequestType.path
-              .replaceFirst(':id', requestReason.requestRejectTemplateId),
+              .replaceFirst(':id', requestReason.id),
         );
       },
     );

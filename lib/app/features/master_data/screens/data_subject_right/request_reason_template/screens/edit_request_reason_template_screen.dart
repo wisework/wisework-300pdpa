@@ -133,7 +133,7 @@ class _EditRequestReasonTemplateScreenState
             );
 
             final deleted = RequestReasonTemplateModel.empty()
-                .copyWith(requestReasonTemplateId: state.requestReasonTpId);
+                .copyWith(id: state.requestReasonTpId);
 
             context.read<RequestReasonTpBloc>().add(UpdateRequestReasonTpEvent(
                 requestReason: deleted, updateType: UpdateType.deleted));
@@ -277,7 +277,7 @@ class _EditRequestReasonTemplateViewState
     context
         .read<EditRequestReasonTpBloc>()
         .add(DeleteCurrentRequestReasonTpEvent(
-          requestReasonTpId: requestReason.requestReasonTemplateId,
+          requestReasonTpId: requestReason.id,
           companyId: widget.currentUser.currentCompany,
         ));
   }
@@ -318,8 +318,8 @@ class _EditRequestReasonTemplateViewState
               BlocBuilder<RequestTypeBloc, RequestTypeState>(
                 builder: (context, state) {
                   if (state is GotRequestTypes) {
-                    final requestName = state.requestTypes.where((id) =>
-                        requestReason.requestTypeId.contains(id.requestTypeId));
+                    final requestName = state.requestTypes.where(
+                        (id) => requestReason.requestTypeId.contains(id.id));
 
                     final requestNamefilter = requestName
                         .map((e) => e.description.first.text)
@@ -457,7 +457,7 @@ class _EditRequestReasonTemplateViewState
                                     () {
                                       // requestReason.requestTypeId =
                                       //     item.requestTypeId;
-                                      _setRequestType(item.requestTypeId);
+                                      _setRequestType(item.id);
 
                                       context.pop();
                                     },
@@ -484,7 +484,7 @@ class _EditRequestReasonTemplateViewState
 
   Column _buildReasonTypeList(BuildContext context, GotReasonTypes state) {
     final reasonName = state.reasonTypes
-        .where((id) => requestReason.reasonTypesId.contains(id.reasonTypeId))
+        .where((id) => requestReason.reasonTypesId.contains(id.id))
         .toList();
 
     return Column(
@@ -507,8 +507,7 @@ class _EditRequestReasonTemplateViewState
                 onPressed: () {
                   //? Delete purpose from seleted
                   setState(() {
-                    requestReason.reasonTypesId
-                        .remove(reasonName[index].reasonTypeId);
+                    requestReason.reasonTypesId.remove(reasonName[index].id);
                     _setReasonTypeList(requestReason.reasonTypesId);
                   });
                 },
@@ -576,13 +575,11 @@ class _EditRequestReasonTemplateViewState
                             onChanged: (newValue) {
                               setState(() {
                                 if (newValue!) {
-                                  requestReason.reasonTypesId
-                                      .add(item.reasonTypeId);
+                                  requestReason.reasonTypesId.add(item.id);
                                   _setReasonTypeList(
                                       requestReason.reasonTypesId);
                                 } else {
-                                  requestReason.reasonTypesId
-                                      .remove(item.reasonTypeId);
+                                  requestReason.reasonTypesId.remove(item.id);
                                   _setReasonTypeList(
                                       requestReason.reasonTypesId);
                                 }

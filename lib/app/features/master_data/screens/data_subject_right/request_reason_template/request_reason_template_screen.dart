@@ -174,7 +174,7 @@ class _RequestReasonTemplateViewState extends State<RequestReasonTemplateView> {
       onTap: () {
         context.push(
           MasterDataRoute.editRequestReason.path
-              .replaceFirst(':id', requestReason.requestReasonTemplateId),
+              .replaceFirst(':id', requestReason.id),
         );
       },
     );

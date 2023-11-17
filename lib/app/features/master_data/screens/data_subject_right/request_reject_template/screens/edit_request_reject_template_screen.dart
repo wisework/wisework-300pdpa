@@ -129,7 +129,7 @@ class _EditRequestRejectTemplateScreenState
             );
 
             final deleted = RequestRejectTemplateModel.empty()
-                .copyWith(requestRejectTemplateId: state.requestRejectTpId);
+                .copyWith(id: state.requestRejectTpId);
 
             context.read<RequestRejectTpBloc>().add(UpdateRequestRejectTpEvent(
                 requestReject: deleted, updateType: UpdateType.deleted));
@@ -271,7 +271,7 @@ class _EditRequestRejectTemplateViewState
     context
         .read<EditRequestRejectTpBloc>()
         .add(DeleteCurrentRequestRejectTpEvent(
-          requestRejectTpId: requestReject.requestRejectTemplateId,
+          requestRejectTpId: requestReject.id,
           companyId: widget.currentUser.currentCompany,
         ));
   }
