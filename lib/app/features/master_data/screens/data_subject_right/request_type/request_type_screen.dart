@@ -58,7 +58,7 @@ class RequestTypeView extends StatefulWidget {
 class _RequestTypeViewState extends State<RequestTypeView> {
   final reqeustModel = [
     RequestTypeModel(
-      requestTypeId: '1',
+      id: '1',
       requestCode: '1',
       description: const [],
       status: ActiveStatus.active,
@@ -152,7 +152,7 @@ class _RequestTypeViewState extends State<RequestTypeView> {
       onTap: () {
         context.push(
           MasterDataRoute.editRequestType.path
-              .replaceFirst(':id', requestType.requestTypeId),
+              .replaceFirst(':id', requestType.id),
         );
       },
     );

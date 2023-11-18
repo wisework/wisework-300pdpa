@@ -117,7 +117,7 @@ class _SelectRequestViewState extends State<SelectRequestView> {
 
   final requestReason = [
     RequestReasonTemplateModel(
-      requestReasonTemplateId: '1',
+      id: '1',
       requestTypeId: 'ID:1',
       reasonTypesId: const [
         'อยู่ในระหว่างการตรวจสอบตามที่เจ้าของข้อมูลส่วนบุคคลร้องขอให้บริษัทแก้ไขข้อมูลส่วนบุคคล',
@@ -131,7 +131,7 @@ class _SelectRequestViewState extends State<SelectRequestView> {
       updatedDate: DateTime.now(),
     ),
     RequestReasonTemplateModel(
-      requestReasonTemplateId: '2',
+      id: '2',
       requestTypeId: 'ID:2',
       reasonTypesId: const [
         'อยู่ในระหว่างการตรวจสอบตามที่เจ้าของข้อมูลส่วนบุคคลร้องขอให้บริษัทแก้ไขข้อมูลส่วนบุคคล',

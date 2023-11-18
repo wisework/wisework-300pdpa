@@ -5,7 +5,7 @@ import 'package:pdpa/app/shared/utils/typedef.dart';
 
 class ReasonTypeModel extends Equatable {
   const ReasonTypeModel({
-    required this.reasonTypeId,
+    required this.id,
     required this.reasonCode,
     required this.description,
     required this.requiredInputReasonText,
@@ -16,7 +16,7 @@ class ReasonTypeModel extends Equatable {
     required this.updatedDate,
   });
 
-  final String reasonTypeId;
+  final String id;
   final String reasonCode;
   final List<LocalizedModel> description;
   final bool requiredInputReasonText;
@@ -28,7 +28,7 @@ class ReasonTypeModel extends Equatable {
 
   ReasonTypeModel.empty()
       : this(
-          reasonTypeId: '',
+          id: '',
           reasonCode: '',
           description: [],
           requiredInputReasonText: false,
@@ -41,7 +41,7 @@ class ReasonTypeModel extends Equatable {
 
   ReasonTypeModel.fromMap(DataMap map)
       : this(
-          reasonTypeId: map['reasonTypeId'] as String,
+          id: map['id'] as String,
           reasonCode: map['reasonCode'] as String,
           description: List<LocalizedModel>.from(
             (map['description'] as List<dynamic>).map<LocalizedModel>(
@@ -63,7 +63,7 @@ class ReasonTypeModel extends Equatable {
   }
 
   DataMap toMap() => {
-        'reasonTypeId': reasonTypeId,
+        'id': id,
         'reasonCode': reasonCode,
         'description': description.map((item) => item.toMap()).toList(),
         'requiredInputReasonText': requiredInputReasonText,
@@ -75,7 +75,7 @@ class ReasonTypeModel extends Equatable {
       };
 
   ReasonTypeModel copyWith({
-    String? reasonTypeId,
+    String? id,
     String? reasonCode,
     List<LocalizedModel>? description,
     bool? requiredInputReasonText,
@@ -87,7 +87,7 @@ class ReasonTypeModel extends Equatable {
     DateTime? updatedDate,
   }) {
     return ReasonTypeModel(
-      reasonTypeId: reasonTypeId ?? this.reasonTypeId,
+      id: id ?? this.id,
       reasonCode: reasonCode ?? this.reasonCode,
       description: description ?? this.description,
       requiredInputReasonText:
@@ -115,7 +115,7 @@ class ReasonTypeModel extends Equatable {
   @override
   List<Object> get props {
     return [
-      reasonTypeId,
+      id,
       reasonCode,
       description,
       requiredInputReasonText,

@@ -4,7 +4,7 @@ import 'package:pdpa/app/shared/utils/typedef.dart';
 
 class RequestRejectTemplateModel extends Equatable {
   const RequestRejectTemplateModel({
-    required this.requestRejectTemplateId,
+    required this.id,
     required this.requestTypeId,
     required this.rejectTypesId,
     required this.status,
@@ -14,7 +14,7 @@ class RequestRejectTemplateModel extends Equatable {
     required this.updatedDate,
   });
 
-  final String requestRejectTemplateId;
+  final String id;
   final String requestTypeId;
   final List<String> rejectTypesId;
   final ActiveStatus status;
@@ -25,7 +25,7 @@ class RequestRejectTemplateModel extends Equatable {
 
   RequestRejectTemplateModel.empty()
       : this(
-          requestRejectTemplateId: '',
+          id: '',
           requestTypeId: '',
           rejectTypesId: [],
           status: ActiveStatus.active,
@@ -37,7 +37,7 @@ class RequestRejectTemplateModel extends Equatable {
 
   RequestRejectTemplateModel.fromMap(DataMap map)
       : this(
-          requestRejectTemplateId: map['requestRejectTemplateId'] as String,
+          id: map['id'] as String,
           requestTypeId: map['requestTypeId'] as String,
           rejectTypesId:
               List<String>.from(map['rejectTypesId'] as List<dynamic>),
@@ -55,6 +55,7 @@ class RequestRejectTemplateModel extends Equatable {
   }
 
   DataMap toMap() => {
+        'id': id,
         'requestTypeId': requestTypeId,
         'rejectTypesId': rejectTypesId,
         'status': status.index,
@@ -65,7 +66,7 @@ class RequestRejectTemplateModel extends Equatable {
       };
 
   RequestRejectTemplateModel copyWith({
-    String? requestRejectTemplateId,
+    String? id,
     String? requestTypeId,
     List<String>? rejectTypesId,
     ActiveStatus? status,
@@ -75,8 +76,7 @@ class RequestRejectTemplateModel extends Equatable {
     DateTime? updatedDate,
   }) {
     return RequestRejectTemplateModel(
-      requestRejectTemplateId:
-          requestRejectTemplateId ?? this.requestRejectTemplateId,
+      id: id ?? this.id,
       requestTypeId: requestTypeId ?? this.requestTypeId,
       rejectTypesId: rejectTypesId ?? this.rejectTypesId,
       status: status ?? this.status,
@@ -102,7 +102,7 @@ class RequestRejectTemplateModel extends Equatable {
   @override
   List<Object> get props {
     return [
-      requestRejectTemplateId,
+      id,
       requestTypeId,
       rejectTypesId,
       status,

@@ -5,7 +5,7 @@ import 'package:pdpa/app/shared/utils/typedef.dart';
 
 class RejectTypeModel extends Equatable {
   const RejectTypeModel({
-    required this.rejectTypeId,
+    required this.id,
     required this.rejectCode,
     required this.description,
     required this.status,
@@ -15,7 +15,7 @@ class RejectTypeModel extends Equatable {
     required this.updatedDate,
   });
 
-  final String rejectTypeId;
+  final String id;
   final String rejectCode;
   final List<LocalizedModel> description;
   final ActiveStatus status;
@@ -26,7 +26,7 @@ class RejectTypeModel extends Equatable {
 
   RejectTypeModel.empty()
       : this(
-          rejectTypeId: '',
+          id: '',
           rejectCode: '',
           description: [],
           status: ActiveStatus.active,
@@ -38,7 +38,7 @@ class RejectTypeModel extends Equatable {
 
   RejectTypeModel.fromMap(DataMap map)
       : this(
-          rejectTypeId: map['rejectTypeId'] as String,
+          id: map['id'] as String,
           rejectCode: map['rejectCode'] as String,
           description: List<LocalizedModel>.from(
             (map['description'] as List<dynamic>).map<LocalizedModel>(
@@ -59,7 +59,7 @@ class RejectTypeModel extends Equatable {
   }
 
   DataMap toMap() => {
-        'rejectTypeId': rejectTypeId,
+        'id': id,
         'rejectCode': rejectCode,
         'description': description.map((item) => item.toMap()).toList(),
         'status': status.index,
@@ -70,7 +70,7 @@ class RejectTypeModel extends Equatable {
       };
 
   RejectTypeModel copyWith({
-    String? rejectTypeId,
+    String? id,
     String? rejectCode,
     List<LocalizedModel>? description,
     ActiveStatus? status,
@@ -80,7 +80,7 @@ class RejectTypeModel extends Equatable {
     DateTime? updatedDate,
   }) {
     return RejectTypeModel(
-      rejectTypeId: rejectTypeId ?? this.rejectTypeId,
+      id: id ?? this.id,
       rejectCode: rejectCode ?? this.rejectCode,
       description: description ?? this.description,
       status: status ?? this.status,
@@ -106,7 +106,7 @@ class RejectTypeModel extends Equatable {
   @override
   List<Object> get props {
     return [
-      rejectTypeId,
+      id,
       rejectCode,
       description,
       status,

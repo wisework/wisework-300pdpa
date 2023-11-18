@@ -116,7 +116,7 @@ class _EditRejectTypeScreenState extends State<EditRejectTypeScreen> {
             );
 
             final deleted = RejectTypeModel.empty()
-                .copyWith(rejectTypeId: state.rejectTypeId);
+                .copyWith(id: state.rejectTypeId);
 
             context.read<RejectTypeBloc>().add(UpdateRejectTypeEvent(
                 rejectType: deleted, updateType: UpdateType.deleted));
@@ -270,7 +270,7 @@ class _EditRejectTypeViewState extends State<EditRejectTypeView> {
 
   void _deleteRejectType() {
     context.read<EditRejectTypeBloc>().add(DeleteCurrentRejectTypeEvent(
-          rejectTypeId: rejectType.rejectTypeId,
+          rejectTypeId: rejectType.id,
           companyId: widget.currentUser.currentCompany,
         ));
   }

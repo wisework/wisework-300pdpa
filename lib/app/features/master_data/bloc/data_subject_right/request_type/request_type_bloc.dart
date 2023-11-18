@@ -56,7 +56,7 @@ class RequestTypeBloc extends Bloc<RequestTypeEvent, RequestTypeState> {
           break;
         case UpdateType.updated:
           for (RequestTypeModel requestType in requestTypes) {
-            if (requestType.requestTypeId == event.requestType.requestTypeId) {
+            if (requestType.id == event.requestType.id) {
               updated.add(event.requestType);
             } else {
               updated.add(requestType);
@@ -65,8 +65,7 @@ class RequestTypeBloc extends Bloc<RequestTypeEvent, RequestTypeState> {
           break;
         case UpdateType.deleted:
           updated = requestTypes
-              .where((requestType) =>
-                  requestType.requestTypeId != event.requestType.requestTypeId)
+              .where((requestType) => requestType.id != event.requestType.id)
               .toList();
           break;
       }

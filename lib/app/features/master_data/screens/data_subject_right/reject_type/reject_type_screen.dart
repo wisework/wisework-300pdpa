@@ -58,7 +58,7 @@ class RejectTypeView extends StatefulWidget {
 class _RejectTypeViewState extends State<RejectTypeView> {
   final reqeustModel = [
     RejectTypeModel(
-      rejectTypeId: '1',
+      id: '1',
       rejectCode: '1',
       description: const [],
       status: ActiveStatus.active,
@@ -152,7 +152,7 @@ class _RejectTypeViewState extends State<RejectTypeView> {
       onTap: () {
         context.push(
           MasterDataRoute.editRejectType.path
-              .replaceFirst(':id', rejectType.rejectTypeId),
+              .replaceFirst(':id', rejectType.id),
         );
       },
     );
