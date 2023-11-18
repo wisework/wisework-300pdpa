@@ -1,3 +1,4 @@
+import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 
@@ -166,7 +167,7 @@ class _SelectRequestViewState extends State<SelectRequestView> {
           backgroundColor: Theme.of(context).colorScheme.onBackground,
         ),
         title: Text(
-          'แบบฟอร์มขอใช้สิทธิ์ตามกฏหมาย', //!
+          tr('dataSubjectRight.manageRequests'), 
           style: Theme.of(context).textTheme.titleLarge,
         ),
       ),

@@ -1,3 +1,4 @@
+import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:ionicons/ionicons.dart';
@@ -65,7 +66,7 @@ class _IdentityVerificationViewState extends State<IdentityVerificationView> {
           backgroundColor: Theme.of(context).colorScheme.onBackground,
         ),
         title: Text(
-          'แบบฟอร์มขอใช้สิทธิ์ตามกฏหมาย', //!
+          tr('dataSubjectRight.manageRequests'), 
           style: Theme.of(context).textTheme.titleLarge,
         ),
       ),
@@ -158,7 +159,7 @@ class _IdentityVerificationViewState extends State<IdentityVerificationView> {
                     child: Padding(
                       padding: const EdgeInsets.symmetric(vertical: 12.0),
                       child: Text(
-                        name, //!
+                        name, 
                         style: isExpanded == false
                             ? Theme.of(context).textTheme.bodyMedium?.copyWith()
                             : Theme.of(context).textTheme.bodyMedium?.copyWith(
@@ -186,44 +187,44 @@ class _IdentityVerificationViewState extends State<IdentityVerificationView> {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: <Widget>[
           Visibility(
-              visible: name.contains('อื่นๆ ถ้ามี (โปรดระบุ)'),
-              child: const Column(
+              visible: name.contains(tr('dataSubjectRight.identityVerification.other')),
+              child:  Column(
                 children: [
                   Row(
                     children: <Widget>[
                       TitleRequiredText(
-                        text: 'ประเภทเอกสาร',
-                        required: true, //!
+                        text: tr('dataSubjectRight.identityVerification.documentType'),
+                        required: true, 
                       ),
                     ],
                   ),
-                  SizedBox(height: UiConfig.lineSpacing),
+                  const SizedBox(height: UiConfig.lineSpacing),
                   Row(
                     children: [
                       Expanded(
                         child: CustomTextField(
-                          hintText: 'ระบุประเภทเอกสาร',
+                          hintText: tr('dataSubjectRight.identityVerification.hintdocumentType'),
                         ),
                       ),
                     ],
                   ),
-                  SizedBox(height: UiConfig.lineSpacing),
+                  const SizedBox(height: UiConfig.lineSpacing),
                 ],
               )),
-          const Row(
+           Row(
             children: <Widget>[
               TitleRequiredText(
-                text: 'ไฟล์สำเนา',
-                required: true, //!
+                text: tr('dataSubjectRight.identityVerification.copyFile'),
+                required: true, 
               ),
             ],
           ),
           const SizedBox(height: UiConfig.lineSpacing),
           Row(
             children: <Widget>[
-              const Expanded(
+               Expanded(
                 child: CustomTextField(
-                  hintText: 'ไม่ได้เลือกไฟล์',
+                  hintText: tr('dataSubjectRight.identityVerification.fileNotSelected'),
                   readOnly: true,
                 ),
               ),

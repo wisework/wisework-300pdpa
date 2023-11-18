@@ -1,3 +1,4 @@
+import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
@@ -109,7 +110,7 @@ class _ProcessDataSubjectRightViewState
       appBar: PdpaAppBar(
         leadingIcon: _buildPopButton(),
         title: Text(
-          'Process Data Subject Right', //!
+          tr('dataSubjectRight.processDsr.processDataSubjectRight'), //!
           style: Theme.of(context).textTheme.titleLarge,
         ),
       ),
@@ -122,7 +123,7 @@ class _ProcessDataSubjectRightViewState
               crossAxisAlignment: CrossAxisAlignment.start,
               children: <Widget>[
                 Text(
-                  'Data Subject Right',
+                  tr('dataSubjectRight.processDsr.datasubjectright'),
                   style: Theme.of(context).textTheme.titleLarge,
                 ),
                 const SizedBox(height: UiConfig.lineSpacing),
@@ -175,7 +176,7 @@ class _ProcessDataSubjectRightViewState
     return <CustomStep>[
       CustomStep(
         title: Text(
-          'ตรวจสอบคำขอ',
+          tr('dataSubjectRight.processDsr.verifyRequest'),
           style: Theme.of(context).textTheme.bodyMedium?.copyWith(
               color: progressIndex >= 0
                   ? Theme.of(context).colorScheme.primary
@@ -188,7 +189,7 @@ class _ProcessDataSubjectRightViewState
       ),
       CustomStep(
         title: Text(
-          'พิจารณาดำเนินการ',
+          tr('dataSubjectRight.processDsr.considerTakingAction'),
           style: Theme.of(context).textTheme.bodyMedium?.copyWith(
               color: progressIndex >= 1
                   ? Theme.of(context).colorScheme.primary
@@ -201,7 +202,7 @@ class _ProcessDataSubjectRightViewState
       ),
       CustomStep(
         title: Text(
-          'ดำเนินการ',
+          tr('dataSubjectRight.processDsr.carryOut'),
           style: Theme.of(context).textTheme.bodyMedium?.copyWith(
               color: progressIndex >= 2
                   ? Theme.of(context).colorScheme.primary
@@ -214,7 +215,7 @@ class _ProcessDataSubjectRightViewState
       ),
       CustomStep(
         title: Text(
-          'ผลการดำเนินการ',
+          tr('dataSubjectRight.processDsr.results'),
           style: Theme.of(context).textTheme.bodyMedium?.copyWith(
               color: progressIndex >= 3
                   ? Theme.of(context).colorScheme.primary

@@ -1,3 +1,4 @@
+import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:pdpa/app/config/config.dart';
 import 'package:pdpa/app/shared/widgets/customs/custom_radio_button.dart';
@@ -38,7 +39,7 @@ class _ConsideringStepState extends State<ConsideringStep> {
       crossAxisAlignment: CrossAxisAlignment.start,
       children: <Widget>[
         Text(
-          'ผลการตรวจสอบแบบฟอร์มคำขอใช้สิทธิ์ตามกฎหมายคุ้มครองข้อมูลส่วนบุคคล',
+          tr('dataSubjectRight.StepProcessDsr.considering.resultOfInspection'),
           style: Theme.of(context).textTheme.bodyMedium,
         ),
         const SizedBox(height: UiConfig.lineSpacing),
@@ -61,7 +62,7 @@ class _ConsideringStepState extends State<ConsideringStep> {
               child: Padding(
                 padding: const EdgeInsets.symmetric(vertical: 5.0),
                 child: Text(
-                  'ดำเนินการ',
+                  tr('dataSubjectRight.StepProcessDsr.considering.carryOut'),
                   style: Theme.of(context).textTheme.bodyMedium,
                 ),
               ),
@@ -92,7 +93,7 @@ class _ConsideringStepState extends State<ConsideringStep> {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: <Widget>[
                     Text(
-                      'ปฏิเสธคำขอ',
+                      tr('dataSubjectRight.StepProcessDsr.considering.refuse'),
                       style: Theme.of(context).textTheme.bodyMedium,
                     ),
                     ExpandedContainer(
@@ -102,13 +103,13 @@ class _ConsideringStepState extends State<ConsideringStep> {
                         mainAxisSize: MainAxisSize.min,
                         children: <Widget>[
                           const SizedBox(height: UiConfig.lineGap),
-                          const TitleRequiredText(
-                            text: 'เหตุผลประกอบ',
+                           TitleRequiredText(
+                            text: tr('dataSubjectRight.StepProcessDsr.considering.reason'),
                             required: true,
                           ),
                           CustomTextField(
                             controller: reasonController,
-                            hintText: 'เนื่องด้วย...',
+                            hintText: tr('dataSubjectRight.StepProcessDsr.considering.since'),
                             maxLines: 5,
                             onChanged: (value) {},
                             required: true,

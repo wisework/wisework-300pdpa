@@ -65,7 +65,7 @@ class _EditDataSubjectRightScreenState
         listener: (context, state) {
           if (state is CreatedCurrentDataSubjectRight) {
             BotToast.showText(
-              text: 'Create successfully', //!
+              text: tr('dataSubjectRight.editDataSubjectRight.createSuccess'), 
               contentColor:
                   Theme.of(context).colorScheme.secondary.withOpacity(0.75),
               borderRadius: BorderRadius.circular(8.0),
@@ -87,7 +87,7 @@ class _EditDataSubjectRightScreenState
 
           if (state is UpdatedCurrentDataSubjectRight) {
             BotToast.showText(
-              text: 'Update successfully', //!
+              text: tr('dataSubjectRight.editDataSubjectRight.updateSuccess'), 
               contentColor:
                   Theme.of(context).colorScheme.secondary.withOpacity(0.75),
               borderRadius: BorderRadius.circular(8.0),

@@ -1,3 +1,4 @@
+import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 
@@ -86,7 +87,7 @@ class _DataRequesterViewState extends State<DataRequesterView> {
           backgroundColor: Theme.of(context).colorScheme.onBackground,
         ),
         title: Text(
-          'แบบฟอร์มขอใช้สิทธิ์ตามกฏหมาย', //!
+          tr('dataSubjectRight.manageRequests'), 
           style: Theme.of(context).textTheme.titleLarge,
         ),
       ),
@@ -97,7 +98,7 @@ class _DataRequesterViewState extends State<DataRequesterView> {
             const SizedBox(height: UiConfig.lineSpacing),
             CustomContainer(
               padding: const EdgeInsets.all(UiConfig.defaultPaddingSpacing),
-              child: _buildStep1Form(context),
+              child: _builddataRequesterForm(context),
             ),
             const SizedBox(height: UiConfig.lineSpacing),
           ],
@@ -106,21 +107,21 @@ class _DataRequesterViewState extends State<DataRequesterView> {
     );
   }
 
-  Form _buildStep1Form(BuildContext context) {
+  Form _builddataRequesterForm(BuildContext context) {
     return Form(
       key: _formKey,
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: <Widget>[
           Text(
-            'ท่านเป็นเจ้าของข้อมูลหรือไม่', //!
+            tr('dataSubjectRight.dataRequester.areYouTheDs'), 
             style: Theme.of(context)
                 .textTheme
                 .titleMedium
                 ?.copyWith(color: Theme.of(context).colorScheme.primary),
           ),
           DataSubjectRightListTile(
-            title: 'ผู้ยื่นคำร้องเป็นบุคคลเดียวกับเจ้าของข้อมูล', //!
+            title: tr('dataSubjectRight.dataRequester.applicantDs'), 
             onTap: () {
               setSelectedRadioTile(1);
             },
@@ -133,7 +134,7 @@ class _DataRequesterViewState extends State<DataRequesterView> {
             ),
           ),
           DataSubjectRightListTile(
-            title: 'ผู้ยื่นคำร้องเป็นตัวแทนเจ้าของข้อมูล', //!
+            title: 'dataSubjectRight.dataRequester.ApplicantAds', 
             onTap: () {
               setSelectedRadioTile(2);
             },
@@ -180,7 +181,7 @@ class _DataRequesterViewState extends State<DataRequesterView> {
           Row(
             children: <Widget>[
               Text(
-                'ข้อมูลของผู้ยื่นคำขอ', //!
+                tr('dataSubjectRight.dataRequester.ApplicantInformation'),
                 style: Theme.of(context)
                     .textTheme
                     .titleMedium
@@ -189,42 +190,42 @@ class _DataRequesterViewState extends State<DataRequesterView> {
             ],
           ),
           const SizedBox(height: UiConfig.lineSpacing),
-          const TitleRequiredText(
-            text: 'ชื่อ - นามสกุล', //!
+           TitleRequiredText(
+            text: tr('dataSubjectRight.dataRequester.namesurename'), 
             required: true,
           ),
           CustomTextField(
-            hintText: 'กรอกชื่อ - นามสกุล', //!
+            hintText: tr('dataSubjectRight.dataRequester.hintnamesurename'), 
             controller: fullNameController,
             required: true,
           ),
           const SizedBox(height: UiConfig.lineSpacing),
-          const TitleRequiredText(
-            text: 'ที่อยู่', //!
+           TitleRequiredText(
+            text: tr('dataSubjectRight.dataRequester.address'), 
             required: true,
           ),
           CustomTextField(
-            hintText: 'กรอกที่อยู่', //!
+            hintText: 'dataSubjectRight.dataRequester.address', 
             controller: addressTextController,
             required: true,
           ),
           const SizedBox(height: UiConfig.lineSpacing),
-          const TitleRequiredText(
-            text: 'อีเมล', //!
+           TitleRequiredText(
+            text: tr('dataSubjectRight.dataRequester.email'), 
             required: true,
           ),
           CustomTextField(
-            hintText: 'กรอกอีเมล', //!
+            hintText: 'dataSubjectRight.dataRequester.hintemail', 
             controller: emailController,
             required: true,
           ),
           const SizedBox(height: UiConfig.lineSpacing),
-          const TitleRequiredText(
-            text: 'เบอร์โทรติดต่อ', //!
+           TitleRequiredText(
+            text: tr('dataSubjectRight.dataRequester.telnumber'), 
             required: true,
           ),
           CustomTextField(
-            hintText: 'กรอกเบอร์โทรติดต่อ', //!
+            hintText: 'dataSubjectRight.dataRequester.hinttelnumber', 
             controller: phonenumberController,
             keyboardType: TextInputType.phone,
             required: true,

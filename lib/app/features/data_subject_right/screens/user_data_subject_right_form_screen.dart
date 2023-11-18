@@ -48,7 +48,7 @@ class _UserDataSubjectRightFormScreenState
         if (state is SubmittedUserDataSubjectRightForm) {
           BotToast.showText(
             text: tr(
-                'consentManagement.consentForm.consentFormDetails.edit.submitSuccess'), //!
+                'consentManagement.consentForm.consentFormDetails.edit.submitSuccess'), 
             contentColor:
                 Theme.of(context).colorScheme.secondary.withOpacity(0.75),
             borderRadius: BorderRadius.circular(8.0),
@@ -118,12 +118,12 @@ class _UserDataSubjectRightFormScreenState
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: <Widget>[
                   Text(
-                    'I have collected your consent from filling out the form',
+                    tr('userSubjectRight.collectedYourConsent'),
                     style: Theme.of(context).textTheme.bodyMedium,
                   ),
                   const SizedBox(height: UiConfig.lineGap),
                   Text(
-                    'Data Subject Right Form',
+                    tr('userSubjectRight.dataSubjectRightForm'),
                     style: Theme.of(context).textTheme.titleLarge?.copyWith(
                         color: Theme.of(context).colorScheme.primary),
                   ),
@@ -139,7 +139,7 @@ class _UserDataSubjectRightFormScreenState
                         context.read<UserDataSubjectRightFormBloc>().add(event);
                       },
                       child: Text(
-                        'Fill out the form again',
+                        tr('userSubjectRight.fillAgain'),
                         style: Theme.of(context).textTheme.bodyMedium?.copyWith(
                             color: Theme.of(context).colorScheme.onPrimary),
                       ),

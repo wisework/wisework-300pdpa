@@ -1,3 +1,4 @@
+import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 
@@ -71,7 +72,7 @@ class _DataOwnerViewState extends State<DataOwnerView> {
           iconColor: Theme.of(context).colorScheme.primary,
           backgroundColor: Theme.of(context).colorScheme.onBackground,
         ),
-        title: const Text('แบบฟอร์มขอใช้สิทธิ์ตามกฏหมาย'), //!
+        title:  Text(tr('dataSubjectRight.manageRequests')), 
       ),
       body: SingleChildScrollView(
         child: Column(
@@ -80,7 +81,7 @@ class _DataOwnerViewState extends State<DataOwnerView> {
             const SizedBox(height: UiConfig.lineSpacing),
             CustomContainer(
               padding: const EdgeInsets.all(UiConfig.defaultPaddingSpacing),
-              child: _buildStep3Form(context),
+              child: _builddataOwnerForm(context),
             ),
             const SizedBox(height: UiConfig.lineSpacing),
           ],
@@ -89,7 +90,7 @@ class _DataOwnerViewState extends State<DataOwnerView> {
     );
   }
 
-  Form _buildStep3Form(BuildContext context) {
+  Form _builddataOwnerForm(BuildContext context) {
     return Form(
       key: _formKey,
       child: Column(
@@ -98,7 +99,7 @@ class _DataOwnerViewState extends State<DataOwnerView> {
           Row(
             children: <Widget>[
               Text(
-                'รายละเอียดเจ้าของข้อมูล', //!
+                tr('dataSubjectRight.dataOwner.dataOwnerDetails'), 
                 style: Theme.of(context)
                     .textTheme
                     .titleMedium
@@ -107,39 +108,39 @@ class _DataOwnerViewState extends State<DataOwnerView> {
             ],
           ),
           const SizedBox(height: UiConfig.lineSpacing),
-          const TitleRequiredText(
-            text: 'ชื่อ - นามสกุล', //!
+           TitleRequiredText(
+            text: tr('dataSubjectRight.dataOwner.namesurename'), 
             required: true,
           ),
           const CustomTextField(
-            hintText: 'กรอกชื่อ - นามสกุล', //!
+            hintText: 'dataSubjectRight.dataOwner.hintnamesurename', 
             required: true,
           ),
           const SizedBox(height: UiConfig.lineSpacing),
-          const TitleRequiredText(
-            text: 'ที่อยู่', //!
+           TitleRequiredText(
+            text: tr('dataSubjectRight.dataOwner.address'), 
             required: true,
           ),
           const CustomTextField(
-            hintText: 'กรอกที่อยู่', //!
+            hintText: 'dataSubjectRight.dataOwner.hintaddress', 
             required: true,
           ),
           const SizedBox(height: UiConfig.lineSpacing),
-          const TitleRequiredText(
-            text: 'อีเมล', //!
+           TitleRequiredText(
+            text: tr('dataSubjectRight.dataOwner.email'), 
             required: true,
           ),
           const CustomTextField(
-            hintText: 'กรอกอีเมล', //!
+            hintText: 'dataSubjectRight.dataOwner.hintemail', 
             required: true,
           ),
           const SizedBox(height: UiConfig.lineSpacing),
-          const TitleRequiredText(
-            text: 'เบอร์โทรติดต่อ', //!
+           TitleRequiredText(
+            text: tr('dataSubjectRight.dataOwner.telnumber'), 
             required: true,
           ),
           const CustomTextField(
-            hintText: 'กรอกเบอร์โทรติดต่อ', //!
+            hintText: 'dataSubjectRight.dataOwner.hinttelnumber', 
             required: true,
           ),
           const SizedBox(height: UiConfig.lineSpacing),

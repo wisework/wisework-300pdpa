@@ -1,3 +1,4 @@
+import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 
@@ -21,7 +22,7 @@ class _RequestIntroScreenState extends State<RequestIntroScreen> {
     return Scaffold(
       appBar: PdpaAppBar(
         leadingIcon: _buildPopButton(),
-        title: const Text('แบบฟอร์มขอใช้สิทธิ์ตามกฏหมาย'), //!
+        title: Text(tr('dataSubjectRight.manageRequests')), 
       ),
       body: CustomContainer(
         margin: const EdgeInsets.all(0),
@@ -47,7 +48,7 @@ class _RequestIntroScreenState extends State<RequestIntroScreen> {
             ),
             const SizedBox(height: UiConfig.lineSpacing),
             Text(
-              'แบบฟอร์มขอใช้สิทธิ์ตามกฎหมายคุ้มครองข้อมูลส่วนบุคคล',
+              tr('dataSubjectRight.intro.title'),
               textAlign: TextAlign.center,
               style: Theme.of(context)
                   .textTheme
@@ -59,7 +60,7 @@ class _RequestIntroScreenState extends State<RequestIntroScreen> {
                   Theme.of(context).colorScheme.outlineVariant.withOpacity(0.5),
             ),
             Text(
-              'พระราชบัญญัติคุ้มครองข้อมูลส่วนบุคคลได้ให้สิทธิแก่เจ้าของข้อมูลส่วนบุคคลในการขอใช้สิทธิดำเนินการต่อข้อมูลส่วนบุคคลของตนซึ่งอยู่ในความดูแลของบริษัท Yab ในฐานะผู้ควบคุมข้อมูลส่วนบุคคลทั้งนี้ท่านสามารถใช้สิทธิดังกล่าวได้โดยการกรอกรายละเอียดในแบบคำร้องนี้',
+              tr('dataSubjectRight.intro.description'),
               textAlign: TextAlign.center,
               style: Theme.of(context)
                   .textTheme
@@ -74,7 +75,7 @@ class _RequestIntroScreenState extends State<RequestIntroScreen> {
                   context.pushReplacement(DataSubjectRightRoute.stepOne.path);
                 },
                 child: Text(
-                  'กรอกแบบคำร้อง',
+                  tr('dataSubjectRight.intro.button'),
                   style: Theme.of(context).textTheme.titleMedium?.copyWith(
                       color: Theme.of(context).colorScheme.onPrimary),
                 ))

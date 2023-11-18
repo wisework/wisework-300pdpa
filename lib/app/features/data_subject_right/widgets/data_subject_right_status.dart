@@ -1,3 +1,4 @@
+import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:pdpa/app/shared/utils/constants.dart';
 
@@ -15,12 +16,12 @@ class DataSubjectRightStatus extends StatefulWidget {
 
 class _DataSubjectRightStatusState extends State<DataSubjectRightStatus> {
   final Map<RequestProcessStatus, String> requestProcessNames = {
-    RequestProcessStatus.newRequest: 'New Request',
-    RequestProcessStatus.pending: 'Pending',
-    RequestProcessStatus.rejected: 'Rejected',
-    RequestProcessStatus.considering: 'Considering',
-    RequestProcessStatus.inProgress: 'In Progress',
-    RequestProcessStatus.completed: 'Completed',
+    RequestProcessStatus.newRequest: tr('dataSubjectRight.status.newRequest'),
+    RequestProcessStatus.pending: tr('dataSubjectRight.status.pending'),
+    RequestProcessStatus.rejected: tr('dataSubjectRight.status.rejected'),
+    RequestProcessStatus.considering: tr('dataSubjectRight.status.considering'),
+    RequestProcessStatus.inProgress: tr('dataSubjectRight.status.inProgress'),
+    RequestProcessStatus.completed: tr('dataSubjectRight.status.completed'),
   };
 
   @override

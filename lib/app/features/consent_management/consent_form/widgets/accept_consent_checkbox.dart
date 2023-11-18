@@ -59,7 +59,7 @@ class _AcceptConsentCheckboxState extends State<AcceptConsentCheckbox> {
         await launchUrl(uri);
       } else {
         BotToast.showText(
-          text: tr('consentManagement.consentForm.couldNotLaunch $url'), //!
+          text: tr('consentManagement.consentForm.couldNotLaunch $url'), 
           contentColor:
               Theme.of(context).colorScheme.secondary.withOpacity(0.75),
           borderRadius: BorderRadius.circular(8.0),
