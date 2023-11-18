@@ -160,7 +160,6 @@ class DataSubjectRightModel extends Equatable {
   }
 
   DataMap toMap() => {
-        'id': id,
         'dataRequester': dataRequester.fold(
           {},
           (map, requesterInput) => map..addAll(requesterInput.toMap()),

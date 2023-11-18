@@ -65,7 +65,7 @@ final Map<TextInputType, String> textInputTypeNames = {
 //   TextInputType.url: tr('app.url'),
 // };
 
-final emailRegex = RegExp(r'^[\w-]+(\.[\w-]+)*@[\w-]+(\.[\w-]+)+$');
+final emailRegex = RegExp(r'^[\w-]+(.[\w-]+)*@[\w-]+(.[\w-]+)+$');
 
 List<String> periodUnits = ['Day', 'Month', 'Year'];
 

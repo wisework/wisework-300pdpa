@@ -113,8 +113,8 @@ class _EditRequestTypeScreenState extends State<EditRequestTypeScreen> {
               duration: UiConfig.toastDuration,
             );
 
-            final deleted = RequestTypeModel.empty()
-                .copyWith(id: state.requestTypeId);
+            final deleted =
+                RequestTypeModel.empty().copyWith(id: state.requestTypeId);
 
             context.read<RequestTypeBloc>().add(UpdateRequestTypeEvent(
                 requestType: deleted, updateType: UpdateType.deleted));

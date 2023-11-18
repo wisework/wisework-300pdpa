@@ -115,8 +115,8 @@ class _EditRejectTypeScreenState extends State<EditRejectTypeScreen> {
               duration: UiConfig.toastDuration,
             );
 
-            final deleted = RejectTypeModel.empty()
-                .copyWith(id: state.rejectTypeId);
+            final deleted =
+                RejectTypeModel.empty().copyWith(id: state.rejectTypeId);
 
             context.read<RejectTypeBloc>().add(UpdateRejectTypeEvent(
                 rejectType: deleted, updateType: UpdateType.deleted));
