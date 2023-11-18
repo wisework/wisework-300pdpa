@@ -75,6 +75,9 @@ class DataSubjectRightView extends StatefulWidget {
 class _DataSubjectRightViewState extends State<DataSubjectRightView> {
   final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
 
+
+
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -184,7 +187,7 @@ class _DataSubjectRightViewState extends State<DataSubjectRightView> {
                     children: <Widget>[
                       Expanded(
                         child: Text(
-                          tr('consentManagement.consentForm.consentList'), //!
+                          tr('dataSubjectRight.Listpage.list'), //!
                           style: Theme.of(context).textTheme.titleMedium,
                           overflow: TextOverflow.ellipsis,
                           maxLines: 1,
@@ -268,7 +271,7 @@ class _DataSubjectRightViewState extends State<DataSubjectRightView> {
       status: UtilFunctions.getRequestProcessStatus(dataSubjectRight),
       onTap: () {
         context.push(
-          DataSubjectRightRoute.processDataSubjectRight.path
+          DataSubjectRightRoute.editDataSubjectRight.path
               .replaceFirst(':id', dataSubjectRight.id),
         );
       },

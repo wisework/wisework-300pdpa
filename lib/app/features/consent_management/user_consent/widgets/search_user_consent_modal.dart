@@ -258,7 +258,7 @@ class _SearchUserConsentModalState extends State<SearchUserConsentModal> {
           'assets/images/general/result-not-found.png',
         ),
         Text(
-          tr('app.features.resultNotFound'),
+          tr('app.home.resultNotFound'),
           style: Theme.of(context).textTheme.titleMedium,
         ),
         const SizedBox(height: UiConfig.lineSpacing),
@@ -267,7 +267,7 @@ class _SearchUserConsentModalState extends State<SearchUserConsentModal> {
             horizontal: UiConfig.defaultPaddingSpacing * 2,
           ),
           child: Text(
-            tr('app.features.description'),
+            tr('app.home.description'),
             textAlign: TextAlign.center,
             style: Theme.of(context).textTheme.labelLarge,
           ),

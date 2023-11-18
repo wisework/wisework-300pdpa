@@ -15,8 +15,8 @@ import 'package:pdpa/app/shared/widgets/customs/custom_icon_button.dart';
 import 'package:pdpa/app/shared/widgets/customs/custom_text_field.dart';
 import 'package:pdpa/app/shared/widgets/material_ink_well.dart';
 
-class SearchConsentFormModal extends StatefulWidget {
-  const SearchConsentFormModal({
+class SearchDataSubjectRightModal extends StatefulWidget {
+  const SearchDataSubjectRightModal({
     super.key,
     required this.initialConsentForms,
     required this.language,
@@ -26,10 +26,10 @@ class SearchConsentFormModal extends StatefulWidget {
   final String language;
 
   @override
-  State<SearchConsentFormModal> createState() => _SearchConsentFormModalState();
+  State<SearchDataSubjectRightModal> createState() => _SearchDataSubjectRightModalState();
 }
 
-class _SearchConsentFormModalState extends State<SearchConsentFormModal> {
+class _SearchDataSubjectRightModalState extends State<SearchDataSubjectRightModal> {
   late UserModel currentUser;
   late TextEditingController searchController;
 

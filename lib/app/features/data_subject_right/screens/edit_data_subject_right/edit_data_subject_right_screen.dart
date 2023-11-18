@@ -213,7 +213,7 @@ class _EditDataSubjectRightViewState extends State<EditDataSubjectRightView> {
         title: Text(
           widget.isNewDataSubjectRight
               ? tr('masterData.dsr.dataSubjectRight.createDataSubjectRight')
-              : 'masterData.dsr.dataSubjectRight.editDataSubjectRight',
+              : tr('masterData.dsr.dataSubjectRight.editDataSubjectRight'),
           style: Theme.of(context).textTheme.titleLarge,
         ),
         actions: [

@@ -496,7 +496,7 @@ class _HomeViewState extends State<HomeView> {
     final List<ExploreActivity> activities = [
       ExploreActivity(
         title: tr('app.features.consent'),
-        subTitle: tr('app.features.createcsf'),
+        subTitle: tr('app.home.createcsf'),
         icon: Ionicons.add_circle_outline,
         path: ConsentFormRoute.createConsentForm.path,
       ),
@@ -683,7 +683,7 @@ class _HomeViewState extends State<HomeView> {
                                 UserConsentRoute.userConsentScreen.path);
                           },
                           child: Text(
-                            tr('app.features.seeMore'),
+                            tr('app.home.seeMore'),
                             style: Theme.of(context)
                                 .textTheme
                                 .titleSmall
@@ -756,7 +756,7 @@ class _HomeViewState extends State<HomeView> {
           'assets/images/general/result-not-found.png',
         ),
         Text(
-          tr('app.features.resultNotFound'),
+          tr('app.home.resultNotFound'),
           style: Theme.of(context).textTheme.titleMedium,
         ),
         const SizedBox(height: UiConfig.lineSpacing),
@@ -765,7 +765,7 @@ class _HomeViewState extends State<HomeView> {
             horizontal: UiConfig.defaultPaddingSpacing * 2,
           ),
           child: Text(
-            tr('app.features.description'),
+            tr('app.home.description'),
             textAlign: TextAlign.center,
             style: Theme.of(context).textTheme.labelLarge,
           ),
