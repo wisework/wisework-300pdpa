@@ -16,6 +16,7 @@ import 'package:pdpa/app/features/authentication/bloc/sign_in/sign_in_bloc.dart'
 import 'package:pdpa/app/features/consent_management/consent_form/routes/consent_form_route.dart';
 import 'package:pdpa/app/features/consent_management/user_consent/bloc/user_consent/user_consent_bloc.dart';
 import 'package:pdpa/app/features/consent_management/user_consent/routes/user_consent_route.dart';
+import 'package:pdpa/app/features/data_subject_right/routes/data_subject_right_route.dart';
 import 'package:pdpa/app/features/general/routes/general_route.dart';
 import 'package:pdpa/app/features/master_data/routes/master_data_route.dart';
 import 'package:pdpa/app/shared/drawers/bloc/drawer_bloc.dart';
@@ -511,6 +512,12 @@ class _HomeViewState extends State<HomeView> {
         subTitle: tr('app.features.consentforms'),
         icon: Ionicons.clipboard_outline,
         path: ConsentFormRoute.consentForm.path,
+      ),
+      ExploreActivity(
+        title: tr('app.features.datasubjectright'),
+        subTitle: 'แบบฟอร์มคำร้อง',
+        icon: Ionicons.shield_checkmark_outline,
+        path: DataSubjectRightRoute.dataSubjectRight.path,
       ),
       ExploreActivity(
         title: tr('app.features.masterdata'),
