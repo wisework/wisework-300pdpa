@@ -1,13 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
+import 'package:ionicons/ionicons.dart';
 import 'package:pdpa/app/config/config.dart';
 import 'package:pdpa/app/data/models/authentication/user_model.dart';
 import 'package:pdpa/app/data/models/data_subject_right/data_subject_right_model.dart';
 import 'package:pdpa/app/data/models/etc/updated_return.dart';
 import 'package:pdpa/app/features/authentication/bloc/sign_in/sign_in_bloc.dart';
 import 'package:pdpa/app/features/data_subject_right/screens/process_data_subject_right/steps/considering_step.dart';
-import 'package:pdpa/app/features/data_subject_right/screens/process_data_subject_right/steps/process_result_step.dart';
 import 'package:pdpa/app/features/data_subject_right/screens/process_data_subject_right/steps/processing_step.dart';
 import 'package:pdpa/app/features/data_subject_right/screens/process_data_subject_right/steps/verifying_step.dart';
 import 'package:pdpa/app/shared/utils/constants.dart';
@@ -132,19 +132,10 @@ class _ProcessDataSubjectRightViewState
                   steps: _getSteps(context),
                   currentStep: stepIndex,
                   progressStep: progressIndex,
-                  onStepCancel: stepIndex != 0
-                      ? () {
-                          if (stepIndex > 0) {
-                            setState(() {
-                              stepIndex -= 1;
-                            });
-                          }
-                        }
-                      : null,
                   onStepContinue: stepIndex != 3
                       ? () {
                           // if (_formKey.currentState!.validate()) {
-                          if (stepIndex < _getSteps(context).length) {
+                          if (stepIndex <= _getSteps(context).length) {
                             setState(() {
                               stepIndex += 1;
                               progressIndex = stepIndex;
@@ -184,6 +175,7 @@ class _ProcessDataSubjectRightViewState
           maxLines: 1,
         ),
         content: const VerifyingStep(),
+        summaryContent: progressIndex > 0 ? _buildSummaryVerify(context) : null,
         isActive: progressIndex >= 0,
       ),
       CustomStep(
@@ -197,6 +189,8 @@ class _ProcessDataSubjectRightViewState
           maxLines: 1,
         ),
         content: const ConsideringStep(),
+        summaryContent:
+            progressIndex > 1 ? _buildSummaryConsider(context) : null,
         isActive: progressIndex >= 1,
       ),
       CustomStep(
@@ -210,21 +204,88 @@ class _ProcessDataSubjectRightViewState
           maxLines: 1,
         ),
         content: const ProcessingStep(),
+        summaryContent:
+            progressIndex > 2 ? _buildSummaryProcess(context) : null,
         isActive: progressIndex >= 2,
       ),
-      CustomStep(
-        title: Text(
-          'ผลการดำเนินการ',
-          style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-              color: progressIndex >= 3
-                  ? Theme.of(context).colorScheme.primary
-                  : Theme.of(context).colorScheme.onSurface),
-          overflow: TextOverflow.ellipsis,
-          maxLines: 1,
-        ),
-        content: const ProcessResultStep(),
-        isActive: progressIndex >= 3,
-      ),
     ];
+  }
+
+  Container _buildSummaryVerify(BuildContext context) {
+    return Container(
+      color: Theme.of(context).colorScheme.onBackground,
+      child: Row(
+        children: <Widget>[
+          const Icon(
+            Icons.circle,
+            size: 8.0,
+            color: Colors.green,
+          ),
+          const SizedBox(width: 10.0),
+          Expanded(
+            child: Text(
+              'ผ่าน',
+              style: Theme.of(context).textTheme.bodyMedium,
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
+  Container _buildSummaryConsider(BuildContext context) {
+    return Container(
+      color: Theme.of(context).colorScheme.onBackground,
+      child: Row(
+        children: <Widget>[
+          const Icon(
+            Icons.circle,
+            size: 8.0,
+            color: Colors.green,
+          ),
+          const SizedBox(width: 10.0),
+          Expanded(
+            child: Text(
+              'ดำเนินการ',
+              style: Theme.of(context).textTheme.bodyMedium,
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
+  Container _buildSummaryProcess(BuildContext context) {
+    return Container(
+      color: Theme.of(context).colorScheme.onBackground,
+      child: Row(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: <Widget>[
+          Container(
+            width: 100.0,
+            height: 100.0,
+            color: Colors.grey.shade300,
+          ),
+          Expanded(
+            child: Padding(
+              padding: const EdgeInsets.all(UiConfig.actionSpacing),
+              child: Text(
+                'แก้ไขแล้ว',
+                style: Theme.of(context).textTheme.bodyMedium,
+              ),
+            ),
+          ),
+          Transform.scale(
+            scale: 0.75,
+            child: CustomIconButton(
+              onPressed: () {},
+              icon: Ionicons.eye_outline,
+              iconColor: Theme.of(context).colorScheme.onPrimary,
+              backgroundColor: Theme.of(context).colorScheme.primary,
+            ),
+          ),
+        ],
+      ),
+    );
   }
 }

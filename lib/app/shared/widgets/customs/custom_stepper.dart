@@ -57,6 +57,10 @@ class _CustomStepperState extends State<CustomStepper> {
     return widget.currentStep == index;
   }
 
+  bool _isLast(int index) {
+    return (widget.steps.length - 1) == index;
+  }
+
   @override
   Widget build(BuildContext context) {
     return Padding(
@@ -142,7 +146,9 @@ class _CustomStepperState extends State<CustomStepper> {
               child: SizedBox(
                 width: 1.0,
                 child: Container(
-                  color: Theme.of(context).colorScheme.primary,
+                  color: _isCurrent(index)
+                      ? Theme.of(context).colorScheme.onSurface.withOpacity(0.6)
+                      : Theme.of(context).colorScheme.primary,
                 ),
               ),
             ),
@@ -159,19 +165,33 @@ class _CustomStepperState extends State<CustomStepper> {
             child: Column(
               children: <Widget>[
                 widget.steps[index].content,
-                _buildControlsBuilder(
-                  context,
-                  details: ControlsDetails(
-                    currentStep: widget.currentStep,
-                    onStepCancel: widget.onStepCancel,
-                    onStepContinue: widget.onStepContinue,
-                    stepIndex: index,
-                  ),
-                ),
+                _isCurrent(index)
+                    ? _buildControlsBuilder(
+                        context,
+                        details: ControlsDetails(
+                          currentStep: widget.currentStep,
+                          onStepCancel: widget.onStepCancel,
+                          onStepContinue: widget.onStepContinue,
+                          stepIndex: index,
+                        ),
+                      )
+                    : const SizedBox(height: 60.0),
               ],
             ),
           ),
         ),
+        if (widget.steps[index].summaryContent != null)
+          ExpandedContainer(
+            expand: !_isCurrent(index),
+            duration: const Duration(milliseconds: 400),
+            child: Padding(
+              padding: const EdgeInsetsDirectional.only(
+                start: 60.0,
+                end: 24.0,
+              ),
+              child: widget.steps[index].summaryContent,
+            ),
+          ),
       ],
     );
   }
