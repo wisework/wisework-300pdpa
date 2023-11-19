@@ -1,14 +1,21 @@
+import 'dart:io';
+import 'dart:typed_data';
+
 // ignore: depend_on_referenced_packages
 import 'package:bloc/bloc.dart';
 import 'package:equatable/equatable.dart';
 import 'package:pdpa/app/data/models/data_subject_right/data_subject_right_model.dart';
+import 'package:pdpa/app/data/models/data_subject_right/process_request_model.dart';
+import 'package:pdpa/app/data/repositories/general_repository.dart';
 import 'package:pdpa/app/shared/utils/constants.dart';
 
 part 'process_data_subject_right_state.dart';
 
 class ProcessDataSubjectRightCubit extends Cubit<ProcessDataSubjectRightState> {
-  ProcessDataSubjectRightCubit()
-      : super(ProcessDataSubjectRightState(
+  ProcessDataSubjectRightCubit({
+    required GeneralRepository generalRepository,
+  })  : _generalRepository = generalRepository,
+        super(ProcessDataSubjectRightState(
           dataSubjectRight: DataSubjectRightModel.empty(),
           initialDataSubjectRight: DataSubjectRightModel.empty(),
           stepIndex: 0,
@@ -19,6 +26,8 @@ class ProcessDataSubjectRightCubit extends Cubit<ProcessDataSubjectRightState> {
           considerError: false,
           endProcess: false,
         ));
+
+  final GeneralRepository _generalRepository;
 
   void initialSettings(DataSubjectRightModel dataSubjectRight) {
     emit(
@@ -134,5 +143,76 @@ class ProcessDataSubjectRightCubit extends Cubit<ProcessDataSubjectRightState> {
       rejectConsiderReason: value.isNotEmpty ? value : '',
     );
     emit(state.copyWith(dataSubjectRight: updated));
+  }
+
+  Future<void> uploadProofFile(
+    File? file,
+    Uint8List? data,
+    String fileName,
+    String path,
+    String processRequestId,
+  ) async {
+    final result = await _generalRepository.uploadFile(
+      file,
+      data,
+      fileName,
+      path,
+    );
+
+    result.fold(
+      (failure) {},
+      (fileUrl) {
+        DataSubjectRightModel dataSubjectRight = state.dataSubjectRight;
+        List<ProcessRequestModel> processRequests = [];
+
+        for (ProcessRequestModel process in dataSubjectRight.processRequests) {
+          if (process.id == processRequestId) {
+            processRequests.add(
+              process.copyWith(proofOfActionFile: fileUrl),
+            );
+          } else {
+            processRequests.add(process);
+          }
+        }
+
+        emit(
+          state.copyWith(
+            dataSubjectRight: dataSubjectRight.copyWith(
+              processRequests: processRequests,
+            ),
+          ),
+        );
+      },
+    );
+  }
+
+  Future<void> downloadProofFile(String path) async {
+    await _generalRepository.downloadFile(path);
+  }
+
+  void setProofText(
+    String text,
+    String processRequestId,
+  ) async {
+    DataSubjectRightModel dataSubjectRight = state.dataSubjectRight;
+    List<ProcessRequestModel> processRequests = [];
+
+    for (ProcessRequestModel process in dataSubjectRight.processRequests) {
+      if (process.id == processRequestId) {
+        processRequests.add(
+          process.copyWith(proofOfActionText: text),
+        );
+      } else {
+        processRequests.add(process);
+      }
+    }
+
+    emit(
+      state.copyWith(
+        dataSubjectRight: dataSubjectRight.copyWith(
+          processRequests: processRequests,
+        ),
+      ),
+    );
   }
 }

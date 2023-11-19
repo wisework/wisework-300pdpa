@@ -38,6 +38,7 @@ class GotCurrentDataSubjectRight extends EditDataSubjectRightState {
     this.rejectTypes,
     // this.reasonTemplates,
     // this.rejectTemplates,
+    this.emails,
   );
 
   final DataSubjectRightModel dataSubjectRight;
@@ -46,6 +47,7 @@ class GotCurrentDataSubjectRight extends EditDataSubjectRightState {
   final List<RejectTypeModel> rejectTypes;
   // final List<RequestReasonTemplateModel> reasonTemplates;
   // final List<RequestRejectTemplateModel> rejectTemplates;
+  final List<String> emails;
 
   @override
   List<Object> get props {
@@ -56,6 +58,7 @@ class GotCurrentDataSubjectRight extends EditDataSubjectRightState {
       rejectTypes,
       // reasonTemplates,
       // rejectTemplates,
+      emails,
     ];
   }
 }
@@ -91,12 +94,14 @@ class UpdatedCurrentDataSubjectRight extends EditDataSubjectRightState {
     this.requestTypes,
     this.reasonTypes,
     this.rejectTypes,
+    this.emails,
   );
 
   final DataSubjectRightModel dataSubjectRight;
   final List<RequestTypeModel> requestTypes;
   final List<ReasonTypeModel> reasonTypes;
   final List<RejectTypeModel> rejectTypes;
+  final List<String> emails;
 
   @override
   List<Object> get props {
@@ -105,6 +110,7 @@ class UpdatedCurrentDataSubjectRight extends EditDataSubjectRightState {
       requestTypes,
       reasonTypes,
       rejectTypes,
+      emails,
     ];
   }
 }

@@ -24,16 +24,26 @@ class GeneralRepository {
     }
   }
 
-  ResultFuture<String> uploadConsentImage(
+  ResultFuture<String> uploadFile(
     File? file,
     Uint8List? data,
     String fileName,
     String path,
   ) async {
     try {
-      final result = await _api.uploadImage(file, data, fileName, path);
+      final result = await _api.uploadFile(file, data, fileName, path);
 
       return Right(result);
+    } on ApiException catch (error) {
+      return Left(ApiFailure.fromException(error));
+    }
+  }
+
+  ResultVoid downloadFile(String path) async {
+    try {
+      await _api.downloadFile(path);
+
+      return const Right(null);
     } on ApiException catch (error) {
       return Left(ApiFailure.fromException(error));
     }
