@@ -31,10 +31,14 @@ class GettingRequestReasons extends RequestReasonTpState {
 }
 
 class GotRequestReasons extends RequestReasonTpState {
-  const GotRequestReasons(this.requestReasons);
+  const GotRequestReasons(
+    this.requestReasons,
+    this.requests,
+  );
 
   final List<RequestReasonTemplateModel> requestReasons;
+  final List<RequestTypeModel> requests;
 
   @override
-  List<Object> get props => [requestReasons];
+  List<Object> get props => [requestReasons, requests];
 }

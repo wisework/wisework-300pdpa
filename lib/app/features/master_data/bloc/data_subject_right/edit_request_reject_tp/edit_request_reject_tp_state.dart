@@ -31,12 +31,16 @@ class GetingCurrentRequestRejectTp extends EditRequestRejectTpState {
 }
 
 class GotCurrentRequestRejectTp extends EditRequestRejectTpState {
-  const GotCurrentRequestRejectTp(this.requestRejectTp);
+  const GotCurrentRequestRejectTp(
+    this.requestRejectTp,
+    this.rejects,
+  );
 
   final RequestRejectTemplateModel requestRejectTp;
+  final List<String> rejects;
 
   @override
-  List<Object> get props => [requestRejectTp];
+  List<Object> get props => [requestRejectTp, rejects];
 }
 
 class CreatingCurrentRequestRejectTp extends EditRequestRejectTpState {
@@ -63,12 +67,16 @@ class UpdatingCurrentRequestRejectTp extends EditRequestRejectTpState {
 }
 
 class UpdatedCurrentRequestRejectTp extends EditRequestRejectTpState {
-  const UpdatedCurrentRequestRejectTp(this.requestRejectTp);
+  const UpdatedCurrentRequestRejectTp(
+    this.requestRejectTp,
+    this.rejects,
+  );
 
   final RequestRejectTemplateModel requestRejectTp;
+  final List<String> rejects;
 
   @override
-  List<Object> get props => [requestRejectTp];
+  List<Object> get props => [requestRejectTp, rejects];
 }
 
 class DeletingCurrentRequestRejectTp extends EditRequestRejectTpState {

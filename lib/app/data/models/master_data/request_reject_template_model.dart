@@ -86,14 +86,14 @@ class RequestRejectTemplateModel extends Equatable {
     );
   }
 
-  RequestRejectTemplateModel toCreated(String email, DateTime date) => copyWith(
+  RequestRejectTemplateModel setCreate(String email, DateTime date) => copyWith(
         createdBy: email,
         createdDate: date,
         updatedBy: email,
         updatedDate: date,
       );
 
-  RequestRejectTemplateModel toUpdated(String email, DateTime date) => copyWith(
+  RequestRejectTemplateModel setUpdate(String email, DateTime date) => copyWith(
         updatedBy: email,
         updatedDate: date,
       );
