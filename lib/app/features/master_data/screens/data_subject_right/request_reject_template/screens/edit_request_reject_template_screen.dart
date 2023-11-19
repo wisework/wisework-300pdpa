@@ -4,8 +4,11 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
 import 'package:ionicons/ionicons.dart';
+import 'package:modal_bottom_sheet/modal_bottom_sheet.dart';
 import 'package:pdpa/app/config/config.dart';
 import 'package:pdpa/app/data/models/authentication/user_model.dart';
+import 'package:pdpa/app/data/models/etc/updated_return.dart';
+import 'package:pdpa/app/data/models/master_data/localized_model.dart';
 import 'package:pdpa/app/data/models/master_data/reject_type_model.dart';
 import 'package:pdpa/app/data/models/master_data/request_reject_template_model.dart';
 import 'package:pdpa/app/data/models/master_data/request_type_model.dart';
@@ -14,15 +17,19 @@ import 'package:pdpa/app/features/master_data/bloc/data_subject_right/edit_reque
 import 'package:pdpa/app/features/master_data/bloc/data_subject_right/reject_type/reject_type_bloc.dart';
 import 'package:pdpa/app/features/master_data/bloc/data_subject_right/request_reject_tp/request_reject_tp_bloc.dart';
 import 'package:pdpa/app/features/master_data/bloc/data_subject_right/request_type/request_type_bloc.dart';
+import 'package:pdpa/app/features/master_data/screens/data_subject_right/request_reject_template/widgets/choose_reject_modal.dart';
 import 'package:pdpa/app/features/master_data/widgets/configuration_info.dart';
 import 'package:pdpa/app/injection.dart';
 import 'package:pdpa/app/shared/utils/constants.dart';
+import 'package:pdpa/app/shared/widgets/content_wrapper.dart';
+import 'package:pdpa/app/shared/widgets/customs/custom_button.dart';
 import 'package:pdpa/app/shared/widgets/customs/custom_container.dart';
 import 'package:pdpa/app/shared/widgets/customs/custom_icon_button.dart';
 import 'package:pdpa/app/shared/widgets/customs/custom_switch_button.dart';
 import 'package:pdpa/app/shared/widgets/screens/error_message_screen.dart';
 import 'package:pdpa/app/shared/widgets/screens/loading_screen.dart';
 import 'package:pdpa/app/shared/widgets/templates/pdpa_app_bar.dart';
+import 'package:pdpa/app/shared/widgets/title_required_text.dart';
 
 class EditRequestRejectTemplateScreen extends StatefulWidget {
   const EditRequestRejectTemplateScreen({
@@ -141,6 +148,7 @@ class _EditRequestRejectTemplateScreenState
           if (state is GotCurrentRequestRejectTp) {
             return EditRequestRejectTemplateView(
               initialRequestReject: state.requestRejectTp,
+              rejects: state.rejects,
               currentUser: currentUser,
               isNewRequestReject: widget.requestRejectId.isEmpty,
             );
@@ -148,6 +156,7 @@ class _EditRequestRejectTemplateScreenState
           if (state is UpdatedCurrentRequestRejectTp) {
             return EditRequestRejectTemplateView(
               initialRequestReject: state.requestRejectTp,
+              rejects: state.rejects,
               currentUser: currentUser,
               isNewRequestReject: widget.requestRejectId.isEmpty,
             );
@@ -167,11 +176,13 @@ class EditRequestRejectTemplateView extends StatefulWidget {
   const EditRequestRejectTemplateView({
     super.key,
     required this.initialRequestReject,
+    required this.rejects,
     required this.currentUser,
     required this.isNewRequestReject,
   });
 
   final RequestRejectTemplateModel initialRequestReject;
+  final List<RejectTypeModel> rejects;
   final UserModel currentUser;
   final bool isNewRequestReject;
   @override
@@ -185,7 +196,6 @@ class _EditRequestRejectTemplateViewState
 
   late List<RequestTypeModel> requestTypeList;
   late List<RejectTypeModel> rejectTypeList;
-  // late List<RequestTypeModel> purposeList;
 
   late bool isActivated;
 
@@ -287,6 +297,12 @@ class _EditRequestRejectTemplateViewState
     context.pop();
   }
 
+  void _updateEditRequestRejectTemplateState(
+      UpdatedReturn<RejectTypeModel> updated) {
+    final event = UpdateEditRequestRejectTpStateEvent(reject: updated.object);
+    context.read<EditRequestRejectTpBloc>().add(event);
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -297,25 +313,21 @@ class _EditRequestRejectTemplateViewState
               ? tr('masterData.dsr.requestrejects.create')
               : tr('masterData.dsr.requestrejects.edit'),
           style: Theme.of(context).textTheme.titleLarge,
+          overflow: TextOverflow.ellipsis,
+          maxLines: 1,
         ),
         actions: [
           _buildSaveButton(),
         ],
       ),
       body: SingleChildScrollView(
-        child: Form(
-          key: _formKey,
+        child: ContentWrapper(
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: <Widget>[
               const SizedBox(height: UiConfig.lineSpacing),
               CustomContainer(
                 child: _buildRequestRejectForm(context),
-              ),
-              const SizedBox(height: UiConfig.lineSpacing),
-              const SizedBox(height: UiConfig.lineSpacing),
-              CustomContainer(
-                child: _buildChooseRejectsForm(context),
               ),
               const SizedBox(height: UiConfig.lineSpacing),
               Visibility(
@@ -331,119 +343,212 @@ class _EditRequestRejectTemplateViewState
     );
   }
 
-  Column _buildRequestRejectForm(BuildContext context) {
-    return (Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        Row(
-          children: <Widget>[
-            Text(
-              tr('masterData.dsr.requestrejects.requesttype.create'),
-              style: Theme.of(context).textTheme.titleLarge,
-            )
-          ],
-        ),
-        const SizedBox(height: UiConfig.lineSpacing),
-        SizedBox(
-          width: double.infinity,
-          child: ElevatedButton(
+  Form _buildRequestRejectForm(BuildContext context) {
+    return Form(
+      key: _formKey,
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: <Widget>[
+          Row(
+            children: <Widget>[
+              Text(
+                tr('masterData.cm.purposeCategory.list'), //!
+                style: Theme.of(context).textTheme.titleLarge,
+              ),
+            ],
+          ),
+          const SizedBox(height: UiConfig.lineSpacing),
+          TitleRequiredText(
+            text: tr('masterData.cm.purposeCategory.description'), //!
+          ),
+          CustomButton(
+            height: 50.0,
             onPressed: () {
-              showModalBottomSheet<void>(
-                context: context,
-                builder: (BuildContext context) {
-                  return Container(
-                    height: 500,
-                    color: Colors.white,
-                    child: Center(
-                      child: Column(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        mainAxisSize: MainAxisSize.min,
-                        children: <Widget>[
-                          const Text('Modal BottomSheet'), //!
-                          ElevatedButton(
-                            child: const Text('Close BottomSheet'), //!
-                            onPressed: () => Navigator.pop(context),
-                          ),
-                        ],
-                      ),
-                    ),
-                  );
-                },
-              );
+              // ? Request Modal
+              // showBarModalBottomSheet(
+              //   context: context,
+              //   backgroundColor: Colors.transparent,
+              //   builder: (context) => ChooseRequestModal(
+              //     initialRequests: requestReject.requestTypeId,
+              //     request: widget.request,
+              //     onChanged: (rejects) {
+              //       setState(() {
+              //         requestReject = requestReject.copyWith(
+              //           rejectTypes: rejects,
+              //         );
+              //       });
+              //     },
+              //     onUpdated: _updateEditRequestRejectTemplateState,
+              //     language: widget.currentUser.defaultLanguage,
+              //   ),
+              // );
             },
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.start,
-              children: [
-                Text(
-                  tr('masterData.dsr.requestrejects.chooserequesttype.create'),
-                  style: Theme.of(context).textTheme.bodyMedium,
-                ),
-              ],
+            buttonType: CustomButtonType.outlined,
+            backgroundColor: Theme.of(context).colorScheme.onBackground,
+            borderColor: Theme.of(context).colorScheme.outlineVariant,
+            child: Padding(
+              padding: const EdgeInsets.symmetric(
+                horizontal: UiConfig.defaultPaddingSpacing,
+              ),
+              child: Row(
+                children: <Widget>[
+                  const SizedBox(width: UiConfig.actionSpacing + 11),
+                  Expanded(
+                    child: Text(
+                      requestReject.requestTypeId,
+                      style: Theme.of(context).textTheme.bodyMedium,
+                    ),
+                  ),
+                ],
+              ),
             ),
           ),
-        )
-      ],
-    ));
+          const SizedBox(height: UiConfig.lineSpacing),
+          TitleRequiredText(
+            text: tr('masterData.cm.purposeCategory.purposes'), //!
+          ),
+          const SizedBox(height: UiConfig.lineSpacing),
+          _buildRejectSection(context,
+              requestReject.rejectTypes.map((reject) => reject.id).toList()),
+        ],
+      ),
+    );
   }
 
-  Column _buildChooseRejectsForm(BuildContext context) {
-    return (Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
+  Column _buildRejectSection(BuildContext context, List<String> rejectIds) {
+    return Column(
       children: <Widget>[
-        Column(
-          children: <Widget>[
-            Text(
-              tr('masterData.dsr.requestrejects.rejecttype.create'),
-              style: Theme.of(context).textTheme.titleLarge,
-            )
-          ],
-        ),
-        const SizedBox(height: UiConfig.lineSpacing),
-        Text(
-          tr('masterData.dsr.requestrejects.add'),
-          style: Theme.of(context).textTheme.bodySmall,
-        ),
-        const SizedBox(height: UiConfig.lineSpacing),
-        SizedBox(
-          width: double.infinity,
-          child: ElevatedButton(
-            onPressed: () {
-              showModalBottomSheet<void>(
-                context: context,
-                builder: (BuildContext context) {
-                  return Container(
-                    height: 500,
-                    color: Colors.white,
-                    child: Center(
-                      child: Column(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        mainAxisSize: MainAxisSize.min,
-                        children: <Widget>[
-                          const Text('Modal BottomSheet'), //!
-                          ElevatedButton(
-                            child: const Text('Close BottomSheet'), //!
-                            onPressed: () => Navigator.pop(context),
-                          ),
-                        ],
-                      ),
-                    ),
-                  );
-                },
-              );
-            },
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.start,
-              children: [
-                Text(
-                  tr('masterData.dsr.requestrejects.chooserejecttype.create'),
-                  style: Theme.of(context).textTheme.bodyMedium,
+        Padding(
+          padding: const EdgeInsets.symmetric(
+            horizontal: UiConfig.defaultPaddingSpacing,
+          ),
+          child: ListView.builder(
+            physics: const NeverScrollableScrollPhysics(),
+            shrinkWrap: true,
+            itemCount: requestReject.rejectTypes.length,
+            itemBuilder: (context, index) => Column(
+              children: <Widget>[
+                _buildRejectTile(
+                  context,
+                  reject: requestReject.rejectTypes[index],
+                  language: widget.currentUser.defaultLanguage,
+                ),
+                Padding(
+                  padding: const EdgeInsets.symmetric(
+                    vertical: 8.0,
+                  ),
+                  child: Divider(
+                    color: Theme.of(context)
+                        .colorScheme
+                        .outlineVariant
+                        .withOpacity(0.5),
+                  ),
                 ),
               ],
             ),
           ),
-        )
+        ),
+        _buildAddRejectButton(context),
       ],
-    ));
+    );
+  }
+
+  Row _buildRejectTile(
+    BuildContext context, {
+    required RejectTypeModel reject,
+    required String language,
+  }) {
+    final description = reject.description.firstWhere(
+              (item) => item.language == language,
+              orElse: () => const LocalizedModel.empty(),
+            ) !=
+            ''
+        ? reject.description.last.text
+        : '';
+
+    return Row(
+      children: <Widget>[
+        Expanded(
+          child: Text(
+            description,
+            style: Theme.of(context).textTheme.bodyMedium,
+          ),
+        ),
+        Padding(
+          padding: const EdgeInsets.only(
+            left: UiConfig.actionSpacing * 2,
+          ),
+          child: CustomIconButton(
+            onPressed: () {
+              final removeId = reject.id;
+              final rejects = requestReject.rejectTypes
+                  .where((reject) => reject.id != removeId)
+                  .toList();
+
+              setState(() {
+                requestReject = requestReject.copyWith(
+                  rejectTypes: rejects,
+                );
+              });
+            },
+            icon: Ionicons.close,
+            iconColor: Theme.of(context).colorScheme.primary,
+            backgroundColor: Theme.of(context).colorScheme.onBackground,
+          ),
+        ),
+      ],
+    );
+  }
+
+  Widget _buildAddRejectButton(BuildContext context) {
+    return CustomButton(
+      height: 50.0,
+      onPressed: () {
+        showBarModalBottomSheet(
+          context: context,
+          backgroundColor: Colors.transparent,
+          builder: (context) => ChooseRejectModal(
+            initialRejects: requestReject.rejectTypes,
+            rejects: widget.rejects,
+            onChanged: (rejects) {
+              setState(() {
+                requestReject = requestReject.copyWith(
+                  rejectTypes: rejects,
+                );
+              });
+            },
+            onUpdated: _updateEditRequestRejectTemplateState,
+            language: widget.currentUser.defaultLanguage,
+          ),
+        );
+      },
+      buttonType: CustomButtonType.outlined,
+      backgroundColor: Theme.of(context).colorScheme.onBackground,
+      borderColor: Theme.of(context).colorScheme.outlineVariant,
+      child: Padding(
+        padding: const EdgeInsets.symmetric(
+          horizontal: UiConfig.defaultPaddingSpacing,
+        ),
+        child: Row(
+          children: <Widget>[
+            Padding(
+              padding: const EdgeInsets.only(bottom: 2.0),
+              child: Icon(
+                Ionicons.add,
+                color: Theme.of(context).colorScheme.primary,
+              ),
+            ),
+            const SizedBox(width: UiConfig.actionSpacing + 11),
+            Expanded(
+              child: Text(
+                tr('masterData.cm.purposeCategory.addPurpose'),
+                style: Theme.of(context).textTheme.bodyMedium,
+              ),
+            ),
+          ],
+        ),
+      ),
+    );
   }
 
   CustomIconButton _buildPopButton(RequestRejectTemplateModel requestRejectTp) {
