@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 
 import 'package:pdpa/app/config/config.dart';
+import 'package:pdpa/app/data/models/master_data/reason_type_model.dart';
 import 'package:pdpa/app/data/models/master_data/request_reason_template_model.dart';
 import 'package:pdpa/app/features/data_subject_right/routes/data_subject_right_route.dart';
 import 'package:pdpa/app/features/data_subject_right/widgets/data_subject_right_list_tile.dart';
@@ -119,11 +120,7 @@ class _SelectRequestViewState extends State<SelectRequestView> {
     RequestReasonTemplateModel(
       id: '1',
       requestTypeId: 'ID:1',
-      reasonTypesId: const [
-        'อยู่ในระหว่างการตรวจสอบตามที่เจ้าของข้อมูลส่วนบุคคลร้องขอให้บริษัทแก้ไขข้อมูลส่วนบุคคล',
-        'ข้อมูลส่วนบุคคลหมดความจำเป็นในการเก็บรักษาไว้ตามวัตถุประสงค์ในการประมวลผลแต่เจ้าของข้อมูลส่วนบุคคลมีความจำเป็นต้องขอให้เก็บรักษาไว้เพื่อใช้ในการก่อตั้งสิทธิเรียกร้องตามกฎหมายการปฏิบัติตามหรือการใช้สิทธิเรียกร้องตามกฎหมาย',
-        'เหตุผลอื่นๆ (โปรดระบุ)'
-      ],
+      reasonTypes: const [],
       status: ActiveStatus.active,
       createdBy: '',
       createdDate: DateTime.now(),
@@ -133,11 +130,7 @@ class _SelectRequestViewState extends State<SelectRequestView> {
     RequestReasonTemplateModel(
       id: '2',
       requestTypeId: 'ID:2',
-      reasonTypesId: const [
-        'อยู่ในระหว่างการตรวจสอบตามที่เจ้าของข้อมูลส่วนบุคคลร้องขอให้บริษัทแก้ไขข้อมูลส่วนบุคคล',
-        'ข้อมูลส่วนบุคคลหมดความจำเป็นในการเก็บรักษาไว้ตามวัตถุประสงค์ในการประมวลผลแต่เจ้าของข้อมูลส่วนบุคคลมีความจำเป็นต้องขอให้เก็บรักษาไว้เพื่อใช้ในการก่อตั้งสิทธิเรียกร้องตามกฎหมายการปฏิบัติตามหรือการใช้สิทธิเรียกร้องตามกฎหมาย',
-        'เหตุผลอื่นๆ (โปรดระบุ)'
-      ],
+      reasonTypes: const [],
       status: ActiveStatus.active,
       createdBy: '',
       createdDate: DateTime.now(),
@@ -263,7 +256,7 @@ class _SelectRequestViewState extends State<SelectRequestView> {
                   ),
                   const SizedBox(width: UiConfig.textLineSpacing),
                   _buildExpandedContainer(
-                      context, requestReason.reasonTypesId), //? Reasons Id
+                      context, requestReason.reasonTypes), //? Reasons Id
                 ],
               ),
             ),
@@ -275,7 +268,7 @@ class _SelectRequestViewState extends State<SelectRequestView> {
 
   //? Expanded Children
   ExpandedContainer _buildExpandedContainer(
-      BuildContext context, List<String> reasons) {
+      BuildContext context, List<ReasonTypeModel> reasons) {
     return ExpandedContainer(
       expand: isExpanded,
       duration: const Duration(milliseconds: 400),
@@ -463,7 +456,7 @@ class _SelectRequestViewState extends State<SelectRequestView> {
                                                   const EdgeInsets.symmetric(
                                                       vertical: 12.0),
                                               child: Text(
-                                                text, //!
+                                                text.description.first.text, //!
                                                 style: isExpanded == false
                                                     ? Theme.of(context)
                                                         .textTheme
@@ -514,7 +507,9 @@ class _SelectRequestViewState extends State<SelectRequestView> {
                                 ),
                               ],
                             )
-                          : _buildCheckBoxTileString(context, text)),
+                          : _buildCheckBoxTileString(
+                              context, text.description.first.text, //!
+                            )),
                 )
                 .toList(),
           )

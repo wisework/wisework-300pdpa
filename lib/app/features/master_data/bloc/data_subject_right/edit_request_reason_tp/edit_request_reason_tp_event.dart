@@ -57,3 +57,14 @@ class DeleteCurrentRequestReasonTpEvent extends EditRequestReasonTpEvent {
   @override
   List<Object> get props => [requestReasonTpId, companyId];
 }
+
+class UpdateEditRequestReasonTpStateEvent extends EditRequestReasonTpEvent {
+  const UpdateEditRequestReasonTpStateEvent({
+    required this.reason,
+  });
+
+  final ReasonTypeModel reason;
+
+  @override
+  List<Object> get props => [reason];
+}

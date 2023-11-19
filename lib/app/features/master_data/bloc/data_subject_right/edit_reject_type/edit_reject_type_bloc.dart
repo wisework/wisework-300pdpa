@@ -66,7 +66,7 @@ class EditRejectTypeBloc
     );
 
     await Future.delayed(const Duration(milliseconds: 800));
-
+  
     result.fold(
       (failure) => emit(EditRejectTypeError(failure.errorMessage)),
       (rejectType) => emit(CreatedCurrentRejectType(rejectType)),
