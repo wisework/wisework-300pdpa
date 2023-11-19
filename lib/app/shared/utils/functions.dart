@@ -152,63 +152,64 @@ class UtilFunctions {
   static RequestProcessStatus getRequestProcessStatus(
     DataSubjectRightModel dataSubjectRight,
   ) {
-    final isNewRequested = dataSubjectRight.lastSeenBy.isEmpty;
-    final isRequestFormVerified = dataSubjectRight.requestFormVerified;
-    final isVerifying =
-        dataSubjectRight.requestVerifyingStatus == RequestVerifyingStatus.none;
-    final isConsidering = dataSubjectRight.processRequests.any((process) =>
-        process.considerRequestStatus == ConsiderRequestStatus.none);
-    final isProofFileUploading = dataSubjectRight.processRequests
-        .any((process) => process.proofOfActionFile.isEmpty);
-    final isProofTextWriting = dataSubjectRight.processRequests
-        .any((process) => process.proofOfActionText.isEmpty);
-    final isProofFileUploaded = dataSubjectRight.processRequests
-        .where((process) =>
-            process.considerRequestStatus == ConsiderRequestStatus.pass)
-        .any((process) => process.proofOfActionFile.isEmpty);
-    final isProofTextWritten = dataSubjectRight.processRequests
-        .where((process) =>
-            process.considerRequestStatus == ConsiderRequestStatus.pass)
-        .any((process) => process.proofOfActionText.isEmpty);
-    final isDone = dataSubjectRight.resultRequest;
+    // final isNewRequested = dataSubjectRight.lastSeenBy.isEmpty;
+    // final isRequestFormVerified = dataSubjectRight.requestFormVerified;
+    // final isVerifying =
+    //     dataSubjectRight.requestFormStatus == RequestResultStatus.none;
+    // final isConsidering = dataSubjectRight.processRequests.any((process) =>
+    //     process.considerRequestStatus == ConsiderRequestStatus.none);
+    // final isProofFileUploading = dataSubjectRight.processRequests
+    //     .any((process) => process.proofOfActionFile.isEmpty);
+    // final isProofTextWriting = dataSubjectRight.processRequests
+    //     .any((process) => process.proofOfActionText.isEmpty);
+    // final isProofFileUploaded = dataSubjectRight.processRequests
+    //     .where((process) =>
+    //         process.considerRequestStatus == ConsiderRequestStatus.pass)
+    //     .any((process) => process.proofOfActionFile.isEmpty);
+    // final isProofTextWritten = dataSubjectRight.processRequests
+    //     .where((process) =>
+    //         process.considerRequestStatus == ConsiderRequestStatus.pass)
+    //     .any((process) => process.proofOfActionText.isEmpty);
+    // final isDone = dataSubjectRight.considerRequest;
 
-    RequestProcessStatus status = RequestProcessStatus.newRequest;
-    if (isNewRequested) {
-      return status;
-    }
+    // RequestProcessStatus status = RequestProcessStatus.newRequest;
+    // if (isNewRequested) {
+    //   return status;
+    // }
 
-    if (!isRequestFormVerified && !isNewRequested) {
-      status = RequestProcessStatus.pending;
-    } else if (isRequestFormVerified && isDone && !isNewRequested) {
-      status = RequestProcessStatus.rejected;
-    }
+    // if (!isRequestFormVerified && !isNewRequested) {
+    //   status = RequestProcessStatus.pending;
+    // } else if (isRequestFormVerified && isDone && !isNewRequested) {
+    //   status = RequestProcessStatus.rejected;
+    // }
 
-    if (isVerifying && !isNewRequested && isRequestFormVerified) {
-      status = RequestProcessStatus.verifying;
-    } else if (isConsidering &&
-        !isNewRequested &&
-        isRequestFormVerified &&
-        !isVerifying) {
-      status = RequestProcessStatus.considering;
-    } else if ((isProofFileUploading || isProofTextWriting) &&
-        !isNewRequested &&
-        isRequestFormVerified &&
-        !isVerifying &&
-        !isConsidering) {
-      status = RequestProcessStatus.inProgress;
-    }
+    // if (isVerifying && !isNewRequested && isRequestFormVerified) {
+    //   status = RequestProcessStatus.verifying;
+    // } else if (isConsidering &&
+    //     !isNewRequested &&
+    //     isRequestFormVerified &&
+    //     !isVerifying) {
+    //   status = RequestProcessStatus.considering;
+    // } else if ((isProofFileUploading || isProofTextWriting) &&
+    //     !isNewRequested &&
+    //     isRequestFormVerified &&
+    //     !isVerifying &&
+    //     !isConsidering) {
+    //   status = RequestProcessStatus.inProgress;
+    // }
 
-    if (isDone &&
-        !isNewRequested &&
-        isRequestFormVerified &&
-        !isVerifying &&
-        !isConsidering &&
-        !isProofFileUploaded &&
-        !isProofTextWritten) {
-      status = RequestProcessStatus.completed;
-    }
+    // if (isDone &&
+    //     !isNewRequested &&
+    //     isRequestFormVerified &&
+    //     !isVerifying &&
+    //     !isConsidering &&
+    //     !isProofFileUploaded &&
+    //     !isProofTextWritten) {
+    //   status = RequestProcessStatus.completed;
+    // }
 
-    return status;
+    // return status;
+    return RequestProcessStatus.newRequest;
   }
 
   //? Upload File

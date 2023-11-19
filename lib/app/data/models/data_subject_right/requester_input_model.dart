@@ -37,7 +37,7 @@ class RequesterInputModel extends Equatable {
 
   DataMap toMap() => {
         id: {
-          'title': title,
+          'title': title.map((item) => item.toMap()).toList(),
           'text': text,
           'priority': priority,
         }
