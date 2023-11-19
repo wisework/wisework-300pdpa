@@ -13,6 +13,8 @@
         "emailAddress": "Email Address",
         "url": "URL",
         "done": "Done",
+        "previous": "Previous",
+        "next": "Next",
         "features": {
             "home": "Home",
             "consentmanagement": "Consent Management",

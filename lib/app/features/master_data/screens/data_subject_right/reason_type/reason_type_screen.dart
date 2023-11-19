@@ -58,7 +58,7 @@ class ReasonTypeView extends StatefulWidget {
 class _ReasonTypeViewState extends State<ReasonTypeView> {
   final reasontypemodel = [
     ReasonTypeModel(
-      reasonTypeId: '1',
+      id: '1',
       reasonCode: '1',
       description: const [],
       requiredInputReasonText: false,
@@ -154,7 +154,7 @@ class _ReasonTypeViewState extends State<ReasonTypeView> {
       onTap: () {
         context.push(
           MasterDataRoute.editReasonType.path
-              .replaceFirst(':id', reasontype.reasonTypeId),
+              .replaceFirst(':id', reasontype.id),
         );
       },
     );

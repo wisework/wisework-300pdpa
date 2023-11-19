@@ -4,7 +4,7 @@ import 'package:pdpa/app/shared/utils/typedef.dart';
 
 class RequestReasonTemplateModel extends Equatable {
   const RequestReasonTemplateModel({
-    required this.requestReasonTemplateId,
+    required this.id,
     required this.requestTypeId,
     required this.reasonTypesId,
     required this.status,
@@ -14,7 +14,7 @@ class RequestReasonTemplateModel extends Equatable {
     required this.updatedDate,
   });
 
-  final String requestReasonTemplateId;
+  final String id;
   final String requestTypeId;
   final List<String> reasonTypesId;
   final ActiveStatus status;
@@ -25,7 +25,7 @@ class RequestReasonTemplateModel extends Equatable {
 
   RequestReasonTemplateModel.empty()
       : this(
-          requestReasonTemplateId: '',
+          id: '',
           requestTypeId: '',
           reasonTypesId: [],
           status: ActiveStatus.active,
@@ -43,7 +43,7 @@ class RequestReasonTemplateModel extends Equatable {
 
   RequestReasonTemplateModel.fromMap(DataMap map)
       : this(
-          requestReasonTemplateId: map['requestReasonTemplateId'] as String,
+          id: map['id'] as String,
           requestTypeId: map['requestTypeId'] as String,
           reasonTypesId:
               List<String>.from(map['reasonTypesId'] as List<dynamic>),
@@ -55,7 +55,7 @@ class RequestReasonTemplateModel extends Equatable {
         );
 
   DataMap toMap() => {
-        'requestReasonTemplateId': requestReasonTemplateId,
+        'id': id,
         'requestTypeId': requestTypeId,
         'reasonTypesId': reasonTypesId,
         'status': status.index,
@@ -66,7 +66,7 @@ class RequestReasonTemplateModel extends Equatable {
       };
 
   RequestReasonTemplateModel copyWith({
-    String? requestReasonTemplateId,
+    String? id,
     String? requestTypeId,
     List<String>? reasonTypesId,
     ActiveStatus? status,
@@ -76,8 +76,7 @@ class RequestReasonTemplateModel extends Equatable {
     DateTime? updatedDate,
   }) {
     return RequestReasonTemplateModel(
-      requestReasonTemplateId:
-          requestReasonTemplateId ?? this.requestReasonTemplateId,
+      id: id ?? this.id,
       requestTypeId: requestTypeId ?? this.requestTypeId,
       reasonTypesId: reasonTypesId ?? this.reasonTypesId,
       status: status ?? this.status,
@@ -103,7 +102,7 @@ class RequestReasonTemplateModel extends Equatable {
   @override
   List<Object> get props {
     return [
-      requestReasonTemplateId,
+      id,
       requestTypeId,
       reasonTypesId,
       status,

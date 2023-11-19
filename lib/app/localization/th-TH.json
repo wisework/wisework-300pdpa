@@ -13,6 +13,8 @@
         "emailAddress": "อีเมล",
         "url": "URL",
         "done": "เรียบร้อย",
+        "previous": "ก่อนหน้า",
+        "next": "ถัดไป",
         "features": {
             "home": "หน้าหลัก",
             "consentmanagement": "ระบบบริหารจัดการข้อมูลส่วนบุคคล",

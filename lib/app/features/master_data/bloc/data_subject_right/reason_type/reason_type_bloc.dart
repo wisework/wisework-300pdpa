@@ -55,7 +55,7 @@ class ReasonTypeBloc extends Bloc<ReasonTypeEvent, ReasonTypeState> {
           break;
         case UpdateType.updated:
           for (ReasonTypeModel reasonType in reasonTypes) {
-            if (reasonType.reasonTypeId == event.reasonType.reasonTypeId) {
+            if (reasonType.id == event.reasonType.id) {
               updated.add(event.reasonType);
             } else {
               updated.add(reasonType);
@@ -64,8 +64,7 @@ class ReasonTypeBloc extends Bloc<ReasonTypeEvent, ReasonTypeState> {
           break;
         case UpdateType.deleted:
           updated = reasonTypes
-              .where((reasonType) =>
-                  reasonType.reasonTypeId != event.reasonType.reasonTypeId)
+              .where((reasonType) => reasonType.id != event.reasonType.id)
               .toList();
           break;
       }

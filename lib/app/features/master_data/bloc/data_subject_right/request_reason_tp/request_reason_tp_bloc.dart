@@ -61,8 +61,7 @@ class RequestReasonTpBloc
           break;
         case UpdateType.updated:
           for (RequestReasonTemplateModel requestReasons in requestReasons) {
-            if (requestReasons.requestReasonTemplateId ==
-                event.requestReason.requestReasonTemplateId) {
+            if (requestReasons.id == event.requestReason.id) {
               updated.add(event.requestReason);
             } else {
               updated.add(requestReasons);
@@ -72,8 +71,7 @@ class RequestReasonTpBloc
         case UpdateType.deleted:
           updated = requestReasons
               .where((requestReasons) =>
-                  requestReasons.requestReasonTemplateId !=
-                  event.requestReason.requestReasonTemplateId)
+                  requestReasons.id != event.requestReason.id)
               .toList();
           break;
       }
