@@ -250,14 +250,14 @@ class _OwnerVerifyPageState extends State<OwnerVerifyPage> {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: <Widget>[
           Text(
-            'ท่านเป็นเจ้าของข้อมูลหรือไม่', //!
+            tr('dataSubjectRight.dataRequester.areYouTheDs'),
             style: Theme.of(context)
                 .textTheme
                 .titleMedium
                 ?.copyWith(color: Theme.of(context).colorScheme.primary),
           ),
           DataSubjectRightListTile(
-            title: 'ผู้ยื่นคำร้องเป็นบุคคลเดียวกับเจ้าของข้อมูล', //!
+            title: tr('dataSubjectRight.dataRequester.applicantDs'), 
             onTap: () {
               setSelectedRadioTile(1);
             },
@@ -270,7 +270,7 @@ class _OwnerVerifyPageState extends State<OwnerVerifyPage> {
             ),
           ),
           DataSubjectRightListTile(
-            title: 'ผู้ยื่นคำร้องเป็นตัวแทนเจ้าของข้อมูล', //!
+            title: tr('dataSubjectRight.dataRequester.ApplicantAds'), 
             onTap: () {
               setSelectedRadioTile(2);
             },
@@ -285,7 +285,7 @@ class _OwnerVerifyPageState extends State<OwnerVerifyPage> {
           Row(
             children: <Widget>[
               Text(
-                'ข้อมูลของผู้ยื่นคำขอ', //!
+                tr('dataSubjectRight.dataRequester.ApplicantInformation'), 
                 style: Theme.of(context)
                     .textTheme
                     .titleMedium
@@ -294,24 +294,24 @@ class _OwnerVerifyPageState extends State<OwnerVerifyPage> {
             ],
           ),
           const SizedBox(height: UiConfig.lineSpacing),
-          const TitleRequiredText(
-            text: 'ชื่อ - นามสกุล', //!
+           TitleRequiredText(
+            text: tr('dataSubjectRight.dataRequester.namesurename'), 
             required: true,
           ),
           CustomTextField(
-            hintText: 'กรอกชื่อ - นามสกุล', //!
+            hintText: tr('dataSubjectRight.dataRequester.hintnamesurename'), 
             controller: fullNameController,
             required: true,
             keyboardType: TextInputType.text,
             onChanged: _setFullNameController,
           ),
           const SizedBox(height: UiConfig.lineSpacing),
-          const TitleRequiredText(
-            text: 'ที่อยู่', //!
+           TitleRequiredText(
+            text: tr('dataSubjectRight.dataRequester.address'), 
             required: true,
           ),
           CustomTextField(
-            hintText: 'กรอกที่อยู่', //!
+            hintText: tr('dataSubjectRight.dataRequester.hintnameaddress'), 
             controller: addressTextController,
             required: true,
             keyboardType: TextInputType.multiline,
@@ -319,24 +319,24 @@ class _OwnerVerifyPageState extends State<OwnerVerifyPage> {
             onChanged: _setAddressTextController,
           ),
           const SizedBox(height: UiConfig.lineSpacing),
-          const TitleRequiredText(
-            text: 'อีเมล', //!
+           TitleRequiredText(
+            text: tr('dataSubjectRight.dataRequester.email'), 
             required: true,
           ),
           CustomTextField(
-            hintText: 'กรอกอีเมล', //!
+            hintText: tr('dataSubjectRight.dataRequester.hintemail'), 
             controller: emailController,
             required: true,
             keyboardType: TextInputType.emailAddress,
             onChanged: _setEmailController,
           ),
           const SizedBox(height: UiConfig.lineSpacing),
-          const TitleRequiredText(
-            text: 'เบอร์โทรติดต่อ', //!
+           TitleRequiredText(
+            text: tr('dataSubjectRight.dataRequester.telnumber'), 
             required: true,
           ),
           CustomTextField(
-            hintText: 'กรอกเบอร์โทรติดต่อ', //!
+            hintText: tr('dataSubjectRight.dataRequester.hinttelnumber'), 
             controller: phonenumberController,
             keyboardType: TextInputType.phone,
             required: true,

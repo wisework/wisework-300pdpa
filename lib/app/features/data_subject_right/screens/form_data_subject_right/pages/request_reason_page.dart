@@ -4,11 +4,9 @@ import 'package:pdpa/app/config/config.dart';
 
 import 'package:pdpa/app/data/models/master_data/localized_model.dart';
 import 'package:pdpa/app/data/models/master_data/reason_type_model.dart';
-
 import 'package:pdpa/app/data/models/master_data/request_type_model.dart';
 
 import 'package:pdpa/app/features/data_subject_right/widgets/data_subject_right_list_tile.dart';
-
 import 'package:pdpa/app/shared/widgets/customs/custom_checkbox.dart';
 import 'package:pdpa/app/shared/widgets/customs/custom_container.dart';
 import 'package:pdpa/app/shared/widgets/customs/custom_radio_button.dart';

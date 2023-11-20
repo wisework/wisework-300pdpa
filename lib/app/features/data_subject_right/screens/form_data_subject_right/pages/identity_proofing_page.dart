@@ -52,25 +52,27 @@ class _IdentityProofingPageState extends State<IdentityProofingPage> {
     });
   }
 
-  List<PowerVerificationModel> identityProofing = const [
+  List<PowerVerificationModel> identityProofing = [
     PowerVerificationModel(
       id: '1',
-      title: 'สำเนาทะเบียนบ้าน',
+      title:
+          tr('dataSubjectRight.identityVerification.copyOfHouseRegistration'),
       additionalReq: false,
     ),
     PowerVerificationModel(
       id: '2',
-      title: 'สำเนาบัตรประชาชน (กรณีสัญชาติไทย)',
+      title:
+          tr('dataSubjectRight.identityVerification.copyOfIdentificationCare'),
       additionalReq: false,
     ),
     PowerVerificationModel(
       id: '3',
-      title: 'สำเนาพาสสปอร์ต (กรณีต่างชาติ)',
+      title: tr('dataSubjectRight.identityVerification.copyOfPassport'),
       additionalReq: false,
     ),
     PowerVerificationModel(
       id: '4',
-      title: 'อื่นๆ ถ้ามี (โปรดระบุ)',
+      title: tr('dataSubjectRight.identityVerification.other'),
       additionalReq: true,
     ),
   ];
@@ -147,7 +149,7 @@ class _IdentityProofingPageState extends State<IdentityProofingPage> {
             ),
             Expanded(
               child: Text(
-                powerVerification.title, //!
+                powerVerification.title,
                 style: !selectIds.contains(powerVerification.id)
                     ? Theme.of(context).textTheme.bodyMedium?.copyWith()
                     : Theme.of(context).textTheme.bodyMedium?.copyWith(
@@ -170,14 +172,15 @@ class _IdentityProofingPageState extends State<IdentityProofingPage> {
               children: <Widget>[
                 Visibility(
                   visible: powerVerification.additionalReq,
-                  child: const Column(
+                  child: Column(
                     children: [
                       SizedBox(height: UiConfig.lineSpacing),
                       Row(
                         children: <Widget>[
                           TitleRequiredText(
-                            text: 'ประเภทเอกสาร',
-                            required: true, //!
+                            text: tr(
+                                'dataSubjectRight.identityVerification.documentType'),
+                            required: true,
                           ),
                         ],
                       ),
@@ -185,7 +188,8 @@ class _IdentityProofingPageState extends State<IdentityProofingPage> {
                         children: [
                           Expanded(
                             child: CustomTextField(
-                              hintText: 'ระบุประเภทเอกสาร',
+                              hintText: tr(
+                                  'dataSubjectRight.identityVerification.hintdocumentType'),
                             ),
                           ),
                         ],
@@ -194,19 +198,21 @@ class _IdentityProofingPageState extends State<IdentityProofingPage> {
                   ),
                 ),
                 const SizedBox(height: UiConfig.lineSpacing),
-                const Row(
+                Row(
                   children: <Widget>[
                     TitleRequiredText(
-                      text: 'ไฟล์สำเนา',
-                      required: true, //!
+                      text:
+                          tr('dataSubjectRight.identityVerification.copyFile'),
+                      required: true,
                     ),
                   ],
                 ),
                 Row(
                   children: <Widget>[
-                    const Expanded(
+                    Expanded(
                       child: CustomTextField(
-                        hintText: 'ไม่ได้เลือกไฟล์',
+                        hintText: tr(
+                            'dataSubjectRight.identityVerification.fileNotSelected'),
                         readOnly: true,
                       ),
                     ),
