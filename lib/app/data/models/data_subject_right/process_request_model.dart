@@ -13,8 +13,8 @@ class ProcessRequestModel extends Equatable {
     required this.requestAction,
     required this.reasonTypes,
     required this.considerRequestStatus,
+    required this.rejectConsiderReason,
     required this.rejectType,
-    required this.rejectText,
     required this.proofOfActionFile,
     required this.proofOfActionText,
   });
@@ -40,11 +40,11 @@ class ProcessRequestModel extends Equatable {
   /// Consider request status of this request [pass, fail, none].
   final RequestResultStatus considerRequestStatus;
 
+  /// What reason why rejecting this request?
+  final String rejectConsiderReason;
+
   /// Reject type ID for rejecting the request in this form.
   final String rejectType;
-
-  /// What reason why rejecting this request?
-  final String rejectText;
 
   /// File link to proof that the request has been processed.
   final String proofOfActionFile;
@@ -61,8 +61,8 @@ class ProcessRequestModel extends Equatable {
           requestAction: '',
           reasonTypes: [],
           considerRequestStatus: RequestResultStatus.none,
+          rejectConsiderReason: '',
           rejectType: '',
-          rejectText: '',
           proofOfActionFile: '',
           proofOfActionText: '',
         );
@@ -80,8 +80,8 @@ class ProcessRequestModel extends Equatable {
           ),
           considerRequestStatus:
               RequestResultStatus.values[map['considerRequestStatus'] as int],
+          rejectConsiderReason: map['rejectConsiderReason'] as String,
           rejectType: map['rejectType'] as String,
-          rejectText: map['rejectText'] as String,
           proofOfActionFile: map['proofOfActionFile'] as String,
           proofOfActionText: map['proofOfActionText'] as String,
         );
@@ -97,8 +97,8 @@ class ProcessRequestModel extends Equatable {
             (map, userInputText) => map..addAll(userInputText.toMap()),
           ),
           'considerRequestStatus': considerRequestStatus.index,
+          'rejectConsiderReason': rejectConsiderReason,
           'rejectType': rejectType,
-          'rejectText': rejectText,
           'proofOfActionFile': proofOfActionFile,
           'proofOfActionText': proofOfActionText,
         }
@@ -112,8 +112,8 @@ class ProcessRequestModel extends Equatable {
     String? requestAction,
     List<UserInputText>? reasonTypes,
     RequestResultStatus? considerRequestStatus,
+    String? rejectConsiderReason,
     String? rejectType,
-    String? rejectText,
     String? proofOfActionFile,
     String? proofOfActionText,
   }) {
@@ -126,8 +126,8 @@ class ProcessRequestModel extends Equatable {
       reasonTypes: reasonTypes ?? this.reasonTypes,
       considerRequestStatus:
           considerRequestStatus ?? this.considerRequestStatus,
+      rejectConsiderReason: rejectConsiderReason ?? this.rejectConsiderReason,
       rejectType: rejectType ?? this.rejectType,
-      rejectText: rejectText ?? this.rejectText,
       proofOfActionFile: proofOfActionFile ?? this.proofOfActionFile,
       proofOfActionText: proofOfActionText ?? this.proofOfActionText,
     );
@@ -143,8 +143,8 @@ class ProcessRequestModel extends Equatable {
       requestAction,
       reasonTypes,
       considerRequestStatus,
+      rejectConsiderReason,
       rejectType,
-      rejectText,
       proofOfActionFile,
       proofOfActionText,
     ];
