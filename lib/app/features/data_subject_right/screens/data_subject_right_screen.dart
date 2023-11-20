@@ -82,6 +82,26 @@ class DataSubjectRightView extends StatefulWidget {
 class _DataSubjectRightViewState extends State<DataSubjectRightView> {
   final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
 
+  // void _openSeachConsentFormModal() {
+  //   final bloc = context.read<DataSubjectRightBloc>();
+
+  //   List<DataSubjectRightModel> dataSubjectRights = [];
+
+  //   if (bloc.state is GotDataSubjectRights) {
+  //     dataSubjectRights = (bloc.state as GotDataSubjectRights).dataSubjectRights;
+  //   }
+
+  //   showBarModalBottomSheet(
+  //     context: context,
+  //     backgroundColor: Colors.transparent,
+  //     builder: (context) => SearchDataSubjectRightModal(
+  //       initialdataSubjectRights: dataSubjectRights,
+  //       dataSubjectRights: dataSubjectRights,
+  //       language: widget.language,
+  //     ),
+  //   );
+  // }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
