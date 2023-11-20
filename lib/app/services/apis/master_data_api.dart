@@ -282,13 +282,23 @@ class MasterDataApi {
   }
 
   //? Request Type
-  Future<List<RequestTypeModel>> getRequestTypes(String companyId) async {
+  Future<List<RequestTypeModel>> getRequestTypes(
+    String companyId,
+  ) async {
     final result =
         await _firestore.collection('Companies/$companyId/RequestTypes').get();
 
     List<RequestTypeModel> requestTypes = [];
     for (var document in result.docs) {
-      requestTypes.add(RequestTypeModel.fromDocument(document));
+      DataMap response = document.data();
+      response['id'] = document.id;
+
+      final rejectTypes = (response['rejectTypes'] as List<dynamic>)
+          .map((id) => {'id': id, ...RejectTypeModel.empty().toMap()})
+          .toList();
+      response['rejectTypes'] = rejectTypes;
+
+      requestTypes.add(RequestTypeModel.fromMap(response));
     }
 
     return requestTypes;
@@ -304,7 +314,17 @@ class MasterDataApi {
         .get();
 
     if (!result.exists) return null;
-    return RequestTypeModel.fromDocument(result);
+
+    DataMap response = result.data()!;
+    response['id'] = result.id;
+
+    final rejectTypes = (response['rejectTypes'] as List<dynamic>)
+        .map((id) => {'id': id, ...RejectTypeModel.empty().toMap()})
+        .toList();
+    print(response['rejectTypes']);
+    response['rejectTypes'] = rejectTypes;
+
+    return RequestTypeModel.fromMap(response);
   }
 
   Future<RequestTypeModel> createRequestType(
@@ -313,7 +333,7 @@ class MasterDataApi {
   ) async {
     final ref =
         _firestore.collection('Companies/$companyId/RequestTypes').doc();
-    final created = requestType.copyWith(requestTypeId: ref.id);
+    final created = requestType.copyWith(id: ref.id);
 
     await ref.set(created.toMap());
 
@@ -326,7 +346,7 @@ class MasterDataApi {
   ) async {
     await _firestore
         .collection('Companies/$companyId/RequestTypes')
-        .doc(requestType.requestTypeId)
+        .doc(requestType.id)
         .set(requestType.toMap());
   }
 
@@ -373,7 +393,7 @@ class MasterDataApi {
     String companyId,
   ) async {
     final ref = _firestore.collection('Companies/$companyId/RejectTypes').doc();
-    final created = rejectType.copyWith(rejectTypeId: ref.id);
+    final created = rejectType.copyWith(id: ref.id);
 
     await ref.set(created.toMap());
 
@@ -386,7 +406,7 @@ class MasterDataApi {
   ) async {
     await _firestore
         .collection('Companies/$companyId/RejectTypes')
-        .doc(rejectType.rejectTypeId)
+        .doc(rejectType.id)
         .set(rejectType.toMap());
   }
 
@@ -433,7 +453,7 @@ class MasterDataApi {
     String companyId,
   ) async {
     final ref = _firestore.collection('Companies/$companyId/ReasonTypes').doc();
-    final created = reasonType.copyWith(reasonTypeId: ref.id);
+    final created = reasonType.copyWith(id: ref.id);
 
     await ref.set(created.toMap());
 
@@ -446,7 +466,7 @@ class MasterDataApi {
   ) async {
     await _firestore
         .collection('Companies/$companyId/ReasonTypes')
-        .doc(reasonType.reasonTypeId)
+        .doc(reasonType.id)
         .set(reasonType.toMap());
   }
 
@@ -498,7 +518,7 @@ class MasterDataApi {
     final ref = _firestore
         .collection('Companies/$companyId/RequestReasonTemplates')
         .doc();
-    final created = requestReason.copyWith(requestReasonTemplateId: ref.id);
+    final created = requestReason.copyWith(id: ref.id);
 
     await ref.set(created.toMap());
 
@@ -511,7 +531,7 @@ class MasterDataApi {
   ) async {
     await _firestore
         .collection('Companies/$companyId/RequestReasonTemplates')
-        .doc(requestReason.requestReasonTemplateId)
+        .doc(requestReason.id)
         .set(requestReason.toMap());
   }
 
@@ -563,7 +583,7 @@ class MasterDataApi {
     final ref = _firestore
         .collection('Companies/$companyId/RequestRejectTemplates')
         .doc();
-    final created = requestReject.copyWith(requestRejectTemplateId: ref.id);
+    final created = requestReject.copyWith(id: ref.id);
 
     await ref.set(created.toMap());
 
@@ -576,7 +596,7 @@ class MasterDataApi {
   ) async {
     await _firestore
         .collection('Companies/$companyId/RequestRejectTemplates')
-        .doc(requestReject.requestRejectTemplateId)
+        .doc(requestReject.id)
         .set(requestReject.toMap());
   }
 

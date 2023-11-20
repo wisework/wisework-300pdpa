@@ -31,12 +31,16 @@ class GetingCurrentRequestReasonTp extends EditRequestReasonTpState {
 }
 
 class GotCurrentRequestReasonTp extends EditRequestReasonTpState {
-  const GotCurrentRequestReasonTp(this.requestReasonTp);
+  const GotCurrentRequestReasonTp(
+    this.requestReasonTp,
+    this.reasons,
+  );
 
   final RequestReasonTemplateModel requestReasonTp;
+  final List<String> reasons;
 
   @override
-  List<Object> get props => [requestReasonTp];
+  List<Object> get props => [requestReasonTp, reasons];
 }
 
 class CreatingCurrentRequestReasonTp extends EditRequestReasonTpState {
@@ -63,12 +67,16 @@ class UpdatingCurrentRequestReasonTp extends EditRequestReasonTpState {
 }
 
 class UpdatedCurrentRequestReasonTp extends EditRequestReasonTpState {
-  const UpdatedCurrentRequestReasonTp(this.requestReasonTp);
+  const UpdatedCurrentRequestReasonTp(
+    this.requestReasonTp,
+    this.reasons,
+  );
 
   final RequestReasonTemplateModel requestReasonTp;
+  final List<String> reasons;
 
   @override
-  List<Object> get props => [requestReasonTp];
+  List<Object> get props => [requestReasonTp, reasons];
 }
 
 class DeletingCurrentRequestReasonTp extends EditRequestReasonTpState {

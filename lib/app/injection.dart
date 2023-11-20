@@ -4,6 +4,8 @@ import 'package:firebase_storage/firebase_storage.dart';
 import 'package:get_it/get_it.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 import 'package:pdpa/app/data/repositories/emailjs_repository.dart';
+import 'package:pdpa/app/features/data_subject_right/bloc/form_data_sub_ject_right/form_data_sub_ject_right_bloc.dart';
+import 'package:pdpa/app/features/data_subject_right/cubit/form_data_subject_right/form_data_subject_right_cubit.dart';
 import 'package:pdpa/app/services/apis/emailjs_api.dart';
 
 import 'config/config.dart';
@@ -204,6 +206,14 @@ Future<void> _dataSubjectRight() async {
         masterDataRepository: serviceLocator(),
         userRepository: serviceLocator(),
       ),
+    )
+    ..registerFactory(
+      () => FormDataSubJectRightBloc(
+        masterDataRepository: serviceLocator(),
+      ),
+    )
+    ..registerFactory(
+      () => FormDataSubjectRightCubit(),
     )
     ..registerFactory(
       () => UserDataSubjectRightFormBloc(

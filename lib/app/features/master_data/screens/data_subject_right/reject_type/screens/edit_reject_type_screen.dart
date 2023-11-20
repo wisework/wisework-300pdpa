@@ -1,4 +1,3 @@
-import 'package:bot_toast/bot_toast.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -6,14 +5,16 @@ import 'package:go_router/go_router.dart';
 import 'package:ionicons/ionicons.dart';
 import 'package:pdpa/app/config/config.dart';
 import 'package:pdpa/app/data/models/authentication/user_model.dart';
+import 'package:pdpa/app/data/models/etc/updated_return.dart';
 import 'package:pdpa/app/data/models/master_data/localized_model.dart';
 import 'package:pdpa/app/data/models/master_data/reject_type_model.dart';
 import 'package:pdpa/app/features/authentication/bloc/sign_in/sign_in_bloc.dart';
 import 'package:pdpa/app/features/master_data/bloc/data_subject_right/edit_reject_type/edit_reject_type_bloc.dart';
-import 'package:pdpa/app/features/master_data/bloc/data_subject_right/reject_type/reject_type_bloc.dart';
 import 'package:pdpa/app/features/master_data/widgets/configuration_info.dart';
 import 'package:pdpa/app/injection.dart';
 import 'package:pdpa/app/shared/utils/constants.dart';
+import 'package:pdpa/app/shared/utils/toast.dart';
+import 'package:pdpa/app/shared/widgets/content_wrapper.dart';
 import 'package:pdpa/app/shared/widgets/customs/custom_container.dart';
 import 'package:pdpa/app/shared/widgets/customs/custom_icon_button.dart';
 import 'package:pdpa/app/shared/widgets/customs/custom_switch_button.dart';
@@ -67,61 +68,44 @@ class _EditRejectTypeScreenState extends State<EditRejectTypeScreen> {
       child: BlocConsumer<EditRejectTypeBloc, EditRejectTypeState>(
         listener: (context, state) {
           if (state is CreatedCurrentRejectType) {
-            BotToast.showText(
+            showToast(
+              context,
               text: tr(
                   'consentManagement.consentForm.editConsentTheme.createSuccess'), //!
-              contentColor:
-                  Theme.of(context).colorScheme.secondary.withOpacity(0.75),
-              borderRadius: BorderRadius.circular(8.0),
-              textStyle: Theme.of(context)
-                  .textTheme
-                  .bodyMedium!
-                  .copyWith(color: Theme.of(context).colorScheme.onPrimary),
-              duration: UiConfig.toastDuration,
+            ); //!
+
+            context.pop(
+              UpdatedReturn<RejectTypeModel>(
+                object: state.rejectType,
+                type: UpdateType.created,
+              ),
             );
-
-            context.read<RejectTypeBloc>().add(UpdateRejectTypeEvent(
-                rejectType: state.rejectType, updateType: UpdateType.created));
-
-            context.pop();
           }
 
           if (state is UpdatedCurrentRejectType) {
-            BotToast.showText(
+            showToast(
+              context,
               text: tr(
                   'consentManagement.consentForm.editConsentTheme.updateSuccess'),
-              contentColor:
-                  Theme.of(context).colorScheme.secondary.withOpacity(0.75),
-              borderRadius: BorderRadius.circular(8.0),
-              textStyle: Theme.of(context)
-                  .textTheme
-                  .bodyMedium!
-                  .copyWith(color: Theme.of(context).colorScheme.onPrimary),
-              duration: UiConfig.toastDuration,
-            );
+            ); //!
           }
 
           if (state is DeletedCurrentRejectType) {
-            BotToast.showText(
+            showToast(
+              context,
               text: tr(
                   'consentManagement.consentForm.editConsentTheme.deleteSuccess'),
-              contentColor:
-                  Theme.of(context).colorScheme.secondary.withOpacity(0.75),
-              borderRadius: BorderRadius.circular(8.0),
-              textStyle: Theme.of(context)
-                  .textTheme
-                  .bodyMedium!
-                  .copyWith(color: Theme.of(context).colorScheme.onPrimary),
-              duration: UiConfig.toastDuration,
+            ); //!
+
+            final deleted =
+                RejectTypeModel.empty().copyWith(id: state.rejectTypeId);
+
+            context.pop(
+              UpdatedReturn<RejectTypeModel>(
+                object: deleted,
+                type: UpdateType.deleted,
+              ),
             );
-
-            final deleted = RejectTypeModel.empty()
-                .copyWith(rejectTypeId: state.rejectTypeId);
-
-            context.read<RejectTypeBloc>().add(UpdateRejectTypeEvent(
-                rejectType: deleted, updateType: UpdateType.deleted));
-
-            context.pop();
           }
         },
         builder: (context, state) {
@@ -168,14 +152,18 @@ class EditRejectTypeView extends StatefulWidget {
 
 class _EditRejectTypeViewState extends State<EditRejectTypeView> {
   late RejectTypeModel rejectType;
+
   late TextEditingController rejectTypeCodeController;
   late TextEditingController descriptionController;
+
   late bool isActivated;
+
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
 
   @override
   void initState() {
     super.initState();
+
     _initialData();
   }
 
@@ -188,7 +176,10 @@ class _EditRejectTypeViewState extends State<EditRejectTypeView> {
   }
 
   void _initialData() {
+    const language = 'th-TH';
+
     rejectType = widget.initialRejectType;
+
     rejectTypeCodeController = TextEditingController();
     descriptionController = TextEditingController();
 
@@ -201,8 +192,15 @@ class _EditRejectTypeViewState extends State<EditRejectTypeView> {
         );
       }
       if (rejectType.description.isNotEmpty) {
+        final description = rejectType.description
+            .firstWhere(
+              (item) => item.language == language,
+              orElse: () => const LocalizedModel.empty(),
+            )
+            .text;
+
         descriptionController = TextEditingController(
-          text: rejectType.description.first.text,
+          text: description,
         );
       }
 
@@ -223,7 +221,7 @@ class _EditRejectTypeViewState extends State<EditRejectTypeView> {
       () {
         final description = [
           LocalizedModel(
-            language: 'en-US',
+            language: 'th-TH',
             text: descriptionController.text,
           ),
         ];
@@ -250,40 +248,46 @@ class _EditRejectTypeViewState extends State<EditRejectTypeView> {
           widget.currentUser.email,
           DateTime.now(),
         );
-        context.read<EditRejectTypeBloc>().add(CreateCurrentRejectTypeEvent(
-              rejectType: rejectType,
-              companyId: widget.currentUser.currentCompany,
-            ));
+        final event = CreateCurrentRejectTypeEvent(
+          rejectType: rejectType,
+          companyId: widget.currentUser.currentCompany,
+        );
+
+        context.read<EditRejectTypeBloc>().add(event);
       } else {
         rejectType = rejectType.setUpdate(
           widget.currentUser.email,
           DateTime.now(),
         );
 
-        context.read<EditRejectTypeBloc>().add(UpdateCurrentRejectTypeEvent(
-              rejectType: rejectType,
-              companyId: widget.currentUser.currentCompany,
-            ));
+        final event = UpdateCurrentRejectTypeEvent(
+          rejectType: rejectType,
+          companyId: widget.currentUser.currentCompany,
+        );
+        context.read<EditRejectTypeBloc>().add(event);
       }
     }
   }
 
   void _deleteRejectType() {
-    context.read<EditRejectTypeBloc>().add(DeleteCurrentRejectTypeEvent(
-          rejectTypeId: rejectType.rejectTypeId,
-          companyId: widget.currentUser.currentCompany,
-        ));
+    final event = DeleteCurrentRejectTypeEvent(
+      rejectTypeId: rejectType.id,
+      companyId: widget.currentUser.currentCompany,
+    );
+    context.read<EditRejectTypeBloc>().add(event);
   }
 
   void _goBackAndUpdate() {
     if (!widget.isNewRejectType) {
-      context.read<RejectTypeBloc>().add(UpdateRejectTypeEvent(
-            rejectType: rejectType,
-            updateType: UpdateType.updated,
-          ));
+      context.pop(
+        UpdatedReturn<RejectTypeModel>(
+          object: widget.initialRejectType,
+          type: UpdateType.updated,
+        ),
+      );
+    } else {
+      context.pop();
     }
-
-    context.pop();
   }
 
   @override
@@ -302,19 +306,22 @@ class _EditRejectTypeViewState extends State<EditRejectTypeView> {
         ],
       ),
       body: SingleChildScrollView(
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: <Widget>[
-            const SizedBox(height: UiConfig.lineSpacing),
-            CustomContainer(
-              child: _buildRejectTypeForm(context),
-            ),
-            const SizedBox(height: UiConfig.lineSpacing),
-            Visibility(
-              visible: widget.initialRejectType != RejectTypeModel.empty(),
-              child: _buildConfigurationInfo(context, widget.initialRejectType),
-            ),
-          ],
+        child: ContentWrapper(
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: <Widget>[
+              const SizedBox(height: UiConfig.lineSpacing),
+              CustomContainer(
+                child: _buildRejectTypeForm(context),
+              ),
+              const SizedBox(height: UiConfig.lineSpacing),
+              Visibility(
+                visible: widget.initialRejectType != RejectTypeModel.empty(),
+                child:
+                    _buildConfigurationInfo(context, widget.initialRejectType),
+              ),
+            ],
+          ),
         ),
       ),
     );

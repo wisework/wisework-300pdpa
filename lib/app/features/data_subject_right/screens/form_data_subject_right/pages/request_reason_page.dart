@@ -1,77 +1,35 @@
+import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
-import 'package:go_router/go_router.dart';
-
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:pdpa/app/config/config.dart';
 import 'package:pdpa/app/data/models/master_data/request_reason_template_model.dart';
-import 'package:pdpa/app/features/data_subject_right/routes/data_subject_right_route.dart';
+import 'package:pdpa/app/features/data_subject_right/cubit/form_data_subject_right/form_data_subject_right_cubit.dart';
 import 'package:pdpa/app/features/data_subject_right/widgets/data_subject_right_list_tile.dart';
 import 'package:pdpa/app/shared/utils/constants.dart';
-import 'package:pdpa/app/shared/widgets/customs/custom_button.dart';
+import 'package:pdpa/app/shared/widgets/content_wrapper.dart';
 import 'package:pdpa/app/shared/widgets/customs/custom_checkbox.dart';
 import 'package:pdpa/app/shared/widgets/customs/custom_container.dart';
-import 'package:pdpa/app/shared/widgets/customs/custom_icon_button.dart';
 import 'package:pdpa/app/shared/widgets/customs/custom_radio_button.dart';
 import 'package:pdpa/app/shared/widgets/customs/custom_text_field.dart';
 import 'package:pdpa/app/shared/widgets/expanded_container.dart';
 import 'package:pdpa/app/shared/widgets/material_ink_well.dart';
-import 'package:pdpa/app/shared/widgets/templates/pdpa_app_bar.dart';
 import 'package:pdpa/app/shared/widgets/title_required_text.dart';
 
-class RequestSelectRequestScreen extends StatefulWidget {
-  const RequestSelectRequestScreen({super.key});
+class RequestReasonPage extends StatefulWidget {
+  const RequestReasonPage({
+    super.key,
+    required this.controller,
+    required this.currentPage,
+  });
+
+  final PageController controller;
+  final int currentPage;
 
   @override
-  State<RequestSelectRequestScreen> createState() =>
-      _RequestSelectRequestScreenState();
+  State<RequestReasonPage> createState() => _RequestReasonPageState();
 }
 
-class _RequestSelectRequestScreenState
-    extends State<RequestSelectRequestScreen> {
-  @override
-  Widget build(BuildContext context) {
-    return const SelectRequestView();
-  }
-
-  // _checkOtherFile() {
-  //   return Column(
-  //     children: [
-  //       CheckboxListTile(
-  //         side: const BorderSide(color: Color(0xff2684FF)),
-  //         controlAffinity: ListTileControlAffinity.leading,
-  //         value: checkboxValue1,
-  //         onChanged: (bool? value) {
-  //           if (value != checkboxValue1) {
-  //             setState(() {
-  //               checkboxValue1 = value;
-  //             });
-  //           }
-  //         },
-  //         title: Transform.translate(
-  //           offset: const Offset(-16, 0),
-  //           child: Text("ระงับการประมวลผลข้อมูล",
-  //               style: checkboxValue1 == false
-  //                   ? Theme.of(context).textTheme.bodySmall?.copyWith()
-  //                   : Theme.of(context).textTheme.bodySmall?.copyWith(
-  //                       color: Theme.of(context).colorScheme.primary)),
-  //         ),
-  //       ),
-  //       Visibility(
-  //         visible: checkboxValue1 == true,
-  //         child:
-  //       ),
-  //     ],
-  //   );
-  // }
-}
-
-class SelectRequestView extends StatefulWidget {
-  const SelectRequestView({super.key});
-
-  @override
-  State<SelectRequestView> createState() => _SelectRequestViewState();
-}
-
-class _SelectRequestViewState extends State<SelectRequestView> {
+class _RequestReasonPageState extends State<RequestReasonPage> {
   bool? checkboxValue1 = false;
   bool? checkboxValue2 = false;
 
@@ -104,20 +62,9 @@ class _SelectRequestViewState extends State<SelectRequestView> {
     });
   }
 
-  // Map<String, bool> choices = {
-  //   'อยู่ในระหว่างการตรวจสอบตามที่เจ้าของข้อมูลส่วนบุคคลร้องขอให้บริษัทแก้ไขข้อมูลส่วนบุคคล':
-  //       false,
-  //   'เป็นข้อมูลส่วนบุคคลที่ต้องลบหรือทำลาย เพราะเป็นการประมวลผลข้อมูลส่วนบุคคลโดยไม่ชอบด้วยกฎหมายแต่เจ้าของข้อมูลส่วนบุคคลประสงค์ขอให้ระงับการใช้แทน ':
-  //       false,
-  //   'ข้อมูลส่วนบุคคลหมดความจำเป็นในการเก็บรักษาไว้ตามวัตถุประสงค์ในการประมวลผลแต่เจ้าของข้อมูลส่วนบุคคลมีความจำเป็นต้องขอให้เก็บรักษาไว้เพื่อใช้ในการก่อตั้งสิทธิเรียกร้องตามกฎหมายการปฏิบัติตามหรือการใช้สิทธิเรียกร้องตามกฎหมาย':
-  //       false,
-  //   'เหตุผลอื่นๆ โปรดระบุ': false,
-  // }; // ตั้งค่า Checkbox เริ่มต้น
-  // String otherReason = '';
-
   final requestReason = [
     RequestReasonTemplateModel(
-      requestReasonTemplateId: '1',
+      id: '1',
       requestTypeId: 'ID:1',
       reasonTypesId: const [
         'อยู่ในระหว่างการตรวจสอบตามที่เจ้าของข้อมูลส่วนบุคคลร้องขอให้บริษัทแก้ไขข้อมูลส่วนบุคคล',
@@ -131,7 +78,7 @@ class _SelectRequestViewState extends State<SelectRequestView> {
       updatedDate: DateTime.now(),
     ),
     RequestReasonTemplateModel(
-      requestReasonTemplateId: '2',
+      id: '2',
       requestTypeId: 'ID:2',
       reasonTypesId: const [
         'อยู่ในระหว่างการตรวจสอบตามที่เจ้าของข้อมูลส่วนบุคคลร้องขอให้บริษัทแก้ไขข้อมูลส่วนบุคคล',
@@ -155,27 +102,12 @@ class _SelectRequestViewState extends State<SelectRequestView> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: PdpaAppBar(
-        leadingIcon: CustomIconButton(
-          onPressed: () {
-            context.pop();
-          },
-          icon: Icons.chevron_left_outlined,
-          iconColor: Theme.of(context).colorScheme.primary,
-          backgroundColor: Theme.of(context).colorScheme.onBackground,
-        ),
-        title: Text(
-          'แบบฟอร์มขอใช้สิทธิ์ตามกฏหมาย', //!
-          style: Theme.of(context).textTheme.titleLarge,
-        ),
-      ),
-      body: SingleChildScrollView(
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            const SizedBox(height: UiConfig.lineSpacing),
-            CustomContainer(
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Expanded(
+          child: SingleChildScrollView(
+            child: CustomContainer(
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 mainAxisAlignment: MainAxisAlignment.start,
@@ -205,25 +137,83 @@ class _SelectRequestViewState extends State<SelectRequestView> {
                             ))
                         .toList(),
                   ),
-                  const SizedBox(height: UiConfig.lineSpacing),
-                  CustomButton(
-                    height: 40.0,
-                    onPressed: () {
-                      context.push(DataSubjectRightRoute.stepSix.path);
-                    },
-                    child: Text(
-                      'ถัดไป', //!
-                      style: Theme.of(context).textTheme.titleMedium?.copyWith(
-                          color: Theme.of(context).colorScheme.onPrimary),
-                    ),
-                  ),
                 ],
               ),
             ),
-          ],
+          ),
         ),
-      ),
+        ContentWrapper(
+          child: Container(
+            padding: const EdgeInsets.all(
+              UiConfig.defaultPaddingSpacing,
+            ),
+            decoration: BoxDecoration(
+              color: Theme.of(context).colorScheme.onBackground,
+              boxShadow: [
+                BoxShadow(
+                  color: Theme.of(context).colorScheme.outline,
+                  blurRadius: 1.0,
+                  offset: const Offset(0, -2.0),
+                ),
+              ],
+            ),
+            child: _buildPageViewController(
+              context,
+              widget.controller,
+              widget.currentPage,
+            ),
+          ),
+        ),
+      ],
     );
+  }
+
+  Row _buildPageViewController(
+    BuildContext context,
+    PageController controller,
+    int currentpage,
+  ) {
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+      children: [
+        TextButton(
+          style: TextButton.styleFrom(
+            textStyle: Theme.of(context).textTheme.bodyMedium?.copyWith(
+                  color: Theme.of(context).colorScheme.primary,
+                ),
+          ),
+          onPressed: previousPage,
+          child: Text(
+            tr("app.previous"),
+          ),
+        ),
+        Text("$currentpage/7"),
+        TextButton(
+            style: TextButton.styleFrom(
+              textStyle: Theme.of(context).textTheme.bodyMedium?.copyWith(
+                    color: Theme.of(context).colorScheme.primary,
+                  ),
+            ),
+            onPressed: nextPage,
+            child: currentpage != 7
+                ? Text(
+                    tr("app.next"),
+                  )
+                : const Text("ส่งแบบคำร้อง")),
+      ],
+    );
+  }
+
+  void nextPage() {
+    widget.controller.animateToPage(widget.currentPage + 1,
+        duration: const Duration(milliseconds: 250), curve: Curves.easeIn);
+    context.read<FormDataSubjectRightCubit>().nextPage(widget.currentPage + 1);
+  }
+
+  void previousPage() {
+    widget.controller.animateToPage(widget.currentPage - 1,
+        duration: const Duration(milliseconds: 250), curve: Curves.easeIn);
+    context.read<FormDataSubjectRightCubit>().nextPage(widget.currentPage - 1);
   }
 
   //? Checkbox List
@@ -367,64 +357,6 @@ class _SelectRequestViewState extends State<SelectRequestView> {
                 .titleMedium
                 ?.copyWith(color: Theme.of(context).colorScheme.primary),
           ),
-          // Column(
-          //   children: choices.keys.map((String choice) {
-          //     return choice == 'เหตุผลอื่นๆ โปรดระบุ'
-          //         ? Column(
-          //             children: [
-          //               CheckboxListTile(
-          //                 controlAffinity: ListTileControlAffinity.leading,
-          //                 contentPadding: const EdgeInsets.only(
-          //                     top: 0, left: 0, right: 16, bottom: 0),
-          //                 title: Text(choice,
-          //                     style: Theme.of(context).textTheme.bodyMedium),
-          //                 value: choices[choice]!,
-          //                 onChanged: (bool? value) {
-          //                   setState(() {
-          //                     choices[choice] = value!;
-          //                   });
-          //                 },
-          //               ),
-          //               if (choices[choice]!)
-          //                 Padding(
-          //                   padding: const EdgeInsets.only(left: 16.0),
-          //                   child: Column(
-          //                     crossAxisAlignment: CrossAxisAlignment.start,
-          //                     children: [
-          //                       const TitleRequiredText(
-          //                         text: 'เหตุผล',
-          //                         required: true,
-          //                       ),
-          //                       TextField(
-          //                         onChanged: (value) {
-          //                           setState(() {
-          //                             otherReason = value;
-          //                           });
-          //                         },
-          //                         decoration: const InputDecoration(
-          //                           hintText: 'เหตุผล',
-          //                         ),
-          //                       ),
-          //                     ],
-          //                   ),
-          //                 ),
-          //             ],
-          //           )
-          //         : CheckboxListTile(
-          //             controlAffinity: ListTileControlAffinity.leading,
-          //             contentPadding: const EdgeInsets.only(
-          //                 top: 0, left: 0, right: 16, bottom: 0),
-          //             title: Text(choice,
-          //                 style: Theme.of(context).textTheme.bodyMedium),
-          //             value: choices[choice]!,
-          //             onChanged: (bool? value) {
-          //               setState(() {
-          //                 choices[choice] = value!;
-          //               });
-          //             },
-          //           );
-          //   }).toList(),
-          // ),
           Column(
             children: reasons
                 .map(

@@ -5,10 +5,11 @@ import 'package:pdpa/app/shared/utils/typedef.dart';
 
 class ReasonTypeModel extends Equatable {
   const ReasonTypeModel({
-    required this.reasonTypeId,
+    required this.id,
     required this.reasonCode,
     required this.description,
     required this.requiredInputReasonText,
+    required this.editable,
     required this.status,
     required this.createdBy,
     required this.createdDate,
@@ -16,10 +17,11 @@ class ReasonTypeModel extends Equatable {
     required this.updatedDate,
   });
 
-  final String reasonTypeId;
+  final String id;
   final String reasonCode;
   final List<LocalizedModel> description;
   final bool requiredInputReasonText;
+  final bool editable;
   final ActiveStatus status;
   final String createdBy;
   final DateTime createdDate;
@@ -28,10 +30,11 @@ class ReasonTypeModel extends Equatable {
 
   ReasonTypeModel.empty()
       : this(
-          reasonTypeId: '',
+          id: '',
           reasonCode: '',
           description: [],
           requiredInputReasonText: false,
+          editable: true,
           status: ActiveStatus.active,
           createdBy: '',
           createdDate: DateTime.fromMillisecondsSinceEpoch(0),
@@ -41,7 +44,7 @@ class ReasonTypeModel extends Equatable {
 
   ReasonTypeModel.fromMap(DataMap map)
       : this(
-          reasonTypeId: map['reasonTypeId'] as String,
+          id: map['id'] as String,
           reasonCode: map['reasonCode'] as String,
           description: List<LocalizedModel>.from(
             (map['description'] as List<dynamic>).map<LocalizedModel>(
@@ -49,6 +52,7 @@ class ReasonTypeModel extends Equatable {
             ),
           ),
           requiredInputReasonText: map['requiredInputReasonText'] as bool,
+          editable: map['editable'] as bool,
           status: ActiveStatus.values[map['status'] as int],
           createdBy: map['createdBy'] as String,
           createdDate: DateTime.parse(map['createdDate'] as String),
@@ -63,10 +67,10 @@ class ReasonTypeModel extends Equatable {
   }
 
   DataMap toMap() => {
-        'reasonTypeId': reasonTypeId,
         'reasonCode': reasonCode,
         'description': description.map((item) => item.toMap()).toList(),
         'requiredInputReasonText': requiredInputReasonText,
+        'editable': editable,
         'status': status.index,
         'createdBy': createdBy,
         'createdDate': createdDate.toIso8601String(),
@@ -75,11 +79,12 @@ class ReasonTypeModel extends Equatable {
       };
 
   ReasonTypeModel copyWith({
-    String? reasonTypeId,
+    String? id,
     String? reasonCode,
     List<LocalizedModel>? description,
     bool? requiredInputReasonText,
     String? periodUnit,
+    bool? editable,
     ActiveStatus? status,
     String? createdBy,
     DateTime? createdDate,
@@ -87,11 +92,12 @@ class ReasonTypeModel extends Equatable {
     DateTime? updatedDate,
   }) {
     return ReasonTypeModel(
-      reasonTypeId: reasonTypeId ?? this.reasonTypeId,
+      id: id ?? this.id,
       reasonCode: reasonCode ?? this.reasonCode,
       description: description ?? this.description,
       requiredInputReasonText:
           requiredInputReasonText ?? this.requiredInputReasonText,
+      editable: editable ?? this.editable,
       status: status ?? this.status,
       createdBy: createdBy ?? this.createdBy,
       createdDate: createdDate ?? this.createdDate,
@@ -115,10 +121,11 @@ class ReasonTypeModel extends Equatable {
   @override
   List<Object> get props {
     return [
-      reasonTypeId,
+      id,
       reasonCode,
       description,
       requiredInputReasonText,
+      editable,
       status,
       createdBy,
       createdDate,

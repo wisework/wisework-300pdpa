@@ -38,6 +38,7 @@ class DataSubjectRightScreen extends StatefulWidget {
 
 class _DataSubjectRightScreenState extends State<DataSubjectRightScreen> {
   late String language;
+  late String companyId;
 
   @override
   void initState() {
@@ -49,7 +50,6 @@ class _DataSubjectRightScreenState extends State<DataSubjectRightScreen> {
   void _initialData() {
     final bloc = context.read<SignInBloc>();
 
-    String companyId = '';
     if (bloc.state is SignedInUser) {
       companyId = (bloc.state as SignedInUser).user.currentCompany;
       language = (bloc.state as SignedInUser).user.defaultLanguage;
@@ -63,6 +63,7 @@ class _DataSubjectRightScreenState extends State<DataSubjectRightScreen> {
   Widget build(BuildContext context) {
     return DataSubjectRightView(
       language: language,
+      companyId: companyId,
     );
   }
 }
@@ -71,9 +72,11 @@ class DataSubjectRightView extends StatefulWidget {
   const DataSubjectRightView({
     super.key,
     required this.language,
+    required this.companyId,
   });
 
   final String language;
+  final String companyId;
 
   @override
   State<DataSubjectRightView> createState() => _DataSubjectRightViewState();
@@ -157,7 +160,8 @@ class _DataSubjectRightViewState extends State<DataSubjectRightView> {
       ),
       floatingActionButton: FloatingActionButton(
         onPressed: () {
-          context.push(DataSubjectRightRoute.createDataSubjectRight.path);
+          context.push(DataSubjectRightRoute.createDataSubjectRight.path
+              .replaceFirst(':id', widget.companyId));
         },
         child: const Icon(Icons.add),
       ),

@@ -6,6 +6,7 @@ abstract class EditRequestTypeEvent extends Equatable {
   @override
   List<Object> get props => [];
 }
+
 class GetCurrentRequestTypeEvent extends EditRequestTypeEvent {
   const GetCurrentRequestTypeEvent({
     required this.requestTypeId,
@@ -56,4 +57,15 @@ class DeleteCurrentRequestTypeEvent extends EditRequestTypeEvent {
 
   @override
   List<Object> get props => [requestTypeId, companyId];
+}
+
+class UpdateEditRequestTypeStateEvent extends EditRequestTypeEvent {
+  const UpdateEditRequestTypeStateEvent({
+    required this.reject,
+  });
+
+  final RejectTypeModel reject;
+
+  @override
+  List<Object> get props => [reject];
 }

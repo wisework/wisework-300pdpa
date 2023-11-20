@@ -10,6 +10,7 @@ import 'package:pdpa/app/features/consent_management/consent_form/cubit/current_
 import 'package:pdpa/app/features/consent_management/user_consent/bloc/user_consent/user_consent_bloc.dart';
 import 'package:pdpa/app/features/data_subject_right/bloc/data_subject_right/data_subject_right_bloc.dart';
 import 'package:pdpa/app/features/data_subject_right/bloc/user_data_subject_right_form/user_data_subject_right_form_bloc.dart';
+import 'package:pdpa/app/features/data_subject_right/cubit/form_data_subject_right/form_data_subject_right_cubit.dart';
 import 'package:pdpa/app/features/general/bloc/app_settings/app_settings_bloc.dart';
 import 'package:pdpa/app/features/general/routes/general_route.dart';
 import 'package:pdpa/app/features/master_data/bloc/consent/custom_field/custom_field_bloc.dart';
@@ -94,6 +95,9 @@ class GlobalBlocProvider {
       ),
       BlocProvider<DataSubjectRightBloc>(
         create: (context) => serviceLocator<DataSubjectRightBloc>(),
+      ),
+      BlocProvider<FormDataSubjectRightCubit>(
+        create: (context) => serviceLocator<FormDataSubjectRightCubit>(),
       ),
       BlocProvider<UserDataSubjectRightFormBloc>(
         create: (context) => serviceLocator<UserDataSubjectRightFormBloc>(),

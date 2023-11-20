@@ -1,43 +1,32 @@
+import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
-import 'package:go_router/go_router.dart';
-
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:pdpa/app/config/config.dart';
-import 'package:pdpa/app/features/data_subject_right/routes/data_subject_right_route.dart';
+import 'package:pdpa/app/features/data_subject_right/cubit/form_data_subject_right/form_data_subject_right_cubit.dart';
 import 'package:pdpa/app/features/data_subject_right/widgets/data_subject_right_list_tile.dart';
-import 'package:pdpa/app/shared/widgets/customs/custom_button.dart';
+import 'package:pdpa/app/shared/widgets/content_wrapper.dart';
 import 'package:pdpa/app/shared/widgets/customs/custom_container.dart';
-import 'package:pdpa/app/shared/widgets/customs/custom_icon_button.dart';
 import 'package:pdpa/app/shared/widgets/customs/custom_radio_button.dart';
 import 'package:pdpa/app/shared/widgets/customs/custom_text_field.dart';
-import 'package:pdpa/app/shared/widgets/templates/pdpa_app_bar.dart';
 import 'package:pdpa/app/shared/widgets/title_required_text.dart';
 
-class RequestDataRequesterScreen extends StatefulWidget {
-  const RequestDataRequesterScreen({super.key});
+class OwnerVerifyPage extends StatefulWidget {
+  const OwnerVerifyPage({
+    super.key,
+    required this.controller,
+    required this.currentPage,
+  });
+
+  final PageController controller;
+  final int currentPage;
 
   @override
-  State<RequestDataRequesterScreen> createState() =>
-      _RequestDataRequesterScreenState();
+  State<OwnerVerifyPage> createState() => _OwnerVerifyPageState();
 }
 
-final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
+class _OwnerVerifyPageState extends State<OwnerVerifyPage> {
+  final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
 
-class _RequestDataRequesterScreenState
-    extends State<RequestDataRequesterScreen> {
-  @override
-  Widget build(BuildContext context) {
-    return const DataRequesterView();
-  }
-}
-
-class DataRequesterView extends StatefulWidget {
-  const DataRequesterView({super.key});
-
-  @override
-  State<DataRequesterView> createState() => _DataRequesterViewState();
-}
-
-class _DataRequesterViewState extends State<DataRequesterView> {
   late int selectedRadioTile;
 
   late TextEditingController fullNameController;
@@ -52,7 +41,6 @@ class _DataRequesterViewState extends State<DataRequesterView> {
     emailController = TextEditingController();
     phonenumberController = TextEditingController();
 
-    // ตั้งค่าค่าเริ่มต้นของ Radio
     selectedRadioTile = 1;
     super.initState();
   }
@@ -75,35 +63,82 @@ class _DataRequesterViewState extends State<DataRequesterView> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: PdpaAppBar(
-        leadingIcon: CustomIconButton(
-          onPressed: () {
-            context.pop();
-          },
-          icon: Icons.chevron_left_outlined,
-          iconColor: Theme.of(context).colorScheme.primary,
-          backgroundColor: Theme.of(context).colorScheme.onBackground,
-        ),
-        title: Text(
-          'แบบฟอร์มขอใช้สิทธิ์ตามกฏหมาย', //!
-          style: Theme.of(context).textTheme.titleLarge,
-        ),
-      ),
-      body: SingleChildScrollView(
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: <Widget>[
-            const SizedBox(height: UiConfig.lineSpacing),
-            CustomContainer(
-              padding: const EdgeInsets.all(UiConfig.defaultPaddingSpacing),
-              child: _buildStep1Form(context),
+    return SingleChildScrollView(
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: <Widget>[
+          const SizedBox(height: UiConfig.lineSpacing),
+          CustomContainer(
+            padding: const EdgeInsets.all(UiConfig.defaultPaddingSpacing),
+            child: _buildStep1Form(context),
+          ),
+          const SizedBox(height: UiConfig.lineSpacing),
+          ContentWrapper(
+            child: Container(
+              padding: const EdgeInsets.all(
+                UiConfig.defaultPaddingSpacing,
+              ),
+              decoration: BoxDecoration(
+                color: Theme.of(context).colorScheme.onBackground,
+                boxShadow: [
+                  BoxShadow(
+                    color: Theme.of(context).colorScheme.outline,
+                    blurRadius: 1.0,
+                    offset: const Offset(0, -2.0),
+                  ),
+                ],
+              ),
+              child: _buildPageViewController(
+                context,
+                widget.controller,
+                widget.currentPage,
+              ),
             ),
-            const SizedBox(height: UiConfig.lineSpacing),
-          ],
-        ),
+          ),
+        ],
       ),
     );
+  }
+
+  Row _buildPageViewController(
+    BuildContext context,
+    PageController controller,
+    int currentpage,
+  ) {
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+      children: [
+        Container(),
+        Text("$currentpage/7"),
+        TextButton(
+            style: TextButton.styleFrom(
+              textStyle: Theme.of(context).textTheme.bodyMedium?.copyWith(
+                    color: Theme.of(context).colorScheme.primary,
+                  ),
+            ),
+            onPressed: nextPage,
+            child: currentpage != 7
+                ? Text(
+                    tr("app.next"),
+                  )
+                : const Text("ส่งแบบคำร้อง")),
+      ],
+    );
+  }
+
+  void nextPage() {
+    if (selectedRadioTile == 1) {
+      widget.controller.jumpToPage(
+        4,
+      );
+      context.read<FormDataSubjectRightCubit>().nextPage(4);
+    } else {
+      widget.controller.animateToPage(widget.currentPage + 1,
+          duration: const Duration(milliseconds: 250), curve: Curves.easeIn);
+      context
+          .read<FormDataSubjectRightCubit>()
+          .nextPage(widget.currentPage + 1);
+    }
   }
 
   Form _buildStep1Form(BuildContext context) {
@@ -145,38 +180,6 @@ class _DataRequesterViewState extends State<DataRequesterView> {
               },
             ),
           ),
-          // ListTile(
-          //   title: Text('ผู้ยื่นคำร้องเป็นบุคคลเดียวกับเจ้าของข้อมูล',
-          //       style: Theme.of(context).textTheme.bodyMedium),
-          //   leading: Radio(
-          //     value: 1,
-          //     groupValue: selectedRadioTile,
-          //     onChanged: (val) {
-          //       setSelectedRadioTile(val!);
-          //     },
-          //   ),
-          //   onTap: () {
-          //     setSelectedRadioTile(1);
-          //   },
-          // ),
-          // Divider(
-          //   color:
-          //       Theme.of(context).colorScheme.outlineVariant.withOpacity(0.5),
-          // ),
-          // ListTile(
-          //   title: Text('ผู้ยื่นคำร้องเป็นตัวแทนเจ้าของข้อมูล',
-          //       style: Theme.of(context).textTheme.bodyMedium),
-          //   leading: Radio(
-          //     value: 2,
-          //     groupValue: selectedRadioTile,
-          //     onChanged: (val) {
-          //       setSelectedRadioTile(val!);
-          //     },
-          //   ),
-          //   onTap: () {
-          //     setSelectedRadioTile(2);
-          //   },
-          // ),
           Row(
             children: <Widget>[
               Text(
@@ -197,6 +200,7 @@ class _DataRequesterViewState extends State<DataRequesterView> {
             hintText: 'กรอกชื่อ - นามสกุล', //!
             controller: fullNameController,
             required: true,
+            keyboardType: TextInputType.text,
           ),
           const SizedBox(height: UiConfig.lineSpacing),
           const TitleRequiredText(
@@ -207,6 +211,8 @@ class _DataRequesterViewState extends State<DataRequesterView> {
             hintText: 'กรอกที่อยู่', //!
             controller: addressTextController,
             required: true,
+            keyboardType: TextInputType.multiline,
+            maxLines: 3,
           ),
           const SizedBox(height: UiConfig.lineSpacing),
           const TitleRequiredText(
@@ -217,6 +223,7 @@ class _DataRequesterViewState extends State<DataRequesterView> {
             hintText: 'กรอกอีเมล', //!
             controller: emailController,
             required: true,
+            keyboardType: TextInputType.emailAddress,
           ),
           const SizedBox(height: UiConfig.lineSpacing),
           const TitleRequiredText(
@@ -228,20 +235,7 @@ class _DataRequesterViewState extends State<DataRequesterView> {
             controller: phonenumberController,
             keyboardType: TextInputType.phone,
             required: true,
-          ),
-          const SizedBox(height: UiConfig.lineSpacing),
-          CustomButton(
-            height: 40.0,
-            onPressed: () {
-              context.push(DataSubjectRightRoute.stepTwo.path);
-            },
-            child: Text(
-              'ถัดไป', //!
-              style: Theme.of(context)
-                  .textTheme
-                  .titleMedium
-                  ?.copyWith(color: Theme.of(context).colorScheme.onPrimary),
-            ),
+            maxLength: 10,
           ),
         ],
       ),
