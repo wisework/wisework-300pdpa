@@ -114,13 +114,13 @@ class _RequestTypeViewState extends State<RequestTypeView> {
                         )
                       : ExampleScreen(
                           headderText: tr(
-                            'masterData.cm.RequestType.list',
+                            'masterData.dsr.request.list',
                           ),
                           buttonText: tr(
-                            'masterData.cm.RequestType.create',
+                            'masterData.dsr.request.create',
                           ),
                           descriptionText: tr(
-                            'masterData.cm.RequestType.explain',
+                            'masterData.dsr.request.explain',
                           ),
                           onPress: () {
                             context
