@@ -1,5 +1,6 @@
 import 'package:equatable/equatable.dart';
 import 'package:pdpa/app/data/models/master_data/localized_model.dart';
+import 'package:pdpa/app/data/models/master_data/reject_type_model.dart';
 import 'package:pdpa/app/shared/utils/constants.dart';
 import 'package:pdpa/app/shared/utils/typedef.dart';
 
@@ -8,6 +9,8 @@ class RequestTypeModel extends Equatable {
     required this.id,
     required this.requestCode,
     required this.description,
+    required this.rejectTypes,
+    required this.editable,
     required this.status,
     required this.createdBy,
     required this.createdDate,
@@ -18,6 +21,8 @@ class RequestTypeModel extends Equatable {
   final String id;
   final String requestCode;
   final List<LocalizedModel> description;
+  final List<RejectTypeModel> rejectTypes;
+  final bool editable;
   final ActiveStatus status;
   final String createdBy;
   final DateTime createdDate;
@@ -29,6 +34,8 @@ class RequestTypeModel extends Equatable {
           id: '',
           requestCode: '',
           description: [],
+          rejectTypes: [],
+          editable: true,
           status: ActiveStatus.active,
           createdBy: '',
           createdDate: DateTime.fromMillisecondsSinceEpoch(0),
@@ -45,6 +52,12 @@ class RequestTypeModel extends Equatable {
               (item) => LocalizedModel.fromMap(item as DataMap),
             ),
           ),
+          rejectTypes: List<RejectTypeModel>.from(
+            (map['rejectTypes'] as List<dynamic>).map<RejectTypeModel>(
+              (item) => RejectTypeModel.fromMap(item as DataMap),
+            ),
+          ),
+          editable: map['editable'] as bool,
           status: ActiveStatus.values[map['status'] as int],
           createdBy: map['createdBy'] as String,
           createdDate: DateTime.parse(map['createdDate'] as String),
@@ -56,6 +69,9 @@ class RequestTypeModel extends Equatable {
         'id': id,
         'requestCode': requestCode,
         'description': description.map((item) => item.toMap()).toList(),
+        'rejectTypes':
+            rejectTypes.map((rejectTypes) => rejectTypes.id).toList(),
+        'editable': editable,
         'status': status.index,
         'createdBy': createdBy,
         'createdDate': createdDate.toIso8601String(),
@@ -73,6 +89,8 @@ class RequestTypeModel extends Equatable {
     String? id,
     String? requestCode,
     List<LocalizedModel>? description,
+    List<RejectTypeModel>? rejectTypes,
+    bool? editable,
     ActiveStatus? status,
     String? createdBy,
     DateTime? createdDate,
@@ -83,6 +101,8 @@ class RequestTypeModel extends Equatable {
       id: id ?? this.id,
       requestCode: requestCode ?? this.requestCode,
       description: description ?? this.description,
+      rejectTypes: rejectTypes ?? this.rejectTypes,
+      editable: editable ?? this.editable,
       status: status ?? this.status,
       createdBy: createdBy ?? this.createdBy,
       createdDate: createdDate ?? this.createdDate,
@@ -91,14 +111,14 @@ class RequestTypeModel extends Equatable {
     );
   }
 
-  RequestTypeModel toCreated(String email, DateTime date) => copyWith(
+  RequestTypeModel setCreate(String email, DateTime date) => copyWith(
         createdBy: email,
         createdDate: date,
         updatedBy: email,
         updatedDate: date,
       );
 
-  RequestTypeModel toUpdated(String email, DateTime date) => copyWith(
+  RequestTypeModel setUpdate(String email, DateTime date) => copyWith(
         updatedBy: email,
         updatedDate: date,
       );
@@ -108,6 +128,8 @@ class RequestTypeModel extends Equatable {
       id,
       requestCode,
       description,
+      rejectTypes,
+      editable,
       status,
       createdBy,
       createdDate,

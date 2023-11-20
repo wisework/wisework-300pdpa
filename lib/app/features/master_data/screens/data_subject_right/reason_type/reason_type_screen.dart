@@ -62,6 +62,7 @@ class _ReasonTypeViewState extends State<ReasonTypeView> {
       reasonCode: '1',
       description: const [],
       requiredInputReasonText: false,
+      editable: false,
       status: ActiveStatus.active,
       createdBy: '',
       createdDate: DateTime.fromMillisecondsSinceEpoch(0),

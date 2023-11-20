@@ -6,36 +6,36 @@ import 'package:ionicons/ionicons.dart';
 import 'package:pdpa/app/config/config.dart';
 import 'package:pdpa/app/data/models/etc/updated_return.dart';
 import 'package:pdpa/app/data/models/master_data/localized_model.dart';
-import 'package:pdpa/app/data/models/master_data/reason_type_model.dart';
+import 'package:pdpa/app/data/models/master_data/reject_type_model.dart';
 import 'package:pdpa/app/features/master_data/routes/master_data_route.dart';
 import 'package:pdpa/app/shared/utils/constants.dart';
 import 'package:pdpa/app/shared/widgets/customs/custom_button.dart';
 import 'package:pdpa/app/shared/widgets/customs/custom_checkbox.dart';
 import 'package:pdpa/app/shared/widgets/customs/custom_icon_button.dart';
 
-class ChooseReasonModal extends StatefulWidget {
-  const ChooseReasonModal({
+class ChooseRejectTypeModal extends StatefulWidget {
+  const ChooseRejectTypeModal({
     super.key,
-    required this.initialReasons,
-    required this.reasons,
+    required this.initialRejectTypes,
+    required this.rejectTypes,
     required this.onChanged,
     required this.onUpdated,
     required this.language,
   });
 
-  final List<ReasonTypeModel> initialReasons;
-  final List<ReasonTypeModel> reasons;
-  final Function(List<ReasonTypeModel> reasons) onChanged;
-  final Function(UpdatedReturn<ReasonTypeModel> reason) onUpdated;
+  final List<RejectTypeModel> initialRejectTypes;
+  final List<RejectTypeModel> rejectTypes;
+  final Function(List<RejectTypeModel> rejectTypes) onChanged;
+  final Function(UpdatedReturn<RejectTypeModel> reject) onUpdated;
   final String language;
 
   @override
-  State<ChooseReasonModal> createState() => _ChooseReasonModalState();
+  State<ChooseRejectTypeModal> createState() => _ChooseRejectTypeModalState();
 }
 
-class _ChooseReasonModalState extends State<ChooseReasonModal> {
-  late List<ReasonTypeModel> reasons;
-  late List<ReasonTypeModel> selectReasons;
+class _ChooseRejectTypeModalState extends State<ChooseRejectTypeModal> {
+  late List<RejectTypeModel> rejectTypes;
+  late List<RejectTypeModel> selectRejectTypes;
 
   @override
   void initState() {
@@ -45,31 +45,31 @@ class _ChooseReasonModalState extends State<ChooseReasonModal> {
   }
 
   void _initialData() {
-    reasons = widget.reasons
-        .where((reason) => reason.status != ActiveStatus.inactive)
-        .map((reason) => reason)
+    rejectTypes = widget.rejectTypes
+        .where((reject) => reject.status != ActiveStatus.inactive)
+        .map((reject) => reject)
         .toList();
-    selectReasons = widget.initialReasons
-        .where((reason) => reason.status != ActiveStatus.inactive)
-        .map((reason) => reason)
+    selectRejectTypes = widget.initialRejectTypes
+        .where((reject) => reject.status != ActiveStatus.inactive)
+        .map((reject) => reject)
         .toList();
   }
 
-  void _selectReason(ReasonTypeModel reason) {
-    final selectIds = selectReasons.map((selected) => selected.id).toList();
+  void _selectReject(RejectTypeModel reject) {
+    final selectIds = selectRejectTypes.map((selected) => selected.id).toList();
 
     setState(() {
-      if (selectIds.contains(reason.id)) {
-        selectReasons = selectReasons
-            .where((selected) => selected.id != reason.id)
+      if (selectIds.contains(reject.id)) {
+        selectRejectTypes = selectRejectTypes
+            .where((selected) => selected.id != reject.id)
             .toList();
       } else {
-        selectReasons = selectReasons.map((selected) => selected).toList()
-          ..add(reason);
+        selectRejectTypes =
+            selectRejectTypes.map((selected) => selected).toList()..add(reject);
       }
     });
 
-    widget.onChanged(selectReasons);
+    widget.onChanged(selectRejectTypes);
   }
 
   @override
@@ -104,7 +104,7 @@ class _ChooseReasonModalState extends State<ChooseReasonModal> {
               children: <Widget>[
                 Expanded(
                   child: Text(
-                    tr('masterData.cm.reason.list'),
+                    tr('masterData.cm.reject.list'),
                     style: Theme.of(context).textTheme.titleLarge,
                   ),
                 ),
@@ -137,11 +137,11 @@ class _ChooseReasonModalState extends State<ChooseReasonModal> {
             padding: const EdgeInsets.symmetric(
               horizontal: UiConfig.defaultPaddingSpacing,
             ),
-            itemCount: reasons.length,
+            itemCount: rejectTypes.length,
             itemBuilder: (_, index) {
-              if (reasons.isEmpty) {
+              if (rejectTypes.isEmpty) {
                 return Text(
-                  tr('masterData.cm.reasonCategory.noData'),
+                  tr('masterData.cm.rejectCategory.noData'),
                   style: Theme.of(context).textTheme.bodyMedium,
                 ); //!
               }
@@ -149,7 +149,7 @@ class _ChooseReasonModalState extends State<ChooseReasonModal> {
                 children: <Widget>[
                   _buildCheckBoxListTile(
                     context,
-                    reason: reasons[index],
+                    reject: rejectTypes[index],
                     language: widget.language,
                   ),
                   Padding(
@@ -174,15 +174,15 @@ class _ChooseReasonModalState extends State<ChooseReasonModal> {
 
   Row _buildCheckBoxListTile(
     BuildContext context, {
-    required ReasonTypeModel reason,
+    required RejectTypeModel reject,
     required String language,
   }) {
-    final description = reason.description.firstWhere(
+    final description = reject.description.firstWhere(
       (item) => item.language == language,
       orElse: () => const LocalizedModel.empty(),
     );
 
-    final selectIds = selectReasons.map((category) => category.id).toList();
+    final selectIds = selectRejectTypes.map((category) => category.id).toList();
 
     return Row(
       children: <Widget>[
@@ -192,9 +192,9 @@ class _ChooseReasonModalState extends State<ChooseReasonModal> {
             right: UiConfig.actionSpacing,
           ),
           child: CustomCheckBox(
-            value: selectIds.contains(reason.id),
+            value: selectIds.contains(reject.id),
             onChanged: (_) {
-              _selectReason(reason);
+              _selectReject(reject);
             },
           ),
         ),
@@ -211,12 +211,12 @@ class _ChooseReasonModalState extends State<ChooseReasonModal> {
   CustomIconButton _buildAddButton(BuildContext context) {
     return CustomIconButton(
       onPressed: () async {
-        await context.push(MasterDataRoute.createReasonType.path).then((value) {
+        await context.push(MasterDataRoute.createRejectType.path).then((value) {
           if (value != null) {
-            final updated = value as UpdatedReturn<ReasonTypeModel>;
+            final updated = value as UpdatedReturn<RejectTypeModel>;
 
-            reasons = reasons..add(updated.object);
-            _selectReason(updated.object);
+            rejectTypes = rejectTypes..add(updated.object);
+            _selectReject(updated.object);
 
             widget.onUpdated(updated);
           }

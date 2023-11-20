@@ -4,6 +4,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
 
 import 'package:pdpa/app/config/config.dart';
+import 'package:pdpa/app/data/models/etc/updated_return.dart';
 import 'package:pdpa/app/data/models/master_data/localized_model.dart';
 import 'package:pdpa/app/data/models/master_data/reject_type_model.dart';
 import 'package:pdpa/app/features/authentication/bloc/sign_in/sign_in_bloc.dart';
@@ -56,11 +57,20 @@ class RejectTypeView extends StatefulWidget {
 }
 
 class _RejectTypeViewState extends State<RejectTypeView> {
+  void _onUpdated(UpdatedReturn<RejectTypeModel> updated) {
+    final event = UpdateRejectTypeEvent(
+      rejectType: updated.object,
+      updateType: updated.type,
+    );
+    context.read<RejectTypeBloc>().add(event);
+  }
+
   final reqeustModel = [
     RejectTypeModel(
       id: '1',
       rejectCode: '1',
       description: const [],
+      editable: false,
       status: ActiveStatus.active,
       createdBy: '',
       createdDate: DateTime.fromMillisecondsSinceEpoch(0),
@@ -70,6 +80,12 @@ class _RejectTypeViewState extends State<RejectTypeView> {
   ];
   @override
   Widget build(BuildContext context) {
+    final bloc = context.read<SignInBloc>();
+
+    String language = '';
+    if (bloc.state is SignedInUser) {
+      language = (bloc.state as SignedInUser).user.defaultLanguage;
+    }
     return Scaffold(
       appBar: PdpaAppBar(
         leadingIcon: CustomIconButton(
