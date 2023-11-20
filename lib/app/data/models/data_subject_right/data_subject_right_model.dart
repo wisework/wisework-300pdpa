@@ -18,9 +18,8 @@ class DataSubjectRightModel extends Equatable {
     required this.requestExpirationDate,
     required this.notifyEmail,
     required this.requestFormVerified,
-    required this.requestFormStatus,
-    required this.rejectFormReason,
-    required this.considerRequest,
+    required this.verifyFormStatus,
+    required this.rejectVerifyReason,
     required this.lastSeenBy,
     required this.createdBy,
     required this.createdDate,
@@ -61,15 +60,11 @@ class DataSubjectRightModel extends Equatable {
 
   /// The results of checking that this form is correct and complete.
   /// Use in [Verify data subject right step].
-  final RequestResultStatus requestFormStatus;
+  final RequestResultStatus verifyFormStatus;
 
   /// Reason for rejecting this form.
   /// Use in [Verify data subject right step].
-  final String rejectFormReason;
-
-  /// Consider the request whether to reject the request or continue action.
-  /// Use in [Considering step].
-  final bool considerRequest;
+  final String rejectVerifyReason;
 
   /// The lastest user who see the data subject right form.
   final String lastSeenBy;
@@ -94,9 +89,8 @@ class DataSubjectRightModel extends Equatable {
           requestExpirationDate: DateTime.fromMillisecondsSinceEpoch(0),
           notifyEmail: [],
           requestFormVerified: false,
-          requestFormStatus: RequestResultStatus.none,
-          rejectFormReason: '',
-          considerRequest: false,
+          verifyFormStatus: RequestResultStatus.none,
+          rejectVerifyReason: '',
           lastSeenBy: '',
           createdBy: '',
           createdDate: DateTime.fromMillisecondsSinceEpoch(0),
@@ -142,10 +136,9 @@ class DataSubjectRightModel extends Equatable {
               DateTime.parse(map['requestExpirationDate'] as String),
           notifyEmail: List<String>.from(map['notifyEmail'] as List<dynamic>),
           requestFormVerified: map['requestFormVerified'] as bool,
-          requestFormStatus:
-              RequestResultStatus.values[map['requestFormStatus'] as int],
-          rejectFormReason: map['rejectFormReason'] as String,
-          considerRequest: map['considerRequest'] as bool,
+          verifyFormStatus:
+              RequestResultStatus.values[map['verifyFormStatus'] as int],
+          rejectVerifyReason: map['rejectVerifyReason'] as String,
           lastSeenBy: map['lastSeenBy'] as String,
           createdBy: map['createdBy'] as String,
           createdDate: DateTime.parse(map['createdDate'] as String),
@@ -186,9 +179,8 @@ class DataSubjectRightModel extends Equatable {
         'requestExpirationDate': requestExpirationDate.toIso8601String(),
         'notifyEmail': notifyEmail,
         'requestFormVerified': requestFormVerified,
-        'requestFormStatus': requestFormStatus.index,
-        'rejectFormReason': rejectFormReason,
-        'considerRequest': considerRequest,
+        'verifyFormStatus': verifyFormStatus.index,
+        'rejectVerifyReason': rejectVerifyReason,
         'lastSeenBy': lastSeenBy,
         'createdBy': createdBy,
         'createdDate': createdDate.toIso8601String(),
@@ -207,9 +199,8 @@ class DataSubjectRightModel extends Equatable {
     DateTime? requestExpirationDate,
     List<String>? notifyEmail,
     bool? requestFormVerified,
-    RequestResultStatus? requestFormStatus,
-    String? rejectFormReason,
-    bool? considerRequest,
+    RequestResultStatus? verifyFormStatus,
+    String? rejectVerifyReason,
     String? lastSeenBy,
     String? createdBy,
     DateTime? createdDate,
@@ -229,9 +220,8 @@ class DataSubjectRightModel extends Equatable {
           requestExpirationDate ?? this.requestExpirationDate,
       notifyEmail: notifyEmail ?? this.notifyEmail,
       requestFormVerified: requestFormVerified ?? this.requestFormVerified,
-      requestFormStatus: requestFormStatus ?? this.requestFormStatus,
-      rejectFormReason: rejectFormReason ?? this.rejectFormReason,
-      considerRequest: considerRequest ?? this.considerRequest,
+      verifyFormStatus: verifyFormStatus ?? this.verifyFormStatus,
+      rejectVerifyReason: rejectVerifyReason ?? this.rejectVerifyReason,
       lastSeenBy: lastSeenBy ?? this.lastSeenBy,
       createdBy: createdBy ?? this.createdBy,
       createdDate: createdDate ?? this.createdDate,
@@ -265,9 +255,8 @@ class DataSubjectRightModel extends Equatable {
       requestExpirationDate,
       notifyEmail,
       requestFormVerified,
-      requestFormStatus,
-      rejectFormReason,
-      considerRequest,
+      verifyFormStatus,
+      rejectVerifyReason,
       lastSeenBy,
       createdBy,
       createdDate,

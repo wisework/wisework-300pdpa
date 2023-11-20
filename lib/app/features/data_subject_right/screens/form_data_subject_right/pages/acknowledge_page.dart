@@ -2,6 +2,7 @@ import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:pdpa/app/config/config.dart';
+import 'package:pdpa/app/data/models/data_subject_right/data_subject_right_model.dart';
 import 'package:pdpa/app/features/data_subject_right/cubit/form_data_subject_right/form_data_subject_right_cubit.dart';
 import 'package:pdpa/app/shared/widgets/content_wrapper.dart';
 import 'package:pdpa/app/shared/widgets/customs/custom_checkbox.dart';
@@ -12,10 +13,12 @@ class AcknowledgePage extends StatefulWidget {
     super.key,
     required this.controller,
     required this.currentPage,
+    required this.dataSubjectRight,
   });
 
   final PageController controller;
   final int currentPage;
+  final DataSubjectRightModel dataSubjectRight;
 
   @override
   State<AcknowledgePage> createState() => _AcknowledgePageState();
@@ -29,6 +32,7 @@ class _AcknowledgePageState extends State<AcknowledgePage> {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: <Widget>[
+        const SizedBox(height: UiConfig.lineSpacing),
         Expanded(
           child: SingleChildScrollView(
             child: CustomContainer(

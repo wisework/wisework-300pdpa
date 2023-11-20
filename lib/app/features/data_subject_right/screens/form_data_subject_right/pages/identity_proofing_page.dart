@@ -3,6 +3,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:ionicons/ionicons.dart';
 import 'package:pdpa/app/config/config.dart';
+import 'package:pdpa/app/data/models/data_subject_right/data_subject_right_model.dart';
+import 'package:pdpa/app/data/models/data_subject_right/power_verification_model.dart';
 import 'package:pdpa/app/features/data_subject_right/cubit/form_data_subject_right/form_data_subject_right_cubit.dart';
 import 'package:pdpa/app/shared/widgets/content_wrapper.dart';
 import 'package:pdpa/app/shared/widgets/customs/custom_checkbox.dart';
@@ -10,7 +12,6 @@ import 'package:pdpa/app/shared/widgets/customs/custom_container.dart';
 import 'package:pdpa/app/shared/widgets/customs/custom_icon_button.dart';
 import 'package:pdpa/app/shared/widgets/customs/custom_text_field.dart';
 import 'package:pdpa/app/shared/widgets/expanded_container.dart';
-import 'package:pdpa/app/shared/widgets/material_ink_well.dart';
 import 'package:pdpa/app/shared/widgets/title_required_text.dart';
 
 class IdentityProofingPage extends StatefulWidget {
@@ -19,11 +20,13 @@ class IdentityProofingPage extends StatefulWidget {
     required this.controller,
     required this.currentPage,
     required this.previousPage,
+    required this.dataSubjectRight,
   });
 
   final PageController controller;
   final int currentPage;
   final int previousPage;
+  final DataSubjectRightModel dataSubjectRight;
 
   @override
   State<IdentityProofingPage> createState() => _IdentityProofingPageState();
@@ -31,24 +34,54 @@ class IdentityProofingPage extends StatefulWidget {
 
 class _IdentityProofingPageState extends State<IdentityProofingPage> {
   bool isExpanded = false;
+  List<PowerVerificationModel> selectIdentityProofing = [];
 
-  void _setExpand() {
+  void _setIdentityProofing(PowerVerificationModel identityProofing) {
+    final selectIds =
+        selectIdentityProofing.map((selected) => selected.id).toList();
+
     setState(() {
-      isExpanded = !isExpanded;
+      if (selectIds.contains(identityProofing.id)) {
+        selectIdentityProofing = selectIdentityProofing
+            .where((selected) => selected.id != identityProofing.id)
+            .toList();
+      } else {
+        selectIdentityProofing = selectIdentityProofing
+            .map((selected) => selected)
+            .toList()
+          ..add(identityProofing);
+      }
     });
   }
 
-  List<String> power = [
-    'สำเนาทะเบียนบ้าน',
-    'สำเนาบัตรประชาชน (กรณีสัญชาติไทย)',
-    'สำเนาพาสสปอร์ต (กรณีต่างชาติ)',
-    'อื่นๆ ถ้ามี (โปรดระบุ)'
+  List<PowerVerificationModel> identityProofing = const [
+    PowerVerificationModel(
+      id: '1',
+      title: 'สำเนาทะเบียนบ้าน',
+      additionalReq: false,
+    ),
+    PowerVerificationModel(
+      id: '2',
+      title: 'สำเนาบัตรประชาชน (กรณีสัญชาติไทย)',
+      additionalReq: false,
+    ),
+    PowerVerificationModel(
+      id: '3',
+      title: 'สำเนาพาสสปอร์ต (กรณีต่างชาติ)',
+      additionalReq: false,
+    ),
+    PowerVerificationModel(
+      id: '4',
+      title: 'อื่นๆ ถ้ามี (โปรดระบุ)',
+      additionalReq: true,
+    ),
   ];
   @override
   Widget build(BuildContext context) {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
+        const SizedBox(height: UiConfig.lineSpacing),
         Expanded(
           child: SingleChildScrollView(
             child: CustomContainer(
@@ -72,12 +105,13 @@ class _IdentityProofingPageState extends State<IdentityProofingPage> {
                   ),
                   const SizedBox(height: UiConfig.lineSpacing),
                   Column(
-                    children: power
-                        .map((menu) => Padding(
+                    children: identityProofing
+                        .map((identityProofing) => Padding(
                               padding: const EdgeInsets.only(
                                 bottom: UiConfig.lineGap,
                               ),
-                              child: _buildCheckBoxTile(context, menu),
+                              child:
+                                  _buildCheckBoxTile(context, identityProofing),
                             ))
                         .toList(),
                   ),
@@ -113,45 +147,107 @@ class _IdentityProofingPageState extends State<IdentityProofingPage> {
   }
 
   //? Checkbox List
-  Widget _buildCheckBoxTile(BuildContext context, String name) {
+  Widget _buildCheckBoxTile(
+      BuildContext context, PowerVerificationModel powerVerification) {
+    final selectIds =
+        selectIdentityProofing.map((category) => category.id).toList();
+
     return Column(
-      children: [
+      mainAxisSize: MainAxisSize.min,
+      children: <Widget>[
         Row(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            CustomCheckBox(
-              value: isExpanded,
-              onChanged: (bool? value) {
-                _setExpand();
-              },
+          children: <Widget>[
+            Padding(
+              padding: const EdgeInsets.only(
+                left: 4.0,
+                right: UiConfig.actionSpacing,
+              ),
+              child: CustomCheckBox(
+                value: selectIds.contains(powerVerification.id),
+                onChanged: (_) {
+                  _setIdentityProofing(powerVerification);
+                },
+              ),
             ),
-            const SizedBox(width: UiConfig.actionSpacing),
             Expanded(
-              child: Column(
-                mainAxisSize: MainAxisSize.min,
-                mainAxisAlignment: MainAxisAlignment.center,
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: <Widget>[
-                  MaterialInkWell(
-                    borderRadius: BorderRadius.circular(4.0),
-                    onTap: _setExpand,
-                    child: Padding(
-                      padding: const EdgeInsets.symmetric(vertical: 12.0),
-                      child: Text(
-                        name, //!
-                        style: isExpanded == false
-                            ? Theme.of(context).textTheme.bodyMedium?.copyWith()
-                            : Theme.of(context).textTheme.bodyMedium?.copyWith(
-                                color: Theme.of(context).colorScheme.primary),
-                      ),
-                    ),
-                  ),
-                  const SizedBox(width: UiConfig.textLineSpacing),
-                  _buildExpandedContainer(context, name),
-                ],
+              child: Text(
+                powerVerification.title, //!
+                style: !selectIds.contains(powerVerification.id)
+                    ? Theme.of(context).textTheme.bodyMedium?.copyWith()
+                    : Theme.of(context).textTheme.bodyMedium?.copyWith(
+                        color: Theme.of(context).colorScheme.primary),
               ),
             ),
           ],
+        ),
+        ExpandedContainer(
+          expand: selectIds.contains(powerVerification.id),
+          duration: const Duration(milliseconds: 400),
+          child: Padding(
+            padding: const EdgeInsets.only(
+              left: UiConfig.actionSpacing,
+              right: UiConfig.actionSpacing,
+            ),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: <Widget>[
+                Visibility(
+                  visible: powerVerification.additionalReq,
+                  child: const Column(
+                    children: [
+                      SizedBox(height: UiConfig.lineSpacing),
+                      Row(
+                        children: <Widget>[
+                          TitleRequiredText(
+                            text: 'ประเภทเอกสาร',
+                            required: true, //!
+                          ),
+                        ],
+                      ),
+                      Row(
+                        children: [
+                          Expanded(
+                            child: CustomTextField(
+                              hintText: 'ระบุประเภทเอกสาร',
+                            ),
+                          ),
+                        ],
+                      ),
+                    ],
+                  ),
+                ),
+                const SizedBox(height: UiConfig.lineSpacing),
+                const Row(
+                  children: <Widget>[
+                    TitleRequiredText(
+                      text: 'ไฟล์สำเนา',
+                      required: true, //!
+                    ),
+                  ],
+                ),
+                Row(
+                  children: <Widget>[
+                    const Expanded(
+                      child: CustomTextField(
+                        hintText: 'ไม่ได้เลือกไฟล์',
+                        readOnly: true,
+                      ),
+                    ),
+                    Padding(
+                      padding: const EdgeInsets.only(left: 10.0),
+                      child: CustomIconButton(
+                        onPressed: () {},
+                        icon: Ionicons.cloud_upload,
+                        iconColor: Theme.of(context).colorScheme.primary,
+                        backgroundColor:
+                            Theme.of(context).colorScheme.onBackground,
+                      ),
+                    ),
+                  ],
+                ),
+              ],
+            ),
+          ),
         ),
       ],
     );
@@ -214,7 +310,8 @@ class _IdentityProofingPageState extends State<IdentityProofingPage> {
   }
 
   //? Expanded Children
-  ExpandedContainer _buildExpandedContainer(BuildContext context, String name) {
+  ExpandedContainer _buildExpandedContainer(
+      BuildContext context, bool additionalReq) {
     return ExpandedContainer(
       expand: isExpanded,
       duration: const Duration(milliseconds: 400),
@@ -222,7 +319,7 @@ class _IdentityProofingPageState extends State<IdentityProofingPage> {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: <Widget>[
           Visibility(
-              visible: name.contains('อื่นๆ ถ้ามี (โปรดระบุ)'),
+              visible: additionalReq,
               child: const Column(
                 children: [
                   Row(

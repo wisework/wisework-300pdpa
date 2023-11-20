@@ -155,7 +155,7 @@ class UtilFunctions {
     final isNewRequested = dataSubjectRight.lastSeenBy.isEmpty;
     final isRequestFormVerified = dataSubjectRight.requestFormVerified;
     final isVerifying =
-        dataSubjectRight.requestFormStatus == RequestResultStatus.none;
+        dataSubjectRight.verifyFormStatus == RequestResultStatus.none;
     final isConsidering = dataSubjectRight.processRequests.any(
         (process) => process.considerRequestStatus == RequestResultStatus.none);
     final isProofFileUploading = dataSubjectRight.processRequests
@@ -170,7 +170,7 @@ class UtilFunctions {
         .where((process) =>
             process.considerRequestStatus == RequestResultStatus.pass)
         .any((process) => process.proofOfActionText.isEmpty);
-    final isDone = dataSubjectRight.considerRequest;
+    //final isDone = dataSubjectRight.considerRequest;
 
     RequestProcessStatus status = RequestProcessStatus.newRequest;
     if (isNewRequested) {
@@ -179,7 +179,7 @@ class UtilFunctions {
 
     if (!isRequestFormVerified && !isNewRequested) {
       status = RequestProcessStatus.pending;
-    } else if (isRequestFormVerified && isDone && !isNewRequested) {
+    } else if (isRequestFormVerified && !isNewRequested) {
       status = RequestProcessStatus.rejected;
     }
 
@@ -198,8 +198,7 @@ class UtilFunctions {
       status = RequestProcessStatus.inProgress;
     }
 
-    if (isDone &&
-        !isNewRequested &&
+    if (!isNewRequested &&
         isRequestFormVerified &&
         !isVerifying &&
         !isConsidering &&

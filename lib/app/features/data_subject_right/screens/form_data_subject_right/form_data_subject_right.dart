@@ -4,7 +4,9 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
 import 'package:pdpa/app/config/config.dart';
 import 'package:pdpa/app/data/models/data_subject_right/data_subject_right_model.dart';
+import 'package:pdpa/app/data/models/master_data/reason_type_model.dart';
 import 'package:pdpa/app/data/models/master_data/request_reason_template_model.dart';
+import 'package:pdpa/app/data/models/master_data/request_type_model.dart';
 import 'package:pdpa/app/features/data_subject_right/bloc/form_data_sub_ject_right/form_data_sub_ject_right_bloc.dart';
 import 'package:pdpa/app/features/data_subject_right/cubit/form_data_subject_right/form_data_subject_right_cubit.dart';
 import 'package:pdpa/app/features/data_subject_right/screens/form_data_subject_right/pages/acknowledge_page.dart';
@@ -77,6 +79,8 @@ class FormDataSubjectRightView extends StatefulWidget {
 
 class _FormDataSubjectRightViewState extends State<FormDataSubjectRightView> {
   late PageController _controller;
+  late List<RequestTypeModel> requestType;
+  late List<ReasonTypeModel> reasonType;
 
   @override
   void initState() {
@@ -90,6 +94,8 @@ class _FormDataSubjectRightViewState extends State<FormDataSubjectRightView> {
     _controller = PageController(
       initialPage: cubit.state.currentPage,
     );
+    requestType = DefaultMasterData.requestType;
+    reasonType = DefaultMasterData.reasonType;
   }
 
   @override
@@ -100,6 +106,9 @@ class _FormDataSubjectRightViewState extends State<FormDataSubjectRightView> {
 
   @override
   Widget build(BuildContext context) {
+    final dataSubjectRight = context.select(
+      (FormDataSubjectRightCubit cubit) => cubit.state.dataSubjectRight,
+    );
     final currentPage = context.select(
       (FormDataSubjectRightCubit cubit) => cubit.state.currentPage,
     );
@@ -119,31 +128,40 @@ class _FormDataSubjectRightViewState extends State<FormDataSubjectRightView> {
                 OwnerVerifyPage(
                   controller: _controller,
                   currentPage: currentPage,
+                  dataSubjectRight: dataSubjectRight,
                 ),
                 PowerOfAttorneyPage(
                   controller: _controller,
                   currentPage: currentPage,
+                  dataSubjectRight: dataSubjectRight,
                 ),
                 DataOwnerDetailPage(
                   controller: _controller,
                   currentPage: currentPage,
+                  dataSubjectRight: dataSubjectRight,
                 ),
                 IdentityProofingPage(
                   controller: _controller,
                   currentPage: currentPage,
                   previousPage: currentPage,
+                  dataSubjectRight: dataSubjectRight,
                 ),
                 RequestReasonPage(
                   controller: _controller,
                   currentPage: currentPage,
+                  dataSubjectRight: dataSubjectRight,
+                  requestType: requestType,
+                  reasonType: reasonType,
                 ),
                 ReserveTheRightPage(
                   controller: _controller,
                   currentPage: currentPage,
+                  dataSubjectRight: dataSubjectRight,
                 ),
                 AcknowledgePage(
                   controller: _controller,
                   currentPage: currentPage,
+                  dataSubjectRight: dataSubjectRight,
                 ),
               ],
             ),

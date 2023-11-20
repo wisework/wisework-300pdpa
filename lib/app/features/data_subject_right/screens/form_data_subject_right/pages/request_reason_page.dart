@@ -2,10 +2,14 @@ import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:pdpa/app/config/config.dart';
-import 'package:pdpa/app/data/models/master_data/request_reason_template_model.dart';
+import 'package:pdpa/app/data/models/data_subject_right/data_subject_right_model.dart';
+import 'package:pdpa/app/data/models/master_data/localized_model.dart';
+import 'package:pdpa/app/data/models/master_data/reason_type_model.dart';
+
+import 'package:pdpa/app/data/models/master_data/request_type_model.dart';
 import 'package:pdpa/app/features/data_subject_right/cubit/form_data_subject_right/form_data_subject_right_cubit.dart';
 import 'package:pdpa/app/features/data_subject_right/widgets/data_subject_right_list_tile.dart';
-import 'package:pdpa/app/shared/utils/constants.dart';
+
 import 'package:pdpa/app/shared/widgets/content_wrapper.dart';
 import 'package:pdpa/app/shared/widgets/customs/custom_checkbox.dart';
 import 'package:pdpa/app/shared/widgets/customs/custom_container.dart';
@@ -20,10 +24,16 @@ class RequestReasonPage extends StatefulWidget {
     super.key,
     required this.controller,
     required this.currentPage,
+    required this.dataSubjectRight,
+    required this.requestType,
+    required this.reasonType,
   });
 
   final PageController controller;
   final int currentPage;
+  final DataSubjectRightModel dataSubjectRight;
+  final List<RequestTypeModel> requestType;
+  final List<ReasonTypeModel> reasonType;
 
   @override
   State<RequestReasonPage> createState() => _RequestReasonPageState();
@@ -41,7 +51,6 @@ class _RequestReasonPageState extends State<RequestReasonPage> {
   void initState() {
     identityDataController = TextEditingController();
     foundedPlaceTextController = TextEditingController();
-    // ตั้งค่าค่าเริ่มต้นของ Radio
 
     selectedRadioTile = 1;
 
@@ -62,36 +71,6 @@ class _RequestReasonPageState extends State<RequestReasonPage> {
     });
   }
 
-  final requestReason = [
-    RequestReasonTemplateModel(
-      id: '1',
-      requestTypeId: 'ID:1',
-      reasonTypesId: const [
-        'อยู่ในระหว่างการตรวจสอบตามที่เจ้าของข้อมูลส่วนบุคคลร้องขอให้บริษัทแก้ไขข้อมูลส่วนบุคคล',
-        'ข้อมูลส่วนบุคคลหมดความจำเป็นในการเก็บรักษาไว้ตามวัตถุประสงค์ในการประมวลผลแต่เจ้าของข้อมูลส่วนบุคคลมีความจำเป็นต้องขอให้เก็บรักษาไว้เพื่อใช้ในการก่อตั้งสิทธิเรียกร้องตามกฎหมายการปฏิบัติตามหรือการใช้สิทธิเรียกร้องตามกฎหมาย',
-        'เหตุผลอื่นๆ (โปรดระบุ)'
-      ],
-      status: ActiveStatus.active,
-      createdBy: '',
-      createdDate: DateTime.now(),
-      updatedBy: '',
-      updatedDate: DateTime.now(),
-    ),
-    RequestReasonTemplateModel(
-      id: '2',
-      requestTypeId: 'ID:2',
-      reasonTypesId: const [
-        'อยู่ในระหว่างการตรวจสอบตามที่เจ้าของข้อมูลส่วนบุคคลร้องขอให้บริษัทแก้ไขข้อมูลส่วนบุคคล',
-        'ข้อมูลส่วนบุคคลหมดความจำเป็นในการเก็บรักษาไว้ตามวัตถุประสงค์ในการประมวลผลแต่เจ้าของข้อมูลส่วนบุคคลมีความจำเป็นต้องขอให้เก็บรักษาไว้เพื่อใช้ในการก่อตั้งสิทธิเรียกร้องตามกฎหมายการปฏิบัติตามหรือการใช้สิทธิเรียกร้องตามกฎหมาย',
-        'เหตุผลอื่นๆ (โปรดระบุ)'
-      ],
-      status: ActiveStatus.active,
-      createdBy: '',
-      createdDate: DateTime.now(),
-      updatedBy: '',
-      updatedDate: DateTime.now(),
-    ),
-  ];
   bool isExpanded = false;
 
   void _setExpand() {
@@ -128,7 +107,7 @@ class _RequestReasonPageState extends State<RequestReasonPage> {
                   ),
                   // _checkOtherFile(),
                   Column(
-                    children: requestReason
+                    children: widget.requestType
                         .map((item) => Padding(
                               padding: const EdgeInsets.only(
                                 bottom: UiConfig.lineGap,
@@ -218,7 +197,7 @@ class _RequestReasonPageState extends State<RequestReasonPage> {
 
   //? Checkbox List
   Widget _buildCheckBoxTile(
-      BuildContext context, RequestReasonTemplateModel requestReason) {
+      BuildContext context, RequestTypeModel requestType) {
     return Column(
       children: [
         Row(
@@ -243,7 +222,12 @@ class _RequestReasonPageState extends State<RequestReasonPage> {
                     child: Padding(
                       padding: const EdgeInsets.symmetric(vertical: 12.0),
                       child: Text(
-                        requestReason.requestTypeId, //!
+                        requestType.description
+                            .firstWhere(
+                              (item) => item.language == 'th-TH',
+                              orElse: () => const LocalizedModel.empty(),
+                            )
+                            .text, //!
                         style: isExpanded == false
                             ? Theme.of(context).textTheme.bodyMedium?.copyWith()
                             : Theme.of(context).textTheme.bodyMedium?.copyWith(
@@ -253,7 +237,9 @@ class _RequestReasonPageState extends State<RequestReasonPage> {
                   ),
                   const SizedBox(width: UiConfig.textLineSpacing),
                   _buildExpandedContainer(
-                      context, requestReason.reasonTypesId), //? Reasons Id
+                    context,
+                    widget.reasonType,
+                  ), //? Reasons Id
                 ],
               ),
             ),
@@ -265,7 +251,7 @@ class _RequestReasonPageState extends State<RequestReasonPage> {
 
   //? Expanded Children
   ExpandedContainer _buildExpandedContainer(
-      BuildContext context, List<String> reasons) {
+      BuildContext context, List<ReasonTypeModel> reasonType) {
     return ExpandedContainer(
       expand: isExpanded,
       duration: const Duration(milliseconds: 400),
@@ -358,13 +344,19 @@ class _RequestReasonPageState extends State<RequestReasonPage> {
                 ?.copyWith(color: Theme.of(context).colorScheme.primary),
           ),
           Column(
-            children: reasons
+            children: reasonType
                 .map(
-                  (text) => Padding(
+                  (reason) => Padding(
                       padding: const EdgeInsets.only(
                         bottom: UiConfig.lineGap,
                       ),
-                      child: text == 'เหตุผลอื่นๆ (โปรดระบุ)'
+                      child: reason.description
+                                  .firstWhere(
+                                    (item) => item.language == 'th-TH',
+                                    orElse: () => const LocalizedModel.empty(),
+                                  )
+                                  .text ==
+                              'อื่นๆ (โปรดระบุ)'
                           ? Column(
                               children: [
                                 Row(
@@ -395,7 +387,16 @@ class _RequestReasonPageState extends State<RequestReasonPage> {
                                                   const EdgeInsets.symmetric(
                                                       vertical: 12.0),
                                               child: Text(
-                                                text, //!
+                                                reason.description
+                                                    .firstWhere(
+                                                      (item) =>
+                                                          item.language ==
+                                                          'th-TH',
+                                                      orElse: () =>
+                                                          const LocalizedModel
+                                                              .empty(),
+                                                    )
+                                                    .text, //!
                                                 style: isExpanded == false
                                                     ? Theme.of(context)
                                                         .textTheme
@@ -446,7 +447,14 @@ class _RequestReasonPageState extends State<RequestReasonPage> {
                                 ),
                               ],
                             )
-                          : _buildCheckBoxTileString(context, text)),
+                          : _buildCheckBoxTileString(
+                              context,
+                              reason.description
+                                  .firstWhere(
+                                    (item) => item.language == 'th-TH',
+                                    orElse: () => const LocalizedModel.empty(),
+                                  )
+                                  .text)),
                 )
                 .toList(),
           )

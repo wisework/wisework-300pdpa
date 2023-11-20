@@ -14,6 +14,10 @@ class FormDataSubjectRightCubit extends Cubit<FormDataSubjectRightState> {
           ),
         );
 
+  void setDataSubjectRight(DataSubjectRightModel dataSubjectRight) {
+    emit(state.copyWith(dataSubjectRight: dataSubjectRight));
+  }
+
   void nextPage(int page) {
     emit(state.copyWith(currentPage: page));
   }

@@ -2,6 +2,9 @@ import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:pdpa/app/config/config.dart';
+import 'package:pdpa/app/data/models/data_subject_right/data_subject_right_model.dart';
+import 'package:pdpa/app/data/models/data_subject_right/requester_input_model.dart';
+import 'package:pdpa/app/data/models/master_data/localized_model.dart';
 import 'package:pdpa/app/features/data_subject_right/cubit/form_data_subject_right/form_data_subject_right_cubit.dart';
 import 'package:pdpa/app/features/data_subject_right/widgets/data_subject_right_list_tile.dart';
 import 'package:pdpa/app/shared/widgets/content_wrapper.dart';
@@ -15,10 +18,12 @@ class OwnerVerifyPage extends StatefulWidget {
     super.key,
     required this.controller,
     required this.currentPage,
+    required this.dataSubjectRight,
   });
 
   final PageController controller;
   final int currentPage;
+  final DataSubjectRightModel dataSubjectRight;
 
   @override
   State<OwnerVerifyPage> createState() => _OwnerVerifyPageState();
@@ -26,6 +31,8 @@ class OwnerVerifyPage extends StatefulWidget {
 
 class _OwnerVerifyPageState extends State<OwnerVerifyPage> {
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
+  final List<RequesterInputModel> dataRequester = [];
+  late DataSubjectRightModel dataSubjectRight;
 
   late int selectedRadioTile;
 
@@ -34,15 +41,139 @@ class _OwnerVerifyPageState extends State<OwnerVerifyPage> {
   late TextEditingController emailController;
   late TextEditingController phonenumberController;
 
+  RequesterInputModel fullName = RequesterInputModel.empty();
+  RequesterInputModel address = RequesterInputModel.empty();
+  RequesterInputModel email = RequesterInputModel.empty();
+  RequesterInputModel phonenumber = RequesterInputModel.empty();
+
+  bool isDataOwner = true;
+
   @override
   void initState() {
+    dataSubjectRight = DataSubjectRightModel.empty();
+    selectedRadioTile = 1;
+    _initialData();
+    super.initState();
+  }
+
+  void _initialData() {
     fullNameController = TextEditingController();
     addressTextController = TextEditingController();
     emailController = TextEditingController();
     phonenumberController = TextEditingController();
+    // isDataOwner = widget.dataSubjectRight.isDataOwner;
+    // isDataOwner == true ? selectedRadioTile = 1 : selectedRadioTile = 2;
+    // if (widget.dataSubjectRight.dataRequester.isNotEmpty &&
+    //     widget.dataSubjectRight.dataRequester
+    //         .where(
+    //           (element) =>
+    //               element.title.first ==
+    //               const LocalizedModel(
+    //                 language: 'en-US',
+    //                 text: 'Firstname - Lastname',
+    //               ),
+    //         )
+    //         .isNotEmpty) {
+    //   fullNameController = TextEditingController(
+    //     text: widget.dataSubjectRight.dataRequester
+    //         .where(
+    //           (element) =>
+    //               element.title.first ==
+    //               const LocalizedModel(
+    //                 language: 'en-US',
+    //                 text: 'Firstname - Lastname',
+    //               ),
+    //         )
+    //         .first
+    //         .text,
+    //   );
+    // } else {
+    //   fullNameController = TextEditingController();
+    // }
 
-    selectedRadioTile = 1;
-    super.initState();
+    // if (widget.dataSubjectRight.dataRequester.isNotEmpty &&
+    //     widget.dataSubjectRight.dataRequester
+    //         .where(
+    //           (element) =>
+    //               element.title.first ==
+    //               const LocalizedModel(
+    //                 language: 'en-US',
+    //                 text: 'Address',
+    //               ),
+    //         )
+    //         .isNotEmpty) {
+    //   addressTextController = TextEditingController(
+    //     text: widget.dataSubjectRight.dataRequester
+    //         .where(
+    //           (element) =>
+    //               element.title.first ==
+    //               const LocalizedModel(
+    //                 language: 'en-US',
+    //                 text: 'Address',
+    //               ),
+    //         )
+    //         .first
+    //         .text,
+    //   );
+    // } else {
+    //   addressTextController = TextEditingController();
+    // }
+
+    // if (widget.dataSubjectRight.dataRequester.isNotEmpty &&
+    //     widget.dataSubjectRight.dataRequester
+    //         .where(
+    //           (element) =>
+    //               element.title.first ==
+    //               const LocalizedModel(
+    //                 language: 'en-US',
+    //                 text: 'Email',
+    //               ),
+    //         )
+    //         .isNotEmpty) {
+    //   emailController = TextEditingController(
+    //     text: widget.dataSubjectRight.dataRequester
+    //         .where(
+    //           (element) =>
+    //               element.title.first ==
+    //               const LocalizedModel(
+    //                 language: 'en-US',
+    //                 text: 'Email',
+    //               ),
+    //         )
+    //         .first
+    //         .text,
+    //   );
+    // } else {
+    //   emailController = TextEditingController();
+    // }
+
+    // if (widget.dataSubjectRight.dataRequester.isNotEmpty &&
+    //     widget.dataSubjectRight.dataRequester
+    //         .where(
+    //           (element) =>
+    //               element.title.first ==
+    //               const LocalizedModel(
+    //                 language: 'en-US',
+    //                 text: 'Phone number',
+    //               ),
+    //         )
+    //         .isNotEmpty) {
+    //   phonenumberController = TextEditingController(
+    //     text: widget.dataSubjectRight.dataRequester
+    //         .where(
+    //           (element) =>
+    //               element.title.first ==
+    //               const LocalizedModel(
+    //                 language: 'en-US',
+    //                 text: 'Phone number',
+    //               ),
+    //         )
+    //         .first
+    //         .text,
+    //   );
+    // } else {
+    //   phonenumberController = TextEditingController();
+    // }
   }
 
   @override
@@ -59,6 +190,80 @@ class _OwnerVerifyPageState extends State<OwnerVerifyPage> {
     setState(() {
       selectedRadioTile = val;
     });
+
+    val == 1 ? isDataOwner = true : isDataOwner = false;
+  }
+
+  void _setFullNameController(String? value) {
+    fullName = RequesterInputModel(
+      id: 'RequesterInput-001',
+      title: const [
+        LocalizedModel(
+          language: 'en-US',
+          text: 'Firstname - Lastname',
+        ),
+        LocalizedModel(
+          language: 'th-TH',
+          text: 'ชื่อ - นามสกุล',
+        ),
+      ],
+      text: fullNameController.text,
+      priority: 1,
+    );
+  }
+
+  void _setAddressTextController(String? value) {
+    address = RequesterInputModel(
+      id: 'RequesterInput-002',
+      title: const [
+        LocalizedModel(
+          language: 'en-US',
+          text: 'Address',
+        ),
+        LocalizedModel(
+          language: 'th-TH',
+          text: 'ที่อยู่',
+        ),
+      ],
+      text: addressTextController.text,
+      priority: 2,
+    );
+  }
+
+  void _setEmailController(String? value) {
+    email = RequesterInputModel(
+      id: 'RequesterInput-003',
+      title: const [
+        LocalizedModel(
+          language: 'en-US',
+          text: 'Email',
+        ),
+        LocalizedModel(
+          language: 'th-TH',
+          text: 'อีเมล',
+        ),
+      ],
+      text: emailController.text,
+      priority: 3,
+    );
+  }
+
+  void _setPhoneNumberController(String? value) {
+    phonenumber = RequesterInputModel(
+      id: 'RequesterInput-004',
+      title: const [
+        LocalizedModel(
+          language: 'en-US',
+          text: 'Phone number',
+        ),
+        LocalizedModel(
+          language: 'th-TH',
+          text: 'เบอร์โทรติดต่อ',
+        ),
+      ],
+      text: phonenumberController.text,
+      priority: 4,
+    );
   }
 
   @override
@@ -127,6 +332,25 @@ class _OwnerVerifyPageState extends State<OwnerVerifyPage> {
   }
 
   void nextPage() {
+    dataRequester.add(fullName);
+    dataRequester.add(address);
+    dataRequester.add(email);
+    dataRequester.add(phonenumber);
+
+    dataSubjectRight = dataSubjectRight.copyWith(
+      isDataOwner: isDataOwner,
+      dataRequester: dataRequester,
+    );
+
+    context
+        .read<FormDataSubjectRightCubit>()
+        .setDataSubjectRight(dataSubjectRight);
+
+    // print(userConsent.isDataOwner);
+    // print(userConsent.dataRequester);
+    // print(dataSubjectRight.isDataOwner);
+    // print(dataSubjectRight.dataRequester);
+
     if (selectedRadioTile == 1) {
       widget.controller.jumpToPage(
         4,
@@ -201,6 +425,7 @@ class _OwnerVerifyPageState extends State<OwnerVerifyPage> {
             controller: fullNameController,
             required: true,
             keyboardType: TextInputType.text,
+            onChanged: _setFullNameController,
           ),
           const SizedBox(height: UiConfig.lineSpacing),
           const TitleRequiredText(
@@ -213,6 +438,7 @@ class _OwnerVerifyPageState extends State<OwnerVerifyPage> {
             required: true,
             keyboardType: TextInputType.multiline,
             maxLines: 3,
+            onChanged: _setAddressTextController,
           ),
           const SizedBox(height: UiConfig.lineSpacing),
           const TitleRequiredText(
@@ -224,6 +450,7 @@ class _OwnerVerifyPageState extends State<OwnerVerifyPage> {
             controller: emailController,
             required: true,
             keyboardType: TextInputType.emailAddress,
+            onChanged: _setEmailController,
           ),
           const SizedBox(height: UiConfig.lineSpacing),
           const TitleRequiredText(
@@ -236,6 +463,7 @@ class _OwnerVerifyPageState extends State<OwnerVerifyPage> {
             keyboardType: TextInputType.phone,
             required: true,
             maxLength: 10,
+            onChanged: _setPhoneNumberController,
           ),
         ],
       ),
