@@ -52,15 +52,15 @@ class _PowerOfAttorneyPageState extends State<PowerOfAttorneyPage> {
     });
   }
 
-  List<PowerVerificationModel> powerVerifications = const [
+  List<PowerVerificationModel> powerVerifications = [
     PowerVerificationModel(
       id: '1',
-      title: 'หนังสือมอบอำนาจ',
+      title: tr('dataSubjectRight.powerVerification.powerOfAttorney'),
       additionalReq: false,
     ),
     PowerVerificationModel(
       id: '2',
-      title: 'อื่นๆ ถ้ามี (โปรดระบุ)',
+      title: tr('dataSubjectRight.powerVerification.other'),
       additionalReq: true,
     ),
   ];
@@ -80,14 +80,14 @@ class _PowerOfAttorneyPageState extends State<PowerOfAttorneyPage> {
                 children: [
                   const SizedBox(height: UiConfig.lineSpacing),
                   Text(
-                    'เอกสารพิสูจน์อำนาจดำเนินการแทน', //!
+                    tr('dataSubjectRight.powerVerification.title'),
                     textAlign: TextAlign.left,
                     style: Theme.of(context).textTheme.titleLarge?.copyWith(
                         color: Theme.of(context).colorScheme.primary),
                   ),
                   const SizedBox(height: UiConfig.lineSpacing),
                   Text(
-                    'ทั้งนี้ข้าพเจ้าได้แนบเอกสารดังต่อไปนี้เพื่อการตรวจสอบอำนาจตัวตนและถิ่นที่อยู่ของผู้ยื่นคำร้องและเจ้าของข้อมูลส่วนบุคคลเพื่อให้บริษัทสามารถดำเนินการตามสิทธิที่ร้องขอได้อย่างถูกต้อง', //!
+                    tr('dataSubjectRight.powerVerification.subtitle'),
                     textAlign: TextAlign.left,
                     style: Theme.of(context).textTheme.bodySmall?.copyWith(
                         color: Theme.of(context).colorScheme.onSurface),
@@ -206,7 +206,7 @@ class _PowerOfAttorneyPageState extends State<PowerOfAttorneyPage> {
             ),
             Expanded(
               child: Text(
-                powerVerification.title, //!
+                powerVerification.title,
                 style: !selectIds.contains(powerVerification.id)
                     ? Theme.of(context).textTheme.bodyMedium?.copyWith()
                     : Theme.of(context).textTheme.bodyMedium?.copyWith(
@@ -228,14 +228,15 @@ class _PowerOfAttorneyPageState extends State<PowerOfAttorneyPage> {
               children: <Widget>[
                 Visibility(
                   visible: powerVerification.additionalReq,
-                  child: const Column(
+                  child: Column(
                     children: [
-                      SizedBox(height: UiConfig.lineSpacing),
+                      const SizedBox(height: UiConfig.lineSpacing),
                       Row(
                         children: <Widget>[
                           TitleRequiredText(
-                            text: 'ประเภทเอกสาร',
-                            required: true, //!
+                            text: tr(
+                                'dataSubjectRight.powerVerification.documentType'),
+                            required: true,
                           ),
                         ],
                       ),
@@ -243,7 +244,8 @@ class _PowerOfAttorneyPageState extends State<PowerOfAttorneyPage> {
                         children: [
                           Expanded(
                             child: CustomTextField(
-                              hintText: 'ระบุประเภทเอกสาร',
+                              hintText: tr(
+                                  'dataSubjectRight.powerVerification.hintdocumentType'),
                             ),
                           ),
                         ],
@@ -252,19 +254,20 @@ class _PowerOfAttorneyPageState extends State<PowerOfAttorneyPage> {
                   ),
                 ),
                 const SizedBox(height: UiConfig.lineSpacing),
-                const Row(
+                Row(
                   children: <Widget>[
                     TitleRequiredText(
-                      text: 'ไฟล์สำเนา',
-                      required: true, //!
+                      text: tr('dataSubjectRight.powerVerification.copyFile'),
+                      required: true,
                     ),
                   ],
                 ),
                 Row(
                   children: <Widget>[
-                    const Expanded(
+                    Expanded(
                       child: CustomTextField(
-                        hintText: 'ไม่ได้เลือกไฟล์',
+                        hintText: tr(
+                            'dataSubjectRight.powerVerification.fileNotSelected'),
                         readOnly: true,
                       ),
                     ),

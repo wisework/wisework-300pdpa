@@ -3,9 +3,6 @@
         "name": "PDPA Management Platform",
         "language": "Language",
         "mode": "Dark Mode",
-        "day": "Day",
-        "month": "Month",
-        "year": "Year",
         "text": "Text",
         "multiline": "Multiline",
         "number": "Number",
@@ -20,7 +17,6 @@
             "consentmanagement": "Consent Management",
             "consent": "Consent",
             "createcsf": "Add new consent",
-            "masterdatas": "MasterData",
             "consentforms": "Consent Forms",
             "userconsents": "User Consents",
             "datasubjectright": "Data Subject Right",
@@ -127,7 +123,7 @@
             "noInputFieldsAdded": "No input fields added.",
             "warningPurpose": "If you don't consent, we can't use your data for this purpose.",
             "consentList": "Consent List",
-            "couldNotLaunch" : "Could not launch",
+            "couldNotLaunch": "Could not launch",
             "createForm": {
                 "create": "Create Consent Form",
                 "edit": "Edit consent form",
@@ -135,7 +131,7 @@
                 "title": "Title",
                 "hinttitle": "Enter title",
                 "description": "Description",
-                "hintdescription" : "กรอกรายละเอียด",
+                "hintdescription": "กรอกรายละเอียด",
                 "address": "Address",
                 "telNumber": "Telephone number",
                 "nameSurename": "Name-Surname",
@@ -261,7 +257,7 @@
         "userConsent": {
             "explain": "This screen shows a list of consent forms received from users. You can view the information for each form",
             "userConsents": "User consents",
-            "listOfConsentsReceived" : "List of consents received",
+            "listOfConsentsReceived": "List of consents received",
             "createForm": {
                 "create": "Create Consent Form",
                 "section": "Request Form Information",
@@ -436,42 +432,93 @@
     },
     "dataSubjectRight": {
         "datasubjectright": "Data Subject Right",
-        "namesurename": "Name-Surname",
-        "address": "Address",
-        "email": "Email",
-        "telnumber": "Telephone number",
+        "status": {
+            "newRequest": "New Request",
+            "pending": "Pending",
+            "rejected": "Rejected",
+            "considering": "Considering",
+            "inProgress": "In Progress",
+            "completed": "Completed"
+        },
         "Listpage": {
+            "listRequests": "List of permission requests",
             "filter": {
                 "all": "All",
                 "recents": "Recents",
                 "duesoon": "Due soon"
             }
         },
-        "step1": {
+        "editDataSubjectRight": {
+            "createSuccess": "Create successfully",
+            "updateSuccess": "Update successfully"
+        },
+        "processDsr": {
+            "processDataSubjectRight": "Process the rights of data owners",
+            "datasubjectright": "Data Subject Right",
+            "verifyRequest": "Verify request",
+            "considerTakingAction": "Consider taking action",
+            "carryOut": "carry out",
+            "results": "Results"
+        },
+        "StepProcessDsr": {
+            "considering": {
+                "resultOfInspection": "Process the rights of data owners",
+                "carryOut": "Carry out",
+                "refuse": "Refuse request",
+                "reason": "Reason",
+                "since": "Since..."
+            },
+            "processResult": {},
+            "processing": {},
+            "verifying": {
+                "resultOfInspection": "ผลการตรวจสอบแบบฟอร์มคำขอใช้สิทธิ์ตามกฎหมายคุ้มครองข้อมูลส่วนบุคคล",
+                "pass": "Pass",
+                "notPass": "Not pass",
+                "reason": "Reason",
+                "since": "Since..."
+            }
+        },
+        "intro": {
+            "title": "Request form for exercising the rights of the owner of personal data",
+            "description": "The Personal Data Protection Act of 2019 gives personal data owners the right to request the right to exercise their personal data which is in the care of the Company. As the controller of personal data You can exercise these rights by filling in the details in this request form.",
+            "button": "Fill out the request form"
+        },
+        "dataRequester": {
             "areYouTheDs": "Are you the data subject?",
             "applicantDs": "Applicant is the data subject",
             "ApplicantAds": "Applicant is the agent of the data subject.",
             "ApplicantInformation": "Applicant information",
             "nameSurename": "Name-Surname",
+            "hintnamesurename": "Enter Name-Surname",
             "address": "Address",
+            "hintaddress": "Enter Address",
             "email": "Email",
-            "telNumber": "Telephone number"
+            "hintemail": "Enter Email",
+            "telNumber": "Telephone number",
+            "hinttelnumber": "Enter Telephone number"
         },
-        "step2": {
-            "title": "",
+        "powerVerification": {
+            "title": "Documents proving authority to act on behalf of",
             "subtitle": "I hereby attach the following documents for the purpose of verification of power, identity and residency of the applicant and the data subject in order for the Company to proceed the exercise of rights accurately.",
             "powerOfAttorney": "Power of attorney",
             "other": "Other (If any, please specify)",
             "documentType": "Document type",
-            "copyFile": "Copy file"
+            "hintdocumentType": "Specify document type",
+            "copyFile": "Copy file",
+            "fileNotSelected": "File not selected"
         },
-        "step3": {
+        "dataOwner": {
+            "dataOwnerDetails": "Data owner details",
             "namesurename": "Name-Surname",
+            "hintnamesurename": "Enter Name-Surname",
             "address": "Address",
+            "hintaddress": "Enter Address",
             "email": "Email",
-            "telnumber": "Telephone number"
+            "hintemail": "Enter Email",
+            "telnumber": "Telephone number",
+            "hinttelnumber": "Enter Telephone number"
         },
-        "step4": {
+        "identityVerification": {
             "title": "Documents for verification of identity and/or residency",
             "subtitle": "I hereby attach the following documents for the purpose of verification of power, identity and residency of the applicant and the data subject in order for the Company to proceed the exercise of rights accurately.",
             "copyOfIdentificationCare": "Copy of identification care (for Thai nationality)",
@@ -479,20 +526,27 @@
             "copyOfHouseRegistration": "Copy of house registration ",
             "other": "Other (If any, please specify)",
             "documentType": "Document type",
-            "copyFile": "Copy file"
+            "hintdocumentType": "Specify document type",
+            "copyFile": "Copy file",
+            "fileNotSelected": "File not selected"
         },
         "step5": {
             "applicantDs": "Applicant is the data subject",
             "ApplicantAds": "Applicant is the agent of the data subject."
         },
-        "step6": {
+        "condition": {
             "title": "Data Controller disclaimer",
             "subtitle": "In order to comply with the relevant laws, the Company may have to deny your request in some cases including but not limited to the following cases where:",
             "decription": "1)You are not able to clearly verify that the applicant is the data subject or authorized to submit the request.2)Your request is unreasonable, e.g., the applicant may not have the right to delete personal data or the Company does not have such personal data.3)Such request is redundant, e.g., such request is repeatedly submitted or duplicated without reasonable reason.4)Retention of such personal data is for establishing legal claims, legal compliance, exercise of legal rights or defenses.5)Proceeding your request may adversely affect and harm rights and freedom of other people.6)Processing of such personal data is necessary for performance of contracts between the data subject and the Company.7)Processing of such personal data is necessary for legitimate interests of the Company.8)Other cases prescribed by the relevant law. In general, you will not be charged for the process in relation to the request. However, if your request is manifestly unreasonable or redundant, the Company may charge a processing fee at a reasonable cost."
         },
-        "step7": {
+        "accepteTerm": {
             "title": "Acknowledgment and Acceptance is require",
             "subtitle": "The applicant has read and understood this form thoroughly. The applicant confirms that the information provided to the Company is true and accurate. The applicant understands that the verification of authorization, identification and residency is necessary for processing your request. Providing false information with bad faith may result in legal prosecution. In order to properly proceed with your request, the Company may request for additional information from you for verification purpose."
         }
+    },
+    "userSubjectRight": {
+        "collectedYourConsent": "I have collected your consent from filling out the form",
+        "dataSubjectRightForm": "Data Subject Right Form",
+        "fillAgain": "Fill out the form again"
     }
 }

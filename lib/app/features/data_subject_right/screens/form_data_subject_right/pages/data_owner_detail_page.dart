@@ -152,7 +152,7 @@ class _DataOwnerDetailPageState extends State<DataOwnerDetailPage> {
                     Row(
                       children: <Widget>[
                         Text(
-                          'รายละเอียดเจ้าของข้อมูล', //!
+                          tr('dataSubjectRight.dataOwner.dataOwnerDetails'),
                           style: Theme.of(context)
                               .textTheme
                               .titleMedium
@@ -162,24 +162,24 @@ class _DataOwnerDetailPageState extends State<DataOwnerDetailPage> {
                       ],
                     ),
                     const SizedBox(height: UiConfig.lineSpacing),
-                    const TitleRequiredText(
-                      text: 'ชื่อ - นามสกุล', //!
+                     TitleRequiredText(
+                      text: tr('dataSubjectRight.dataOwner.namesurename'), 
                       required: true,
                     ),
                     CustomTextField(
-                      hintText: 'กรอกชื่อ - นามสกุล', //!
+                      hintText: tr('dataSubjectRight.dataOwner.hintnamesurename'), 
                       controller: fullNameController,
                       required: true,
                       keyboardType: TextInputType.text,
                       onChanged: _setFullNameController,
                     ),
                     const SizedBox(height: UiConfig.lineSpacing),
-                    const TitleRequiredText(
-                      text: 'ที่อยู่', //!
+                     TitleRequiredText(
+                      text: tr('dataSubjectRight.dataOwner.address'), 
                       required: true,
                     ),
                     CustomTextField(
-                      hintText: 'กรอกที่อยู่', //!
+                      hintText: tr('dataSubjectRight.dataOwner.hintaddress'), 
                       controller: addressTextController,
                       required: true,
                       keyboardType: TextInputType.multiline,
@@ -187,24 +187,24 @@ class _DataOwnerDetailPageState extends State<DataOwnerDetailPage> {
                       onChanged: _setAddressTextController,
                     ),
                     const SizedBox(height: UiConfig.lineSpacing),
-                    const TitleRequiredText(
-                      text: 'อีเมล', //!
+                     TitleRequiredText(
+                      text: tr('dataSubjectRight.dataOwner.email'), 
                       required: true,
                     ),
                     CustomTextField(
-                      hintText: 'กรอกอีเมล', //!
+                      hintText: tr('dataSubjectRight.dataOwner.hintemail'), 
                       controller: emailController,
                       required: true,
                       keyboardType: TextInputType.emailAddress,
                       onChanged: _setEmailController,
                     ),
                     const SizedBox(height: UiConfig.lineSpacing),
-                    const TitleRequiredText(
-                      text: 'เบอร์โทรติดต่อ', //!
+                     TitleRequiredText(
+                      text: tr('dataSubjectRight.dataOwner.telnumber'), 
                       required: true,
                     ),
                     CustomTextField(
-                      hintText: 'กรอกเบอร์โทรติดต่อ', //!
+                      hintText: tr('dataSubjectRight.dataOwner.hinttelnumber'), 
                       controller: phonenumberController,
                       keyboardType: TextInputType.phone,
                       required: true,
