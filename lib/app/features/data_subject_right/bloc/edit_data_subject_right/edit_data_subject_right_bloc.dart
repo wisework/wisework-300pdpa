@@ -3,6 +3,7 @@ import 'package:bloc/bloc.dart';
 import 'package:equatable/equatable.dart';
 import 'package:pdpa/app/data/models/authentication/user_model.dart';
 import 'package:pdpa/app/data/models/data_subject_right/data_subject_right_model.dart';
+import 'package:pdpa/app/data/models/data_subject_right/process_request_model.dart';
 import 'package:pdpa/app/data/models/master_data/reason_type_model.dart';
 import 'package:pdpa/app/data/models/master_data/reject_type_model.dart';
 import 'package:pdpa/app/data/models/master_data/request_type_model.dart';
@@ -93,9 +94,23 @@ class EditDataSubjectRightBloc
         },
       );
 
+      //? Sort Process Requests
+      List<ProcessRequestModel> processRequestSorted = [];
+
+      for (ProcessRequestModel request in dataSubjectRight.processRequests) {
+        final reasonTypes = request.reasonTypes
+          ..sort((a, b) => a.id.compareTo(b.id));
+        processRequestSorted.add(request.copyWith(reasonTypes: reasonTypes));
+      }
+
+      processRequestSorted = processRequestSorted
+        ..sort((a, b) => a.requestType.compareTo(b.requestType));
+
       emit(
         GotCurrentDataSubjectRight(
-          dataSubjectRight,
+          dataSubjectRight.copyWith(
+            processRequests: processRequestSorted,
+          ),
           gotRequestTypes,
           gotReasonTypes,
           gotRejectTypes,
@@ -150,14 +165,14 @@ class EditDataSubjectRightBloc
       requestTypes = settings.requestTypes;
       reasonTypes = settings.reasonTypes;
       rejectTypes = settings.rejectTypes;
-      emails = settings.emails;
+      emails = settings.userEmails;
     } else if (state is UpdatedCurrentDataSubjectRight) {
       final settings = state as UpdatedCurrentDataSubjectRight;
 
       requestTypes = settings.requestTypes;
       reasonTypes = settings.reasonTypes;
       rejectTypes = settings.rejectTypes;
-      emails = settings.emails;
+      emails = settings.userEmails;
     }
 
     emit(const UpdatingCurrentDataSubjectRight());

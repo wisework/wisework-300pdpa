@@ -5,46 +5,34 @@ class ProcessDataSubjectRightState extends Equatable {
     required this.dataSubjectRight,
     required this.initialDataSubjectRight,
     required this.stepIndex,
-    required this.progressedIndex,
-    required this.verifySelected,
-    required this.considerSelected,
+    required this.requestExpanded,
     required this.verifyError,
     required this.considerError,
-    required this.endProcess,
   });
 
   final DataSubjectRightModel dataSubjectRight;
   final DataSubjectRightModel initialDataSubjectRight;
   final int stepIndex;
-  final int progressedIndex;
-  final int verifySelected;
-  final int considerSelected;
+  final List<String> requestExpanded;
   final bool verifyError;
-  final bool considerError;
-  final bool endProcess;
+  final List<String> considerError;
 
   ProcessDataSubjectRightState copyWith({
     DataSubjectRightModel? dataSubjectRight,
     DataSubjectRightModel? initialDataSubjectRight,
     int? stepIndex,
-    int? progressedIndex,
-    int? verifySelected,
-    int? considerSelected,
+    List<String>? requestExpanded,
     bool? verifyError,
-    bool? considerError,
-    bool? endProcess,
+    List<String>? considerError,
   }) {
     return ProcessDataSubjectRightState(
       dataSubjectRight: dataSubjectRight ?? this.dataSubjectRight,
       initialDataSubjectRight:
           initialDataSubjectRight ?? this.initialDataSubjectRight,
       stepIndex: stepIndex ?? this.stepIndex,
-      progressedIndex: progressedIndex ?? this.progressedIndex,
-      verifySelected: verifySelected ?? this.verifySelected,
-      considerSelected: considerSelected ?? this.considerSelected,
+      requestExpanded: requestExpanded ?? this.requestExpanded,
       verifyError: verifyError ?? this.verifyError,
       considerError: considerError ?? this.considerError,
-      endProcess: endProcess ?? this.endProcess,
     );
   }
 
@@ -54,12 +42,9 @@ class ProcessDataSubjectRightState extends Equatable {
       dataSubjectRight,
       initialDataSubjectRight,
       stepIndex,
-      progressedIndex,
-      verifySelected,
-      considerSelected,
+      requestExpanded,
       verifyError,
       considerError,
-      endProcess,
     ];
   }
 }

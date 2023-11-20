@@ -261,72 +261,102 @@ class _DataSubjectRightViewState extends State<DataSubjectRightView> {
                       id: '',
                       dataRequester: const [
                         RequesterInputModel(
-                          id: 'DR-001',
+                          id: 'DATA-REQ-001',
                           title: [
-                            LocalizedModel(language: 'en-US', text: 'Name'),
-                            LocalizedModel(language: 'en-US', text: 'ชื่อ'),
+                            LocalizedModel(
+                              language: 'en-US',
+                              text: 'Name',
+                            ),
+                            LocalizedModel(
+                              language: 'th-TH',
+                              text: 'ชื่อ - นามสกุล',
+                            ),
                           ],
-                          text: 'Karn Khunthip',
+                          text: 'กานต์ ขุนทิพย์',
                           priority: 1,
                         ),
                         RequesterInputModel(
-                          id: 'DR-002',
+                          id: 'DATA-REQ-002',
                           title: [
-                            LocalizedModel(language: 'en-US', text: 'Email'),
-                            LocalizedModel(language: 'en-US', text: 'อีเมล'),
+                            LocalizedModel(language: 'en-US', text: 'Address'),
+                            LocalizedModel(language: 'th-TH', text: 'ที่อยู่'),
                           ],
-                          text: 'khunthip.city@gmail.com',
+                          text: 'ปากช่องซิตี้',
                           priority: 2,
                         ),
                         RequesterInputModel(
-                          id: 'DR-003',
+                          id: 'DATA-REQ-003',
+                          title: [
+                            LocalizedModel(language: 'en-US', text: 'Email'),
+                            LocalizedModel(language: 'th-TH', text: 'อีเมล'),
+                          ],
+                          text: 'khunthip.city@gmail.com',
+                          priority: 3,
+                        ),
+                        RequesterInputModel(
+                          id: 'DATA-REQ-004',
                           title: [
                             LocalizedModel(
                               language: 'en-US',
                               text: 'Phone Number',
                             ),
                             LocalizedModel(
-                              language: 'en-US',
+                              language: 'th-TH',
                               text: 'หมายเลขโทรศัพท์',
                             ),
                           ],
                           text: '0981234567',
-                          priority: 3,
+                          priority: 4,
                         ),
                       ],
                       dataOwner: const [
                         RequesterInputModel(
-                          id: 'DR-001',
+                          id: 'DATA-OWN-001',
                           title: [
-                            LocalizedModel(language: 'en-US', text: 'Name'),
-                            LocalizedModel(language: 'en-US', text: 'ชื่อ'),
+                            LocalizedModel(
+                              language: 'en-US',
+                              text: 'Name',
+                            ),
+                            LocalizedModel(
+                              language: 'th-TH',
+                              text: 'ชื่อ - นามสกุล',
+                            ),
                           ],
-                          text: 'Karn Khunthip',
+                          text: 'กานต์ ขุนทิพย์',
                           priority: 1,
                         ),
                         RequesterInputModel(
-                          id: 'DR-002',
+                          id: 'DATA-OWN-002',
                           title: [
-                            LocalizedModel(language: 'en-US', text: 'Email'),
-                            LocalizedModel(language: 'en-US', text: 'อีเมล'),
+                            LocalizedModel(language: 'en-US', text: 'Address'),
+                            LocalizedModel(language: 'th-TH', text: 'ที่อยู่'),
                           ],
-                          text: 'khunthip.city@gmail.com',
+                          text: 'ปากช่องซิตี้',
                           priority: 2,
                         ),
                         RequesterInputModel(
-                          id: 'DR-003',
+                          id: 'DATA-OWN-003',
+                          title: [
+                            LocalizedModel(language: 'en-US', text: 'Email'),
+                            LocalizedModel(language: 'th-TH', text: 'อีเมล'),
+                          ],
+                          text: 'khunthip.city@gmail.com',
+                          priority: 3,
+                        ),
+                        RequesterInputModel(
+                          id: 'DATA-OWN-004',
                           title: [
                             LocalizedModel(
                               language: 'en-US',
                               text: 'Phone Number',
                             ),
                             LocalizedModel(
-                              language: 'en-US',
+                              language: 'th-TH',
                               text: 'หมายเลขโทรศัพท์',
                             ),
                           ],
                           text: '0981234567',
-                          priority: 3,
+                          priority: 4,
                         ),
                       ],
                       isDataOwner: true,
@@ -346,28 +376,52 @@ class _DataSubjectRightViewState extends State<DataSubjectRightView> {
                       ],
                       processRequests: const [
                         ProcessRequestModel(
-                          id: 'id-001',
-                          personalData: 'personalData',
-                          foundSource: 'foundSource',
+                          id: 'PR-001',
+                          personalData: 'รูปโปรไฟล์',
+                          foundSource: 'www.mock-web.co.th/info',
                           requestType: 'REQ-001',
-                          requestAction: 'DELETE',
-                          reasonTypes: [UserInputText(id: 'id', text: 'text')],
+                          requestAction: 'REA-001',
+                          reasonTypes: [
+                            UserInputText(id: 'RES-002', text: ''),
+                            UserInputText(id: 'RES-003', text: ''),
+                            UserInputText(
+                              id: 'RES-004',
+                              text: 'เหตุผลส่วนตัวเด้อสู',
+                            ),
+                          ],
                           considerRequestStatus: RequestResultStatus.none,
-                          rejectConsiderReason: 'rejectText',
-                          rejectType: 'rejectType',
+                          rejectTypes: [],
+                          rejectConsiderReason: '',
+                          proofOfActionFile: '',
+                          proofOfActionText: '',
+                        ),
+                        ProcessRequestModel(
+                          id: 'PR-002',
+                          personalData: 'ข้อมูลส่วนตัว',
+                          foundSource: 'www.mock-web.co.th/news',
+                          requestType: 'REQ-005',
+                          requestAction: 'REA-001',
+                          reasonTypes: [
+                            UserInputText(id: 'RES-002', text: ''),
+                            UserInputText(
+                                id: 'RES-004', text: 'เหตุผลส่วนตัวเด้อสู'),
+                          ],
+                          considerRequestStatus: RequestResultStatus.none,
+                          rejectTypes: [],
+                          rejectConsiderReason: '',
                           proofOfActionFile: '',
                           proofOfActionText: '',
                         ),
                       ],
                       requestExpirationDate: now.add(const Duration(days: 30)),
-                      notifyEmail: const ['karnkk.20000@gmail.com'],
+                      notifyEmail: const [],
                       requestFormVerified: false,
                       verifyFormStatus: RequestResultStatus.none,
                       rejectVerifyReason: '',
                       lastSeenBy: '',
-                      createdBy: '',
+                      createdBy: 'khunthip.city@gmail.com',
                       createdDate: now,
-                      updatedBy: '',
+                      updatedBy: 'khunthip.city@gmail.com',
                       updatedDate: now,
                     );
                     final repository = DataSubjectRightRepository(
