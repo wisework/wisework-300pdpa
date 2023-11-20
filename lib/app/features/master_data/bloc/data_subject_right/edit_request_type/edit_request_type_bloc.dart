@@ -51,6 +51,7 @@ class EditRequestTypeBloc
         },
         (requestType) {
           gotRequestType = requestType;
+
         },
       );
     }
@@ -58,6 +59,7 @@ class EditRequestTypeBloc
     final rejectResult = await _masterDataRepository.getRejectTypes(
       event.companyId,
     );
+
     rejectResult.fold(
       (failure) {
         emit(EditRequestTypeError(failure.errorMessage));
@@ -65,6 +67,7 @@ class EditRequestTypeBloc
       },
       (rejects) {
         gotRejects = rejects;
+
       },
     );
 
@@ -78,7 +81,6 @@ class EditRequestTypeBloc
         }).toList(),
       );
     }
-
     emit(GotCurrentRequestType(gotRequestType, gotRejects));
   }
 

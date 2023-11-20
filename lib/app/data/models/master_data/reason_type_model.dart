@@ -67,7 +67,6 @@ class ReasonTypeModel extends Equatable {
   }
 
   DataMap toMap() => {
-        'id': id,
         'reasonCode': reasonCode,
         'description': description.map((item) => item.toMap()).toList(),
         'requiredInputReasonText': requiredInputReasonText,

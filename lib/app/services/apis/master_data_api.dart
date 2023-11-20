@@ -321,6 +321,7 @@ class MasterDataApi {
     final rejectTypes = (response['rejectTypes'] as List<dynamic>)
         .map((id) => {'id': id, ...RejectTypeModel.empty().toMap()})
         .toList();
+    print(response['rejectTypes']);
     response['rejectTypes'] = rejectTypes;
 
     return RequestTypeModel.fromMap(response);

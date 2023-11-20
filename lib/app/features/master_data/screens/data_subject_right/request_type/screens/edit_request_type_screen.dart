@@ -302,7 +302,7 @@ class _EditRequestTypeViewState extends State<EditRequestTypeView> {
     }
   }
 
-  void _updateEditPurposeCategoryState(UpdatedReturn<RejectTypeModel> updated) {
+  void _updateEditRequestTypeState(UpdatedReturn<RejectTypeModel> updated) {
     final event = UpdateEditRequestTypeStateEvent(reject: updated.object);
     context.read<EditRequestTypeBloc>().add(event);
   }
@@ -385,6 +385,10 @@ class _EditRequestTypeViewState extends State<EditRequestTypeView> {
             onChanged: _setDescription,
           ),
           const SizedBox(height: UiConfig.lineSpacing),
+          TitleRequiredText(
+            text: tr('Reject Type'), //!
+          ),
+          const SizedBox(height: UiConfig.lineSpacing),
           _buildRejectTypesection(context,
               requestType.rejectTypes.map((reject) => reject.id).toList()),
         ],
@@ -455,13 +459,13 @@ class _EditRequestTypeViewState extends State<EditRequestTypeView> {
           child: CustomIconButton(
             onPressed: () {
               final removeId = reject.id;
-              final rejecttypes = requestType.rejectTypes
+              final rejectTypes = requestType.rejectTypes
                   .where((reject) => reject.id != removeId)
                   .toList();
 
               setState(() {
                 requestType = requestType.copyWith(
-                  rejectTypes: rejecttypes,
+                  rejectTypes: rejectTypes,
                 );
               });
             },
@@ -491,7 +495,7 @@ class _EditRequestTypeViewState extends State<EditRequestTypeView> {
                 );
               });
             },
-            onUpdated: _updateEditPurposeCategoryState,
+            onUpdated: _updateEditRequestTypeState,
             language: widget.currentUser.defaultLanguage,
           ),
         );

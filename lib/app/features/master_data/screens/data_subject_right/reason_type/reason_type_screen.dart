@@ -4,6 +4,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
 
 import 'package:pdpa/app/config/config.dart';
+import 'package:pdpa/app/data/models/etc/updated_return.dart';
 import 'package:pdpa/app/data/models/master_data/localized_model.dart';
 import 'package:pdpa/app/data/models/master_data/reason_type_model.dart';
 import 'package:pdpa/app/features/authentication/bloc/sign_in/sign_in_bloc.dart';
@@ -11,7 +12,11 @@ import 'package:pdpa/app/features/master_data/bloc/data_subject_right/reason_typ
 import 'package:pdpa/app/features/master_data/routes/master_data_route.dart';
 import 'package:pdpa/app/features/master_data/widgets/master_data_item_card.dart';
 import 'package:pdpa/app/shared/utils/constants.dart';
+import 'package:pdpa/app/shared/widgets/content_wrapper.dart';
+import 'package:pdpa/app/shared/widgets/customs/custom_container.dart';
 import 'package:pdpa/app/shared/widgets/customs/custom_icon_button.dart';
+import 'package:pdpa/app/shared/widgets/loading_indicator.dart';
+import 'package:pdpa/app/shared/widgets/screens/example_screen.dart';
 import 'package:pdpa/app/shared/widgets/templates/pdpa_app_bar.dart';
 
 class ReasonTypeScreen extends StatefulWidget {
@@ -56,6 +61,14 @@ class ReasonTypeView extends StatefulWidget {
 }
 
 class _ReasonTypeViewState extends State<ReasonTypeView> {
+  void _onUpdated(UpdatedReturn<ReasonTypeModel> updated) {
+    final event = UpdateReasonTypeEvent(
+      reasonType: updated.object,
+      updateType: updated.type,
+    );
+    context.read<ReasonTypeBloc>().add(event);
+  }
+
   final reasontypemodel = [
     ReasonTypeModel(
       id: '1',
@@ -73,6 +86,12 @@ class _ReasonTypeViewState extends State<ReasonTypeView> {
 
   @override
   Widget build(BuildContext context) {
+    final bloc = context.read<SignInBloc>();
+
+    String language = '';
+    if (bloc.state is SignedInUser) {
+      language = (bloc.state as SignedInUser).user.defaultLanguage;
+    }
     return Scaffold(
       appBar: PdpaAppBar(
         leadingIcon: CustomIconButton(
@@ -87,76 +106,108 @@ class _ReasonTypeViewState extends State<ReasonTypeView> {
           tr('masterData.dsr.reason.title'),
         ),
       ),
-      body: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: <Widget>[
-          const SizedBox(height: UiConfig.lineSpacing),
-          Expanded(
-            child: Container(
-              padding: const EdgeInsets.all(UiConfig.defaultPaddingSpacing),
-              decoration: BoxDecoration(
-                color: Theme.of(context).colorScheme.onBackground,
-              ),
-              child: BlocBuilder<ReasonTypeBloc, ReasonTypeState>(
-                builder: (context, state) {
-                  if (state is GotReasonTypes) {
-                    return ListView.builder(
-                      itemCount: state.reasonTypes.length,
-                      itemBuilder: (context, index) {
-                        return _buildItemCard(
-                          context,
-                          reasontype: state.reasonTypes[index],
-                        );
-                      },
-                    );
-                  }
-                  if (state is ReasonTypeError) {
-                    return Center(
+      body:  SingleChildScrollView(
+        child: ContentWrapper(
+          child: BlocBuilder<ReasonTypeBloc, ReasonTypeState>(
+            builder: (context, state) {
+              if (state is GotReasonTypes) {
+                return CustomContainer(
+                  margin: const EdgeInsets.all(UiConfig.lineSpacing),
+                  child: state.reasonTypes.isNotEmpty
+                      ? ListView.builder(
+                          physics: const NeverScrollableScrollPhysics(),
+                          shrinkWrap: true,
+                          itemCount: state.reasonTypes.length,
+                          itemBuilder: (context, index) {
+                            return _buildItemCard(
+                              context,
+                              reasonType: state.reasonTypes[index],
+                              onUpdated: _onUpdated,
+                              language: language,
+                            );
+                          },
+                        )
+                      : ExampleScreen(
+                          headderText: tr('masterData.cm.ReasonType.list'),
+                          buttonText: tr('masterData.cm.ReasonType.create'),
+                          descriptionText:
+                              tr('masterData.cm.ReasonType.explain'),
+                          onPress: () {
+                            context.push(MasterDataRoute.createReasonType.path);
+                          },
+                        ),
+                );
+              }
+              if (state is ReasonTypeError) {
+                return CustomContainer(
+                  margin: const EdgeInsets.all(UiConfig.lineSpacing),
+                  child: Padding(
+                    padding: const EdgeInsets.symmetric(
+                      vertical: UiConfig.defaultPaddingSpacing * 4,
+                    ),
+                    child: Center(
                       child: Text(
                         state.message,
                         style: Theme.of(context).textTheme.bodyMedium,
                       ),
-                    );
-                  }
-                  return const Center(
-                    child: CircularProgressIndicator(),
-                  );
-                },
-              ),
-            ),
+                    ),
+                  ),
+                );
+              }
+              return const CustomContainer(
+                margin: EdgeInsets.all(UiConfig.lineSpacing),
+                child: Padding(
+                  padding: EdgeInsets.symmetric(
+                    vertical: UiConfig.defaultPaddingSpacing * 4,
+                  ),
+                  child: Center(
+                    child: LoadingIndicator(),
+                  ),
+                ),
+              );
+            },
           ),
-        ],
+        ),
       ),
       floatingActionButton: FloatingActionButton(
-        onPressed: () {
-          context.push(MasterDataRoute.createReasonType.path);
+        onPressed: () async {
+          await context
+              .push(MasterDataRoute.createReasonType.path)
+              .then((value) {
+            if (value != null) {
+              _onUpdated(value as UpdatedReturn<ReasonTypeModel>);
+            }
+          });
         },
         child: const Icon(Icons.add),
       ),
     );
   }
 
-  MasterDataItemCard _buildItemCard(
+   MasterDataItemCard _buildItemCard(
     BuildContext context, {
-    required ReasonTypeModel reasontype,
+    required ReasonTypeModel reasonType,
+    required Function(UpdatedReturn<ReasonTypeModel> updated) onUpdated,
+    required String language,
   }) {
-    const language = 'en-US';
-    final description = reasontype.description.firstWhere(
+    final description = reasonType.description.firstWhere(
       (item) => item.language == language,
       orElse: () => const LocalizedModel.empty(),
     );
 
-    final reasoncode = reasontype.reasonCode;
-
     return MasterDataItemCard(
       title: description.text,
-      subtitle: reasoncode,
-      status: reasontype.status,
-      onTap: () {
-        context.push(
-          MasterDataRoute.editReasonType.path
-              .replaceFirst(':id', reasontype.id),
-        );
+      subtitle: reasonType.reasonCode,
+      status: reasonType.status,
+      onTap: () async {
+        await context
+            .push(MasterDataRoute.editReasonType.path
+                .replaceFirst(':id', reasonType.id))
+            .then((value) {
+          if (value != null) {
+            onUpdated(value as UpdatedReturn<ReasonTypeModel>);
+          }
+        });
       },
     );
   }

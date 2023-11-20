@@ -62,8 +62,7 @@ class RejectTypeModel extends Equatable {
     return RejectTypeModel.fromMap(response);
   }
 
-  DataMap toMap() => {
-        'id': id,
+  DataMap toMap() => {     
         'rejectCode': rejectCode,
         'description': description.map((item) => item.toMap()).toList(),
         'editable': editable,

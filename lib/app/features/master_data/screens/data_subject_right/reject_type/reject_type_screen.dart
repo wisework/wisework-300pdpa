@@ -12,7 +12,11 @@ import 'package:pdpa/app/features/master_data/bloc/data_subject_right/reject_typ
 import 'package:pdpa/app/features/master_data/routes/master_data_route.dart';
 import 'package:pdpa/app/features/master_data/widgets/master_data_item_card.dart';
 import 'package:pdpa/app/shared/utils/constants.dart';
+import 'package:pdpa/app/shared/widgets/content_wrapper.dart';
+import 'package:pdpa/app/shared/widgets/customs/custom_container.dart';
 import 'package:pdpa/app/shared/widgets/customs/custom_icon_button.dart';
+import 'package:pdpa/app/shared/widgets/loading_indicator.dart';
+import 'package:pdpa/app/shared/widgets/screens/example_screen.dart';
 import 'package:pdpa/app/shared/widgets/templates/pdpa_app_bar.dart';
 
 class RejectTypeScreen extends StatefulWidget {
@@ -101,49 +105,78 @@ class _RejectTypeViewState extends State<RejectTypeView> {
           style: Theme.of(context).textTheme.titleLarge,
         ),
       ),
-      body: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: <Widget>[
-          const SizedBox(height: UiConfig.lineSpacing),
-          Expanded(
-            child: Container(
-              padding: const EdgeInsets.all(UiConfig.defaultPaddingSpacing),
-              decoration: BoxDecoration(
-                color: Theme.of(context).colorScheme.onBackground,
-              ),
-              child: BlocBuilder<RejectTypeBloc, RejectTypeState>(
-                builder: (context, state) {
-                  if (state is GotRejectTypes) {
-                    return ListView.builder(
-                      itemCount: state.rejectTypes.length,
-                      itemBuilder: (context, index) {
-                        return _buildItemCard(
-                          context,
-                          rejectType: state.rejectTypes[index],
-                        );
-                      },
-                    );
-                  }
-                  if (state is RejectTypeError) {
-                    return Center(
+      body: SingleChildScrollView(
+        child: ContentWrapper(
+          child: BlocBuilder<RejectTypeBloc, RejectTypeState>(
+            builder: (context, state) {
+              if (state is GotRejectTypes) {
+                return CustomContainer(
+                  margin: const EdgeInsets.all(UiConfig.lineSpacing),
+                  child: state.rejectTypes.isNotEmpty
+                      ? ListView.builder(
+                          physics: const NeverScrollableScrollPhysics(),
+                          shrinkWrap: true,
+                          itemCount: state.rejectTypes.length,
+                          itemBuilder: (context, index) {
+                            return _buildItemCard(
+                              context,
+                              rejectType: state.rejectTypes[index],
+                              onUpdated: _onUpdated,
+                              language: language,
+                            );
+                          },
+                        )
+                      : ExampleScreen(
+                          headderText: tr('masterData.cm.RejectType.list'),
+                          buttonText: tr('masterData.cm.RejectType.create'),
+                          descriptionText:
+                              tr('masterData.cm.RejectType.explain'),
+                          onPress: () {
+                            context.push(MasterDataRoute.createRejectType.path);
+                          },
+                        ),
+                );
+              }
+              if (state is RejectTypeError) {
+                return CustomContainer(
+                  margin: const EdgeInsets.all(UiConfig.lineSpacing),
+                  child: Padding(
+                    padding: const EdgeInsets.symmetric(
+                      vertical: UiConfig.defaultPaddingSpacing * 4,
+                    ),
+                    child: Center(
                       child: Text(
                         state.message,
                         style: Theme.of(context).textTheme.bodyMedium,
                       ),
-                    );
-                  }
-                  return const Center(
-                    child: CircularProgressIndicator(),
-                  );
-                },
-              ),
-            ),
+                    ),
+                  ),
+                );
+              }
+              return const CustomContainer(
+                margin: EdgeInsets.all(UiConfig.lineSpacing),
+                child: Padding(
+                  padding: EdgeInsets.symmetric(
+                    vertical: UiConfig.defaultPaddingSpacing * 4,
+                  ),
+                  child: Center(
+                    child: LoadingIndicator(),
+                  ),
+                ),
+              );
+            },
           ),
-        ],
+        ),
       ),
       floatingActionButton: FloatingActionButton(
-        onPressed: () {
-          context.push(MasterDataRoute.createRejectType.path);
+        onPressed: () async {
+          await context
+              .push(MasterDataRoute.createRejectType.path)
+              .then((value) {
+            if (value != null) {
+              _onUpdated(value as UpdatedReturn<RejectTypeModel>);
+            }
+          });
         },
         child: const Icon(Icons.add),
       ),
@@ -153,23 +186,27 @@ class _RejectTypeViewState extends State<RejectTypeView> {
   MasterDataItemCard _buildItemCard(
     BuildContext context, {
     required RejectTypeModel rejectType,
+    required Function(UpdatedReturn<RejectTypeModel> updated) onUpdated,
+    required String language,
   }) {
-    const language = 'en-US';
     final description = rejectType.description.firstWhere(
       (item) => item.language == language,
       orElse: () => const LocalizedModel.empty(),
     );
-    final rejectCode = rejectType.rejectCode;
 
     return MasterDataItemCard(
       title: description.text,
-      subtitle: rejectCode,
+      subtitle: rejectType.rejectCode,
       status: rejectType.status,
-      onTap: () {
-        context.push(
-          MasterDataRoute.editRejectType.path
-              .replaceFirst(':id', rejectType.id),
-        );
+      onTap: () async {
+        await context
+            .push(MasterDataRoute.editRejectType.path
+                .replaceFirst(':id', rejectType.id))
+            .then((value) {
+          if (value != null) {
+            onUpdated(value as UpdatedReturn<RejectTypeModel>);
+          }
+        });
       },
     );
   }
