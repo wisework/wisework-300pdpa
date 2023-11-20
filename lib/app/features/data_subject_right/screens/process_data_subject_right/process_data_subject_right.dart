@@ -359,22 +359,22 @@ class _ProcessDataSubjectRightViewState
                 ),
             ],
           ),
-          summaryContent: state.progressedIndex > 1
-              ? _buildSummaryOption(
-                  context,
-                  passText: 'ดำเนินการ',
-                  rejectText: 'ปฏิเสธคำขอ',
-                  rejectReason: state.dataSubjectRight.rejectConsiderReason,
-                  isPassed: state.dataSubjectRight.considerFormStatus ==
-                      RequestResultStatus.pass,
-                  content: emailSelected.isNotEmpty
-                      ? _buildEmailNotification(
-                          context,
-                          readOnly: true,
-                        )
-                      : null,
-                )
-              : null,
+          // summaryContent: state.progressedIndex > 1
+          //     ? _buildSummaryOption(
+          //         context,
+          //         passText: 'ดำเนินการ',
+          //         rejectText: 'ปฏิเสธคำขอ',
+          //         rejectReason: state.dataSubjectRight.rejectConsiderReason,
+          //         isPassed: state.dataSubjectRight.considerFormStatus ==
+          //             RequestResultStatus.pass,
+          //         content: emailSelected.isNotEmpty
+          //             ? _buildEmailNotification(
+          //                 context,
+          //                 readOnly: true,
+          //               )
+          //             : null,
+          //       )
+          //     : null,
           isActive: state.stepIndex >= 1,
           endStep: state.endProcess && state.stepIndex == 1,
         ),

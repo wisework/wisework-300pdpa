@@ -20,8 +20,6 @@ class DataSubjectRightModel extends Equatable {
     required this.requestFormVerified,
     required this.verifyFormStatus,
     required this.rejectVerifyReason,
-    required this.considerFormStatus,
-    required this.rejectConsiderReason,
     required this.lastSeenBy,
     required this.createdBy,
     required this.createdDate,
@@ -68,14 +66,6 @@ class DataSubjectRightModel extends Equatable {
   /// Use in [Verify data subject right step].
   final String rejectVerifyReason;
 
-  /// Consider the request whether to reject the request or continue action.
-  /// Use in [Considering step].
-  final RequestResultStatus considerFormStatus;
-
-  /// Reason for rejecting this form.
-  /// Use in [Consider data subject right step].
-  final String rejectConsiderReason;
-
   /// The lastest user who see the data subject right form.
   final String lastSeenBy;
 
@@ -101,8 +91,6 @@ class DataSubjectRightModel extends Equatable {
           requestFormVerified: false,
           verifyFormStatus: RequestResultStatus.none,
           rejectVerifyReason: '',
-          considerFormStatus: RequestResultStatus.none,
-          rejectConsiderReason: '',
           lastSeenBy: '',
           createdBy: '',
           createdDate: DateTime.fromMillisecondsSinceEpoch(0),
@@ -151,9 +139,6 @@ class DataSubjectRightModel extends Equatable {
           verifyFormStatus:
               RequestResultStatus.values[map['verifyFormStatus'] as int],
           rejectVerifyReason: map['rejectVerifyReason'] as String,
-          considerFormStatus:
-              RequestResultStatus.values[map['considerFormStatus'] as int],
-          rejectConsiderReason: map['rejectConsiderReason'] as String,
           lastSeenBy: map['lastSeenBy'] as String,
           createdBy: map['createdBy'] as String,
           createdDate: DateTime.parse(map['createdDate'] as String),
@@ -196,8 +181,6 @@ class DataSubjectRightModel extends Equatable {
         'requestFormVerified': requestFormVerified,
         'verifyFormStatus': verifyFormStatus.index,
         'rejectVerifyReason': rejectVerifyReason,
-        'considerFormStatus': considerFormStatus.index,
-        'rejectConsiderReason': rejectConsiderReason,
         'lastSeenBy': lastSeenBy,
         'createdBy': createdBy,
         'createdDate': createdDate.toIso8601String(),
@@ -218,8 +201,6 @@ class DataSubjectRightModel extends Equatable {
     bool? requestFormVerified,
     RequestResultStatus? verifyFormStatus,
     String? rejectVerifyReason,
-    RequestResultStatus? considerFormStatus,
-    String? rejectConsiderReason,
     String? lastSeenBy,
     String? createdBy,
     DateTime? createdDate,
@@ -241,8 +222,6 @@ class DataSubjectRightModel extends Equatable {
       requestFormVerified: requestFormVerified ?? this.requestFormVerified,
       verifyFormStatus: verifyFormStatus ?? this.verifyFormStatus,
       rejectVerifyReason: rejectVerifyReason ?? this.rejectVerifyReason,
-      considerFormStatus: considerFormStatus ?? this.considerFormStatus,
-      rejectConsiderReason: rejectConsiderReason ?? this.rejectConsiderReason,
       lastSeenBy: lastSeenBy ?? this.lastSeenBy,
       createdBy: createdBy ?? this.createdBy,
       createdDate: createdDate ?? this.createdDate,
@@ -278,8 +257,6 @@ class DataSubjectRightModel extends Equatable {
       requestFormVerified,
       verifyFormStatus,
       rejectVerifyReason,
-      considerFormStatus,
-      rejectConsiderReason,
       lastSeenBy,
       createdBy,
       createdDate,

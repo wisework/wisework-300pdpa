@@ -69,21 +69,21 @@ class ProcessDataSubjectRightCubit extends Cubit<ProcessDataSubjectRightState> {
         return;
       }
 
-      //? If choose reject, reject consider reason should not empty
-      if (state.considerSelected == 2 &&
-          state.dataSubjectRight.rejectConsiderReason.isEmpty) {
-        return;
-      }
+      // //? If choose reject, reject consider reason should not empty
+      // if (state.considerSelected == 2 &&
+      //     state.dataSubjectRight.rejectConsiderReason.isEmpty) {
+      //   return;
+      // }
 
-      //? If choose reject consider, should be end process
-      if (state.considerSelected == 2 &&
-          state.dataSubjectRight.rejectConsiderReason.isNotEmpty) {
-        emit(state.copyWith(
-          progressedIndex: 2,
-          endProcess: true,
-        ));
-        return;
-      }
+      // //? If choose reject consider, should be end process
+      // if (state.considerSelected == 2 &&
+      //     state.dataSubjectRight.rejectConsiderReason.isNotEmpty) {
+      //   emit(state.copyWith(
+      //     progressedIndex: 2,
+      //     endProcess: true,
+      //   ));
+      //   return;
+      // }
     } else if (state.stepIndex == 2) {}
 
     //? Update progress index
@@ -115,20 +115,20 @@ class ProcessDataSubjectRightCubit extends Cubit<ProcessDataSubjectRightState> {
   }
 
   void setConsiderOption(int value) {
-    final updated = state.dataSubjectRight.copyWith(
-      considerFormStatus: value == 0
-          ? RequestResultStatus.none
-          : value == 1
-              ? RequestResultStatus.pass
-              : RequestResultStatus.fail,
-    );
-    emit(
-      state.copyWith(
-        dataSubjectRight: updated,
-        considerSelected: value,
-        considerError: value == 0,
-      ),
-    );
+    // final updated = state.dataSubjectRight.copyWith(
+    //   considerFormStatus: value == 0
+    //       ? RequestResultStatus.none
+    //       : value == 1
+    //           ? RequestResultStatus.pass
+    //           : RequestResultStatus.fail,
+    // );
+    // emit(
+    //   state.copyWith(
+    //     dataSubjectRight: updated,
+    //     considerSelected: value,
+    //     considerError: value == 0,
+    //   ),
+    // );
   }
 
   void setRejectVerifyReason(String value) {
@@ -139,10 +139,10 @@ class ProcessDataSubjectRightCubit extends Cubit<ProcessDataSubjectRightState> {
   }
 
   void setRejectConsiderReason(String value) {
-    final updated = state.dataSubjectRight.copyWith(
-      rejectConsiderReason: value.isNotEmpty ? value : '',
-    );
-    emit(state.copyWith(dataSubjectRight: updated));
+    // final updated = state.dataSubjectRight.copyWith(
+    //   rejectConsiderReason: value.isNotEmpty ? value : '',
+    // );
+    // emit(state.copyWith(dataSubjectRight: updated));
   }
 
   Future<void> uploadProofFile(
