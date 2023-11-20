@@ -4,6 +4,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
 import 'package:pdpa/app/config/config.dart';
 import 'package:pdpa/app/data/models/data_subject_right/data_subject_right_model.dart';
+import 'package:pdpa/app/data/models/data_subject_right/requester_input_model.dart';
 import 'package:pdpa/app/data/models/master_data/reason_type_model.dart';
 import 'package:pdpa/app/data/models/master_data/request_reason_template_model.dart';
 import 'package:pdpa/app/data/models/master_data/request_type_model.dart';
@@ -38,18 +39,16 @@ class _FormDataSubjectRightState extends State<FormDataSubjectRight> {
   @override
   Widget build(BuildContext context) {
     return BlocProvider(
-      create: (context) => serviceLocator<FormDataSubJectRightBloc>()
-        ..add(
-          GetFormDataSubJectRightEvent(companyId: widget.companyId),
-        ),
+      create: (context) => serviceLocator<FormDataSubJectRightBloc>(),
+      // ..add(
+      //   GetFormDataSubJectRightEvent(companyId: widget.companyId),
+      // ),
       child: Scaffold(
         appBar: PdpaAppBar(
           leadingIcon: _buildPopButton(),
           title: const Text('แบบฟอร์มขอใช้สิทธิ์ตามกฏหมาย'), //!
         ),
-        body: const FormDataSubjectRightView(
-          requestResons: [],
-        ),
+        body: const FormDataSubjectRightView(),
       ),
     );
   }
@@ -67,10 +66,7 @@ class _FormDataSubjectRightState extends State<FormDataSubjectRight> {
 class FormDataSubjectRightView extends StatefulWidget {
   const FormDataSubjectRightView({
     super.key,
-    required this.requestResons,
   });
-
-  final List<RequestReasonTemplateModel> requestResons;
 
   @override
   State<FormDataSubjectRightView> createState() =>
@@ -125,118 +121,114 @@ class _FormDataSubjectRightViewState extends State<FormDataSubjectRightView> {
                   controller: _controller,
                   currentPage: currentPage,
                 ),
-                OwnerVerifyPage(
-                  controller: _controller,
-                  currentPage: currentPage,
-                  dataSubjectRight: dataSubjectRight,
-                ),
-                PowerOfAttorneyPage(
-                  controller: _controller,
-                  currentPage: currentPage,
-                  dataSubjectRight: dataSubjectRight,
-                ),
-                DataOwnerDetailPage(
-                  controller: _controller,
-                  currentPage: currentPage,
-                  dataSubjectRight: dataSubjectRight,
-                ),
-                IdentityProofingPage(
-                  controller: _controller,
-                  currentPage: currentPage,
-                  previousPage: currentPage,
-                  dataSubjectRight: dataSubjectRight,
-                ),
+                const OwnerVerifyPage(),
+                const PowerOfAttorneyPage(),
+                const DataOwnerDetailPage(),
+                const IdentityProofingPage(),
                 RequestReasonPage(
-                  controller: _controller,
-                  currentPage: currentPage,
-                  dataSubjectRight: dataSubjectRight,
                   requestType: requestType,
                   reasonType: reasonType,
                 ),
-                ReserveTheRightPage(
-                  controller: _controller,
-                  currentPage: currentPage,
-                  dataSubjectRight: dataSubjectRight,
-                ),
-                AcknowledgePage(
-                  controller: _controller,
-                  currentPage: currentPage,
-                  dataSubjectRight: dataSubjectRight,
-                ),
+                const ReserveTheRightPage(),
+                const AcknowledgePage(),
               ],
             ),
           ),
         ),
-        // Visibility(
-        //   visible: currentPage != 0,
-        //   child: ContentWrapper(
-        //     child: Container(
-        //       padding: const EdgeInsets.all(
-        //         UiConfig.defaultPaddingSpacing,
-        //       ),
-        //       decoration: BoxDecoration(
-        //         color: Theme.of(context).colorScheme.onBackground,
-        //         boxShadow: [
-        //           BoxShadow(
-        //             color: Theme.of(context).colorScheme.outline,
-        //             blurRadius: 1.0,
-        //             offset: const Offset(0, -2.0),
-        //           ),
-        //         ],
-        //       ),
-        //       child: _buildPageViewController(
-        //         context,
-        //         _controller,
-        //         currentPage,
-        //       ),
-        //     ),
-        //   ),
-        // )
+        Visibility(
+          visible: currentPage != 0,
+          child: ContentWrapper(
+            child: Container(
+              padding: const EdgeInsets.all(
+                UiConfig.defaultPaddingSpacing,
+              ),
+              decoration: BoxDecoration(
+                color: Theme.of(context).colorScheme.onBackground,
+                boxShadow: [
+                  BoxShadow(
+                    color: Theme.of(context).colorScheme.outline,
+                    blurRadius: 1.0,
+                    offset: const Offset(0, -2.0),
+                  ),
+                ],
+              ),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  TextButton(
+                    style: TextButton.styleFrom(
+                      textStyle:
+                          Theme.of(context).textTheme.bodyMedium?.copyWith(
+                                color: Theme.of(context).colorScheme.primary,
+                              ),
+                    ),
+                    onPressed: () {
+                      if (dataSubjectRight.isDataOwner == true) {
+                        context
+                            .read<FormDataSubjectRightCubit>()
+                            .previousPage(1);
+                        context
+                            .read<FormDataSubjectRightCubit>()
+                            .setDataSubjectRight(
+                                dataSubjectRight.copyWith(dataOwner: []));
+
+                        _controller.jumpToPage(1);
+                      } else {
+                        context
+                            .read<FormDataSubjectRightCubit>()
+                            .previousPage(currentPage - 1);
+                        _controller.previousPage(
+                          duration: const Duration(microseconds: 1),
+                          curve: Curves.easeInOut,
+                        );
+                      }
+                    },
+                    child: Text(
+                      tr("app.previous"),
+                    ),
+                  ),
+                  Text("$currentPage/7"),
+                  TextButton(
+                      style: TextButton.styleFrom(
+                        textStyle:
+                            Theme.of(context).textTheme.bodyMedium?.copyWith(
+                                  color: Theme.of(context).colorScheme.primary,
+                                ),
+                      ),
+                      onPressed: () {
+                        if (currentPage != 7) {
+                          if (dataSubjectRight.isDataOwner == true) {
+                            context
+                                .read<FormDataSubjectRightCubit>()
+                                .nextPage(4);
+                            context
+                                .read<FormDataSubjectRightCubit>()
+                                .setDataSubjectRight(dataSubjectRight.copyWith(
+                                    dataOwner: dataSubjectRight.dataRequester));
+
+                            _controller.jumpToPage(4);
+                          } else {
+                            context
+                                .read<FormDataSubjectRightCubit>()
+                                .nextPage(currentPage + 1);
+                            _controller.nextPage(
+                              duration: const Duration(microseconds: 1),
+                              curve: Curves.easeInOut,
+                            );
+                          }
+                        }
+                      },
+                      child: currentPage != 7
+                          ? Text(
+                              tr("app.next"),
+                            )
+                          : const Text("ส่งแบบคำร้อง")),
+                ],
+              ),
+            ),
+          ),
+        )
       ],
     );
   }
-
-  // Row _buildPageViewController(
-  //   BuildContext context,
-  //   PageController controller,
-  //   int currentpage,
-  // ) {
-  //   return Row(
-  //     mainAxisAlignment: MainAxisAlignment.spaceBetween,
-  //     children: [
-  //       TextButton(
-  //         style: TextButton.styleFrom(
-  //           textStyle: Theme.of(context).textTheme.bodyMedium?.copyWith(
-  //                 color: Theme.of(context).colorScheme.primary,
-  //               ),
-  //         ),
-  //         onPressed: previousPage,
-  //         child: Text(
-  //           tr("app.previous"),
-  //         ),
-  //       ),
-  //       Text("$currentpage/7"),
-  //       TextButton(
-  //           style: TextButton.styleFrom(
-  //             textStyle: Theme.of(context).textTheme.bodyMedium?.copyWith(
-  //                   color: Theme.of(context).colorScheme.primary,
-  //                 ),
-  //           ),
-  //           onPressed: nextPage,
-  //           child: currentpage != 7
-  //               ? Text(
-  //                   tr("app.next"),
-  //                 )
-  //               : const Text("ส่งแบบคำร้อง")),
-  //     ],
-  //   );
-  // }
-
-  // void nextPage() {
-  //   context.read<FormDataSubjectRightCubit>().nextPage(_controller);
-  // }
-
-  // void previousPage() {
-  //   context.read<FormDataSubjectRightCubit>().previousPage(_controller);
-  // }
 }
