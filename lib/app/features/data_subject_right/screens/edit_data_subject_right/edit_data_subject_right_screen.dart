@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
-import 'package:ionicons/ionicons.dart';
 import 'package:pdpa/app/config/config.dart';
 import 'package:pdpa/app/data/models/authentication/user_model.dart';
 import 'package:pdpa/app/data/models/data_subject_right/data_subject_right_model.dart';
@@ -91,9 +90,8 @@ class _EditDataSubjectRightScreenState
               requestTypes: state.requestTypes,
               reasonTypes: state.reasonTypes,
               rejectTypes: state.rejectTypes,
-              emails: state.emails,
+              userEmails: state.userEmails,
               currentUser: currentUser,
-              isNewDataSubjectRight: widget.dataSubjectRightId.isEmpty,
             );
           }
           if (state is UpdatedCurrentDataSubjectRight) {
@@ -102,9 +100,8 @@ class _EditDataSubjectRightScreenState
               requestTypes: state.requestTypes,
               reasonTypes: state.reasonTypes,
               rejectTypes: state.rejectTypes,
-              emails: state.emails,
+              userEmails: state.userEmails,
               currentUser: currentUser,
-              isNewDataSubjectRight: widget.dataSubjectRightId.isEmpty,
             );
           }
           if (state is EditDataSubjectRightError) {
@@ -125,18 +122,16 @@ class EditDataSubjectRightView extends StatefulWidget {
     required this.requestTypes,
     required this.reasonTypes,
     required this.rejectTypes,
-    required this.emails,
+    required this.userEmails,
     required this.currentUser,
-    required this.isNewDataSubjectRight,
   });
 
   final DataSubjectRightModel initialDataSubjectRight;
   final List<RequestTypeModel> requestTypes;
   final List<ReasonTypeModel> reasonTypes;
   final List<RejectTypeModel> rejectTypes;
-  final List<String> emails;
+  final List<String> userEmails;
   final UserModel currentUser;
-  final bool isNewDataSubjectRight;
 
   @override
   State<EditDataSubjectRightView> createState() =>
@@ -145,8 +140,6 @@ class EditDataSubjectRightView extends StatefulWidget {
 
 class _EditDataSubjectRightViewState extends State<EditDataSubjectRightView> {
   late DataSubjectRightModel dataSubjectRight;
-
-  final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
 
   @override
   void initState() {
@@ -159,46 +152,7 @@ class _EditDataSubjectRightViewState extends State<EditDataSubjectRightView> {
     dataSubjectRight = widget.initialDataSubjectRight;
   }
 
-  void _savePurpose() {
-    if (_formKey.currentState!.validate()) {
-      if (widget.isNewDataSubjectRight) {
-        dataSubjectRight = dataSubjectRight.setCreate(
-          widget.currentUser.email,
-          DateTime.now(),
-        );
-
-        final event = CreateCurrentDataSubjectRightEvent(
-          dataSubjectRight: dataSubjectRight,
-          companyId: widget.currentUser.currentCompany,
-        );
-
-        context.read<EditDataSubjectRightBloc>().add(event);
-      } else {
-        dataSubjectRight = dataSubjectRight.setUpdate(
-          widget.currentUser.email,
-          DateTime.now(),
-        );
-
-        final event = UpdateCurrentDataSubjectRightEvent(
-          dataSubjectRight: dataSubjectRight,
-          companyId: widget.currentUser.currentCompany,
-        );
-
-        context.read<EditDataSubjectRightBloc>().add(event);
-      }
-    }
-  }
-
-  void _goBackAndUpdate() {
-    if (!widget.isNewDataSubjectRight) {
-      final event = UpdateDataSubjectRightsEvent(
-        dataSubjectRight: dataSubjectRight,
-        updateType: UpdateType.updated,
-      );
-
-      context.read<DataSubjectRightBloc>().add(event);
-    }
-
+  void _goBack() {
     context.pop();
   }
 
@@ -208,14 +162,9 @@ class _EditDataSubjectRightViewState extends State<EditDataSubjectRightView> {
       appBar: PdpaAppBar(
         leadingIcon: _buildPopButton(),
         title: Text(
-          widget.isNewDataSubjectRight
-              ? 'Create Data Subject Right'
-              : 'Edit Data Subject Right',
+          'รายละเอียดคำร้องขอใช้สิทธิ์',
           style: Theme.of(context).textTheme.titleLarge,
         ),
-        actions: [
-          _buildSaveButton(),
-        ],
       ),
       body: Column(
         children: <Widget>[
@@ -259,7 +208,7 @@ class _EditDataSubjectRightViewState extends State<EditDataSubjectRightView> {
                         MaterialPageRoute(
                           builder: (context) => ProcessDataSubjectRightScreen(
                             initialDataSubjectRight: dataSubjectRight,
-                            emails: widget.emails,
+                            userEmails: widget.userEmails,
                             currentUser: widget.currentUser,
                           ),
                         ),
@@ -288,28 +237,10 @@ class _EditDataSubjectRightViewState extends State<EditDataSubjectRightView> {
 
   CustomIconButton _buildPopButton() {
     return CustomIconButton(
-      onPressed: _goBackAndUpdate,
+      onPressed: _goBack,
       icon: Icons.chevron_left_outlined,
       iconColor: Theme.of(context).colorScheme.primary,
       backgroundColor: Theme.of(context).colorScheme.onBackground,
     );
-  }
-
-  Builder _buildSaveButton() {
-    return Builder(builder: (context) {
-      if (dataSubjectRight != widget.initialDataSubjectRight) {
-        return CustomIconButton(
-          onPressed: _savePurpose,
-          icon: Ionicons.save_outline,
-          iconColor: Theme.of(context).colorScheme.primary,
-          backgroundColor: Theme.of(context).colorScheme.onBackground,
-        );
-      }
-      return CustomIconButton(
-        icon: Ionicons.save_outline,
-        iconColor: Theme.of(context).colorScheme.onTertiary,
-        backgroundColor: Theme.of(context).colorScheme.onBackground,
-      );
-    });
   }
 }
