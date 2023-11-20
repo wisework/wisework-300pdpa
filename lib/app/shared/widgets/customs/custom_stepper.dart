@@ -12,6 +12,7 @@ class CustomStep {
     this.state = StepState.indexed,
     this.isActive = false,
     this.label,
+    this.endStep = false,
   });
 
   final Widget title;
@@ -21,6 +22,7 @@ class CustomStep {
   final StepState state;
   final bool isActive;
   final Widget? label;
+  final bool endStep;
 }
 
 class CustomStepper extends StatefulWidget {
@@ -32,8 +34,10 @@ class CustomStepper extends StatefulWidget {
     required this.steps,
     this.currentStep = 0,
     this.progressStep = 0,
-    this.onStepCancel,
-    this.onStepContinue,
+    this.previousButtonText,
+    this.onPreviousStep,
+    this.nextButtonText,
+    this.onNextStep,
   });
 
   final EdgeInsets? padding;
@@ -42,8 +46,10 @@ class CustomStepper extends StatefulWidget {
   final List<CustomStep> steps;
   final int currentStep;
   final int progressStep;
-  final VoidCallback? onStepCancel;
-  final VoidCallback? onStepContinue;
+  final String? previousButtonText;
+  final VoidCallback? onPreviousStep;
+  final String? nextButtonText;
+  final VoidCallback? onNextStep;
 
   @override
   State<CustomStepper> createState() => _CustomStepperState();
@@ -55,6 +61,10 @@ class _CustomStepperState extends State<CustomStepper> {
 
   bool _isCurrent(int index) {
     return widget.currentStep == index;
+  }
+
+  bool _isEndStep(int index) {
+    return widget.steps[index].endStep;
   }
 
   @override
@@ -111,7 +121,7 @@ class _CustomStepperState extends State<CustomStepper> {
         curve: Curves.fastOutSlowIn,
         duration: kThemeAnimationDuration,
         decoration: BoxDecoration(
-          color: widget.progressStep >= index
+          color: widget.currentStep >= index
               ? Theme.of(context).colorScheme.primary
               : Theme.of(context).colorScheme.onSurface.withOpacity(0.6),
           shape: BoxShape.circle,
@@ -142,14 +152,19 @@ class _CustomStepperState extends State<CustomStepper> {
               child: SizedBox(
                 width: 1.0,
                 child: Container(
-                  color: Theme.of(context).colorScheme.primary,
+                  color: widget.progressStep > index
+                      ? Theme.of(context).colorScheme.primary
+                      : Theme.of(context)
+                          .colorScheme
+                          .onSurface
+                          .withOpacity(0.6),
                 ),
               ),
             ),
           ),
         ),
         ExpandedContainer(
-          expand: _isCurrent(index),
+          expand: _isCurrent(index) && !_isEndStep(index),
           duration: const Duration(milliseconds: 400),
           child: Padding(
             padding: const EdgeInsetsDirectional.only(
@@ -159,19 +174,33 @@ class _CustomStepperState extends State<CustomStepper> {
             child: Column(
               children: <Widget>[
                 widget.steps[index].content,
-                _buildControlsBuilder(
-                  context,
-                  details: ControlsDetails(
-                    currentStep: widget.currentStep,
-                    onStepCancel: widget.onStepCancel,
-                    onStepContinue: widget.onStepContinue,
-                    stepIndex: index,
-                  ),
-                ),
+                _isCurrent(index)
+                    ? _buildControlsBuilder(
+                        context,
+                        details: ControlsDetails(
+                          currentStep: widget.currentStep,
+                          onStepCancel: widget.onPreviousStep,
+                          onStepContinue: widget.onNextStep,
+                          stepIndex: index,
+                        ),
+                      )
+                    : const SizedBox(height: 60.0),
               ],
             ),
           ),
         ),
+        if (widget.steps[index].summaryContent != null)
+          ExpandedContainer(
+            expand: widget.progressStep > index,
+            duration: const Duration(milliseconds: 400),
+            child: Padding(
+              padding: const EdgeInsetsDirectional.only(
+                start: 60.0,
+                end: 24.0,
+              ),
+              child: widget.steps[index].summaryContent,
+            ),
+          ),
       ],
     );
   }
@@ -192,11 +221,11 @@ class _CustomStepperState extends State<CustomStepper> {
                   onPressed: details.onStepCancel!,
                   child: Padding(
                     padding: const EdgeInsets.symmetric(
-                      vertical: 4.0,
+                      vertical: 8.0,
                       horizontal: 12.0,
                     ),
                     child: Text(
-                      'ย้อนกลับ',
+                      widget.previousButtonText ?? 'ย้อนกลับ',
                       style: Theme.of(context).textTheme.bodyMedium?.copyWith(
                           color: Theme.of(context).colorScheme.onPrimary),
                     ),
@@ -208,11 +237,11 @@ class _CustomStepperState extends State<CustomStepper> {
                   onPressed: details.onStepContinue!,
                   child: Padding(
                     padding: const EdgeInsets.symmetric(
-                      vertical: 4.0,
+                      vertical: 8.0,
                       horizontal: 12.0,
                     ),
                     child: Text(
-                      'ถัดไป',
+                      widget.nextButtonText ?? 'ถัดไป',
                       style: Theme.of(context).textTheme.bodyMedium?.copyWith(
                           color: Theme.of(context).colorScheme.onPrimary),
                     ),

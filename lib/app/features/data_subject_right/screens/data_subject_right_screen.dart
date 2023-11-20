@@ -1,3 +1,4 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -5,12 +6,21 @@ import 'package:go_router/go_router.dart';
 import 'package:ionicons/ionicons.dart';
 import 'package:pdpa/app/config/config.dart';
 import 'package:pdpa/app/data/models/data_subject_right/data_subject_right_model.dart';
+import 'package:pdpa/app/data/models/data_subject_right/process_request_model.dart';
+import 'package:pdpa/app/data/models/data_subject_right/requester_input_model.dart';
+import 'package:pdpa/app/data/models/data_subject_right/requester_verification_model.dart';
+import 'package:pdpa/app/data/models/etc/user_input_text.dart';
+import 'package:pdpa/app/data/models/master_data/localized_model.dart';
+import 'package:pdpa/app/data/repositories/data_subject_right_repository.dart';
 import 'package:pdpa/app/features/authentication/bloc/sign_in/sign_in_bloc.dart';
 import 'package:pdpa/app/features/data_subject_right/bloc/data_subject_right/data_subject_right_bloc.dart';
 import 'package:pdpa/app/features/data_subject_right/routes/data_subject_right_route.dart';
 import 'package:pdpa/app/features/data_subject_right/widgets/data_subject_right_card.dart';
+import 'package:pdpa/app/services/apis/data_subject_right_api.dart';
 import 'package:pdpa/app/shared/drawers/pdpa_drawer.dart';
+import 'package:pdpa/app/shared/utils/constants.dart';
 import 'package:pdpa/app/shared/utils/functions.dart';
+import 'package:pdpa/app/shared/utils/toast.dart';
 import 'package:pdpa/app/shared/widgets/content_wrapper.dart';
 import 'package:pdpa/app/shared/widgets/customs/custom_button.dart';
 import 'package:pdpa/app/shared/widgets/customs/custom_container.dart';
@@ -242,9 +252,132 @@ class _DataSubjectRightViewState extends State<DataSubjectRightView> {
                     'consentManagement.consentForm.explain',
                   ),
                   onPress: () {
-                    context.push(
-                      DataSubjectRightRoute.createDataSubjectRight.path,
+                    // context.push(
+                    //   DataSubjectRightRoute.createDataSubjectRight.path,
+                    // );
+
+                    final now = DateTime.now();
+                    final dsr = DataSubjectRightModel(
+                      id: '',
+                      dataRequester: const [
+                        RequesterInputModel(
+                          id: 'DR-001',
+                          title: [
+                            LocalizedModel(language: 'en-US', text: 'Name'),
+                            LocalizedModel(language: 'en-US', text: 'ชื่อ'),
+                          ],
+                          text: 'Karn Khunthip',
+                          priority: 1,
+                        ),
+                        RequesterInputModel(
+                          id: 'DR-002',
+                          title: [
+                            LocalizedModel(language: 'en-US', text: 'Email'),
+                            LocalizedModel(language: 'en-US', text: 'อีเมล'),
+                          ],
+                          text: 'khunthip.city@gmail.com',
+                          priority: 2,
+                        ),
+                        RequesterInputModel(
+                          id: 'DR-003',
+                          title: [
+                            LocalizedModel(
+                              language: 'en-US',
+                              text: 'Phone Number',
+                            ),
+                            LocalizedModel(
+                              language: 'en-US',
+                              text: 'หมายเลขโทรศัพท์',
+                            ),
+                          ],
+                          text: '0981234567',
+                          priority: 3,
+                        ),
+                      ],
+                      dataOwner: const [
+                        RequesterInputModel(
+                          id: 'DR-001',
+                          title: [
+                            LocalizedModel(language: 'en-US', text: 'Name'),
+                            LocalizedModel(language: 'en-US', text: 'ชื่อ'),
+                          ],
+                          text: 'Karn Khunthip',
+                          priority: 1,
+                        ),
+                        RequesterInputModel(
+                          id: 'DR-002',
+                          title: [
+                            LocalizedModel(language: 'en-US', text: 'Email'),
+                            LocalizedModel(language: 'en-US', text: 'อีเมล'),
+                          ],
+                          text: 'khunthip.city@gmail.com',
+                          priority: 2,
+                        ),
+                        RequesterInputModel(
+                          id: 'DR-003',
+                          title: [
+                            LocalizedModel(
+                              language: 'en-US',
+                              text: 'Phone Number',
+                            ),
+                            LocalizedModel(
+                              language: 'en-US',
+                              text: 'หมายเลขโทรศัพท์',
+                            ),
+                          ],
+                          text: '0981234567',
+                          priority: 3,
+                        ),
+                      ],
+                      isDataOwner: true,
+                      powerVerifications: const [
+                        RequesterVerificationModel(
+                          id: 'PV-001',
+                          text: 'Profile',
+                          imageUrl: 'karnza.jpg',
+                        ),
+                      ],
+                      identityVerifications: const [
+                        RequesterVerificationModel(
+                          id: 'IV-001',
+                          text: 'Proof',
+                          imageUrl: 'karnza.jpg',
+                        ),
+                      ],
+                      processRequests: const [
+                        ProcessRequestModel(
+                          id: 'id-001',
+                          personalData: 'personalData',
+                          foundSource: 'foundSource',
+                          requestType: 'REQ-001',
+                          requestAction: 'DELETE',
+                          reasonTypes: [UserInputText(id: 'id', text: 'text')],
+                          rejectType: 'rejectType',
+                          rejectText: 'rejectText',
+                          considerRequestStatus: RequestResultStatus.none,
+                          proofOfActionFile: '',
+                          proofOfActionText: '',
+                        ),
+                      ],
+                      requestExpirationDate: now.add(const Duration(days: 30)),
+                      notifyEmail: const ['karnkk.20000@gmail.com'],
+                      requestFormVerified: false,
+                      verifyFormStatus: RequestResultStatus.none,
+                      rejectVerifyReason: '',
+                      considerFormStatus: RequestResultStatus.none,
+                      rejectConsiderReason: '',
+                      lastSeenBy: '',
+                      createdBy: '',
+                      createdDate: now,
+                      updatedBy: '',
+                      updatedDate: now,
                     );
+                    final repository = DataSubjectRightRepository(
+                      DataSubjectRightApi(FirebaseFirestore.instance),
+                    );
+                    repository
+                        .createDataSubjectRight(dsr, 'Y7gRT2kc3bC1i80iKVaF')
+                        .then((value) => showToast(context, text: 'success'));
                   },
                 ),
         ],
@@ -264,7 +397,7 @@ class _DataSubjectRightViewState extends State<DataSubjectRightView> {
       status: UtilFunctions.getRequestProcessStatus(dataSubjectRight),
       onTap: () {
         context.push(
-          DataSubjectRightRoute.processDataSubjectRight.path
+          DataSubjectRightRoute.editDataSubjectRight.path
               .replaceFirst(':id', dataSubjectRight.id),
         );
       },

@@ -33,14 +33,34 @@ class GettingCurrentDataSubjectRight extends EditDataSubjectRightState {
 class GotCurrentDataSubjectRight extends EditDataSubjectRightState {
   const GotCurrentDataSubjectRight(
     this.dataSubjectRight,
-    this.mandatoryFields,
+    this.requestTypes,
+    this.reasonTypes,
+    this.rejectTypes,
+    // this.reasonTemplates,
+    // this.rejectTemplates,
+    this.emails,
   );
 
   final DataSubjectRightModel dataSubjectRight;
-  final List<MandatoryFieldModel> mandatoryFields;
+  final List<RequestTypeModel> requestTypes;
+  final List<ReasonTypeModel> reasonTypes;
+  final List<RejectTypeModel> rejectTypes;
+  // final List<RequestReasonTemplateModel> reasonTemplates;
+  // final List<RequestRejectTemplateModel> rejectTemplates;
+  final List<String> emails;
 
   @override
-  List<Object> get props => [dataSubjectRight, mandatoryFields];
+  List<Object> get props {
+    return [
+      dataSubjectRight,
+      requestTypes,
+      reasonTypes,
+      rejectTypes,
+      // reasonTemplates,
+      // rejectTemplates,
+      emails,
+    ];
+  }
 }
 
 class CreatingCurrentDataSubjectRight extends EditDataSubjectRightState {
@@ -71,12 +91,26 @@ class UpdatingCurrentDataSubjectRight extends EditDataSubjectRightState {
 class UpdatedCurrentDataSubjectRight extends EditDataSubjectRightState {
   const UpdatedCurrentDataSubjectRight(
     this.dataSubjectRight,
-    this.mandatoryFields,
+    this.requestTypes,
+    this.reasonTypes,
+    this.rejectTypes,
+    this.emails,
   );
 
   final DataSubjectRightModel dataSubjectRight;
-  final List<MandatoryFieldModel> mandatoryFields;
+  final List<RequestTypeModel> requestTypes;
+  final List<ReasonTypeModel> reasonTypes;
+  final List<RejectTypeModel> rejectTypes;
+  final List<String> emails;
 
   @override
-  List<Object> get props => [dataSubjectRight, mandatoryFields];
+  List<Object> get props {
+    return [
+      dataSubjectRight,
+      requestTypes,
+      reasonTypes,
+      rejectTypes,
+      emails,
+    ];
+  }
 }

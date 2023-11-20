@@ -1,10 +1,14 @@
 // ignore: depend_on_referenced_packages
 import 'package:bloc/bloc.dart';
 import 'package:equatable/equatable.dart';
+import 'package:pdpa/app/data/models/authentication/user_model.dart';
 import 'package:pdpa/app/data/models/data_subject_right/data_subject_right_model.dart';
-import 'package:pdpa/app/data/models/master_data/mandatory_field_model.dart';
+import 'package:pdpa/app/data/models/master_data/reason_type_model.dart';
+import 'package:pdpa/app/data/models/master_data/reject_type_model.dart';
+import 'package:pdpa/app/data/models/master_data/request_type_model.dart';
 import 'package:pdpa/app/data/repositories/data_subject_right_repository.dart';
 import 'package:pdpa/app/data/repositories/master_data_repository.dart';
+import 'package:pdpa/app/data/repositories/user_repository.dart';
 
 part 'edit_data_subject_right_event.dart';
 part 'edit_data_subject_right_state.dart';
@@ -14,8 +18,10 @@ class EditDataSubjectRightBloc
   EditDataSubjectRightBloc({
     required DataSubjectRightRepository dataSubjectRightRepository,
     required MasterDataRepository masterDataRepository,
+    required UserRepository userRepository,
   })  : _dataSubjectRightRepository = dataSubjectRightRepository,
         _masterDataRepository = masterDataRepository,
+        _userRepository = userRepository,
         super(const EditDataSubjectRightInitial()) {
     on<GetCurrentDataSubjectRightEvent>(_getCurrentDsrHandler);
     on<CreateCurrentDataSubjectRightEvent>(_createCurrentDsrHandler);
@@ -24,6 +30,7 @@ class EditDataSubjectRightBloc
 
   final DataSubjectRightRepository _dataSubjectRightRepository;
   final MasterDataRepository _masterDataRepository;
+  final UserRepository _userRepository;
 
   Future<void> _getCurrentDsrHandler(
     GetCurrentDataSubjectRightEvent event,
@@ -36,45 +43,66 @@ class EditDataSubjectRightBloc
 
     emit(const GettingCurrentDataSubjectRight());
 
-    await Future.delayed(const Duration(milliseconds: 800));
-
-    final result = await _masterDataRepository.getMandatoryFields(
+    final result = await _dataSubjectRightRepository.getDataSubjectRightById(
+      event.dataSubjectRightId,
       event.companyId,
     );
 
-    await result.fold(
-      (failure) {
-        emit(EditDataSubjectRightError(failure.errorMessage));
-        return;
-      },
-      (mandatoryFields) async {
-        if (event.dataSubjectRightId.isEmpty) {
-          emit(
-            GotCurrentDataSubjectRight(
-              DataSubjectRightModel.empty(),
-              mandatoryFields,
-            ),
-          );
-          return;
-        }
+    await Future.delayed(const Duration(milliseconds: 800));
 
-        final result =
-            await _dataSubjectRightRepository.getDataSubjectRightById(
-          event.dataSubjectRightId,
-          event.companyId,
-        );
+    await result.fold((failure) {
+      emit(EditDataSubjectRightError(failure.errorMessage));
+    }, (dataSubjectRight) async {
+      List<RequestTypeModel> gotRequestTypes = [];
+      final requestTypeResult = await _masterDataRepository.getRequestTypes(
+        event.companyId,
+      );
+      requestTypeResult.fold(
+        (failure) => emit(EditDataSubjectRightError(failure.errorMessage)),
+        (requestTypes) => gotRequestTypes = requestTypes,
+      );
 
-        result.fold(
-          (failure) => emit(EditDataSubjectRightError(failure.errorMessage)),
-          (dataSubjectRight) => emit(
-            GotCurrentDataSubjectRight(
-              dataSubjectRight,
-              mandatoryFields,
-            ),
-          ),
-        );
-      },
-    );
+      List<ReasonTypeModel> gotReasonTypes = [];
+      final reasonTypeResult = await _masterDataRepository.getReasonTypes(
+        event.companyId,
+      );
+      reasonTypeResult.fold(
+        (failure) => emit(EditDataSubjectRightError(failure.errorMessage)),
+        (reasonTypes) => gotReasonTypes = reasonTypes,
+      );
+
+      List<RejectTypeModel> gotRejectTypes = [];
+      final rejectTypeResult = await _masterDataRepository.getRejectTypes(
+        event.companyId,
+      );
+      rejectTypeResult.fold(
+        (failure) => emit(EditDataSubjectRightError(failure.errorMessage)),
+        (rejectTypes) => gotRejectTypes = rejectTypes,
+      );
+
+      List<String> gotEmails = [];
+      final userResult = await _userRepository.getUsers();
+      userResult.fold(
+        (failure) => emit(EditDataSubjectRightError(failure.errorMessage)),
+        (users) {
+          for (UserModel user in users) {
+            if (user.companies.contains(event.companyId)) {
+              gotEmails.add(user.email);
+            }
+          }
+        },
+      );
+
+      emit(
+        GotCurrentDataSubjectRight(
+          dataSubjectRight,
+          gotRequestTypes,
+          gotReasonTypes,
+          gotRejectTypes,
+          gotEmails,
+        ),
+      );
+    });
   }
 
   Future<void> _createCurrentDsrHandler(
@@ -112,15 +140,24 @@ class EditDataSubjectRightBloc
       return;
     }
 
-    List<MandatoryFieldModel> mandatoryFields = [];
+    List<RequestTypeModel> requestTypes = [];
+    List<ReasonTypeModel> reasonTypes = [];
+    List<RejectTypeModel> rejectTypes = [];
+    List<String> emails = [];
     if (state is GotCurrentDataSubjectRight) {
       final settings = state as GotCurrentDataSubjectRight;
 
-      mandatoryFields = settings.mandatoryFields;
+      requestTypes = settings.requestTypes;
+      reasonTypes = settings.reasonTypes;
+      rejectTypes = settings.rejectTypes;
+      emails = settings.emails;
     } else if (state is UpdatedCurrentDataSubjectRight) {
       final settings = state as UpdatedCurrentDataSubjectRight;
 
-      mandatoryFields = settings.mandatoryFields;
+      requestTypes = settings.requestTypes;
+      reasonTypes = settings.reasonTypes;
+      rejectTypes = settings.rejectTypes;
+      emails = settings.emails;
     }
 
     emit(const UpdatingCurrentDataSubjectRight());
@@ -137,7 +174,10 @@ class EditDataSubjectRightBloc
       (_) => emit(
         UpdatedCurrentDataSubjectRight(
           event.dataSubjectRight,
-          mandatoryFields,
+          requestTypes,
+          reasonTypes,
+          rejectTypes,
+          emails,
         ),
       ),
     );
