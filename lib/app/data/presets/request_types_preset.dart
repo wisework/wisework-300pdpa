@@ -5,7 +5,7 @@ import 'package:pdpa/app/data/models/master_data/request_type_model.dart';
 final List<RequestTypeModel> requestTypesPreset = [
   RequestTypeModel.empty().copyWith(
     id: 'DSR-REQ-001',
-    requestCode: '',
+    requestCode: 'REQ-001',
     description: const [
       LocalizedModel(
         language: 'en-US',
@@ -21,7 +21,7 @@ final List<RequestTypeModel> requestTypesPreset = [
   ),
   RequestTypeModel.empty().copyWith(
     id: 'DSR-REQ-002',
-    requestCode: '',
+    requestCode: 'REQ-002',
     description: const [
       LocalizedModel(
         language: 'en-US',
@@ -42,7 +42,7 @@ final List<RequestTypeModel> requestTypesPreset = [
   ),
   RequestTypeModel.empty().copyWith(
     id: 'DSR-REQ-003',
-    requestCode: '',
+    requestCode: 'REQ-003',
     description: const [
       LocalizedModel(
         language: 'en-US',
@@ -63,7 +63,7 @@ final List<RequestTypeModel> requestTypesPreset = [
   ),
   RequestTypeModel.empty().copyWith(
     id: 'DSR-REQ-004',
-    requestCode: '',
+    requestCode: 'REQ-004',
     description: const [
       LocalizedModel(
         language: 'en-US',
@@ -82,7 +82,7 @@ final List<RequestTypeModel> requestTypesPreset = [
   ),
   RequestTypeModel.empty().copyWith(
     id: 'DSR-REQ-005',
-    requestCode: '',
+    requestCode: 'REQ-005',
     description: const [
       LocalizedModel(
         language: 'en-US',
@@ -106,7 +106,7 @@ final List<RequestTypeModel> requestTypesPreset = [
   ),
   RequestTypeModel.empty().copyWith(
     id: 'DSR-REQ-006',
-    requestCode: '',
+    requestCode: 'REQ-006',
     description: const [
       LocalizedModel(
         language: 'en-US',
@@ -128,7 +128,7 @@ final List<RequestTypeModel> requestTypesPreset = [
   ),
   RequestTypeModel.empty().copyWith(
     id: 'DSR-REQ-007',
-    requestCode: '',
+    requestCode: 'REQ-007',
     description: const [
       LocalizedModel(
         language: 'en-US',
@@ -149,7 +149,7 @@ final List<RequestTypeModel> requestTypesPreset = [
   ),
   RequestTypeModel.empty().copyWith(
     id: 'DSR-REQ-008',
-    requestCode: '',
+    requestCode: 'REQ-008',
     description: const [
       LocalizedModel(
         language: 'en-US',
@@ -171,7 +171,7 @@ final List<RequestTypeModel> requestTypesPreset = [
   ),
   RequestTypeModel.empty().copyWith(
     id: 'DSR-REQ-009',
-    requestCode: '',
+    requestCode: 'REQ-009',
     description: const [
       LocalizedModel(
         language: 'en-US',

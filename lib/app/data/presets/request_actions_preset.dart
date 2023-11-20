@@ -8,7 +8,7 @@ final List<RequestActionModel> requestActionsPreset = [
       title: const [
         LocalizedModel(
           language: 'en-US',
-          text: "",
+          text: "Delete",
         ),
         LocalizedModel(
           language: 'th-TH',
@@ -22,7 +22,7 @@ final List<RequestActionModel> requestActionsPreset = [
       title: const [
         LocalizedModel(
           language: 'en-US',
-          text: "",
+          text: "Destroy",
         ),
         LocalizedModel(
           language: 'th-TH',
@@ -36,7 +36,7 @@ final List<RequestActionModel> requestActionsPreset = [
       title: const [
         LocalizedModel(
           language: 'en-US',
-          text: "",
+          text: "This makes the information non-personally identifiable.",
         ),
         LocalizedModel(
           language: 'th-TH',

@@ -5,7 +5,7 @@ final List<RejectTypeModel> rejectTypesPreset = [
   
     RejectTypeModel.empty().copyWith(
       id: 'DSR-REJ-001',
-      rejectCode: '',
+      rejectCode: 'REJ-001',
       description: const [
         LocalizedModel(
           language: 'en-US',
@@ -20,7 +20,7 @@ final List<RejectTypeModel> rejectTypesPreset = [
     ),
     RejectTypeModel.empty().copyWith(
       id: 'DSR-REJ-002',
-      rejectCode: '',
+      rejectCode: 'REJ-002',
       description: const [
         LocalizedModel(
           language: 'en-US',
@@ -35,7 +35,7 @@ final List<RejectTypeModel> rejectTypesPreset = [
     ),
     RejectTypeModel.empty().copyWith(
       id: 'DSR-REJ-003',
-      rejectCode: '',
+      rejectCode: 'REJ-003',
       description: const [
         LocalizedModel(
           language: 'en-US',
@@ -50,7 +50,7 @@ final List<RejectTypeModel> rejectTypesPreset = [
     ),
     RejectTypeModel.empty().copyWith(
       id: 'DSR-REJ-004',
-      rejectCode: '',
+      rejectCode: 'REJ-004',
       description: const [
         LocalizedModel(
           language: 'en-US',
@@ -65,7 +65,7 @@ final List<RejectTypeModel> rejectTypesPreset = [
     ),
     RejectTypeModel.empty().copyWith(
       id: 'DSR-REJ-005',
-      rejectCode: '',
+      rejectCode: 'REJ-005',
       description: const [
         LocalizedModel(
           language: 'en-US',
@@ -80,7 +80,7 @@ final List<RejectTypeModel> rejectTypesPreset = [
     ),
     RejectTypeModel.empty().copyWith(
       id: 'DSR-REJ-006',
-      rejectCode: '',
+      rejectCode: 'REJ-006',
       description: const [
         LocalizedModel(
           language: 'en-US',
@@ -95,7 +95,7 @@ final List<RejectTypeModel> rejectTypesPreset = [
     ),
     RejectTypeModel.empty().copyWith(
       id: 'DSR-REJ-007',
-      rejectCode: '',
+      rejectCode: 'REJ-007',
       description: const [
         LocalizedModel(
           language: 'en-US',
@@ -110,7 +110,7 @@ final List<RejectTypeModel> rejectTypesPreset = [
     ),
     RejectTypeModel.empty().copyWith(
       id: 'DSR-REJ-008',
-      rejectCode: '',
+      rejectCode: 'REJ-008',
       description: const [
         LocalizedModel(
           language: 'en-US',
@@ -125,7 +125,7 @@ final List<RejectTypeModel> rejectTypesPreset = [
     ),
     RejectTypeModel.empty().copyWith(
       id: 'DSR-REJ-009',
-      rejectCode: '',
+      rejectCode: 'REJ-009',
       description: const [
         LocalizedModel(
           language: 'en-US',
@@ -140,7 +140,7 @@ final List<RejectTypeModel> rejectTypesPreset = [
     ),
     RejectTypeModel.empty().copyWith(
       id: 'DSR-REJ-010',
-      rejectCode: '',
+      rejectCode: 'REJ-010',
       description: const [
         LocalizedModel(
           language: 'en-US',
@@ -155,7 +155,7 @@ final List<RejectTypeModel> rejectTypesPreset = [
     ),
     RejectTypeModel.empty().copyWith(
       id: 'DSR-REJ-011',
-      rejectCode: '',
+      rejectCode: 'REJ-011',
       description: const [
         LocalizedModel(
           language: 'en-US',
