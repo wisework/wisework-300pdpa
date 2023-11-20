@@ -155,20 +155,20 @@ class MasterDataScreen extends StatelessWidget {
               context.push(MasterDataRoute.reasonType.path);
             },
           ),
-          MasterDataListTile(
-            trail: true,
-            title: tr('masterData.dsr.requestrejects.list'),
-            onTap: () {
-              context.push(MasterDataRoute.requestReject.path);
-            },
-          ),
-          MasterDataListTile(
-            trail: true,
-            title: tr('masterData.dsr.requestreasons.list'),
-            onTap: () {
-              context.push(MasterDataRoute.requestReason.path);
-            },
-          ),
+          // MasterDataListTile(
+          //   trail: true,
+          //   title: tr('masterData.dsr.requestrejects.list'),
+          //   onTap: () {
+          //     context.push(MasterDataRoute.requestReject.path);
+          //   },
+          // ),
+          // MasterDataListTile(
+          //   trail: true,
+          //   title: tr('masterData.dsr.requestreasons.list'),
+          //   onTap: () {
+          //     context.push(MasterDataRoute.requestReason.path);
+          //   },
+          // ),
         ],
       ),
     );

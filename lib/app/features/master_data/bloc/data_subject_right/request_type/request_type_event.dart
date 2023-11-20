@@ -6,8 +6,8 @@ abstract class RequestTypeEvent extends Equatable {
   @override
   List<Object> get props => [];
 }
-class GetRequestTypeEvent extends RequestTypeEvent {
-  const GetRequestTypeEvent({required this.companyId});
+class GetRequestTypesEvent extends RequestTypeEvent {
+  const GetRequestTypesEvent({required this.companyId});
 
   final String companyId;
 
@@ -15,8 +15,8 @@ class GetRequestTypeEvent extends RequestTypeEvent {
   List<Object> get props => [companyId];
 }
 
-class UpdateRequestTypeEvent extends RequestTypeEvent {
-  const UpdateRequestTypeEvent({
+class UpdateRequestTypesChangedEvent extends RequestTypeEvent {
+  const UpdateRequestTypesChangedEvent({
     required this.requestType,
     required this.updateType,
   });

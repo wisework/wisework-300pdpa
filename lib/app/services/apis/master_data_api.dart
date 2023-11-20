@@ -282,13 +282,23 @@ class MasterDataApi {
   }
 
   //? Request Type
-  Future<List<RequestTypeModel>> getRequestTypes(String companyId) async {
+  Future<List<RequestTypeModel>> getRequestTypes(
+    String companyId,
+  ) async {
     final result =
         await _firestore.collection('Companies/$companyId/RequestTypes').get();
 
     List<RequestTypeModel> requestTypes = [];
     for (var document in result.docs) {
-      requestTypes.add(RequestTypeModel.fromDocument(document));
+      DataMap response = document.data();
+      response['id'] = document.id;
+
+      final rejectTypes = (response['rejectTypes'] as List<dynamic>)
+          .map((id) => {'id': id, ...RejectTypeModel.empty().toMap()})
+          .toList();
+      response['rejectTypes'] = rejectTypes;
+
+      requestTypes.add(RequestTypeModel.fromMap(response));
     }
 
     return requestTypes;
@@ -304,7 +314,17 @@ class MasterDataApi {
         .get();
 
     if (!result.exists) return null;
-    return RequestTypeModel.fromDocument(result);
+
+    DataMap response = result.data()!;
+    response['id'] = result.id;
+
+    final rejectTypes = (response['rejectTypes'] as List<dynamic>)
+        .map((id) => {'id': id, ...RejectTypeModel.empty().toMap()})
+        .toList();
+    print(response['rejectTypes']);
+    response['rejectTypes'] = rejectTypes;
+
+    return RequestTypeModel.fromMap(response);
   }
 
   Future<RequestTypeModel> createRequestType(

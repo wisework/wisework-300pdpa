@@ -1,4 +1,5 @@
 import 'dart:math';
+import 'dart:typed_data';
 
 import 'package:path/path.dart';
 import 'package:pdpa/app/config/config.dart';
@@ -152,62 +153,64 @@ class UtilFunctions {
   static RequestProcessStatus getRequestProcessStatus(
     DataSubjectRightModel dataSubjectRight,
   ) {
-    final isNewRequested = dataSubjectRight.lastSeenBy.isEmpty;
-    final isRequestFormVerified = dataSubjectRight.requestFormVerified;
-    final isVerifying =
-        dataSubjectRight.verifyFormStatus == RequestResultStatus.none;
-    final isConsidering = dataSubjectRight.processRequests.any(
-        (process) => process.considerRequestStatus == RequestResultStatus.none);
-    final isProofFileUploading = dataSubjectRight.processRequests
-        .any((process) => process.proofOfActionFile.isEmpty);
-    final isProofTextWriting = dataSubjectRight.processRequests
-        .any((process) => process.proofOfActionText.isEmpty);
-    final isProofFileUploaded = dataSubjectRight.processRequests
-        .where((process) =>
-            process.considerRequestStatus == RequestResultStatus.pass)
-        .any((process) => process.proofOfActionFile.isEmpty);
-    final isProofTextWritten = dataSubjectRight.processRequests
-        .where((process) =>
-            process.considerRequestStatus == RequestResultStatus.pass)
-        .any((process) => process.proofOfActionText.isEmpty);
-    //final isDone = dataSubjectRight.considerRequest;
+    // final isNewRequested = dataSubjectRight.lastSeenBy.isEmpty;
+    // final isRequestFormVerified = dataSubjectRight.requestFormVerified;
+    // final isVerifying =
+    //     dataSubjectRight.requestFormStatus == RequestResultStatus.none;
+    // final isConsidering = dataSubjectRight.processRequests.any((process) =>
+    //     process.considerRequestStatus == ConsiderRequestStatus.none);
+    // final isProofFileUploading = dataSubjectRight.processRequests
+    //     .any((process) => process.proofOfActionFile.isEmpty);
+    // final isProofTextWriting = dataSubjectRight.processRequests
+    //     .any((process) => process.proofOfActionText.isEmpty);
+    // final isProofFileUploaded = dataSubjectRight.processRequests
+    //     .where((process) =>
+    //         process.considerRequestStatus == ConsiderRequestStatus.pass)
+    //     .any((process) => process.proofOfActionFile.isEmpty);
+    // final isProofTextWritten = dataSubjectRight.processRequests
+    //     .where((process) =>
+    //         process.considerRequestStatus == ConsiderRequestStatus.pass)
+    //     .any((process) => process.proofOfActionText.isEmpty);
+    // final isDone = dataSubjectRight.considerRequest;
 
-    RequestProcessStatus status = RequestProcessStatus.newRequest;
-    if (isNewRequested) {
-      return status;
-    }
+    // RequestProcessStatus status = RequestProcessStatus.newRequest;
+    // if (isNewRequested) {
+    //   return status;
+    // }
 
-    if (!isRequestFormVerified && !isNewRequested) {
-      status = RequestProcessStatus.pending;
-    } else if (isRequestFormVerified && !isNewRequested) {
-      status = RequestProcessStatus.rejected;
-    }
+    // if (!isRequestFormVerified && !isNewRequested) {
+    //   status = RequestProcessStatus.pending;
+    // } else if (isRequestFormVerified && isDone && !isNewRequested) {
+    //   status = RequestProcessStatus.rejected;
+    // }
 
-    if (isVerifying && !isNewRequested && isRequestFormVerified) {
-      status = RequestProcessStatus.verifying;
-    } else if (isConsidering &&
-        !isNewRequested &&
-        isRequestFormVerified &&
-        !isVerifying) {
-      status = RequestProcessStatus.considering;
-    } else if ((isProofFileUploading || isProofTextWriting) &&
-        !isNewRequested &&
-        isRequestFormVerified &&
-        !isVerifying &&
-        !isConsidering) {
-      status = RequestProcessStatus.inProgress;
-    }
+    // if (isVerifying && !isNewRequested && isRequestFormVerified) {
+    //   status = RequestProcessStatus.verifying;
+    // } else if (isConsidering &&
+    //     !isNewRequested &&
+    //     isRequestFormVerified &&
+    //     !isVerifying) {
+    //   status = RequestProcessStatus.considering;
+    // } else if ((isProofFileUploading || isProofTextWriting) &&
+    //     !isNewRequested &&
+    //     isRequestFormVerified &&
+    //     !isVerifying &&
+    //     !isConsidering) {
+    //   status = RequestProcessStatus.inProgress;
+    // }
 
-    if (!isNewRequested &&
-        isRequestFormVerified &&
-        !isVerifying &&
-        !isConsidering &&
-        !isProofFileUploaded &&
-        !isProofTextWritten) {
-      status = RequestProcessStatus.completed;
-    }
+    // if (isDone &&
+    //     !isNewRequested &&
+    //     isRequestFormVerified &&
+    //     !isVerifying &&
+    //     !isConsidering &&
+    //     !isProofFileUploaded &&
+    //     !isProofTextWritten) {
+    //   status = RequestProcessStatus.completed;
+    // }
 
-    return status;
+    // return status;
+    return RequestProcessStatus.newRequest;
   }
 
   //? Upload File
@@ -216,6 +219,73 @@ class UtilFunctions {
     final fileExtension = extension(path);
 
     return '$fileName$fileExtension';
+  }
+
+  static String getUniqueFileNameByUint8List(Uint8List bytes) {
+    final fileName = DateTime.now().millisecondsSinceEpoch.toString();
+
+    if (bytes.length >= 2) {
+      if (bytes[0] == 0xFF && bytes[1] == 0xD8) {
+        return '$fileName.jpg';
+      } else if (bytes[0] == 0x89 && bytes[1] == 0x50) {
+        return '$fileName.png';
+      } else if (bytes[0] == 0x47 && bytes[1] == 0x49) {
+        return '$fileName.gif';
+      } else if (bytes[0] == 0x42 && bytes[1] == 0x4D) {
+        return '$fileName.bmp';
+      }
+
+      if (bytes[0] == 0xEF && bytes[1] == 0xBB && bytes[2] == 0xBF) {
+        return 'txt';
+      }
+
+      if (bytes[0] == 0x25 &&
+          bytes[1] == 0x50 &&
+          bytes[2] == 0x44 &&
+          bytes[3] == 0x46) {
+        return 'pdf';
+      }
+
+      if (bytes[0] == 0xD0 &&
+          bytes[1] == 0xCF &&
+          bytes[2] == 0x11 &&
+          bytes[3] == 0xE0) {
+        return 'doc';
+      } else if (bytes[0] == 0x50 &&
+          bytes[1] == 0x4B &&
+          bytes[2] == 0x03 &&
+          bytes[3] == 0x04) {
+        return 'docx';
+      }
+
+      if (bytes[0] == 0xD0 &&
+          bytes[1] == 0xCF &&
+          bytes[2] == 0x11 &&
+          bytes[3] == 0xE0) {
+        return 'xls';
+      } else if (bytes[0] == 0x50 &&
+          bytes[1] == 0x4B &&
+          bytes[2] == 0x03 &&
+          bytes[3] == 0x04) {
+        return 'xlsx';
+      }
+
+      if (bytes[0] == 0x50 &&
+          bytes[1] == 0x4B &&
+          bytes[2] == 0x03 &&
+          bytes[3] == 0x04) {
+        return 'zip';
+      }
+
+      if (bytes[0] == 0x52 &&
+          bytes[1] == 0x61 &&
+          bytes[2] == 0x72 &&
+          bytes[3] == 0x21) {
+        return 'rar';
+      }
+    }
+
+    return fileName;
   }
 
   static String getFileNameFromUrl(String url) {
@@ -237,6 +307,17 @@ class UtilFunctions {
     final folder = '${imageType.name}/';
 
     return [company, consent, folder].join('/');
+  }
+
+  static String getProcessDsrProofPath(
+    String companyId,
+    String dataSubjectRightId,
+  ) {
+    final company = 'companies/$companyId';
+    final dataSubjectRight = 'data_subject_rights/$dataSubjectRightId';
+    const folder = 'proof/';
+
+    return [company, dataSubjectRight, folder].join('/');
   }
 
   //? Etc

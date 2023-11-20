@@ -28,32 +28,52 @@ class DataSubjectRightModel extends Equatable {
   });
 
   /// Data subject right ID
+  /// Data subject right ID
   final String id;
+
+  /// The data about requester who requesting the form.
 
   /// The data about requester who requesting the form.
   final List<RequesterInputModel> dataRequester;
 
   /// Requester data in case where the requester is not the owner of data.
+
+  /// Requester data in case where the requester is not the owner of data.
   final List<RequesterInputModel> dataOwner;
+
+  /// Check whether the requester and the data owner are the same person or not?
 
   /// Check whether the requester and the data owner are the same person or not?
   final bool isDataOwner;
 
   /// Power of attorneys in case where the requester is not the owner of data.
+
+  /// Power of attorneys in case where the requester is not the owner of data.
   final List<RequesterVerificationModel> powerVerifications;
 
   /// Identity proofs to confirm the identity of the requester.
+
+  /// Identity proofs to confirm the identity of the requester.
   final List<RequesterVerificationModel> identityVerifications;
+
+  /// The request that the requester want to action in this form.
 
   /// The request that the requester want to action in this form.
   final List<ProcessRequestModel> processRequests;
 
   /// Expiration date of this form.
   /// Starting from the requested date until the scheduled date [such as 30 days].
+
+  /// Expiration date of this form.
+  /// Starting from the requested date until the scheduled date [such as 30 days].
   final DateTime requestExpirationDate;
 
   /// Email notification to relevant people.
+
+  /// Email notification to relevant people.
   final List<String> notifyEmail;
+
+  /// Verify that the data subject right form is verified by operator or not.
 
   /// Verify that the data subject right form is verified by operator or not.
   final bool requestFormVerified;
@@ -70,8 +90,12 @@ class DataSubjectRightModel extends Equatable {
   final String lastSeenBy;
 
   /// The date and user who created the form.
+
+  /// The date and user who created the form.
   final String createdBy;
   final DateTime createdDate;
+
+  /// The date and operator who edited or updated the form.
 
   /// The date and operator who edited or updated the form.
   final String updatedBy;

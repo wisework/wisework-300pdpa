@@ -58,3 +58,14 @@ class DeleteCurrentRequestRejectTpEvent extends EditRequestRejectTpEvent {
   @override
   List<Object> get props => [requestRejectTpId, companyId];
 }
+
+class UpdateEditRequestRejectTpStateEvent extends EditRequestRejectTpEvent {
+  const UpdateEditRequestRejectTpStateEvent({
+    required this.reject,
+  });
+
+  final RejectTypeModel reject;
+
+  @override
+  List<Object> get props => [reject];
+}

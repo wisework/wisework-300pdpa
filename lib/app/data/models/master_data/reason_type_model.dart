@@ -9,6 +9,7 @@ class ReasonTypeModel extends Equatable {
     required this.reasonCode,
     required this.description,
     required this.requiredInputReasonText,
+    required this.editable,
     required this.status,
     required this.createdBy,
     required this.createdDate,
@@ -20,6 +21,7 @@ class ReasonTypeModel extends Equatable {
   final String reasonCode;
   final List<LocalizedModel> description;
   final bool requiredInputReasonText;
+  final bool editable;
   final ActiveStatus status;
   final String createdBy;
   final DateTime createdDate;
@@ -32,6 +34,7 @@ class ReasonTypeModel extends Equatable {
           reasonCode: '',
           description: [],
           requiredInputReasonText: false,
+          editable: true,
           status: ActiveStatus.active,
           createdBy: '',
           createdDate: DateTime.fromMillisecondsSinceEpoch(0),
@@ -49,6 +52,7 @@ class ReasonTypeModel extends Equatable {
             ),
           ),
           requiredInputReasonText: map['requiredInputReasonText'] as bool,
+          editable: map['editable'] as bool,
           status: ActiveStatus.values[map['status'] as int],
           createdBy: map['createdBy'] as String,
           createdDate: DateTime.parse(map['createdDate'] as String),
@@ -63,10 +67,10 @@ class ReasonTypeModel extends Equatable {
   }
 
   DataMap toMap() => {
-        'id': id,
         'reasonCode': reasonCode,
         'description': description.map((item) => item.toMap()).toList(),
         'requiredInputReasonText': requiredInputReasonText,
+        'editable': editable,
         'status': status.index,
         'createdBy': createdBy,
         'createdDate': createdDate.toIso8601String(),
@@ -80,6 +84,7 @@ class ReasonTypeModel extends Equatable {
     List<LocalizedModel>? description,
     bool? requiredInputReasonText,
     String? periodUnit,
+    bool? editable,
     ActiveStatus? status,
     String? createdBy,
     DateTime? createdDate,
@@ -92,6 +97,7 @@ class ReasonTypeModel extends Equatable {
       description: description ?? this.description,
       requiredInputReasonText:
           requiredInputReasonText ?? this.requiredInputReasonText,
+      editable: editable ?? this.editable,
       status: status ?? this.status,
       createdBy: createdBy ?? this.createdBy,
       createdDate: createdDate ?? this.createdDate,
@@ -119,6 +125,7 @@ class ReasonTypeModel extends Equatable {
       reasonCode,
       description,
       requiredInputReasonText,
+      editable,
       status,
       createdBy,
       createdDate,

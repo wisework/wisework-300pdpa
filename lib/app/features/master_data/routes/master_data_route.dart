@@ -6,8 +6,6 @@ import 'package:pdpa/app/features/master_data/screens/consent/purpose_category/s
 import 'package:pdpa/app/features/master_data/screens/data_subject_right/data_subject_right.dart';
 import 'package:pdpa/app/features/master_data/screens/data_subject_right/reason_type/screens/edit_reason_type_screen.dart';
 import 'package:pdpa/app/features/master_data/screens/data_subject_right/reject_type/screens/edit_reject_type_screen.dart';
-import 'package:pdpa/app/features/master_data/screens/data_subject_right/request_reason_template/screens/edit_request_reason_template_screen.dart';
-import 'package:pdpa/app/features/master_data/screens/data_subject_right/request_reject_template/screens/edit_request_reject_template_screen.dart';
 import 'package:pdpa/app/features/master_data/screens/data_subject_right/request_type/screens/edit_request_type_screen.dart';
 import 'package:pdpa/app/features/master_data/screens/mandatory/mandatory_field_screen.dart';
 import 'package:pdpa/app/features/master_data/screens/master_data_screen.dart';
@@ -152,46 +150,6 @@ class MasterDataRoute {
     ),
   );
 
-  //? Request Reason
-  static final GoRoute requestReason = GoRoute(
-    path: '/master-data/requestreason',
-    builder: (context, _) => const RequestReasonTemplateScreen(),
-  );
-
-  static final GoRoute createRequestReason = GoRoute(
-    path: '/master-data/requestreason/create',
-    builder: (context, _) => const EditRequestReasonTemplateScreen(
-      requestReasonId: '',
-    ),
-  );
-
-  static final GoRoute editRequestReason = GoRoute(
-    path: '/master-data/requestreason/edit',
-    builder: (context, state) => EditRequestReasonTemplateScreen(
-      requestReasonId: state.pathParameters['id'] ?? '',
-    ),
-  );
-
-  //? Request Reject
-  static final GoRoute requestReject = GoRoute(
-    path: '/master-data/requestreject',
-    builder: (context, _) => const RequestRejectTemplateScreen(),
-  );
-
-  static final GoRoute createRequestReject = GoRoute(
-    path: '/master-data/requestreject/create',
-    builder: (context, _) => const EditRequestRejectTemplateScreen(
-      requestRejectId: '',
-    ),
-  );
-
-  static final GoRoute editRequestReject = GoRoute(
-    path: '/master-data/requestreject/edit',
-    builder: (context, state) => EditRequestRejectTemplateScreen(
-      requestRejectId: state.pathParameters['id'] ?? '',
-    ),
-  );
-
   static final List<GoRoute> routes = <GoRoute>[
     masterData,
     //mandatory
@@ -217,11 +175,5 @@ class MasterDataRoute {
     rejectType,
     createRejectType,
     editRejectType,
-    requestReason,
-    createRequestReason,
-    editRequestReason,
-    requestReject,
-    createRequestReject,
-    editRequestReject
   ];
 }
