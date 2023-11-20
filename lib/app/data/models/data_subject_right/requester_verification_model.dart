@@ -1,8 +1,8 @@
 import 'package:equatable/equatable.dart';
 import 'package:pdpa/app/shared/utils/typedef.dart';
 
-class UserVerification extends Equatable {
-  const UserVerification({
+class RequesterVerificationModel extends Equatable {
+  const RequesterVerificationModel({
     required this.id,
     required this.text,
     required this.imageUrl,
@@ -12,7 +12,7 @@ class UserVerification extends Equatable {
   final String text;
   final String imageUrl;
 
-  UserVerification.fromMap(DataMap map)
+  RequesterVerificationModel.fromMap(DataMap map)
       : this(
           id: map['id'] as String,
           text: map['text'] as String,
@@ -26,12 +26,12 @@ class UserVerification extends Equatable {
         }
       };
 
-  UserVerification copyWith({
+  RequesterVerificationModel copyWith({
     String? id,
     String? text,
     String? imageUrl,
   }) {
-    return UserVerification(
+    return RequesterVerificationModel(
       id: id ?? this.id,
       text: text ?? this.text,
       imageUrl: imageUrl ?? this.imageUrl,

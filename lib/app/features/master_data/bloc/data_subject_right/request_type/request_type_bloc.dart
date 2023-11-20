@@ -1,6 +1,7 @@
 // ignore: depend_on_referenced_packages
 import 'package:bloc/bloc.dart';
 import 'package:equatable/equatable.dart';
+import 'package:pdpa/app/data/models/master_data/reject_type_model.dart';
 import 'package:pdpa/app/data/models/master_data/request_type_model.dart';
 import 'package:pdpa/app/data/repositories/master_data_repository.dart';
 import 'package:pdpa/app/shared/utils/constants.dart';
@@ -13,14 +14,14 @@ class RequestTypeBloc extends Bloc<RequestTypeEvent, RequestTypeState> {
     required MasterDataRepository masterDataRepository,
   })  : _masterDataRepository = masterDataRepository,
         super(const RequestTypeInitial()) {
-    on<GetRequestTypeEvent>(_getRequestTypesHandler);
-    on<UpdateRequestTypeEvent>(_updateRequestTypesHandler);
+    on<GetRequestTypesEvent>(_getRequestTypesHandler);
+    on<UpdateRequestTypesChangedEvent>(_updateRequestTypesHandler);
   }
 
   final MasterDataRepository _masterDataRepository;
 
   Future<void> _getRequestTypesHandler(
-    GetRequestTypeEvent event,
+    GetRequestTypesEvent event,
     Emitter<RequestTypeState> emit,
   ) async {
     if (event.companyId.isEmpty) {
@@ -30,18 +31,53 @@ class RequestTypeBloc extends Bloc<RequestTypeEvent, RequestTypeState> {
 
     emit(const GettingRequestType());
 
-    final result = await _masterDataRepository.getRequestTypes(event.companyId);
+    List<RejectTypeModel> gotRejectTypes = [];
+    List<RequestTypeModel> gotRequestTypes = [];
 
-    result.fold(
-      (failure) => emit(RequestTypeError(failure.errorMessage)),
-      (requestTypes) => emit(GotRequestTypes(
-        requestTypes..sort((a, b) => b.updatedDate.compareTo(a.updatedDate)),
-      )),
+    final rejectResult = await _masterDataRepository.getRejectTypes(
+      event.companyId,
+    );
+    rejectResult.fold(
+      (failure) {
+        emit(RequestTypeError(failure.errorMessage));
+        return;
+      },
+      (rejects) {
+        gotRejectTypes = rejects;
+      },
+    );
+
+    final requestTypeResult = await _masterDataRepository.getRequestTypes(
+      event.companyId,
+    );
+
+    requestTypeResult.fold(
+      (failure) {
+        emit(RequestTypeError(failure.errorMessage));
+        return;
+      },
+      (requestTypes) {
+        for (RequestTypeModel request in requestTypes) {
+          final rejectIds =
+              request.rejectTypes.map((reject) => reject.id).toList();
+          final rejects = gotRejectTypes
+              .where((reject) => rejectIds.contains(reject.id))
+              .toList();
+
+          gotRequestTypes.add(request.copyWith(rejectTypes: rejects));
+        }
+        emit(
+          GotRequestTypes(
+            gotRequestTypes
+              ..sort((a, b) => b.updatedDate.compareTo(a.updatedDate)),
+          ),
+        );
+      },
     );
   }
 
   Future<void> _updateRequestTypesHandler(
-    UpdateRequestTypeEvent event,
+    UpdateRequestTypesChangedEvent event,
     Emitter<RequestTypeState> emit,
   ) async {
     if (state is GotRequestTypes) {
@@ -56,7 +92,7 @@ class RequestTypeBloc extends Bloc<RequestTypeEvent, RequestTypeState> {
           break;
         case UpdateType.updated:
           for (RequestTypeModel requestType in requestTypes) {
-            if (requestType.requestTypeId == event.requestType.requestTypeId) {
+            if (requestType.id == event.requestType.id) {
               updated.add(event.requestType);
             } else {
               updated.add(requestType);
@@ -65,8 +101,7 @@ class RequestTypeBloc extends Bloc<RequestTypeEvent, RequestTypeState> {
           break;
         case UpdateType.deleted:
           updated = requestTypes
-              .where((requestType) =>
-                  requestType.requestTypeId != event.requestType.requestTypeId)
+              .where((requestType) => requestType.id != event.requestType.id)
               .toList();
           break;
       }

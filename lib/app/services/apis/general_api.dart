@@ -35,7 +35,7 @@ class GeneralApi {
     return body['link'];
   }
 
-  Future<String> uploadImage(
+  Future<String> uploadFile(
     File? file,
     Uint8List? data,
     String fileName,
@@ -53,9 +53,12 @@ class GeneralApi {
     return await ref.getDownloadURL();
   }
 
-  Future<List<String>> getImages(
-    String path,
-  ) async {
+  Future<void> downloadFile(String path) async {
+    final ref = _storage.ref().child(path);
+    await ref.getData();
+  }
+
+  Future<List<String>> getImages(String path) async {
     final result = await _storage.ref().child(path).listAll();
 
     List<String> imagePaths = [];

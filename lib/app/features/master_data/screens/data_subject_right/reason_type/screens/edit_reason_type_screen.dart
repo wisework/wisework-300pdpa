@@ -115,8 +115,8 @@ class _EditReasonTypeScreenState extends State<EditReasonTypeScreen> {
               duration: UiConfig.toastDuration,
             );
 
-            final deleted = ReasonTypeModel.empty()
-                .copyWith(reasonTypeId: state.reasonTypeId);
+            final deleted =
+                ReasonTypeModel.empty().copyWith(id: state.reasonTypeId);
 
             context.read<ReasonTypeBloc>().add(UpdateReasonTypeEvent(
                 reasonType: deleted, updateType: UpdateType.deleted));
@@ -286,7 +286,7 @@ class _EditReasonTypeViewState extends State<EditReasonTypeView> {
 
   void _deleteReasonType() {
     context.read<EditReasonTypeBloc>().add(DeleteCurrentReasonTypeEvent(
-          reasonTypeId: reasonType.reasonTypeId,
+          reasonTypeId: reasonType.id,
           companyId: widget.currentUser.currentCompany,
         ));
   }

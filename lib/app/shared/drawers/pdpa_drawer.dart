@@ -10,6 +10,7 @@ import 'package:pdpa/app/features/authentication/bloc/sign_in/sign_in_bloc.dart'
 import 'package:pdpa/app/features/authentication/routes/authentication_route.dart';
 import 'package:pdpa/app/features/consent_management/consent_form/routes/consent_form_route.dart';
 import 'package:pdpa/app/features/consent_management/user_consent/routes/user_consent_route.dart';
+import 'package:pdpa/app/features/data_subject_right/routes/data_subject_right_route.dart';
 import 'package:pdpa/app/features/general/routes/general_route.dart';
 import 'package:pdpa/app/features/master_data/routes/master_data_route.dart';
 import 'package:pdpa/app/shared/drawers/models/drawer_menu_models.dart';
@@ -65,12 +66,12 @@ class _PdpaDrawerState extends State<PdpaDrawer> {
         ),
       ],
     ),
-    // DrawerMenuModel(
-    //   value: 'data_subject_right',
-    //   title: 'Data Subject Right',
-    //   icon: Ionicons.shield_checkmark_outline,
-    //   route: DataSubjectRightRoute.dataSubjectRight,
-    // ),
+    DrawerMenuModel(
+      value: 'data_subject_right',
+      title: tr('app.features.datasubjectright'),
+      icon: Ionicons.shield_checkmark_outline,
+      route: DataSubjectRightRoute.dataSubjectRight,
+    ),
     DrawerMenuModel(
       value: 'master_data',
       title: tr('app.features.masterdata'),

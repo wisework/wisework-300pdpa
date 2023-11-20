@@ -31,10 +31,14 @@ class GettingRequestRejects extends RequestRejectTpState {
 }
 
 class GotRequestRejects extends RequestRejectTpState {
-  const GotRequestRejects(this.requestRejects);
+  const GotRequestRejects(
+    this.requestRejects,
+    this.requests,
+  );
 
   final List<RequestRejectTemplateModel> requestRejects;
+  final List<RequestTypeModel> requests;
 
   @override
-  List<Object> get props => [requestRejects];
+  List<Object> get props => [requestRejects, requests];
 }

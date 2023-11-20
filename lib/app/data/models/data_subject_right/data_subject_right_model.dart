@@ -1,8 +1,8 @@
 import 'package:equatable/equatable.dart';
 
 import 'package:pdpa/app/data/models/data_subject_right/process_request_model.dart';
-import 'package:pdpa/app/data/models/etc/user_input_text.dart';
-import 'package:pdpa/app/data/models/etc/user_verification.dart';
+import 'package:pdpa/app/data/models/data_subject_right/requester_input_model.dart';
+import 'package:pdpa/app/data/models/data_subject_right/requester_verification_model.dart';
 import 'package:pdpa/app/shared/utils/constants.dart';
 import 'package:pdpa/app/shared/utils/typedef.dart';
 
@@ -18,9 +18,8 @@ class DataSubjectRightModel extends Equatable {
     required this.requestExpirationDate,
     required this.notifyEmail,
     required this.requestFormVerified,
-    required this.requestVerifyingStatus,
-    required this.resultRequest,
-    required this.verifyReason,
+    required this.verifyFormStatus,
+    required this.rejectVerifyReason,
     required this.lastSeenBy,
     required this.createdBy,
     required this.createdDate,
@@ -28,22 +27,77 @@ class DataSubjectRightModel extends Equatable {
     required this.updatedDate,
   });
 
+  /// Data subject right ID
+  /// Data subject right ID
   final String id;
-  final List<UserInputText> dataRequester;
-  final List<UserInputText> dataOwner;
+
+  /// The data about requester who requesting the form.
+
+  /// The data about requester who requesting the form.
+  final List<RequesterInputModel> dataRequester;
+
+  /// Requester data in case where the requester is not the owner of data.
+
+  /// Requester data in case where the requester is not the owner of data.
+  final List<RequesterInputModel> dataOwner;
+
+  /// Check whether the requester and the data owner are the same person or not?
+
+  /// Check whether the requester and the data owner are the same person or not?
   final bool isDataOwner;
-  final List<UserVerification> powerVerifications;
-  final List<UserVerification> identityVerifications;
+
+  /// Power of attorneys in case where the requester is not the owner of data.
+
+  /// Power of attorneys in case where the requester is not the owner of data.
+  final List<RequesterVerificationModel> powerVerifications;
+
+  /// Identity proofs to confirm the identity of the requester.
+
+  /// Identity proofs to confirm the identity of the requester.
+  final List<RequesterVerificationModel> identityVerifications;
+
+  /// The request that the requester want to action in this form.
+
+  /// The request that the requester want to action in this form.
   final List<ProcessRequestModel> processRequests;
+
+  /// Expiration date of this form.
+  /// Starting from the requested date until the scheduled date [such as 30 days].
+
+  /// Expiration date of this form.
+  /// Starting from the requested date until the scheduled date [such as 30 days].
   final DateTime requestExpirationDate;
+
+  /// Email notification to relevant people.
+
+  /// Email notification to relevant people.
   final List<String> notifyEmail;
+
+  /// Verify that the data subject right form is verified by operator or not.
+
+  /// Verify that the data subject right form is verified by operator or not.
   final bool requestFormVerified;
-  final RequestVerifyingStatus requestVerifyingStatus;
-  final bool resultRequest;
-  final String verifyReason;
+
+  /// The results of checking that this form is correct and complete.
+  /// Use in [Verify data subject right step].
+  final RequestResultStatus verifyFormStatus;
+
+  /// Reason for rejecting this form.
+  /// Use in [Verify data subject right step].
+  final String rejectVerifyReason;
+
+  /// The lastest user who see the data subject right form.
   final String lastSeenBy;
+
+  /// The date and user who created the form.
+
+  /// The date and user who created the form.
   final String createdBy;
   final DateTime createdDate;
+
+  /// The date and operator who edited or updated the form.
+
+  /// The date and operator who edited or updated the form.
   final String updatedBy;
   final DateTime updatedDate;
 
@@ -59,9 +113,8 @@ class DataSubjectRightModel extends Equatable {
           requestExpirationDate: DateTime.fromMillisecondsSinceEpoch(0),
           notifyEmail: [],
           requestFormVerified: false,
-          requestVerifyingStatus: RequestVerifyingStatus.none,
-          resultRequest: false,
-          verifyReason: '',
+          verifyFormStatus: RequestResultStatus.none,
+          rejectVerifyReason: '',
           lastSeenBy: '',
           createdBy: '',
           createdDate: DateTime.fromMillisecondsSinceEpoch(0),
@@ -72,27 +125,30 @@ class DataSubjectRightModel extends Equatable {
   DataSubjectRightModel.fromMap(DataMap map)
       : this(
           id: map['id'] as String,
-          dataRequester: List<UserInputText>.from(
-            (map['dataRequester'] as DataMap).entries.map<UserInputText>(
-                (item) => UserInputText.fromMap(
-                    {'id': item.key, 'text': item.value})),
+          dataRequester: List<RequesterInputModel>.from(
+            (map['dataRequester'] as DataMap).entries.map<RequesterInputModel>(
+                (item) => RequesterInputModel.fromMap(
+                    {'id': item.key, ...item.value})),
           ),
-          dataOwner: List<UserInputText>.from(
-            (map['dataOwner'] as DataMap).entries.map<UserInputText>((item) =>
-                UserInputText.fromMap({'id': item.key, 'text': item.value})),
+          dataOwner: List<RequesterInputModel>.from(
+            (map['dataOwner'] as DataMap).entries.map<RequesterInputModel>(
+                (item) => RequesterInputModel.fromMap(
+                    {'id': item.key, ...item.value})),
           ),
           isDataOwner: map['isDataOwner'] as bool,
-          powerVerifications: List<UserVerification>.from(
+          powerVerifications: List<RequesterVerificationModel>.from(
             (map['powerVerifications'] as DataMap)
                 .entries
-                .map<UserVerification>((item) =>
-                    UserVerification.fromMap({'id': item.key, ...item.value})),
+                .map<RequesterVerificationModel>((item) =>
+                    RequesterVerificationModel.fromMap(
+                        {'id': item.key, ...item.value})),
           ),
-          identityVerifications: List<UserVerification>.from(
+          identityVerifications: List<RequesterVerificationModel>.from(
             (map['identityVerifications'] as DataMap)
                 .entries
-                .map<UserVerification>((item) =>
-                    UserVerification.fromMap({'id': item.key, ...item.value})),
+                .map<RequesterVerificationModel>((item) =>
+                    RequesterVerificationModel.fromMap(
+                        {'id': item.key, ...item.value})),
           ),
           processRequests: List<ProcessRequestModel>.from(
             (map['processRequests'] as DataMap)
@@ -104,10 +160,9 @@ class DataSubjectRightModel extends Equatable {
               DateTime.parse(map['requestExpirationDate'] as String),
           notifyEmail: List<String>.from(map['notifyEmail'] as List<dynamic>),
           requestFormVerified: map['requestFormVerified'] as bool,
-          requestVerifyingStatus: RequestVerifyingStatus
-              .values[map['requestVerifyingStatus'] as int],
-          resultRequest: map['resultRequest'] as bool,
-          verifyReason: map['verifyReason'] as String,
+          verifyFormStatus:
+              RequestResultStatus.values[map['verifyFormStatus'] as int],
+          rejectVerifyReason: map['rejectVerifyReason'] as String,
           lastSeenBy: map['lastSeenBy'] as String,
           createdBy: map['createdBy'] as String,
           createdDate: DateTime.parse(map['createdDate'] as String),
@@ -122,23 +177,24 @@ class DataSubjectRightModel extends Equatable {
   }
 
   DataMap toMap() => {
-        'id': id,
         'dataRequester': dataRequester.fold(
           {},
-          (map, userInputField) => map..addAll(userInputField.toMap()),
+          (map, requesterInput) => map..addAll(requesterInput.toMap()),
         ),
         'dataOwner': dataOwner.fold(
           {},
-          (map, userInputField) => map..addAll(userInputField.toMap()),
+          (map, requesterInput) => map..addAll(requesterInput.toMap()),
         ),
         'isDataOwner': isDataOwner,
         'powerVerifications': powerVerifications.fold(
           {},
-          (map, userVerification) => map..addAll(userVerification.toMap()),
+          (map, requesterVerification) =>
+              map..addAll(requesterVerification.toMap()),
         ),
         'identityVerifications': identityVerifications.fold(
           {},
-          (map, userVerification) => map..addAll(userVerification.toMap()),
+          (map, requesterVerification) =>
+              map..addAll(requesterVerification.toMap()),
         ),
         'processRequests': processRequests.fold(
           {},
@@ -147,9 +203,8 @@ class DataSubjectRightModel extends Equatable {
         'requestExpirationDate': requestExpirationDate.toIso8601String(),
         'notifyEmail': notifyEmail,
         'requestFormVerified': requestFormVerified,
-        'requestVerifyingStatus': requestVerifyingStatus.index,
-        'resultRequest': resultRequest,
-        'verifyReason': verifyReason,
+        'verifyFormStatus': verifyFormStatus.index,
+        'rejectVerifyReason': rejectVerifyReason,
         'lastSeenBy': lastSeenBy,
         'createdBy': createdBy,
         'createdDate': createdDate.toIso8601String(),
@@ -159,18 +214,17 @@ class DataSubjectRightModel extends Equatable {
 
   DataSubjectRightModel copyWith({
     String? id,
-    List<UserInputText>? dataRequester,
-    List<UserInputText>? dataOwner,
+    List<RequesterInputModel>? dataRequester,
+    List<RequesterInputModel>? dataOwner,
     bool? isDataOwner,
-    List<UserVerification>? powerVerifications,
-    List<UserVerification>? identityVerifications,
+    List<RequesterVerificationModel>? powerVerifications,
+    List<RequesterVerificationModel>? identityVerifications,
     List<ProcessRequestModel>? processRequests,
     DateTime? requestExpirationDate,
     List<String>? notifyEmail,
     bool? requestFormVerified,
-    RequestVerifyingStatus? requestVerifyingStatus,
-    bool? resultRequest,
-    String? verifyReason,
+    RequestResultStatus? verifyFormStatus,
+    String? rejectVerifyReason,
     String? lastSeenBy,
     String? createdBy,
     DateTime? createdDate,
@@ -190,10 +244,8 @@ class DataSubjectRightModel extends Equatable {
           requestExpirationDate ?? this.requestExpirationDate,
       notifyEmail: notifyEmail ?? this.notifyEmail,
       requestFormVerified: requestFormVerified ?? this.requestFormVerified,
-      requestVerifyingStatus:
-          requestVerifyingStatus ?? this.requestVerifyingStatus,
-      resultRequest: resultRequest ?? this.resultRequest,
-      verifyReason: verifyReason ?? this.verifyReason,
+      verifyFormStatus: verifyFormStatus ?? this.verifyFormStatus,
+      rejectVerifyReason: rejectVerifyReason ?? this.rejectVerifyReason,
       lastSeenBy: lastSeenBy ?? this.lastSeenBy,
       createdBy: createdBy ?? this.createdBy,
       createdDate: createdDate ?? this.createdDate,
@@ -227,9 +279,8 @@ class DataSubjectRightModel extends Equatable {
       requestExpirationDate,
       notifyEmail,
       requestFormVerified,
-      requestVerifyingStatus,
-      resultRequest,
-      verifyReason,
+      verifyFormStatus,
+      rejectVerifyReason,
       lastSeenBy,
       createdBy,
       createdDate,

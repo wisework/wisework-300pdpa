@@ -13,6 +13,7 @@ class EditRequestTypeInitial extends EditRequestTypeState {
   @override
   List<Object> get props => [];
 }
+
 class EditRequestTypeError extends EditRequestTypeState {
   const EditRequestTypeError(this.message);
 
@@ -30,12 +31,16 @@ class GetingCurrentRequestType extends EditRequestTypeState {
 }
 
 class GotCurrentRequestType extends EditRequestTypeState {
-  const GotCurrentRequestType(this.requestType);
+  const GotCurrentRequestType(
+    this.requestType,
+    this.rejectTypes,
+  );
 
   final RequestTypeModel requestType;
+  final List<RejectTypeModel> rejectTypes;
 
   @override
-  List<Object> get props => [requestType];
+  List<Object> get props => [requestType, rejectTypes];
 }
 
 class CreatingCurrentRequestType extends EditRequestTypeState {
@@ -62,12 +67,16 @@ class UpdatingCurrentRequestType extends EditRequestTypeState {
 }
 
 class UpdatedCurrentRequestType extends EditRequestTypeState {
-  const UpdatedCurrentRequestType(this.requestType);
+  const UpdatedCurrentRequestType(
+    this.requestType,
+    this.rejectTypes,
+  );
 
   final RequestTypeModel requestType;
+  final List<RejectTypeModel> rejectTypes;
 
   @override
-  List<Object> get props => [requestType];
+  List<Object> get props => [requestType, rejectTypes];
 }
 
 class DeletingCurrentRequestType extends EditRequestTypeState {

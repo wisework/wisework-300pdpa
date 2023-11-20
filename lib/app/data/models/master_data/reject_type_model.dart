@@ -5,9 +5,10 @@ import 'package:pdpa/app/shared/utils/typedef.dart';
 
 class RejectTypeModel extends Equatable {
   const RejectTypeModel({
-    required this.rejectTypeId,
+    required this.id,
     required this.rejectCode,
     required this.description,
+    required this.editable,
     required this.status,
     required this.createdBy,
     required this.createdDate,
@@ -15,9 +16,10 @@ class RejectTypeModel extends Equatable {
     required this.updatedDate,
   });
 
-  final String rejectTypeId;
+  final String id;
   final String rejectCode;
   final List<LocalizedModel> description;
+  final bool editable;
   final ActiveStatus status;
   final String createdBy;
   final DateTime createdDate;
@@ -26,9 +28,10 @@ class RejectTypeModel extends Equatable {
 
   RejectTypeModel.empty()
       : this(
-          rejectTypeId: '',
+          id: '',
           rejectCode: '',
           description: [],
+          editable: true,
           status: ActiveStatus.active,
           createdBy: '',
           createdDate: DateTime.fromMillisecondsSinceEpoch(0),
@@ -38,13 +41,14 @@ class RejectTypeModel extends Equatable {
 
   RejectTypeModel.fromMap(DataMap map)
       : this(
-          rejectTypeId: map['rejectTypeId'] as String,
+          id: map['id'] as String,
           rejectCode: map['rejectCode'] as String,
           description: List<LocalizedModel>.from(
             (map['description'] as List<dynamic>).map<LocalizedModel>(
               (item) => LocalizedModel.fromMap(item as DataMap),
             ),
           ),
+          editable: map['editable'] as bool,
           status: ActiveStatus.values[map['status'] as int],
           createdBy: map['createdBy'] as String,
           createdDate: DateTime.parse(map['createdDate'] as String),
@@ -58,10 +62,10 @@ class RejectTypeModel extends Equatable {
     return RejectTypeModel.fromMap(response);
   }
 
-  DataMap toMap() => {
-        'rejectTypeId': rejectTypeId,
+  DataMap toMap() => {     
         'rejectCode': rejectCode,
         'description': description.map((item) => item.toMap()).toList(),
+        'editable': editable,
         'status': status.index,
         'createdBy': createdBy,
         'createdDate': createdDate.toIso8601String(),
@@ -70,9 +74,10 @@ class RejectTypeModel extends Equatable {
       };
 
   RejectTypeModel copyWith({
-    String? rejectTypeId,
+    String? id,
     String? rejectCode,
     List<LocalizedModel>? description,
+    bool? editable,
     ActiveStatus? status,
     String? createdBy,
     DateTime? createdDate,
@@ -80,9 +85,10 @@ class RejectTypeModel extends Equatable {
     DateTime? updatedDate,
   }) {
     return RejectTypeModel(
-      rejectTypeId: rejectTypeId ?? this.rejectTypeId,
+      id: id ?? this.id,
       rejectCode: rejectCode ?? this.rejectCode,
       description: description ?? this.description,
+      editable: editable ?? this.editable,
       status: status ?? this.status,
       createdBy: createdBy ?? this.createdBy,
       createdDate: createdDate ?? this.createdDate,
@@ -106,9 +112,10 @@ class RejectTypeModel extends Equatable {
   @override
   List<Object> get props {
     return [
-      rejectTypeId,
+      id,
       rejectCode,
       description,
+      editable,
       status,
       createdBy,
       createdDate,

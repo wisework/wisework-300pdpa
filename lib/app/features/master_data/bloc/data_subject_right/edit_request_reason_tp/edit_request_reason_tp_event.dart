@@ -6,6 +6,7 @@ abstract class EditRequestReasonTpEvent extends Equatable {
   @override
   List<Object> get props => [];
 }
+
 class GetCurrentRequestReasonTpEvent extends EditRequestReasonTpEvent {
   const GetCurrentRequestReasonTpEvent({
     required this.requestReasonTpId,
@@ -56,4 +57,15 @@ class DeleteCurrentRequestReasonTpEvent extends EditRequestReasonTpEvent {
 
   @override
   List<Object> get props => [requestReasonTpId, companyId];
+}
+
+class UpdateEditRequestReasonTpStateEvent extends EditRequestReasonTpEvent {
+  const UpdateEditRequestReasonTpStateEvent({
+    required this.reason,
+  });
+
+  final ReasonTypeModel reason;
+
+  @override
+  List<Object> get props => [reason];
 }
