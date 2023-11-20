@@ -91,6 +91,7 @@ class _EditDataSubjectRightScreenState
               requestTypes: state.requestTypes,
               reasonTypes: state.reasonTypes,
               rejectTypes: state.rejectTypes,
+              emails: state.emails,
               currentUser: currentUser,
               isNewDataSubjectRight: widget.dataSubjectRightId.isEmpty,
             );
@@ -101,6 +102,7 @@ class _EditDataSubjectRightScreenState
               requestTypes: state.requestTypes,
               reasonTypes: state.reasonTypes,
               rejectTypes: state.rejectTypes,
+              emails: state.emails,
               currentUser: currentUser,
               isNewDataSubjectRight: widget.dataSubjectRightId.isEmpty,
             );
@@ -123,6 +125,7 @@ class EditDataSubjectRightView extends StatefulWidget {
     required this.requestTypes,
     required this.reasonTypes,
     required this.rejectTypes,
+    required this.emails,
     required this.currentUser,
     required this.isNewDataSubjectRight,
   });
@@ -131,6 +134,7 @@ class EditDataSubjectRightView extends StatefulWidget {
   final List<RequestTypeModel> requestTypes;
   final List<ReasonTypeModel> reasonTypes;
   final List<RejectTypeModel> rejectTypes;
+  final List<String> emails;
   final UserModel currentUser;
   final bool isNewDataSubjectRight;
 
@@ -255,6 +259,7 @@ class _EditDataSubjectRightViewState extends State<EditDataSubjectRightView> {
                         MaterialPageRoute(
                           builder: (context) => ProcessDataSubjectRightScreen(
                             initialDataSubjectRight: dataSubjectRight,
+                            emails: widget.emails,
                             currentUser: widget.currentUser,
                           ),
                         ),

@@ -204,6 +204,7 @@ Future<void> _dataSubjectRight() async {
       () => EditDataSubjectRightBloc(
         dataSubjectRightRepository: serviceLocator(),
         masterDataRepository: serviceLocator(),
+        userRepository: serviceLocator(),
       ),
     )
     ..registerFactory(

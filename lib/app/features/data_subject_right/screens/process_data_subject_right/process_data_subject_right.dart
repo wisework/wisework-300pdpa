@@ -1,41 +1,49 @@
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:ionicons/ionicons.dart';
 import 'package:pdpa/app/config/config.dart';
 import 'package:pdpa/app/data/models/authentication/user_model.dart';
 import 'package:pdpa/app/data/models/data_subject_right/data_subject_right_model.dart';
 import 'package:pdpa/app/data/models/data_subject_right/requester_input_model.dart';
 import 'package:pdpa/app/features/data_subject_right/cubit/process_data_subject_right/process_data_subject_right_cubit.dart';
-import 'package:pdpa/app/features/data_subject_right/screens/process_data_subject_right/steps/processing_step.dart';
+import 'package:pdpa/app/injection.dart';
 import 'package:pdpa/app/shared/utils/constants.dart';
+import 'package:pdpa/app/shared/utils/functions.dart';
 import 'package:pdpa/app/shared/widgets/content_wrapper.dart';
+import 'package:pdpa/app/shared/widgets/customs/custom_checkbox.dart';
 import 'package:pdpa/app/shared/widgets/customs/custom_container.dart';
 import 'package:pdpa/app/shared/widgets/customs/custom_icon_button.dart';
 import 'package:pdpa/app/shared/widgets/customs/custom_radio_button.dart';
 import 'package:pdpa/app/shared/widgets/customs/custom_stepper.dart';
 import 'package:pdpa/app/shared/widgets/customs/custom_text_field.dart';
 import 'package:pdpa/app/shared/widgets/expanded_container.dart';
+import 'package:pdpa/app/shared/widgets/material_ink_well.dart';
 import 'package:pdpa/app/shared/widgets/templates/pdpa_app_bar.dart';
 import 'package:pdpa/app/shared/widgets/title_required_text.dart';
+import 'package:pdpa/app/shared/widgets/upload_file_field.dart';
 
 class ProcessDataSubjectRightScreen extends StatelessWidget {
   const ProcessDataSubjectRightScreen({
     super.key,
     required this.initialDataSubjectRight,
+    required this.emails,
     required this.currentUser,
   });
 
   final DataSubjectRightModel initialDataSubjectRight;
+  final List<String> emails;
   final UserModel currentUser;
 
   @override
   Widget build(BuildContext context) {
     return BlocProvider<ProcessDataSubjectRightCubit>(
-      create: (context) => ProcessDataSubjectRightCubit()
-        ..initialSettings(
+      create: (context) => ProcessDataSubjectRightCubit(
+        generalRepository: serviceLocator(),
+      )..initialSettings(
           initialDataSubjectRight,
         ),
       child: ProcessDataSubjectRightView(
+        emails: emails,
         currentUser: currentUser,
       ),
     );
@@ -45,9 +53,11 @@ class ProcessDataSubjectRightScreen extends StatelessWidget {
 class ProcessDataSubjectRightView extends StatefulWidget {
   const ProcessDataSubjectRightView({
     super.key,
+    required this.emails,
     required this.currentUser,
   });
 
+  final List<String> emails;
   final UserModel currentUser;
 
   @override
@@ -59,7 +69,11 @@ class _ProcessDataSubjectRightViewState
     extends State<ProcessDataSubjectRightView> {
   final GlobalKey<FormState> _verifyFormKey = GlobalKey<FormState>();
   final GlobalKey<FormState> _considerFormKey = GlobalKey<FormState>();
+
   final int stepLength = 3;
+
+  bool isInfoExpanded = true;
+  List<String> emailSelected = [];
 
   void _goBackAndUpdate() {
     final cubit = context.read<ProcessDataSubjectRightCubit>();
@@ -114,17 +128,75 @@ class _ProcessDataSubjectRightViewState
         child: ContentWrapper(
           child: CustomContainer(
             margin: const EdgeInsets.all(UiConfig.defaultPaddingSpacing),
-            child: Column(
-              mainAxisSize: MainAxisSize.min,
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: <Widget>[
-                Text(
-                  'Data Subject Right (${_getRequesterName()})',
-                  style: Theme.of(context).textTheme.titleLarge,
-                ),
-                const SizedBox(height: UiConfig.lineSpacing),
-                _buildCustomStepper(context),
-              ],
+            child: BlocBuilder<ProcessDataSubjectRightCubit,
+                ProcessDataSubjectRightState>(
+              builder: (context, state) {
+                return Column(
+                  mainAxisSize: MainAxisSize.min,
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: <Widget>[
+                    MaterialInkWell(
+                      onTap: () {
+                        setState(() {
+                          isInfoExpanded = !isInfoExpanded;
+                        });
+                      },
+                      child: Padding(
+                        padding: const EdgeInsets.symmetric(
+                          vertical: 4.0,
+                        ),
+                        child: Row(
+                          children: <Widget>[
+                            Expanded(
+                              child: Text(
+                                'Data Subject Right (${_getRequesterName()})',
+                                style: Theme.of(context).textTheme.titleLarge,
+                              ),
+                            ),
+                            const SizedBox(width: 2.0),
+                            Icon(
+                              isInfoExpanded
+                                  ? Icons.arrow_drop_down
+                                  : Icons.arrow_drop_up,
+                              size: 20.0,
+                              color: Theme.of(context).colorScheme.onSurface,
+                            ),
+                          ],
+                        ),
+                      ),
+                    ),
+                    const SizedBox(height: UiConfig.lineSpacing),
+                    ExpandedContainer(
+                      expand: isInfoExpanded,
+                      duration: const Duration(milliseconds: 400),
+                      child: Column(
+                        mainAxisSize: MainAxisSize.min,
+                        children: <Widget>[
+                          _buildProcessRequestInfo(
+                            context,
+                            dataSubjectRight: state.dataSubjectRight,
+                          ),
+                          const SizedBox(height: UiConfig.lineGap),
+                          Padding(
+                            padding: const EdgeInsets.symmetric(
+                              vertical: UiConfig.lineSpacing,
+                            ),
+                            child: Divider(
+                              height: 0.1,
+                              color: Theme.of(context)
+                                  .colorScheme
+                                  .outlineVariant
+                                  .withOpacity(0.6),
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                    _buildCustomStepper(context, state: state),
+                    const SizedBox(height: 4.0),
+                  ],
+                );
+              },
             ),
           ),
         ),
@@ -141,68 +213,132 @@ class _ProcessDataSubjectRightViewState
     );
   }
 
-  BlocBuilder _buildCustomStepper(BuildContext context) {
-    return BlocBuilder<ProcessDataSubjectRightCubit,
-        ProcessDataSubjectRightState>(
-      builder: (context, state) {
-        return CustomStepper(
-          physics: const NeverScrollableScrollPhysics(),
-          shrinkWrap: true,
-          steps: <CustomStep>[
-            CustomStep(
-              title: Text(
-                'ตรวจสอบคำขอ',
-                style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                    color: state.stepIndex >= 0
-                        ? Theme.of(context).colorScheme.primary
-                        : Theme.of(context).colorScheme.onSurface),
-                overflow: TextOverflow.ellipsis,
-                maxLines: 1,
-              ),
-              content: _buildSelectOption(
-                context,
-                formKey: _verifyFormKey,
-                description:
-                    'ผลการตรวจสอบแบบฟอร์มคำขอใช้สิทธิ์ตามกฎหมายคุ้มครองข้อมูลส่วนบุคคล',
-                valueSelected: state.verifySelected,
-                onSelected: (value) {
-                  final cubit = context.read<ProcessDataSubjectRightCubit>();
-                  cubit.setVerifyOption(value);
-                },
-                onRejectChanged: (value) {
-                  final cubit = context.read<ProcessDataSubjectRightCubit>();
-                  cubit.setRejectVerifyReason(value);
-                },
-                isWarning: state.verifyError,
-              ),
-              summaryContent: state.progressedIndex > 0
-                  ? _buildSummaryOption(
-                      context,
-                      passText: 'ผ่าน',
-                      rejectText: 'ไม่ผ่าน',
-                      rejectReason: state.dataSubjectRight.rejectVerifyReason,
-                      isPassed: state.dataSubjectRight.verifyFormStatus ==
-                          RequestResultStatus.pass,
-                    )
-                  : null,
-              isActive: state.stepIndex >= 0,
-              endStep: state.endProcess && state.stepIndex == 0,
+  ListView _buildProcessRequestInfo(
+    BuildContext context, {
+    required DataSubjectRightModel dataSubjectRight,
+  }) {
+    return ListView.builder(
+      physics: const NeverScrollableScrollPhysics(),
+      shrinkWrap: true,
+      itemBuilder: (context, index) {
+        final processRequest = dataSubjectRight.processRequests[index];
+
+        return Column(
+          mainAxisSize: MainAxisSize.min,
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: <Widget>[
+            Text(
+              processRequest.requestType,
+              style: Theme.of(context).textTheme.titleMedium,
             ),
-            CustomStep(
-              title: Text(
-                'พิจารณาดำเนินการ',
-                style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                    color: state.stepIndex >= 1
-                        ? Theme.of(context).colorScheme.primary
-                        : Theme.of(context).colorScheme.onSurface),
-                overflow: TextOverflow.ellipsis,
-                maxLines: 1,
+            const SizedBox(height: UiConfig.lineGap),
+            const TitleRequiredText(
+              text: 'ข้อมูลส่วนบุคคล',
+              required: true,
+            ),
+            CustomTextField(
+              controller: TextEditingController(
+                text: processRequest.personalData,
               ),
-              content: _buildSelectOption(
+              readOnly: true,
+            ),
+            const SizedBox(height: UiConfig.lineSpacing),
+            const TitleRequiredText(
+              text: 'สถานที่พบเจอ',
+              required: true,
+            ),
+            CustomTextField(
+              controller: TextEditingController(
+                text: processRequest.foundSource,
+              ),
+              readOnly: true,
+            ),
+            const SizedBox(height: UiConfig.lineSpacing),
+            const TitleRequiredText(
+              text: 'การดำเนินการ',
+              required: true,
+            ),
+            CustomTextField(
+              controller: TextEditingController(
+                text: processRequest.requestAction,
+              ),
+              readOnly: true,
+            ),
+          ],
+        );
+      },
+      itemCount: dataSubjectRight.processRequests.length,
+    );
+  }
+
+  CustomStepper _buildCustomStepper(
+    BuildContext context, {
+    required ProcessDataSubjectRightState state,
+  }) {
+    return CustomStepper(
+      physics: const NeverScrollableScrollPhysics(),
+      shrinkWrap: true,
+      steps: <CustomStep>[
+        CustomStep(
+          title: Text(
+            'ตรวจสอบคำขอ',
+            style: Theme.of(context).textTheme.bodyMedium?.copyWith(
+                color: state.stepIndex >= 0
+                    ? Theme.of(context).colorScheme.primary
+                    : Theme.of(context).colorScheme.onSurface),
+            overflow: TextOverflow.ellipsis,
+            maxLines: 1,
+          ),
+          content: _buildSelectOption(
+            context,
+            formKey: _verifyFormKey,
+            description:
+                'ผลการตรวจสอบแบบฟอร์มคำขอใช้สิทธิ์ตามกฎหมายคุ้มครองข้อมูลส่วนบุคคล',
+            passText: 'ผ่าน',
+            rejectText: 'ไม่ผ่าน',
+            valueSelected: state.verifySelected,
+            onSelected: (value) {
+              final cubit = context.read<ProcessDataSubjectRightCubit>();
+              cubit.setVerifyOption(value);
+            },
+            onRejectChanged: (value) {
+              final cubit = context.read<ProcessDataSubjectRightCubit>();
+              cubit.setRejectVerifyReason(value);
+            },
+            isWarning: state.verifyError,
+          ),
+          summaryContent: state.progressedIndex > 0
+              ? _buildSummaryOption(
+                  context,
+                  passText: 'ผ่าน',
+                  rejectText: 'ไม่ผ่าน',
+                  rejectReason: state.dataSubjectRight.rejectVerifyReason,
+                  isPassed: state.dataSubjectRight.verifyFormStatus ==
+                      RequestResultStatus.pass,
+                )
+              : null,
+          isActive: state.stepIndex >= 0,
+          endStep: state.endProcess && state.stepIndex == 0,
+        ),
+        CustomStep(
+          title: Text(
+            'พิจารณาดำเนินการ',
+            style: Theme.of(context).textTheme.bodyMedium?.copyWith(
+                color: state.stepIndex >= 1
+                    ? Theme.of(context).colorScheme.primary
+                    : Theme.of(context).colorScheme.onSurface),
+            overflow: TextOverflow.ellipsis,
+            maxLines: 1,
+          ),
+          content: Column(
+            children: <Widget>[
+              _buildSelectOption(
                 context,
                 formKey: _considerFormKey,
                 description:
                     'ผลการตรวจสอบแบบฟอร์มคำขอใช้สิทธิ์ตามกฎหมายคุ้มครองข้อมูลส่วนบุคคล',
+                passText: 'ดำเนินการ',
+                rejectText: 'ปฏิเสธคำขอ',
                 valueSelected: state.considerSelected,
                 onSelected: (value) {
                   final cubit = context.read<ProcessDataSubjectRightCubit>();
@@ -214,43 +350,62 @@ class _ProcessDataSubjectRightViewState
                 },
                 isWarning: state.considerError,
               ),
-              summaryContent: state.progressedIndex > 1
-                  ? _buildSummaryOption(
-                      context,
-                      passText: 'ดำเนินการ',
-                      rejectText: 'ปฏิเสธคำขอ',
-                      rejectReason: state.dataSubjectRight.rejectConsiderReason,
-                      isPassed: state.dataSubjectRight.considerFormStatus ==
-                          RequestResultStatus.pass,
-                    )
-                  : null,
-              isActive: state.stepIndex >= 1,
-              endStep: state.endProcess && state.stepIndex == 1,
-            ),
-            CustomStep(
-              title: Text(
-                'ดำเนินการ',
-                style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                    color: state.stepIndex >= 2
-                        ? Theme.of(context).colorScheme.primary
-                        : Theme.of(context).colorScheme.onSurface),
-                overflow: TextOverflow.ellipsis,
-                maxLines: 1,
-              ),
-              content: const ProcessingStep(),
-              summaryContent: state.progressedIndex > 2
-                  ? _buildSummaryProcess(context)
-                  : null,
-              isActive: state.stepIndex >= 2,
-              endStep: state.endProcess && state.stepIndex == 2,
-            ),
-          ],
-          currentStep: state.stepIndex,
-          progressStep: state.progressedIndex,
-          nextButtonText: 'ส่งผลการตรวจสอบ',
-          onNextStep: state.stepIndex != 3 ? _onNextStepPressed : null,
-        );
-      },
+              if (widget.emails.isNotEmpty)
+                Padding(
+                  padding: const EdgeInsets.symmetric(
+                    vertical: UiConfig.lineGap,
+                  ),
+                  child: _buildEmailNotification(context),
+                ),
+            ],
+          ),
+          summaryContent: state.progressedIndex > 1
+              ? _buildSummaryOption(
+                  context,
+                  passText: 'ดำเนินการ',
+                  rejectText: 'ปฏิเสธคำขอ',
+                  rejectReason: state.dataSubjectRight.rejectConsiderReason,
+                  isPassed: state.dataSubjectRight.considerFormStatus ==
+                      RequestResultStatus.pass,
+                  content: emailSelected.isNotEmpty
+                      ? _buildEmailNotification(
+                          context,
+                          readOnly: true,
+                        )
+                      : null,
+                )
+              : null,
+          isActive: state.stepIndex >= 1,
+          endStep: state.endProcess && state.stepIndex == 1,
+        ),
+        CustomStep(
+          title: Text(
+            'ดำเนินการ',
+            style: Theme.of(context).textTheme.bodyMedium?.copyWith(
+                color: state.stepIndex >= 2
+                    ? Theme.of(context).colorScheme.primary
+                    : Theme.of(context).colorScheme.onSurface),
+            overflow: TextOverflow.ellipsis,
+            maxLines: 1,
+          ),
+          content: _buildProcessRequest(
+            context,
+            dataSubjectRight: state.dataSubjectRight,
+          ),
+          summaryContent: state.progressedIndex > 2
+              ? _buildSummaryProcess(
+                  context,
+                  dataSubjectRight: state.dataSubjectRight,
+                )
+              : null,
+          isActive: state.stepIndex >= 2,
+          endStep: state.endProcess && state.stepIndex == 2,
+        ),
+      ],
+      currentStep: state.stepIndex,
+      progressStep: state.progressedIndex,
+      nextButtonText: 'ส่งผลการตรวจสอบ',
+      onNextStep: state.stepIndex != 3 ? _onNextStepPressed : null,
     );
   }
 
@@ -258,6 +413,8 @@ class _ProcessDataSubjectRightViewState
     BuildContext context, {
     required GlobalKey<FormState> formKey,
     required String description,
+    required String passText,
+    required String rejectText,
     required int valueSelected,
     required Function(int value) onSelected,
     required Function(String value) onRejectChanged,
@@ -289,7 +446,7 @@ class _ProcessDataSubjectRightViewState
               child: Padding(
                 padding: const EdgeInsets.symmetric(vertical: 5.0),
                 child: Text(
-                  'ผ่าน',
+                  passText,
                   style: Theme.of(context).textTheme.bodyMedium,
                 ),
               ),
@@ -318,7 +475,7 @@ class _ProcessDataSubjectRightViewState
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: <Widget>[
                     Text(
-                      'ไม่ผ่าน',
+                      rejectText,
                       style: Theme.of(context).textTheme.bodyMedium,
                     ),
                     ExpandedContainer(
@@ -409,12 +566,151 @@ class _ProcessDataSubjectRightViewState
     );
   }
 
+  Column _buildEmailNotification(
+    BuildContext context, {
+    bool readOnly = false,
+  }) {
+    return Column(
+      mainAxisSize: MainAxisSize.min,
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: <Widget>[
+        Text(
+          'แจ้งเตือนอีเมล',
+          style: Theme.of(context).textTheme.bodyMedium,
+        ),
+        SizedBox(
+          height: readOnly ? UiConfig.lineGap : UiConfig.lineSpacing,
+        ),
+        readOnly
+            ? ListView.separated(
+                physics: const NeverScrollableScrollPhysics(),
+                shrinkWrap: true,
+                itemBuilder: (context, index) {
+                  return Padding(
+                    padding: const EdgeInsets.only(left: 18.0),
+                    child: Row(
+                      children: <Widget>[
+                        Text(
+                          emailSelected[index],
+                          style: Theme.of(context).textTheme.bodyMedium,
+                        ),
+                      ],
+                    ),
+                  );
+                },
+                itemCount: emailSelected.length,
+                separatorBuilder: (context, index) => const SizedBox(
+                  height: UiConfig.lineGap,
+                ),
+              )
+            : ListView.separated(
+                physics: const NeverScrollableScrollPhysics(),
+                shrinkWrap: true,
+                itemBuilder: (context, index) {
+                  return Row(
+                    children: <Widget>[
+                      Padding(
+                        padding: const EdgeInsets.only(
+                          left: 4.0,
+                          right: UiConfig.actionSpacing,
+                        ),
+                        child: CustomCheckBox(
+                          value: emailSelected.contains(widget.emails[index]),
+                          onChanged: (_) {
+                            setState(() {
+                              if (!emailSelected
+                                  .contains(widget.emails[index])) {
+                                emailSelected.add(widget.emails[index]);
+                              } else {
+                                emailSelected.remove(widget.emails[index]);
+                              }
+                            });
+                          },
+                        ),
+                      ),
+                      Expanded(
+                        child: Text(
+                          widget.emails[index],
+                          style: Theme.of(context).textTheme.bodyMedium,
+                        ),
+                      ),
+                    ],
+                  );
+                },
+                itemCount: widget.emails.length,
+                separatorBuilder: (context, index) => const SizedBox(
+                  height: UiConfig.lineGap,
+                ),
+              ),
+      ],
+    );
+  }
+
+  ListView _buildProcessRequest(
+    BuildContext context, {
+    required DataSubjectRightModel dataSubjectRight,
+  }) {
+    return ListView.builder(
+      physics: const NeverScrollableScrollPhysics(),
+      shrinkWrap: true,
+      itemBuilder: (context, index) {
+        final processRequest = dataSubjectRight.processRequests[index];
+
+        return Column(
+          mainAxisSize: MainAxisSize.min,
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: <Widget>[
+            Text(
+              "หากดำเนินการเสร็จสิ้นแล้ว ให้กดปุ่ม 'อัพโหลดไฟล์' หรือ กรอกรายละเอียดผลการดำเนินการ",
+              style: Theme.of(context).textTheme.bodyMedium,
+            ),
+            const SizedBox(height: UiConfig.lineSpacing),
+            UploadFileField(
+              fileUrl: processRequest.proofOfActionFile,
+              onUploaded: (file, data, path) {
+                final cubit = context.read<ProcessDataSubjectRightCubit>();
+                cubit.uploadProofFile(
+                  file,
+                  data,
+                  kIsWeb && data != null
+                      ? UtilFunctions.getUniqueFileNameByUint8List(data)
+                      : UtilFunctions.getUniqueFileName(path),
+                  UtilFunctions.getProcessDsrProofPath(
+                    widget.currentUser.currentCompany,
+                    dataSubjectRight.id,
+                  ),
+                  processRequest.id,
+                );
+              },
+              onRemoved: () {},
+            ),
+            const SizedBox(height: UiConfig.lineSpacing),
+            const TitleRequiredText(
+              text: 'รายละเอียดผลการดำเนินการ',
+            ),
+            CustomTextField(
+              initialValue: processRequest.proofOfActionText,
+              maxLines: 3,
+              minLines: 1,
+              onChanged: (value) {
+                final cubit = context.read<ProcessDataSubjectRightCubit>();
+                cubit.setProofText(value, processRequest.id);
+              },
+            ),
+          ],
+        );
+      },
+      itemCount: dataSubjectRight.processRequests.length,
+    );
+  }
+
   Container _buildSummaryOption(
     BuildContext context, {
     required String passText,
     required String rejectText,
     required String rejectReason,
     required bool isPassed,
+    Widget? content,
   }) {
     return Container(
       color: Theme.of(context).colorScheme.onBackground,
@@ -446,42 +742,80 @@ class _ProcessDataSubjectRightViewState
                 style: Theme.of(context).textTheme.bodyMedium,
               ),
             ),
+          if (content != null)
+            Padding(
+              padding: const EdgeInsets.only(top: UiConfig.lineSpacing),
+              child: content,
+            ),
         ],
       ),
     );
   }
 
-  Container _buildSummaryProcess(BuildContext context) {
-    return Container(
-      color: Theme.of(context).colorScheme.onBackground,
-      child: Row(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: <Widget>[
-          Container(
-            width: 100.0,
-            height: 100.0,
-            color: Colors.grey.shade300,
-          ),
-          Expanded(
-            child: Padding(
-              padding: const EdgeInsets.all(UiConfig.actionSpacing),
-              child: Text(
-                'แก้ไขแล้ว',
-                style: Theme.of(context).textTheme.bodyMedium,
+  ListView _buildSummaryProcess(
+    BuildContext context, {
+    required DataSubjectRightModel dataSubjectRight,
+  }) {
+    return ListView.builder(
+      physics: const NeverScrollableScrollPhysics(),
+      shrinkWrap: true,
+      itemBuilder: (context, index) {
+        final processRequest = dataSubjectRight.processRequests[index];
+
+        return Container(
+          color: Theme.of(context).colorScheme.onBackground,
+          child: Row(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: <Widget>[
+              if (processRequest.proofOfActionFile.isNotEmpty)
+                Column(
+                  mainAxisSize: MainAxisSize.min,
+                  children: <Widget>[
+                    SizedBox(
+                      height: 100.0,
+                      child: Image.network(
+                        processRequest.proofOfActionFile,
+                        fit: BoxFit.contain,
+                      ),
+                    ),
+                    const SizedBox(height: UiConfig.lineGap),
+                    // CustomIconButton(
+                    //   padding: const EdgeInsets.only(
+                    //     left: 8.0,
+                    //     top: 6.0,
+                    //     right: 8.0,
+                    //     bottom: 10.0,
+                    //   ),
+                    //   onPressed: () {
+                    //     final cubit =
+                    //         context.read<ProcessDataSubjectRightCubit>();
+                    //     cubit.downloadProofFile(
+                    //       UtilFunctions.getFileNameFromUrl(
+                    //         processRequest.proofOfActionFile,
+                    //       ),
+                    //     );
+                    //   },
+                    //   icon: Ionicons.download_outline,
+                    //   iconColor: Theme.of(context).colorScheme.primary,
+                    //   backgroundColor:
+                    //       Theme.of(context).colorScheme.onBackground,
+                    // ),
+                  ],
+                ),
+              Expanded(
+                child: Padding(
+                  padding: const EdgeInsets.all(UiConfig.actionSpacing),
+                  child: Text(
+                    processRequest.proofOfActionText,
+                    style: Theme.of(context).textTheme.bodyMedium,
+                  ),
+                ),
               ),
-            ),
+            ],
           ),
-          Transform.scale(
-            scale: 0.75,
-            child: CustomIconButton(
-              onPressed: () {},
-              icon: Ionicons.eye_outline,
-              iconColor: Theme.of(context).colorScheme.onPrimary,
-              backgroundColor: Theme.of(context).colorScheme.primary,
-            ),
-          ),
-        ],
-      ),
+        );
+      },
+      itemCount: dataSubjectRight.processRequests.length,
     );
   }
 }
