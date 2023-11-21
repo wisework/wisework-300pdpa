@@ -17,7 +17,7 @@ class DataSubjectRightCard extends StatelessWidget {
   final String title;
   final List<String> subtitle;
   final DateTime date;
-  final RequestProcessStatus status;
+  final ProcessDataSubjectRightStatus status;
   final VoidCallback onTap;
 
   @override

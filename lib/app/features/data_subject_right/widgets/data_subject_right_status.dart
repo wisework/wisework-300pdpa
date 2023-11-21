@@ -7,20 +7,17 @@ class DataSubjectRightStatus extends StatefulWidget {
     required this.status,
   });
 
-  final RequestProcessStatus status;
+  final ProcessDataSubjectRightStatus status;
 
   @override
   State<DataSubjectRightStatus> createState() => _DataSubjectRightStatusState();
 }
 
 class _DataSubjectRightStatusState extends State<DataSubjectRightStatus> {
-  final Map<RequestProcessStatus, String> requestProcessNames = {
-    RequestProcessStatus.newRequest: 'New Request',
-    RequestProcessStatus.pending: 'Pending',
-    RequestProcessStatus.rejected: 'Rejected',
-    RequestProcessStatus.considering: 'Considering',
-    RequestProcessStatus.inProgress: 'In Progress',
-    RequestProcessStatus.completed: 'Completed',
+  final Map<ProcessDataSubjectRightStatus, String> requestProcessNames = {
+    ProcessDataSubjectRightStatus.notStarted: 'Not started',
+    ProcessDataSubjectRightStatus.inProgress: 'In Progress',
+    ProcessDataSubjectRightStatus.completed: 'Completed',
   };
 
   @override

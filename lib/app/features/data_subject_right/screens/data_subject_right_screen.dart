@@ -265,7 +265,7 @@ class _DataSubjectRightViewState extends State<DataSubjectRightView> {
                       id: '',
                       dataRequester: const [
                         RequesterInputModel(
-                          id: 'DATA-REQ-001',
+                          id: 'DSR-DATA-REQ-001',
                           title: [
                             LocalizedModel(
                               language: 'en-US',
@@ -280,7 +280,7 @@ class _DataSubjectRightViewState extends State<DataSubjectRightView> {
                           priority: 1,
                         ),
                         RequesterInputModel(
-                          id: 'DATA-REQ-002',
+                          id: 'DSR-DATA-REQ-002',
                           title: [
                             LocalizedModel(language: 'en-US', text: 'Address'),
                             LocalizedModel(language: 'th-TH', text: 'ที่อยู่'),
@@ -289,7 +289,7 @@ class _DataSubjectRightViewState extends State<DataSubjectRightView> {
                           priority: 2,
                         ),
                         RequesterInputModel(
-                          id: 'DATA-REQ-003',
+                          id: 'DSR-DATA-REQ-003',
                           title: [
                             LocalizedModel(language: 'en-US', text: 'Email'),
                             LocalizedModel(language: 'th-TH', text: 'อีเมล'),
@@ -298,7 +298,7 @@ class _DataSubjectRightViewState extends State<DataSubjectRightView> {
                           priority: 3,
                         ),
                         RequesterInputModel(
-                          id: 'DATA-REQ-004',
+                          id: 'DSR-DATA-REQ-004',
                           title: [
                             LocalizedModel(
                               language: 'en-US',
@@ -315,7 +315,7 @@ class _DataSubjectRightViewState extends State<DataSubjectRightView> {
                       ],
                       dataOwner: const [
                         RequesterInputModel(
-                          id: 'DATA-OWN-001',
+                          id: 'DSR-DATA-OWN-001',
                           title: [
                             LocalizedModel(
                               language: 'en-US',
@@ -330,7 +330,7 @@ class _DataSubjectRightViewState extends State<DataSubjectRightView> {
                           priority: 1,
                         ),
                         RequesterInputModel(
-                          id: 'DATA-OWN-002',
+                          id: 'DSR-DATA-OWN-002',
                           title: [
                             LocalizedModel(language: 'en-US', text: 'Address'),
                             LocalizedModel(language: 'th-TH', text: 'ที่อยู่'),
@@ -339,7 +339,7 @@ class _DataSubjectRightViewState extends State<DataSubjectRightView> {
                           priority: 2,
                         ),
                         RequesterInputModel(
-                          id: 'DATA-OWN-003',
+                          id: 'DSR-DATA-OWN-003',
                           title: [
                             LocalizedModel(language: 'en-US', text: 'Email'),
                             LocalizedModel(language: 'th-TH', text: 'อีเมล'),
@@ -348,7 +348,7 @@ class _DataSubjectRightViewState extends State<DataSubjectRightView> {
                           priority: 3,
                         ),
                         RequesterInputModel(
-                          id: 'DATA-OWN-004',
+                          id: 'DSR-DATA-OWN-004',
                           title: [
                             LocalizedModel(
                               language: 'en-US',
@@ -366,30 +366,30 @@ class _DataSubjectRightViewState extends State<DataSubjectRightView> {
                       isDataOwner: true,
                       powerVerifications: const [
                         RequesterVerificationModel(
-                          id: 'PV-001',
+                          id: 'DSR-PV-001',
                           text: 'Profile',
                           imageUrl: 'karnza.jpg',
                         ),
                       ],
                       identityVerifications: const [
                         RequesterVerificationModel(
-                          id: 'IV-001',
+                          id: 'DSR-IV-001',
                           text: 'Proof',
                           imageUrl: 'karnza.jpg',
                         ),
                       ],
                       processRequests: const [
                         ProcessRequestModel(
-                          id: 'PR-001',
+                          id: 'DSR-PR-001',
                           personalData: 'รูปโปรไฟล์',
                           foundSource: 'www.mock-web.co.th/info',
-                          requestType: 'REQ-001',
-                          requestAction: 'REA-001',
+                          requestType: 'DSR-REQ-001',
+                          requestAction: 'DSR-REA-001',
                           reasonTypes: [
-                            UserInputText(id: 'RES-002', text: ''),
-                            UserInputText(id: 'RES-003', text: ''),
+                            UserInputText(id: 'DSR-RES-002', text: ''),
+                            UserInputText(id: 'DSR-RES-003', text: ''),
                             UserInputText(
-                              id: 'RES-004',
+                              id: 'DSR-RES-004',
                               text: 'เหตุผลส่วนตัวเด้อสู',
                             ),
                           ],
@@ -400,15 +400,15 @@ class _DataSubjectRightViewState extends State<DataSubjectRightView> {
                           proofOfActionText: '',
                         ),
                         ProcessRequestModel(
-                          id: 'PR-002',
+                          id: 'DSR-PR-002',
                           personalData: 'ข้อมูลส่วนตัว',
                           foundSource: 'www.mock-web.co.th/news',
-                          requestType: 'REQ-005',
-                          requestAction: 'REA-001',
+                          requestType: 'DSR-REQ-005',
+                          requestAction: 'DSR-REA-001',
                           reasonTypes: [
-                            UserInputText(id: 'RES-002', text: ''),
+                            UserInputText(id: 'DSR-RES-002', text: ''),
                             UserInputText(
-                                id: 'RES-004', text: 'เหตุผลส่วนตัวเด้อสู'),
+                                id: 'DSR-RES-004', text: 'เหตุผลส่วนตัวเด้อสู'),
                           ],
                           considerRequestStatus: RequestResultStatus.none,
                           rejectTypes: [],
@@ -419,7 +419,6 @@ class _DataSubjectRightViewState extends State<DataSubjectRightView> {
                       ],
                       requestExpirationDate: now.add(const Duration(days: 30)),
                       notifyEmail: const [],
-                      requestFormVerified: false,
                       verifyFormStatus: RequestResultStatus.none,
                       rejectVerifyReason: '',
                       lastSeenBy: '',
@@ -450,7 +449,7 @@ class _DataSubjectRightViewState extends State<DataSubjectRightView> {
       title: dataSubjectRight.dataRequester.first.text,
       subtitle: requests,
       date: dataSubjectRight.updatedDate,
-      status: UtilFunctions.getRequestProcessStatus(dataSubjectRight),
+      status: UtilFunctions.getProcessDataSubjectRightStatus(dataSubjectRight),
       onTap: () {
         context.push(
           DataSubjectRightRoute.editDataSubjectRight.path
