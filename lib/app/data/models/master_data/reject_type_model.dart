@@ -8,6 +8,7 @@ class RejectTypeModel extends Equatable {
     required this.id,
     required this.rejectCode,
     required this.description,
+    required this.requiredInputReasonText,
     required this.editable,
     required this.status,
     required this.createdBy,
@@ -19,6 +20,7 @@ class RejectTypeModel extends Equatable {
   final String id;
   final String rejectCode;
   final List<LocalizedModel> description;
+  final bool requiredInputReasonText;
   final bool editable;
   final ActiveStatus status;
   final String createdBy;
@@ -31,6 +33,7 @@ class RejectTypeModel extends Equatable {
           id: '',
           rejectCode: '',
           description: [],
+          requiredInputReasonText: false,
           editable: true,
           status: ActiveStatus.active,
           createdBy: '',
@@ -48,6 +51,7 @@ class RejectTypeModel extends Equatable {
               (item) => LocalizedModel.fromMap(item as DataMap),
             ),
           ),
+          requiredInputReasonText: map['requiredInputReasonText'] as bool,
           editable: map['editable'] as bool,
           status: ActiveStatus.values[map['status'] as int],
           createdBy: map['createdBy'] as String,
@@ -62,9 +66,10 @@ class RejectTypeModel extends Equatable {
     return RejectTypeModel.fromMap(response);
   }
 
-  DataMap toMap() => {     
+  DataMap toMap() => {
         'rejectCode': rejectCode,
         'description': description.map((item) => item.toMap()).toList(),
+        'requiredInputReasonText': requiredInputReasonText,
         'editable': editable,
         'status': status.index,
         'createdBy': createdBy,
@@ -77,6 +82,7 @@ class RejectTypeModel extends Equatable {
     String? id,
     String? rejectCode,
     List<LocalizedModel>? description,
+    bool? requiredInputReasonText,
     bool? editable,
     ActiveStatus? status,
     String? createdBy,
@@ -88,6 +94,8 @@ class RejectTypeModel extends Equatable {
       id: id ?? this.id,
       rejectCode: rejectCode ?? this.rejectCode,
       description: description ?? this.description,
+      requiredInputReasonText:
+          requiredInputReasonText ?? this.requiredInputReasonText,
       editable: editable ?? this.editable,
       status: status ?? this.status,
       createdBy: createdBy ?? this.createdBy,
@@ -115,6 +123,7 @@ class RejectTypeModel extends Equatable {
       id,
       rejectCode,
       description,
+      requiredInputReasonText,
       editable,
       status,
       createdBy,

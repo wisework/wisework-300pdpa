@@ -37,6 +37,7 @@ class ProcessDataSubjectRightCubit extends Cubit<ProcessDataSubjectRightState> {
 
   void initialSettings(
     DataSubjectRightModel dataSubjectRight,
+    String processRequestSelected,
     UserModel currentUser,
     List<String> userEmails,
   ) {
@@ -53,6 +54,7 @@ class ProcessDataSubjectRightCubit extends Cubit<ProcessDataSubjectRightState> {
         currentUser: currentUser,
         userEmails: userEmails,
         stepIndex: stepIndex,
+        requestExpanded: [processRequestSelected],
       ),
     );
   }

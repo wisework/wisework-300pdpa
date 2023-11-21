@@ -77,6 +77,4 @@ enum ConsentFormImageType { logo, header, body }
 
 enum RequestResultStatus { pass, fail, none }
 
-enum ProcessDataSubjectRightStatus { notStarted, inProgress, completed }
-
 enum ProcessRequestStatus { notProcessed, inProgress, refused, completed }
