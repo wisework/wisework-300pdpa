@@ -153,30 +153,6 @@ class UtilFunctions {
   }
 
   //? Data Subject Right
-  static ProcessDataSubjectRightStatus getProcessDataSubjectRightStatus(
-    DataSubjectRightModel dataSubjectRight,
-  ) {
-    if (dataSubjectRight.verifyFormStatus == RequestResultStatus.none) {
-      return ProcessDataSubjectRightStatus.notStarted;
-    } else if (dataSubjectRight.verifyFormStatus == RequestResultStatus.fail) {
-      return ProcessDataSubjectRightStatus.completed;
-    }
-
-    List<ProcessRequestModel> completed = [];
-    for (ProcessRequestModel request in dataSubjectRight.processRequests) {
-      if (request.proofOfActionFile.isNotEmpty ||
-          request.considerRequestStatus == RequestResultStatus.fail) {
-        completed.add(request);
-      }
-    }
-
-    if (completed.length == dataSubjectRight.processRequests.length) {
-      return ProcessDataSubjectRightStatus.completed;
-    }
-
-    return ProcessDataSubjectRightStatus.inProgress;
-  }
-
   static ProcessRequestStatus getProcessRequestStatus(
     ProcessRequestModel processRequest,
   ) {

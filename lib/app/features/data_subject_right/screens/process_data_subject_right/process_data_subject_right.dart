@@ -19,11 +19,13 @@ class ProcessDataSubjectRightScreen extends StatelessWidget {
   const ProcessDataSubjectRightScreen({
     super.key,
     required this.initialDataSubjectRight,
+    required this.processRequestSelected,
     required this.currentUser,
     required this.userEmails,
   });
 
   final DataSubjectRightModel initialDataSubjectRight;
+  final String processRequestSelected;
   final UserModel currentUser;
   final List<String> userEmails;
 
@@ -35,6 +37,7 @@ class ProcessDataSubjectRightScreen extends StatelessWidget {
         generalRepository: serviceLocator(),
       )..initialSettings(
           initialDataSubjectRight,
+          processRequestSelected,
           currentUser,
           userEmails,
         ),

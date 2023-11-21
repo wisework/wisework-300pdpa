@@ -26,9 +26,11 @@ class EditDataSubjectRightScreen extends StatefulWidget {
   const EditDataSubjectRightScreen({
     super.key,
     required this.dataSubjectRightId,
+    required this.processRequestId,
   });
 
   final String dataSubjectRightId;
+  final String processRequestId;
 
   @override
   State<EditDataSubjectRightScreen> createState() =>
@@ -87,6 +89,7 @@ class _EditDataSubjectRightScreenState
           if (state is GotCurrentDataSubjectRight) {
             return EditDataSubjectRightView(
               initialDataSubjectRight: state.dataSubjectRight,
+              processRequestSelected: widget.processRequestId,
               requestTypes: state.requestTypes,
               reasonTypes: state.reasonTypes,
               rejectTypes: state.rejectTypes,
@@ -97,6 +100,7 @@ class _EditDataSubjectRightScreenState
           if (state is UpdatedCurrentDataSubjectRight) {
             return EditDataSubjectRightView(
               initialDataSubjectRight: state.dataSubjectRight,
+              processRequestSelected: widget.processRequestId,
               requestTypes: state.requestTypes,
               reasonTypes: state.reasonTypes,
               rejectTypes: state.rejectTypes,
@@ -119,6 +123,7 @@ class EditDataSubjectRightView extends StatefulWidget {
   const EditDataSubjectRightView({
     super.key,
     required this.initialDataSubjectRight,
+    required this.processRequestSelected,
     required this.requestTypes,
     required this.reasonTypes,
     required this.rejectTypes,
@@ -127,6 +132,7 @@ class EditDataSubjectRightView extends StatefulWidget {
   });
 
   final DataSubjectRightModel initialDataSubjectRight;
+  final String processRequestSelected;
   final List<RequestTypeModel> requestTypes;
   final List<ReasonTypeModel> reasonTypes;
   final List<RejectTypeModel> rejectTypes;
@@ -208,6 +214,8 @@ class _EditDataSubjectRightViewState extends State<EditDataSubjectRightView> {
                         MaterialPageRoute(
                           builder: (context) => ProcessDataSubjectRightScreen(
                             initialDataSubjectRight: dataSubjectRight,
+                            processRequestSelected:
+                                widget.processRequestSelected,
                             currentUser: widget.currentUser,
                             userEmails: widget.userEmails,
                           ),

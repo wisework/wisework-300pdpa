@@ -62,11 +62,11 @@ final List<ReasonTypeModel> reasonTypesPreset = [
     description: const [
       LocalizedModel(
         language: 'en-US',
-        text: "Other reasons, please specify.",
+        text: 'Other',
       ),
       LocalizedModel(
         language: 'th-TH',
-        text: 'เหตุผลอื่นๆ โปรดระบุ',
+        text: 'เหตุผลอื่น ๆ',
       ),
     ],
     requiredInputReasonText: true,
