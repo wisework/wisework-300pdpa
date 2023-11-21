@@ -3,6 +3,9 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:pdpa/app/config/config.dart';
 import 'package:pdpa/app/data/models/authentication/user_model.dart';
 import 'package:pdpa/app/data/models/data_subject_right/data_subject_right_model.dart';
+import 'package:pdpa/app/data/models/master_data/reason_type_model.dart';
+import 'package:pdpa/app/data/models/master_data/reject_type_model.dart';
+import 'package:pdpa/app/data/models/master_data/request_type_model.dart';
 import 'package:pdpa/app/features/data_subject_right/cubit/process_data_subject_right/process_data_subject_right_cubit.dart';
 import 'package:pdpa/app/features/data_subject_right/models/process_request_loading_status.dart';
 import 'package:pdpa/app/features/data_subject_right/screens/process_data_subject_right/steps/consider_request_step.dart';
@@ -19,12 +22,18 @@ class ProcessDataSubjectRightScreen extends StatelessWidget {
   const ProcessDataSubjectRightScreen({
     super.key,
     required this.initialDataSubjectRight,
+    required this.requestTypes,
+    required this.reasonTypes,
+    required this.rejectTypes,
     required this.processRequestSelected,
     required this.currentUser,
     required this.userEmails,
   });
 
   final DataSubjectRightModel initialDataSubjectRight;
+  final List<RequestTypeModel> requestTypes;
+  final List<ReasonTypeModel> reasonTypes;
+  final List<RejectTypeModel> rejectTypes;
   final String processRequestSelected;
   final UserModel currentUser;
   final List<String> userEmails;
@@ -41,13 +50,29 @@ class ProcessDataSubjectRightScreen extends StatelessWidget {
           currentUser,
           userEmails,
         ),
-      child: const ProcessDataSubjectRightView(),
+      child: ProcessDataSubjectRightView(
+        requestTypes: requestTypes,
+        reasonTypes: reasonTypes,
+        rejectTypes: rejectTypes,
+        language: currentUser.defaultLanguage,
+      ),
     );
   }
 }
 
 class ProcessDataSubjectRightView extends StatefulWidget {
-  const ProcessDataSubjectRightView({super.key});
+  const ProcessDataSubjectRightView({
+    super.key,
+    required this.requestTypes,
+    required this.reasonTypes,
+    required this.rejectTypes,
+    required this.language,
+  });
+
+  final List<RequestTypeModel> requestTypes;
+  final List<ReasonTypeModel> reasonTypes;
+  final List<RejectTypeModel> rejectTypes;
+  final String language;
 
   @override
   State<ProcessDataSubjectRightView> createState() =>
@@ -65,11 +90,7 @@ class _ProcessDataSubjectRightViewState
 
   void _goBackAndUpdate() {
     final cubit = context.read<ProcessDataSubjectRightCubit>();
-    if (cubit.state.dataSubjectRight != cubit.state.initialDataSubjectRight) {
-      Navigator.pop(context, cubit.state.dataSubjectRight);
-    } else {
-      Navigator.pop(context);
-    }
+    Navigator.pop(context, cubit.state.dataSubjectRight);
   }
 
   void _onBackStepPressed() {
@@ -116,7 +137,12 @@ class _ProcessDataSubjectRightViewState
                       VerifyFormStep(
                         formKey: _verifyFormKey,
                       ),
-                      const ConsiderRequestStep(),
+                      ConsiderRequestStep(
+                        requestTypes: widget.requestTypes,
+                        reasonTypes: widget.reasonTypes,
+                        rejectTypes: widget.rejectTypes,
+                        language: widget.language,
+                      ),
                       const Text('3'),
                     ].elementAt(state.stepIndex),
                   ),

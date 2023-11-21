@@ -2,6 +2,10 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:pdpa/app/config/config.dart';
 import 'package:pdpa/app/data/models/data_subject_right/process_request_model.dart';
+import 'package:pdpa/app/data/models/master_data/localized_model.dart';
+import 'package:pdpa/app/data/models/master_data/reason_type_model.dart';
+import 'package:pdpa/app/data/models/master_data/reject_type_model.dart';
+import 'package:pdpa/app/data/models/master_data/request_type_model.dart';
 import 'package:pdpa/app/features/data_subject_right/cubit/process_data_subject_right/process_data_subject_right_cubit.dart';
 import 'package:pdpa/app/features/data_subject_right/screens/process_data_subject_right/widgets/process_consider_request.dart';
 import 'package:pdpa/app/features/data_subject_right/screens/process_data_subject_right/widgets/process_proof_of_action.dart';
@@ -15,13 +19,51 @@ import 'package:pdpa/app/shared/widgets/material_ink_well.dart';
 import 'package:pdpa/app/shared/widgets/title_required_text.dart';
 
 class ConsiderRequestStep extends StatefulWidget {
-  const ConsiderRequestStep({super.key});
+  const ConsiderRequestStep({
+    super.key,
+    required this.requestTypes,
+    required this.reasonTypes,
+    required this.rejectTypes,
+    required this.language,
+  });
+
+  final List<RequestTypeModel> requestTypes;
+  final List<ReasonTypeModel> reasonTypes;
+  final List<RejectTypeModel> rejectTypes;
+  final String language;
 
   @override
   State<ConsiderRequestStep> createState() => _ConsiderRequestStepState();
 }
 
 class _ConsiderRequestStepState extends State<ConsiderRequestStep> {
+  final requestSelectedKey = GlobalKey();
+
+  String processRequestSelected = '';
+
+  @override
+  void initState() {
+    super.initState();
+
+    _selectProcessRequest();
+  }
+
+  Future<void> _selectProcessRequest() async {
+    final cubit = context.read<ProcessDataSubjectRightCubit>();
+    processRequestSelected = cubit.state.processRequestSelected;
+
+    await Future.delayed(const Duration(milliseconds: 400)).then((_) async {
+      await Scrollable.ensureVisible(
+        requestSelectedKey.currentContext!,
+        duration: const Duration(milliseconds: 400),
+      );
+    });
+
+    await Scrollable.ensureVisible(
+      requestSelectedKey.currentContext!,
+    );
+  }
+
   void _setRequestExpand(String id) {
     final cubit = context.read<ProcessDataSubjectRightCubit>();
     cubit.setRequestExpand(id);
@@ -69,6 +111,9 @@ class _ConsiderRequestStepState extends State<ConsiderRequestStep> {
 
                 return _buildProcessRequestCard(
                   context,
+                  key: processRequest.id == processRequestSelected
+                      ? requestSelectedKey
+                      : null,
                   index: index + 1,
                   dataSubjectRightId: state.dataSubjectRight.id,
                   processRequest: processRequest,
@@ -90,13 +135,24 @@ class _ConsiderRequestStepState extends State<ConsiderRequestStep> {
 
   CustomContainer _buildProcessRequestCard(
     BuildContext context, {
+    Key? key,
     required int index,
     required String dataSubjectRightId,
     required ProcessRequestModel processRequest,
     required ProcessRequestModel initialProcessRequest,
     bool expanded = false,
   }) {
+    final requestType = UtilFunctions.getRequestTypeById(
+      widget.requestTypes,
+      processRequest.requestType,
+    );
+    final description = requestType.description.firstWhere(
+      (item) => item.language == widget.language,
+      orElse: () => const LocalizedModel.empty(),
+    );
+
     return CustomContainer(
+      key: key,
       child: Column(
         mainAxisSize: MainAxisSize.min,
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -111,7 +167,7 @@ class _ConsiderRequestStepState extends State<ConsiderRequestStep> {
                 children: <Widget>[
                   Expanded(
                     child: Text(
-                      '$index. ${processRequest.requestType}',
+                      '$index. ${description.text}',
                       style: Theme.of(context).textTheme.titleMedium,
                     ),
                   ),
@@ -124,6 +180,10 @@ class _ConsiderRequestStepState extends State<ConsiderRequestStep> {
                 ],
               ),
             ),
+          ),
+          _buildProcessRequestStatus(
+            context,
+            processRequest: processRequest,
           ),
           ExpandedContainer(
             expand: expanded,
@@ -146,8 +206,8 @@ class _ConsiderRequestStepState extends State<ConsiderRequestStep> {
                   initialProcessRequest: initialProcessRequest,
                 ),
                 ExpandedContainer(
-                  expand: initialProcessRequest.considerRequestStatus !=
-                      RequestResultStatus.none,
+                  expand: initialProcessRequest.considerRequestStatus ==
+                      RequestResultStatus.pass,
                   duration: const Duration(milliseconds: 400),
                   child: Padding(
                     padding: const EdgeInsets.only(
@@ -161,14 +221,6 @@ class _ConsiderRequestStepState extends State<ConsiderRequestStep> {
                   ),
                 ),
               ],
-            ),
-          ),
-          ExpandedContainer(
-            expand: !expanded,
-            duration: const Duration(milliseconds: 400),
-            child: _buildProcessRequestStatus(
-              context,
-              processRequest: processRequest,
             ),
           ),
         ],
@@ -263,7 +315,14 @@ class _ConsiderRequestStepState extends State<ConsiderRequestStep> {
           physics: const NeverScrollableScrollPhysics(),
           shrinkWrap: true,
           itemBuilder: (context, index) {
-            final reasonType = processRequest.reasonTypes[index];
+            final reasonType = UtilFunctions.getReasonTypeById(
+              widget.reasonTypes,
+              processRequest.reasonTypes[index].id,
+            );
+            final description = reasonType.description.firstWhere(
+              (item) => item.language == widget.language,
+              orElse: () => const LocalizedModel.empty(),
+            );
 
             return Row(
               children: <Widget>[
@@ -275,9 +334,9 @@ class _ConsiderRequestStepState extends State<ConsiderRequestStep> {
                 const SizedBox(width: UiConfig.actionSpacing),
                 Expanded(
                   child: Text(
-                    reasonType.text.isNotEmpty
-                        ? reasonType.text
-                        : reasonType.id,
+                    processRequest.reasonTypes[index].text.isNotEmpty
+                        ? processRequest.reasonTypes[index].text
+                        : description.text,
                     style: Theme.of(context).textTheme.bodyMedium,
                   ),
                 ),

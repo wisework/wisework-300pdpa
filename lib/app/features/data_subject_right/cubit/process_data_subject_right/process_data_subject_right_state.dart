@@ -4,6 +4,7 @@ class ProcessDataSubjectRightState extends Equatable {
   const ProcessDataSubjectRightState({
     required this.dataSubjectRight,
     required this.initialDataSubjectRight,
+    required this.processRequestSelected,
     required this.currentUser,
     required this.userEmails,
     required this.stepIndex,
@@ -15,6 +16,7 @@ class ProcessDataSubjectRightState extends Equatable {
 
   final DataSubjectRightModel dataSubjectRight;
   final DataSubjectRightModel initialDataSubjectRight;
+  final String processRequestSelected;
   final UserModel currentUser;
   final List<String> userEmails;
   final int stepIndex;
@@ -26,6 +28,7 @@ class ProcessDataSubjectRightState extends Equatable {
   ProcessDataSubjectRightState copyWith({
     DataSubjectRightModel? dataSubjectRight,
     DataSubjectRightModel? initialDataSubjectRight,
+    String? processRequestSelected,
     UserModel? currentUser,
     List<String>? userEmails,
     int? stepIndex,
@@ -38,6 +41,8 @@ class ProcessDataSubjectRightState extends Equatable {
       dataSubjectRight: dataSubjectRight ?? this.dataSubjectRight,
       initialDataSubjectRight:
           initialDataSubjectRight ?? this.initialDataSubjectRight,
+      processRequestSelected:
+          processRequestSelected ?? this.processRequestSelected,
       currentUser: currentUser ?? this.currentUser,
       userEmails: userEmails ?? this.userEmails,
       stepIndex: stepIndex ?? this.stepIndex,
@@ -53,6 +58,7 @@ class ProcessDataSubjectRightState extends Equatable {
     return [
       dataSubjectRight,
       initialDataSubjectRight,
+      processRequestSelected,
       currentUser,
       userEmails,
       stepIndex,

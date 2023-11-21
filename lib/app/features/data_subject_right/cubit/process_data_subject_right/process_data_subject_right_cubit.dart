@@ -23,6 +23,7 @@ class ProcessDataSubjectRightCubit extends Cubit<ProcessDataSubjectRightState> {
         super(ProcessDataSubjectRightState(
           dataSubjectRight: DataSubjectRightModel.empty(),
           initialDataSubjectRight: DataSubjectRightModel.empty(),
+          processRequestSelected: '',
           currentUser: UserModel.empty(),
           userEmails: const [],
           stepIndex: 0,
@@ -51,6 +52,7 @@ class ProcessDataSubjectRightCubit extends Cubit<ProcessDataSubjectRightState> {
       state.copyWith(
         dataSubjectRight: dataSubjectRight,
         initialDataSubjectRight: dataSubjectRight,
+        processRequestSelected: processRequestSelected,
         currentUser: currentUser,
         userEmails: userEmails,
         stepIndex: stepIndex,

@@ -4,6 +4,7 @@ import 'package:go_router/go_router.dart';
 import 'package:pdpa/app/config/config.dart';
 import 'package:pdpa/app/data/models/authentication/user_model.dart';
 import 'package:pdpa/app/data/models/data_subject_right/data_subject_right_model.dart';
+import 'package:pdpa/app/data/models/etc/updated_return.dart';
 import 'package:pdpa/app/data/models/master_data/reason_type_model.dart';
 import 'package:pdpa/app/data/models/master_data/reject_type_model.dart';
 import 'package:pdpa/app/data/models/master_data/request_type_model.dart';
@@ -158,8 +159,44 @@ class _EditDataSubjectRightViewState extends State<EditDataSubjectRightView> {
     dataSubjectRight = widget.initialDataSubjectRight;
   }
 
-  void _goBack() {
-    context.pop();
+  void _goBackAndUpdate() {
+    context.pop(
+      UpdatedReturn<DataSubjectRightModel>(
+        object: widget.initialDataSubjectRight,
+        type: UpdateType.updated,
+      ),
+    );
+  }
+
+  void _onProcessRequestPressed() async {
+    await Navigator.push(
+      context,
+      MaterialPageRoute(
+        builder: (context) => ProcessDataSubjectRightScreen(
+          initialDataSubjectRight: dataSubjectRight,
+          requestTypes: widget.requestTypes,
+          reasonTypes: widget.reasonTypes,
+          rejectTypes: widget.rejectTypes,
+          processRequestSelected: widget.processRequestSelected,
+          currentUser: widget.currentUser,
+          userEmails: widget.userEmails,
+        ),
+      ),
+    ).then((result) {
+      if (result != null) {
+        final updated = result as DataSubjectRightModel;
+        if (dataSubjectRight != updated) {
+          _updateEditDsrState(updated);
+        }
+      }
+    });
+  }
+
+  void _updateEditDsrState(DataSubjectRightModel dataSubjectRight) {
+    final event = UpdateEditDataSubjectRightStateEvent(
+      dataSubjectRight: dataSubjectRight,
+    );
+    context.read<EditDataSubjectRightBloc>().add(event);
   }
 
   @override
@@ -208,20 +245,7 @@ class _EditDataSubjectRightViewState extends State<EditDataSubjectRightView> {
                 mainAxisAlignment: MainAxisAlignment.end,
                 children: <Widget>[
                   CustomButton(
-                    onPressed: () {
-                      Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                          builder: (context) => ProcessDataSubjectRightScreen(
-                            initialDataSubjectRight: dataSubjectRight,
-                            processRequestSelected:
-                                widget.processRequestSelected,
-                            currentUser: widget.currentUser,
-                            userEmails: widget.userEmails,
-                          ),
-                        ),
-                      );
-                    },
+                    onPressed: _onProcessRequestPressed,
                     child: Padding(
                       padding: const EdgeInsets.symmetric(
                         vertical: 8.0,
@@ -245,7 +269,7 @@ class _EditDataSubjectRightViewState extends State<EditDataSubjectRightView> {
 
   CustomIconButton _buildPopButton() {
     return CustomIconButton(
-      onPressed: _goBack,
+      onPressed: _goBackAndUpdate,
       icon: Icons.chevron_left_outlined,
       iconColor: Theme.of(context).colorScheme.primary,
       backgroundColor: Theme.of(context).colorScheme.onBackground,
