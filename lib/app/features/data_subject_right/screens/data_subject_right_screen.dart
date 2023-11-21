@@ -86,6 +86,47 @@ class _DataSubjectRightViewState extends State<DataSubjectRightView> {
 
   @override
   Widget build(BuildContext context) {
+    final datasubject = [
+      DataSubjectRightModel.empty().copyWith(
+        id: '1',
+        dataRequester: [
+          const RequesterInputModel(
+            id: '1',
+            title: [
+              LocalizedModel(language: 'th-TH', text: 'title1'),
+            ],
+            text: 'text',
+            priority: 1,
+          )
+        ],
+      ),
+      DataSubjectRightModel.empty().copyWith(
+        id: '2',
+        dataRequester: [
+          const RequesterInputModel(
+            id: '2',
+            title: [
+              LocalizedModel(language: 'th-TH', text: 'title2'),
+            ],
+            text: 'text',
+            priority: 1,
+          )
+        ],
+      ),
+      DataSubjectRightModel.empty().copyWith(
+        id: '3',
+        dataRequester: [
+          const RequesterInputModel(
+            id: '3',
+            title: [
+              LocalizedModel(language: 'th-TH', text: 'title3'),
+            ],
+            text: 'text',
+            priority: 1,
+          )
+        ],
+      ),
+    ];
     return Scaffold(
       key: _scaffoldKey,
       appBar: PdpaAppBar(
