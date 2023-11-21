@@ -24,6 +24,13 @@ class PowerVerificationModel extends Equatable {
     );
   }
 
+  const PowerVerificationModel.empty()
+      : this(
+          id: '',
+          title: '',
+          additionalReq: false,
+        );
+
   PowerVerificationModel.fromMap(DataMap map)
       : this(
           id: map['id'] as String,

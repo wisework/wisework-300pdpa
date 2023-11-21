@@ -5,6 +5,7 @@ import 'package:path/path.dart';
 import 'package:pdpa/app/config/config.dart';
 import 'package:pdpa/app/data/models/authentication/company_model.dart';
 import 'package:pdpa/app/data/models/data_subject_right/data_subject_right_model.dart';
+import 'package:pdpa/app/data/models/data_subject_right/power_verification_model.dart';
 import 'package:pdpa/app/data/models/data_subject_right/process_request_model.dart';
 import 'package:pdpa/app/data/models/etc/user_company_role.dart';
 import 'package:pdpa/app/data/models/etc/user_input_purpose.dart';
@@ -192,6 +193,20 @@ class UtilFunctions {
     }
 
     return ProcessRequestStatus.inProgress;
+  }
+
+  static PowerVerificationModel getPowerVerification(
+    List<PowerVerificationModel> powerVerifications,
+    String powerOfAttorneyId,
+  ) {
+    if (powerVerifications.isNotEmpty && powerOfAttorneyId.isNotEmpty) {
+      for (PowerVerificationModel verification in powerVerifications) {
+        if (verification.id == powerOfAttorneyId) {
+          return verification;
+        }
+      }
+    }
+    return const PowerVerificationModel.empty();
   }
 
   //? Upload File

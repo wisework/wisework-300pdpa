@@ -80,3 +80,5 @@ enum RequestResultStatus { pass, fail, none }
 enum ProcessDataSubjectRightStatus { notStarted, inProgress, completed }
 
 enum ProcessRequestStatus { notProcessed, inProgress, refused, completed }
+
+const fileImageType = <String>['jpg', 'jpeg', 'png'];
