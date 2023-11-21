@@ -182,12 +182,7 @@ final List<RequestTypeModel> requestTypesPreset = [
         text: 'แจ้งเหตุละเมิด',
       ),
     ],
-    rejectTypes: [
-      RejectTypeModel.empty().copyWith(id: 'DSR-REJ-001'),
-      RejectTypeModel.empty().copyWith(id: 'DSR-REJ-002'),
-      RejectTypeModel.empty().copyWith(id: 'DSR-REJ-003'),
-      RejectTypeModel.empty().copyWith(id: 'DSR-REJ-006'),
-    ],
+    rejectTypes: [],
     editable: false,
   ),
 ];

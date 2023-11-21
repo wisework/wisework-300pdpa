@@ -8,7 +8,8 @@ final List<ReasonTypeModel> reasonTypesPreset = [
     description: const [
       LocalizedModel(
         language: 'en-US',
-        text: "It is under investigation as the owner of personal data requests the company to correct personal data.",
+        text:
+            "It is under investigation as the owner of personal data requests the company to correct personal data.",
       ),
       LocalizedModel(
         language: 'th-TH',
@@ -25,7 +26,8 @@ final List<ReasonTypeModel> reasonTypesPreset = [
     description: const [
       LocalizedModel(
         language: 'en-US',
-        text: "It is personal information that must be deleted or destroyed. Because it is an unlawful processing of personal data, but the owner of the personal data wishes to request that the use be suspended instead.",
+        text:
+            "It is personal information that must be deleted or destroyed. Because it is an unlawful processing of personal data, but the owner of the personal data wishes to request that the use be suspended instead.",
       ),
       LocalizedModel(
         language: 'th-TH',
@@ -42,7 +44,8 @@ final List<ReasonTypeModel> reasonTypesPreset = [
     description: const [
       LocalizedModel(
         language: 'en-US',
-        text: "Personal data is no longer necessary to be kept for the purpose of processing, but the owner of the personal data is required to request its retention in order to establish legal claims, comply with the law, or exercise rights. Legal claim",
+        text:
+            "Personal data is no longer necessary to be kept for the purpose of processing, but the owner of the personal data is required to request its retention in order to establish legal claims, comply with the law, or exercise rights. Legal claim",
       ),
       LocalizedModel(
         language: 'th-TH',
@@ -66,7 +69,7 @@ final List<ReasonTypeModel> reasonTypesPreset = [
         text: 'เหตุผลอื่นๆ โปรดระบุ',
       ),
     ],
-    requiredInputReasonText: false,
+    requiredInputReasonText: true,
     editable: false,
   ),
 ];
