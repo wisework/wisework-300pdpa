@@ -1,4 +1,3 @@
-import 'package:bot_toast/bot_toast.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -6,14 +5,16 @@ import 'package:go_router/go_router.dart';
 import 'package:ionicons/ionicons.dart';
 import 'package:pdpa/app/config/config.dart';
 import 'package:pdpa/app/data/models/authentication/user_model.dart';
+import 'package:pdpa/app/data/models/etc/updated_return.dart';
 import 'package:pdpa/app/data/models/master_data/localized_model.dart';
 import 'package:pdpa/app/data/models/master_data/reason_type_model.dart';
 import 'package:pdpa/app/features/authentication/bloc/sign_in/sign_in_bloc.dart';
 import 'package:pdpa/app/features/master_data/bloc/data_subject_right/edit_reason_type/edit_reason_type_bloc.dart';
-import 'package:pdpa/app/features/master_data/bloc/data_subject_right/reason_type/reason_type_bloc.dart';
 import 'package:pdpa/app/features/master_data/widgets/configuration_info.dart';
 import 'package:pdpa/app/injection.dart';
 import 'package:pdpa/app/shared/utils/constants.dart';
+import 'package:pdpa/app/shared/utils/toast.dart';
+import 'package:pdpa/app/shared/widgets/content_wrapper.dart';
 import 'package:pdpa/app/shared/widgets/customs/custom_container.dart';
 import 'package:pdpa/app/shared/widgets/customs/custom_icon_button.dart';
 import 'package:pdpa/app/shared/widgets/customs/custom_switch_button.dart';
@@ -67,61 +68,44 @@ class _EditReasonTypeScreenState extends State<EditReasonTypeScreen> {
       child: BlocConsumer<EditReasonTypeBloc, EditReasonTypeState>(
         listener: (context, state) {
           if (state is CreatedCurrentReasonType) {
-            BotToast.showText(
+            showToast(
+              context,
               text: tr(
                   'consentManagement.consentForm.editConsentTheme.createSuccess'), //!
-              contentColor:
-                  Theme.of(context).colorScheme.secondary.withOpacity(0.75),
-              borderRadius: BorderRadius.circular(8.0),
-              textStyle: Theme.of(context)
-                  .textTheme
-                  .bodyMedium!
-                  .copyWith(color: Theme.of(context).colorScheme.onPrimary),
-              duration: UiConfig.toastDuration,
+            ); //!
+
+            context.pop(
+              UpdatedReturn<ReasonTypeModel>(
+                object: state.reasonType,
+                type: UpdateType.created,
+              ),
             );
-
-            context.read<ReasonTypeBloc>().add(UpdateReasonTypeEvent(
-                reasonType: state.reasonType, updateType: UpdateType.created));
-
-            context.pop();
           }
 
           if (state is UpdatedCurrentReasonType) {
-            BotToast.showText(
+            showToast(
+              context,
               text: tr(
-                  'consentManagement.consentForm.editConsentTheme.updateSuccess'), //!
-              contentColor:
-                  Theme.of(context).colorScheme.secondary.withOpacity(0.75),
-              borderRadius: BorderRadius.circular(8.0),
-              textStyle: Theme.of(context)
-                  .textTheme
-                  .bodyMedium!
-                  .copyWith(color: Theme.of(context).colorScheme.onPrimary),
-              duration: UiConfig.toastDuration,
-            );
+                  'consentManagement.consentForm.editConsentTheme.updateSuccess'),
+            ); //!
           }
 
           if (state is DeletedCurrentReasonType) {
-            BotToast.showText(
+            showToast(
+              context,
               text: tr(
-                  'consentManagement.consentForm.editConsentTheme.deleteSuccess'), //!
-              contentColor:
-                  Theme.of(context).colorScheme.secondary.withOpacity(0.75),
-              borderRadius: BorderRadius.circular(8.0),
-              textStyle: Theme.of(context)
-                  .textTheme
-                  .bodyMedium!
-                  .copyWith(color: Theme.of(context).colorScheme.onPrimary),
-              duration: UiConfig.toastDuration,
-            );
+                  'consentManagement.consentForm.editConsentTheme.deleteSuccess'),
+            ); //!
 
             final deleted =
                 ReasonTypeModel.empty().copyWith(id: state.reasonTypeId);
 
-            context.read<ReasonTypeBloc>().add(UpdateReasonTypeEvent(
-                reasonType: deleted, updateType: UpdateType.deleted));
-
-            context.pop();
+            context.pop(
+              UpdatedReturn<ReasonTypeModel>(
+                object: deleted,
+                type: UpdateType.deleted,
+              ),
+            );
           }
         },
         builder: (context, state) {
@@ -171,13 +155,15 @@ class _EditReasonTypeViewState extends State<EditReasonTypeView> {
 
   late TextEditingController reasonTypeCodeController;
   late TextEditingController descriptionController;
+
   late bool isActivated;
-  late bool isNeedInfo;
+
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
 
   @override
   void initState() {
     super.initState();
+
     _initialData();
   }
 
@@ -190,11 +176,13 @@ class _EditReasonTypeViewState extends State<EditReasonTypeView> {
   }
 
   void _initialData() {
+    const language = 'th-TH';
+
     reasonType = widget.initialReasonType;
+
     reasonTypeCodeController = TextEditingController();
     descriptionController = TextEditingController();
 
-    isNeedInfo = false;
     isActivated = true;
 
     if (reasonType != ReasonTypeModel.empty()) {
@@ -204,12 +192,17 @@ class _EditReasonTypeViewState extends State<EditReasonTypeView> {
         );
       }
       if (reasonType.description.isNotEmpty) {
+        final description = reasonType.description
+            .firstWhere(
+              (item) => item.language == language,
+              orElse: () => const LocalizedModel.empty(),
+            )
+            .text;
+
         descriptionController = TextEditingController(
-          text: reasonType.description.first.text,
+          text: description,
         );
       }
-
-      isNeedInfo = reasonType.requiredInputReasonText;
 
       isActivated = reasonType.status == ActiveStatus.active;
     }
@@ -228,7 +221,7 @@ class _EditReasonTypeViewState extends State<EditReasonTypeView> {
       () {
         final description = [
           LocalizedModel(
-            language: 'en-US',
+            language: 'th-TH',
             text: descriptionController.text,
           ),
         ];
@@ -236,17 +229,6 @@ class _EditReasonTypeViewState extends State<EditReasonTypeView> {
         reasonType = reasonType.copyWith(description: description);
       },
     );
-  }
-
-  void _setNeedInfo(bool value) {
-    setState(() {
-      isNeedInfo = value;
-
-      final requiredInputReasonText = isNeedInfo ? true : false;
-
-      reasonType =
-          reasonType.copyWith(requiredInputReasonText: requiredInputReasonText);
-    });
   }
 
   void _setActiveStatus(bool value) {
@@ -266,40 +248,46 @@ class _EditReasonTypeViewState extends State<EditReasonTypeView> {
           widget.currentUser.email,
           DateTime.now(),
         );
-        context.read<EditReasonTypeBloc>().add(CreateCurrentReasonTypeEvent(
-              reasonType: reasonType,
-              companyId: widget.currentUser.currentCompany,
-            ));
+        final event = CreateCurrentReasonTypeEvent(
+          reasonType: reasonType,
+          companyId: widget.currentUser.currentCompany,
+        );
+
+        context.read<EditReasonTypeBloc>().add(event);
       } else {
         reasonType = reasonType.setUpdate(
           widget.currentUser.email,
           DateTime.now(),
         );
 
-        context.read<EditReasonTypeBloc>().add(UpdateCurrentReasonTypeEvent(
-              reasonType: reasonType,
-              companyId: widget.currentUser.currentCompany,
-            ));
+        final event = UpdateCurrentReasonTypeEvent(
+          reasonType: reasonType,
+          companyId: widget.currentUser.currentCompany,
+        );
+        context.read<EditReasonTypeBloc>().add(event);
       }
     }
   }
 
   void _deleteReasonType() {
-    context.read<EditReasonTypeBloc>().add(DeleteCurrentReasonTypeEvent(
-          reasonTypeId: reasonType.id,
-          companyId: widget.currentUser.currentCompany,
-        ));
+    final event = DeleteCurrentReasonTypeEvent(
+      reasonTypeId: reasonType.id,
+      companyId: widget.currentUser.currentCompany,
+    );
+    context.read<EditReasonTypeBloc>().add(event);
   }
 
   void _goBackAndUpdate() {
     if (!widget.isNewReasonType) {
-      context.read<ReasonTypeBloc>().add(UpdateReasonTypeEvent(
-            reasonType: reasonType,
-            updateType: UpdateType.updated,
-          ));
+      context.pop(
+        UpdatedReturn<ReasonTypeModel>(
+          object: widget.initialReasonType,
+          type: UpdateType.updated,
+        ),
+      );
+    } else {
+      context.pop();
     }
-
-    context.pop();
   }
 
   @override
@@ -318,19 +306,22 @@ class _EditReasonTypeViewState extends State<EditReasonTypeView> {
         ],
       ),
       body: SingleChildScrollView(
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: <Widget>[
-            const SizedBox(height: UiConfig.lineSpacing),
-            CustomContainer(
-              child: _buildReasonTypeForm(context),
-            ),
-            const SizedBox(height: UiConfig.lineSpacing),
-            Visibility(
-              visible: widget.initialReasonType != ReasonTypeModel.empty(),
-              child: _buildConfigurationInfo(context, widget.initialReasonType),
-            ),
-          ],
+        child: ContentWrapper(
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: <Widget>[
+              const SizedBox(height: UiConfig.lineSpacing),
+              CustomContainer(
+                child: _buildReasonTypeForm(context),
+              ),
+              const SizedBox(height: UiConfig.lineSpacing),
+              Visibility(
+                visible: widget.initialReasonType != ReasonTypeModel.empty(),
+                child:
+                    _buildConfigurationInfo(context, widget.initialReasonType),
+              ),
+            ],
+          ),
         ),
       ),
     );
@@ -345,50 +336,32 @@ class _EditReasonTypeViewState extends State<EditReasonTypeView> {
           Row(
             children: <Widget>[
               Text(
-                tr('masterData.dsr.reason.title'),
+                tr('masterData.dsr.reason.title'), //!
                 style: Theme.of(context).textTheme.titleLarge,
               ),
             ],
           ),
           const SizedBox(height: UiConfig.lineSpacing),
           TitleRequiredText(
-            text: tr('masterData.dsr.reason.reasoncode'),
+            text: tr('masterData.dsr.reason.reasoncode'), //!
             required: true,
           ),
           CustomTextField(
             controller: reasonTypeCodeController,
-            hintText: tr('masterData.dsr.reason.reasoncodeHint'),
-            required: true,
+            hintText: tr('masterData.dsr.reason.reasoncodeHint'), //!
             onChanged: _setReasonCode,
+            required: true,
           ),
           const SizedBox(height: UiConfig.lineSpacing),
           TitleRequiredText(
-            text: tr('masterData.dsr.reason.description'),
+            text: tr('masterData.dsr.reason.description'), //!
           ),
           CustomTextField(
             controller: descriptionController,
-            hintText: tr('masterData.dsr.reason.descriptionHint'),
+            hintText: tr('masterData.dsr.reason.descriptionHint'), //!
             onChanged: _setDescription,
           ),
           const SizedBox(height: UiConfig.lineSpacing),
-          Divider(
-            color:
-                Theme.of(context).colorScheme.outlineVariant.withOpacity(0.5),
-          ),
-          const SizedBox(height: UiConfig.lineSpacing),
-          Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: <Widget>[
-              Text(
-                tr('masterData.dsr.reason.needmoreinformation'),
-                style: Theme.of(context).textTheme.bodyMedium,
-              ),
-              CustomSwitchButton(
-                value: isNeedInfo,
-                onChanged: _setNeedInfo,
-              ),
-            ],
-          ),
         ],
       ),
     );

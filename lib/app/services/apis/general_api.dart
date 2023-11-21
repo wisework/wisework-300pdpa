@@ -6,6 +6,7 @@ import 'package:firebase_storage/firebase_storage.dart';
 import 'package:http/http.dart' as http;
 import 'package:pdpa/app/config/config.dart';
 import 'package:pdpa/app/shared/utils/typedef.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 class GeneralApi {
   const GeneralApi(this._storage);
@@ -53,9 +54,16 @@ class GeneralApi {
     return await ref.getDownloadURL();
   }
 
-  Future<void> downloadFile(String path) async {
+  Future<void> downloadFirebaseStorageFile(String path) async {
     final ref = _storage.ref().child(path);
-    await ref.getData();
+    final fileUrl = await ref.getDownloadURL();
+    final uri = Uri.parse(fileUrl);
+
+    await canLaunchUrl(uri).then((result) async {
+      if (result) {
+        await launchUrl(uri);
+      }
+    });
   }
 
   Future<List<String>> getImages(String path) async {
