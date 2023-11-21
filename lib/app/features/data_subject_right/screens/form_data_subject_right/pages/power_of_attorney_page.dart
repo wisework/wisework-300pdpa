@@ -1,3 +1,8 @@
+import 'dart:io';
+
+import 'package:easy_localization/easy_localization.dart';
+import 'package:file_picker/file_picker.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 
 import 'package:ionicons/ionicons.dart';
@@ -109,6 +114,9 @@ class _PowerOfAttorneyPageState extends State<PowerOfAttorneyPage> {
     final selectIds =
         selectPowerVerification.map((category) => category.id).toList();
 
+    File? file;
+    FilePickerResult? result;
+
     return Column(
       mainAxisSize: MainAxisSize.min,
       children: <Widget>[
@@ -149,6 +157,20 @@ class _PowerOfAttorneyPageState extends State<PowerOfAttorneyPage> {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: <Widget>[
+                if (file != null || result != null) ...[
+                  if (kIsWeb) ...[
+                    Image.memory(
+                      result!.files.first.bytes!,
+                      height: 350,
+                      width: 350,
+                      fit: BoxFit.fill,
+                    ),
+                  ] else ...[
+                    Image.file(file!,
+                        height: 150, width: 150, fit: BoxFit.fill),
+                  ],
+                  const SizedBox(height: 8),
+                ],
                 Visibility(
                   visible: powerVerification.additionalReq,
                   child: Column(
@@ -197,7 +219,19 @@ class _PowerOfAttorneyPageState extends State<PowerOfAttorneyPage> {
                     Padding(
                       padding: const EdgeInsets.only(left: 10.0),
                       child: CustomIconButton(
-                        onPressed: () {},
+                        onPressed: () async {
+                          try {
+                            result = await FilePicker.platform.pickFiles();
+                            if (result != null) {
+                              if (!kIsWeb) {
+                                file = File(result!.files.single.path!);
+                              }
+                              setState(() {});
+                            } else {
+                              // User canceled the picker
+                            }
+                          } catch (_) {}
+                        },
                         icon: Ionicons.cloud_upload,
                         iconColor: Theme.of(context).colorScheme.primary,
                         backgroundColor:

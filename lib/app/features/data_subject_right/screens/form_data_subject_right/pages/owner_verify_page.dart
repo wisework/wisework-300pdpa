@@ -1,3 +1,4 @@
+import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
@@ -257,7 +258,7 @@ class _OwnerVerifyPageState extends State<OwnerVerifyPage> {
                 ?.copyWith(color: Theme.of(context).colorScheme.primary),
           ),
           DataSubjectRightListTile(
-            title: tr('dataSubjectRight.dataRequester.applicantDs'), 
+            title: tr('dataSubjectRight.dataRequester.applicantDs'),
             onTap: () {
               setSelectedRadioTile(1);
             },
@@ -270,7 +271,7 @@ class _OwnerVerifyPageState extends State<OwnerVerifyPage> {
             ),
           ),
           DataSubjectRightListTile(
-            title: tr('dataSubjectRight.dataRequester.ApplicantAds'), 
+            title: tr('dataSubjectRight.dataRequester.ApplicantAds'),
             onTap: () {
               setSelectedRadioTile(2);
             },
@@ -285,7 +286,7 @@ class _OwnerVerifyPageState extends State<OwnerVerifyPage> {
           Row(
             children: <Widget>[
               Text(
-                tr('dataSubjectRight.dataRequester.ApplicantInformation'), 
+                tr('dataSubjectRight.dataRequester.ApplicantInformation'),
                 style: Theme.of(context)
                     .textTheme
                     .titleMedium
@@ -294,24 +295,24 @@ class _OwnerVerifyPageState extends State<OwnerVerifyPage> {
             ],
           ),
           const SizedBox(height: UiConfig.lineSpacing),
-           TitleRequiredText(
-            text: tr('dataSubjectRight.dataRequester.namesurename'), 
+          TitleRequiredText(
+            text: tr('dataSubjectRight.dataRequester.namesurename'),
             required: true,
           ),
           CustomTextField(
-            hintText: tr('dataSubjectRight.dataRequester.hintnamesurename'), 
+            hintText: tr('dataSubjectRight.dataRequester.hintnamesurename'),
             controller: fullNameController,
             required: true,
             keyboardType: TextInputType.text,
             onChanged: _setFullNameController,
           ),
           const SizedBox(height: UiConfig.lineSpacing),
-           TitleRequiredText(
-            text: tr('dataSubjectRight.dataRequester.address'), 
+          TitleRequiredText(
+            text: tr('dataSubjectRight.dataRequester.address'),
             required: true,
           ),
           CustomTextField(
-            hintText: tr('dataSubjectRight.dataRequester.hintnameaddress'), 
+            hintText: tr('dataSubjectRight.dataRequester.hintnameaddress'),
             controller: addressTextController,
             required: true,
             keyboardType: TextInputType.multiline,
@@ -319,24 +320,24 @@ class _OwnerVerifyPageState extends State<OwnerVerifyPage> {
             onChanged: _setAddressTextController,
           ),
           const SizedBox(height: UiConfig.lineSpacing),
-           TitleRequiredText(
-            text: tr('dataSubjectRight.dataRequester.email'), 
+          TitleRequiredText(
+            text: tr('dataSubjectRight.dataRequester.email'),
             required: true,
           ),
           CustomTextField(
-            hintText: tr('dataSubjectRight.dataRequester.hintemail'), 
+            hintText: tr('dataSubjectRight.dataRequester.hintemail'),
             controller: emailController,
             required: true,
             keyboardType: TextInputType.emailAddress,
             onChanged: _setEmailController,
           ),
           const SizedBox(height: UiConfig.lineSpacing),
-           TitleRequiredText(
-            text: tr('dataSubjectRight.dataRequester.telnumber'), 
+          TitleRequiredText(
+            text: tr('dataSubjectRight.dataRequester.telnumber'),
             required: true,
           ),
           CustomTextField(
-            hintText: tr('dataSubjectRight.dataRequester.hinttelnumber'), 
+            hintText: tr('dataSubjectRight.dataRequester.hinttelnumber'),
             controller: phonenumberController,
             keyboardType: TextInputType.phone,
             required: true,

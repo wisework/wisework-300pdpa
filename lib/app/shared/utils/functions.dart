@@ -13,6 +13,7 @@ import 'package:pdpa/app/data/models/master_data/custom_field_model.dart';
 import 'package:pdpa/app/data/models/master_data/mandatory_field_model.dart';
 import 'package:pdpa/app/data/models/master_data/purpose_category_model.dart';
 import 'package:pdpa/app/data/models/master_data/purpose_model.dart';
+import 'package:path/path.dart' as p;
 
 import 'constants.dart';
 
@@ -199,6 +200,12 @@ class UtilFunctions {
     final fileExtension = extension(path);
 
     return '$fileName$fileExtension';
+  }
+
+  static String getFileType(String path) {
+    if (path.isEmpty) return "";
+    final fileType = p.extension(path);
+    return fileType.split(".")[1];
   }
 
   static String getUniqueFileNameByUint8List(Uint8List bytes) {

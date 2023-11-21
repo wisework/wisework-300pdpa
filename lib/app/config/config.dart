@@ -67,6 +67,8 @@ class DefaultMasterData {
       createdDate: DateTime.fromMillisecondsSinceEpoch(0),
       updatedBy: '',
       updatedDate: DateTime.fromMillisecondsSinceEpoch(0),
+      rejectTypes: [],
+      editable: false,
     ),
     RequestTypeModel(
       id: 'REQ-002',
@@ -80,6 +82,8 @@ class DefaultMasterData {
       createdDate: DateTime.fromMillisecondsSinceEpoch(0),
       updatedBy: '',
       updatedDate: DateTime.fromMillisecondsSinceEpoch(0),
+      rejectTypes: [],
+      editable: false,
     ),
     RequestTypeModel(
       id: 'REQ-003',
@@ -97,6 +101,8 @@ class DefaultMasterData {
       createdDate: DateTime.fromMillisecondsSinceEpoch(0),
       updatedBy: '',
       updatedDate: DateTime.fromMillisecondsSinceEpoch(0),
+      rejectTypes: [],
+      editable: false,
     ),
     RequestTypeModel(
       id: 'REQ-004',
@@ -112,6 +118,8 @@ class DefaultMasterData {
       createdDate: DateTime.fromMillisecondsSinceEpoch(0),
       updatedBy: '',
       updatedDate: DateTime.fromMillisecondsSinceEpoch(0),
+      rejectTypes: [],
+      editable: false,
     ),
     RequestTypeModel(
       id: 'REQ-005',
@@ -125,6 +133,8 @@ class DefaultMasterData {
       createdDate: DateTime.fromMillisecondsSinceEpoch(0),
       updatedBy: '',
       updatedDate: DateTime.fromMillisecondsSinceEpoch(0),
+      rejectTypes: [],
+      editable: false,
     ),
     RequestTypeModel(
       id: 'REQ-006',
@@ -140,6 +150,8 @@ class DefaultMasterData {
       createdDate: DateTime.fromMillisecondsSinceEpoch(0),
       updatedBy: '',
       updatedDate: DateTime.fromMillisecondsSinceEpoch(0),
+      rejectTypes: [],
+      editable: false,
     ),
     RequestTypeModel(
       id: 'REQ-007',
@@ -154,6 +166,8 @@ class DefaultMasterData {
       createdDate: DateTime.fromMillisecondsSinceEpoch(0),
       updatedBy: '',
       updatedDate: DateTime.fromMillisecondsSinceEpoch(0),
+      rejectTypes: [],
+      editable: false,
     ),
     RequestTypeModel(
       id: 'REQ-008',
@@ -169,6 +183,8 @@ class DefaultMasterData {
       createdDate: DateTime.fromMillisecondsSinceEpoch(0),
       updatedBy: '',
       updatedDate: DateTime.fromMillisecondsSinceEpoch(0),
+      rejectTypes: [],
+      editable: false,
     ),
     RequestTypeModel(
       id: 'REQ-009',
@@ -183,6 +199,8 @@ class DefaultMasterData {
       createdDate: DateTime.fromMillisecondsSinceEpoch(0),
       updatedBy: '',
       updatedDate: DateTime.fromMillisecondsSinceEpoch(0),
+      rejectTypes: [],
+      editable: false,
     )
   ];
 
@@ -204,6 +222,7 @@ class DefaultMasterData {
       createdDate: DateTime.fromMillisecondsSinceEpoch(0),
       updatedBy: '',
       updatedDate: DateTime.fromMillisecondsSinceEpoch(0),
+      editable: false,
     ),
     ReasonTypeModel(
       id: 'RES-002',
@@ -222,6 +241,7 @@ class DefaultMasterData {
       createdDate: DateTime.fromMillisecondsSinceEpoch(0),
       updatedBy: '',
       updatedDate: DateTime.fromMillisecondsSinceEpoch(0),
+      editable: false,
     ),
     ReasonTypeModel(
       id: 'RES-003',
@@ -240,6 +260,7 @@ class DefaultMasterData {
       createdDate: DateTime.fromMillisecondsSinceEpoch(0),
       updatedBy: '',
       updatedDate: DateTime.fromMillisecondsSinceEpoch(0),
+      editable: false,
     ),
     ReasonTypeModel(
       id: 'RES-004',
@@ -257,6 +278,7 @@ class DefaultMasterData {
       createdDate: DateTime.fromMillisecondsSinceEpoch(0),
       updatedBy: '',
       updatedDate: DateTime.fromMillisecondsSinceEpoch(0),
+      editable: false,
     ),
   ];
 }
