@@ -5,6 +5,7 @@ import 'package:ionicons/ionicons.dart';
 import 'package:pdpa/app/config/config.dart';
 import 'package:pdpa/app/data/models/data_subject_right/data_subject_right_model.dart';
 import 'package:pdpa/app/data/models/data_subject_right/power_verification_model.dart';
+import 'package:pdpa/app/data/presets/identity_proofing_preset.dart';
 import 'package:pdpa/app/features/data_subject_right/cubit/form_data_subject_right/form_data_subject_right_cubit.dart';
 import 'package:pdpa/app/shared/widgets/customs/custom_checkbox.dart';
 import 'package:pdpa/app/shared/widgets/customs/custom_container.dart';
@@ -52,30 +53,6 @@ class _IdentityProofingPageState extends State<IdentityProofingPage> {
     });
   }
 
-  List<PowerVerificationModel> identityProofing = [
-    PowerVerificationModel(
-      id: '1',
-      title:
-          tr('dataSubjectRight.identityVerification.copyOfHouseRegistration'),
-      additionalReq: false,
-    ),
-    PowerVerificationModel(
-      id: '2',
-      title:
-          tr('dataSubjectRight.identityVerification.copyOfIdentificationCare'),
-      additionalReq: false,
-    ),
-    PowerVerificationModel(
-      id: '3',
-      title: tr('dataSubjectRight.identityVerification.copyOfPassport'),
-      additionalReq: false,
-    ),
-    PowerVerificationModel(
-      id: '4',
-      title: tr('dataSubjectRight.identityVerification.other'),
-      additionalReq: true,
-    ),
-  ];
   @override
   Widget build(BuildContext context) {
     return SingleChildScrollView(
@@ -106,7 +83,7 @@ class _IdentityProofingPageState extends State<IdentityProofingPage> {
                 ),
                 const SizedBox(height: UiConfig.lineSpacing),
                 Column(
-                  children: identityProofing
+                  children: identityProofingPreset
                       .map((identityProofing) => Padding(
                             padding: const EdgeInsets.only(
                               bottom: UiConfig.lineGap,
@@ -174,7 +151,7 @@ class _IdentityProofingPageState extends State<IdentityProofingPage> {
                   visible: powerVerification.additionalReq,
                   child: Column(
                     children: [
-                      SizedBox(height: UiConfig.lineSpacing),
+                      const SizedBox(height: UiConfig.lineSpacing),
                       Row(
                         children: <Widget>[
                           TitleRequiredText(

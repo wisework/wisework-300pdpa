@@ -1,25 +1,34 @@
-import 'dart:io';
+import 'dart:typed_data';
 
 import 'package:easy_localization/easy_localization.dart';
+import 'package:flutter/foundation.dart';
 
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 
-import 'package:ionicons/ionicons.dart';
 import 'package:pdpa/app/config/config.dart';
 
 import 'package:pdpa/app/data/models/data_subject_right/power_verification_model.dart';
+import 'package:pdpa/app/data/presets/power_verification_preset.dart';
+import 'package:pdpa/app/features/data_subject_right/cubit/form_data_subject_right/form_data_subject_right_cubit.dart';
+import 'package:pdpa/app/shared/utils/constants.dart';
+import 'package:pdpa/app/shared/utils/functions.dart';
 
 import 'package:pdpa/app/shared/widgets/customs/custom_checkbox.dart';
 import 'package:pdpa/app/shared/widgets/customs/custom_container.dart';
-import 'package:pdpa/app/shared/widgets/customs/custom_icon_button.dart';
+
 import 'package:pdpa/app/shared/widgets/customs/custom_text_field.dart';
 import 'package:pdpa/app/shared/widgets/expanded_container.dart';
 import 'package:pdpa/app/shared/widgets/title_required_text.dart';
+import 'package:pdpa/app/shared/widgets/upload_file_field.dart';
 
 class PowerOfAttorneyPage extends StatefulWidget {
   const PowerOfAttorneyPage({
     super.key,
+    required this.companyId,
   });
+
+  final String companyId;
 
   @override
   State<PowerOfAttorneyPage> createState() => _PowerOfAttorneyPageState();
@@ -46,19 +55,6 @@ class _PowerOfAttorneyPageState extends State<PowerOfAttorneyPage> {
       }
     });
   }
-
-  List<PowerVerificationModel> powerVerifications = [
-    PowerVerificationModel(
-      id: '1',
-      title: tr('dataSubjectRight.powerVerification.powerOfAttorney'),
-      additionalReq: false,
-    ),
-    PowerVerificationModel(
-      id: '2',
-      title: tr('dataSubjectRight.powerVerification.other'),
-      additionalReq: true,
-    ),
-  ];
 
   @override
   Widget build(BuildContext context) {
@@ -90,12 +86,13 @@ class _PowerOfAttorneyPageState extends State<PowerOfAttorneyPage> {
                 ),
                 const SizedBox(height: UiConfig.lineSpacing),
                 Column(
-                  children: powerVerifications
-                      .map((menu) => Padding(
+                  children: powerVerificationsPreset
+                      .map((powerVerification) => Padding(
                             padding: const EdgeInsets.only(
                               bottom: UiConfig.lineGap,
                             ),
-                            child: _buildCheckBoxTile(context, menu),
+                            child:
+                                _buildCheckBoxTile(context, powerVerification),
                           ))
                       .toList(),
                 ),
@@ -153,35 +150,6 @@ class _PowerOfAttorneyPageState extends State<PowerOfAttorneyPage> {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: <Widget>[
-                // CustomUploadTextField(
-                //   title: "ไฟล์สำเนา",
-                //   text: powerVerification.title,
-                //   filePath: powerVerification.imageUrl,
-                //   fileUrl: ServiceHandlerHelper.getFileUrl(
-                //     state.fileReferences,
-                //     powerVerification.powerVerificationId,
-                //   ),
-                //   onPressed: () {
-                //     context
-                //         .read<FormDataSubjectRightBloc>()
-                //         .add(FormDataSubjectRightPowerUploaded(
-                //           powerOfAttorneyId,
-                //         ));
-                //   },
-                //   onRemoved: () {
-                //     context
-                //         .read<FormDataSubjectRightBloc>()
-                //         .add(FormDataSubjectRightPowerRemoved(
-                //           powerOfAttorneyId,
-                //         ));
-                //   },
-                //   padding: const EdgeInsets.only(
-                //     top: 5.0,
-                //   ),
-                //   isFilled: true,
-                //   isError: false,
-                //   isRequired: true,
-                // ),
                 Visibility(
                   visible: powerVerification.additionalReq,
                   child: Column(
@@ -218,27 +186,20 @@ class _PowerOfAttorneyPageState extends State<PowerOfAttorneyPage> {
                     ),
                   ],
                 ),
-                Row(
-                  children: <Widget>[
-                    Expanded(
-                      child: CustomTextField(
-                        hintText: tr(
-                            'dataSubjectRight.powerVerification.fileNotSelected'),
-                        readOnly: true,
-                      ),
-                    ),
-                    Padding(
-                      padding: const EdgeInsets.only(left: 10.0),
-                      child: CustomIconButton(
-                        onPressed: () async {},
-                        icon: Ionicons.cloud_upload,
-                        iconColor: Theme.of(context).colorScheme.primary,
-                        backgroundColor:
-                            Theme.of(context).colorScheme.onBackground,
-                      ),
-                    ),
-                  ],
-                ),
+                UploadFileField(
+                  fileUrl: '',
+                  onUploaded: (Uint8List data, String fileName) {
+                    final cubit = context.read<FormDataSubjectRightCubit>();
+
+                    cubit.uploadPowerVerificationFile(
+                      data,
+                      fileName,
+                      UtilFunctions.getPowverVacationDsrPath(widget.companyId,
+                          DataSubjectRightImageType.powerVerifications),
+                      powerVerification.id,
+                    );
+                  },
+                )
               ],
             ),
           ),

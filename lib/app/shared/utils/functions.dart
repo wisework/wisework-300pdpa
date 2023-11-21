@@ -4,7 +4,7 @@ import 'dart:typed_data';
 import 'package:path/path.dart';
 import 'package:pdpa/app/config/config.dart';
 import 'package:pdpa/app/data/models/authentication/company_model.dart';
-import 'package:pdpa/app/data/models/data_subject_right/data_subject_right_model.dart';
+
 import 'package:pdpa/app/data/models/data_subject_right/power_verification_model.dart';
 import 'package:pdpa/app/data/models/data_subject_right/process_request_model.dart';
 import 'package:pdpa/app/data/models/etc/user_company_role.dart';
@@ -294,6 +294,17 @@ class UtilFunctions {
     final company = 'companies/$companyId';
     final dataSubjectRight = 'data_subject_rights/$dataSubjectRightId';
     const folder = 'proof/';
+
+    return [company, dataSubjectRight, folder].join('/');
+  }
+
+  static String getPowverVacationDsrPath(
+    String companyId,
+    DataSubjectRightImageType imageType,
+  ) {
+    final company = 'companies/$companyId';
+    const dataSubjectRight = 'data_subject_rights/form';
+    final folder = '${imageType.name}/';
 
     return [company, dataSubjectRight, folder].join('/');
   }

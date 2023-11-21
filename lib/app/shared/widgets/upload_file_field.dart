@@ -1,8 +1,7 @@
-import 'dart:io';
-
+import 'package:file_picker/file_picker.dart';
 import 'package:flutter/foundation.dart' show Uint8List, kIsWeb;
 import 'package:flutter/material.dart';
-import 'package:image_picker/image_picker.dart';
+
 import 'package:ionicons/ionicons.dart';
 import 'package:pdpa/app/config/config.dart';
 import 'package:pdpa/app/shared/utils/functions.dart';
@@ -21,9 +20,8 @@ class UploadFileField extends StatefulWidget {
 
   final String fileUrl;
   final Function(
-    File? file,
-    Uint8List? data,
-    String path,
+    Uint8List data,
+    String fileName,
   ) onUploaded;
   final VoidCallback? onRemoved;
 
@@ -32,22 +30,22 @@ class UploadFileField extends StatefulWidget {
 }
 
 class _UploadFileFieldState extends State<UploadFileField> {
+  PlatformFile file = PlatformFile(name: '', size: 0);
   void _pickFile() async {
-    final imagePicker = ImagePicker();
-    final result = await imagePicker.pickImage(source: ImageSource.gallery);
+    final result = await FilePicker.platform.pickFiles();
 
     Uint8List data = Uint8List(10);
-    if (result != null) {
-      data = await result.readAsBytes();
+    if (result != null && result.files.isNotEmpty) {
+      data = result.files.first.bytes!;
+      if (kIsWeb) {
+        widget.onUploaded(data, result.files.first.name);
+      }
     }
 
     if (result == null) return;
-
-    if (kIsWeb) {
-      widget.onUploaded(null, data, result.path);
-    } else {
-      widget.onUploaded(File(result.path), null, result.path);
-    }
+    setState(() {
+      file = result.files.first;
+    });
   }
 
   @override
@@ -56,7 +54,7 @@ class _UploadFileFieldState extends State<UploadFileField> {
       children: <Widget>[
         Visibility(
           visible: widget.fileUrl.isNotEmpty,
-          child: _buildFilePreview(),
+          child: _buildFilePreview(file),
         ),
         Row(
           children: <Widget>[
@@ -86,18 +84,37 @@ class _UploadFileFieldState extends State<UploadFileField> {
     );
   }
 
-  Stack _buildFilePreview() {
+  Stack _buildFilePreview(PlatformFile file) {
+    final extension = file.extension ?? 'none';
+    const color = Colors.blue;
     return Stack(
       children: <Widget>[
         Column(
           children: <Widget>[
-            SizedBox(
-              height: 180.0,
-              child: Image.network(
-                widget.fileUrl,
-                fit: BoxFit.contain,
-              ),
-            ),
+            extension == 'jpg' || extension == 'png'
+                ? SizedBox(
+                    height: 180.0,
+                    child: Image.network(
+                      widget.fileUrl,
+                      fit: BoxFit.contain,
+                    ),
+                  )
+                : Container(
+                    height: 120.0,
+                    width: 120.0,
+                    alignment: Alignment.center,
+                    decoration: BoxDecoration(
+                      color: color,
+                      borderRadius: BorderRadius.circular(12),
+                    ),
+                    child: Text(
+                      extension,
+                      style: Theme.of(context)
+                          .textTheme
+                          .titleMedium
+                          ?.copyWith(color: Colors.white),
+                    ),
+                  ),
             const SizedBox(height: UiConfig.lineSpacing),
           ],
         ),
