@@ -19,9 +19,10 @@ class DataSubjectRightRoute {
   );
 
   static final GoRoute editDataSubjectRight = GoRoute(
-    path: '/data-subject-rights/:id/edit',
+    path: '/data-subject-rights/:id1/request/:id2/edit',
     builder: (context, state) => EditDataSubjectRightScreen(
-      dataSubjectRightId: state.pathParameters['id'] ?? '',
+      dataSubjectRightId: state.pathParameters['id1'] ?? '',
+      processRequestId: state.pathParameters['id2'] ?? '',
     ),
   );
 
@@ -29,6 +30,7 @@ class DataSubjectRightRoute {
     path: '/data-subject-rights/:id/form',
     builder: (context, state) => EditDataSubjectRightScreen(
       dataSubjectRightId: state.pathParameters['id'] ?? '',
+      processRequestId: '',
     ),
   );
 

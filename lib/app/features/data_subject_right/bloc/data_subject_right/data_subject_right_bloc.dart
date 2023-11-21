@@ -2,6 +2,7 @@
 import 'package:bloc/bloc.dart';
 import 'package:equatable/equatable.dart';
 import 'package:pdpa/app/data/models/data_subject_right/data_subject_right_model.dart';
+import 'package:pdpa/app/data/models/data_subject_right/process_request_model.dart';
 import 'package:pdpa/app/data/repositories/data_subject_right_repository.dart';
 import 'package:pdpa/app/shared/utils/constants.dart';
 
@@ -37,10 +38,44 @@ class DataSubjectRightBloc
 
     result.fold(
       (failure) => emit(DataSubjectRightError(failure.errorMessage)),
-      (dataSubjectRight) => emit(GotDataSubjectRights(
-        dataSubjectRight
-          ..sort((a, b) => b.updatedDate.compareTo(a.updatedDate)),
-      )),
+      (dataSubjectRights) {
+        List<DataSubjectRightModel> updated = [];
+
+        for (DataSubjectRightModel from in dataSubjectRights) {
+          //? Sort Process Requests
+          List<ProcessRequestModel> processRequestSorted = [];
+
+          for (ProcessRequestModel request in from.processRequests) {
+            final reasonTypes = request.reasonTypes
+              ..sort((a, b) => a.id.compareTo(b.id));
+            processRequestSorted
+                .add(request.copyWith(reasonTypes: reasonTypes));
+          }
+
+          processRequestSorted = processRequestSorted
+            ..sort((a, b) => a.requestType.compareTo(b.requestType));
+
+          updated.add(
+            from.copyWith(
+              dataRequester: from.dataRequester
+                ..sort(
+                  (a, b) => a.priority.compareTo(b.priority),
+                ),
+              dataOwner: from.dataOwner
+                ..sort(
+                  (a, b) => a.priority.compareTo(b.priority),
+                ),
+              processRequests: processRequestSorted,
+            ),
+          );
+        }
+
+        emit(
+          GotDataSubjectRights(
+            updated..sort((a, b) => b.updatedDate.compareTo(a.updatedDate)),
+          ),
+        );
+      },
     );
   }
 
