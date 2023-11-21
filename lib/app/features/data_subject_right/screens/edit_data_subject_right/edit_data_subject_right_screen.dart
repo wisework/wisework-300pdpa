@@ -208,8 +208,8 @@ class _EditDataSubjectRightViewState extends State<EditDataSubjectRightView> {
                         MaterialPageRoute(
                           builder: (context) => ProcessDataSubjectRightScreen(
                             initialDataSubjectRight: dataSubjectRight,
-                            userEmails: widget.userEmails,
                             currentUser: widget.currentUser,
+                            userEmails: widget.userEmails,
                           ),
                         ),
                       );

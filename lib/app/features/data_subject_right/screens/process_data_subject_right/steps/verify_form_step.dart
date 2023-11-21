@@ -64,7 +64,15 @@ class _VerifyFormStepState extends State<VerifyFormStep> {
                   CustomRadioButton<RequestResultStatus>(
                     value: RequestResultStatus.pass,
                     selected: state.dataSubjectRight.verifyFormStatus,
-                    onChanged: _onOptionChanged,
+                    onChanged: state.initialDataSubjectRight.verifyFormStatus ==
+                            RequestResultStatus.none
+                        ? _onOptionChanged
+                        : null,
+                    activeColor:
+                        state.initialDataSubjectRight.verifyFormStatus !=
+                                RequestResultStatus.none
+                            ? Theme.of(context).colorScheme.outlineVariant
+                            : null,
                     margin:
                         const EdgeInsets.only(right: UiConfig.actionSpacing),
                   ),
@@ -86,7 +94,15 @@ class _VerifyFormStepState extends State<VerifyFormStep> {
                   CustomRadioButton<RequestResultStatus>(
                     value: RequestResultStatus.fail,
                     selected: state.dataSubjectRight.verifyFormStatus,
-                    onChanged: _onOptionChanged,
+                    onChanged: state.initialDataSubjectRight.verifyFormStatus ==
+                            RequestResultStatus.none
+                        ? _onOptionChanged
+                        : null,
+                    activeColor:
+                        state.initialDataSubjectRight.verifyFormStatus !=
+                                RequestResultStatus.none
+                            ? Theme.of(context).colorScheme.outlineVariant
+                            : null,
                     margin:
                         const EdgeInsets.only(right: UiConfig.actionSpacing),
                   ),
@@ -111,9 +127,11 @@ class _VerifyFormStepState extends State<VerifyFormStep> {
                                 mainAxisSize: MainAxisSize.min,
                                 children: <Widget>[
                                   const SizedBox(height: UiConfig.lineGap),
-                                  const TitleRequiredText(
+                                  TitleRequiredText(
                                     text: 'เหตุผลประกอบ',
-                                    required: true,
+                                    required: state.initialDataSubjectRight
+                                            .verifyFormStatus ==
+                                        RequestResultStatus.none,
                                   ),
                                   CustomTextField(
                                     initialValue: state
@@ -121,6 +139,9 @@ class _VerifyFormStepState extends State<VerifyFormStep> {
                                     hintText: 'เนื่องด้วย...',
                                     maxLines: 5,
                                     onChanged: _onRejectReasonChanged,
+                                    readOnly: state.initialDataSubjectRight
+                                            .verifyFormStatus !=
+                                        RequestResultStatus.none,
                                     required: true,
                                   ),
                                 ],

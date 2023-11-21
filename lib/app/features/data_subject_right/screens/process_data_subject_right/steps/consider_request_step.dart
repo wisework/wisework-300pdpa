@@ -3,11 +3,12 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:pdpa/app/config/config.dart';
 import 'package:pdpa/app/data/models/data_subject_right/process_request_model.dart';
 import 'package:pdpa/app/features/data_subject_right/cubit/process_data_subject_right/process_data_subject_right_cubit.dart';
+import 'package:pdpa/app/features/data_subject_right/screens/process_data_subject_right/widgets/process_consider_request.dart';
+import 'package:pdpa/app/features/data_subject_right/screens/process_data_subject_right/widgets/process_proof_of_action.dart';
 import 'package:pdpa/app/shared/utils/constants.dart';
-import 'package:pdpa/app/shared/widgets/customs/custom_button.dart';
+import 'package:pdpa/app/shared/utils/functions.dart';
 import 'package:pdpa/app/shared/widgets/customs/custom_checkbox.dart';
 import 'package:pdpa/app/shared/widgets/customs/custom_container.dart';
-import 'package:pdpa/app/shared/widgets/customs/custom_radio_button.dart';
 import 'package:pdpa/app/shared/widgets/customs/custom_text_field.dart';
 import 'package:pdpa/app/shared/widgets/expanded_container.dart';
 import 'package:pdpa/app/shared/widgets/material_ink_well.dart';
@@ -60,11 +61,18 @@ class _ConsiderRequestStepState extends State<ConsiderRequestStep> {
               itemBuilder: (context, index) {
                 final processRequest =
                     state.dataSubjectRight.processRequests[index];
+                final initialProcessRequest =
+                    state.initialDataSubjectRight.processRequests.firstWhere(
+                  (request) => request.id == processRequest.id,
+                  orElse: () => ProcessRequestModel.empty(),
+                );
 
                 return _buildProcessRequestCard(
                   context,
                   index: index + 1,
+                  dataSubjectRightId: state.dataSubjectRight.id,
                   processRequest: processRequest,
+                  initialProcessRequest: initialProcessRequest,
                   expanded: state.requestExpanded.contains(processRequest.id),
                 );
               },
@@ -83,7 +91,9 @@ class _ConsiderRequestStepState extends State<ConsiderRequestStep> {
   CustomContainer _buildProcessRequestCard(
     BuildContext context, {
     required int index,
+    required String dataSubjectRightId,
     required ProcessRequestModel processRequest,
+    required ProcessRequestModel initialProcessRequest,
     bool expanded = false,
   }) {
     return CustomContainer(
@@ -133,6 +143,22 @@ class _ConsiderRequestStepState extends State<ConsiderRequestStep> {
                 const SizedBox(height: UiConfig.lineSpacing),
                 ProcessConsiderRequest(
                   processRequest: processRequest,
+                  initialProcessRequest: initialProcessRequest,
+                ),
+                ExpandedContainer(
+                  expand: initialProcessRequest.considerRequestStatus !=
+                      RequestResultStatus.none,
+                  duration: const Duration(milliseconds: 400),
+                  child: Padding(
+                    padding: const EdgeInsets.only(
+                      top: UiConfig.lineSpacing,
+                    ),
+                    child: ProcessProofOfAction(
+                      dataSubjectRightId: dataSubjectRightId,
+                      processRequest: processRequest,
+                      initialProcessRequest: initialProcessRequest,
+                    ),
+                  ),
                 ),
               ],
             ),
@@ -154,6 +180,14 @@ class _ConsiderRequestStepState extends State<ConsiderRequestStep> {
     BuildContext context, {
     required ProcessRequestModel processRequest,
   }) {
+    final status = UtilFunctions.getProcessRequestStatus(processRequest);
+    final Map<ProcessRequestStatus, String> processRequestStatuses = {
+      ProcessRequestStatus.notProcessed: 'ยังไม่ดำเนินการ',
+      ProcessRequestStatus.inProgress: 'อยู่ระหว่างการดำเนินการ',
+      ProcessRequestStatus.refused: 'ปฏิเสธการดำเนินการ',
+      ProcessRequestStatus.completed: 'ดำเนินการเสร็จสิ้น',
+    };
+
     return Container(
       padding: const EdgeInsets.symmetric(
         vertical: 4.0,
@@ -168,7 +202,7 @@ class _ConsiderRequestStepState extends State<ConsiderRequestStep> {
         top: UiConfig.lineGap,
       ),
       child: Text(
-        'สถานะ: พิจารณาการดำเนินการ',
+        'สถานะ: ${processRequestStatuses[status]}',
         style: Theme.of(context)
             .textTheme
             .bodyMedium
@@ -185,10 +219,7 @@ class _ConsiderRequestStepState extends State<ConsiderRequestStep> {
       mainAxisSize: MainAxisSize.min,
       crossAxisAlignment: CrossAxisAlignment.start,
       children: <Widget>[
-        const TitleRequiredText(
-          text: 'ข้อมูลส่วนบุคคล',
-          required: true,
-        ),
+        const TitleRequiredText(text: 'ข้อมูลส่วนบุคคล'),
         CustomTextField(
           controller: TextEditingController(
             text: processRequest.personalData,
@@ -196,10 +227,7 @@ class _ConsiderRequestStepState extends State<ConsiderRequestStep> {
           readOnly: true,
         ),
         const SizedBox(height: UiConfig.lineSpacing),
-        const TitleRequiredText(
-          text: 'สถานที่พบเจอ',
-          required: true,
-        ),
+        const TitleRequiredText(text: 'สถานที่พบเจอ'),
         CustomTextField(
           controller: TextEditingController(
             text: processRequest.foundSource,
@@ -207,10 +235,7 @@ class _ConsiderRequestStepState extends State<ConsiderRequestStep> {
           readOnly: true,
         ),
         const SizedBox(height: UiConfig.lineSpacing),
-        const TitleRequiredText(
-          text: 'การดำเนินการ',
-          required: true,
-        ),
+        const TitleRequiredText(text: 'การดำเนินการ'),
         CustomTextField(
           controller: TextEditingController(
             text: processRequest.requestAction,
@@ -265,224 +290,6 @@ class _ConsiderRequestStepState extends State<ConsiderRequestStep> {
           ),
         ),
       ],
-    );
-  }
-}
-
-class ProcessConsiderRequest extends StatefulWidget {
-  const ProcessConsiderRequest({
-    super.key,
-    required this.processRequest,
-  });
-
-  final ProcessRequestModel processRequest;
-
-  @override
-  State<ProcessConsiderRequest> createState() => _ProcessConsiderRequestState();
-}
-
-class _ProcessConsiderRequestState extends State<ProcessConsiderRequest> {
-  final GlobalKey<FormState> _considerFormKey = GlobalKey<FormState>();
-
-  void _onOptionChanged(RequestResultStatus value, String id) {
-    final cubit = context.read<ProcessDataSubjectRightCubit>();
-    cubit.setConsiderOption(value, id);
-  }
-
-  void _onRejectReasonChanged(String value, String id) {
-    final cubit = context.read<ProcessDataSubjectRightCubit>();
-    cubit.setRejectConsiderReason(value, id);
-  }
-
-  void _onSubmitPressed() {
-    if (_considerFormKey.currentState!.validate()) {}
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    return CustomContainer(
-      margin: EdgeInsets.zero,
-      color: Theme.of(context).colorScheme.background,
-      child: Column(
-        mainAxisSize: MainAxisSize.min,
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: <Widget>[
-          Text(
-            'พิจารณาดำเนินการ',
-            style: Theme.of(context).textTheme.titleMedium,
-          ),
-          const SizedBox(height: UiConfig.lineGap),
-          _buildRadioOption(
-            context,
-            processRequest: widget.processRequest,
-            onChanged: (value) {
-              if (value != null) {
-                _onOptionChanged(value, widget.processRequest.id);
-              }
-            },
-            formKey: _considerFormKey,
-          ),
-          const SizedBox(height: UiConfig.lineGap),
-          CustomButton(
-            height: 45.0,
-            onPressed: _onSubmitPressed,
-            child: Text(
-              'ส่งผลการตรวจสอบ',
-              style: Theme.of(context)
-                  .textTheme
-                  .titleMedium
-                  ?.copyWith(color: Theme.of(context).colorScheme.onPrimary),
-            ),
-          ),
-        ],
-      ),
-    );
-  }
-
-  Column _buildRadioOption(
-    BuildContext context, {
-    required ProcessRequestModel processRequest,
-    Function(RequestResultStatus? value)? onChanged,
-    required GlobalKey<FormState> formKey,
-  }) {
-    return Column(
-      children: <Widget>[
-        Row(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: <Widget>[
-            CustomRadioButton<RequestResultStatus>(
-              value: RequestResultStatus.pass,
-              selected: processRequest.considerRequestStatus,
-              onChanged: onChanged,
-              margin: const EdgeInsets.only(right: UiConfig.actionSpacing),
-            ),
-            Expanded(
-              child: Padding(
-                padding: const EdgeInsets.symmetric(vertical: 5.0),
-                child: Text(
-                  'ดำเนินการ',
-                  style: Theme.of(context).textTheme.bodyMedium,
-                ),
-              ),
-            ),
-          ],
-        ),
-        const SizedBox(height: UiConfig.lineGap),
-        Row(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: <Widget>[
-            CustomRadioButton<RequestResultStatus>(
-              value: RequestResultStatus.fail,
-              selected: processRequest.considerRequestStatus,
-              onChanged: onChanged,
-              margin: const EdgeInsets.only(right: UiConfig.actionSpacing),
-            ),
-            Expanded(
-              child: Padding(
-                padding: const EdgeInsets.symmetric(vertical: 5.0),
-                child: Column(
-                  mainAxisSize: MainAxisSize.min,
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: <Widget>[
-                    Text(
-                      'ปฏิเสธคำขอ',
-                      style: Theme.of(context).textTheme.bodyMedium,
-                    ),
-                    ExpandedContainer(
-                      expand: processRequest.considerRequestStatus ==
-                          RequestResultStatus.fail,
-                      duration: const Duration(milliseconds: 400),
-                      child: Form(
-                        key: _considerFormKey,
-                        child: Column(
-                          mainAxisSize: MainAxisSize.min,
-                          children: <Widget>[
-                            const SizedBox(height: UiConfig.lineGap),
-                            const TitleRequiredText(
-                              text: 'เหตุผลประกอบ',
-                              required: true,
-                            ),
-                            CustomTextField(
-                              initialValue: processRequest.rejectConsiderReason,
-                              hintText: 'เนื่องด้วย...',
-                              maxLines: 5,
-                              onChanged: (value) {
-                                _onRejectReasonChanged(
-                                  value,
-                                  processRequest.id,
-                                );
-                              },
-                              required: true,
-                            ),
-                          ],
-                        ),
-                      ),
-                    ),
-                  ],
-                ),
-              ),
-            ),
-          ],
-        ),
-        Column(
-          children: <Widget>[
-            const SizedBox(height: UiConfig.lineGap),
-            BlocBuilder<ProcessDataSubjectRightCubit,
-                ProcessDataSubjectRightState>(
-              builder: (context, state) {
-                return _buildWarningContainer(
-                  context,
-                  isWarning: state.considerError.contains(processRequest.id),
-                );
-              },
-            ),
-          ],
-        ),
-      ],
-    );
-  }
-
-  ExpandedContainer _buildWarningContainer(
-    BuildContext context, {
-    required bool isWarning,
-  }) {
-    return ExpandedContainer(
-      expand: isWarning,
-      duration: const Duration(milliseconds: 400),
-      child: Container(
-        padding: const EdgeInsets.all(10.0),
-        decoration: BoxDecoration(
-          color: Theme.of(context).colorScheme.onBackground,
-          border: Border.all(
-            color: Theme.of(context).colorScheme.onError,
-            width: 1.0,
-          ),
-          borderRadius: BorderRadius.circular(4.0),
-        ),
-        margin: const EdgeInsets.symmetric(vertical: UiConfig.textSpacing),
-        child: Row(
-          children: <Widget>[
-            Padding(
-              padding: const EdgeInsets.only(bottom: 4.0),
-              child: Icon(
-                Icons.warning_outlined,
-                size: 18.0,
-                color: Theme.of(context).colorScheme.onError,
-              ),
-            ),
-            const SizedBox(width: UiConfig.textSpacing),
-            Expanded(
-              child: Text(
-                'โปรดเลือกตัวเลือกเพื่อดำเนินการต่อ',
-                style: Theme.of(context)
-                    .textTheme
-                    .bodyMedium
-                    ?.copyWith(color: Theme.of(context).colorScheme.secondary),
-              ),
-            ),
-          ],
-        ),
-      ),
     );
   }
 }

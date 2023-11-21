@@ -65,18 +65,19 @@ class _UploadFileFieldState extends State<UploadFileField> {
                 controller: TextEditingController(
                   text: UtilFunctions.getFileNameFromUrl(widget.fileUrl),
                 ),
-                hintText: 'No file selected',
-                maxLines: 3,
+                hintText: 'ไม่ได้เลือกไฟล์',
+                maxLines: 5,
                 readOnly: true,
               ),
             ),
             Padding(
               padding: const EdgeInsets.only(left: 10.0),
               child: CustomIconButton(
+                padding: const EdgeInsets.all(12.0),
                 onPressed: _pickFile,
                 icon: Icons.file_upload_outlined,
-                iconColor: Theme.of(context).colorScheme.primary,
-                backgroundColor: Theme.of(context).colorScheme.onBackground,
+                iconColor: Theme.of(context).colorScheme.onPrimary,
+                backgroundColor: Theme.of(context).colorScheme.primary,
               ),
             ),
           ],

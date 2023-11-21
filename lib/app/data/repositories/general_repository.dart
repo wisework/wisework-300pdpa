@@ -39,9 +39,9 @@ class GeneralRepository {
     }
   }
 
-  ResultVoid downloadFile(String path) async {
+  ResultVoid downloadFirebaseStorageFile(String path) async {
     try {
-      await _api.downloadFile(path);
+      await _api.downloadFirebaseStorageFile(path);
 
       return const Right(null);
     } on ApiException catch (error) {

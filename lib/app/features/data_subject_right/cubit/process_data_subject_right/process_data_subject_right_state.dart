@@ -4,35 +4,47 @@ class ProcessDataSubjectRightState extends Equatable {
   const ProcessDataSubjectRightState({
     required this.dataSubjectRight,
     required this.initialDataSubjectRight,
+    required this.currentUser,
+    required this.userEmails,
     required this.stepIndex,
     required this.requestExpanded,
     required this.verifyError,
     required this.considerError,
+    required this.loadingStatus,
   });
 
   final DataSubjectRightModel dataSubjectRight;
   final DataSubjectRightModel initialDataSubjectRight;
+  final UserModel currentUser;
+  final List<String> userEmails;
   final int stepIndex;
   final List<String> requestExpanded;
   final bool verifyError;
   final List<String> considerError;
+  final ProcessRequestLoadingStatus loadingStatus;
 
   ProcessDataSubjectRightState copyWith({
     DataSubjectRightModel? dataSubjectRight,
     DataSubjectRightModel? initialDataSubjectRight,
+    UserModel? currentUser,
+    List<String>? userEmails,
     int? stepIndex,
     List<String>? requestExpanded,
     bool? verifyError,
     List<String>? considerError,
+    ProcessRequestLoadingStatus? loadingStatus,
   }) {
     return ProcessDataSubjectRightState(
       dataSubjectRight: dataSubjectRight ?? this.dataSubjectRight,
       initialDataSubjectRight:
           initialDataSubjectRight ?? this.initialDataSubjectRight,
+      currentUser: currentUser ?? this.currentUser,
+      userEmails: userEmails ?? this.userEmails,
       stepIndex: stepIndex ?? this.stepIndex,
       requestExpanded: requestExpanded ?? this.requestExpanded,
       verifyError: verifyError ?? this.verifyError,
       considerError: considerError ?? this.considerError,
+      loadingStatus: loadingStatus ?? this.loadingStatus,
     );
   }
 
@@ -41,10 +53,13 @@ class ProcessDataSubjectRightState extends Equatable {
     return [
       dataSubjectRight,
       initialDataSubjectRight,
+      currentUser,
+      userEmails,
       stepIndex,
       requestExpanded,
       verifyError,
       considerError,
+      loadingStatus,
     ];
   }
 }

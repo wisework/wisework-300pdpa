@@ -4,34 +4,55 @@ import 'dart:typed_data';
 // ignore: depend_on_referenced_packages
 import 'package:bloc/bloc.dart';
 import 'package:equatable/equatable.dart';
-import 'package:flutter/material.dart';
+import 'package:pdpa/app/data/models/authentication/user_model.dart';
 import 'package:pdpa/app/data/models/data_subject_right/data_subject_right_model.dart';
 import 'package:pdpa/app/data/models/data_subject_right/process_request_model.dart';
+import 'package:pdpa/app/data/repositories/data_subject_right_repository.dart';
 import 'package:pdpa/app/data/repositories/general_repository.dart';
+import 'package:pdpa/app/features/data_subject_right/models/process_request_loading_status.dart';
 import 'package:pdpa/app/shared/utils/constants.dart';
 
 part 'process_data_subject_right_state.dart';
 
 class ProcessDataSubjectRightCubit extends Cubit<ProcessDataSubjectRightState> {
   ProcessDataSubjectRightCubit({
+    required DataSubjectRightRepository dataSubjectRightRepository,
     required GeneralRepository generalRepository,
-  })  : _generalRepository = generalRepository,
+  })  : _dataSubjectRightRepository = dataSubjectRightRepository,
+        _generalRepository = generalRepository,
         super(ProcessDataSubjectRightState(
           dataSubjectRight: DataSubjectRightModel.empty(),
           initialDataSubjectRight: DataSubjectRightModel.empty(),
+          currentUser: UserModel.empty(),
+          userEmails: const [],
           stepIndex: 0,
           requestExpanded: const [],
           verifyError: false,
           considerError: const [],
+          loadingStatus: ProcessRequestLoadingStatus.initial,
         ));
 
+  final DataSubjectRightRepository _dataSubjectRightRepository;
   final GeneralRepository _generalRepository;
 
-  void initialSettings(DataSubjectRightModel dataSubjectRight) {
+  void initialSettings(
+    DataSubjectRightModel dataSubjectRight,
+    UserModel currentUser,
+    List<String> userEmails,
+  ) {
+    int stepIndex = 0;
+
+    if (dataSubjectRight.verifyFormStatus != RequestResultStatus.none) {
+      stepIndex = 1;
+    }
+
     emit(
       state.copyWith(
         dataSubjectRight: dataSubjectRight,
         initialDataSubjectRight: dataSubjectRight,
+        currentUser: currentUser,
+        userEmails: userEmails,
+        stepIndex: stepIndex,
       ),
     );
   }
@@ -48,82 +69,114 @@ class ProcessDataSubjectRightCubit extends Cubit<ProcessDataSubjectRightState> {
     }
   }
 
-  void onVerifyFormValidate(int stepLength, GlobalKey<FormState> formKey) {
-    if (state.stepIndex == 0) {
-      if (state.dataSubjectRight.verifyFormStatus == RequestResultStatus.none) {
-        emit(state.copyWith(verifyError: true));
-        return;
-      }
+  Future<void> onVerifyFormValidate(int stepLength) async {
+    //? If no option is selected, a warning should be displayed.
+    if (state.dataSubjectRight.verifyFormStatus == RequestResultStatus.none) {
+      emit(state.copyWith(verifyError: true));
+      return;
+    }
 
-      if (state.dataSubjectRight.verifyFormStatus == RequestResultStatus.fail) {
-        if (formKey.currentState!.validate()) {
-          onNextStepPressed(stepLength);
-        }
-        return;
-      }
+    //? Saving data subject right.
+    if (state.initialDataSubjectRight.verifyFormStatus ==
+        RequestResultStatus.none) {
+      emit(
+        state.copyWith(
+          loadingStatus: state.loadingStatus.copyWith(
+            verifyingForm: true,
+          ),
+        ),
+      );
+
+      final updated = state.dataSubjectRight.setUpdate(
+        state.currentUser.email,
+        DateTime.now(),
+      );
+
+      await _dataSubjectRightRepository.updateDataSubjectRight(
+        updated,
+        state.currentUser.currentCompany,
+      );
+
+      emit(
+        state.copyWith(
+          dataSubjectRight: updated,
+          initialDataSubjectRight: updated,
+          stepIndex: 1,
+          loadingStatus: state.loadingStatus.copyWith(
+            verifyingForm: false,
+          ),
+        ),
+      );
+
+      return;
     }
 
     onNextStepPressed(stepLength);
   }
 
-  // void onNextStepPressed(int stepLength) {
-  //   //? Validate each step
-  //   if (state.stepIndex == 0) {
-  //     if (state.verifySelected == 0) {
-  //       emit(state.copyWith(verifyError: state.verifySelected == 0));
-  //       return;
-  //     }
+  Future<void> submitConsiderRequest(String processRequestId) async {
+    emit(
+      state.copyWith(
+        loadingStatus: state.loadingStatus.copyWith(
+          consideringRequest: processRequestId,
+        ),
+      ),
+    );
 
-  //     //? If choose reject, reject verify reason should not empty
-  //     if (state.verifySelected == 2 &&
-  //         state.dataSubjectRight.rejectVerifyReason.isEmpty) {
-  //       return;
-  //     }
+    final updated = state.dataSubjectRight.setUpdate(
+      state.currentUser.email,
+      DateTime.now(),
+    );
 
-  //     //? If choose reject verify, should be end process
-  //     if (state.verifySelected == 2 &&
-  //         state.dataSubjectRight.rejectVerifyReason.isNotEmpty) {
-  //       emit(
-  //         state.copyWith(
-  //           progressedIndex: 1,
-  //           endProcess: true,
-  //         ),
-  //       );
-  //       return;
-  //     }
-  //   } else if (state.stepIndex == 1) {
-  //     if (state.considerSelected == 0) {
-  //       emit(state.copyWith(considerError: state.considerSelected == 0));
-  //       return;
-  //     }
+    await _dataSubjectRightRepository.updateDataSubjectRight(
+      updated,
+      state.currentUser.currentCompany,
+    );
 
-  //     // //? If choose reject, reject consider reason should not empty
-  //     // if (state.considerSelected == 2 &&
-  //     //     state.dataSubjectRight.rejectConsiderReason.isEmpty) {
-  //     //   return;
-  //     // }
+    emit(
+      state.copyWith(
+        dataSubjectRight: updated,
+        initialDataSubjectRight: updated,
+        loadingStatus: state.loadingStatus.copyWith(
+          consideringRequest: '',
+        ),
+      ),
+    );
 
-  //     // //? If choose reject consider, should be end process
-  //     // if (state.considerSelected == 2 &&
-  //     //     state.dataSubjectRight.rejectConsiderReason.isNotEmpty) {
-  //     //   emit(state.copyWith(
-  //     //     progressedIndex: 2,
-  //     //     endProcess: true,
-  //     //   ));
-  //     //   return;
-  //     // }
-  //   } else if (state.stepIndex == 2) {}
+    return;
+  }
 
-  //   //? Update progress index
-  //   if (state.stepIndex < stepLength) {
-  //     emit(
-  //       state.copyWith(
-  //         stepIndex: state.stepIndex + 1,
-  //         progressedIndex: state.progressedIndex + 1,
-  //       ),
-  //     );
-  //   }
-  // }
+  Future<void> submitProcessRequest(String processRequestId) async {
+    emit(
+      state.copyWith(
+        loadingStatus: state.loadingStatus.copyWith(
+          processingRequest: processRequestId,
+        ),
+      ),
+    );
+
+    final updated = state.dataSubjectRight.setUpdate(
+      state.currentUser.email,
+      DateTime.now(),
+    );
+
+    await _dataSubjectRightRepository.updateDataSubjectRight(
+      updated,
+      state.currentUser.currentCompany,
+    );
+
+    emit(
+      state.copyWith(
+        dataSubjectRight: updated,
+        initialDataSubjectRight: updated,
+        loadingStatus: state.loadingStatus.copyWith(
+          processingRequest: '',
+        ),
+      ),
+    );
+
+    return;
+  }
 
   void setRequestExpand(String processRequestId) {
     if (!state.requestExpanded.contains(processRequestId)) {
@@ -220,7 +273,7 @@ class ProcessDataSubjectRightCubit extends Cubit<ProcessDataSubjectRightState> {
     );
   }
 
-  Future<void> uploadProofFile(
+  Future<void> uploadProofOfActionFile(
     File? file,
     Uint8List? data,
     String fileName,
@@ -262,11 +315,11 @@ class ProcessDataSubjectRightCubit extends Cubit<ProcessDataSubjectRightState> {
   }
 
   Future<void> downloadProofFile(String path) async {
-    await _generalRepository.downloadFile(path);
+    await _generalRepository.downloadFirebaseStorageFile(path);
   }
 
-  void setProofText(
-    String text,
+  void setProofOfActionText(
+    String value,
     String processRequestId,
   ) async {
     DataSubjectRightModel dataSubjectRight = state.dataSubjectRight;
@@ -275,7 +328,7 @@ class ProcessDataSubjectRightCubit extends Cubit<ProcessDataSubjectRightState> {
     for (ProcessRequestModel process in dataSubjectRight.processRequests) {
       if (process.id == processRequestId) {
         processRequests.add(
-          process.copyWith(proofOfActionText: text),
+          process.copyWith(proofOfActionText: value),
         );
       } else {
         processRequests.add(process);
