@@ -113,7 +113,7 @@ class CurrentConsentFormSettingsCubit
     String path,
     ConsentFormImageType imageType,
   ) async {
-    final result = await _generalRepository.uploadFile(
+    final result = await _generalRepository.uploadImage(
       file,
       data,
       fileName,

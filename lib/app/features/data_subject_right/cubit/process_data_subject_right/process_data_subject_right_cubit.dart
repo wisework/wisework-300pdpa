@@ -1,4 +1,3 @@
-import 'dart:io';
 import 'dart:typed_data';
 
 // ignore: depend_on_referenced_packages
@@ -276,14 +275,12 @@ class ProcessDataSubjectRightCubit extends Cubit<ProcessDataSubjectRightState> {
   }
 
   Future<void> uploadProofOfActionFile(
-    File? file,
-    Uint8List? data,
+    Uint8List data,
     String fileName,
     String path,
     String processRequestId,
   ) async {
     final result = await _generalRepository.uploadFile(
-      file,
       data,
       fileName,
       path,

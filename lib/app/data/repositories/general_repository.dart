@@ -24,14 +24,28 @@ class GeneralRepository {
     }
   }
 
-  ResultFuture<String> uploadFile(
+  ResultFuture<String> uploadImage(
     File? file,
     Uint8List? data,
     String fileName,
     String path,
   ) async {
     try {
-      final result = await _api.uploadFile(file, data, fileName, path);
+      final result = await _api.uploadImage(file, data, fileName, path);
+
+      return Right(result);
+    } on ApiException catch (error) {
+      return Left(ApiFailure.fromException(error));
+    }
+  }
+
+  ResultFuture uploadFile(
+    Uint8List file,
+    String fileName,
+    String filePath,
+  ) async {
+    try {
+      final result = await _api.uploadFile(file, fileName, filePath);
 
       return Right(result);
     } on ApiException catch (error) {
