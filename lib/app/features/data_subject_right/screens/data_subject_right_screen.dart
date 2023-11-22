@@ -5,6 +5,7 @@ import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
 import 'package:ionicons/ionicons.dart';
+import 'package:modal_bottom_sheet/modal_bottom_sheet.dart';
 import 'package:pdpa/app/config/config.dart';
 import 'package:pdpa/app/data/models/data_subject_right/data_subject_right_model.dart';
 import 'package:pdpa/app/data/models/data_subject_right/process_request_model.dart';
@@ -96,47 +97,6 @@ class _DataSubjectRightViewState extends State<DataSubjectRightView> {
 
   @override
   Widget build(BuildContext context) {
-    final datasubject = [
-      DataSubjectRightModel.empty().copyWith(
-        id: '1',
-        dataRequester: [
-          const RequesterInputModel(
-            id: '1',
-            title: [
-              LocalizedModel(language: 'th-TH', text: 'title1'),
-            ],
-            text: 'text',
-            priority: 1,
-          )
-        ],
-      ),
-      DataSubjectRightModel.empty().copyWith(
-        id: '2',
-        dataRequester: [
-          const RequesterInputModel(
-            id: '2',
-            title: [
-              LocalizedModel(language: 'th-TH', text: 'title2'),
-            ],
-            text: 'text',
-            priority: 1,
-          )
-        ],
-      ),
-      DataSubjectRightModel.empty().copyWith(
-        id: '3',
-        dataRequester: [
-          const RequesterInputModel(
-            id: '3',
-            title: [
-              LocalizedModel(language: 'th-TH', text: 'title3'),
-            ],
-            text: 'text',
-            priority: 1,
-          )
-        ],
-      ),
-    ];
     return Scaffold(
       key: _scaffoldKey,
       appBar: PdpaAppBar(
@@ -155,15 +115,24 @@ class _DataSubjectRightViewState extends State<DataSubjectRightView> {
         actions: [
           CustomIconButton(
             onPressed: () {
-              showModalBottomSheet(
-                backgroundColor: Colors.transparent,
+              final path = DataSubjectRightRoute.userDataSubjectRightForm.path;
+              final dsrFormUrl =
+                  '${AppConfig.baseUrl}/#${path.replaceFirst(':id', widget.companyId)}';
+
+              showMaterialModalBottomSheet(
                 context: context,
-                builder: (context) => Padding(
-                  padding: const EdgeInsets.only(top: 20.0),
-                  child: SingleChildScrollView(
-                    child: CustomContainer(
-              child: _buildShareConsentForm(context),
-            ),
+                backgroundColor: Colors.transparent,
+                builder: (context) => SingleChildScrollView(
+                  child: Center(
+                    child: ContentWrapper(
+                      child: CustomContainer(
+                        margin: EdgeInsets.zero,
+                        child: _buildShareConsentForm(
+                          context,
+                          url: dsrFormUrl,
+                        ),
+                      ),
+                    ),
                   ),
                 ),
               );
@@ -546,35 +515,37 @@ class _DataSubjectRightViewState extends State<DataSubjectRightView> {
     );
   }
 
-  Column _buildShareConsentForm(BuildContext context) {
+  Column _buildShareConsentForm(
+    BuildContext context, {
+    required String url,
+  }) {
     return Column(
-      
       crossAxisAlignment: CrossAxisAlignment.start,
       children: <Widget>[
         Align(
-            alignment: Alignment.topRight,
-            child: MaterialInkWell(
-              borderRadius: BorderRadius.circular(13.0),
-              backgroundColor:
-                  Theme.of(context).colorScheme.outlineVariant.withOpacity(0.4),
-              onTap: () async {
-                Navigator.of(context).pop();
-              },
-              child: Padding(
-                padding: const EdgeInsets.only(
-                  left: 2.0,
-                  top: 1.0,
-                  right: 2.0,
-                  bottom: 3.0,
-                ),
-                child: Icon(
-                  Ionicons.close_outline,
-                  size: 16.0,
-                  color: Theme.of(context).colorScheme.onPrimary,
-                ),
+          alignment: Alignment.topRight,
+          child: MaterialInkWell(
+            borderRadius: BorderRadius.circular(13.0),
+            backgroundColor:
+                Theme.of(context).colorScheme.outlineVariant.withOpacity(0.4),
+            onTap: () async {
+              Navigator.of(context).pop();
+            },
+            child: Padding(
+              padding: const EdgeInsets.only(
+                left: 2.0,
+                top: 1.0,
+                right: 2.0,
+                bottom: 3.0,
+              ),
+              child: Icon(
+                Ionicons.close_outline,
+                size: 16.0,
+                color: Theme.of(context).colorScheme.onPrimary,
               ),
             ),
           ),
+        ),
         Padding(
           padding: const EdgeInsets.all(UiConfig.textLineSpacing),
           child: Text(
@@ -593,9 +564,9 @@ class _DataSubjectRightViewState extends State<DataSubjectRightView> {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: <Widget>[
             const SizedBox(height: UiConfig.lineSpacing),
-            _buildQrDataSubjectRight(context),
+            _buildQrDataSubjectRight(context, url: url),
             const SizedBox(height: UiConfig.lineSpacing),
-            _buildDatSubjectRightLink(context),
+            _buildDataSubjectRightLink(context, url: url),
             const SizedBox(height: UiConfig.lineSpacing),
           ],
         ),
@@ -603,7 +574,10 @@ class _DataSubjectRightViewState extends State<DataSubjectRightView> {
     );
   }
 
-  Row _buildQrDataSubjectRight(BuildContext context) {
+  Row _buildQrDataSubjectRight(
+    BuildContext context, {
+    required String url,
+  }) {
     return Row(
       children: <Widget>[
         Expanded(
@@ -627,7 +601,7 @@ class _DataSubjectRightViewState extends State<DataSubjectRightView> {
                       child: RepaintBoundary(
                         key: qrCodeKey,
                         child: QrImageView(
-                          data: 'www.google.com',
+                          data: url,
                           size: 160,
                           backgroundColor: Colors.white,
                           version: QrVersions.auto,
@@ -672,13 +646,16 @@ class _DataSubjectRightViewState extends State<DataSubjectRightView> {
     );
   }
 
-  Row _buildDatSubjectRightLink(BuildContext context) {
+  Row _buildDataSubjectRightLink(
+    BuildContext context, {
+    required String url,
+  }) {
     return Row(
       children: <Widget>[
         Expanded(
           child: CustomTextField(
             controller: TextEditingController(
-              text: 'www.google.com',
+              text: url,
             ),
             readOnly: true,
           ),
@@ -688,7 +665,7 @@ class _DataSubjectRightViewState extends State<DataSubjectRightView> {
           child: CustomIconButton(
             onPressed: () {
               Clipboard.setData(
-                const ClipboardData(text: 'www.google.com'),
+                ClipboardData(text: url),
               );
 
               showToast(
