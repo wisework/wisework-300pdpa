@@ -162,79 +162,96 @@ class _FormDataSubjectRightViewState extends State<FormDataSubjectRightView> {
                   ),
                 ],
               ),
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              child: Stack(
                 children: [
-                  TextButton(
-                    style: TextButton.styleFrom(
-                      textStyle:
-                          Theme.of(context).textTheme.bodyMedium?.copyWith(
+                  if (currentPage != 1)
+                    Align(
+                      alignment: const Alignment(-0.9, -0.9),
+                      child: TextButton(
+                        style: TextButton.styleFrom(
+                          textStyle: Theme.of(context)
+                              .textTheme
+                              .bodyMedium
+                              ?.copyWith(
                                 color: Theme.of(context).colorScheme.primary,
                               ),
-                    ),
-                    onPressed: () {
-                      if (dataSubjectRight.isDataOwner == true &&
-                          currentPage == 4) {
-                        context
-                            .read<FormDataSubjectRightCubit>()
-                            .previousPage(1);
-                        context
-                            .read<FormDataSubjectRightCubit>()
-                            .setDataSubjectRight(
-                                dataSubjectRight.copyWith(dataOwner: []));
-
-                        _controller.jumpToPage(1);
-                      } else {
-                        context
-                            .read<FormDataSubjectRightCubit>()
-                            .previousPage(currentPage - 1);
-                        _controller.previousPage(
-                          duration: const Duration(microseconds: 1),
-                          curve: Curves.easeInOut,
-                        );
-                      }
-                    },
-                    child: Text(
-                      tr("app.previous"),
-                    ),
-                  ),
-                  Text("$currentPage/7"),
-                  TextButton(
-                      style: TextButton.styleFrom(
-                        textStyle:
-                            Theme.of(context).textTheme.bodyMedium?.copyWith(
-                                  color: Theme.of(context).colorScheme.primary,
-                                ),
-                      ),
-                      onPressed: () {
-                        if (currentPage != 7) {
+                        ),
+                        onPressed: () {
                           if (dataSubjectRight.isDataOwner == true &&
-                              currentPage == 1) {
+                              currentPage == 4) {
                             context
                                 .read<FormDataSubjectRightCubit>()
-                                .nextPage(4);
+                                .previousPage(1);
                             context
                                 .read<FormDataSubjectRightCubit>()
-                                .setDataSubjectRight(dataSubjectRight.copyWith(
-                                    dataOwner: dataSubjectRight.dataRequester));
+                                .setDataSubjectRight(
+                                    dataSubjectRight.copyWith(dataOwner: []));
 
-                            _controller.jumpToPage(4);
+                            _controller.jumpToPage(1);
                           } else {
                             context
                                 .read<FormDataSubjectRightCubit>()
-                                .nextPage(currentPage + 1);
-                            _controller.nextPage(
+                                .previousPage(currentPage - 1);
+                            _controller.previousPage(
                               duration: const Duration(microseconds: 1),
                               curve: Curves.easeInOut,
                             );
                           }
-                        }
-                      },
-                      child: currentPage != 7
-                          ? Text(
-                              tr("app.next"),
-                            )
-                          : const Text("ส่งแบบคำร้อง")),
+                        },
+                        child: Text(
+                          tr("app.previous"),
+                        ),
+                      ),
+                    ),
+                  Align(
+                      alignment: Alignment.bottomCenter,
+                      child: Text(
+                        "$currentPage/7",
+                        style: Theme.of(context).textTheme.bodyMedium,
+                      )),
+                  Align(
+                    alignment: const Alignment(0.9, -0.9),
+                    child: TextButton(
+                        style: TextButton.styleFrom(
+                          textStyle: Theme.of(context)
+                              .textTheme
+                              .bodyMedium
+                              ?.copyWith(
+                                color: Theme.of(context).colorScheme.primary,
+                              ),
+                        ),
+                        onPressed: () {
+                          if (currentPage != 7) {
+                            if (dataSubjectRight.isDataOwner == true &&
+                                currentPage == 1) {
+                              context
+                                  .read<FormDataSubjectRightCubit>()
+                                  .nextPage(4);
+                              context
+                                  .read<FormDataSubjectRightCubit>()
+                                  .setDataSubjectRight(
+                                      dataSubjectRight.copyWith(
+                                          dataOwner:
+                                              dataSubjectRight.dataRequester));
+
+                              _controller.jumpToPage(4);
+                            } else {
+                              context
+                                  .read<FormDataSubjectRightCubit>()
+                                  .nextPage(currentPage + 1);
+                              _controller.nextPage(
+                                duration: const Duration(microseconds: 1),
+                                curve: Curves.easeInOut,
+                              );
+                            }
+                          }
+                        },
+                        child: currentPage != 7
+                            ? Text(
+                                tr("app.next"),
+                              )
+                            : const Text("ส่งแบบคำร้อง")),
+                  ),
                 ],
               ),
             ),

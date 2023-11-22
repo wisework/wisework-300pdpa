@@ -5,6 +5,7 @@ import 'package:path/path.dart' as p;
 
 import 'package:ionicons/ionicons.dart';
 import 'package:pdpa/app/config/config.dart';
+import 'package:pdpa/app/shared/utils/constants.dart';
 import 'package:pdpa/app/shared/utils/functions.dart';
 import 'package:pdpa/app/shared/widgets/material_ink_well.dart';
 
@@ -34,7 +35,10 @@ class _UploadFileFieldState extends State<UploadFileField> {
   PlatformFile file = PlatformFile(name: '', size: 0);
   Uint8List data = Uint8List(10);
   void _pickFile() async {
-    final result = await FilePicker.platform.pickFiles();
+    final result = await FilePicker.platform.pickFiles(
+      type: FileType.custom,
+      allowedExtensions: fileType,
+    );
 
     if (result != null && result.files.isNotEmpty) {
       data = result.files.first.bytes!;

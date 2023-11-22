@@ -85,3 +85,25 @@ enum RequestResultStatus { pass, fail, none }
 enum ProcessRequestStatus { notProcessed, inProgress, refused, completed }
 
 const fileImageType = <String>['jpg', 'jpeg', 'png'];
+
+const fileType = <String>[
+  'jpg',
+  'jpeg',
+  'png',
+  'pdf',
+  'txt',
+  'csv',
+  'doc',
+  'docx',
+  'xls',
+  'xlsx',
+  'ppt',
+  'pptx',
+  'vsd',
+  'vsdx',
+  'xml',
+  'rtf',
+  'zip',
+  'rar',
+  '7z',
+];
