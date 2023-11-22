@@ -13,10 +13,10 @@ import 'package:pdpa/app/features/data_subject_right/bloc/form_data_sub_ject_rig
 import 'package:pdpa/app/features/data_subject_right/cubit/form_data_subject_right/form_data_subject_right_cubit.dart';
 import 'package:pdpa/app/features/data_subject_right/screens/form_data_subject_right/pages/acknowledge_page.dart';
 import 'package:pdpa/app/features/data_subject_right/screens/form_data_subject_right/pages/data_owner_detail_page.dart';
-import 'package:pdpa/app/features/data_subject_right/screens/form_data_subject_right/pages/identity_proofing_page.dart';
+import 'package:pdpa/app/features/data_subject_right/screens/form_data_subject_right/pages/identity_verification_page.dart';
 import 'package:pdpa/app/features/data_subject_right/screens/form_data_subject_right/pages/owner_verify_page.dart';
 import 'package:pdpa/app/features/data_subject_right/screens/form_data_subject_right/pages/intro_page.dart';
-import 'package:pdpa/app/features/data_subject_right/screens/form_data_subject_right/pages/power_of_attorney_page.dart';
+import 'package:pdpa/app/features/data_subject_right/screens/form_data_subject_right/pages/power_verification_page.dart';
 import 'package:pdpa/app/features/data_subject_right/screens/form_data_subject_right/pages/request_reason_page.dart';
 import 'package:pdpa/app/features/data_subject_right/screens/form_data_subject_right/pages/reserve_the_right_page.dart';
 import 'package:pdpa/app/injection.dart';
@@ -128,11 +128,13 @@ class _FormDataSubjectRightViewState extends State<FormDataSubjectRightView> {
                   currentPage: currentPage,
                 ),
                 const OwnerVerifyPage(),
-                PowerOfAttorneyPage(
+                PowerVerificationPage(
                   companyId: widget.companyId,
                 ),
                 const DataOwnerDetailPage(),
-                const IdentityProofingPage(),
+                IdentityVerificationPage(
+                  companyId: widget.companyId,
+                ),
                 RequestReasonPage(
                   requestType: requestType,
                   reasonType: reasonType,
