@@ -1,31 +1,35 @@
+import 'dart:typed_data';
+
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:ionicons/ionicons.dart';
 import 'package:pdpa/app/config/config.dart';
 import 'package:pdpa/app/data/models/data_subject_right/data_subject_right_model.dart';
 import 'package:pdpa/app/data/models/data_subject_right/power_verification_model.dart';
+import 'package:pdpa/app/data/models/data_subject_right/requester_verification_model.dart';
 import 'package:pdpa/app/data/presets/identity_proofing_preset.dart';
 import 'package:pdpa/app/features/data_subject_right/cubit/form_data_subject_right/form_data_subject_right_cubit.dart';
+import 'package:pdpa/app/shared/utils/constants.dart';
+import 'package:pdpa/app/shared/utils/functions.dart';
 import 'package:pdpa/app/shared/widgets/customs/custom_checkbox.dart';
 import 'package:pdpa/app/shared/widgets/customs/custom_container.dart';
-import 'package:pdpa/app/shared/widgets/customs/custom_icon_button.dart';
 import 'package:pdpa/app/shared/widgets/customs/custom_text_field.dart';
 import 'package:pdpa/app/shared/widgets/expanded_container.dart';
 import 'package:pdpa/app/shared/widgets/title_required_text.dart';
+import 'package:pdpa/app/shared/widgets/upload_file_field.dart';
 
-class IdentityProofingPage extends StatefulWidget {
-  const IdentityProofingPage({
-    super.key,
-  });
+class IdentityVerificationPage extends StatefulWidget {
+  const IdentityVerificationPage({super.key, required this.companyId});
+
+  final String companyId;
 
   @override
-  State<IdentityProofingPage> createState() => _IdentityProofingPageState();
+  State<IdentityVerificationPage> createState() =>
+      _IdentityVerificationPageState();
 }
 
-class _IdentityProofingPageState extends State<IdentityProofingPage> {
-  bool isExpanded = false;
-  List<PowerVerificationModel> selectIdentityProofing = [];
+class _IdentityVerificationPageState extends State<IdentityVerificationPage> {
+  List<RequesterVerificationModel> identityVerifications = [];
   late DataSubjectRightModel dataSubjectRight;
   @override
   void initState() {
@@ -33,24 +37,6 @@ class _IdentityProofingPageState extends State<IdentityProofingPage> {
         context.read<FormDataSubjectRightCubit>().state.dataSubjectRight;
 
     super.initState();
-  }
-
-  void _setIdentityProofing(PowerVerificationModel identityProofing) {
-    final selectIds =
-        selectIdentityProofing.map((selected) => selected.id).toList();
-
-    setState(() {
-      if (selectIds.contains(identityProofing.id)) {
-        selectIdentityProofing = selectIdentityProofing
-            .where((selected) => selected.id != identityProofing.id)
-            .toList();
-      } else {
-        selectIdentityProofing = selectIdentityProofing
-            .map((selected) => selected)
-            .toList()
-          ..add(identityProofing);
-      }
-    });
   }
 
   @override
@@ -104,8 +90,17 @@ class _IdentityProofingPageState extends State<IdentityProofingPage> {
   //? Checkbox List
   Widget _buildCheckBoxTile(
       BuildContext context, PowerVerificationModel powerVerification) {
-    final selectIds =
-        selectIdentityProofing.map((category) => category.id).toList();
+    final data = context
+        .read<FormDataSubjectRightCubit>()
+        .state
+        .dataSubjectRight
+        .identityVerifications;
+    final selectIds = data.map((category) => category.id).toList();
+
+    final String? url = data
+        .where((item) => item.id == powerVerification.id)
+        .firstOrNull
+        ?.imageUrl;
 
     return Column(
       mainAxisSize: MainAxisSize.min,
@@ -120,7 +115,10 @@ class _IdentityProofingPageState extends State<IdentityProofingPage> {
               child: CustomCheckBox(
                 value: selectIds.contains(powerVerification.id),
                 onChanged: (_) {
-                  _setIdentityProofing(powerVerification);
+                  context
+                      .read<FormDataSubjectRightCubit>()
+                      .formDataSubjectRightIdentityChecked(
+                          powerVerification.id);
                 },
               ),
             ),
@@ -167,6 +165,32 @@ class _IdentityProofingPageState extends State<IdentityProofingPage> {
                             child: CustomTextField(
                               hintText: tr(
                                   'dataSubjectRight.identityVerification.hintdocumentType'),
+                              onChanged: (value) {
+                                final selectIds = data
+                                    .map((selected) => selected.id)
+                                    .toList();
+
+                                if (selectIds.contains(powerVerification.id)) {
+                                  final updatedData = data.map((item) {
+                                    if (item.id == powerVerification.id) {
+                                      return item.copyWith(text: value);
+                                    } else {
+                                      return item;
+                                    }
+                                  }).toList();
+
+                                  setState(() {
+                                    identityVerifications = updatedData;
+                                  });
+
+                                  context
+                                      .read<FormDataSubjectRightCubit>()
+                                      .setDataSubjectRight(
+                                          dataSubjectRight.copyWith(
+                                              identityVerifications:
+                                                  identityVerifications));
+                                }
+                              },
                             ),
                           ),
                         ],
@@ -184,27 +208,20 @@ class _IdentityProofingPageState extends State<IdentityProofingPage> {
                     ),
                   ],
                 ),
-                Row(
-                  children: <Widget>[
-                    Expanded(
-                      child: CustomTextField(
-                        hintText: tr(
-                            'dataSubjectRight.identityVerification.fileNotSelected'),
-                        readOnly: true,
-                      ),
-                    ),
-                    Padding(
-                      padding: const EdgeInsets.only(left: 10.0),
-                      child: CustomIconButton(
-                        onPressed: () {},
-                        icon: Ionicons.cloud_upload,
-                        iconColor: Theme.of(context).colorScheme.primary,
-                        backgroundColor:
-                            Theme.of(context).colorScheme.onBackground,
-                      ),
-                    ),
-                  ],
-                ),
+                UploadFileField(
+                  fileUrl: url ?? '',
+                  onUploaded: (Uint8List data, String fileName) {
+                    final cubit = context.read<FormDataSubjectRightCubit>();
+
+                    cubit.uploadIdentityProofingFile(
+                      data,
+                      fileName,
+                      UtilFunctions.getPowverVacationDsrPath(widget.companyId,
+                          DataSubjectRightImageType.identityVerifications),
+                      powerVerification.id,
+                    );
+                  },
+                )
               ],
             ),
           ),

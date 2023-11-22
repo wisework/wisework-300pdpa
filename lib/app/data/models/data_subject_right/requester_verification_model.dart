@@ -12,6 +12,13 @@ class RequesterVerificationModel extends Equatable {
   final String text;
   final String imageUrl;
 
+  const RequesterVerificationModel.empty()
+      : this(
+          id: '',
+          text: '',
+          imageUrl: '',
+        );
+
   RequesterVerificationModel.fromMap(DataMap map)
       : this(
           id: map['id'] as String,

@@ -1,6 +1,7 @@
 import 'package:file_picker/file_picker.dart';
 import 'package:flutter/foundation.dart' show Uint8List, kIsWeb;
 import 'package:flutter/material.dart';
+import 'package:path/path.dart' as p;
 
 import 'package:ionicons/ionicons.dart';
 import 'package:pdpa/app/config/config.dart';
@@ -31,10 +32,10 @@ class UploadFileField extends StatefulWidget {
 
 class _UploadFileFieldState extends State<UploadFileField> {
   PlatformFile file = PlatformFile(name: '', size: 0);
+  Uint8List data = Uint8List(10);
   void _pickFile() async {
     final result = await FilePicker.platform.pickFiles();
 
-    Uint8List data = Uint8List(10);
     if (result != null && result.files.isNotEmpty) {
       data = result.files.first.bytes!;
       if (kIsWeb) {
@@ -54,7 +55,7 @@ class _UploadFileFieldState extends State<UploadFileField> {
       children: <Widget>[
         Visibility(
           visible: widget.fileUrl.isNotEmpty,
-          child: _buildFilePreview(file),
+          child: _buildFilePreview(),
         ),
         Row(
           children: <Widget>[
@@ -84,14 +85,16 @@ class _UploadFileFieldState extends State<UploadFileField> {
     );
   }
 
-  Stack _buildFilePreview(PlatformFile file) {
-    final extension = file.extension ?? 'none';
+  Stack _buildFilePreview() {
+    final extension = p.extension(
+      UtilFunctions.getFileNameFromUrl(widget.fileUrl),
+    );
     const color = Colors.blue;
     return Stack(
       children: <Widget>[
         Column(
           children: <Widget>[
-            extension == 'jpg' || extension == 'png'
+            extension == '.jpg' || extension == '.png'
                 ? SizedBox(
                     height: 180.0,
                     child: Image.network(
