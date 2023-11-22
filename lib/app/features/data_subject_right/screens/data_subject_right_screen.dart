@@ -20,6 +20,7 @@ import 'package:pdpa/app/features/data_subject_right/widgets/data_subject_right_
 import 'package:pdpa/app/services/apis/data_subject_right_api.dart';
 import 'package:pdpa/app/shared/drawers/pdpa_drawer.dart';
 import 'package:pdpa/app/shared/utils/constants.dart';
+import 'package:pdpa/app/shared/utils/functions.dart';
 import 'package:pdpa/app/shared/utils/toast.dart';
 import 'package:pdpa/app/shared/widgets/content_wrapper.dart';
 import 'package:pdpa/app/shared/widgets/customs/custom_button.dart';
@@ -124,6 +125,7 @@ class _DataSubjectRightViewState extends State<DataSubjectRightView> {
               return _buildDataSubjectRightView(
                 context,
                 dataSubjectRights: state.dataSubjectRights,
+                processRequests: state.processRequests,
                 requestTypes: state.requestTypes,
               );
             }
@@ -175,12 +177,13 @@ class _DataSubjectRightViewState extends State<DataSubjectRightView> {
   Column _buildDataSubjectRightView(
     BuildContext context, {
     required List<DataSubjectRightModel> dataSubjectRights,
+    required List<Map<String, ProcessRequestModel>> processRequests,
     required List<RequestTypeModel> requestTypes,
   }) {
     return Column(
       children: <Widget>[
         const SizedBox(height: UiConfig.lineSpacing),
-        if (dataSubjectRights.isNotEmpty)
+        if (processRequests.isNotEmpty)
           Padding(
             padding: const EdgeInsets.only(
               left: UiConfig.lineGap * 2,
@@ -215,9 +218,7 @@ class _DataSubjectRightViewState extends State<DataSubjectRightView> {
                       ),
                       const SizedBox(width: 2.0),
                       Icon(
-                        1 != 1 //_sortAscending
-                            ? Icons.arrow_drop_up
-                            : Icons.arrow_drop_down,
+                        Icons.arrow_drop_down,
                         size: 20.0,
                         color: Theme.of(context).colorScheme.onSurface,
                       ),
@@ -236,6 +237,7 @@ class _DataSubjectRightViewState extends State<DataSubjectRightView> {
               child: _buildDataSubjectRightListView(
                 context,
                 dataSubjectRights: dataSubjectRights,
+                processRequests: processRequests,
                 requestTypes: requestTypes,
               ),
             ),
@@ -248,9 +250,10 @@ class _DataSubjectRightViewState extends State<DataSubjectRightView> {
   Widget _buildDataSubjectRightListView(
     BuildContext context, {
     required List<DataSubjectRightModel> dataSubjectRights,
+    required List<Map<String, ProcessRequestModel>> processRequests,
     required List<RequestTypeModel> requestTypes,
   }) {
-    if (dataSubjectRights.isEmpty) {
+    if (processRequests.isEmpty) {
       return ExampleScreen(
         headderText: tr(
           'consentManagement.consentForm.consentForms',
@@ -446,26 +449,11 @@ class _DataSubjectRightViewState extends State<DataSubjectRightView> {
       physics: const NeverScrollableScrollPhysics(),
       shrinkWrap: true,
       itemBuilder: (context, index) {
-        return _buildDataSubjectRightGroup(
-          context,
-          dataSubjectRight: dataSubjectRights[index],
-          requestTypes: requestTypes,
+        final entry = processRequests[index].entries.first;
+        final dataSubjectRight = UtilFunctions.getDataSubjectRightById(
+          dataSubjectRights,
+          entry.key,
         );
-      },
-      itemCount: dataSubjectRights.length,
-    );
-  }
-
-  ListView _buildDataSubjectRightGroup(
-    BuildContext context, {
-    required DataSubjectRightModel dataSubjectRight,
-    required List<RequestTypeModel> requestTypes,
-  }) {
-    return ListView.builder(
-      physics: const NeverScrollableScrollPhysics(),
-      shrinkWrap: true,
-      itemBuilder: (context, index) {
-        final processRequest = dataSubjectRight.processRequests[index];
 
         return Padding(
           padding: const EdgeInsets.only(
@@ -473,13 +461,13 @@ class _DataSubjectRightViewState extends State<DataSubjectRightView> {
           ),
           child: DataSubjectRightCard(
             dataSubjectRight: dataSubjectRight,
-            processRequest: processRequest,
+            processRequest: entry.value,
             requestTypes: requestTypes,
             language: widget.language,
           ),
         );
       },
-      itemCount: dataSubjectRight.processRequests.length,
+      itemCount: processRequests.length,
     );
   }
 }
