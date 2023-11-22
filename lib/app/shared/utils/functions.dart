@@ -4,6 +4,8 @@ import 'dart:typed_data';
 import 'package:path/path.dart';
 import 'package:pdpa/app/config/config.dart';
 import 'package:pdpa/app/data/models/authentication/company_model.dart';
+
+import 'package:pdpa/app/data/models/data_subject_right/power_verification_model.dart';
 import 'package:pdpa/app/data/models/data_subject_right/process_request_model.dart';
 import 'package:pdpa/app/data/models/etc/user_company_role.dart';
 import 'package:pdpa/app/data/models/etc/user_input_purpose.dart';
@@ -16,7 +18,7 @@ import 'package:pdpa/app/data/models/master_data/reason_type_model.dart';
 import 'package:pdpa/app/data/models/master_data/reject_type_model.dart';
 import 'package:pdpa/app/data/models/master_data/request_action_model.dart';
 import 'package:pdpa/app/data/models/master_data/request_type_model.dart';
-
+import 'package:path/path.dart' as p;
 import 'constants.dart';
 
 class UtilFunctions {
@@ -212,12 +214,32 @@ class UtilFunctions {
     );
   }
 
+  static PowerVerificationModel getPowerVerification(
+    List<PowerVerificationModel> powerVerifications,
+    String powerOfAttorneyId,
+  ) {
+    if (powerVerifications.isNotEmpty && powerOfAttorneyId.isNotEmpty) {
+      for (PowerVerificationModel verification in powerVerifications) {
+        if (verification.id == powerOfAttorneyId) {
+          return verification;
+        }
+      }
+    }
+    return const PowerVerificationModel.empty();
+  }
+
   //? Upload File
   static String getUniqueFileName(String path) {
     final fileName = DateTime.now().millisecondsSinceEpoch.toString();
     final fileExtension = extension(path);
 
     return '$fileName$fileExtension';
+  }
+
+  static String getFileType(String path) {
+    if (path.isEmpty) return "";
+    final fileType = p.extension(path);
+    return fileType.split(".")[1];
   }
 
   static String getUniqueFileNameByUint8List(Uint8List bytes) {
@@ -315,6 +337,17 @@ class UtilFunctions {
     final company = 'companies/$companyId';
     final dataSubjectRight = 'data_subject_rights/$dataSubjectRightId';
     const folder = 'proof/';
+
+    return [company, dataSubjectRight, folder].join('/');
+  }
+
+  static String getPowverVacationDsrPath(
+    String companyId,
+    DataSubjectRightImageType imageType,
+  ) {
+    final company = 'companies/$companyId';
+    const dataSubjectRight = 'data_subject_rights/form';
+    final folder = '${imageType.name}/';
 
     return [company, dataSubjectRight, folder].join('/');
   }

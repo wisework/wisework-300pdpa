@@ -18,69 +18,69 @@ class IntroPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return CustomContainer(
-      margin: const EdgeInsets.all(0),
-      child: Column(
-        children: [
-          Container(
-            width: 100,
-            height: 100,
-            decoration: BoxDecoration(
-              color: Theme.of(context).colorScheme.primary,
-              borderRadius: BorderRadius.circular(10.0),
+    return SingleChildScrollView(
+      child: CustomContainer(
+        margin: const EdgeInsets.all(0),
+        child: Column(
+          children: [
+            Container(
+              width: 100,
+              height: 100,
+              decoration: BoxDecoration(
+                color: Theme.of(context).colorScheme.primary,
+                borderRadius: BorderRadius.circular(10.0),
+              ),
+              child: const Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                crossAxisAlignment: CrossAxisAlignment.center,
+                children: [
+                  Text(
+                    'M',
+                    style: TextStyle(fontSize: 48, color: Colors.white),
+                  ),
+                ],
+              ),
             ),
-            child: const Column(
-              mainAxisAlignment: MainAxisAlignment.center,
-              crossAxisAlignment: CrossAxisAlignment.center,
-              children: [
-                Text(
-                  'M',
-                  style: TextStyle(fontSize: 48, color: Colors.white),
-                ),
-              ],
+            const SizedBox(height: UiConfig.lineSpacing),
+            Text(
+              'แบบฟอร์มขอใช้สิทธิ์ตามกฎหมายคุ้มครองข้อมูลส่วนบุคคล',
+              textAlign: TextAlign.center,
+              style: Theme.of(context)
+                  .textTheme
+                  .titleMedium
+                  ?.copyWith(color: Theme.of(context).colorScheme.primary),
             ),
-          ),
-          const SizedBox(height: UiConfig.lineSpacing),
-          Text(
-            'แบบฟอร์มขอใช้สิทธิ์ตามกฎหมายคุ้มครองข้อมูลส่วนบุคคล',
-            textAlign: TextAlign.center,
-            style: Theme.of(context)
-                .textTheme
-                .titleMedium
-                ?.copyWith(color: Theme.of(context).colorScheme.primary),
-          ),
-          Divider(
-            color:
-                Theme.of(context).colorScheme.outlineVariant.withOpacity(0.5),
-          ),
-          Text(
-            'พระราชบัญญัติคุ้มครองข้อมูลส่วนบุคคลได้ให้สิทธิแก่เจ้าของข้อมูลส่วนบุคคลในการขอใช้สิทธิดำเนินการต่อข้อมูลส่วนบุคคลของตนซึ่งอยู่ในความดูแลของบริษัท Yab ในฐานะผู้ควบคุมข้อมูลส่วนบุคคลทั้งนี้ท่านสามารถใช้สิทธิดังกล่าวได้โดยการกรอกรายละเอียดในแบบคำร้องนี้',
-            textAlign: TextAlign.center,
-            style: Theme.of(context)
-                .textTheme
-                .bodySmall
-                ?.copyWith(color: Theme.of(context).colorScheme.onSurface),
-          ),
-          const SizedBox(height: UiConfig.lineSpacing),
-          CustomButton(
-              width: double.infinity,
-              height: 50,
-              onPressed: () {
-                context
-                    .read<FormDataSubjectRightCubit>()
-                    .nextPage(currentPage + 1);
-                controller.animateToPage(currentPage + 1,
-                    duration: const Duration(milliseconds: 250),
-                    curve: Curves.easeIn);
-              },
-              child: Text(
-                'กรอกแบบคำร้อง',
-                style: Theme.of(context)
-                    .textTheme
-                    .titleMedium
-                    ?.copyWith(color: Theme.of(context).colorScheme.onPrimary),
-              ))
-        ],
+            Divider(
+              color:
+                  Theme.of(context).colorScheme.outlineVariant.withOpacity(0.5),
+            ),
+            Text(
+              'พระราชบัญญัติคุ้มครองข้อมูลส่วนบุคคลได้ให้สิทธิแก่เจ้าของข้อมูลส่วนบุคคลในการขอใช้สิทธิดำเนินการต่อข้อมูลส่วนบุคคลของตนซึ่งอยู่ในความดูแลของบริษัท Yab ในฐานะผู้ควบคุมข้อมูลส่วนบุคคลทั้งนี้ท่านสามารถใช้สิทธิดังกล่าวได้โดยการกรอกรายละเอียดในแบบคำร้องนี้',
+              textAlign: TextAlign.center,
+              style: Theme.of(context)
+                  .textTheme
+                  .bodySmall
+                  ?.copyWith(color: Theme.of(context).colorScheme.onSurface),
+            ),
+            const SizedBox(height: UiConfig.lineSpacing),
+            CustomButton(
+                width: double.infinity,
+                height: 50,
+                onPressed: () {
+                  context
+                      .read<FormDataSubjectRightCubit>()
+                      .nextPage(currentPage + 1);
+                  controller.animateToPage(currentPage + 1,
+                      duration: const Duration(milliseconds: 250),
+                      curve: Curves.easeIn);
+                },
+                child: Text(
+                  'กรอกแบบคำร้อง',
+                  style: Theme.of(context).textTheme.titleMedium?.copyWith(
+                      color: Theme.of(context).colorScheme.onPrimary),
+                ))
+          ],
+        ),
       ),
     );
   }
