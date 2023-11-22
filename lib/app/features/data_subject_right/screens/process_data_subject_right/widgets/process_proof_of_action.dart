@@ -3,7 +3,11 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:pdpa/app/config/config.dart';
 import 'package:pdpa/app/data/models/data_subject_right/process_request_model.dart';
+import 'package:pdpa/app/data/models/email_js/process_request_params.dart';
+import 'package:pdpa/app/data/models/master_data/localized_model.dart';
+import 'package:pdpa/app/data/models/master_data/request_type_model.dart';
 import 'package:pdpa/app/features/data_subject_right/cubit/process_data_subject_right/process_data_subject_right_cubit.dart';
+import 'package:pdpa/app/shared/utils/constants.dart';
 import 'package:pdpa/app/shared/utils/functions.dart';
 import 'package:pdpa/app/shared/utils/toast.dart';
 import 'package:pdpa/app/shared/widgets/customs/custom_button.dart';
@@ -21,11 +25,15 @@ class ProcessProofOfAction extends StatefulWidget {
     required this.dataSubjectRightId,
     required this.processRequest,
     required this.initialProcessRequest,
+    required this.requestTypes,
+    required this.language,
   });
 
   final String dataSubjectRightId;
   final ProcessRequestModel processRequest;
   final ProcessRequestModel initialProcessRequest;
+  final List<RequestTypeModel> requestTypes;
+  final String language;
 
   @override
   State<ProcessProofOfAction> createState() => _ProcessProofOfActionState();
@@ -65,7 +73,53 @@ class _ProcessProofOfActionState extends State<ProcessProofOfAction> {
     if (!_proofFormKey.currentState!.validate()) return;
 
     final cubit = context.read<ProcessDataSubjectRightCubit>();
-    cubit.submitProcessRequest(widget.processRequest.id);
+    cubit.submitProcessRequest(
+      widget.processRequest.id,
+      emailParams: _getEmailParams(),
+    );
+  }
+
+  ProcessRequestTemplateParams? _getEmailParams() {
+    final cubit = context.read<ProcessDataSubjectRightCubit>();
+    final dataSubjectRight = cubit.state.dataSubjectRight;
+
+    final emptyRequest = ProcessRequestModel.empty();
+    final processRequest = dataSubjectRight.processRequests.firstWhere(
+      (request) => request.id == cubit.state.processRequestSelected,
+      orElse: () => emptyRequest,
+    );
+
+    if (processRequest != emptyRequest) {
+      final Map<ProcessRequestStatus, String> statusTexts = {
+        ProcessRequestStatus.notProcessed: 'ยังไม่ดำเนินการ',
+        ProcessRequestStatus.inProgress: 'อยู่ระหว่างการดำเนินการ',
+        ProcessRequestStatus.refused: 'ปฏิเสธการดำเนินการ',
+        ProcessRequestStatus.completed: 'ดำเนินการเสร็จสิ้น',
+      };
+
+      final status = UtilFunctions.getProcessRequestStatus(
+        dataSubjectRight,
+        processRequest,
+      );
+      final requestType = UtilFunctions.getRequestTypeById(
+        widget.requestTypes,
+        processRequest.requestType,
+      );
+      final description = requestType.description.firstWhere(
+        (item) => item.language == widget.language,
+        orElse: () => const LocalizedModel.empty(),
+      );
+
+      return ProcessRequestTemplateParams(
+        toName: dataSubjectRight.dataRequester[0].text,
+        toEmail: dataSubjectRight.dataRequester[2].text,
+        dataSubjectRightId: dataSubjectRight.id,
+        processRequest: description.text,
+        processStatus: '${statusTexts[status]}',
+      );
+    }
+
+    return null;
   }
 
   @override

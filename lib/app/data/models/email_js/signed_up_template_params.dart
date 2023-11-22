@@ -1,8 +1,8 @@
 import 'package:equatable/equatable.dart';
 import 'package:pdpa/app/shared/utils/typedef.dart';
 
-class EmailTemplateParams extends Equatable {
-  const EmailTemplateParams({
+class SignedUpTemplateParams extends Equatable {
+  const SignedUpTemplateParams({
     required this.toName,
     required this.toEmail,
     required this.message,
@@ -12,17 +12,17 @@ class EmailTemplateParams extends Equatable {
   final String toEmail;
   final String message;
 
-  const EmailTemplateParams.empty()
+  const SignedUpTemplateParams.empty()
       : this(
           toName: '',
           toEmail: '',
           message: '',
         );
 
-  EmailTemplateParams.fromMap(DataMap map)
+  SignedUpTemplateParams.fromMap(DataMap map)
       : this(
-          toName: map['toName'] as String,
-          toEmail: map['toEmail'] as String,
+          toName: map['to_name'] as String,
+          toEmail: map['to_email'] as String,
           message: map['message'] as String,
         );
 
@@ -32,12 +32,12 @@ class EmailTemplateParams extends Equatable {
         'message': message,
       };
 
-  EmailTemplateParams copyWith({
+  SignedUpTemplateParams copyWith({
     String? toName,
     String? toEmail,
     String? message,
   }) {
-    return EmailTemplateParams(
+    return SignedUpTemplateParams(
       toName: toName ?? this.toName,
       toEmail: toEmail ?? this.toEmail,
       message: message ?? this.message,

@@ -16,7 +16,8 @@ class AppConfig {
   static const String emailJsUrl =
       'https://api.emailjs.com/api/v1.0/email/send';
   static const String serviceId = 'service_yu0bzoh';
-  static const String templateId = 'template_638hul8';
+  static const String signedUpTemplateId = 'template_638hul8';
+  static const String processedRequestTemplateId = 'template_ybp01ba';
   static const String userId = 'zAusZtWTuLIJ5NRsW';
   static const String notificationEmail = 'notifications.wisework@gmail.com';
   static const List<String> godIds = [

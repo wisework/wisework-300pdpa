@@ -15,6 +15,7 @@ class ProcessRequestModel extends Equatable {
     required this.considerRequestStatus,
     required this.rejectTypes,
     required this.rejectConsiderReason,
+    required this.notifyEmail,
     required this.proofOfActionFile,
     required this.proofOfActionText,
   });
@@ -46,6 +47,9 @@ class ProcessRequestModel extends Equatable {
   /// What reason why rejecting this request?
   final String rejectConsiderReason;
 
+  /// Email notification to relevant people.
+  final List<String> notifyEmail;
+
   /// File link to proof that the request has been processed.
   final String proofOfActionFile;
 
@@ -63,6 +67,7 @@ class ProcessRequestModel extends Equatable {
           considerRequestStatus: RequestResultStatus.none,
           rejectTypes: [],
           rejectConsiderReason: '',
+          notifyEmail: [],
           proofOfActionFile: '',
           proofOfActionText: '',
         );
@@ -84,6 +89,7 @@ class ProcessRequestModel extends Equatable {
               .map((item) => item.toString())
               .toList(),
           rejectConsiderReason: map['rejectConsiderReason'] as String,
+          notifyEmail: List<String>.from(map['notifyEmail'] as List<dynamic>),
           proofOfActionFile: map['proofOfActionFile'] as String,
           proofOfActionText: map['proofOfActionText'] as String,
         );
@@ -101,6 +107,7 @@ class ProcessRequestModel extends Equatable {
           'considerRequestStatus': considerRequestStatus.index,
           'rejectTypes': rejectTypes,
           'rejectConsiderReason': rejectConsiderReason,
+          'notifyEmail': notifyEmail,
           'proofOfActionFile': proofOfActionFile,
           'proofOfActionText': proofOfActionText,
         }
@@ -116,6 +123,7 @@ class ProcessRequestModel extends Equatable {
     RequestResultStatus? considerRequestStatus,
     List<String>? rejectTypes,
     String? rejectConsiderReason,
+    List<String>? notifyEmail,
     String? proofOfActionFile,
     String? proofOfActionText,
   }) {
@@ -130,6 +138,7 @@ class ProcessRequestModel extends Equatable {
           considerRequestStatus ?? this.considerRequestStatus,
       rejectTypes: rejectTypes ?? this.rejectTypes,
       rejectConsiderReason: rejectConsiderReason ?? this.rejectConsiderReason,
+      notifyEmail: notifyEmail ?? this.notifyEmail,
       proofOfActionFile: proofOfActionFile ?? this.proofOfActionFile,
       proofOfActionText: proofOfActionText ?? this.proofOfActionText,
     );
@@ -147,6 +156,7 @@ class ProcessRequestModel extends Equatable {
       considerRequestStatus,
       rejectTypes,
       rejectConsiderReason,
+      notifyEmail,
       proofOfActionFile,
       proofOfActionText,
     ];

@@ -11,6 +11,7 @@ import 'package:pdpa/app/data/models/data_subject_right/requester_input_model.da
 import 'package:pdpa/app/data/models/data_subject_right/requester_verification_model.dart';
 import 'package:pdpa/app/data/models/etc/user_input_text.dart';
 import 'package:pdpa/app/data/models/master_data/localized_model.dart';
+import 'package:pdpa/app/data/models/master_data/request_type_model.dart';
 import 'package:pdpa/app/data/repositories/data_subject_right_repository.dart';
 import 'package:pdpa/app/features/authentication/bloc/sign_in/sign_in_bloc.dart';
 import 'package:pdpa/app/features/data_subject_right/bloc/data_subject_right/data_subject_right_bloc.dart';
@@ -123,6 +124,7 @@ class _DataSubjectRightViewState extends State<DataSubjectRightView> {
               return _buildDataSubjectRightView(
                 context,
                 dataSubjectRights: state.dataSubjectRights,
+                requestTypes: state.requestTypes,
               );
             }
             if (state is DataSubjectRightError) {
@@ -173,6 +175,7 @@ class _DataSubjectRightViewState extends State<DataSubjectRightView> {
   Column _buildDataSubjectRightView(
     BuildContext context, {
     required List<DataSubjectRightModel> dataSubjectRights,
+    required List<RequestTypeModel> requestTypes,
   }) {
     return Column(
       children: <Widget>[
@@ -233,6 +236,7 @@ class _DataSubjectRightViewState extends State<DataSubjectRightView> {
               child: _buildDataSubjectRightListView(
                 context,
                 dataSubjectRights: dataSubjectRights,
+                requestTypes: requestTypes,
               ),
             ),
           ),
@@ -244,6 +248,7 @@ class _DataSubjectRightViewState extends State<DataSubjectRightView> {
   Widget _buildDataSubjectRightListView(
     BuildContext context, {
     required List<DataSubjectRightModel> dataSubjectRights,
+    required List<RequestTypeModel> requestTypes,
   }) {
     if (dataSubjectRights.isEmpty) {
       return ExampleScreen(
@@ -277,7 +282,7 @@ class _DataSubjectRightViewState extends State<DataSubjectRightView> {
                     text: 'ชื่อ - นามสกุล',
                   ),
                 ],
-                text: 'ชนะชัย สิงห์ลือ',
+                text: 'เหมียว เหมียว',
                 priority: 1,
               ),
               RequesterInputModel(
@@ -286,7 +291,7 @@ class _DataSubjectRightViewState extends State<DataSubjectRightView> {
                   LocalizedModel(language: 'en-US', text: 'Address'),
                   LocalizedModel(language: 'th-TH', text: 'ที่อยู่'),
                 ],
-                text: 'ระยองซิตี้',
+                text: 'โคราชซิตี้',
                 priority: 2,
               ),
               RequesterInputModel(
@@ -295,7 +300,7 @@ class _DataSubjectRightViewState extends State<DataSubjectRightView> {
                   LocalizedModel(language: 'en-US', text: 'Email'),
                   LocalizedModel(language: 'th-TH', text: 'อีเมล'),
                 ],
-                text: 'chaiyo.city@gmail.com',
+                text: 'Sage.Online2000@gmail.com',
                 priority: 3,
               ),
               RequesterInputModel(
@@ -310,7 +315,7 @@ class _DataSubjectRightViewState extends State<DataSubjectRightView> {
                     text: 'หมายเลขโทรศัพท์',
                   ),
                 ],
-                text: '0983213214',
+                text: '0612345678',
                 priority: 4,
               ),
             ],
@@ -384,7 +389,7 @@ class _DataSubjectRightViewState extends State<DataSubjectRightView> {
                 id: 'DSR-PR-001',
                 personalData: 'รูปโปรไฟล์',
                 foundSource: 'www.mock-web.co.th/info',
-                requestType: 'DSR-REQ-001',
+                requestType: 'DSR-REQ-002',
                 requestAction: 'DSR-REA-001',
                 reasonTypes: [
                   UserInputText(id: 'DSR-RES-002', text: ''),
@@ -397,6 +402,7 @@ class _DataSubjectRightViewState extends State<DataSubjectRightView> {
                 considerRequestStatus: RequestResultStatus.none,
                 rejectTypes: [],
                 rejectConsiderReason: '',
+                notifyEmail: [],
                 proofOfActionFile: '',
                 proofOfActionText: '',
               ),
@@ -404,7 +410,7 @@ class _DataSubjectRightViewState extends State<DataSubjectRightView> {
                 id: 'DSR-PR-002',
                 personalData: 'ข้อมูลส่วนตัว',
                 foundSource: 'www.mock-web.co.th/news',
-                requestType: 'DSR-REQ-005',
+                requestType: 'DSR-REQ-003',
                 requestAction: 'DSR-REA-001',
                 reasonTypes: [
                   UserInputText(id: 'DSR-RES-002', text: ''),
@@ -413,18 +419,18 @@ class _DataSubjectRightViewState extends State<DataSubjectRightView> {
                 considerRequestStatus: RequestResultStatus.none,
                 rejectTypes: [],
                 rejectConsiderReason: '',
+                notifyEmail: [],
                 proofOfActionFile: '',
                 proofOfActionText: '',
               ),
             ],
             requestExpirationDate: now.add(const Duration(days: 30)),
-            notifyEmail: const [],
             verifyFormStatus: RequestResultStatus.none,
             rejectVerifyReason: '',
             lastSeenBy: '',
-            createdBy: 'khunthip.city@gmail.com',
+            createdBy: 'Sage.Online2000@gmail.com',
             createdDate: now,
-            updatedBy: 'khunthip.city@gmail.com',
+            updatedBy: 'Sage.Online2000@gmail.com',
             updatedDate: now,
           );
           final repository = DataSubjectRightRepository(
@@ -443,6 +449,7 @@ class _DataSubjectRightViewState extends State<DataSubjectRightView> {
         return _buildDataSubjectRightGroup(
           context,
           dataSubjectRight: dataSubjectRights[index],
+          requestTypes: requestTypes,
         );
       },
       itemCount: dataSubjectRights.length,
@@ -452,6 +459,7 @@ class _DataSubjectRightViewState extends State<DataSubjectRightView> {
   ListView _buildDataSubjectRightGroup(
     BuildContext context, {
     required DataSubjectRightModel dataSubjectRight,
+    required List<RequestTypeModel> requestTypes,
   }) {
     return ListView.builder(
       physics: const NeverScrollableScrollPhysics(),
@@ -466,6 +474,8 @@ class _DataSubjectRightViewState extends State<DataSubjectRightView> {
           child: DataSubjectRightCard(
             dataSubjectRight: dataSubjectRight,
             processRequest: processRequest,
+            requestTypes: requestTypes,
+            language: widget.language,
           ),
         );
       },
