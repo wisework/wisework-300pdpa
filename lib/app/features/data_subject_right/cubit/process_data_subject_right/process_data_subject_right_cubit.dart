@@ -6,7 +6,9 @@ import 'package:equatable/equatable.dart';
 import 'package:pdpa/app/data/models/authentication/user_model.dart';
 import 'package:pdpa/app/data/models/data_subject_right/data_subject_right_model.dart';
 import 'package:pdpa/app/data/models/data_subject_right/process_request_model.dart';
+import 'package:pdpa/app/data/models/email_js/process_request_params.dart';
 import 'package:pdpa/app/data/repositories/data_subject_right_repository.dart';
+import 'package:pdpa/app/data/repositories/emailjs_repository.dart';
 import 'package:pdpa/app/data/repositories/general_repository.dart';
 import 'package:pdpa/app/features/data_subject_right/models/process_request_loading_status.dart';
 import 'package:pdpa/app/shared/utils/constants.dart';
@@ -17,8 +19,10 @@ class ProcessDataSubjectRightCubit extends Cubit<ProcessDataSubjectRightState> {
   ProcessDataSubjectRightCubit({
     required DataSubjectRightRepository dataSubjectRightRepository,
     required GeneralRepository generalRepository,
+    required EmailJsRepository emailJsRepository,
   })  : _dataSubjectRightRepository = dataSubjectRightRepository,
         _generalRepository = generalRepository,
+        _emailJsRepository = emailJsRepository,
         super(ProcessDataSubjectRightState(
           dataSubjectRight: DataSubjectRightModel.empty(),
           initialDataSubjectRight: DataSubjectRightModel.empty(),
@@ -34,6 +38,7 @@ class ProcessDataSubjectRightCubit extends Cubit<ProcessDataSubjectRightState> {
 
   final DataSubjectRightRepository _dataSubjectRightRepository;
   final GeneralRepository _generalRepository;
+  final EmailJsRepository _emailJsRepository;
 
   void initialSettings(
     DataSubjectRightModel dataSubjectRight,
@@ -45,6 +50,21 @@ class ProcessDataSubjectRightCubit extends Cubit<ProcessDataSubjectRightState> {
 
     if (dataSubjectRight.verifyFormStatus != RequestResultStatus.none) {
       stepIndex = 1;
+    }
+    if (dataSubjectRight.verifyFormStatus == RequestResultStatus.fail) {
+      emit(
+        state.copyWith(
+          dataSubjectRight: dataSubjectRight,
+          initialDataSubjectRight: dataSubjectRight,
+          processRequestSelected: processRequestSelected,
+          currentUser: currentUser,
+          userEmails: userEmails,
+          stepIndex: 2,
+          requestExpanded: [processRequestSelected],
+        ),
+      );
+
+      return;
     }
 
     for (ProcessRequestModel request in dataSubjectRight.processRequests) {
@@ -70,6 +90,12 @@ class ProcessDataSubjectRightCubit extends Cubit<ProcessDataSubjectRightState> {
   }
 
   void onBackStepPressed() {
+    if (state.stepIndex == 2 &&
+        state.dataSubjectRight.verifyFormStatus == RequestResultStatus.fail) {
+      emit(state.copyWith(stepIndex: 0));
+      return;
+    }
+
     if (state.stepIndex > 0) {
       emit(state.copyWith(stepIndex: state.stepIndex - 1));
     }
@@ -81,7 +107,10 @@ class ProcessDataSubjectRightCubit extends Cubit<ProcessDataSubjectRightState> {
     }
   }
 
-  Future<void> onVerifyFormValidate(int stepLength) async {
+  Future<void> onVerifyFormValidate(
+    int stepLength, {
+    ProcessRequestTemplateParams? emailParams,
+  }) async {
     //? If no option is selected, a warning should be displayed.
     if (state.dataSubjectRight.verifyFormStatus == RequestResultStatus.none) {
       emit(state.copyWith(verifyError: true));
@@ -99,6 +128,7 @@ class ProcessDataSubjectRightCubit extends Cubit<ProcessDataSubjectRightState> {
         ),
       );
 
+      //? Update data subject right
       final updated = state.dataSubjectRight.setUpdate(
         state.currentUser.email,
         DateTime.now(),
@@ -108,6 +138,11 @@ class ProcessDataSubjectRightCubit extends Cubit<ProcessDataSubjectRightState> {
         updated,
         state.currentUser.currentCompany,
       );
+
+      //? Send email to requester
+      if (emailParams != null) {
+        await _emailJsRepository.sendProcessRequestEmail(emailParams);
+      }
 
       emit(
         state.copyWith(
@@ -121,29 +156,42 @@ class ProcessDataSubjectRightCubit extends Cubit<ProcessDataSubjectRightState> {
       );
 
       return;
+    } else if (state.initialDataSubjectRight.verifyFormStatus ==
+        RequestResultStatus.fail) {
+      emit(state.copyWith(stepIndex: 2));
+
+      return;
     }
 
     onNextStepPressed(stepLength);
   }
 
-  Future<void> submitConsiderRequest(String processRequestId) async {
+  Future<void> submitConsiderRequest(
+    String processRequestId, {
+    ProcessRequestTemplateParams? emailParams,
+  }) async {
+    ProcessRequestModel currentRequest = ProcessRequestModel.empty();
+
     for (ProcessRequestModel request
         in state.dataSubjectRight.processRequests) {
-      final noOptionSelected =
-          request.considerRequestStatus == RequestResultStatus.none;
+      if (request.id == processRequestId) {
+        currentRequest = request;
 
-      if (request.id == processRequestId && noOptionSelected) {
-        List<String> considerError =
-            state.considerError.map((id) => id).toList();
+        final noOptionSelected =
+            request.considerRequestStatus == RequestResultStatus.none;
+        if (noOptionSelected) {
+          List<String> considerError =
+              state.considerError.map((id) => id).toList();
 
-        if (!considerError.contains(processRequestId)) {
-          considerError.add(processRequestId);
-        } else {
-          considerError.remove(processRequestId);
+          if (!considerError.contains(processRequestId)) {
+            considerError.add(processRequestId);
+          } else {
+            considerError.remove(processRequestId);
+          }
+
+          emit(state.copyWith(considerError: considerError));
+          return;
         }
-
-        emit(state.copyWith(considerError: considerError));
-        return;
       }
     }
 
@@ -165,10 +213,19 @@ class ProcessDataSubjectRightCubit extends Cubit<ProcessDataSubjectRightState> {
       state.currentUser.currentCompany,
     );
 
+    //? Send email to requester
+    if (emailParams != null) {
+      await _emailJsRepository.sendProcessRequestEmail(emailParams);
+    }
+
     emit(
       state.copyWith(
         dataSubjectRight: updated,
         initialDataSubjectRight: updated,
+        stepIndex:
+            currentRequest.considerRequestStatus == RequestResultStatus.fail
+                ? 2
+                : state.stepIndex,
         loadingStatus: state.loadingStatus.copyWith(
           consideringRequest: '',
         ),
@@ -178,7 +235,10 @@ class ProcessDataSubjectRightCubit extends Cubit<ProcessDataSubjectRightState> {
     return;
   }
 
-  Future<void> submitProcessRequest(String processRequestId) async {
+  Future<void> submitProcessRequest(
+    String processRequestId, {
+    ProcessRequestTemplateParams? emailParams,
+  }) async {
     emit(
       state.copyWith(
         loadingStatus: state.loadingStatus.copyWith(
@@ -197,10 +257,16 @@ class ProcessDataSubjectRightCubit extends Cubit<ProcessDataSubjectRightState> {
       state.currentUser.currentCompany,
     );
 
+    //? Send email to requester
+    if (emailParams != null) {
+      await _emailJsRepository.sendProcessRequestEmail(emailParams);
+    }
+
     emit(
       state.copyWith(
         dataSubjectRight: updated,
         initialDataSubjectRight: updated,
+        stepIndex: 2,
         loadingStatus: state.loadingStatus.copyWith(
           processingRequest: '',
         ),

@@ -1,12 +1,10 @@
 // ignore: depend_on_referenced_packages
-
 import 'dart:typed_data';
 
 // ignore: depend_on_referenced_packages
 import 'package:bloc/bloc.dart';
 import 'package:equatable/equatable.dart';
 import 'package:pdpa/app/data/models/data_subject_right/data_subject_right_model.dart';
-import 'package:pdpa/app/data/models/data_subject_right/power_verification_model.dart';
 import 'package:pdpa/app/data/models/data_subject_right/requester_verification_model.dart';
 import 'package:pdpa/app/data/repositories/general_repository.dart';
 
@@ -174,6 +172,58 @@ class FormDataSubjectRightCubit extends Cubit<FormDataSubjectRightState> {
           ),
         );
       },
+    );
+  }
+
+  Future<void> removeIdentityProofingFile(
+    String identityProofingId,
+  ) async {
+    DataSubjectRightModel dataSubjectRight = state.dataSubjectRight;
+    List<RequesterVerificationModel> requesterVerification = [];
+
+    for (RequesterVerificationModel form
+        in dataSubjectRight.identityVerifications) {
+      if (form.id == identityProofingId) {
+        requesterVerification.add(
+          form.copyWith(imageUrl: ''),
+        );
+      } else {
+        requesterVerification.add(form);
+      }
+    }
+
+    emit(
+      state.copyWith(
+        dataSubjectRight: dataSubjectRight.copyWith(
+          identityVerifications: requesterVerification,
+        ),
+      ),
+    );
+  }
+
+  Future<void> removePowerVerificationFile(
+    String powerVerificationId,
+  ) async {
+    DataSubjectRightModel dataSubjectRight = state.dataSubjectRight;
+    List<RequesterVerificationModel> requesterVerification = [];
+
+    for (RequesterVerificationModel form
+        in dataSubjectRight.powerVerifications) {
+      if (form.id == powerVerificationId) {
+        requesterVerification.add(
+          form.copyWith(imageUrl: ''),
+        );
+      } else {
+        requesterVerification.add(form);
+      }
+    }
+
+    emit(
+      state.copyWith(
+        dataSubjectRight: dataSubjectRight.copyWith(
+          powerVerifications: requesterVerification,
+        ),
+      ),
     );
   }
 }

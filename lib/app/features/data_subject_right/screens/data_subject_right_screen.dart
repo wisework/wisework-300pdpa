@@ -23,6 +23,7 @@ import 'package:pdpa/app/features/data_subject_right/widgets/search_data_subject
 import 'package:pdpa/app/services/apis/data_subject_right_api.dart';
 import 'package:pdpa/app/shared/drawers/pdpa_drawer.dart';
 import 'package:pdpa/app/shared/utils/constants.dart';
+import 'package:pdpa/app/shared/utils/functions.dart';
 import 'package:pdpa/app/shared/utils/toast.dart';
 import 'package:pdpa/app/shared/widgets/content_wrapper.dart';
 import 'package:pdpa/app/shared/widgets/customs/custom_button.dart';
@@ -168,6 +169,7 @@ class _DataSubjectRightViewState extends State<DataSubjectRightView> {
               return _buildDataSubjectRightView(
                 context,
                 dataSubjectRights: state.dataSubjectRights,
+                processRequests: state.processRequests,
                 requestTypes: state.requestTypes,
               );
             }
@@ -219,12 +221,13 @@ class _DataSubjectRightViewState extends State<DataSubjectRightView> {
   Column _buildDataSubjectRightView(
     BuildContext context, {
     required List<DataSubjectRightModel> dataSubjectRights,
+    required List<Map<String, ProcessRequestModel>> processRequests,
     required List<RequestTypeModel> requestTypes,
   }) {
     return Column(
       children: <Widget>[
         const SizedBox(height: UiConfig.lineSpacing),
-        if (dataSubjectRights.isNotEmpty)
+        if (processRequests.isNotEmpty)
           Padding(
             padding: const EdgeInsets.only(
               left: UiConfig.lineGap * 2,
@@ -259,9 +262,7 @@ class _DataSubjectRightViewState extends State<DataSubjectRightView> {
                       ),
                       const SizedBox(width: 2.0),
                       Icon(
-                        1 != 1 //_sortAscending
-                            ? Icons.arrow_drop_up
-                            : Icons.arrow_drop_down,
+                        Icons.arrow_drop_down,
                         size: 20.0,
                         color: Theme.of(context).colorScheme.onSurface,
                       ),
@@ -280,6 +281,7 @@ class _DataSubjectRightViewState extends State<DataSubjectRightView> {
               child: _buildDataSubjectRightListView(
                 context,
                 dataSubjectRights: dataSubjectRights,
+                processRequests: processRequests,
                 requestTypes: requestTypes,
               ),
             ),
@@ -292,9 +294,10 @@ class _DataSubjectRightViewState extends State<DataSubjectRightView> {
   Widget _buildDataSubjectRightListView(
     BuildContext context, {
     required List<DataSubjectRightModel> dataSubjectRights,
+    required List<Map<String, ProcessRequestModel>> processRequests,
     required List<RequestTypeModel> requestTypes,
   }) {
-    if (dataSubjectRights.isEmpty) {
+    if (processRequests.isEmpty) {
       return ExampleScreen(
         headderText: tr(
           'consentManagement.consentForm.consentForms',
@@ -326,7 +329,7 @@ class _DataSubjectRightViewState extends State<DataSubjectRightView> {
                     text: 'ชื่อ - นามสกุล',
                   ),
                 ],
-                text: 'กานต์ ขุนทิพย์',
+                text: 'เหมียว เหมียว',
                 priority: 1,
               ),
               RequesterInputModel(
@@ -335,7 +338,7 @@ class _DataSubjectRightViewState extends State<DataSubjectRightView> {
                   LocalizedModel(language: 'en-US', text: 'Address'),
                   LocalizedModel(language: 'th-TH', text: 'ที่อยู่'),
                 ],
-                text: 'ปากช่องซิตี้',
+                text: 'โคราชซิตี้',
                 priority: 2,
               ),
               RequesterInputModel(
@@ -344,7 +347,7 @@ class _DataSubjectRightViewState extends State<DataSubjectRightView> {
                   LocalizedModel(language: 'en-US', text: 'Email'),
                   LocalizedModel(language: 'th-TH', text: 'อีเมล'),
                 ],
-                text: 'khunthip.city@gmail.com',
+                text: 'Sage.Online2000@gmail.com',
                 priority: 3,
               ),
               RequesterInputModel(
@@ -359,7 +362,7 @@ class _DataSubjectRightViewState extends State<DataSubjectRightView> {
                     text: 'หมายเลขโทรศัพท์',
                   ),
                 ],
-                text: '0981234567',
+                text: '0612345678',
                 priority: 4,
               ),
             ],
@@ -433,7 +436,7 @@ class _DataSubjectRightViewState extends State<DataSubjectRightView> {
                 id: 'DSR-PR-001',
                 personalData: 'รูปโปรไฟล์',
                 foundSource: 'www.mock-web.co.th/info',
-                requestType: 'DSR-REQ-001',
+                requestType: 'DSR-REQ-002',
                 requestAction: 'DSR-REA-001',
                 reasonTypes: [
                   UserInputText(id: 'DSR-RES-002', text: ''),
@@ -454,7 +457,7 @@ class _DataSubjectRightViewState extends State<DataSubjectRightView> {
                 id: 'DSR-PR-002',
                 personalData: 'ข้อมูลส่วนตัว',
                 foundSource: 'www.mock-web.co.th/news',
-                requestType: 'DSR-REQ-005',
+                requestType: 'DSR-REQ-003',
                 requestAction: 'DSR-REA-001',
                 reasonTypes: [
                   UserInputText(id: 'DSR-RES-002', text: ''),
@@ -472,9 +475,9 @@ class _DataSubjectRightViewState extends State<DataSubjectRightView> {
             verifyFormStatus: RequestResultStatus.none,
             rejectVerifyReason: '',
             lastSeenBy: '',
-            createdBy: 'khunthip.city@gmail.com',
+            createdBy: 'Sage.Online2000@gmail.com',
             createdDate: now,
-            updatedBy: 'khunthip.city@gmail.com',
+            updatedBy: 'Sage.Online2000@gmail.com',
             updatedDate: now,
           );
           final repository = DataSubjectRightRepository(
@@ -490,26 +493,11 @@ class _DataSubjectRightViewState extends State<DataSubjectRightView> {
       physics: const NeverScrollableScrollPhysics(),
       shrinkWrap: true,
       itemBuilder: (context, index) {
-        return _buildDataSubjectRightGroup(
-          context,
-          dataSubjectRight: dataSubjectRights[index],
-          requestTypes: requestTypes,
+        final entry = processRequests[index].entries.first;
+        final dataSubjectRight = UtilFunctions.getDataSubjectRightById(
+          dataSubjectRights,
+          entry.key,
         );
-      },
-      itemCount: dataSubjectRights.length,
-    );
-  }
-
-  ListView _buildDataSubjectRightGroup(
-    BuildContext context, {
-    required DataSubjectRightModel dataSubjectRight,
-    required List<RequestTypeModel> requestTypes,
-  }) {
-    return ListView.builder(
-      physics: const NeverScrollableScrollPhysics(),
-      shrinkWrap: true,
-      itemBuilder: (context, index) {
-        final processRequest = dataSubjectRight.processRequests[index];
 
         return Padding(
           padding: const EdgeInsets.only(
@@ -517,13 +505,13 @@ class _DataSubjectRightViewState extends State<DataSubjectRightView> {
           ),
           child: DataSubjectRightCard(
             dataSubjectRight: dataSubjectRight,
-            processRequest: processRequest,
+            processRequest: entry.value,
             requestTypes: requestTypes,
             language: widget.language,
           ),
         );
       },
-      itemCount: dataSubjectRight.processRequests.length,
+      itemCount: processRequests.length,
     );
   }
 

@@ -4,7 +4,7 @@ import 'package:equatable/equatable.dart';
 import 'package:pdpa/app/config/config.dart';
 import 'package:pdpa/app/data/models/authentication/company_model.dart';
 import 'package:pdpa/app/data/models/authentication/user_model.dart';
-import 'package:pdpa/app/data/models/etc/email_template_params.dart';
+import 'package:pdpa/app/data/models/email_js/signed_up_template_params.dart';
 import 'package:pdpa/app/data/models/etc/user_company_role.dart';
 import 'package:pdpa/app/data/models/master_data/mandatory_field_model.dart';
 import 'package:pdpa/app/data/models/master_data/purpose_model.dart';
@@ -187,13 +187,13 @@ class EditUserBloc extends Bloc<EditUserEvent, EditUserState> {
         emit(EditUserError(failure.errorMessage));
       },
       (user) async {
-        final params = EmailTemplateParams(
+        final params = SignedUpTemplateParams(
           toName: user.firstName,
           toEmail: user.email,
           message: 'Email: ${user.email}\nPassword: $password',
         );
 
-        final result = await _emailJsRepository.sendEmail(params);
+        final result = await _emailJsRepository.sendSignedUpEmail(params);
 
         result.fold(
           (failure) => emit(EditUserError(failure.errorMessage)),
