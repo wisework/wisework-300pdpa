@@ -4,24 +4,33 @@ import 'package:go_router/go_router.dart';
 import 'package:pdpa/app/config/config.dart';
 import 'package:pdpa/app/data/models/authentication/user_model.dart';
 import 'package:pdpa/app/data/models/data_subject_right/data_subject_right_model.dart';
+import 'package:pdpa/app/data/models/data_subject_right/process_request_model.dart';
 import 'package:pdpa/app/data/models/etc/updated_return.dart';
+import 'package:pdpa/app/data/models/master_data/localized_model.dart';
 import 'package:pdpa/app/data/models/master_data/reason_type_model.dart';
 import 'package:pdpa/app/data/models/master_data/reject_type_model.dart';
 import 'package:pdpa/app/data/models/master_data/request_type_model.dart';
+import 'package:pdpa/app/data/presets/request_actions_preset.dart';
 import 'package:pdpa/app/features/authentication/bloc/sign_in/sign_in_bloc.dart';
 import 'package:pdpa/app/features/data_subject_right/bloc/data_subject_right/data_subject_right_bloc.dart';
 import 'package:pdpa/app/features/data_subject_right/bloc/edit_data_subject_right/edit_data_subject_right_bloc.dart';
 import 'package:pdpa/app/features/data_subject_right/screens/process_data_subject_right/process_data_subject_right.dart';
 import 'package:pdpa/app/injection.dart';
 import 'package:pdpa/app/shared/utils/constants.dart';
+import 'package:pdpa/app/shared/utils/functions.dart';
 import 'package:pdpa/app/shared/utils/toast.dart';
 import 'package:pdpa/app/shared/widgets/content_wrapper.dart';
 import 'package:pdpa/app/shared/widgets/customs/custom_button.dart';
+import 'package:pdpa/app/shared/widgets/customs/custom_checkbox.dart';
 import 'package:pdpa/app/shared/widgets/customs/custom_container.dart';
 import 'package:pdpa/app/shared/widgets/customs/custom_icon_button.dart';
+import 'package:pdpa/app/shared/widgets/customs/custom_radio_button.dart';
+import 'package:pdpa/app/shared/widgets/customs/custom_text_field.dart';
+import 'package:pdpa/app/shared/widgets/expanded_container.dart';
 import 'package:pdpa/app/shared/widgets/screens/error_message_screen.dart';
 import 'package:pdpa/app/shared/widgets/screens/loading_screen.dart';
 import 'package:pdpa/app/shared/widgets/templates/pdpa_app_bar.dart';
+import 'package:pdpa/app/shared/widgets/title_required_text.dart';
 
 class EditDataSubjectRightScreen extends StatefulWidget {
   const EditDataSubjectRightScreen({
@@ -218,7 +227,7 @@ class _EditDataSubjectRightViewState extends State<EditDataSubjectRightView> {
                   children: <Widget>[
                     const SizedBox(height: UiConfig.lineSpacing),
                     CustomContainer(
-                      child: Text(dataSubjectRight.toString()),
+                      child: _buildDataSubjectRightForm(context),
                     ),
                     const SizedBox(height: UiConfig.lineSpacing),
                   ],
@@ -273,6 +282,379 @@ class _EditDataSubjectRightViewState extends State<EditDataSubjectRightView> {
       icon: Icons.chevron_left_outlined,
       iconColor: Theme.of(context).colorScheme.primary,
       backgroundColor: Theme.of(context).colorScheme.onBackground,
+    );
+  }
+
+  Column _buildDataSubjectRightForm(BuildContext context) {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: <Widget>[
+        Text(
+          'รายละเอียดคำร้องขอใช้สิทธิ์ตามกฎหมายคุ้มครองข้อมูลส่วนบุคคล',
+          style: Theme.of(context)
+              .textTheme
+              .headlineMedium
+              ?.copyWith(color: Theme.of(context).colorScheme.primary),
+        ),
+        _buildDivider(context),
+        _buildDataRequesterInfo(context),
+        _buildDivider(context),
+        _buildCheckDataOwner(context),
+        _buildDivider(context),
+        if (!dataSubjectRight.isDataOwner) _buildDataOwnerInfo(context),
+        _buildProcessRequestInfo(context),
+      ],
+    );
+  }
+
+  Column _buildDataRequesterInfo(BuildContext context) {
+    return Column(
+      mainAxisSize: MainAxisSize.min,
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: <Widget>[
+        Text(
+          'ข้อมูลของผู้ยื่นคำขอ',
+          style: Theme.of(context)
+              .textTheme
+              .titleLarge
+              ?.copyWith(color: Theme.of(context).colorScheme.primary),
+        ),
+        const SizedBox(height: UiConfig.lineSpacing),
+        ListView.separated(
+          physics: const NeverScrollableScrollPhysics(),
+          shrinkWrap: true,
+          itemBuilder: (context, index) {
+            final input = dataSubjectRight.dataRequester[index];
+            final title = input.title.firstWhere(
+              (item) => item.language == widget.currentUser.defaultLanguage,
+              orElse: () => const LocalizedModel.empty(),
+            );
+
+            return Column(
+              children: <Widget>[
+                TitleRequiredText(text: title.text),
+                CustomTextField(
+                  controller: TextEditingController(
+                    text: input.text,
+                  ),
+                  readOnly: true,
+                ),
+              ],
+            );
+          },
+          itemCount: dataSubjectRight.dataRequester.length,
+          separatorBuilder: (context, index) => const SizedBox(
+            height: UiConfig.lineSpacing,
+          ),
+        ),
+      ],
+    );
+  }
+
+  Column _buildCheckDataOwner(BuildContext context) {
+    return Column(
+      mainAxisSize: MainAxisSize.min,
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: <Widget>[
+        Text(
+          'ท่านเป็นเจ้าของข้อมูลหรือไม่',
+          style: Theme.of(context)
+              .textTheme
+              .titleLarge
+              ?.copyWith(color: Theme.of(context).colorScheme.primary),
+        ),
+        const SizedBox(height: UiConfig.lineSpacing),
+        Row(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: <Widget>[
+            CustomRadioButton<bool>(
+              value: true,
+              selected: dataSubjectRight.isDataOwner,
+              onChanged: null,
+              activeColor: Theme.of(context).colorScheme.outlineVariant,
+              margin: const EdgeInsets.only(right: UiConfig.actionSpacing),
+            ),
+            Expanded(
+              child: Padding(
+                padding: const EdgeInsets.symmetric(vertical: 5.0),
+                child: Text(
+                  'ผู้ยื่นคำร้องเป็นบุคคลเดียวกับเจ้าของข้อมูล',
+                  style: Theme.of(context).textTheme.bodyMedium,
+                ),
+              ),
+            ),
+          ],
+        ),
+        const SizedBox(height: UiConfig.lineGap),
+        Row(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: <Widget>[
+            CustomRadioButton<bool>(
+              value: false,
+              selected: dataSubjectRight.isDataOwner,
+              onChanged: null,
+              activeColor: Theme.of(context).colorScheme.outlineVariant,
+              margin: const EdgeInsets.only(right: UiConfig.actionSpacing),
+            ),
+            Expanded(
+              child: Padding(
+                padding: const EdgeInsets.symmetric(vertical: 5.0),
+                child: Text(
+                  'ผู้ยื่นคำร้องเป็นตัวแทนเจ้าของข้อมูล',
+                  style: Theme.of(context).textTheme.bodyMedium,
+                ),
+              ),
+            ),
+          ],
+        ),
+      ],
+    );
+  }
+
+  Column _buildDataOwnerInfo(BuildContext context) {
+    return Column(
+      mainAxisSize: MainAxisSize.min,
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: <Widget>[
+        Text(
+          'รายละเอียดเจ้าของข้อมูล',
+          style: Theme.of(context)
+              .textTheme
+              .titleLarge
+              ?.copyWith(color: Theme.of(context).colorScheme.primary),
+        ),
+        const SizedBox(height: UiConfig.lineSpacing),
+        ListView.separated(
+          physics: const NeverScrollableScrollPhysics(),
+          shrinkWrap: true,
+          itemBuilder: (context, index) {
+            final input = dataSubjectRight.dataOwner[index];
+            final title = input.title.firstWhere(
+              (item) => item.language == widget.currentUser.defaultLanguage,
+              orElse: () => const LocalizedModel.empty(),
+            );
+
+            return Column(
+              children: <Widget>[
+                TitleRequiredText(text: title.text),
+                CustomTextField(
+                  controller: TextEditingController(
+                    text: input.text,
+                  ),
+                  readOnly: true,
+                ),
+              ],
+            );
+          },
+          itemCount: dataSubjectRight.dataRequester.length,
+          separatorBuilder: (context, index) => const SizedBox(
+            height: UiConfig.lineSpacing,
+          ),
+        ),
+        _buildDivider(context),
+      ],
+    );
+  }
+
+  Column _buildProcessRequestInfo(BuildContext context) {
+    return Column(
+      mainAxisSize: MainAxisSize.min,
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: <Widget>[
+        Text(
+          'ต้องการยื่นคำร้องขอเพื่อจุดประสงค์ดังต่อไปนี้',
+          style: Theme.of(context)
+              .textTheme
+              .titleLarge
+              ?.copyWith(color: Theme.of(context).colorScheme.primary),
+        ),
+        const SizedBox(height: UiConfig.lineSpacing),
+        ListView.separated(
+          physics: const NeverScrollableScrollPhysics(),
+          shrinkWrap: true,
+          itemBuilder: (context, index) {
+            final processRequest = dataSubjectRight.processRequests[index];
+
+            return _buildProcessRequestCard(
+              context,
+              index: index + 1,
+              dataSubjectRightId: dataSubjectRight.id,
+              processRequest: processRequest,
+            );
+          },
+          itemCount: dataSubjectRight.processRequests.length,
+          separatorBuilder: (context, index) => const SizedBox(
+            height: UiConfig.lineSpacing,
+          ),
+        ),
+      ],
+    );
+  }
+
+  Column _buildProcessRequestCard(
+    BuildContext context, {
+    required int index,
+    required String dataSubjectRightId,
+    required ProcessRequestModel processRequest,
+  }) {
+    final requestType = UtilFunctions.getRequestTypeById(
+      widget.requestTypes,
+      processRequest.requestType,
+    );
+    final description = requestType.description.firstWhere(
+      (item) => item.language == widget.currentUser.defaultLanguage,
+      orElse: () => const LocalizedModel.empty(),
+    );
+
+    return Column(
+      mainAxisSize: MainAxisSize.min,
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: <Widget>[
+        Padding(
+          padding: const EdgeInsets.symmetric(vertical: 4.0),
+          child: Row(
+            children: <Widget>[
+              Text(
+                '$index. ${description.text}',
+                style: Theme.of(context).textTheme.titleMedium,
+              ),
+            ],
+          ),
+        ),
+        ExpandedContainer(
+          expand: true,
+          duration: const Duration(milliseconds: 400),
+          child: Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 18.0),
+            child: Column(
+              children: <Widget>[
+                const SizedBox(height: UiConfig.lineSpacing),
+                _buildRequestActionInfo(
+                  context,
+                  processRequest: processRequest,
+                ),
+                const SizedBox(height: UiConfig.lineGap * 2),
+                _buildRequestReasonInfo(
+                  context,
+                  processRequest: processRequest,
+                ),
+              ],
+            ),
+          ),
+        ),
+      ],
+    );
+  }
+
+  Column _buildRequestActionInfo(
+    BuildContext context, {
+    required ProcessRequestModel processRequest,
+  }) {
+    final requestAction = UtilFunctions.getRequestActionById(
+      requestActionsPreset,
+      processRequest.requestAction,
+    );
+    final title = requestAction.title.firstWhere(
+      (item) => item.language == widget.currentUser.defaultLanguage,
+      orElse: () => const LocalizedModel.empty(),
+    );
+
+    return Column(
+      mainAxisSize: MainAxisSize.min,
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: <Widget>[
+        const TitleRequiredText(text: 'ข้อมูลส่วนบุคคล'),
+        CustomTextField(
+          controller: TextEditingController(
+            text: processRequest.personalData,
+          ),
+          readOnly: true,
+        ),
+        const SizedBox(height: UiConfig.lineSpacing),
+        const TitleRequiredText(text: 'สถานที่พบเจอ'),
+        CustomTextField(
+          controller: TextEditingController(
+            text: processRequest.foundSource,
+          ),
+          readOnly: true,
+        ),
+        const SizedBox(height: UiConfig.lineSpacing),
+        const TitleRequiredText(text: 'การดำเนินการ'),
+        CustomTextField(
+          controller: TextEditingController(
+            text: title.text,
+          ),
+          readOnly: true,
+        ),
+      ],
+    );
+  }
+
+  Column _buildRequestReasonInfo(
+    BuildContext context, {
+    required ProcessRequestModel processRequest,
+  }) {
+    return Column(
+      mainAxisSize: MainAxisSize.min,
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: <Widget>[
+        Text(
+          'เหตุผลประกอบคำร้อง',
+          style: Theme.of(context).textTheme.bodyMedium,
+        ),
+        const SizedBox(height: UiConfig.lineGap),
+        ListView.separated(
+          physics: const NeverScrollableScrollPhysics(),
+          shrinkWrap: true,
+          itemBuilder: (context, index) {
+            final reasonType = UtilFunctions.getReasonTypeById(
+              widget.reasonTypes,
+              processRequest.reasonTypes[index].id,
+            );
+            final description = reasonType.description.firstWhere(
+              (item) => item.language == widget.currentUser.defaultLanguage,
+              orElse: () => const LocalizedModel.empty(),
+            );
+
+            return Row(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: <Widget>[
+                CustomCheckBox(
+                  value: true,
+                  activeColor: Theme.of(context).colorScheme.outlineVariant,
+                ),
+                const SizedBox(width: UiConfig.actionSpacing),
+                Expanded(
+                  child: Padding(
+                    padding: const EdgeInsets.only(top: 4.0),
+                    child: Text(
+                      processRequest.reasonTypes[index].text.isNotEmpty
+                          ? processRequest.reasonTypes[index].text
+                          : description.text,
+                      style: Theme.of(context).textTheme.bodyMedium,
+                    ),
+                  ),
+                ),
+              ],
+            );
+          },
+          itemCount: processRequest.reasonTypes.length,
+          separatorBuilder: (context, index) => const SizedBox(
+            height: UiConfig.lineSpacing,
+          ),
+        ),
+      ],
+    );
+  }
+
+  Padding _buildDivider(BuildContext context) {
+    return Padding(
+      padding: const EdgeInsets.symmetric(
+        vertical: UiConfig.lineSpacing,
+      ),
+      child: Divider(
+        color: Theme.of(context).colorScheme.outlineVariant.withOpacity(0.5),
+      ),
     );
   }
 }
