@@ -60,7 +60,6 @@ class _PowerVerificationPageState extends State<PowerVerificationPage> {
               crossAxisAlignment: CrossAxisAlignment.start,
               mainAxisAlignment: MainAxisAlignment.start,
               children: [
-                const SizedBox(height: UiConfig.lineSpacing),
                 Text(
                   'เอกสารพิสูจน์อำนาจดำเนินการแทน', //!
                   textAlign: TextAlign.left,
@@ -73,7 +72,7 @@ class _PowerVerificationPageState extends State<PowerVerificationPage> {
                 Text(
                   'ทั้งนี้ข้าพเจ้าได้แนบเอกสารดังต่อไปนี้เพื่อการตรวจสอบอำนาจตัวตนและถิ่นที่อยู่ของผู้ยื่นคำร้องและเจ้าของข้อมูลส่วนบุคคลเพื่อให้บริษัทสามารถดำเนินการตามสิทธิที่ร้องขอได้อย่างถูกต้อง', //!
                   textAlign: TextAlign.left,
-                  style: Theme.of(context).textTheme.bodySmall?.copyWith(
+                  style: Theme.of(context).textTheme.bodyMedium?.copyWith(
                       color: Theme.of(context).colorScheme.onSurface),
                 ),
                 const SizedBox(height: UiConfig.lineSpacing),
@@ -147,7 +146,6 @@ class _PowerVerificationPageState extends State<PowerVerificationPage> {
           child: Padding(
             padding: const EdgeInsets.only(
               left: UiConfig.defaultPaddingSpacing * 3,
-              top: UiConfig.lineGap,
               bottom: UiConfig.lineGap,
             ),
             child: Column(
@@ -157,7 +155,6 @@ class _PowerVerificationPageState extends State<PowerVerificationPage> {
                   visible: powerVerification.additionalReq,
                   child: Column(
                     children: [
-                      const SizedBox(height: UiConfig.lineSpacing),
                       Row(
                         children: <Widget>[
                           TitleRequiredText(
@@ -203,10 +200,10 @@ class _PowerVerificationPageState extends State<PowerVerificationPage> {
                           ),
                         ],
                       ),
+                      const SizedBox(height: UiConfig.lineSpacing),
                     ],
                   ),
                 ),
-                const SizedBox(height: UiConfig.lineSpacing),
                 Row(
                   children: <Widget>[
                     TitleRequiredText(
@@ -225,6 +222,12 @@ class _PowerVerificationPageState extends State<PowerVerificationPage> {
                       fileName,
                       UtilFunctions.getPowverVacationDsrPath(widget.companyId,
                           DataSubjectRightImageType.powerVerifications),
+                      powerVerification.id,
+                    );
+                  },
+                  onRemoved: () {
+                    final cubit = context.read<FormDataSubjectRightCubit>();
+                    cubit.removePowerVerificationFile(
                       powerVerification.id,
                     );
                   },

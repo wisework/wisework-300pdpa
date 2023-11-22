@@ -176,4 +176,56 @@ class FormDataSubjectRightCubit extends Cubit<FormDataSubjectRightState> {
       },
     );
   }
+
+  Future<void> removeIdentityProofingFile(
+    String identityProofingId,
+  ) async {
+    DataSubjectRightModel dataSubjectRight = state.dataSubjectRight;
+    List<RequesterVerificationModel> requesterVerification = [];
+
+    for (RequesterVerificationModel form
+        in dataSubjectRight.identityVerifications) {
+      if (form.id == identityProofingId) {
+        requesterVerification.add(
+          form.copyWith(imageUrl: ''),
+        );
+      } else {
+        requesterVerification.add(form);
+      }
+    }
+
+    emit(
+      state.copyWith(
+        dataSubjectRight: dataSubjectRight.copyWith(
+          identityVerifications: requesterVerification,
+        ),
+      ),
+    );
+  }
+
+  Future<void> removePowerVerificationFile(
+    String powerVerificationId,
+  ) async {
+    DataSubjectRightModel dataSubjectRight = state.dataSubjectRight;
+    List<RequesterVerificationModel> requesterVerification = [];
+
+    for (RequesterVerificationModel form
+        in dataSubjectRight.powerVerifications) {
+      if (form.id == powerVerificationId) {
+        requesterVerification.add(
+          form.copyWith(imageUrl: ''),
+        );
+      } else {
+        requesterVerification.add(form);
+      }
+    }
+
+    emit(
+      state.copyWith(
+        dataSubjectRight: dataSubjectRight.copyWith(
+          powerVerifications: requesterVerification,
+        ),
+      ),
+    );
+  }
 }

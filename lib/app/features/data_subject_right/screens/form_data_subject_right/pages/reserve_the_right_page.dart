@@ -26,12 +26,11 @@ class _ReserveTheRightPageState extends State<ReserveTheRightPage> {
               crossAxisAlignment: CrossAxisAlignment.start,
               mainAxisAlignment: MainAxisAlignment.start,
               children: <Widget>[
-                const SizedBox(height: UiConfig.lineSpacing),
                 Text(
                   'ข้อสงวนสิทธิของผู้ควบคุมข้อมูล', //!
                   style: Theme.of(context)
                       .textTheme
-                      .titleMedium
+                      .titleLarge
                       ?.copyWith(color: Theme.of(context).colorScheme.primary),
                 ),
                 const SizedBox(height: UiConfig.lineSpacing),
@@ -44,7 +43,7 @@ class _ReserveTheRightPageState extends State<ReserveTheRightPage> {
                         "เกี่ยวข้องบริษัทอาจจำเป็นต้องปฏิเสธคำร้องขอของท่าน "
                         "ในบางกรณี ซึ่งรวมถึงแต่ไม่จำกัดเพียงกรณีดังต่อไปนี้", //!
                         textAlign: TextAlign.left,
-                        style: Theme.of(context).textTheme.bodySmall?.copyWith(
+                        style: Theme.of(context).textTheme.bodyMedium?.copyWith(
                             color: Theme.of(context).colorScheme.onSurface),
                       ),
                     ),

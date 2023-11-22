@@ -173,7 +173,8 @@ class _FormDataSubjectRightViewState extends State<FormDataSubjectRightView> {
                               ),
                     ),
                     onPressed: () {
-                      if (dataSubjectRight.isDataOwner == true) {
+                      if (dataSubjectRight.isDataOwner == true &&
+                          currentPage == 4) {
                         context
                             .read<FormDataSubjectRightCubit>()
                             .previousPage(1);
@@ -207,7 +208,8 @@ class _FormDataSubjectRightViewState extends State<FormDataSubjectRightView> {
                       ),
                       onPressed: () {
                         if (currentPage != 7) {
-                          if (dataSubjectRight.isDataOwner == true) {
+                          if (dataSubjectRight.isDataOwner == true &&
+                              currentPage == 1) {
                             context
                                 .read<FormDataSubjectRightCubit>()
                                 .nextPage(4);

@@ -114,7 +114,7 @@ class _UploadFileFieldState extends State<UploadFileField> {
                       extension,
                       style: Theme.of(context)
                           .textTheme
-                          .titleMedium
+                          .displayLarge
                           ?.copyWith(color: Colors.white),
                     ),
                   ),
@@ -126,6 +126,7 @@ class _UploadFileFieldState extends State<UploadFileField> {
             top: 4.0,
             right: 4.0,
             child: MaterialInkWell(
+              backgroundColor: Colors.white,
               borderRadius: BorderRadius.circular(11.0),
               onTap: widget.onRemoved!,
               child: Padding(

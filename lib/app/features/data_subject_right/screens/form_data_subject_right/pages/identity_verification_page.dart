@@ -51,7 +51,6 @@ class _IdentityVerificationPageState extends State<IdentityVerificationPage> {
               crossAxisAlignment: CrossAxisAlignment.start,
               mainAxisAlignment: MainAxisAlignment.start,
               children: [
-                const SizedBox(height: UiConfig.lineSpacing),
                 Text(
                   'เอกสารพิสูจน์ตัวตนและพิสูจน์ถิ่นที่อยู่เจ้าของข้อมูล', //!
                   textAlign: TextAlign.left,
@@ -64,7 +63,7 @@ class _IdentityVerificationPageState extends State<IdentityVerificationPage> {
                 Text(
                   'ข้าพเจ้าได้แนบเอกสารดังต่อไปนี้เพื่อการตรวจสอบตัวตน', //!
                   textAlign: TextAlign.left,
-                  style: Theme.of(context).textTheme.bodySmall?.copyWith(
+                  style: Theme.of(context).textTheme.bodyMedium?.copyWith(
                       color: Theme.of(context).colorScheme.onSurface),
                 ),
                 const SizedBox(height: UiConfig.lineSpacing),
@@ -139,7 +138,6 @@ class _IdentityVerificationPageState extends State<IdentityVerificationPage> {
           child: Padding(
             padding: const EdgeInsets.only(
               left: UiConfig.defaultPaddingSpacing * 3,
-              top: UiConfig.lineGap,
               bottom: UiConfig.lineGap,
             ),
             child: Column(
@@ -149,7 +147,6 @@ class _IdentityVerificationPageState extends State<IdentityVerificationPage> {
                   visible: powerVerification.additionalReq,
                   child: Column(
                     children: [
-                      const SizedBox(height: UiConfig.lineSpacing),
                       Row(
                         children: <Widget>[
                           TitleRequiredText(
@@ -195,10 +192,10 @@ class _IdentityVerificationPageState extends State<IdentityVerificationPage> {
                           ),
                         ],
                       ),
+                      const SizedBox(height: UiConfig.lineSpacing),
                     ],
                   ),
                 ),
-                const SizedBox(height: UiConfig.lineSpacing),
                 Row(
                   children: <Widget>[
                     TitleRequiredText(
@@ -218,6 +215,12 @@ class _IdentityVerificationPageState extends State<IdentityVerificationPage> {
                       fileName,
                       UtilFunctions.getPowverVacationDsrPath(widget.companyId,
                           DataSubjectRightImageType.identityVerifications),
+                      powerVerification.id,
+                    );
+                  },
+                  onRemoved: () {
+                    final cubit = context.read<FormDataSubjectRightCubit>();
+                    cubit.removeIdentityProofingFile(
                       powerVerification.id,
                     );
                   },
