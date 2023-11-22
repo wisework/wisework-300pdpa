@@ -78,6 +78,7 @@ class DataSubjectRightCard extends StatelessWidget {
                     flex: 1,
                     child: DataSubjectRightStatus(
                       status: UtilFunctions.getProcessRequestStatus(
+                        dataSubjectRight,
                         processRequest,
                       ),
                     ),

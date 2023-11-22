@@ -282,7 +282,7 @@ class _DataSubjectRightViewState extends State<DataSubjectRightView> {
                     text: 'ชื่อ - นามสกุล',
                   ),
                 ],
-                text: 'กานต์ ขุนทิพย์',
+                text: 'เหมียว เหมียว',
                 priority: 1,
               ),
               RequesterInputModel(
@@ -291,7 +291,7 @@ class _DataSubjectRightViewState extends State<DataSubjectRightView> {
                   LocalizedModel(language: 'en-US', text: 'Address'),
                   LocalizedModel(language: 'th-TH', text: 'ที่อยู่'),
                 ],
-                text: 'ปากช่องซิตี้',
+                text: 'โคราชซิตี้',
                 priority: 2,
               ),
               RequesterInputModel(
@@ -300,7 +300,7 @@ class _DataSubjectRightViewState extends State<DataSubjectRightView> {
                   LocalizedModel(language: 'en-US', text: 'Email'),
                   LocalizedModel(language: 'th-TH', text: 'อีเมล'),
                 ],
-                text: 'khunthip.city@gmail.com',
+                text: 'Sage.Online2000@gmail.com',
                 priority: 3,
               ),
               RequesterInputModel(
@@ -315,7 +315,7 @@ class _DataSubjectRightViewState extends State<DataSubjectRightView> {
                     text: 'หมายเลขโทรศัพท์',
                   ),
                 ],
-                text: '0981234567',
+                text: '0612345678',
                 priority: 4,
               ),
             ],
@@ -389,7 +389,7 @@ class _DataSubjectRightViewState extends State<DataSubjectRightView> {
                 id: 'DSR-PR-001',
                 personalData: 'รูปโปรไฟล์',
                 foundSource: 'www.mock-web.co.th/info',
-                requestType: 'DSR-REQ-001',
+                requestType: 'DSR-REQ-002',
                 requestAction: 'DSR-REA-001',
                 reasonTypes: [
                   UserInputText(id: 'DSR-RES-002', text: ''),
@@ -410,7 +410,7 @@ class _DataSubjectRightViewState extends State<DataSubjectRightView> {
                 id: 'DSR-PR-002',
                 personalData: 'ข้อมูลส่วนตัว',
                 foundSource: 'www.mock-web.co.th/news',
-                requestType: 'DSR-REQ-005',
+                requestType: 'DSR-REQ-003',
                 requestAction: 'DSR-REA-001',
                 reasonTypes: [
                   UserInputText(id: 'DSR-RES-002', text: ''),
@@ -428,9 +428,9 @@ class _DataSubjectRightViewState extends State<DataSubjectRightView> {
             verifyFormStatus: RequestResultStatus.none,
             rejectVerifyReason: '',
             lastSeenBy: '',
-            createdBy: 'khunthip.city@gmail.com',
+            createdBy: 'Sage.Online2000@gmail.com',
             createdDate: now,
-            updatedBy: 'khunthip.city@gmail.com',
+            updatedBy: 'Sage.Online2000@gmail.com',
             updatedDate: now,
           );
           final repository = DataSubjectRightRepository(
