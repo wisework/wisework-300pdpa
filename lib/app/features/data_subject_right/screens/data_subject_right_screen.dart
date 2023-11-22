@@ -5,7 +5,6 @@ import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
 import 'package:ionicons/ionicons.dart';
-import 'package:modal_bottom_sheet/modal_bottom_sheet.dart';
 import 'package:pdpa/app/config/config.dart';
 import 'package:pdpa/app/data/models/data_subject_right/data_subject_right_model.dart';
 import 'package:pdpa/app/data/models/data_subject_right/process_request_model.dart';
@@ -19,7 +18,6 @@ import 'package:pdpa/app/features/authentication/bloc/sign_in/sign_in_bloc.dart'
 import 'package:pdpa/app/features/data_subject_right/bloc/data_subject_right/data_subject_right_bloc.dart';
 import 'package:pdpa/app/features/data_subject_right/routes/data_subject_right_route.dart';
 import 'package:pdpa/app/features/data_subject_right/widgets/data_subject_right_card.dart';
-import 'package:pdpa/app/features/data_subject_right/widgets/search_data_subject_right_modal.dart';
 import 'package:pdpa/app/services/apis/data_subject_right_api.dart';
 import 'package:pdpa/app/shared/drawers/pdpa_drawer.dart';
 import 'package:pdpa/app/shared/utils/constants.dart';
@@ -94,31 +92,51 @@ class DataSubjectRightView extends StatefulWidget {
 
 class _DataSubjectRightViewState extends State<DataSubjectRightView> {
   final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
-  void _openSeachConsentFormModal() {
-    final bloc = context.read<DataSubjectRightBloc>();
-
-    List<DataSubjectRightModel> dataSubjectRights = [];
-    List<RequestTypeModel> requestTypes = [];
-    if (bloc.state is GotDataSubjectRights) {
-      dataSubjectRights =
-          (bloc.state as GotDataSubjectRights).dataSubjectRights;
-      requestTypes = (bloc.state as GotDataSubjectRights).requestTypes;
-    }
-
-    showBarModalBottomSheet(
-      context: context,
-      backgroundColor: Colors.transparent,
-      builder: (context) => SearchDataSubjectRightModal(
-        initialDataSubjectRights: dataSubjectRights,
-        initialRequestTypes: requestTypes,
-        language: widget.language,
-      ),
-    );
-  }
   final qrCodeKey = GlobalKey();
 
   @override
   Widget build(BuildContext context) {
+    final datasubject = [
+      DataSubjectRightModel.empty().copyWith(
+        id: '1',
+        dataRequester: [
+          const RequesterInputModel(
+            id: '1',
+            title: [
+              LocalizedModel(language: 'th-TH', text: 'title1'),
+            ],
+            text: 'text',
+            priority: 1,
+          )
+        ],
+      ),
+      DataSubjectRightModel.empty().copyWith(
+        id: '2',
+        dataRequester: [
+          const RequesterInputModel(
+            id: '2',
+            title: [
+              LocalizedModel(language: 'th-TH', text: 'title2'),
+            ],
+            text: 'text',
+            priority: 1,
+          )
+        ],
+      ),
+      DataSubjectRightModel.empty().copyWith(
+        id: '3',
+        dataRequester: [
+          const RequesterInputModel(
+            id: '3',
+            title: [
+              LocalizedModel(language: 'th-TH', text: 'title3'),
+            ],
+            text: 'text',
+            priority: 1,
+          )
+        ],
+      ),
+    ];
     return Scaffold(
       key: _scaffoldKey,
       appBar: PdpaAppBar(
@@ -138,6 +156,7 @@ class _DataSubjectRightViewState extends State<DataSubjectRightView> {
           CustomIconButton(
             onPressed: () {
               showModalBottomSheet(
+                backgroundColor: Colors.transparent,
                 context: context,
                 builder: (context) => Padding(
                   padding: const EdgeInsets.only(top: 20.0),
@@ -154,7 +173,7 @@ class _DataSubjectRightViewState extends State<DataSubjectRightView> {
             backgroundColor: Theme.of(context).colorScheme.onBackground,
           ),
           CustomIconButton(
-            onPressed: _openSeachConsentFormModal,
+            onPressed: () {},
             icon: Ionicons.search_outline,
             iconColor: Theme.of(context).colorScheme.primary,
             backgroundColor: Theme.of(context).colorScheme.onBackground,
@@ -326,7 +345,7 @@ class _DataSubjectRightViewState extends State<DataSubjectRightView> {
                     text: 'ชื่อ - นามสกุล',
                   ),
                 ],
-                text: 'เหมียว เหมียว',
+                text: 'กานต์ ขุนทิพย์',
                 priority: 1,
               ),
               RequesterInputModel(
@@ -335,7 +354,7 @@ class _DataSubjectRightViewState extends State<DataSubjectRightView> {
                   LocalizedModel(language: 'en-US', text: 'Address'),
                   LocalizedModel(language: 'th-TH', text: 'ที่อยู่'),
                 ],
-                text: 'โคราชซิตี้',
+                text: 'ปากช่องซิตี้',
                 priority: 2,
               ),
               RequesterInputModel(
@@ -344,7 +363,7 @@ class _DataSubjectRightViewState extends State<DataSubjectRightView> {
                   LocalizedModel(language: 'en-US', text: 'Email'),
                   LocalizedModel(language: 'th-TH', text: 'อีเมล'),
                 ],
-                text: 'Sage.Online2000@gmail.com',
+                text: 'khunthip.city@gmail.com',
                 priority: 3,
               ),
               RequesterInputModel(
@@ -359,7 +378,7 @@ class _DataSubjectRightViewState extends State<DataSubjectRightView> {
                     text: 'หมายเลขโทรศัพท์',
                   ),
                 ],
-                text: '0612345678',
+                text: '0981234567',
                 priority: 4,
               ),
             ],
@@ -433,7 +452,7 @@ class _DataSubjectRightViewState extends State<DataSubjectRightView> {
                 id: 'DSR-PR-001',
                 personalData: 'รูปโปรไฟล์',
                 foundSource: 'www.mock-web.co.th/info',
-                requestType: 'DSR-REQ-002',
+                requestType: 'DSR-REQ-001',
                 requestAction: 'DSR-REA-001',
                 reasonTypes: [
                   UserInputText(id: 'DSR-RES-002', text: ''),
@@ -454,7 +473,7 @@ class _DataSubjectRightViewState extends State<DataSubjectRightView> {
                 id: 'DSR-PR-002',
                 personalData: 'ข้อมูลส่วนตัว',
                 foundSource: 'www.mock-web.co.th/news',
-                requestType: 'DSR-REQ-003',
+                requestType: 'DSR-REQ-005',
                 requestAction: 'DSR-REA-001',
                 reasonTypes: [
                   UserInputText(id: 'DSR-RES-002', text: ''),
@@ -472,9 +491,9 @@ class _DataSubjectRightViewState extends State<DataSubjectRightView> {
             verifyFormStatus: RequestResultStatus.none,
             rejectVerifyReason: '',
             lastSeenBy: '',
-            createdBy: 'Sage.Online2000@gmail.com',
+            createdBy: 'khunthip.city@gmail.com',
             createdDate: now,
-            updatedBy: 'Sage.Online2000@gmail.com',
+            updatedBy: 'khunthip.city@gmail.com',
             updatedDate: now,
           );
           final repository = DataSubjectRightRepository(
