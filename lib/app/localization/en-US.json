@@ -451,11 +451,23 @@
             "listRequests": "List of permission requests",
             "filter": {
                 "all": "All",
-                "recents": "Recents",
-                "duesoon": "Due soon"
+                "recents": "Recents"
             }
         },
         "editDataSubjectRight": {
+            "title1": "Details of data subject rights request",
+            "conductAninspection": "Conduct an inspection",
+            "detail": "Details of data subject rights request under the Personal Information Protection Act",
+            "ApplicantInformation": "Applicant's information",
+            "title2": "Are you the owner of the information?",
+            "applicantDs": "The applicant is the same person as the owner of the information.",
+            "ApplicantAds": "The applicant is the representative of the data owner.",
+            "title3": "Data owner details",
+            "title4": "I would like to submit a request for the following purposes.",
+            "personalInformation": "Personal information",
+            "place": "Place of encounte",
+            "operation": "Operation",
+            "reasonsRequest": "Reason request",
             "createSuccess": "Create successfully",
             "updateSuccess": "Update successfully"
         },
