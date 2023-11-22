@@ -26,8 +26,8 @@ import 'package:pdpa/app/shared/utils/constants.dart';
 import 'package:pdpa/app/shared/utils/functions.dart';
 import 'package:pdpa/app/shared/utils/toast.dart';
 import 'package:pdpa/app/shared/widgets/content_wrapper.dart';
-import 'package:pdpa/app/shared/widgets/customs/custom_button.dart';
 import 'package:pdpa/app/shared/widgets/customs/custom_container.dart';
+import 'package:pdpa/app/shared/widgets/customs/custom_dropdown_button.dart';
 import 'package:pdpa/app/shared/widgets/customs/custom_icon_button.dart';
 import 'package:pdpa/app/shared/widgets/customs/custom_text_field.dart';
 import 'package:pdpa/app/shared/widgets/loading_indicator.dart';
@@ -116,7 +116,25 @@ class _DataSubjectRightViewState extends State<DataSubjectRightView> {
       ),
     );
   }
+
   final qrCodeKey = GlobalKey();
+  String _selectedChoice = 'ทั้งหมด';
+
+  // List of choices
+  final List<String> _choices = [
+    'ทั้งหมด',
+    'ยังไม่ดำเนินการ',
+    'กำลังดำเนินการ',
+    'ดำเนินการเสร็จสิ้น',
+    'ปฏิเสธการดำเนินการ'
+  ];
+  void _setPeriodUnit(String? value) {
+    if (value != null) {
+      setState(() {
+        _selectedChoice = value;
+      });
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -144,8 +162,8 @@ class _DataSubjectRightViewState extends State<DataSubjectRightView> {
                   padding: const EdgeInsets.only(top: 20.0),
                   child: SingleChildScrollView(
                     child: CustomContainer(
-              child: _buildShareConsentForm(context),
-            ),
+                      child: _buildShareConsentForm(context),
+                    ),
                   ),
                 ),
               );
@@ -244,31 +262,25 @@ class _DataSubjectRightViewState extends State<DataSubjectRightView> {
                     maxLines: 1,
                   ),
                 ),
-                CustomButton(
-                  padding: const EdgeInsets.symmetric(
-                    vertical: 2.0,
-                    horizontal: 8.0,
-                  ),
-                  onPressed: () {
-                    // _sortConsentForms(!_sortAscending);
-                  },
-                  buttonType: CustomButtonType.text,
-                  child: Row(
-                    mainAxisSize: MainAxisSize.min,
-                    children: <Widget>[
-                      Text(
-                        'ทั้งหมด',
-                        style: Theme.of(context).textTheme.titleMedium,
-                      ),
-                      const SizedBox(width: 2.0),
-                      Icon(
-                        Icons.arrow_drop_down,
-                        size: 20.0,
-                        color: Theme.of(context).colorScheme.onSurface,
-                      ),
-                    ],
+                SizedBox(
+                  width: 200,
+                  child: CustomDropdownButton<String>(
+                    value: _selectedChoice,
+                    items: _choices.map(
+                      (unit) {
+                        return DropdownMenuItem(
+                          value: unit,
+                          child: Text(
+                            unit,
+                            style: Theme.of(context).textTheme.bodyMedium,
+                          ),
+                        );
+                      },
+                    ).toList(),
+                    onSelected: _setPeriodUnit,
                   ),
                 ),
+              
               ],
             ),
           ),
@@ -517,33 +529,32 @@ class _DataSubjectRightViewState extends State<DataSubjectRightView> {
 
   Column _buildShareConsentForm(BuildContext context) {
     return Column(
-      
       crossAxisAlignment: CrossAxisAlignment.start,
       children: <Widget>[
         Align(
-            alignment: Alignment.topRight,
-            child: MaterialInkWell(
-              borderRadius: BorderRadius.circular(13.0),
-              backgroundColor:
-                  Theme.of(context).colorScheme.outlineVariant.withOpacity(0.4),
-              onTap: () async {
-                Navigator.of(context).pop();
-              },
-              child: Padding(
-                padding: const EdgeInsets.only(
-                  left: 2.0,
-                  top: 1.0,
-                  right: 2.0,
-                  bottom: 3.0,
-                ),
-                child: Icon(
-                  Ionicons.close_outline,
-                  size: 16.0,
-                  color: Theme.of(context).colorScheme.onPrimary,
-                ),
+          alignment: Alignment.topRight,
+          child: MaterialInkWell(
+            borderRadius: BorderRadius.circular(13.0),
+            backgroundColor:
+                Theme.of(context).colorScheme.outlineVariant.withOpacity(0.4),
+            onTap: () async {
+              Navigator.of(context).pop();
+            },
+            child: Padding(
+              padding: const EdgeInsets.only(
+                left: 2.0,
+                top: 1.0,
+                right: 2.0,
+                bottom: 3.0,
+              ),
+              child: Icon(
+                Ionicons.close_outline,
+                size: 16.0,
+                color: Theme.of(context).colorScheme.onPrimary,
               ),
             ),
           ),
+        ),
         Padding(
           padding: const EdgeInsets.all(UiConfig.textLineSpacing),
           child: Text(

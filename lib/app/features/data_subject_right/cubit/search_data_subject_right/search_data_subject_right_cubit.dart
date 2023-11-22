@@ -3,10 +3,8 @@ import 'package:bloc/bloc.dart';
 import 'package:equatable/equatable.dart';
 import 'package:pdpa/app/data/models/data_subject_right/data_subject_right_model.dart';
 import 'package:pdpa/app/data/models/data_subject_right/process_request_model.dart';
-import 'package:pdpa/app/data/models/data_subject_right/requester_input_model.dart';
 import 'package:pdpa/app/data/models/master_data/localized_model.dart';
 import 'package:pdpa/app/data/models/master_data/request_type_model.dart';
-import 'package:pdpa/app/shared/utils/functions.dart';
 
 part 'search_data_subject_right_state.dart';
 
@@ -16,6 +14,7 @@ class SearchDataSubjectRightCubit extends Cubit<SearchDataSubjectRightState> {
           initialDataSubjectRightForms: [],
           dataSubjectRightForms: [],
           requestTypes: [],
+          processRequests: [],
         ));
 
   void initialDataSubjectRight(
@@ -38,6 +37,7 @@ class SearchDataSubjectRightCubit extends Cubit<SearchDataSubjectRightState> {
       return;
     }
     List<DataSubjectRightModel> searchResult = [];
+    List<Map<String, ProcessRequestModel>> processRequests = [];
 
     searchResult = state.dataSubjectRightForms.where((dataSubjectRight) {
       if (dataSubjectRight.dataRequester.isNotEmpty) {
@@ -46,25 +46,6 @@ class SearchDataSubjectRightCubit extends Cubit<SearchDataSubjectRightState> {
             .text;
 
         if (title.contains(search)) return true;
-        // for (ProcessRequestModel request in dataSubjectRight.processRequests) {
-        //   final title = request.requestType;
-
-        //   final description = state.requestTypes
-        //       .firstWhere(
-        //         (item) => item.id == title,
-        //       )
-        //       .description;
-
-        //   final text = description
-        //       .firstWhere(
-        //         (item) => item.language == language,
-        //         orElse: () => const LocalizedModel.empty(),
-        //       )
-        //       .text;
-        //   print(search);
-        //   print(text);
-        //   if (text.contains(search)) return true;
-        // }
       }
 
       return false;
@@ -72,15 +53,9 @@ class SearchDataSubjectRightCubit extends Cubit<SearchDataSubjectRightState> {
 
     final searchAtRequester =
         state.dataSubjectRightForms.where((dataSubjectRight) {
-      // for (DataSubjectRightModel dataSubjectRight
-      //     in state.dataSubjectRightForms) {
-      //   final title = dataSubjectRight.dataRequester
-      //       .firstWhere((text) => text.priority == 1)
-      //       .text;
-
-      //   if (title.contains(search)) return true;
-      // }
       for (ProcessRequestModel request in dataSubjectRight.processRequests) {
+        processRequests.add({dataSubjectRight.id: request});
+
         final title = request.requestType;
 
         final description = state.requestTypes
@@ -95,8 +70,7 @@ class SearchDataSubjectRightCubit extends Cubit<SearchDataSubjectRightState> {
               orElse: () => const LocalizedModel.empty(),
             )
             .text;
-        print(search);
-        print(text);
+
         if (text.contains(search)) return true;
       }
       return false;
@@ -109,13 +83,12 @@ class SearchDataSubjectRightCubit extends Cubit<SearchDataSubjectRightState> {
         searchResult.add(dataSubjectRight);
       }
     }
-    print(searchResult);
-    print(searchAtRequester);
+    print(processRequests);
     emit(
       state.copyWith(
-        dataSubjectRightForms: searchResult
-          ..sort(((a, b) => b.updatedDate.compareTo(a.updatedDate))),
-      ),
+          dataSubjectRightForms: searchResult
+            ..sort(((a, b) => b.updatedDate.compareTo(a.updatedDate))),
+          processRequests: processRequests),
     );
   }
 }

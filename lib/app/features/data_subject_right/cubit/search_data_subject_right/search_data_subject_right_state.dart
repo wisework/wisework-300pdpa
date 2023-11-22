@@ -5,16 +5,19 @@ class SearchDataSubjectRightState extends Equatable {
     required this.initialDataSubjectRightForms,
     required this.dataSubjectRightForms,
     required this.requestTypes,
+    required this.processRequests,
   });
 
   final List<DataSubjectRightModel> initialDataSubjectRightForms;
   final List<DataSubjectRightModel> dataSubjectRightForms;
+  final List<Map<String, ProcessRequestModel>> processRequests;
   final List<RequestTypeModel> requestTypes;
 
   SearchDataSubjectRightState copyWith({
     List<DataSubjectRightModel>? initialDataSubjectRightForms,
     List<DataSubjectRightModel>? dataSubjectRightForms,
     List<RequestTypeModel>? requestTypes,
+    List<Map<String, ProcessRequestModel>>? processRequests,
   }) {
     return SearchDataSubjectRightState(
       initialDataSubjectRightForms:
@@ -22,6 +25,7 @@ class SearchDataSubjectRightState extends Equatable {
       dataSubjectRightForms:
           dataSubjectRightForms ?? this.dataSubjectRightForms,
       requestTypes: requestTypes ?? this.requestTypes,
+      processRequests: processRequests ?? this.processRequests,
     );
   }
 
@@ -30,5 +34,6 @@ class SearchDataSubjectRightState extends Equatable {
         initialDataSubjectRightForms,
         dataSubjectRightForms,
         requestTypes,
+        processRequests,
       ];
 }
