@@ -3,12 +3,12 @@ part of 'form_data_subject_right_cubit.dart';
 
 class FormDataSubjectRightState extends Equatable {
   const FormDataSubjectRightState({
-    required this.currentPage,
     required this.dataSubjectRight,
+    required this.currentPage,
   });
 
-  final int currentPage;
   final DataSubjectRightModel dataSubjectRight;
+  final int currentPage;
 
   FormDataSubjectRightState copyWith({
     int? currentPage,

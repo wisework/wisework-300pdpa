@@ -7,6 +7,8 @@ import 'package:pdpa/app/config/config.dart';
 import 'package:pdpa/app/data/models/master_data/reason_type_model.dart';
 
 import 'package:pdpa/app/data/models/master_data/request_type_model.dart';
+import 'package:pdpa/app/data/presets/reason_types_preset.dart';
+import 'package:pdpa/app/data/presets/request_types_preset.dart';
 import 'package:pdpa/app/features/data_subject_right/bloc/form_data_sub_ject_right/form_data_sub_ject_right_bloc.dart';
 import 'package:pdpa/app/features/data_subject_right/cubit/form_data_subject_right/form_data_subject_right_cubit.dart';
 import 'package:pdpa/app/features/data_subject_right/screens/form_data_subject_right/pages/acknowledge_page.dart';
@@ -47,7 +49,9 @@ class _FormDataSubjectRightState extends State<FormDataSubjectRight> {
           leadingIcon: _buildPopButton(),
           title: const Text('แบบฟอร์มขอใช้สิทธิ์ตามกฏหมาย'), //!
         ),
-        body: const FormDataSubjectRightView(),
+        body: FormDataSubjectRightView(
+          companyId: widget.companyId,
+        ),
       ),
     );
   }
@@ -65,7 +69,10 @@ class _FormDataSubjectRightState extends State<FormDataSubjectRight> {
 class FormDataSubjectRightView extends StatefulWidget {
   const FormDataSubjectRightView({
     super.key,
+    required this.companyId,
   });
+
+  final String companyId;
 
   @override
   State<FormDataSubjectRightView> createState() =>
@@ -89,8 +96,8 @@ class _FormDataSubjectRightViewState extends State<FormDataSubjectRightView> {
     _controller = PageController(
       initialPage: cubit.state.currentPage,
     );
-    requestType = DefaultMasterData.requestType;
-    reasonType = DefaultMasterData.reasonType;
+    requestType = requestTypesPreset;
+    reasonType = reasonTypesPreset;
   }
 
   @override
@@ -121,7 +128,9 @@ class _FormDataSubjectRightViewState extends State<FormDataSubjectRightView> {
                   currentPage: currentPage,
                 ),
                 const OwnerVerifyPage(),
-                const PowerOfAttorneyPage(),
+                PowerOfAttorneyPage(
+                  companyId: widget.companyId,
+                ),
                 const DataOwnerDetailPage(),
                 const IdentityProofingPage(),
                 RequestReasonPage(

@@ -3,7 +3,10 @@ import 'package:bloc/bloc.dart';
 import 'package:equatable/equatable.dart';
 import 'package:pdpa/app/data/models/data_subject_right/data_subject_right_model.dart';
 import 'package:pdpa/app/data/models/data_subject_right/process_request_model.dart';
+import 'package:pdpa/app/data/models/master_data/request_type_model.dart';
+import 'package:pdpa/app/data/presets/request_types_preset.dart';
 import 'package:pdpa/app/data/repositories/data_subject_right_repository.dart';
+import 'package:pdpa/app/data/repositories/master_data_repository.dart';
 import 'package:pdpa/app/shared/utils/constants.dart';
 
 part 'data_subject_right_event.dart';
@@ -13,13 +16,16 @@ class DataSubjectRightBloc
     extends Bloc<DataSubjectRightEvent, DataSubjectRightState> {
   DataSubjectRightBloc({
     required DataSubjectRightRepository dataSubjectRightRepository,
+    required MasterDataRepository masterDataRepository,
   })  : _dataSubjectRightRepository = dataSubjectRightRepository,
+        _masterDataRepository = masterDataRepository,
         super(const DataSubjectRightInitial()) {
     on<GetDataSubjectRightsEvent>(_getDataSubjectRightsHandler);
     on<UpdateDataSubjectRightsEvent>(_updateDataSubjectRightsHandler);
   }
 
   final DataSubjectRightRepository _dataSubjectRightRepository;
+  final MasterDataRepository _masterDataRepository;
 
   Future<void> _getDataSubjectRightsHandler(
     GetDataSubjectRightsEvent event,
@@ -36,9 +42,11 @@ class DataSubjectRightBloc
       event.companyId,
     );
 
-    result.fold(
-      (failure) => emit(DataSubjectRightError(failure.errorMessage)),
-      (dataSubjectRights) {
+    await result.fold(
+      (failure) {
+        emit(DataSubjectRightError(failure.errorMessage));
+      },
+      (dataSubjectRights) async {
         List<DataSubjectRightModel> updated = [];
 
         for (DataSubjectRightModel from in dataSubjectRights) {
@@ -70,9 +78,19 @@ class DataSubjectRightBloc
           );
         }
 
+        List<RequestTypeModel> gotRequestTypes = requestTypesPreset;
+        final result = await _masterDataRepository.getRequestTypes(
+          event.companyId,
+        );
+        result.fold(
+          (failure) => emit(DataSubjectRightError(failure.errorMessage)),
+          (requestTypes) => gotRequestTypes.addAll(requestTypes),
+        );
+
         emit(
           GotDataSubjectRights(
             updated..sort((a, b) => b.updatedDate.compareTo(a.updatedDate)),
+            gotRequestTypes,
           ),
         );
       },
@@ -86,6 +104,7 @@ class DataSubjectRightBloc
     if (state is GotDataSubjectRights) {
       final dataSubjectRights =
           (state as GotDataSubjectRights).dataSubjectRights;
+      final requestTypes = (state as GotDataSubjectRights).requestTypes;
 
       List<DataSubjectRightModel> updated = [];
 
@@ -113,6 +132,7 @@ class DataSubjectRightBloc
       emit(
         GotDataSubjectRights(
           updated..sort((a, b) => b.updatedDate.compareTo(a.updatedDate)),
+          requestTypes,
         ),
       );
     }

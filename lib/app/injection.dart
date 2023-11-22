@@ -198,6 +198,7 @@ Future<void> _dataSubjectRight() async {
     ..registerFactory(
       () => DataSubjectRightBloc(
         dataSubjectRightRepository: serviceLocator(),
+        masterDataRepository: serviceLocator(),
       ),
     )
     ..registerFactory(
@@ -213,7 +214,9 @@ Future<void> _dataSubjectRight() async {
       ),
     )
     ..registerFactory(
-      () => FormDataSubjectRightCubit(),
+      () => FormDataSubjectRightCubit(
+        generalRepository: serviceLocator(),
+      ),
     )
     ..registerFactory(
       () => UserDataSubjectRightFormBloc(
