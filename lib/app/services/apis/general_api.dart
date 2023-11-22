@@ -3,6 +3,7 @@ import 'dart:io';
 import 'dart:typed_data';
 
 import 'package:firebase_storage/firebase_storage.dart';
+import 'package:flutter/foundation.dart';
 import 'package:http/http.dart' as http;
 import 'package:pdpa/app/config/config.dart';
 import 'package:pdpa/app/shared/utils/typedef.dart';
@@ -36,7 +37,7 @@ class GeneralApi {
     return body['link'];
   }
 
-  Future<String> uploadFile(
+  Future<String> uploadImage(
     File? file,
     Uint8List? data,
     String fileName,
@@ -52,6 +53,17 @@ class GeneralApi {
     }
 
     return await ref.getDownloadURL();
+  }
+
+  Future<String> uploadFile(
+    Uint8List file,
+    String fileName,
+    String filePath,
+  ) async {
+    final storageRef = _storage.ref().child(filePath).child(fileName);
+
+    await storageRef.putData(file);
+    return await storageRef.getDownloadURL();
   }
 
   Future<void> downloadFirebaseStorageFile(String path) async {

@@ -1,5 +1,3 @@
-import 'dart:io';
-
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -36,16 +34,13 @@ class ProcessProofOfAction extends StatefulWidget {
 class _ProcessProofOfActionState extends State<ProcessProofOfAction> {
   final GlobalKey<FormState> _proofFormKey = GlobalKey<FormState>();
 
-  void _onUploadProofOfActionFile(File? file, Uint8List? data, String path) {
+  void _onUploadProofOfActionFile(Uint8List data, String fileName) {
     final cubit = context.read<ProcessDataSubjectRightCubit>();
     final currentUser = cubit.state.currentUser;
 
     cubit.uploadProofOfActionFile(
-      file,
       data,
-      kIsWeb && data != null
-          ? UtilFunctions.getUniqueFileNameByUint8List(data)
-          : UtilFunctions.getUniqueFileName(path),
+      fileName,
       UtilFunctions.getProcessDsrProofPath(
         currentUser.currentCompany,
         widget.dataSubjectRightId,
