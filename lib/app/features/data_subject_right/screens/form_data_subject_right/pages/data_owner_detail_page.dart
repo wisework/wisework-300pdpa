@@ -226,12 +226,9 @@ class _DataOwnerDetailPageState extends State<DataOwnerDetailPage> {
                   Row(
                     children: <Widget>[
                       Text(
-                        tr('dataSubjectRight.dataOwner.dataOwnerDetails'), 
-                        style: Theme.of(context)
-                            .textTheme
-                            .titleMedium
-                            ?.copyWith(
-                                color: Theme.of(context).colorScheme.primary),
+                        'รายละเอียดเจ้าของข้อมูล', //!
+                        style: Theme.of(context).textTheme.titleLarge?.copyWith(
+                            color: Theme.of(context).colorScheme.primary),
                       ),
                     ],
                   ),

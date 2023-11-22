@@ -27,12 +27,11 @@ class _ReserveTheRightPageState extends State<ReserveTheRightPage> {
               crossAxisAlignment: CrossAxisAlignment.start,
               mainAxisAlignment: MainAxisAlignment.start,
               children: <Widget>[
-                const SizedBox(height: UiConfig.lineSpacing),
                 Text(
                   tr('dataSubjectRight.reserveTheRight.title'), 
                   style: Theme.of(context)
                       .textTheme
-                      .titleMedium
+                      .titleLarge
                       ?.copyWith(color: Theme.of(context).colorScheme.primary),
                 ),
                 const SizedBox(height: UiConfig.lineSpacing),
@@ -43,7 +42,7 @@ class _ReserveTheRightPageState extends State<ReserveTheRightPage> {
                       child: Text(
                         tr('dataSubjectRight.reserveTheRight.subtitle'), 
                         textAlign: TextAlign.left,
-                        style: Theme.of(context).textTheme.bodySmall?.copyWith(
+                        style: Theme.of(context).textTheme.bodyMedium?.copyWith(
                             color: Theme.of(context).colorScheme.onSurface),
                       ),
                     ),

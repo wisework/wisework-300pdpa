@@ -254,7 +254,7 @@ class _OwnerVerifyPageState extends State<OwnerVerifyPage> {
             tr('dataSubjectRight.dataRequester.areYouTheDs'),
             style: Theme.of(context)
                 .textTheme
-                .titleMedium
+                .titleLarge
                 ?.copyWith(color: Theme.of(context).colorScheme.primary),
           ),
           DataSubjectRightListTile(
@@ -289,7 +289,7 @@ class _OwnerVerifyPageState extends State<OwnerVerifyPage> {
                 tr('dataSubjectRight.dataRequester.ApplicantInformation'),
                 style: Theme.of(context)
                     .textTheme
-                    .titleMedium
+                    .titleLarge
                     ?.copyWith(color: Theme.of(context).colorScheme.primary),
               ),
             ],

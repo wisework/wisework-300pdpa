@@ -52,11 +52,23 @@ class _AcknowledgePageState extends State<AcknowledgePage> {
                       },
                     ),
                     Expanded(
-                      child: Text(
-                        tr('dataSubjectRight.acknowledge.subtitle'), 
-                        textAlign: TextAlign.left,
-                        style: Theme.of(context).textTheme.bodySmall?.copyWith(
-                            color: Theme.of(context).colorScheme.onSurface),
+                      child: Padding(
+                        padding: const EdgeInsets.only(top: 4.0),
+                        child: Text(
+                          "ข้าพเจ้าได้อ่านและเข้าใจเนื้อหาของคำร้องขอฉบับนี้แล้ว และยืนยันว่าข้อมูลต่าง ๆ "
+                          "ที่ได้แจ้งแก่บริษัทนั้นถูกต้อง ข้าพเจ้าเข้าใจดีว่าการตรวจสอบเพื่อยืนยันอำนาจตัวตน"
+                          "และถิ่นที่อยู่ของข้าพเจ้านั้นเป็นการจำเป็นอย่างยิ่งเพื่อพิจารณาดำเนินการตามสิทธิของข้าพเจ้า"
+                          "หากข้าพเจ้าให้ข้อมูลที่ผิดพลาดด้วยเจตนาทุจริต ข้าพเจ้าอาจถูกดำเนินคดีตามกฎหมายได้ "
+                          "และบริษัทอาจขอข้อมูลเพิ่มเติมจากข้าพเจ้าเพื่อการตรวจสอบดังกล่าว "
+                          "เพื่อให้การดำเนินการตามคำร้องของข้าพเจ้าเป็นไปอย่างถูกต้องครบถ้วนต่อไป", //!
+                          textAlign: TextAlign.left,
+                          style: Theme.of(context)
+                              .textTheme
+                              .bodySmall
+                              ?.copyWith(
+                                  color:
+                                      Theme.of(context).colorScheme.onSurface),
+                        ),
                       ),
                     ),
                   ],

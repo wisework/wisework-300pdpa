@@ -108,7 +108,6 @@ class _RequestReasonPageState extends State<RequestReasonPage> {
               crossAxisAlignment: CrossAxisAlignment.start,
               mainAxisAlignment: MainAxisAlignment.start,
               children: [
-                const SizedBox(height: UiConfig.lineSpacing),
                 Text(
                   tr('dataSubjectRight.requestReason.title'),
                   textAlign: TextAlign.left,
@@ -121,7 +120,7 @@ class _RequestReasonPageState extends State<RequestReasonPage> {
                 Text(
                   tr('dataSubjectRight.requestReason.pleaseSelect'),
                   textAlign: TextAlign.left,
-                  style: Theme.of(context).textTheme.bodySmall?.copyWith(
+                  style: Theme.of(context).textTheme.bodyMedium?.copyWith(
                       color: Theme.of(context).colorScheme.onSurface),
                 ),
                 const SizedBox(height: UiConfig.lineSpacing),
@@ -165,7 +164,6 @@ class _RequestReasonPageState extends State<RequestReasonPage> {
                 },
               ),
             ),
-            const SizedBox(width: UiConfig.actionSpacing),
             Expanded(
               child: Column(
                 mainAxisSize: MainAxisSize.min,
@@ -301,160 +299,98 @@ class _RequestReasonPageState extends State<RequestReasonPage> {
                 .titleMedium
                 ?.copyWith(color: Theme.of(context).colorScheme.primary),
           ),
+          const SizedBox(height: UiConfig.lineSpacing),
           Column(
             children: reasonType
                 .map(
                   (reason) => Padding(
-                    padding: const EdgeInsets.only(
-                      bottom: UiConfig.lineGap,
-                    ),
-                    child: reason.description
-                                .firstWhere(
-                                  (item) => item.language == 'th-TH',
-                                  orElse: () => const LocalizedModel.empty(),
-                                )
-                                .text ==
-                            tr('dataSubjectRight.requestReason.other')
-                        ? Column(
+                      padding: const EdgeInsets.only(
+                        bottom: UiConfig.lineGap,
+                      ),
+                      child: Column(
+                        mainAxisSize: MainAxisSize.min,
+                        children: [
+                          Row(
+                            mainAxisSize: MainAxisSize.min,
+                            mainAxisAlignment: MainAxisAlignment.start,
+                            crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
-                              Row(
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                children: [
-                                  CustomCheckBox(
-                                    value:
-                                        selectReasonTypeIds.contains(reason.id),
-                                    onChanged: (_) {
-                                      _setReasonType(reason);
-                                    },
-                                  ),
-                                  const SizedBox(width: UiConfig.actionSpacing),
-                                  Expanded(
-                                    child: Column(
-                                      mainAxisSize: MainAxisSize.min,
-                                      mainAxisAlignment:
-                                          MainAxisAlignment.center,
-                                      crossAxisAlignment:
-                                          CrossAxisAlignment.start,
-                                      children: <Widget>[
-                                        Padding(
-                                          padding: const EdgeInsets.symmetric(
-                                              vertical: 12.0),
-                                          child: Text(
-                                            reason.description
-                                                .firstWhere(
-                                                  (item) =>
-                                                      item.language == 'th-TH',
-                                                  orElse: () =>
-                                                      const LocalizedModel
-                                                          .empty(),
-                                                )
-                                                .text, 
-                                            style: !selectReasonTypeIds
-                                                    .contains(reason.id)
-                                                ? Theme.of(context)
-                                                    .textTheme
-                                                    .bodyMedium
-                                                    ?.copyWith()
-                                                : Theme.of(context)
-                                                    .textTheme
-                                                    .bodyMedium
-                                                    ?.copyWith(
-                                                        color: Theme.of(context)
-                                                            .colorScheme
-                                                            .primary),
-                                          ),
-                                        ),
-                                        const SizedBox(
-                                            width: UiConfig.textLineSpacing),
-                                        ExpandedContainer(
-                                          expand: isExpanded,
-                                          duration:
-                                              const Duration(milliseconds: 400),
-                                          child: Column(
-                                            crossAxisAlignment:
-                                                CrossAxisAlignment
-                                                    .start, // กำหนดให้ชิดซ้าย
-                                            children: [
-                                               TitleRequiredText(
-                                                text: tr('dataSubjectRight.requestReason.reason'), 
-                                                required: true,
-                                              ),
-                                              CustomTextField(
-                                                hintText: tr('dataSubjectRight.requestReason.hintReason'), 
-                                                controller:
-                                                    identityDataController,
-                                                required: true,
-                                              ),
-                                              const SizedBox(
-                                                  height: UiConfig.lineSpacing),
-                                            ],
-                                          ),
+                              Padding(
+                                padding: const EdgeInsets.only(
+                                  left: 4.0,
+                                  right: UiConfig.actionSpacing,
+                                ),
+                                child: CustomCheckBox(
+                                  value:
+                                      selectReasonTypeIds.contains(reason.id),
+                                  onChanged: (_) {
+                                    _setReasonType(reason);
+                                  },
+                                ),
+                              ),
+                              Expanded(
+                                child: Padding(
+                                  padding: const EdgeInsets.only(top: 4.0),
+                                  child: Text(
+                                    reason.description
+                                        .firstWhere(
+                                          (item) => item.language == 'th-TH',
+                                          orElse: () =>
+                                              const LocalizedModel.empty(),
                                         )
-                                      ],
-                                    ),
+                                        .text, //!
+                                    style:
+                                        !selectReasonTypeIds.contains(reason.id)
+                                            ? Theme.of(context)
+                                                .textTheme
+                                                .bodyMedium
+                                                ?.copyWith()
+                                            : Theme.of(context)
+                                                .textTheme
+                                                .bodyMedium
+                                                ?.copyWith(
+                                                    color: Theme.of(context)
+                                                        .colorScheme
+                                                        .primary),
                                   ),
-                                ],
+                                ),
                               ),
                             ],
-                          )
-                        : _buildCheckBoxTileString(
-                            context,
-                            reason,
                           ),
-                  ),
+                          if (reason.requiredInputReasonText == true)
+                            ExpandedContainer(
+                              expand: selectReasonTypeIds.contains(reason.id),
+                              duration: const Duration(milliseconds: 400),
+                              child: Padding(
+                                padding: const EdgeInsets.only(
+                                  left: UiConfig.defaultPaddingSpacing * 3,
+                                  bottom: UiConfig.lineGap,
+                                ),
+                                child: Column(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: [
+                                    const TitleRequiredText(
+                                      text: 'เหตุผล', //!
+                                      required: true,
+                                    ),
+                                    CustomTextField(
+                                      hintText: 'กรอกเหตุผล', //!
+                                      controller: identityDataController,
+                                      required: true,
+                                    ),
+                                    const SizedBox(
+                                        height: UiConfig.lineSpacing),
+                                  ],
+                                ),
+                              ),
+                            )
+                        ],
+                      )),
                 )
                 .toList(),
           )
         ],
       ),
-    );
-  }
-
-  //? Checkbox List
-  Widget _buildCheckBoxTileString(
-      BuildContext context, ReasonTypeModel reasonType) {
-    final selectReasonTypeIds =
-        selectReasonType.map((category) => category.id).toList();
-    return Column(
-      children: [
-        Row(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            CustomCheckBox(
-              value: selectReasonTypeIds.contains(reasonType.id),
-              onChanged: (_) {
-                _setReasonType(reasonType);
-              },
-            ),
-            const SizedBox(width: UiConfig.actionSpacing),
-            Expanded(
-              child: Column(
-                mainAxisSize: MainAxisSize.min,
-                mainAxisAlignment: MainAxisAlignment.center,
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: <Widget>[
-                  Padding(
-                    padding: const EdgeInsets.symmetric(vertical: 12.0),
-                    child: Text(
-                      reasonType.description
-                          .firstWhere(
-                            (item) => item.language == 'th-TH',
-                            orElse: () => const LocalizedModel.empty(),
-                          )
-                          .text, 
-                      style: !selectReasonTypeIds.contains(reasonType.id)
-                          ? Theme.of(context).textTheme.bodyMedium?.copyWith()
-                          : Theme.of(context).textTheme.bodyMedium?.copyWith(
-                              color: Theme.of(context).colorScheme.primary),
-                    ),
-                  ),
-                  const SizedBox(width: UiConfig.textLineSpacing),
-                ],
-              ),
-            ),
-          ],
-        ),
-      ],
     );
   }
 }
