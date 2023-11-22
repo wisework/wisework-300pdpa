@@ -88,7 +88,7 @@ class _RejectTypeViewState extends State<RejectTypeView> {
           backgroundColor: Theme.of(context).colorScheme.onBackground,
         ),
         title: Text(
-          tr('masterData.dsr.reject.list'),
+          tr('masterData.dsr.rejections.title'),
           style: Theme.of(context).textTheme.titleLarge,
         ),
       ),
@@ -123,28 +123,40 @@ class _RejectTypeViewState extends State<RejectTypeView> {
             return CustomContainer(
               margin: const EdgeInsets.all(UiConfig.lineSpacing),
               child: state.rejectTypes.isNotEmpty
-                  ? ListView.builder(
-                      physics: const NeverScrollableScrollPhysics(),
-                      shrinkWrap: true,
-                      itemCount: state.rejectTypes.length,
-                      itemBuilder: (context, index) {
-                        return _buildItemCard(
-                          context,
-                          rejectType: state.rejectTypes[index],
-                          onUpdated: _onUpdated,
-                          language: language,
-                        );
-                      },
+                  ? Column(
+                      children: [
+                        Text(
+                          tr(
+                        'masterData.dsr.rejections.title2',
+                      ),
+                          style: Theme.of(context).textTheme.titleLarge,
+                        ),
+                        ListView.builder(
+                          physics: const NeverScrollableScrollPhysics(),
+                          shrinkWrap: true,
+                          itemCount: state.rejectTypes.length,
+                          itemBuilder: (context, index) {
+                            return _buildItemCard(
+                              context,
+                              rejectType: state.rejectTypes[index],
+                              onUpdated: _onUpdated,
+                              language: language,
+                            );
+                          },
+                        ),
+                      ],
                     )
                   : ExampleScreen(
                       headderText: tr(
-                        'masterData.cm.RejectType.list',
+                        tr(
+                        'masterData.dsr.rejections.title2',
+                      ),
                       ),
                       buttonText: tr(
-                        'masterData.cm.RejectType.create',
+                        'masterData.dsr.rejections.create',
                       ),
                       descriptionText: tr(
-                        'masterData.cm.RejectType.explain',
+                        'masterData.dsr.rejections.description',
                       ),
                       onPress: () {
                         context.push(MasterDataRoute.createRejectType.path);
@@ -189,27 +201,37 @@ class _RejectTypeViewState extends State<RejectTypeView> {
       child: CustomContainer(
         margin: const EdgeInsets.all(UiConfig.lineSpacing),
         child: rejectTypesPreset.isNotEmpty
-            ? ListView.builder(
-                physics: const NeverScrollableScrollPhysics(),
-                shrinkWrap: true,
-                itemCount: rejectTypesPreset.length,
-                itemBuilder: (context, index) {
-                  return _buildItemCardPreset(
-                    context,
-                    rejectType: rejectTypesPreset[index],
-                    language: language,
-                  );
-                },
+            ? Column(
+                children: [
+                  Text(
+                    tr(
+                  'masterData.dsr.rejections.title1',
+                ),
+                    style: Theme.of(context).textTheme.titleLarge,
+                  ),
+                  ListView.builder(
+                    physics: const NeverScrollableScrollPhysics(),
+                    shrinkWrap: true,
+                    itemCount: rejectTypesPreset.length,
+                    itemBuilder: (context, index) {
+                      return _buildItemCardPreset(
+                        context,
+                        rejectType: rejectTypesPreset[index],
+                        language: language,
+                      );
+                    },
+                  ),
+                ],
               )
             : ExampleScreen(
                 headderText: tr(
-                  'masterData.cm.RejectType.list',
+                  'masterData.dsr.rejections.title1',
                 ),
                 buttonText: tr(
-                  'masterData.cm.RejectType.create',
+                  'masterData.dsr.rejections.create',
                 ),
                 descriptionText: tr(
-                  'masterData.cm.RejectType.explain',
+                  'masterData.dsr.rejections.description',
                 ),
                 onPress: () {
                   context.push(MasterDataRoute.createRejectType.path);

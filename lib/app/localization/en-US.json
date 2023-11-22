@@ -363,8 +363,11 @@
         "dsr": {
             "datasubjectright": "Data Subject Right",
             "request": {
+                "title1": "คำขอขั้นต้น",
+                "title2": "คำขอที่สามารถแก้ไขได้",
                 "title": "Request types",
                 "list": "Requests",
+                "list2": "ตัวเลือกประเภทคำขอ",
                 "create": "Create request type",
                 "edit": "Edit request type",
                 "requestcode": "Request code",
@@ -373,6 +376,8 @@
                 "descriptionHint": "Request description"
             },
             "rejections": {
+                "title1": "การปฏิเสธคำร้องขอขั้นต้น",
+                "title2": "การปฏิเสธคำร้องขอที่สามารถแก้ไขได้",
                 "title": "Reject type",
                 "list": "Rejections",
                 "create": "Create teject type",
@@ -383,6 +388,8 @@
                 "descriptionHint": "Reject description"
             },
             "reason": {
+                "title1": "ประเภทของเหตุผลขั้นต้น",
+                "title2": "ประเภทของเหตุผลที่สามารถแก้ไขได้",
                 "title": "Reason type",
                 "list": "Reasons",
                 "create": "Create reason type",

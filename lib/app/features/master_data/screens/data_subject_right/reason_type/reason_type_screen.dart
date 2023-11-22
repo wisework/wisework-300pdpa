@@ -123,28 +123,36 @@ class _ReasonTypeViewState extends State<ReasonTypeView> {
             return CustomContainer(
               margin: const EdgeInsets.all(UiConfig.lineSpacing),
               child: state.reasonTypes.isNotEmpty
-                  ? ListView.builder(
-                      physics: const NeverScrollableScrollPhysics(),
-                      shrinkWrap: true,
-                      itemCount: state.reasonTypes.length,
-                      itemBuilder: (context, index) {
-                        return _buildItemCard(
-                          context,
-                          reasonType: state.reasonTypes[index],
-                          onUpdated: _onUpdated,
-                          language: language,
-                        );
-                      },
+                  ? Column(
+                      children: [
+                        Text(
+                          tr('masterData.dsr.reason.title2'),
+                          style: Theme.of(context).textTheme.titleLarge,
+                        ),
+                        ListView.builder(
+                          physics: const NeverScrollableScrollPhysics(),
+                          shrinkWrap: true,
+                          itemCount: state.reasonTypes.length,
+                          itemBuilder: (context, index) {
+                            return _buildItemCard(
+                              context,
+                              reasonType: state.reasonTypes[index],
+                              onUpdated: _onUpdated,
+                              language: language,
+                            );
+                          },
+                        ),
+                      ],
                     )
                   : ExampleScreen(
                       headderText: tr(
-                        'masterData.cm.ReasonType.list',
+                        tr('masterData.dsr.reason.title2'),
                       ),
                       buttonText: tr(
-                        'masterData.cm.ReasonType.create',
+                        'masterData.dsr.reason.create',
                       ),
                       descriptionText: tr(
-                        'masterData.cm.ReasonType.explain',
+                        'masterData.dsr.reason.descriptionHint',
                       ),
                       onPress: () {
                         context.push(MasterDataRoute.createReasonType.path);
@@ -189,27 +197,35 @@ class _ReasonTypeViewState extends State<ReasonTypeView> {
       child: CustomContainer(
         margin: const EdgeInsets.all(UiConfig.lineSpacing),
         child: reasonTypesPreset.isNotEmpty
-            ? ListView.builder(
-                physics: const NeverScrollableScrollPhysics(),
-                shrinkWrap: true,
-                itemCount: reasonTypesPreset.length,
-                itemBuilder: (context, index) {
-                  return _buildItemCardPreset(
-                    context,
-                    reasonType: reasonTypesPreset[index],
-                    language: language,
-                  );
-                },
+            ? Column(
+                children: [
+                  Text(
+                    tr('masterData.dsr.reason.title1'),
+                    style: Theme.of(context).textTheme.titleLarge,
+                  ),
+                  ListView.builder(
+                    physics: const NeverScrollableScrollPhysics(),
+                    shrinkWrap: true,
+                    itemCount: reasonTypesPreset.length,
+                    itemBuilder: (context, index) {
+                      return _buildItemCardPreset(
+                        context,
+                        reasonType: reasonTypesPreset[index],
+                        language: language,
+                      );
+                    },
+                  ),
+                ],
               )
             : ExampleScreen(
                 headderText: tr(
-                  'masterData.cm.ReasonType.list',
+                  'masterData.dsr.reason.title1',
                 ),
                 buttonText: tr(
-                  'masterData.cm.ReasonType.create',
+                  'masterData.dsr.reason.create',
                 ),
                 descriptionText: tr(
-                  'masterData.cm.ReasonType.explain',
+                  'masterData.dsr.reason.description',
                 ),
                 onPress: () {
                   context.push(MasterDataRoute.createReasonType.path);
