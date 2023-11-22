@@ -2,6 +2,7 @@ import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:pdpa/app/config/config.dart';
+import 'package:pdpa/app/data/models/data_subject_right/data_subject_right_model.dart';
 import 'package:pdpa/app/data/models/data_subject_right/process_request_model.dart';
 import 'package:pdpa/app/data/models/master_data/localized_model.dart';
 import 'package:pdpa/app/data/models/master_data/reason_type_model.dart';
@@ -113,7 +114,7 @@ class _ConsiderRequestStepState extends State<ConsiderRequestStep> {
                       ? requestSelectedKey
                       : null,
                   index: index + 1,
-                  dataSubjectRightId: state.dataSubjectRight.id,
+                  dataSubjectRight: state.dataSubjectRight,
                   processRequest: processRequest,
                   initialProcessRequest: initialProcessRequest,
                   expanded: state.requestExpanded.contains(processRequest.id),
@@ -135,7 +136,7 @@ class _ConsiderRequestStepState extends State<ConsiderRequestStep> {
     BuildContext context, {
     Key? key,
     required int index,
-    required String dataSubjectRightId,
+    required DataSubjectRightModel dataSubjectRight,
     required ProcessRequestModel processRequest,
     required ProcessRequestModel initialProcessRequest,
     bool expanded = false,
@@ -181,6 +182,7 @@ class _ConsiderRequestStepState extends State<ConsiderRequestStep> {
           ),
           _buildProcessRequestStatus(
             context,
+            dataSubjectRight: dataSubjectRight,
             processRequest: processRequest,
           ),
           ExpandedContainer(
@@ -204,6 +206,8 @@ class _ConsiderRequestStepState extends State<ConsiderRequestStep> {
                   ProcessConsiderRequest(
                     processRequest: processRequest,
                     initialProcessRequest: initialProcessRequest,
+                    requestTypes: widget.requestTypes,
+                    language: widget.language,
                   ),
                   ExpandedContainer(
                     expand: initialProcessRequest.considerRequestStatus ==
@@ -214,9 +218,11 @@ class _ConsiderRequestStepState extends State<ConsiderRequestStep> {
                         top: UiConfig.lineSpacing,
                       ),
                       child: ProcessProofOfAction(
-                        dataSubjectRightId: dataSubjectRightId,
+                        dataSubjectRightId: dataSubjectRight.id,
                         processRequest: processRequest,
                         initialProcessRequest: initialProcessRequest,
+                        requestTypes: widget.requestTypes,
+                        language: widget.language,
                       ),
                     ),
                   ),
@@ -232,9 +238,13 @@ class _ConsiderRequestStepState extends State<ConsiderRequestStep> {
 
   Container _buildProcessRequestStatus(
     BuildContext context, {
+    required DataSubjectRightModel dataSubjectRight,
     required ProcessRequestModel processRequest,
   }) {
-    final status = UtilFunctions.getProcessRequestStatus(processRequest);
+    final status = UtilFunctions.getProcessRequestStatus(
+      dataSubjectRight,
+      processRequest,
+    );
     final Map<ProcessRequestStatus, String> statusTexts = {
       ProcessRequestStatus.notProcessed:
           tr('dataSubjectRight.StepProcessDsr.considering.notYetProcessed'),

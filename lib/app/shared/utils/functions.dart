@@ -4,6 +4,7 @@ import 'dart:typed_data';
 import 'package:path/path.dart';
 import 'package:pdpa/app/config/config.dart';
 import 'package:pdpa/app/data/models/authentication/company_model.dart';
+import 'package:pdpa/app/data/models/data_subject_right/data_subject_right_model.dart';
 
 import 'package:pdpa/app/data/models/data_subject_right/power_verification_model.dart';
 import 'package:pdpa/app/data/models/data_subject_right/process_request_model.dart';
@@ -157,8 +158,13 @@ class UtilFunctions {
 
   //? Data Subject Right
   static ProcessRequestStatus getProcessRequestStatus(
+    DataSubjectRightModel dataSubjectRight,
     ProcessRequestModel processRequest,
   ) {
+    if (dataSubjectRight.verifyFormStatus == RequestResultStatus.fail) {
+      return ProcessRequestStatus.refused;
+    }
+
     final considerRequestStatus = processRequest.considerRequestStatus;
 
     if (considerRequestStatus == RequestResultStatus.none) {
