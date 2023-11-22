@@ -1,14 +1,26 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:go_router/go_router.dart';
 import 'package:pdpa/app/config/config.dart';
 import 'package:pdpa/app/data/models/authentication/user_model.dart';
 import 'package:pdpa/app/data/models/data_subject_right/data_subject_right_model.dart';
+import 'package:pdpa/app/data/models/data_subject_right/process_request_model.dart';
+import 'package:pdpa/app/data/models/email_js/process_request_params.dart';
+import 'package:pdpa/app/data/models/master_data/localized_model.dart';
+import 'package:pdpa/app/data/models/master_data/reason_type_model.dart';
+import 'package:pdpa/app/data/models/master_data/reject_type_model.dart';
+import 'package:pdpa/app/data/models/master_data/request_type_model.dart';
 import 'package:pdpa/app/features/data_subject_right/cubit/process_data_subject_right/process_data_subject_right_cubit.dart';
 import 'package:pdpa/app/features/data_subject_right/models/process_request_loading_status.dart';
+import 'package:pdpa/app/features/data_subject_right/routes/data_subject_right_route.dart';
 import 'package:pdpa/app/features/data_subject_right/screens/process_data_subject_right/steps/consider_request_step.dart';
+import 'package:pdpa/app/features/data_subject_right/screens/process_data_subject_right/steps/summary_request_step.dart';
 import 'package:pdpa/app/features/data_subject_right/screens/process_data_subject_right/steps/verify_form_step.dart';
 import 'package:pdpa/app/injection.dart';
 import 'package:pdpa/app/shared/utils/constants.dart';
+import 'package:pdpa/app/shared/utils/functions.dart';
 import 'package:pdpa/app/shared/widgets/content_wrapper.dart';
 import 'package:pdpa/app/shared/widgets/customs/custom_button.dart';
 import 'package:pdpa/app/shared/widgets/customs/custom_icon_button.dart';
@@ -19,12 +31,18 @@ class ProcessDataSubjectRightScreen extends StatelessWidget {
   const ProcessDataSubjectRightScreen({
     super.key,
     required this.initialDataSubjectRight,
+    required this.requestTypes,
+    required this.reasonTypes,
+    required this.rejectTypes,
     required this.processRequestSelected,
     required this.currentUser,
     required this.userEmails,
   });
 
   final DataSubjectRightModel initialDataSubjectRight;
+  final List<RequestTypeModel> requestTypes;
+  final List<ReasonTypeModel> reasonTypes;
+  final List<RejectTypeModel> rejectTypes;
   final String processRequestSelected;
   final UserModel currentUser;
   final List<String> userEmails;
@@ -35,19 +53,36 @@ class ProcessDataSubjectRightScreen extends StatelessWidget {
       create: (context) => ProcessDataSubjectRightCubit(
         dataSubjectRightRepository: serviceLocator(),
         generalRepository: serviceLocator(),
+        emailJsRepository: serviceLocator(),
       )..initialSettings(
           initialDataSubjectRight,
           processRequestSelected,
           currentUser,
           userEmails,
         ),
-      child: const ProcessDataSubjectRightView(),
+      child: ProcessDataSubjectRightView(
+        requestTypes: requestTypes,
+        reasonTypes: reasonTypes,
+        rejectTypes: rejectTypes,
+        language: currentUser.defaultLanguage,
+      ),
     );
   }
 }
 
 class ProcessDataSubjectRightView extends StatefulWidget {
-  const ProcessDataSubjectRightView({super.key});
+  const ProcessDataSubjectRightView({
+    super.key,
+    required this.requestTypes,
+    required this.reasonTypes,
+    required this.rejectTypes,
+    required this.language,
+  });
+
+  final List<RequestTypeModel> requestTypes;
+  final List<ReasonTypeModel> reasonTypes;
+  final List<RejectTypeModel> rejectTypes;
+  final String language;
 
   @override
   State<ProcessDataSubjectRightView> createState() =>
@@ -63,35 +98,98 @@ class _ProcessDataSubjectRightViewState
   List<String> emailSelected = [];
   List<String> moreEmails = [];
 
+  bool isButtonDisabled = false;
+
   void _goBackAndUpdate() {
     final cubit = context.read<ProcessDataSubjectRightCubit>();
-    if (cubit.state.dataSubjectRight != cubit.state.initialDataSubjectRight) {
-      Navigator.pop(context, cubit.state.dataSubjectRight);
-    } else {
-      Navigator.pop(context);
-    }
+    Navigator.pop(context, cubit.state.initialDataSubjectRight);
   }
 
   void _onBackStepPressed() {
-    final cubit = context.read<ProcessDataSubjectRightCubit>();
-    cubit.onBackStepPressed();
+    if (!isButtonDisabled) {
+      final cubit = context.read<ProcessDataSubjectRightCubit>();
+      cubit.onBackStepPressed();
+
+      isButtonDisabled = true;
+
+      Timer(const Duration(seconds: 1), () {
+        isButtonDisabled = false;
+      });
+    }
   }
 
   void _onNextStepPressed() {
-    final cubit = context.read<ProcessDataSubjectRightCubit>();
-    final verifyFormStatus = cubit.state.dataSubjectRight.verifyFormStatus;
-    final stepIndex = cubit.state.stepIndex;
+    if (!isButtonDisabled) {
+      final cubit = context.read<ProcessDataSubjectRightCubit>();
+      final verifyFormStatus = cubit.state.dataSubjectRight.verifyFormStatus;
+      final stepIndex = cubit.state.stepIndex;
 
-    if (stepIndex == 0) {
-      //? If choose reject, reject verify reason should not empty.
-      if (verifyFormStatus == RequestResultStatus.fail) {
-        if (!_verifyFormKey.currentState!.validate()) return;
+      if (stepIndex == (stepLength - 1)) {
+        context.pushReplacement(DataSubjectRightRoute.dataSubjectRight.path);
+        return;
       }
 
-      cubit.onVerifyFormValidate(stepLength);
-    } else {
-      cubit.onNextStepPressed(stepLength);
+      if (stepIndex == 0) {
+        //? If choose reject, reject verify reason should not empty.
+        if (verifyFormStatus == RequestResultStatus.fail) {
+          if (!_verifyFormKey.currentState!.validate()) return;
+        }
+
+        cubit.onVerifyFormValidate(
+          stepLength,
+          emailParams: _getEmailParams(),
+        );
+      } else {
+        cubit.onNextStepPressed(stepLength);
+      }
+
+      isButtonDisabled = true;
+
+      Timer(const Duration(seconds: 1), () {
+        isButtonDisabled = false;
+      });
     }
+  }
+
+  ProcessRequestTemplateParams? _getEmailParams() {
+    final cubit = context.read<ProcessDataSubjectRightCubit>();
+    final dataSubjectRight = cubit.state.dataSubjectRight;
+
+    List<String> requests = [];
+    for (ProcessRequestModel request in dataSubjectRight.processRequests) {
+      final requestType = UtilFunctions.getRequestTypeById(
+        widget.requestTypes,
+        request.requestType,
+      );
+      final description = requestType.description.firstWhere(
+        (item) => item.language == widget.language,
+        orElse: () => const LocalizedModel.empty(),
+      );
+
+      requests.add(description.text);
+    }
+
+    final rejectReason = dataSubjectRight.rejectVerifyReason.isNotEmpty
+        ? '\nเหตุผล: ${dataSubjectRight.rejectVerifyReason}'
+        : '';
+
+    final status = dataSubjectRight.verifyFormStatus == RequestResultStatus.pass
+        ? 'ผ่านการตรวจสอบแล้ว'
+        : dataSubjectRight.verifyFormStatus == RequestResultStatus.fail
+            ? 'ไม่ผ่านการตรวจสอบ$rejectReason'
+            : 'ยังไม่ได้ตรวจสอบ';
+
+    if (requests.isNotEmpty) {
+      return ProcessRequestTemplateParams(
+        toName: dataSubjectRight.dataRequester[0].text,
+        toEmail: dataSubjectRight.dataRequester[2].text,
+        dataSubjectRightId: dataSubjectRight.id,
+        processRequest: requests.join('\n'),
+        processStatus: status,
+      );
+    }
+
+    return null;
   }
 
   @override
@@ -99,9 +197,18 @@ class _ProcessDataSubjectRightViewState
     return Scaffold(
       appBar: PdpaAppBar(
         leadingIcon: _buildPopButton(),
-        title: Text(
-          'การดำเนินการ', //!
-          style: Theme.of(context).textTheme.titleLarge,
+        title: BlocBuilder<ProcessDataSubjectRightCubit,
+            ProcessDataSubjectRightState>(
+          builder: (context, state) {
+            return Text(
+              state.stepIndex == 0
+                  ? 'ตรวจสอบแบบฟอร์ม'
+                  : state.stepIndex == 2
+                      ? 'สรุปผลการดำเนินการคำร้องขอ'
+                      : 'การดำเนินการ',
+              style: Theme.of(context).textTheme.titleLarge,
+            );
+          },
         ),
       ),
       body: BlocBuilder<ProcessDataSubjectRightCubit,
@@ -116,8 +223,16 @@ class _ProcessDataSubjectRightViewState
                       VerifyFormStep(
                         formKey: _verifyFormKey,
                       ),
-                      const ConsiderRequestStep(),
-                      const Text('3'),
+                      ConsiderRequestStep(
+                        requestTypes: widget.requestTypes,
+                        reasonTypes: widget.reasonTypes,
+                        rejectTypes: widget.rejectTypes,
+                        language: widget.language,
+                      ),
+                      SummaryRequestStep(
+                        requestTypes: widget.requestTypes,
+                        language: widget.language,
+                      ),
                     ].elementAt(state.stepIndex),
                   ),
                 ),
@@ -207,16 +322,12 @@ class _ProcessDataSubjectRightViewState
                           loadingType: LoadingType.horizontalRotatingDots,
                         )
                       : Text(
-                          'ถัดไป',
+                          currentIndex != 2 ? 'ถัดไป' : 'เสร็จสิ้น',
                           style: Theme.of(context)
                               .textTheme
                               .bodyMedium
                               ?.copyWith(
-                                  color: currentIndex != (stepLength - 1)
-                                      ? Theme.of(context).colorScheme.primary
-                                      : Theme.of(context)
-                                          .colorScheme
-                                          .outlineVariant),
+                                  color: Theme.of(context).colorScheme.primary),
                         ),
                 ),
               ),
