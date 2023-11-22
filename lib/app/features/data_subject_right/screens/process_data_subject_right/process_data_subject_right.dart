@@ -9,6 +9,7 @@ import 'package:pdpa/app/data/models/master_data/request_type_model.dart';
 import 'package:pdpa/app/features/data_subject_right/cubit/process_data_subject_right/process_data_subject_right_cubit.dart';
 import 'package:pdpa/app/features/data_subject_right/models/process_request_loading_status.dart';
 import 'package:pdpa/app/features/data_subject_right/screens/process_data_subject_right/steps/consider_request_step.dart';
+import 'package:pdpa/app/features/data_subject_right/screens/process_data_subject_right/steps/summary_request_step.dart';
 import 'package:pdpa/app/features/data_subject_right/screens/process_data_subject_right/steps/verify_form_step.dart';
 import 'package:pdpa/app/injection.dart';
 import 'package:pdpa/app/shared/utils/constants.dart';
@@ -90,7 +91,7 @@ class _ProcessDataSubjectRightViewState
 
   void _goBackAndUpdate() {
     final cubit = context.read<ProcessDataSubjectRightCubit>();
-    Navigator.pop(context, cubit.state.dataSubjectRight);
+    Navigator.pop(context, cubit.state.initialDataSubjectRight);
   }
 
   void _onBackStepPressed() {
@@ -120,9 +121,18 @@ class _ProcessDataSubjectRightViewState
     return Scaffold(
       appBar: PdpaAppBar(
         leadingIcon: _buildPopButton(),
-        title: Text(
-          'การดำเนินการ', //!
-          style: Theme.of(context).textTheme.titleLarge,
+        title: BlocBuilder<ProcessDataSubjectRightCubit,
+            ProcessDataSubjectRightState>(
+          builder: (context, state) {
+            return Text(
+              state.stepIndex == 0
+                  ? 'ตรวจสอบแบบฟอร์ม'
+                  : state.stepIndex == 2
+                      ? 'สรุปผลการดำเนินการคำร้องขอ'
+                      : 'การดำเนินการ',
+              style: Theme.of(context).textTheme.titleLarge,
+            );
+          },
         ),
       ),
       body: BlocBuilder<ProcessDataSubjectRightCubit,
@@ -143,7 +153,10 @@ class _ProcessDataSubjectRightViewState
                         rejectTypes: widget.rejectTypes,
                         language: widget.language,
                       ),
-                      const Text('3'),
+                      SummaryRequestStep(
+                        requestTypes: widget.requestTypes,
+                        language: widget.language,
+                      ),
                     ].elementAt(state.stepIndex),
                   ),
                 ),

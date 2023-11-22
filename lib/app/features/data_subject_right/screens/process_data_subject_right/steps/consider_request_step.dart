@@ -6,6 +6,7 @@ import 'package:pdpa/app/data/models/master_data/localized_model.dart';
 import 'package:pdpa/app/data/models/master_data/reason_type_model.dart';
 import 'package:pdpa/app/data/models/master_data/reject_type_model.dart';
 import 'package:pdpa/app/data/models/master_data/request_type_model.dart';
+import 'package:pdpa/app/data/presets/request_actions_preset.dart';
 import 'package:pdpa/app/features/data_subject_right/cubit/process_data_subject_right/process_data_subject_right_cubit.dart';
 import 'package:pdpa/app/features/data_subject_right/screens/process_data_subject_right/widgets/process_consider_request.dart';
 import 'package:pdpa/app/features/data_subject_right/screens/process_data_subject_right/widgets/process_proof_of_action.dart';
@@ -45,10 +46,10 @@ class _ConsiderRequestStepState extends State<ConsiderRequestStep> {
   void initState() {
     super.initState();
 
-    _selectProcessRequest();
+    _autoScrollToRequest();
   }
 
-  Future<void> _selectProcessRequest() async {
+  Future<void> _autoScrollToRequest() async {
     final cubit = context.read<ProcessDataSubjectRightCubit>();
     processRequestSelected = cubit.state.processRequestSelected;
 
@@ -58,10 +59,6 @@ class _ConsiderRequestStepState extends State<ConsiderRequestStep> {
         duration: const Duration(milliseconds: 400),
       );
     });
-
-    await Scrollable.ensureVisible(
-      requestSelectedKey.currentContext!,
-    );
   }
 
   void _setRequestExpand(String id) {
@@ -188,39 +185,43 @@ class _ConsiderRequestStepState extends State<ConsiderRequestStep> {
           ExpandedContainer(
             expand: expanded,
             duration: const Duration(milliseconds: 400),
-            child: Column(
-              children: <Widget>[
-                const SizedBox(height: UiConfig.lineSpacing),
-                _buildRequestActionInfo(
-                  context,
-                  processRequest: processRequest,
-                ),
-                const SizedBox(height: UiConfig.lineGap * 2),
-                _buildRequestReasonInfo(
-                  context,
-                  processRequest: processRequest,
-                ),
-                const SizedBox(height: UiConfig.lineSpacing),
-                ProcessConsiderRequest(
-                  processRequest: processRequest,
-                  initialProcessRequest: initialProcessRequest,
-                ),
-                ExpandedContainer(
-                  expand: initialProcessRequest.considerRequestStatus ==
-                      RequestResultStatus.pass,
-                  duration: const Duration(milliseconds: 400),
-                  child: Padding(
-                    padding: const EdgeInsets.only(
-                      top: UiConfig.lineSpacing,
-                    ),
-                    child: ProcessProofOfAction(
-                      dataSubjectRightId: dataSubjectRightId,
-                      processRequest: processRequest,
-                      initialProcessRequest: initialProcessRequest,
+            child: Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 18.0),
+              child: Column(
+                children: <Widget>[
+                  const SizedBox(height: UiConfig.lineSpacing),
+                  _buildRequestActionInfo(
+                    context,
+                    processRequest: processRequest,
+                  ),
+                  const SizedBox(height: UiConfig.lineGap * 2),
+                  _buildRequestReasonInfo(
+                    context,
+                    processRequest: processRequest,
+                  ),
+                  const SizedBox(height: UiConfig.lineSpacing),
+                  ProcessConsiderRequest(
+                    processRequest: processRequest,
+                    initialProcessRequest: initialProcessRequest,
+                  ),
+                  ExpandedContainer(
+                    expand: initialProcessRequest.considerRequestStatus ==
+                        RequestResultStatus.pass,
+                    duration: const Duration(milliseconds: 400),
+                    child: Padding(
+                      padding: const EdgeInsets.only(
+                        top: UiConfig.lineSpacing,
+                      ),
+                      child: ProcessProofOfAction(
+                        dataSubjectRightId: dataSubjectRightId,
+                        processRequest: processRequest,
+                        initialProcessRequest: initialProcessRequest,
+                      ),
                     ),
                   ),
-                ),
-              ],
+                  const SizedBox(height: UiConfig.lineGap),
+                ],
+              ),
             ),
           ),
         ],
@@ -233,11 +234,17 @@ class _ConsiderRequestStepState extends State<ConsiderRequestStep> {
     required ProcessRequestModel processRequest,
   }) {
     final status = UtilFunctions.getProcessRequestStatus(processRequest);
-    final Map<ProcessRequestStatus, String> processRequestStatuses = {
+    final Map<ProcessRequestStatus, String> statusTexts = {
       ProcessRequestStatus.notProcessed: 'ยังไม่ดำเนินการ',
       ProcessRequestStatus.inProgress: 'อยู่ระหว่างการดำเนินการ',
       ProcessRequestStatus.refused: 'ปฏิเสธการดำเนินการ',
       ProcessRequestStatus.completed: 'ดำเนินการเสร็จสิ้น',
+    };
+    final Map<ProcessRequestStatus, Color> statusColors = {
+      ProcessRequestStatus.notProcessed: const Color(0xFF878787),
+      ProcessRequestStatus.inProgress: const Color(0xFF0172E6),
+      ProcessRequestStatus.refused: const Color(0xFFDF2200),
+      ProcessRequestStatus.completed: const Color(0xFF4FC1B1),
     };
 
     return Container(
@@ -246,19 +253,20 @@ class _ConsiderRequestStepState extends State<ConsiderRequestStep> {
         horizontal: 8.0,
       ),
       decoration: BoxDecoration(
-        color: Theme.of(context).colorScheme.primary.withOpacity(0.1),
+        color: statusColors[status]?.withOpacity(0.1),
         borderRadius: BorderRadius.circular(6.0),
       ),
       margin: const EdgeInsets.only(
         left: 18.0,
         top: UiConfig.lineGap,
+        right: 18.0,
       ),
       child: Text(
-        'สถานะ: ${processRequestStatuses[status]}',
+        'สถานะ: ${statusTexts[status]}',
         style: Theme.of(context)
             .textTheme
             .bodyMedium
-            ?.copyWith(color: Theme.of(context).colorScheme.primary),
+            ?.copyWith(color: statusColors[status]),
       ),
     );
   }
@@ -267,6 +275,15 @@ class _ConsiderRequestStepState extends State<ConsiderRequestStep> {
     BuildContext context, {
     required ProcessRequestModel processRequest,
   }) {
+    final requestAction = UtilFunctions.getRequestActionById(
+      requestActionsPreset,
+      processRequest.requestAction,
+    );
+    final title = requestAction.title.firstWhere(
+      (item) => item.language == widget.language,
+      orElse: () => const LocalizedModel.empty(),
+    );
+
     return Column(
       mainAxisSize: MainAxisSize.min,
       crossAxisAlignment: CrossAxisAlignment.start,
@@ -290,7 +307,7 @@ class _ConsiderRequestStepState extends State<ConsiderRequestStep> {
         const TitleRequiredText(text: 'การดำเนินการ'),
         CustomTextField(
           controller: TextEditingController(
-            text: processRequest.requestAction,
+            text: title.text,
           ),
           readOnly: true,
         ),
@@ -325,19 +342,22 @@ class _ConsiderRequestStepState extends State<ConsiderRequestStep> {
             );
 
             return Row(
+              crossAxisAlignment: CrossAxisAlignment.start,
               children: <Widget>[
                 CustomCheckBox(
                   value: true,
-                  onChanged: (_) {},
                   activeColor: Theme.of(context).colorScheme.outlineVariant,
                 ),
                 const SizedBox(width: UiConfig.actionSpacing),
                 Expanded(
-                  child: Text(
-                    processRequest.reasonTypes[index].text.isNotEmpty
-                        ? processRequest.reasonTypes[index].text
-                        : description.text,
-                    style: Theme.of(context).textTheme.bodyMedium,
+                  child: Padding(
+                    padding: const EdgeInsets.only(top: 4.0),
+                    child: Text(
+                      processRequest.reasonTypes[index].text.isNotEmpty
+                          ? processRequest.reasonTypes[index].text
+                          : description.text,
+                      style: Theme.of(context).textTheme.bodyMedium,
+                    ),
                   ),
                 ),
               ],

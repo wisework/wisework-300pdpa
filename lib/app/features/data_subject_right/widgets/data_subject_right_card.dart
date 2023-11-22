@@ -52,11 +52,14 @@ class DataSubjectRightCard extends StatelessWidget {
           await context.push(path).then((value) {
             if (value != null) {
               final updated = value as UpdatedReturn<DataSubjectRightModel>;
-              final event = UpdateDataSubjectRightsEvent(
-                dataSubjectRight: updated.object,
-                updateType: updated.type,
-              );
-              context.read<DataSubjectRightBloc>().add(event);
+
+              if (updated != dataSubjectRight) {
+                final event = UpdateDataSubjectRightsEvent(
+                  dataSubjectRight: updated.object,
+                  updateType: updated.type,
+                );
+                context.read<DataSubjectRightBloc>().add(event);
+              }
             }
           });
         },

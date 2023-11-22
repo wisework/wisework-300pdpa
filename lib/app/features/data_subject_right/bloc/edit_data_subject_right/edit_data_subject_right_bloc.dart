@@ -113,6 +113,14 @@ class EditDataSubjectRightBloc
       emit(
         GotCurrentDataSubjectRight(
           dataSubjectRight.copyWith(
+            dataRequester: dataSubjectRight.dataRequester
+              ..sort(
+                (a, b) => a.priority.compareTo(b.priority),
+              ),
+            dataOwner: dataSubjectRight.dataOwner
+              ..sort(
+                (a, b) => a.priority.compareTo(b.priority),
+              ),
             processRequests: processRequestSorted,
           ),
           gotRequestTypes,
@@ -202,10 +210,10 @@ class EditDataSubjectRightBloc
     );
   }
 
-  void _updateEditDsrStateHandler(
+  Future<void> _updateEditDsrStateHandler(
     UpdateEditDataSubjectRightStateEvent event,
     Emitter<EditDataSubjectRightState> emit,
-  ) {
+  ) async {
     List<RequestTypeModel> requestTypes = [];
     List<ReasonTypeModel> reasonTypes = [];
     List<RejectTypeModel> rejectTypes = [];
@@ -218,6 +226,10 @@ class EditDataSubjectRightBloc
       reasonTypes = settings.reasonTypes;
       rejectTypes = settings.rejectTypes;
       emails = settings.userEmails;
+
+      emit(const UpdatingCurrentDataSubjectRight());
+
+      await Future.delayed(const Duration(milliseconds: 800));
 
       emit(
         GotCurrentDataSubjectRight(
@@ -235,6 +247,10 @@ class EditDataSubjectRightBloc
       reasonTypes = settings.reasonTypes;
       rejectTypes = settings.rejectTypes;
       emails = settings.userEmails;
+
+      emit(const UpdatingCurrentDataSubjectRight());
+
+      await Future.delayed(const Duration(milliseconds: 800));
 
       emit(
         UpdatedCurrentDataSubjectRight(

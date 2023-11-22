@@ -16,7 +16,6 @@ class DataSubjectRightModel extends Equatable {
     required this.identityVerifications,
     required this.processRequests,
     required this.requestExpirationDate,
-    required this.notifyEmail,
     required this.verifyFormStatus,
     required this.rejectVerifyReason,
     required this.lastSeenBy,
@@ -51,9 +50,6 @@ class DataSubjectRightModel extends Equatable {
   /// Starting from the requested date until the scheduled date [such as 30 days].
   final DateTime requestExpirationDate;
 
-  /// Email notification to relevant people.
-  final List<String> notifyEmail;
-
   /// The results of checking that this form is correct and complete.
   /// Use in [Verify data subject right step].
   final RequestResultStatus verifyFormStatus;
@@ -83,7 +79,6 @@ class DataSubjectRightModel extends Equatable {
           identityVerifications: [],
           processRequests: [],
           requestExpirationDate: DateTime.fromMillisecondsSinceEpoch(0),
-          notifyEmail: [],
           verifyFormStatus: RequestResultStatus.none,
           rejectVerifyReason: '',
           lastSeenBy: '',
@@ -129,7 +124,6 @@ class DataSubjectRightModel extends Equatable {
           ),
           requestExpirationDate:
               DateTime.parse(map['requestExpirationDate'] as String),
-          notifyEmail: List<String>.from(map['notifyEmail'] as List<dynamic>),
           verifyFormStatus:
               RequestResultStatus.values[map['verifyFormStatus'] as int],
           rejectVerifyReason: map['rejectVerifyReason'] as String,
@@ -171,7 +165,6 @@ class DataSubjectRightModel extends Equatable {
           (map, processRequest) => map..addAll(processRequest.toMap()),
         ),
         'requestExpirationDate': requestExpirationDate.toIso8601String(),
-        'notifyEmail': notifyEmail,
         'verifyFormStatus': verifyFormStatus.index,
         'rejectVerifyReason': rejectVerifyReason,
         'lastSeenBy': lastSeenBy,
@@ -190,7 +183,6 @@ class DataSubjectRightModel extends Equatable {
     List<RequesterVerificationModel>? identityVerifications,
     List<ProcessRequestModel>? processRequests,
     DateTime? requestExpirationDate,
-    List<String>? notifyEmail,
     RequestResultStatus? verifyFormStatus,
     String? rejectVerifyReason,
     String? lastSeenBy,
@@ -210,7 +202,6 @@ class DataSubjectRightModel extends Equatable {
       processRequests: processRequests ?? this.processRequests,
       requestExpirationDate:
           requestExpirationDate ?? this.requestExpirationDate,
-      notifyEmail: notifyEmail ?? this.notifyEmail,
       verifyFormStatus: verifyFormStatus ?? this.verifyFormStatus,
       rejectVerifyReason: rejectVerifyReason ?? this.rejectVerifyReason,
       lastSeenBy: lastSeenBy ?? this.lastSeenBy,
@@ -244,7 +235,6 @@ class DataSubjectRightModel extends Equatable {
       identityVerifications,
       processRequests,
       requestExpirationDate,
-      notifyEmail,
       verifyFormStatus,
       rejectVerifyReason,
       lastSeenBy,
