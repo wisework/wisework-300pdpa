@@ -1,3 +1,4 @@
+import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:pdpa/app/config/config.dart';
@@ -46,7 +47,7 @@ class _VerifyFormStepState extends State<VerifyFormStep> {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: <Widget>[
               Text(
-                'ตรวจสอบแบบฟอร์ม',
+                tr('dataSubjectRight.StepProcessDsr.verifying.check'),
                 style: Theme.of(context)
                     .textTheme
                     .titleLarge
@@ -54,7 +55,7 @@ class _VerifyFormStepState extends State<VerifyFormStep> {
               ),
               const SizedBox(height: UiConfig.lineSpacing),
               Text(
-                'ผลการตรวจสอบแบบฟอร์มคำขอใช้สิทธิ์ตามกฎหมายคุ้มครองข้อมูลส่วนบุคคล',
+                tr('dataSubjectRight.StepProcessDsr.verifying.resultOfInspection'),
                 style: Theme.of(context).textTheme.bodyMedium,
               ),
               const SizedBox(height: UiConfig.lineSpacing),
@@ -80,7 +81,7 @@ class _VerifyFormStepState extends State<VerifyFormStep> {
                     child: Padding(
                       padding: const EdgeInsets.symmetric(vertical: 5.0),
                       child: Text(
-                        'ผ่าน',
+                        tr('dataSubjectRight.StepProcessDsr.verifying.pass'),
                         style: Theme.of(context).textTheme.bodyMedium,
                       ),
                     ),
@@ -114,7 +115,7 @@ class _VerifyFormStepState extends State<VerifyFormStep> {
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: <Widget>[
                           Text(
-                            'ไม่ผ่าน',
+                            tr('dataSubjectRight.StepProcessDsr.verifying.notPass'),
                             style: Theme.of(context).textTheme.bodyMedium,
                           ),
                           ExpandedContainer(
@@ -128,7 +129,7 @@ class _VerifyFormStepState extends State<VerifyFormStep> {
                                 children: <Widget>[
                                   const SizedBox(height: UiConfig.lineGap),
                                   TitleRequiredText(
-                                    text: 'เหตุผลประกอบ',
+                                    text: tr('dataSubjectRight.StepProcessDsr.verifying.reason'),
                                     required: state.initialDataSubjectRight
                                             .verifyFormStatus ==
                                         RequestResultStatus.none,
@@ -136,7 +137,7 @@ class _VerifyFormStepState extends State<VerifyFormStep> {
                                   CustomTextField(
                                     initialValue: state
                                         .dataSubjectRight.rejectVerifyReason,
-                                    hintText: 'เนื่องด้วย...',
+                                    hintText: tr('dataSubjectRight.StepProcessDsr.verifying.since'),
                                     maxLines: 5,
                                     onChanged: _onRejectReasonChanged,
                                     readOnly: state.initialDataSubjectRight
@@ -201,7 +202,7 @@ class _VerifyFormStepState extends State<VerifyFormStep> {
             const SizedBox(width: UiConfig.textSpacing),
             Expanded(
               child: Text(
-                'โปรดเลือกตัวเลือกเพื่อดำเนินการต่อ',
+                tr('dataSubjectRight.StepProcessDsr.verifying.pleaseSelect'),
                 style: Theme.of(context)
                     .textTheme
                     .bodyMedium

@@ -1,3 +1,4 @@
+import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 
 import 'package:pdpa/app/config/config.dart';
@@ -109,7 +110,7 @@ class _RequestReasonPageState extends State<RequestReasonPage> {
               children: [
                 const SizedBox(height: UiConfig.lineSpacing),
                 Text(
-                  'ต้องการยื่นคำร้องขอเพื่อจุดประสงค์ดังต่อไปนี้',
+                  tr('dataSubjectRight.requestReason.title'),
                   textAlign: TextAlign.left,
                   style: Theme.of(context)
                       .textTheme
@@ -118,7 +119,7 @@ class _RequestReasonPageState extends State<RequestReasonPage> {
                 ),
                 const SizedBox(height: UiConfig.lineSpacing),
                 Text(
-                  'โปรดเลือกจุดประสงค์ที่ท่านต้องการ',
+                  tr('dataSubjectRight.requestReason.pleaseSelect'),
                   textAlign: TextAlign.left,
                   style: Theme.of(context).textTheme.bodySmall?.copyWith(
                       color: Theme.of(context).colorScheme.onSurface),
@@ -177,7 +178,7 @@ class _RequestReasonPageState extends State<RequestReasonPage> {
                           (item) => item.language == 'th-TH',
                           orElse: () => const LocalizedModel.empty(),
                         )
-                        .text, //!
+                        .text, 
                     style: !selectRequestTypeIds.contains(requestType.id)
                         ? Theme.of(context).textTheme.bodyMedium?.copyWith()
                         : Theme.of(context).textTheme.bodyMedium?.copyWith(
@@ -213,40 +214,40 @@ class _RequestReasonPageState extends State<RequestReasonPage> {
       expand: isExpanded,
       duration: const Duration(milliseconds: 400),
       child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start, // กำหนดให้ชิดซ้าย
+        crossAxisAlignment: CrossAxisAlignment.start, 
         children: [
           Text(
-            'ข้อมูลและรายละเอียดการดำเนินการ', //!
+            tr('dataSubjectRight.requestReason.iadoperations'), 
             style: Theme.of(context)
                 .textTheme
                 .titleMedium
                 ?.copyWith(color: Theme.of(context).colorScheme.primary),
           ),
           const SizedBox(height: UiConfig.lineSpacing),
-          const TitleRequiredText(
-            text: 'ข้อมูลส่วนบุคคล', //!
+           TitleRequiredText(
+            text: tr('dataSubjectRight.requestReason.personalInformation'), 
             required: true,
           ),
           CustomTextField(
-            hintText: 'กรอกข้อมูลส่วนบุคคล', //!
+            hintText: tr('dataSubjectRight.requestReason.hintpersonalInformation'), 
             controller: identityDataController,
             required: true,
           ),
           const SizedBox(height: UiConfig.lineSpacing),
-          const TitleRequiredText(
-            text: 'สถานที่พบเจอ', //!
+           TitleRequiredText(
+            text: tr('dataSubjectRight.requestReason.place'), 
           ),
           CustomTextField(
             controller: foundedPlaceTextController,
-            hintText: 'กรอกสถานที่พบเจอ', //!
+            hintText: tr('dataSubjectRight.requestReason.hintPlace'), 
           ),
           const SizedBox(height: UiConfig.lineSpacing),
-          const TitleRequiredText(
-            text: 'การดำเนินการ', //!
+           TitleRequiredText(
+            text: tr('dataSubjectRight.requestReason.operation'), 
             required: true,
           ),
           DataSubjectRightListTile(
-            title: 'ลบ',
+            title: tr('dataSubjectRight.requestReason.delete'),
             onTap: () {
               setSelectedRadioTile(1);
             },
@@ -263,7 +264,7 @@ class _RequestReasonPageState extends State<RequestReasonPage> {
                 Theme.of(context).colorScheme.outlineVariant.withOpacity(0.5),
           ),
           DataSubjectRightListTile(
-            title: 'ไม่ทำลาย',
+            title: tr('dataSubjectRight.requestReason.nonDestructive'),
             onTap: () {
               setSelectedRadioTile(2);
             },
@@ -280,7 +281,7 @@ class _RequestReasonPageState extends State<RequestReasonPage> {
                 Theme.of(context).colorScheme.outlineVariant.withOpacity(0.5),
           ),
           DataSubjectRightListTile(
-            title: 'ทำให้ไม่สามารถระบุตัวตน',
+            title: tr('dataSubjectRight.requestReason.impossibleToIdentifyYourself'),
             onTap: () {
               setSelectedRadioTile(3);
             },
@@ -294,7 +295,7 @@ class _RequestReasonPageState extends State<RequestReasonPage> {
           ),
           const SizedBox(height: UiConfig.lineSpacing),
           Text(
-            'เหตุผลประกอบคำร้อง',
+            tr('dataSubjectRight.requestReason.reasonsRequest'),
             style: Theme.of(context)
                 .textTheme
                 .titleMedium
@@ -313,7 +314,7 @@ class _RequestReasonPageState extends State<RequestReasonPage> {
                                   orElse: () => const LocalizedModel.empty(),
                                 )
                                 .text ==
-                            'อื่นๆ (โปรดระบุ)'
+                            tr('dataSubjectRight.requestReason.other')
                         ? Column(
                             children: [
                               Row(
@@ -347,7 +348,7 @@ class _RequestReasonPageState extends State<RequestReasonPage> {
                                                       const LocalizedModel
                                                           .empty(),
                                                 )
-                                                .text, //!
+                                                .text, 
                                             style: !selectReasonTypeIds
                                                     .contains(reason.id)
                                                 ? Theme.of(context)
@@ -374,12 +375,12 @@ class _RequestReasonPageState extends State<RequestReasonPage> {
                                                 CrossAxisAlignment
                                                     .start, // กำหนดให้ชิดซ้าย
                                             children: [
-                                              const TitleRequiredText(
-                                                text: 'เหตุผล', //!
+                                               TitleRequiredText(
+                                                text: tr('dataSubjectRight.requestReason.reason'), 
                                                 required: true,
                                               ),
                                               CustomTextField(
-                                                hintText: 'กรอกเหตุผล', //!
+                                                hintText: tr('dataSubjectRight.requestReason.hintReason'), 
                                                 controller:
                                                     identityDataController,
                                                 required: true,
@@ -440,7 +441,7 @@ class _RequestReasonPageState extends State<RequestReasonPage> {
                             (item) => item.language == 'th-TH',
                             orElse: () => const LocalizedModel.empty(),
                           )
-                          .text, //!
+                          .text, 
                       style: !selectReasonTypeIds.contains(reasonType.id)
                           ? Theme.of(context).textTheme.bodyMedium?.copyWith()
                           : Theme.of(context).textTheme.bodyMedium?.copyWith(

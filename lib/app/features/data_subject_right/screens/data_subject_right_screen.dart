@@ -272,7 +272,7 @@ class _DataSubjectRightViewState extends State<DataSubjectRightView> {
                     mainAxisSize: MainAxisSize.min,
                     children: <Widget>[
                       Text(
-                        'ทั้งหมด',
+                        tr('dataSubjectRight.Listpage.filter.all'),
                         style: Theme.of(context).textTheme.titleMedium,
                       ),
                       const SizedBox(width: 2.0),

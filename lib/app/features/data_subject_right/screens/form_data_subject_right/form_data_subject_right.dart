@@ -232,7 +232,7 @@ class _FormDataSubjectRightViewState extends State<FormDataSubjectRightView> {
                           ? Text(
                               tr("app.next"),
                             )
-                          : const Text("ส่งแบบคำร้อง")),
+                          : Text(tr("dataSubjectRight.submitRequestForm"))),
                 ],
               ),
             ),

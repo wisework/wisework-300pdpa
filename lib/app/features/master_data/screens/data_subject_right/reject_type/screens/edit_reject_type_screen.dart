@@ -72,7 +72,7 @@ class _EditRejectTypeScreenState extends State<EditRejectTypeScreen> {
               context,
               text: tr(
                   'consentManagement.consentForm.editConsentTheme.createSuccess'), //!
-            ); //!
+            ); 
 
             context.pop(
               UpdatedReturn<RejectTypeModel>(
@@ -87,7 +87,7 @@ class _EditRejectTypeScreenState extends State<EditRejectTypeScreen> {
               context,
               text: tr(
                   'consentManagement.consentForm.editConsentTheme.updateSuccess'),
-            ); //!
+            ); 
           }
 
           if (state is DeletedCurrentRejectType) {
@@ -95,7 +95,7 @@ class _EditRejectTypeScreenState extends State<EditRejectTypeScreen> {
               context,
               text: tr(
                   'consentManagement.consentForm.editConsentTheme.deleteSuccess'),
-            ); //!
+            ); 
 
             final deleted =
                 RejectTypeModel.empty().copyWith(id: state.rejectTypeId);
@@ -336,29 +336,29 @@ class _EditRejectTypeViewState extends State<EditRejectTypeView> {
           Row(
             children: <Widget>[
               Text(
-                tr('masterData.dsr.rejections.title'), //!
+                tr('masterData.dsr.rejections.title'), 
                 style: Theme.of(context).textTheme.titleLarge,
               ),
             ],
           ),
           const SizedBox(height: UiConfig.lineSpacing),
           TitleRequiredText(
-            text: tr('masterData.dsr.rejections.rejectcode'), //!
+            text: tr('masterData.dsr.rejections.rejectcode'), 
             required: true,
           ),
           CustomTextField(
             controller: rejectTypeCodeController,
-            hintText: tr('masterData.dsr.rejections.rejectcodeHint'), //!
+            hintText: tr('masterData.dsr.rejections.rejectcodeHint'), 
             onChanged: _setRejectCode,
             required: true,
           ),
           const SizedBox(height: UiConfig.lineSpacing),
           TitleRequiredText(
-            text: tr('masterData.dsr.rejections.description'), //!
+            text: tr('masterData.dsr.rejections.description'), 
           ),
           CustomTextField(
             controller: descriptionController,
-            hintText: tr('masterData.dsr.rejections.descriptionHint'), //!
+            hintText: tr('masterData.dsr.rejections.descriptionHint'), 
             onChanged: _setDescription,
           ),
           const SizedBox(height: UiConfig.lineSpacing),
