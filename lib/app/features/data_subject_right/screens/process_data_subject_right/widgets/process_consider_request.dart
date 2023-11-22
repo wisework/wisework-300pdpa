@@ -5,6 +5,7 @@ import 'package:pdpa/app/data/models/data_subject_right/process_request_model.da
 import 'package:pdpa/app/features/data_subject_right/cubit/process_data_subject_right/process_data_subject_right_cubit.dart';
 import 'package:pdpa/app/shared/utils/constants.dart';
 import 'package:pdpa/app/shared/widgets/customs/custom_button.dart';
+import 'package:pdpa/app/shared/widgets/customs/custom_checkbox.dart';
 import 'package:pdpa/app/shared/widgets/customs/custom_container.dart';
 import 'package:pdpa/app/shared/widgets/customs/custom_radio_button.dart';
 import 'package:pdpa/app/shared/widgets/customs/custom_text_field.dart';
@@ -34,9 +35,14 @@ class _ProcessConsiderRequestState extends State<ProcessConsiderRequest> {
     cubit.setConsiderOption(value, id);
   }
 
-  void _onRejectReasonChanged(String value, String id) {
+  void _onRejectReasonChanged(String value) {
     final cubit = context.read<ProcessDataSubjectRightCubit>();
-    cubit.setRejectConsiderReason(value, id);
+    cubit.setRejectConsiderReason(value, widget.processRequest.id);
+  }
+
+  void _onEmailSelected(String email) {
+    final cubit = context.read<ProcessDataSubjectRightCubit>();
+    cubit.selectNotifyEmail(email, widget.processRequest.id);
   }
 
   void _onSubmitPressed() {
@@ -72,11 +78,31 @@ class _ProcessConsiderRequestState extends State<ProcessConsiderRequest> {
           const SizedBox(height: UiConfig.lineGap),
           _buildRadioOption(
             context,
-            processRequest: widget.processRequest,
             onChanged: (value) {
               if (value != null) {
                 _onOptionChanged(value, widget.processRequest.id);
               }
+            },
+          ),
+          BlocBuilder<ProcessDataSubjectRightCubit,
+              ProcessDataSubjectRightState>(
+            builder: (context, state) {
+              return Visibility(
+                visible: state.userEmails.isNotEmpty,
+                child: Padding(
+                  padding: const EdgeInsets.symmetric(
+                    vertical: 5.0,
+                  ),
+                  child: _buildEmailNotification(
+                    context,
+                    userEmails: state.userEmails,
+                    emailSelected: widget.processRequest.notifyEmail,
+                    readOnly:
+                        widget.initialProcessRequest.considerRequestStatus !=
+                            RequestResultStatus.none,
+                  ),
+                ),
+              );
             },
           ),
           ExpandedContainer(
@@ -95,7 +121,6 @@ class _ProcessConsiderRequestState extends State<ProcessConsiderRequest> {
 
   Column _buildRadioOption(
     BuildContext context, {
-    required ProcessRequestModel processRequest,
     Function(RequestResultStatus? value)? onChanged,
   }) {
     return Column(
@@ -105,7 +130,7 @@ class _ProcessConsiderRequestState extends State<ProcessConsiderRequest> {
           children: <Widget>[
             CustomRadioButton<RequestResultStatus>(
               value: RequestResultStatus.pass,
-              selected: processRequest.considerRequestStatus,
+              selected: widget.processRequest.considerRequestStatus,
               onChanged: widget.initialProcessRequest.considerRequestStatus ==
                       RequestResultStatus.none
                   ? onChanged
@@ -133,7 +158,7 @@ class _ProcessConsiderRequestState extends State<ProcessConsiderRequest> {
           children: <Widget>[
             CustomRadioButton<RequestResultStatus>(
               value: RequestResultStatus.fail,
-              selected: processRequest.considerRequestStatus,
+              selected: widget.processRequest.considerRequestStatus,
               onChanged: widget.initialProcessRequest.considerRequestStatus ==
                       RequestResultStatus.none
                   ? onChanged
@@ -156,7 +181,7 @@ class _ProcessConsiderRequestState extends State<ProcessConsiderRequest> {
                       style: Theme.of(context).textTheme.bodyMedium,
                     ),
                     ExpandedContainer(
-                      expand: processRequest.considerRequestStatus ==
+                      expand: widget.processRequest.considerRequestStatus ==
                           RequestResultStatus.fail,
                       duration: const Duration(milliseconds: 400),
                       child: Form(
@@ -172,14 +197,12 @@ class _ProcessConsiderRequestState extends State<ProcessConsiderRequest> {
                                   RequestResultStatus.none,
                             ),
                             CustomTextField(
-                              initialValue: processRequest.rejectConsiderReason,
+                              initialValue:
+                                  widget.processRequest.rejectConsiderReason,
                               hintText: 'เนื่องด้วย...',
                               maxLines: 5,
                               onChanged: (value) {
-                                _onRejectReasonChanged(
-                                  value,
-                                  processRequest.id,
-                                );
+                                _onRejectReasonChanged(value);
                               },
                               readOnly: widget.initialProcessRequest
                                       .considerRequestStatus !=
@@ -204,7 +227,8 @@ class _ProcessConsiderRequestState extends State<ProcessConsiderRequest> {
               builder: (context, state) {
                 return _buildWarningContainer(
                   context,
-                  isWarning: state.considerError.contains(processRequest.id),
+                  isWarning:
+                      state.considerError.contains(widget.processRequest.id),
                 );
               },
             ),
@@ -255,6 +279,62 @@ class _ProcessConsiderRequestState extends State<ProcessConsiderRequest> {
           ],
         ),
       ),
+    );
+  }
+
+  Column _buildEmailNotification(
+    BuildContext context, {
+    required List<String> userEmails,
+    required List<String> emailSelected,
+    bool readOnly = false,
+  }) {
+    return Column(
+      mainAxisSize: MainAxisSize.min,
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: <Widget>[
+        Text(
+          'ส่งการแจ้งเตือนทางอีเมล',
+          style: Theme.of(context).textTheme.titleMedium,
+        ),
+        const SizedBox(height: UiConfig.lineGap),
+        ListView.separated(
+          physics: const NeverScrollableScrollPhysics(),
+          shrinkWrap: true,
+          itemBuilder: (context, index) {
+            return Row(
+              children: <Widget>[
+                Padding(
+                  padding: const EdgeInsets.only(
+                    left: 4.0,
+                    right: UiConfig.actionSpacing,
+                  ),
+                  child: CustomCheckBox(
+                    value: emailSelected.contains(userEmails[index]),
+                    onChanged: !readOnly
+                        ? (_) {
+                            _onEmailSelected(userEmails[index]);
+                          }
+                        : null,
+                    activeColor: readOnly
+                        ? Theme.of(context).colorScheme.outlineVariant
+                        : null,
+                  ),
+                ),
+                Expanded(
+                  child: Text(
+                    userEmails[index],
+                    style: Theme.of(context).textTheme.bodyMedium,
+                  ),
+                ),
+              ],
+            );
+          },
+          itemCount: userEmails.length,
+          separatorBuilder: (context, index) => const SizedBox(
+            height: UiConfig.lineGap,
+          ),
+        ),
+      ],
     );
   }
 

@@ -22,6 +22,7 @@ class ProcessDataSubjectRightCubit extends Cubit<ProcessDataSubjectRightState> {
         super(ProcessDataSubjectRightState(
           dataSubjectRight: DataSubjectRightModel.empty(),
           initialDataSubjectRight: DataSubjectRightModel.empty(),
+          processRequestSelected: '',
           currentUser: UserModel.empty(),
           userEmails: const [],
           stepIndex: 0,
@@ -46,10 +47,20 @@ class ProcessDataSubjectRightCubit extends Cubit<ProcessDataSubjectRightState> {
       stepIndex = 1;
     }
 
+    for (ProcessRequestModel request in dataSubjectRight.processRequests) {
+      if (request.id == processRequestSelected) {
+        if (request.considerRequestStatus == RequestResultStatus.fail ||
+            request.proofOfActionText.isNotEmpty) {
+          stepIndex = 2;
+        }
+      }
+    }
+
     emit(
       state.copyWith(
         dataSubjectRight: dataSubjectRight,
         initialDataSubjectRight: dataSubjectRight,
+        processRequestSelected: processRequestSelected,
         currentUser: currentUser,
         userEmails: userEmails,
         stepIndex: stepIndex,
@@ -116,6 +127,26 @@ class ProcessDataSubjectRightCubit extends Cubit<ProcessDataSubjectRightState> {
   }
 
   Future<void> submitConsiderRequest(String processRequestId) async {
+    for (ProcessRequestModel request
+        in state.dataSubjectRight.processRequests) {
+      final noOptionSelected =
+          request.considerRequestStatus == RequestResultStatus.none;
+
+      if (request.id == processRequestId && noOptionSelected) {
+        List<String> considerError =
+            state.considerError.map((id) => id).toList();
+
+        if (!considerError.contains(processRequestId)) {
+          considerError.add(processRequestId);
+        } else {
+          considerError.remove(processRequestId);
+        }
+
+        emit(state.copyWith(considerError: considerError));
+        return;
+      }
+    }
+
     emit(
       state.copyWith(
         loadingStatus: state.loadingStatus.copyWith(
@@ -262,6 +293,38 @@ class ProcessDataSubjectRightCubit extends Cubit<ProcessDataSubjectRightState> {
         );
       } else {
         processRequests.add(process);
+      }
+    }
+
+    emit(
+      state.copyWith(
+        dataSubjectRight: dataSubjectRight.copyWith(
+          processRequests: processRequests,
+        ),
+      ),
+    );
+  }
+
+  void selectNotifyEmail(String email, String processRequestId) {
+    DataSubjectRightModel dataSubjectRight = state.dataSubjectRight;
+    List<ProcessRequestModel> processRequests = [];
+
+    for (ProcessRequestModel request in dataSubjectRight.processRequests) {
+      if (request.id == processRequestId) {
+        List<String> notifyEmail =
+            request.notifyEmail.map((email) => email).toList();
+
+        if (!notifyEmail.contains(email)) {
+          notifyEmail.add(email);
+        } else {
+          notifyEmail.remove(email);
+        }
+
+        processRequests.add(
+          request.copyWith(notifyEmail: notifyEmail),
+        );
+      } else {
+        processRequests.add(request);
       }
     }
 

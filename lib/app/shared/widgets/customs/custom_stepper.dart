@@ -12,7 +12,6 @@ class CustomStep {
     this.state = StepState.indexed,
     this.isActive = false,
     this.label,
-    this.endStep = false,
   });
 
   final Widget title;
@@ -22,7 +21,6 @@ class CustomStep {
   final StepState state;
   final bool isActive;
   final Widget? label;
-  final bool endStep;
 }
 
 class CustomStepper extends StatefulWidget {
@@ -33,11 +31,14 @@ class CustomStepper extends StatefulWidget {
     this.shrinkWrap = false,
     required this.steps,
     this.currentStep = 0,
-    this.progressStep = 0,
     this.previousButtonText,
     this.onPreviousStep,
     this.nextButtonText,
     this.onNextStep,
+    this.activeColor,
+    this.checkIcon = false,
+    this.showContentInSummary = false,
+    this.hideStepperControls = false,
   });
 
   final EdgeInsets? padding;
@@ -45,11 +46,14 @@ class CustomStepper extends StatefulWidget {
   final bool shrinkWrap;
   final List<CustomStep> steps;
   final int currentStep;
-  final int progressStep;
   final String? previousButtonText;
   final VoidCallback? onPreviousStep;
   final String? nextButtonText;
   final VoidCallback? onNextStep;
+  final Color? activeColor;
+  final bool checkIcon;
+  final bool showContentInSummary;
+  final bool hideStepperControls;
 
   @override
   State<CustomStepper> createState() => _CustomStepperState();
@@ -61,10 +65,6 @@ class _CustomStepperState extends State<CustomStepper> {
 
   bool _isCurrent(int index) {
     return widget.currentStep == index;
-  }
-
-  bool _isEndStep(int index) {
-    return widget.steps[index].endStep;
   }
 
   @override
@@ -117,43 +117,76 @@ class _CustomStepperState extends State<CustomStepper> {
       margin: const EdgeInsets.symmetric(vertical: 8.0),
       width: _kStepSize,
       height: _kStepSize,
-      child: AnimatedContainer(
-        curve: Curves.fastOutSlowIn,
-        duration: kThemeAnimationDuration,
-        decoration: BoxDecoration(
-          color: widget.currentStep >= index
-              ? Theme.of(context).colorScheme.primary
-              : Theme.of(context).colorScheme.onSurface.withOpacity(0.6),
-          shape: BoxShape.circle,
-        ),
-        child: Center(
-          child: Text(
-            '${index + 1}',
-            style: Theme.of(context)
-                .textTheme
-                .labelMedium
-                ?.copyWith(color: Theme.of(context).colorScheme.onPrimary),
-          ),
-        ),
-      ),
+      child: widget.checkIcon
+          ? AnimatedContainer(
+              curve: Curves.fastOutSlowIn,
+              duration: kThemeAnimationDuration,
+              decoration: BoxDecoration(
+                color: Theme.of(context).colorScheme.onBackground,
+                border: Border.all(
+                  color: widget.currentStep >= index
+                      ? widget.activeColor ??
+                          Theme.of(context).colorScheme.primary
+                      : Theme.of(context)
+                          .colorScheme
+                          .onSurface
+                          .withOpacity(0.6),
+                  width: 1.0,
+                ),
+                shape: BoxShape.circle,
+              ),
+              child: Center(
+                child: Opacity(
+                  opacity: widget.currentStep >= index ? 1.0 : 0,
+                  child: Icon(
+                    Icons.check,
+                    size: 12.0,
+                    color: widget.activeColor ??
+                        Theme.of(context).colorScheme.primary,
+                  ),
+                ),
+              ),
+            )
+          : AnimatedContainer(
+              curve: Curves.fastOutSlowIn,
+              duration: kThemeAnimationDuration,
+              decoration: BoxDecoration(
+                color: widget.currentStep >= index
+                    ? widget.activeColor ??
+                        Theme.of(context).colorScheme.primary
+                    : Theme.of(context).colorScheme.onSurface.withOpacity(0.6),
+                shape: BoxShape.circle,
+              ),
+              child: Center(
+                child: Text(
+                  '${index + 1}',
+                  style: Theme.of(context).textTheme.labelMedium?.copyWith(
+                      color: Theme.of(context).colorScheme.onPrimary),
+                ),
+              ),
+            ),
     );
   }
 
   Stack _buildVerticalBody(BuildContext context, int index) {
+    const verticalLineWidth = 8.0;
+    const horizontalPadding = 24.0;
+
     return Stack(
       children: <Widget>[
         PositionedDirectional(
-          start: 24.0,
+          start: verticalLineWidth,
           top: 0.0,
           bottom: 0.0,
           child: SizedBox(
-            width: 24.0,
+            width: verticalLineWidth,
             child: Center(
               child: SizedBox(
                 width: 1.0,
                 child: Container(
-                  color: widget.progressStep > index
-                      ? Theme.of(context).colorScheme.primary
+                  color: widget.currentStep > index
+                      ? widget.activeColor ??
+                          Theme.of(context).colorScheme.primary
                       : Theme.of(context)
                           .colorScheme
                           .onSurface
@@ -164,43 +197,63 @@ class _CustomStepperState extends State<CustomStepper> {
           ),
         ),
         ExpandedContainer(
-          expand: _isCurrent(index) && !_isEndStep(index),
+          expand: _isCurrent(index),
           duration: const Duration(milliseconds: 400),
           child: Padding(
             padding: const EdgeInsetsDirectional.only(
-              start: 60.0,
-              end: 24.0,
+              start: verticalLineWidth + horizontalPadding + 6.0,
+              end: horizontalPadding,
             ),
             child: Column(
               children: <Widget>[
                 widget.steps[index].content,
-                _isCurrent(index)
-                    ? _buildControlsBuilder(
-                        context,
-                        details: ControlsDetails(
-                          currentStep: widget.currentStep,
-                          onStepCancel: widget.onPreviousStep,
-                          onStepContinue: widget.onNextStep,
-                          stepIndex: index,
-                        ),
-                      )
-                    : const SizedBox(height: 60.0),
+                if (_isCurrent(index) && !widget.hideStepperControls)
+                  Padding(
+                    padding: const EdgeInsets.only(top: 10.0),
+                    child: _buildControlsBuilder(
+                      context,
+                      details: ControlsDetails(
+                        currentStep: widget.currentStep,
+                        onStepCancel: widget.onPreviousStep,
+                        onStepContinue: widget.onNextStep,
+                        stepIndex: index,
+                      ),
+                    ),
+                  ),
               ],
             ),
           ),
         ),
-        if (widget.steps[index].summaryContent != null)
-          ExpandedContainer(
-            expand: widget.progressStep > index,
-            duration: const Duration(milliseconds: 400),
-            child: Padding(
-              padding: const EdgeInsetsDirectional.only(
-                start: 60.0,
-                end: 24.0,
+        widget.showContentInSummary
+            ? Visibility(
+                visible: widget.currentStep > index,
+                child: ExpandedContainer(
+                  expand: widget.currentStep >= index,
+                  duration: const Duration(milliseconds: 400),
+                  child: Padding(
+                    padding: const EdgeInsetsDirectional.only(
+                      start: verticalLineWidth + horizontalPadding + 6.0,
+                      end: horizontalPadding,
+                    ),
+                    child: widget.steps[index].content,
+                  ),
+                ),
+              )
+            : Visibility(
+                visible: widget.steps[index].summaryContent != null &&
+                    widget.currentStep > index,
+                child: ExpandedContainer(
+                  expand: widget.currentStep >= index,
+                  duration: const Duration(milliseconds: 400),
+                  child: Padding(
+                    padding: const EdgeInsetsDirectional.only(
+                      start: verticalLineWidth + horizontalPadding + 6.0,
+                      end: horizontalPadding,
+                    ),
+                    child: widget.steps[index].summaryContent,
+                  ),
+                ),
               ),
-              child: widget.steps[index].summaryContent,
-            ),
-          ),
       ],
     );
   }
@@ -221,12 +274,12 @@ class _CustomStepperState extends State<CustomStepper> {
                   onPressed: details.onStepCancel!,
                   child: Padding(
                     padding: const EdgeInsets.symmetric(
-                      vertical: 8.0,
-                      horizontal: 12.0,
+                      vertical: 6.0,
+                      horizontal: 10.0,
                     ),
                     child: Text(
                       widget.previousButtonText ?? 'ย้อนกลับ',
-                      style: Theme.of(context).textTheme.bodyMedium?.copyWith(
+                      style: Theme.of(context).textTheme.bodySmall?.copyWith(
                           color: Theme.of(context).colorScheme.onPrimary),
                     ),
                   ),
@@ -237,12 +290,12 @@ class _CustomStepperState extends State<CustomStepper> {
                   onPressed: details.onStepContinue!,
                   child: Padding(
                     padding: const EdgeInsets.symmetric(
-                      vertical: 8.0,
-                      horizontal: 12.0,
+                      vertical: 6.0,
+                      horizontal: 10.0,
                     ),
                     child: Text(
                       widget.nextButtonText ?? 'ถัดไป',
-                      style: Theme.of(context).textTheme.bodyMedium?.copyWith(
+                      style: Theme.of(context).textTheme.bodySmall?.copyWith(
                           color: Theme.of(context).colorScheme.onPrimary),
                     ),
                   ),

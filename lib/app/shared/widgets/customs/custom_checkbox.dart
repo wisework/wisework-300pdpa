@@ -4,19 +4,25 @@ class CustomCheckBox extends StatelessWidget {
   const CustomCheckBox({
     super.key,
     required this.value,
-    required this.onChanged,
+    this.onChanged,
     this.activeColor,
   });
 
   final bool value;
-  final ValueChanged<bool> onChanged;
+  final ValueChanged<bool>? onChanged;
   final Color? activeColor;
 
   @override
   Widget build(BuildContext context) {
     return Checkbox(
       value: value,
-      onChanged: (_) => onChanged(!value),
+      onChanged: onChanged != null
+          ? (value) {
+              if (value != null) {
+                onChanged!(value);
+              }
+            }
+          : null,
       shape: RoundedRectangleBorder(
         borderRadius: BorderRadius.circular(4.0),
       ),
@@ -27,6 +33,20 @@ class CustomCheckBox extends StatelessWidget {
         ),
       ),
       activeColor: activeColor ?? Theme.of(context).colorScheme.primary,
+      fillColor: onChanged == null
+          ? MaterialStateProperty.resolveWith(
+              (states) {
+                final color =
+                    activeColor ?? Theme.of(context).colorScheme.primary;
+
+                if (states.contains(MaterialState.disabled)) {
+                  return value ? color : Colors.transparent;
+                }
+
+                return color;
+              },
+            )
+          : null,
       checkColor: Theme.of(context).colorScheme.onPrimary,
       overlayColor: MaterialStateColor.resolveWith(
         (states) {

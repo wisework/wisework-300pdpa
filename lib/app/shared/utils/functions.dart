@@ -14,6 +14,10 @@ import 'package:pdpa/app/data/models/master_data/custom_field_model.dart';
 import 'package:pdpa/app/data/models/master_data/mandatory_field_model.dart';
 import 'package:pdpa/app/data/models/master_data/purpose_category_model.dart';
 import 'package:pdpa/app/data/models/master_data/purpose_model.dart';
+import 'package:pdpa/app/data/models/master_data/reason_type_model.dart';
+import 'package:pdpa/app/data/models/master_data/reject_type_model.dart';
+import 'package:pdpa/app/data/models/master_data/request_action_model.dart';
+import 'package:pdpa/app/data/models/master_data/request_type_model.dart';
 import 'package:path/path.dart' as p;
 
 import 'constants.dart';
@@ -169,6 +173,46 @@ class UtilFunctions {
     }
 
     return ProcessRequestStatus.inProgress;
+  }
+
+  static RequestTypeModel getRequestTypeById(
+    List<RequestTypeModel> requestTypes,
+    String requestTypeId,
+  ) {
+    return requestTypes.firstWhere(
+      (requestType) => requestType.id == requestTypeId,
+      orElse: () => RequestTypeModel.empty().copyWith(id: requestTypeId),
+    );
+  }
+
+  static ReasonTypeModel getReasonTypeById(
+    List<ReasonTypeModel> reasonTypes,
+    String reasonTypeId,
+  ) {
+    return reasonTypes.firstWhere(
+      (reasonType) => reasonType.id == reasonTypeId,
+      orElse: () => ReasonTypeModel.empty().copyWith(id: reasonTypeId),
+    );
+  }
+
+  static RejectTypeModel getRejectTypeById(
+    List<RejectTypeModel> rejectTypes,
+    String rejectTypeId,
+  ) {
+    return rejectTypes.firstWhere(
+      (rejectType) => rejectType.id == rejectTypeId,
+      orElse: () => RejectTypeModel.empty().copyWith(id: rejectTypeId),
+    );
+  }
+
+  static RequestActionModel getRequestActionById(
+    List<RequestActionModel> requestActions,
+    String requestActionId,
+  ) {
+    return requestActions.firstWhere(
+      (requestAction) => requestAction.id == requestActionId,
+      orElse: () => RequestActionModel.empty().copyWith(id: requestActionId),
+    );
   }
 
   static PowerVerificationModel getPowerVerification(

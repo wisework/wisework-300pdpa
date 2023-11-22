@@ -1,8 +1,13 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
 import 'package:pdpa/app/config/config.dart';
 import 'package:pdpa/app/data/models/data_subject_right/data_subject_right_model.dart';
 import 'package:pdpa/app/data/models/data_subject_right/process_request_model.dart';
+import 'package:pdpa/app/data/models/etc/updated_return.dart';
+import 'package:pdpa/app/data/models/master_data/localized_model.dart';
+import 'package:pdpa/app/data/models/master_data/request_type_model.dart';
+import 'package:pdpa/app/features/data_subject_right/bloc/data_subject_right/data_subject_right_bloc.dart';
 import 'package:pdpa/app/features/data_subject_right/routes/data_subject_right_route.dart';
 import 'package:pdpa/app/features/data_subject_right/widgets/data_subject_right_status.dart';
 import 'package:pdpa/app/shared/utils/constants.dart';
@@ -14,10 +19,14 @@ class DataSubjectRightCard extends StatelessWidget {
     super.key,
     required this.dataSubjectRight,
     required this.processRequest,
+    required this.requestTypes,
+    required this.language,
   });
 
   final DataSubjectRightModel dataSubjectRight;
   final ProcessRequestModel processRequest;
+  final List<RequestTypeModel> requestTypes;
+  final String language;
 
   @override
   Widget build(BuildContext context) {
@@ -35,12 +44,24 @@ class DataSubjectRightCard extends StatelessWidget {
       ),
       child: MaterialInkWell(
         hoverColor: Theme.of(context).colorScheme.primary.withOpacity(0.1),
-        onTap: () {
+        onTap: () async {
           String path = DataSubjectRightRoute.editDataSubjectRight.path;
           path = path.replaceFirst(':id1', dataSubjectRight.id);
           path = path.replaceFirst(':id2', processRequest.id);
 
-          context.push(path);
+          await context.push(path).then((value) {
+            if (value != null) {
+              final updated = value as UpdatedReturn<DataSubjectRightModel>;
+
+              if (updated != dataSubjectRight) {
+                final event = UpdateDataSubjectRightsEvent(
+                  dataSubjectRight: updated.object,
+                  updateType: updated.type,
+                );
+                context.read<DataSubjectRightBloc>().add(event);
+              }
+            }
+          });
         },
         child: Padding(
           padding: const EdgeInsets.all(UiConfig.defaultPaddingSpacing),
@@ -117,12 +138,21 @@ class DataSubjectRightCard extends StatelessWidget {
   }
 
   Column _buildProcessRequestInfo(BuildContext context) {
+    final requestType = UtilFunctions.getRequestTypeById(
+      requestTypes,
+      processRequest.requestType,
+    );
+    final description = requestType.description.firstWhere(
+      (item) => item.language == language,
+      orElse: () => const LocalizedModel.empty(),
+    );
+
     return Column(
       mainAxisSize: MainAxisSize.min,
       crossAxisAlignment: CrossAxisAlignment.start,
       children: <Widget>[
         Text(
-          processRequest.requestType,
+          description.text,
           style: Theme.of(context)
               .textTheme
               .titleMedium

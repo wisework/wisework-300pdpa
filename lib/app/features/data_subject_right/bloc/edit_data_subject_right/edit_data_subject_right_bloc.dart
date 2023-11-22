@@ -7,6 +7,9 @@ import 'package:pdpa/app/data/models/data_subject_right/process_request_model.da
 import 'package:pdpa/app/data/models/master_data/reason_type_model.dart';
 import 'package:pdpa/app/data/models/master_data/reject_type_model.dart';
 import 'package:pdpa/app/data/models/master_data/request_type_model.dart';
+import 'package:pdpa/app/data/presets/reason_types_preset.dart';
+import 'package:pdpa/app/data/presets/reject_types_preset.dart';
+import 'package:pdpa/app/data/presets/request_types_preset.dart';
 import 'package:pdpa/app/data/repositories/data_subject_right_repository.dart';
 import 'package:pdpa/app/data/repositories/master_data_repository.dart';
 import 'package:pdpa/app/data/repositories/user_repository.dart';
@@ -27,6 +30,7 @@ class EditDataSubjectRightBloc
     on<GetCurrentDataSubjectRightEvent>(_getCurrentDsrHandler);
     on<CreateCurrentDataSubjectRightEvent>(_createCurrentDsrHandler);
     on<UpdateCurrentDataSubjectRightEvent>(_updateCurrentDsrHandler);
+    on<UpdateEditDataSubjectRightStateEvent>(_updateEditDsrStateHandler);
   }
 
   final DataSubjectRightRepository _dataSubjectRightRepository;
@@ -54,31 +58,31 @@ class EditDataSubjectRightBloc
     await result.fold((failure) {
       emit(EditDataSubjectRightError(failure.errorMessage));
     }, (dataSubjectRight) async {
-      List<RequestTypeModel> gotRequestTypes = [];
+      List<RequestTypeModel> gotRequestTypes = requestTypesPreset;
       final requestTypeResult = await _masterDataRepository.getRequestTypes(
         event.companyId,
       );
       requestTypeResult.fold(
         (failure) => emit(EditDataSubjectRightError(failure.errorMessage)),
-        (requestTypes) => gotRequestTypes = requestTypes,
+        (requestTypes) => gotRequestTypes.addAll(requestTypes),
       );
 
-      List<ReasonTypeModel> gotReasonTypes = [];
+      List<ReasonTypeModel> gotReasonTypes = reasonTypesPreset;
       final reasonTypeResult = await _masterDataRepository.getReasonTypes(
         event.companyId,
       );
       reasonTypeResult.fold(
         (failure) => emit(EditDataSubjectRightError(failure.errorMessage)),
-        (reasonTypes) => gotReasonTypes = reasonTypes,
+        (reasonTypes) => gotReasonTypes.addAll(reasonTypes),
       );
 
-      List<RejectTypeModel> gotRejectTypes = [];
+      List<RejectTypeModel> gotRejectTypes = rejectTypesPreset;
       final rejectTypeResult = await _masterDataRepository.getRejectTypes(
         event.companyId,
       );
       rejectTypeResult.fold(
         (failure) => emit(EditDataSubjectRightError(failure.errorMessage)),
-        (rejectTypes) => gotRejectTypes = rejectTypes,
+        (rejectTypes) => gotRejectTypes.addAll(rejectTypes),
       );
 
       List<String> gotEmails = [];
@@ -109,6 +113,14 @@ class EditDataSubjectRightBloc
       emit(
         GotCurrentDataSubjectRight(
           dataSubjectRight.copyWith(
+            dataRequester: dataSubjectRight.dataRequester
+              ..sort(
+                (a, b) => a.priority.compareTo(b.priority),
+              ),
+            dataOwner: dataSubjectRight.dataOwner
+              ..sort(
+                (a, b) => a.priority.compareTo(b.priority),
+              ),
             processRequests: processRequestSorted,
           ),
           gotRequestTypes,
@@ -196,5 +208,59 @@ class EditDataSubjectRightBloc
         ),
       ),
     );
+  }
+
+  Future<void> _updateEditDsrStateHandler(
+    UpdateEditDataSubjectRightStateEvent event,
+    Emitter<EditDataSubjectRightState> emit,
+  ) async {
+    List<RequestTypeModel> requestTypes = [];
+    List<ReasonTypeModel> reasonTypes = [];
+    List<RejectTypeModel> rejectTypes = [];
+    List<String> emails = [];
+
+    if (state is GotCurrentDataSubjectRight) {
+      final settings = state as GotCurrentDataSubjectRight;
+
+      requestTypes = settings.requestTypes;
+      reasonTypes = settings.reasonTypes;
+      rejectTypes = settings.rejectTypes;
+      emails = settings.userEmails;
+
+      emit(const UpdatingCurrentDataSubjectRight());
+
+      await Future.delayed(const Duration(milliseconds: 800));
+
+      emit(
+        GotCurrentDataSubjectRight(
+          event.dataSubjectRight,
+          requestTypes,
+          reasonTypes,
+          rejectTypes,
+          emails,
+        ),
+      );
+    } else if (state is UpdatedCurrentDataSubjectRight) {
+      final settings = state as GotCurrentDataSubjectRight;
+
+      requestTypes = settings.requestTypes;
+      reasonTypes = settings.reasonTypes;
+      rejectTypes = settings.rejectTypes;
+      emails = settings.userEmails;
+
+      emit(const UpdatingCurrentDataSubjectRight());
+
+      await Future.delayed(const Duration(milliseconds: 800));
+
+      emit(
+        UpdatedCurrentDataSubjectRight(
+          event.dataSubjectRight,
+          requestTypes,
+          reasonTypes,
+          rejectTypes,
+          emails,
+        ),
+      );
+    }
   }
 }
