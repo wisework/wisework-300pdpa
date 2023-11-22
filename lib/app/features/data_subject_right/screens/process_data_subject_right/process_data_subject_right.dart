@@ -169,11 +169,15 @@ class _ProcessDataSubjectRightViewState
       requests.add(description.text);
     }
 
+    final rejectReason = dataSubjectRight.rejectVerifyReason.isNotEmpty
+        ? '\nเหตุผล: ${dataSubjectRight.rejectVerifyReason}'
+        : '';
+
     final status = dataSubjectRight.verifyFormStatus == RequestResultStatus.pass
-        ? 'อยู่ระหว่างการดำเนินการ'
+        ? 'ผ่านการตรวจสอบแล้ว'
         : dataSubjectRight.verifyFormStatus == RequestResultStatus.fail
-            ? 'ปฏิเสธการดำเนินการ${dataSubjectRight.rejectVerifyReason.isNotEmpty ? '\nเหตุผล: ${dataSubjectRight.rejectVerifyReason}' : ''}'
-            : 'ยังไม่ดำเนินการ';
+            ? 'ไม่ผ่านการตรวจสอบ$rejectReason'
+            : 'ยังไม่ได้ตรวจสอบ';
 
     if (requests.isNotEmpty) {
       return ProcessRequestTemplateParams(

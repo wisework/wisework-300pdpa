@@ -205,6 +205,8 @@ class _ConsiderRequestStepState extends State<ConsiderRequestStep> {
                   ProcessConsiderRequest(
                     processRequest: processRequest,
                     initialProcessRequest: initialProcessRequest,
+                    requestTypes: widget.requestTypes,
+                    language: widget.language,
                   ),
                   ExpandedContainer(
                     expand: initialProcessRequest.considerRequestStatus ==
@@ -218,6 +220,8 @@ class _ConsiderRequestStepState extends State<ConsiderRequestStep> {
                         dataSubjectRightId: dataSubjectRight.id,
                         processRequest: processRequest,
                         initialProcessRequest: initialProcessRequest,
+                        requestTypes: widget.requestTypes,
+                        language: widget.language,
                       ),
                     ),
                   ),
