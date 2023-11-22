@@ -1,6 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
 import 'package:ionicons/ionicons.dart';
@@ -27,9 +28,16 @@ import 'package:pdpa/app/shared/widgets/content_wrapper.dart';
 import 'package:pdpa/app/shared/widgets/customs/custom_button.dart';
 import 'package:pdpa/app/shared/widgets/customs/custom_container.dart';
 import 'package:pdpa/app/shared/widgets/customs/custom_icon_button.dart';
+import 'package:pdpa/app/shared/widgets/customs/custom_text_field.dart';
 import 'package:pdpa/app/shared/widgets/loading_indicator.dart';
+import 'package:pdpa/app/shared/widgets/material_ink_well.dart';
 import 'package:pdpa/app/shared/widgets/screens/example_screen.dart';
 import 'package:pdpa/app/shared/widgets/templates/pdpa_app_bar.dart';
+import 'package:qr_flutter/qr_flutter.dart';
+import 'package:pdpa/app/features/consent_management/consent_form/widgets/download_fuctions/netive_download.dart'
+    if (dart.library.html) 'package:pdpa/app/features/consent_management/consent_form/widgets/download_fuctions/web_download.dart'
+    // ignore: library_prefixes
+    as downloadQrCode;
 
 class DataSubjectRightScreen extends StatefulWidget {
   const DataSubjectRightScreen({super.key});
@@ -107,6 +115,7 @@ class _DataSubjectRightViewState extends State<DataSubjectRightView> {
       ),
     );
   }
+  final qrCodeKey = GlobalKey();
 
   @override
   Widget build(BuildContext context) {
@@ -127,7 +136,19 @@ class _DataSubjectRightViewState extends State<DataSubjectRightView> {
         ),
         actions: [
           CustomIconButton(
-            onPressed: () {},
+            onPressed: () {
+              showModalBottomSheet(
+                context: context,
+                builder: (context) => Padding(
+                  padding: const EdgeInsets.only(top: 20.0),
+                  child: SingleChildScrollView(
+                    child: CustomContainer(
+              child: _buildShareConsentForm(context),
+            ),
+                  ),
+                ),
+              );
+            },
             icon: Ionicons.link_outline,
             iconColor: Theme.of(context).colorScheme.primary,
             backgroundColor: Theme.of(context).colorScheme.onBackground,
@@ -503,6 +524,167 @@ class _DataSubjectRightViewState extends State<DataSubjectRightView> {
         );
       },
       itemCount: dataSubjectRight.processRequests.length,
+    );
+  }
+
+  Column _buildShareConsentForm(BuildContext context) {
+    return Column(
+      
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: <Widget>[
+        Align(
+            alignment: Alignment.topRight,
+            child: MaterialInkWell(
+              borderRadius: BorderRadius.circular(13.0),
+              backgroundColor:
+                  Theme.of(context).colorScheme.outlineVariant.withOpacity(0.4),
+              onTap: () async {
+                Navigator.of(context).pop();
+              },
+              child: Padding(
+                padding: const EdgeInsets.only(
+                  left: 2.0,
+                  top: 1.0,
+                  right: 2.0,
+                  bottom: 3.0,
+                ),
+                child: Icon(
+                  Ionicons.close_outline,
+                  size: 16.0,
+                  color: Theme.of(context).colorScheme.onPrimary,
+                ),
+              ),
+            ),
+          ),
+        Padding(
+          padding: const EdgeInsets.all(UiConfig.textLineSpacing),
+          child: Text(
+            tr("consentManagement.consentForm.consentFormDetails.form.shareLinkForm"),
+            style: Theme.of(context).textTheme.titleLarge,
+          ),
+        ),
+        Padding(
+          padding: const EdgeInsets.all(UiConfig.textLineSpacing),
+          child: Text(
+            tr("consentManagement.consentForm.consentFormDetails.form.descriptionShare"),
+            style: Theme.of(context).textTheme.labelLarge,
+          ),
+        ),
+        Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: <Widget>[
+            const SizedBox(height: UiConfig.lineSpacing),
+            _buildQrDataSubjectRight(context),
+            const SizedBox(height: UiConfig.lineSpacing),
+            _buildDatSubjectRightLink(context),
+            const SizedBox(height: UiConfig.lineSpacing),
+          ],
+        ),
+      ],
+    );
+  }
+
+  Row _buildQrDataSubjectRight(BuildContext context) {
+    return Row(
+      children: <Widget>[
+        Expanded(
+          child: Container(
+            padding: const EdgeInsets.all(15.0),
+            decoration: BoxDecoration(
+              color: Theme.of(context).colorScheme.onBackground,
+              borderRadius: BorderRadius.circular(10.0),
+              border: Border.all(
+                width: 1.0,
+                color: Theme.of(context).colorScheme.outlineVariant,
+              ),
+            ),
+            child: Align(
+              alignment: Alignment.centerLeft,
+              child: GestureDetector(
+                child: Column(
+                  children: <Widget>[
+                    Align(
+                      alignment: Alignment.centerLeft,
+                      child: RepaintBoundary(
+                        key: qrCodeKey,
+                        child: QrImageView(
+                          data: 'www.google.com',
+                          size: 160,
+                          backgroundColor: Colors.white,
+                          version: QrVersions.auto,
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+            ),
+          ),
+        ),
+        Padding(
+          padding: const EdgeInsets.only(left: 10.0),
+          child: CustomIconButton(
+            onPressed: () async {
+              // downloadQrCode.downloadQrcode(qrKey);
+              await downloadQrCode.downloadQrCode(qrCodeKey).then((value) {
+                if (value) {
+                  showToast(
+                    context,
+                    text: tr(
+                      'consentManagement.consentForm.urltab.qrCodeHasBeenDownloaded',
+                    ),
+                  );
+                } else {
+                  showToast(
+                    context,
+                    text: tr(
+                      'consentManagement.consentForm.urltab.failedToDownloadQrCode',
+                    ),
+                  );
+                }
+              });
+            },
+            icon: Icons.file_download_outlined,
+            iconColor: Theme.of(context).colorScheme.primary,
+            backgroundColor: Theme.of(context).colorScheme.onBackground,
+          ),
+        ),
+      ],
+    );
+  }
+
+  Row _buildDatSubjectRightLink(BuildContext context) {
+    return Row(
+      children: <Widget>[
+        Expanded(
+          child: CustomTextField(
+            controller: TextEditingController(
+              text: 'www.google.com',
+            ),
+            readOnly: true,
+          ),
+        ),
+        Padding(
+          padding: const EdgeInsets.only(left: 10.0),
+          child: CustomIconButton(
+            onPressed: () {
+              Clipboard.setData(
+                const ClipboardData(text: 'www.google.com'),
+              );
+
+              showToast(
+                context,
+                text: tr(
+                  'consentManagement.consentForm.urltab.urlCopied',
+                ),
+              );
+            },
+            icon: Ionicons.copy_outline,
+            iconColor: Theme.of(context).colorScheme.primary,
+            backgroundColor: Theme.of(context).colorScheme.onBackground,
+          ),
+        ),
+      ],
     );
   }
 }

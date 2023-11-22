@@ -88,7 +88,7 @@ class _RequestTypeViewState extends State<RequestTypeView> {
           backgroundColor: Theme.of(context).colorScheme.onBackground,
         ),
         title: Text(
-          tr('masterData.dsr.request.list'),
+          tr('masterData.dsr.request.list2'),
           style: Theme.of(context).textTheme.titleLarge,
         ),
       ),
@@ -123,28 +123,36 @@ class _RequestTypeViewState extends State<RequestTypeView> {
             return CustomContainer(
               margin: const EdgeInsets.all(UiConfig.lineSpacing),
               child: state.requestTypes.isNotEmpty
-                  ? ListView.builder(
-                      physics: const NeverScrollableScrollPhysics(),
-                      shrinkWrap: true,
-                      itemCount: state.requestTypes.length,
-                      itemBuilder: (context, index) {
-                        return _buildItemCard(
-                          context,
-                          requestType: state.requestTypes[index],
-                          onUpdated: _onUpdated,
-                          language: language,
-                        );
-                      },
+                  ? Column(
+                      children: [
+                        Text(
+                          'masterData.dsr.request.title2',
+                          style: Theme.of(context).textTheme.titleLarge,
+                        ), //!
+                        ListView.builder(
+                          physics: const NeverScrollableScrollPhysics(),
+                          shrinkWrap: true,
+                          itemCount: state.requestTypes.length,
+                          itemBuilder: (context, index) {
+                            return _buildItemCard(
+                              context,
+                              requestType: state.requestTypes[index],
+                              onUpdated: _onUpdated,
+                              language: language,
+                            );
+                          },
+                        ),
+                      ],
                     )
                   : ExampleScreen(
                       headderText: tr(
-                        'masterData.cm.RequestType.list',
+                        'masterData.dsr.request.title2',
                       ),
                       buttonText: tr(
-                        'masterData.cm.RequestType.create',
+                        'masterData.dsr.request.create',
                       ),
                       descriptionText: tr(
-                        'masterData.cm.RequestType.explain',
+                        'masterData.dsr.request.description',
                       ),
                       onPress: () {
                         context.push(MasterDataRoute.createRequestType.path);
@@ -189,27 +197,35 @@ class _RequestTypeViewState extends State<RequestTypeView> {
       child: CustomContainer(
         margin: const EdgeInsets.all(UiConfig.lineSpacing),
         child: requestTypesPreset.isNotEmpty
-            ? ListView.builder(
-                physics: const NeverScrollableScrollPhysics(),
-                shrinkWrap: true,
-                itemCount: requestTypesPreset.length,
-                itemBuilder: (context, index) {
-                  return _buildItemCardPreset(
-                    context,
-                    requestType: requestTypesPreset[index],
-                    language: language,
-                  );
-                },
+            ? Column(
+                children: [
+                  Text(
+                    tr('masterData.dsr.request.title1'),
+                    style: Theme.of(context).textTheme.titleLarge,
+                  ), //!
+                  ListView.builder(
+                    physics: const NeverScrollableScrollPhysics(),
+                    shrinkWrap: true,
+                    itemCount: requestTypesPreset.length,
+                    itemBuilder: (context, index) {
+                      return _buildItemCardPreset(
+                        context,
+                        requestType: requestTypesPreset[index],
+                        language: language,
+                      );
+                    },
+                  ),
+                ],
               )
             : ExampleScreen(
                 headderText: tr(
-                  'masterData.cm.RequestType.list',
+                  'masterData.dsr.request.title1',
                 ),
                 buttonText: tr(
-                  'masterData.cm.RequestType.create',
+                  'masterData.dsr.request.create',
                 ),
                 descriptionText: tr(
-                  'masterData.cm.RequestType.explain',
+                  'masterData.dsr.request.description',
                 ),
                 onPress: () {
                   context.push(MasterDataRoute.createRequestType.path);

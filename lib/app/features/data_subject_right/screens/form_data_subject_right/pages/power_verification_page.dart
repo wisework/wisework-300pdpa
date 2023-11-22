@@ -7,8 +7,10 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 import 'package:pdpa/app/config/config.dart';
+import 'package:pdpa/app/data/models/data_subject_right/data_subject_right_model.dart';
 
 import 'package:pdpa/app/data/models/data_subject_right/power_verification_model.dart';
+import 'package:pdpa/app/data/models/data_subject_right/requester_verification_model.dart';
 import 'package:pdpa/app/data/presets/power_verification_preset.dart';
 import 'package:pdpa/app/features/data_subject_right/cubit/form_data_subject_right/form_data_subject_right_cubit.dart';
 import 'package:pdpa/app/shared/utils/constants.dart';
@@ -22,8 +24,8 @@ import 'package:pdpa/app/shared/widgets/expanded_container.dart';
 import 'package:pdpa/app/shared/widgets/title_required_text.dart';
 import 'package:pdpa/app/shared/widgets/upload_file_field.dart';
 
-class PowerOfAttorneyPage extends StatefulWidget {
-  const PowerOfAttorneyPage({
+class PowerVerificationPage extends StatefulWidget {
+  const PowerVerificationPage({
     super.key,
     required this.companyId,
   });
@@ -31,29 +33,19 @@ class PowerOfAttorneyPage extends StatefulWidget {
   final String companyId;
 
   @override
-  State<PowerOfAttorneyPage> createState() => _PowerOfAttorneyPageState();
+  State<PowerVerificationPage> createState() => _PowerVerificationPageState();
 }
 
-class _PowerOfAttorneyPageState extends State<PowerOfAttorneyPage> {
-  bool isExpanded = false;
-  List<PowerVerificationModel> selectPowerVerification = [];
+class _PowerVerificationPageState extends State<PowerVerificationPage> {
+  late DataSubjectRightModel dataSubjectRight;
 
-  void _setPowerVerifications(PowerVerificationModel powerVerification) {
-    final selectIds =
-        selectPowerVerification.map((selected) => selected.id).toList();
+  List<RequesterVerificationModel> powerVerifications = [];
 
-    setState(() {
-      if (selectIds.contains(powerVerification.id)) {
-        selectPowerVerification = selectPowerVerification
-            .where((selected) => selected.id != powerVerification.id)
-            .toList();
-      } else {
-        selectPowerVerification = selectPowerVerification
-            .map((selected) => selected)
-            .toList()
-          ..add(powerVerification);
-      }
-    });
+  @override
+  void initState() {
+    dataSubjectRight =
+        context.read<FormDataSubjectRightCubit>().state.dataSubjectRight;
+    super.initState();
   }
 
   @override
@@ -107,8 +99,17 @@ class _PowerOfAttorneyPageState extends State<PowerOfAttorneyPage> {
   //? Checkbox List
   Widget _buildCheckBoxTile(
       BuildContext context, PowerVerificationModel powerVerification) {
-    final selectIds =
-        selectPowerVerification.map((category) => category.id).toList();
+    final data = context
+        .read<FormDataSubjectRightCubit>()
+        .state
+        .dataSubjectRight
+        .powerVerifications;
+    final selectIds = data.map((category) => category.id).toList();
+
+    final String? url = data
+        .where((item) => item.id == powerVerification.id)
+        .firstOrNull
+        ?.imageUrl;
 
     return Column(
       mainAxisSize: MainAxisSize.min,
@@ -123,7 +124,9 @@ class _PowerOfAttorneyPageState extends State<PowerOfAttorneyPage> {
               child: CustomCheckBox(
                 value: selectIds.contains(powerVerification.id),
                 onChanged: (_) {
-                  _setPowerVerifications(powerVerification);
+                  context
+                      .read<FormDataSubjectRightCubit>()
+                      .formDataSubjectRightPowerChecked(powerVerification.id);
                 },
               ),
             ),
@@ -170,6 +173,32 @@ class _PowerOfAttorneyPageState extends State<PowerOfAttorneyPage> {
                             child: CustomTextField(
                               hintText: tr(
                                   'dataSubjectRight.powerVerification.hintdocumentType'),
+                              onChanged: (value) {
+                                final selectIds = data
+                                    .map((selected) => selected.id)
+                                    .toList();
+
+                                if (selectIds.contains(powerVerification.id)) {
+                                  final updatedData = data.map((item) {
+                                    if (item.id == powerVerification.id) {
+                                      return item.copyWith(text: value);
+                                    } else {
+                                      return item;
+                                    }
+                                  }).toList();
+
+                                  setState(() {
+                                    powerVerifications = updatedData;
+                                  });
+
+                                  context
+                                      .read<FormDataSubjectRightCubit>()
+                                      .setDataSubjectRight(
+                                          dataSubjectRight.copyWith(
+                                              powerVerifications:
+                                                  powerVerifications));
+                                }
+                              },
                             ),
                           ),
                         ],
@@ -187,7 +216,7 @@ class _PowerOfAttorneyPageState extends State<PowerOfAttorneyPage> {
                   ],
                 ),
                 UploadFileField(
-                  fileUrl: '',
+                  fileUrl: url ?? '',
                   onUploaded: (Uint8List data, String fileName) {
                     final cubit = context.read<FormDataSubjectRightCubit>();
 
