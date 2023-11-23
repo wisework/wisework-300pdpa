@@ -15,28 +15,23 @@ class DataSubjectRightListTile extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Column(
-      mainAxisSize: MainAxisSize.min,
+    return Row(
+      crossAxisAlignment: CrossAxisAlignment.start,
       children: <Widget>[
-        ListTile(
-          onTap: onTap,
-          leading: leading,
-          title: Padding(
-            padding: const EdgeInsets.all(UiConfig.lineGap),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: <Widget>[
-                Text(
-                  title,
-                  style: Theme.of(context).textTheme.bodyMedium,
-                ),
-              ],
+        if (leading != null) leading!,
+        Expanded(
+          child: Padding(
+            padding: const EdgeInsets.only(
+              left: UiConfig.actionSpacing,
+              top: 5.0,
+              bottom: 5.0,
+            ),
+            child: Text(
+              title,
+              style: Theme.of(context).textTheme.bodyMedium,
             ),
           ),
         ),
-        // Divider(
-        //   color: Theme.of(context).colorScheme.outlineVariant.withOpacity(0.5),
-        // ),
       ],
     );
   }

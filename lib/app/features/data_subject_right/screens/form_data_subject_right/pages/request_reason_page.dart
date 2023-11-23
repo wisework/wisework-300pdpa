@@ -176,11 +176,12 @@ class _RequestReasonPageState extends State<RequestReasonPage> {
                           (item) => item.language == 'th-TH',
                           orElse: () => const LocalizedModel.empty(),
                         )
-                        .text, 
+                        .text,
                     style: !selectRequestTypeIds.contains(requestType.id)
-                        ? Theme.of(context).textTheme.bodyMedium?.copyWith()
-                        : Theme.of(context).textTheme.bodyMedium?.copyWith(
-                            color: Theme.of(context).colorScheme.primary),
+                        ? Theme.of(context).textTheme.bodyMedium
+                        : Theme.of(context).textTheme.titleMedium?.copyWith(
+                              color: Theme.of(context).colorScheme.primary,
+                            ),
                   ),
                 ],
               ),
@@ -211,185 +212,189 @@ class _RequestReasonPageState extends State<RequestReasonPage> {
     return ExpandedContainer(
       expand: isExpanded,
       duration: const Duration(milliseconds: 400),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start, 
-        children: [
-          Text(
-            tr('dataSubjectRight.requestReason.iadoperations'), 
-            style: Theme.of(context)
-                .textTheme
-                .titleMedium
-                ?.copyWith(color: Theme.of(context).colorScheme.primary),
-          ),
-          const SizedBox(height: UiConfig.lineSpacing),
-           TitleRequiredText(
-            text: tr('dataSubjectRight.requestReason.personalInformation'), 
-            required: true,
-          ),
-          CustomTextField(
-            hintText: tr('dataSubjectRight.requestReason.hintpersonalInformation'), 
-            controller: identityDataController,
-            required: true,
-          ),
-          const SizedBox(height: UiConfig.lineSpacing),
-           TitleRequiredText(
-            text: tr('dataSubjectRight.requestReason.place'), 
-          ),
-          CustomTextField(
-            controller: foundedPlaceTextController,
-            hintText: tr('dataSubjectRight.requestReason.hintPlace'), 
-          ),
-          const SizedBox(height: UiConfig.lineSpacing),
-           TitleRequiredText(
-            text: tr('dataSubjectRight.requestReason.operation'), 
-            required: true,
-          ),
-          DataSubjectRightListTile(
-            title: tr('dataSubjectRight.requestReason.delete'),
-            onTap: () {
-              setSelectedRadioTile(1);
-            },
-            leading: CustomRadioButton(
-              value: 1,
-              selected: selectedRadioTile,
-              onChanged: (val) {
-                setSelectedRadioTile(val!);
-              },
+      child: CustomContainer(
+        margin: EdgeInsets.zero,
+        color: Theme.of(context).colorScheme.background,
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start, // กำหนดให้ชิดซ้าย
+          children: [
+            Text(
+              'ข้อมูลและรายละเอียดการดำเนินการ', //!
+              style: Theme.of(context)
+                  .textTheme
+                  .titleMedium
+                  ?.copyWith(color: Theme.of(context).colorScheme.primary),
             ),
-          ),
-          Divider(
-            color:
-                Theme.of(context).colorScheme.outlineVariant.withOpacity(0.5),
-          ),
-          DataSubjectRightListTile(
-            title: tr('dataSubjectRight.requestReason.nonDestructive'),
-            onTap: () {
-              setSelectedRadioTile(2);
-            },
-            leading: CustomRadioButton(
-              value: 2,
-              selected: selectedRadioTile,
-              onChanged: (val) {
-                setSelectedRadioTile(val!);
-              },
+            const SizedBox(height: UiConfig.lineSpacing),
+            const TitleRequiredText(
+              text: 'ข้อมูลส่วนบุคคล', //!
+              required: true,
             ),
-          ),
-          Divider(
-            color:
-                Theme.of(context).colorScheme.outlineVariant.withOpacity(0.5),
-          ),
-          DataSubjectRightListTile(
-            title: tr('dataSubjectRight.requestReason.impossibleToIdentifyYourself'),
-            onTap: () {
-              setSelectedRadioTile(3);
-            },
-            leading: CustomRadioButton(
-              value: 3,
-              selected: selectedRadioTile,
-              onChanged: (val) {
-                setSelectedRadioTile(val!);
-              },
+            CustomTextField(
+              hintText: 'กรอกข้อมูลส่วนบุคคล', //!
+              controller: identityDataController,
+              required: true,
             ),
-          ),
-          const SizedBox(height: UiConfig.lineSpacing),
-          Text(
-            tr('dataSubjectRight.requestReason.reasonsRequest'),
-            style: Theme.of(context)
-                .textTheme
-                .titleMedium
-                ?.copyWith(color: Theme.of(context).colorScheme.primary),
-          ),
-          const SizedBox(height: UiConfig.lineSpacing),
-          Column(
-            children: reasonType
-                .map(
-                  (reason) => Padding(
-                      padding: const EdgeInsets.only(
-                        bottom: UiConfig.lineGap,
-                      ),
-                      child: Column(
-                        mainAxisSize: MainAxisSize.min,
-                        children: [
-                          Row(
-                            mainAxisSize: MainAxisSize.min,
-                            mainAxisAlignment: MainAxisAlignment.start,
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              Padding(
-                                padding: const EdgeInsets.only(
-                                  left: 4.0,
-                                  right: UiConfig.actionSpacing,
-                                ),
-                                child: CustomCheckBox(
-                                  value:
-                                      selectReasonTypeIds.contains(reason.id),
-                                  onChanged: (_) {
-                                    _setReasonType(reason);
-                                  },
-                                ),
-                              ),
-                              Expanded(
-                                child: Padding(
-                                  padding: const EdgeInsets.only(top: 4.0),
-                                  child: Text(
-                                    reason.description
-                                        .firstWhere(
-                                          (item) => item.language == 'th-TH',
-                                          orElse: () =>
-                                              const LocalizedModel.empty(),
-                                        )
-                                        .text, 
-                                    style:
-                                        !selectReasonTypeIds.contains(reason.id)
-                                            ? Theme.of(context)
-                                                .textTheme
-                                                .bodyMedium
-                                                ?.copyWith()
-                                            : Theme.of(context)
-                                                .textTheme
-                                                .bodyMedium
-                                                ?.copyWith(
-                                                    color: Theme.of(context)
-                                                        .colorScheme
-                                                        .primary),
+            const SizedBox(height: UiConfig.lineSpacing),
+            const TitleRequiredText(
+              text: 'สถานที่พบเจอ', //!
+            ),
+            CustomTextField(
+              controller: foundedPlaceTextController,
+              hintText: 'กรอกสถานที่พบเจอ', //!
+            ),
+            const SizedBox(height: UiConfig.lineSpacing),
+            const TitleRequiredText(
+              text: 'การดำเนินการ', //!
+              required: true,
+            ),
+            DataSubjectRightListTile(
+              title: 'ลบ',
+              onTap: () {
+                setSelectedRadioTile(1);
+              },
+              leading: CustomRadioButton(
+                value: 1,
+                selected: selectedRadioTile,
+                onChanged: (val) {
+                  setSelectedRadioTile(val!);
+                },
+              ),
+            ),
+            Divider(
+              color:
+                  Theme.of(context).colorScheme.outlineVariant.withOpacity(0.5),
+            ),
+            DataSubjectRightListTile(
+              title: 'ไม่ทำลาย',
+              onTap: () {
+                setSelectedRadioTile(2);
+              },
+              leading: CustomRadioButton(
+                value: 2,
+                selected: selectedRadioTile,
+                onChanged: (val) {
+                  setSelectedRadioTile(val!);
+                },
+              ),
+            ),
+            Divider(
+              color:
+                  Theme.of(context).colorScheme.outlineVariant.withOpacity(0.5),
+            ),
+            DataSubjectRightListTile(
+              title: 'ทำให้ไม่สามารถระบุตัวตน',
+              onTap: () {
+                setSelectedRadioTile(3);
+              },
+              leading: CustomRadioButton(
+                value: 3,
+                selected: selectedRadioTile,
+                onChanged: (val) {
+                  setSelectedRadioTile(val!);
+                },
+              ),
+            ),
+            const SizedBox(height: UiConfig.lineSpacing),
+            Text(
+              'เหตุผลประกอบคำร้อง',
+              style: Theme.of(context)
+                  .textTheme
+                  .titleMedium
+                  ?.copyWith(color: Theme.of(context).colorScheme.primary),
+            ),
+            const SizedBox(height: UiConfig.lineSpacing),
+            Column(
+              children: reasonType
+                  .map(
+                    (reason) => Padding(
+                        padding: const EdgeInsets.only(
+                          bottom: UiConfig.lineGap,
+                        ),
+                        child: Column(
+                          mainAxisSize: MainAxisSize.min,
+                          children: [
+                            Row(
+                              mainAxisSize: MainAxisSize.min,
+                              mainAxisAlignment: MainAxisAlignment.start,
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                Padding(
+                                  padding: const EdgeInsets.only(
+                                    left: 4.0,
+                                    right: UiConfig.actionSpacing,
+                                  ),
+                                  child: CustomCheckBox(
+                                    value:
+                                        selectReasonTypeIds.contains(reason.id),
+                                    onChanged: (_) {
+                                      _setReasonType(reason);
+                                    },
                                   ),
                                 ),
-                              ),
-                            ],
-                          ),
-                          if (reason.requiredInputReasonText == true)
-                            ExpandedContainer(
-                              expand: selectReasonTypeIds.contains(reason.id),
-                              duration: const Duration(milliseconds: 400),
-                              child: Padding(
-                                padding: const EdgeInsets.only(
-                                  left: UiConfig.defaultPaddingSpacing * 3,
-                                  bottom: UiConfig.lineGap,
-                                ),
-                                child: Column(
-                                  crossAxisAlignment: CrossAxisAlignment.start,
-                                  children: [
-                                     TitleRequiredText(
-                                      text: tr('dataSubjectRight.requestReason.reason'), 
-                                      required: true,
+                                Expanded(
+                                  child: Padding(
+                                    padding: const EdgeInsets.only(top: 4.0),
+                                    child: Text(
+                                      reason.description
+                                          .firstWhere(
+                                            (item) => item.language == 'th-TH',
+                                            orElse: () =>
+                                                const LocalizedModel.empty(),
+                                          )
+                                          .text, //!
+                                      style: !selectReasonTypeIds
+                                              .contains(reason.id)
+                                          ? Theme.of(context)
+                                              .textTheme
+                                              .bodyMedium
+                                          : Theme.of(context)
+                                              .textTheme
+                                              .titleMedium
+                                              ?.copyWith(
+                                                  color: Theme.of(context)
+                                                      .colorScheme
+                                                      .primary),
                                     ),
-                                    CustomTextField(
-                                      hintText: tr('dataSubjectRight.requestReason.hintReason'), 
-                                      controller: identityDataController,
-                                      required: true,
-                                    ),
-                                    const SizedBox(
-                                        height: UiConfig.lineSpacing),
-                                  ],
+                                  ),
                                 ),
-                              ),
-                            )
-                        ],
-                      )),
-                )
-                .toList(),
-          )
-        ],
+                              ],
+                            ),
+                            if (reason.requiredInputReasonText == true)
+                              ExpandedContainer(
+                                expand: selectReasonTypeIds.contains(reason.id),
+                                duration: const Duration(milliseconds: 400),
+                                child: Padding(
+                                  padding: const EdgeInsets.only(
+                                    left: UiConfig.defaultPaddingSpacing * 3,
+                                    bottom: UiConfig.lineGap,
+                                  ),
+                                  child: Column(
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.start,
+                                    children: [
+                                      const TitleRequiredText(
+                                        text: 'เหตุผล', //!
+                                        required: true,
+                                      ),
+                                      CustomTextField(
+                                        hintText: 'กรอกเหตุผล', //!
+                                        controller: identityDataController,
+                                        required: true,
+                                      ),
+                                      const SizedBox(
+                                          height: UiConfig.lineSpacing),
+                                    ],
+                                  ),
+                                ),
+                              )
+                          ],
+                        )),
+                  )
+                  .toList(),
+            )
+          ],
+        ),
       ),
     );
   }

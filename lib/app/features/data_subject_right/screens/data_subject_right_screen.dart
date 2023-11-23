@@ -7,7 +7,6 @@ import 'package:ionicons/ionicons.dart';
 import 'package:modal_bottom_sheet/modal_bottom_sheet.dart';
 import 'package:pdpa/app/config/config.dart';
 import 'package:pdpa/app/data/models/data_subject_right/data_subject_right_model.dart';
-import 'package:pdpa/app/data/models/data_subject_right/process_request_model.dart';
 import 'package:pdpa/app/data/models/master_data/request_type_model.dart';
 import 'package:pdpa/app/features/authentication/bloc/sign_in/sign_in_bloc.dart';
 import 'package:pdpa/app/features/data_subject_right/bloc/data_subject_right/data_subject_right_bloc.dart';
@@ -15,6 +14,7 @@ import 'package:pdpa/app/features/data_subject_right/routes/data_subject_right_r
 import 'package:pdpa/app/features/data_subject_right/widgets/data_subject_right_card.dart';
 import 'package:pdpa/app/features/data_subject_right/widgets/search_data_subject_right_modal.dart';
 import 'package:pdpa/app/shared/drawers/pdpa_drawer.dart';
+import 'package:pdpa/app/shared/utils/constants.dart';
 import 'package:pdpa/app/shared/utils/functions.dart';
 import 'package:pdpa/app/shared/utils/toast.dart';
 import 'package:pdpa/app/shared/widgets/content_wrapper.dart';
@@ -24,6 +24,7 @@ import 'package:pdpa/app/shared/widgets/customs/custom_icon_button.dart';
 import 'package:pdpa/app/shared/widgets/customs/custom_text_field.dart';
 import 'package:pdpa/app/shared/widgets/loading_indicator.dart';
 import 'package:pdpa/app/shared/widgets/material_ink_well.dart';
+import 'package:pdpa/app/shared/widgets/screens/example_screen.dart';
 import 'package:pdpa/app/shared/widgets/templates/pdpa_app_bar.dart';
 import 'package:qr_flutter/qr_flutter.dart';
 import 'package:pdpa/app/features/consent_management/consent_form/widgets/download_fuctions/netive_download.dart'
@@ -109,20 +110,21 @@ class _DataSubjectRightViewState extends State<DataSubjectRightView> {
   }
 
   final qrCodeKey = GlobalKey();
-  String _selectedChoice = 'ทั้งหมด';
 
-  // List of choices
-  final List<String> _choices = [
-    'ทั้งหมด',
-    'ยังไม่ดำเนินการ',
-    'กำลังดำเนินการ',
-    'ดำเนินการเสร็จสิ้น',
-    'ปฏิเสธการดำเนินการ'
-  ];
-  void _setPeriodUnit(String? value) {
+  ProcessRequestFilter filterSelected = ProcessRequestFilter.all;
+
+  final Map<ProcessRequestFilter, String> filterTexts = {
+    ProcessRequestFilter.all: 'ทั้งหมด',
+    ProcessRequestFilter.notProcessed: 'ยังไม่เริ่ม',
+    ProcessRequestFilter.inProgress: 'ระหว่างดำเนินการ',
+    ProcessRequestFilter.refused: 'ปฏิเสธคำร้อง',
+    ProcessRequestFilter.completed: 'เสร็จสิ้น',
+  };
+
+  void _setFilter(ProcessRequestFilter? value) {
     if (value != null) {
       setState(() {
-        _selectedChoice = value;
+        filterSelected = value;
       });
     }
   }
@@ -188,7 +190,6 @@ class _DataSubjectRightViewState extends State<DataSubjectRightView> {
               return _buildDataSubjectRightView(
                 context,
                 dataSubjectRights: state.dataSubjectRights,
-                processRequests: state.processRequests,
                 requestTypes: state.requestTypes,
               );
             }
@@ -240,13 +241,12 @@ class _DataSubjectRightViewState extends State<DataSubjectRightView> {
   Column _buildDataSubjectRightView(
     BuildContext context, {
     required List<DataSubjectRightModel> dataSubjectRights,
-    required List<Map<String, ProcessRequestModel>> processRequests,
     required List<RequestTypeModel> requestTypes,
   }) {
     return Column(
       children: <Widget>[
         const SizedBox(height: UiConfig.lineSpacing),
-        if (processRequests.isNotEmpty)
+        if (dataSubjectRights.isNotEmpty)
           Padding(
             padding: const EdgeInsets.only(
               left: UiConfig.lineGap * 2,
@@ -264,37 +264,38 @@ class _DataSubjectRightViewState extends State<DataSubjectRightView> {
                   ),
                 ),
                 SizedBox(
-                  width: 200,
-                  child: CustomDropdownButton<String>(
-                    value: _selectedChoice,
-                    items: _choices.map(
-                      (unit) {
+                  width: 190.0,
+                  child: CustomDropdownButton<ProcessRequestFilter>(
+                    value: filterSelected,
+                    items: ProcessRequestFilter.values.map(
+                      (value) {
                         return DropdownMenuItem(
-                          value: unit,
+                          value: value,
                           child: Text(
-                            unit,
+                            filterTexts[value] ?? '',
                             style: Theme.of(context).textTheme.bodyMedium,
                           ),
                         );
                       },
                     ).toList(),
-                    onSelected: _setPeriodUnit,
+                    onSelected: _setFilter,
+                    height: 38.0,
                   ),
                 ),
-              
               ],
             ),
           ),
         Expanded(
           child: SingleChildScrollView(
             child: Padding(
-              padding: const EdgeInsets.symmetric(
-                horizontal: UiConfig.lineGap * 2,
+              padding: const EdgeInsets.only(
+                left: UiConfig.lineGap * 2,
+                right: UiConfig.lineGap * 2,
+                bottom: UiConfig.lineSpacing,
               ),
               child: _buildDataSubjectRightListView(
                 context,
                 dataSubjectRights: dataSubjectRights,
-                processRequests: processRequests,
                 requestTypes: requestTypes,
               ),
             ),
@@ -307,26 +308,56 @@ class _DataSubjectRightViewState extends State<DataSubjectRightView> {
   Widget _buildDataSubjectRightListView(
     BuildContext context, {
     required List<DataSubjectRightModel> dataSubjectRights,
-    required List<Map<String, ProcessRequestModel>> processRequests,
     required List<RequestTypeModel> requestTypes,
   }) {
     if (dataSubjectRights.isEmpty) {
-      return _buildResultNotFound(context);
+      return ExampleScreen(
+        headderText: tr(
+          'consentManagement.consentForm.consentForms',
+        ),
+        buttonText: tr(
+          'consentManagement.consentForm.createForm.create',
+        ),
+        descriptionText: tr(
+          'consentManagement.consentForm.explain',
+        ),
+        onPress: () {
+          context.push(
+            DataSubjectRightRoute.createDataSubjectRight.path,
+          );
+        },
+      );
     }
-    return ListView.builder(
+
+    final processRequestFiltered = UtilFunctions.filterAllProcessRequest(
+      dataSubjectRights,
+      filterSelected,
+    );
+
+    if (processRequestFiltered.isEmpty) {
+      return Padding(
+        padding: const EdgeInsets.symmetric(
+          vertical: UiConfig.lineSpacing * 4,
+        ),
+        child: Text(
+          'ไม่พบคำร้องที่ตรงกัน',
+          style: Theme.of(context).textTheme.bodyMedium,
+        ),
+      );
+    }
+
+    return ListView.separated(
       physics: const NeverScrollableScrollPhysics(),
       shrinkWrap: true,
       itemBuilder: (context, index) {
-        final entry = processRequests[index].entries.first;
+        final entry = processRequestFiltered[index].entries.first;
         final dataSubjectRight = UtilFunctions.getDataSubjectRightById(
           dataSubjectRights,
           entry.key,
         );
 
         return Padding(
-          padding: const EdgeInsets.only(
-            bottom: UiConfig.lineSpacing,
-          ),
+          padding: const EdgeInsets.only(),
           child: DataSubjectRightCard(
             dataSubjectRight: dataSubjectRight,
             processRequest: entry.value,
@@ -335,7 +366,10 @@ class _DataSubjectRightViewState extends State<DataSubjectRightView> {
           ),
         );
       },
-      itemCount: processRequests.length,
+      itemCount: processRequestFiltered.length,
+      separatorBuilder: (context, index) => const SizedBox(
+        height: UiConfig.lineSpacing,
+      ),
     );
   }
 

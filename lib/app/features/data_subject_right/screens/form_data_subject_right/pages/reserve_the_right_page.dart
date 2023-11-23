@@ -56,7 +56,7 @@ class _ReserveTheRightPageState extends State<ReserveTheRightPage> {
                       child: Text(
                        tr('dataSubjectRight.reserveTheRight.decription'), 
                         textAlign: TextAlign.left,
-                        style: Theme.of(context).textTheme.bodySmall?.copyWith(
+                        style: Theme.of(context).textTheme.bodyMedium?.copyWith(
                             color: Theme.of(context).colorScheme.onSurface),
                       ),
                     ),

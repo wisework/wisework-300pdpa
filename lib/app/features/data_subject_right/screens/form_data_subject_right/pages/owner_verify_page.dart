@@ -257,6 +257,7 @@ class _OwnerVerifyPageState extends State<OwnerVerifyPage> {
                 .titleLarge
                 ?.copyWith(color: Theme.of(context).colorScheme.primary),
           ),
+          const SizedBox(height: UiConfig.lineSpacing),
           DataSubjectRightListTile(
             title: tr('dataSubjectRight.dataRequester.applicantDs'),
             onTap: () {
@@ -270,6 +271,7 @@ class _OwnerVerifyPageState extends State<OwnerVerifyPage> {
               },
             ),
           ),
+          const SizedBox(height: UiConfig.lineGap),
           DataSubjectRightListTile(
             title: tr('dataSubjectRight.dataRequester.ApplicantAds'),
             onTap: () {
@@ -283,6 +285,7 @@ class _OwnerVerifyPageState extends State<OwnerVerifyPage> {
               },
             ),
           ),
+          const SizedBox(height: UiConfig.lineGap * 2),
           Row(
             children: <Widget>[
               Text(
