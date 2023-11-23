@@ -1,3 +1,4 @@
+import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
@@ -80,7 +81,10 @@ class _EditDataSubjectRightScreenState
       child: BlocConsumer<EditDataSubjectRightBloc, EditDataSubjectRightState>(
         listener: (context, state) {
           if (state is CreatedCurrentDataSubjectRight) {
-            showToast(context, text: 'Create successfully');
+            showToast(
+              context,
+              text: tr('dataSubjectRight.editDataSubjectRight.createSuccess'),
+            );
 
             final event = UpdateDataSubjectRightsEvent(
               dataSubjectRight: state.dataSubjectRight,
@@ -92,7 +96,10 @@ class _EditDataSubjectRightScreenState
           }
 
           if (state is UpdatedCurrentDataSubjectRight) {
-            showToast(context, text: 'Update successfully');
+            showToast(
+              context,
+              text: tr('dataSubjectRight.editDataSubjectRight.updateSuccess'),
+            );
           }
         },
         builder: (context, state) {
@@ -214,7 +221,7 @@ class _EditDataSubjectRightViewState extends State<EditDataSubjectRightView> {
       appBar: PdpaAppBar(
         leadingIcon: _buildPopButton(),
         title: Text(
-          'รายละเอียดคำร้องขอใช้สิทธิ์',
+          tr('dataSubjectRight.editDataSubjectRight.title1'),
           style: Theme.of(context).textTheme.titleLarge,
         ),
       ),
@@ -261,7 +268,7 @@ class _EditDataSubjectRightViewState extends State<EditDataSubjectRightView> {
                         horizontal: 12.0,
                       ),
                       child: Text(
-                        'ดำเนินการตรวจสอบ',
+                        tr('dataSubjectRight.editDataSubjectRight.conductAninspection'),
                         style: Theme.of(context).textTheme.bodyMedium?.copyWith(
                             color: Theme.of(context).colorScheme.onPrimary),
                       ),
@@ -290,7 +297,7 @@ class _EditDataSubjectRightViewState extends State<EditDataSubjectRightView> {
       crossAxisAlignment: CrossAxisAlignment.start,
       children: <Widget>[
         Text(
-          'รายละเอียดคำร้องขอใช้สิทธิ์ตามกฎหมายคุ้มครองข้อมูลส่วนบุคคล',
+          tr('dataSubjectRight.editDataSubjectRight.detail'),
           style: Theme.of(context)
               .textTheme
               .headlineMedium
@@ -313,7 +320,7 @@ class _EditDataSubjectRightViewState extends State<EditDataSubjectRightView> {
       crossAxisAlignment: CrossAxisAlignment.start,
       children: <Widget>[
         Text(
-          'ข้อมูลของผู้ยื่นคำขอ',
+          tr('dataSubjectRight.editDataSubjectRight.ApplicantInformation'),
           style: Theme.of(context)
               .textTheme
               .titleLarge
@@ -357,7 +364,7 @@ class _EditDataSubjectRightViewState extends State<EditDataSubjectRightView> {
       crossAxisAlignment: CrossAxisAlignment.start,
       children: <Widget>[
         Text(
-          'ท่านเป็นเจ้าของข้อมูลหรือไม่',
+          tr('dataSubjectRight.editDataSubjectRight.title2'),
           style: Theme.of(context)
               .textTheme
               .titleLarge
@@ -378,7 +385,7 @@ class _EditDataSubjectRightViewState extends State<EditDataSubjectRightView> {
               child: Padding(
                 padding: const EdgeInsets.symmetric(vertical: 5.0),
                 child: Text(
-                  'ผู้ยื่นคำร้องเป็นบุคคลเดียวกับเจ้าของข้อมูล',
+                  tr('dataSubjectRight.editDataSubjectRight.applicantDs'),
                   style: Theme.of(context).textTheme.bodyMedium,
                 ),
               ),
@@ -400,7 +407,7 @@ class _EditDataSubjectRightViewState extends State<EditDataSubjectRightView> {
               child: Padding(
                 padding: const EdgeInsets.symmetric(vertical: 5.0),
                 child: Text(
-                  'ผู้ยื่นคำร้องเป็นตัวแทนเจ้าของข้อมูล',
+                  tr('dataSubjectRight.editDataSubjectRight.ApplicantAds'),
                   style: Theme.of(context).textTheme.bodyMedium,
                 ),
               ),
@@ -417,7 +424,7 @@ class _EditDataSubjectRightViewState extends State<EditDataSubjectRightView> {
       crossAxisAlignment: CrossAxisAlignment.start,
       children: <Widget>[
         Text(
-          'รายละเอียดเจ้าของข้อมูล',
+          tr('dataSubjectRight.editDataSubjectRight.title3'),
           style: Theme.of(context)
               .textTheme
               .titleLarge
@@ -462,7 +469,7 @@ class _EditDataSubjectRightViewState extends State<EditDataSubjectRightView> {
       crossAxisAlignment: CrossAxisAlignment.start,
       children: <Widget>[
         Text(
-          'ต้องการยื่นคำร้องขอเพื่อจุดประสงค์ดังต่อไปนี้',
+          tr('dataSubjectRight.editDataSubjectRight.title4'),
           style: Theme.of(context)
               .textTheme
               .titleLarge
@@ -563,7 +570,7 @@ class _EditDataSubjectRightViewState extends State<EditDataSubjectRightView> {
       mainAxisSize: MainAxisSize.min,
       crossAxisAlignment: CrossAxisAlignment.start,
       children: <Widget>[
-        const TitleRequiredText(text: 'ข้อมูลส่วนบุคคล'),
+         TitleRequiredText(text: tr('dataSubjectRight.editDataSubjectRight.personalInformation'),),
         CustomTextField(
           controller: TextEditingController(
             text: processRequest.personalData,
@@ -571,7 +578,7 @@ class _EditDataSubjectRightViewState extends State<EditDataSubjectRightView> {
           readOnly: true,
         ),
         const SizedBox(height: UiConfig.lineSpacing),
-        const TitleRequiredText(text: 'สถานที่พบเจอ'),
+         TitleRequiredText(text: tr('dataSubjectRight.editDataSubjectRight.place'),),
         CustomTextField(
           controller: TextEditingController(
             text: processRequest.foundSource,
@@ -579,7 +586,7 @@ class _EditDataSubjectRightViewState extends State<EditDataSubjectRightView> {
           readOnly: true,
         ),
         const SizedBox(height: UiConfig.lineSpacing),
-        const TitleRequiredText(text: 'การดำเนินการ'),
+         TitleRequiredText(text: tr('dataSubjectRight.editDataSubjectRight.operation'),),
         CustomTextField(
           controller: TextEditingController(
             text: title.text,
@@ -599,7 +606,7 @@ class _EditDataSubjectRightViewState extends State<EditDataSubjectRightView> {
       crossAxisAlignment: CrossAxisAlignment.start,
       children: <Widget>[
         Text(
-          'เหตุผลประกอบคำร้อง',
+          tr('dataSubjectRight.editDataSubjectRight.reasonsRequest'),
           style: Theme.of(context).textTheme.bodyMedium,
         ),
         const SizedBox(height: UiConfig.lineGap),

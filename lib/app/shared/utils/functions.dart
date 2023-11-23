@@ -180,6 +180,18 @@ class UtilFunctions {
     return ProcessRequestStatus.inProgress;
   }
 
+  static DataSubjectRightModel getDataSubjectRightById(
+    List<DataSubjectRightModel> dataSubjectRights,
+    String dataSubjectRightId,
+  ) {
+    return dataSubjectRights.firstWhere(
+      (dataSubjectRight) => dataSubjectRight.id == dataSubjectRightId,
+      orElse: () => DataSubjectRightModel.empty().copyWith(
+        id: dataSubjectRightId,
+      ),
+    );
+  }
+
   static RequestTypeModel getRequestTypeById(
     List<RequestTypeModel> requestTypes,
     String requestTypeId,

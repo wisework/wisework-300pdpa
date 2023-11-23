@@ -104,7 +104,7 @@ class _ChooseRejectTypeModalState extends State<ChooseRejectTypeModal> {
               children: <Widget>[
                 Expanded(
                   child: Text(
-                    tr('masterData.cm.reject.list'),
+                    tr('masterData.dsr.rejections.list'),
                     style: Theme.of(context).textTheme.titleLarge,
                   ),
                 ),
