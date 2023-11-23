@@ -183,7 +183,7 @@ class _ProcessDataSubjectRightViewState
       return ProcessRequestTemplateParams(
         toName: dataSubjectRight.dataRequester[0].text,
         toEmail: dataSubjectRight.dataRequester[2].text,
-        dataSubjectRightId: dataSubjectRight.id,
+        id: dataSubjectRight.id,
         processRequest: requests.join('\n'),
         processStatus: status,
       );

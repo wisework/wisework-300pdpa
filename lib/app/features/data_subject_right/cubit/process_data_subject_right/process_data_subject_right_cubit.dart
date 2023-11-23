@@ -3,6 +3,7 @@ import 'dart:typed_data';
 // ignore: depend_on_referenced_packages
 import 'package:bloc/bloc.dart';
 import 'package:equatable/equatable.dart';
+import 'package:pdpa/app/config/config.dart';
 import 'package:pdpa/app/data/models/authentication/user_model.dart';
 import 'package:pdpa/app/data/models/data_subject_right/data_subject_right_model.dart';
 import 'package:pdpa/app/data/models/data_subject_right/process_request_model.dart';
@@ -141,7 +142,10 @@ class ProcessDataSubjectRightCubit extends Cubit<ProcessDataSubjectRightState> {
 
       //? Send email to requester
       if (emailParams != null) {
-        await _emailJsRepository.sendProcessRequestEmail(emailParams);
+        await _emailJsRepository.sendEmail(
+          AppConfig.verificationTemplateId,
+          emailParams.toMap(),
+        );
       }
 
       emit(
@@ -168,7 +172,8 @@ class ProcessDataSubjectRightCubit extends Cubit<ProcessDataSubjectRightState> {
 
   Future<void> submitConsiderRequest(
     String processRequestId, {
-    ProcessRequestTemplateParams? emailParams,
+    ProcessRequestTemplateParams? toRequesterParams,
+    ProcessRequestTemplateParams? toUserParams,
   }) async {
     ProcessRequestModel currentRequest = ProcessRequestModel.empty();
 
@@ -214,8 +219,25 @@ class ProcessDataSubjectRightCubit extends Cubit<ProcessDataSubjectRightState> {
     );
 
     //? Send email to requester
-    if (emailParams != null) {
-      await _emailJsRepository.sendProcessRequestEmail(emailParams);
+    if (toRequesterParams != null) {
+      await _emailJsRepository.sendEmail(
+        AppConfig.requestTemplateId,
+        toRequesterParams.toMap(),
+      );
+    }
+
+    //? Send email to another user
+    if (toUserParams != null) {
+      for (ProcessRequestModel request in updated.processRequests) {
+        if (request.id == processRequestId) {
+          for (String email in request.notifyEmail) {
+            await _emailJsRepository.sendEmail(
+              AppConfig.processDsrTemplateId,
+              toUserParams.copyWith(toEmail: email).toMap(),
+            );
+          }
+        }
+      }
     }
 
     emit(
@@ -237,7 +259,8 @@ class ProcessDataSubjectRightCubit extends Cubit<ProcessDataSubjectRightState> {
 
   Future<void> submitProcessRequest(
     String processRequestId, {
-    ProcessRequestTemplateParams? emailParams,
+    ProcessRequestTemplateParams? toRequesterParams,
+    ProcessRequestTemplateParams? toUserParams,
   }) async {
     emit(
       state.copyWith(
@@ -258,8 +281,28 @@ class ProcessDataSubjectRightCubit extends Cubit<ProcessDataSubjectRightState> {
     );
 
     //? Send email to requester
-    if (emailParams != null) {
-      await _emailJsRepository.sendProcessRequestEmail(emailParams);
+    if (toRequesterParams != null) {
+      await _emailJsRepository.sendEmail(
+        toRequesterParams.link.isNotEmpty
+            ? AppConfig.requestWithProofTemplateId
+            : AppConfig.requestTemplateId,
+        toRequesterParams.toMap(),
+      );
+    }
+    print(toRequesterParams?.link);
+
+    //? Send email to another user
+    if (toUserParams != null) {
+      for (ProcessRequestModel request in updated.processRequests) {
+        if (request.id == processRequestId) {
+          for (String email in request.notifyEmail) {
+            await _emailJsRepository.sendEmail(
+              AppConfig.processDsrTemplateId,
+              toUserParams.copyWith(toEmail: email).toMap(),
+            );
+          }
+        }
+      }
     }
 
     emit(
