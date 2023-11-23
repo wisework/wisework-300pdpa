@@ -157,6 +157,29 @@ class UtilFunctions {
   }
 
   //? Data Subject Right
+  static List<Map<String, ProcessRequestModel>> filterAllProcessRequest(
+    List<DataSubjectRightModel> dataSubjectRights,
+    ProcessRequestFilter filterKey,
+  ) {
+    //? Get process request from data subject right
+    List<Map<String, ProcessRequestModel>> processRequests = [];
+    for (DataSubjectRightModel from in dataSubjectRights) {
+      for (ProcessRequestModel request in from.processRequests) {
+        final status = UtilFunctions.getProcessRequestStatus(
+          from,
+          request,
+        );
+
+        if (status.name == filterKey.name ||
+            filterKey == ProcessRequestFilter.all) {
+          processRequests.add({from.id: request});
+        }
+      }
+    }
+
+    return processRequests;
+  }
+
   static ProcessRequestStatus getProcessRequestStatus(
     DataSubjectRightModel dataSubjectRight,
     ProcessRequestModel processRequest,
