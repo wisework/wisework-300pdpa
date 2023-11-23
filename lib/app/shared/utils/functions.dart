@@ -255,7 +255,7 @@ class UtilFunctions {
     );
   }
 
-  static PowerVerificationModel getPowerVerification(
+  static PowerVerificationModel getVerificationById(
     List<PowerVerificationModel> powerVerifications,
     String powerOfAttorneyId,
   ) {

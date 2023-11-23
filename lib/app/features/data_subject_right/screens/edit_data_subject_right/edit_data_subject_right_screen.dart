@@ -6,11 +6,14 @@ import 'package:pdpa/app/config/config.dart';
 import 'package:pdpa/app/data/models/authentication/user_model.dart';
 import 'package:pdpa/app/data/models/data_subject_right/data_subject_right_model.dart';
 import 'package:pdpa/app/data/models/data_subject_right/process_request_model.dart';
+import 'package:pdpa/app/data/models/data_subject_right/requester_verification_model.dart';
 import 'package:pdpa/app/data/models/etc/updated_return.dart';
 import 'package:pdpa/app/data/models/master_data/localized_model.dart';
 import 'package:pdpa/app/data/models/master_data/reason_type_model.dart';
 import 'package:pdpa/app/data/models/master_data/reject_type_model.dart';
 import 'package:pdpa/app/data/models/master_data/request_type_model.dart';
+import 'package:pdpa/app/data/presets/identity_proofing_preset.dart';
+import 'package:pdpa/app/data/presets/power_verification_preset.dart';
 import 'package:pdpa/app/data/presets/request_actions_preset.dart';
 import 'package:pdpa/app/features/authentication/bloc/sign_in/sign_in_bloc.dart';
 import 'package:pdpa/app/features/data_subject_right/bloc/data_subject_right/data_subject_right_bloc.dart';
@@ -27,6 +30,7 @@ import 'package:pdpa/app/shared/widgets/customs/custom_container.dart';
 import 'package:pdpa/app/shared/widgets/customs/custom_icon_button.dart';
 import 'package:pdpa/app/shared/widgets/customs/custom_radio_button.dart';
 import 'package:pdpa/app/shared/widgets/customs/custom_text_field.dart';
+import 'package:pdpa/app/shared/widgets/download_file_field.dart';
 import 'package:pdpa/app/shared/widgets/expanded_container.dart';
 import 'package:pdpa/app/shared/widgets/screens/error_message_screen.dart';
 import 'package:pdpa/app/shared/widgets/screens/loading_screen.dart';
@@ -215,6 +219,13 @@ class _EditDataSubjectRightViewState extends State<EditDataSubjectRightView> {
     context.read<EditDataSubjectRightBloc>().add(event);
   }
 
+  void _onDownloadFile(String path) {
+    final event = DownloadDataSubjectRightFileEvent(path: path);
+    context.read<EditDataSubjectRightBloc>().add(event);
+
+    showToast(context, text: 'ดาวน์โหลดไฟล์สำเร็จ');
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -308,7 +319,23 @@ class _EditDataSubjectRightViewState extends State<EditDataSubjectRightView> {
         _buildDivider(context),
         _buildCheckDataOwner(context),
         _buildDivider(context),
-        if (!dataSubjectRight.isDataOwner) _buildDataOwnerInfo(context),
+        if (!dataSubjectRight.isDataOwner)
+          Column(
+            children: <Widget>[
+              _buildPowerProofInfo(
+                context,
+                verifications: dataSubjectRight.powerVerifications,
+              ),
+              _buildDivider(context),
+              _buildDataOwnerInfo(context),
+              _buildDivider(context),
+              _buildIdentityProofInfo(
+                context,
+                verifications: dataSubjectRight.identityVerifications,
+              ),
+              _buildDivider(context),
+            ],
+          ),
         _buildProcessRequestInfo(context),
       ],
     );
@@ -418,6 +445,66 @@ class _EditDataSubjectRightViewState extends State<EditDataSubjectRightView> {
     );
   }
 
+  Column _buildPowerProofInfo(
+    BuildContext context, {
+    required List<RequesterVerificationModel> verifications,
+  }) {
+    return Column(
+      mainAxisSize: MainAxisSize.min,
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: <Widget>[
+        Text(
+          'เอกสารพิสูจน์อำนาจดำเนินการแทน',
+          style: Theme.of(context)
+              .textTheme
+              .titleLarge
+              ?.copyWith(color: Theme.of(context).colorScheme.primary),
+        ),
+        const SizedBox(height: UiConfig.lineSpacing),
+        Text(
+          'ทั้งนี้ข้าพเจ้าได้แนบเอกสารดังต่อไปนี้เพื่อการตรวจสอบอำนาจตัวตนและถิ่นที่อยู่ของผู้ยื่นคำร้องและเจ้าของข้อมูลส่วนบุคคลเพื่อให้บริษัทสามารถดำเนินการตามสิทธิที่ร้องขอได้อย่างถูกต้อง',
+          style: Theme.of(context).textTheme.bodyMedium,
+        ),
+        const SizedBox(height: UiConfig.lineSpacing),
+        ListView.builder(
+          physics: const NeverScrollableScrollPhysics(),
+          shrinkWrap: true,
+          itemBuilder: (context, index) {
+            final verification = UtilFunctions.getVerificationById(
+              powerVerificationsPreset,
+              verifications[index].id,
+            );
+
+            return Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: <Widget>[
+                Text(
+                  '${index + 1}. ${verification.title}',
+                  style: Theme.of(context).textTheme.titleMedium,
+                ),
+                if (!verification.additionalReq)
+                  Padding(
+                    padding: const EdgeInsets.only(top: UiConfig.lineGap),
+                    child: Text(
+                      'ประเภทเอกสาร: ${verifications[index].text}',
+                      style: Theme.of(context).textTheme.bodyMedium,
+                    ),
+                  ),
+                const SizedBox(height: UiConfig.lineGap),
+                DownloadFileField(
+                  fileUrl: verifications[index].imageUrl,
+                  onDownloaded: _onDownloadFile,
+                  alignment: Alignment.centerLeft,
+                ),
+              ],
+            );
+          },
+          itemCount: verifications.length,
+        ),
+      ],
+    );
+  }
+
   Column _buildDataOwnerInfo(BuildContext context) {
     return Column(
       mainAxisSize: MainAxisSize.min,
@@ -458,7 +545,66 @@ class _EditDataSubjectRightViewState extends State<EditDataSubjectRightView> {
             height: UiConfig.lineSpacing,
           ),
         ),
-        _buildDivider(context),
+      ],
+    );
+  }
+
+  Column _buildIdentityProofInfo(
+    BuildContext context, {
+    required List<RequesterVerificationModel> verifications,
+  }) {
+    return Column(
+      mainAxisSize: MainAxisSize.min,
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: <Widget>[
+        Text(
+          'เอกสารพิสูจน์ตัวตนและ/หรือพิสูจน์ถิ่นที่อยู่เจ้าของข้อมูล',
+          style: Theme.of(context)
+              .textTheme
+              .titleLarge
+              ?.copyWith(color: Theme.of(context).colorScheme.primary),
+        ),
+        const SizedBox(height: UiConfig.lineSpacing),
+        Text(
+          'ข้าพเจ้าได้แนบเอกสารดังต่อไปนี้เพื่อการตรวจสอบตัวตนและที่อยู่ของผู้ยื่นคำร้องเพื่อให้บริษัทฯสามารถดำเนินการตามสิทธิที่ร้องขอได้อย่างถูกต้อง',
+          style: Theme.of(context).textTheme.bodyMedium,
+        ),
+        const SizedBox(height: UiConfig.lineSpacing),
+        ListView.builder(
+          physics: const NeverScrollableScrollPhysics(),
+          shrinkWrap: true,
+          itemBuilder: (context, index) {
+            final verification = UtilFunctions.getVerificationById(
+              identityProofingPreset,
+              verifications[index].id,
+            );
+
+            return Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: <Widget>[
+                Text(
+                  '${index + 1}. ${verification.title}',
+                  style: Theme.of(context).textTheme.titleMedium,
+                ),
+                if (!verification.additionalReq)
+                  Padding(
+                    padding: const EdgeInsets.only(top: UiConfig.lineGap),
+                    child: Text(
+                      'ประเภทเอกสาร: ${verifications[index].text}',
+                      style: Theme.of(context).textTheme.bodyMedium,
+                    ),
+                  ),
+                const SizedBox(height: UiConfig.lineGap),
+                DownloadFileField(
+                  fileUrl: verifications[index].imageUrl,
+                  onDownloaded: _onDownloadFile,
+                  alignment: Alignment.centerLeft,
+                ),
+              ],
+            );
+          },
+          itemCount: verifications.length,
+        ),
       ],
     );
   }
@@ -570,7 +716,9 @@ class _EditDataSubjectRightViewState extends State<EditDataSubjectRightView> {
       mainAxisSize: MainAxisSize.min,
       crossAxisAlignment: CrossAxisAlignment.start,
       children: <Widget>[
-         TitleRequiredText(text: tr('dataSubjectRight.editDataSubjectRight.personalInformation'),),
+        TitleRequiredText(
+          text: tr('dataSubjectRight.editDataSubjectRight.personalInformation'),
+        ),
         CustomTextField(
           controller: TextEditingController(
             text: processRequest.personalData,
@@ -578,7 +726,9 @@ class _EditDataSubjectRightViewState extends State<EditDataSubjectRightView> {
           readOnly: true,
         ),
         const SizedBox(height: UiConfig.lineSpacing),
-         TitleRequiredText(text: tr('dataSubjectRight.editDataSubjectRight.place'),),
+        TitleRequiredText(
+          text: tr('dataSubjectRight.editDataSubjectRight.place'),
+        ),
         CustomTextField(
           controller: TextEditingController(
             text: processRequest.foundSource,
@@ -586,7 +736,9 @@ class _EditDataSubjectRightViewState extends State<EditDataSubjectRightView> {
           readOnly: true,
         ),
         const SizedBox(height: UiConfig.lineSpacing),
-         TitleRequiredText(text: tr('dataSubjectRight.editDataSubjectRight.operation'),),
+        TitleRequiredText(
+          text: tr('dataSubjectRight.editDataSubjectRight.operation'),
+        ),
         CustomTextField(
           controller: TextEditingController(
             text: title.text,

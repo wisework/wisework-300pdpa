@@ -442,7 +442,7 @@ class ProcessDataSubjectRightCubit extends Cubit<ProcessDataSubjectRightState> {
     );
   }
 
-  Future<void> downloadProofFile(String path) async {
+  Future<void> downloadFile(String path) async {
     await _generalRepository.downloadFirebaseStorageFile(path);
   }
 

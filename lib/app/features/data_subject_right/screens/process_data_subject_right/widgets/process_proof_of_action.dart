@@ -59,7 +59,7 @@ class _ProcessProofOfActionState extends State<ProcessProofOfAction> {
 
   void _onDownloadProofOfActionFile(String path) {
     final cubit = context.read<ProcessDataSubjectRightCubit>();
-    cubit.downloadProofFile(path);
+    cubit.downloadFile(path);
 
     showToast(context, text: 'ดาวน์โหลดไฟล์สำเร็จ');
   }
