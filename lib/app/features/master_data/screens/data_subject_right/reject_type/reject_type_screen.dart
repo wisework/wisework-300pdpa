@@ -121,16 +121,23 @@ class _RejectTypeViewState extends State<RejectTypeView> {
         builder: (context, state) {
           if (state is GotRejectTypes) {
             return CustomContainer(
-              margin: const EdgeInsets.all(UiConfig.lineSpacing),
               child: state.rejectTypes.isNotEmpty
                   ? Column(
                       children: [
                         Text(
                           tr(
-                        'masterData.dsr.rejections.title2',
-                      ),
+                            'masterData.dsr.rejections.title2',
+                          ),
                           style: Theme.of(context).textTheme.titleLarge,
                         ),
+                        const SizedBox(height: UiConfig.textSpacing),
+                        Text(
+                          tr(
+                            'masterData.dsr.rejections.descriptiontitle2',
+                          ),
+                          style: Theme.of(context).textTheme.labelMedium,
+                        ),
+                        const SizedBox(height: UiConfig.lineGap),
                         ListView.builder(
                           physics: const NeverScrollableScrollPhysics(),
                           shrinkWrap: true,
@@ -149,14 +156,14 @@ class _RejectTypeViewState extends State<RejectTypeView> {
                   : ExampleScreen(
                       headderText: tr(
                         tr(
-                        'masterData.dsr.rejections.title2',
-                      ),
+                          'masterData.dsr.rejections.title2',
+                        ),
                       ),
                       buttonText: tr(
                         'masterData.dsr.rejections.create',
                       ),
                       descriptionText: tr(
-                        'masterData.dsr.rejections.description',
+                        '',
                       ),
                       onPress: () {
                         context.push(MasterDataRoute.createRejectType.path);
@@ -205,10 +212,18 @@ class _RejectTypeViewState extends State<RejectTypeView> {
                 children: [
                   Text(
                     tr(
-                  'masterData.dsr.rejections.title1',
-                ),
+                      'masterData.dsr.rejections.title1',
+                    ),
                     style: Theme.of(context).textTheme.titleLarge,
                   ),
+                  const SizedBox(height: UiConfig.textSpacing),
+                  Text(
+                    tr(
+                      'masterData.dsr.rejections.descriptiontitle1',
+                    ),
+                    style: Theme.of(context).textTheme.labelMedium,
+                  ),
+                  const SizedBox(height: UiConfig.lineGap),
                   ListView.builder(
                     physics: const NeverScrollableScrollPhysics(),
                     shrinkWrap: true,
@@ -231,7 +246,7 @@ class _RejectTypeViewState extends State<RejectTypeView> {
                   'masterData.dsr.rejections.create',
                 ),
                 descriptionText: tr(
-                  'masterData.dsr.rejections.description',
+                  '',
                 ),
                 onPress: () {
                   context.push(MasterDataRoute.createRejectType.path);

@@ -300,7 +300,7 @@ class _SignInScreenState extends State<SignInScreen> {
               child: BlocConsumer<SignInBloc, SignInState>(
                 listener: (context, state) {
                   if (state is SignInError) {
-                    showToast(context, text: state.message);
+                    showToast(context, text: tr('auth.signIn.incorrect'));
                   } else if (state is SignedInUser) {
                     _signInSuccessful(state.user);
                   }

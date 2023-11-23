@@ -62,7 +62,8 @@
             "forgotDescription": "Please enter an email linked to your account. We’ll send a link that will sign you into the app instantly.",
             "passwordResetSent": "Password reset email sent.",
             "resendDescription": "We have sent you an email to reset your password. If you do not receive another email Please press send again.",
-            "sendAgain": "Send again"
+            "sendAgain": "Send again",
+            "incorrect" : "Incorrect email or password"
         },
         "resetPassword": {
             "title": "Reset Password",
@@ -365,7 +366,10 @@
             "datasubjectright": "Data Subject Right",
             "request": {
                 "title1": "Initial request",
+                "descriptiontitle1": "รายการคำร้องขอใช้สิทธิ์ของเจ้าของข้อมูลภายใต้ พ.ร.บ.คุ้มครองข้อมูลส่วนบุคคล",
                 "title2": "Requests that can be edited",
+                "descriptiontitle2": "ท่านสามารถปรับปรุง แก้ไข รายละเอียดของรายการคำร้องขอที่สร้างเพิ่มเติมได้",
+                "title3": "ท่านสามารถสร้างรายการคำร้องขอใช้สิทธิ์เพิ่มเติมได้ที่นี่",
                 "title": "Request types",
                 "list": "Requests",
                 "list2": "Request type options",
@@ -380,7 +384,10 @@
             },
             "rejections": {
                 "title1": "Initial denial of request",
+                "descriptiontitle1": "รายการการปฏิเสธคำร้องขอของเจ้าของข้อมูลภายใต้ พ.ร.บ.คุ้มครองข้อมูลส่วนบุคคล",
                 "title2": "Denial of a request that can be modified",
+                "descriptiontitle2": "ท่านสามารถปรับปรุง แก้ไข รายการการปฏิเสธคำร้องขอที่สร้างเพิ่มเติมได้",
+                "title3": "ท่านสามารถสร้างรายการเหตุผลการปฏิเสธคำขอเพิ่มเติมได้ที่นี่",
                 "title": "Reject type",
                 "list": "Rejections",
                 "create": "Create teject type",
@@ -392,7 +399,10 @@
             },
             "reason": {
                 "title1": "Types of primary reasons",
+                "descriptiontitle1": "รายการเหตุผลประกอบคำร้องของข้อมูลภายใต้ พ.ร.บ.คุ้มครองข้อมูลส่วนบุคคล",
                 "title2": "Types of reasons that can be fixed",
+                "descriptiontitle2": "ท่านสามารถปรับปรุง แก้ไข รายการเหตุผลประกอบคำร้องที่สร้างเพิ่มเติมได้",
+                "title3": "ท่านสามารถสร้างรายการเหตุผลประกอบคำร้องเพิ่มเติมได้ที่นี่",
                 "title": "Reason type",
                 "list": "Reasons",
                 "create": "Create reason type",
@@ -484,7 +494,11 @@
             "verifyRequest": "Verify request",
             "considerTakingAction": "Consider taking action",
             "carryOut": "carry out",
-            "results": "Results"
+            "results": "Results",
+            "reason:": "เหตุผล:",
+            "pass": "ผ่านการตรวจสอบแล้ว",
+            "notPass": "ไม่ผ่านการตรวจสอบ",
+            "notYetVerified": "ยังไม่ได้ตรวจสอบ"
         },
         "StepProcessDsr": {
             "considering": {

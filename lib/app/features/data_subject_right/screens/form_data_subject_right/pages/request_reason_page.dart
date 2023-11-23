@@ -338,7 +338,7 @@ class _RequestReasonPageState extends State<RequestReasonPage> {
                                           orElse: () =>
                                               const LocalizedModel.empty(),
                                         )
-                                        .text, //!
+                                        .text, 
                                     style:
                                         !selectReasonTypeIds.contains(reason.id)
                                             ? Theme.of(context)
@@ -369,12 +369,12 @@ class _RequestReasonPageState extends State<RequestReasonPage> {
                                 child: Column(
                                   crossAxisAlignment: CrossAxisAlignment.start,
                                   children: [
-                                    const TitleRequiredText(
-                                      text: 'เหตุผล', //!
+                                     TitleRequiredText(
+                                      text: tr('dataSubjectRight.requestReason.reason'), 
                                       required: true,
                                     ),
                                     CustomTextField(
-                                      hintText: 'กรอกเหตุผล', //!
+                                      hintText: tr('dataSubjectRight.requestReason.hintReason'), 
                                       controller: identityDataController,
                                       required: true,
                                     ),

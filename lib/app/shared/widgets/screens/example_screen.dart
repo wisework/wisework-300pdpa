@@ -7,14 +7,14 @@ class ExampleScreen extends StatelessWidget {
     super.key,
     required this.headderText,
     required this.buttonText,
-    required this.descriptionText,
+    this.descriptionText,
     this.image,
     required this.onPress,
   });
 
   final String headderText;
   final String buttonText;
-  final String descriptionText;
+  final String? descriptionText;
   final Image? image;
   final VoidCallback onPress;
 
@@ -36,20 +36,22 @@ class ExampleScreen extends StatelessWidget {
           ],
         ),
         const SizedBox(height: UiConfig.defaultPaddingSpacing),
-        Row(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            Expanded(
-              child: Text(
-                descriptionText,
-                style: Theme.of(context).textTheme.bodyMedium,
-                textAlign: TextAlign.center,
+        Visibility(
+          visible: descriptionText != null,
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              Expanded(
+                child: Text(
+                  descriptionText ?? '',
+                  style: Theme.of(context).textTheme.bodyMedium,
+                  textAlign: TextAlign.center,
+                ),
               ),
-            ),
-          ],
+            ],
+          ),
         ),
         const SizedBox(height: UiConfig.defaultPaddingSpacing),
-        
         Visibility(
           visible: image != null,
           child: Center(
