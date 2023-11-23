@@ -1,9 +1,11 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
 import 'package:ionicons/ionicons.dart';
+import 'package:modal_bottom_sheet/modal_bottom_sheet.dart';
 import 'package:pdpa/app/config/config.dart';
 import 'package:pdpa/app/data/models/data_subject_right/data_subject_right_model.dart';
 import 'package:pdpa/app/data/models/data_subject_right/process_request_model.dart';
@@ -17,17 +19,26 @@ import 'package:pdpa/app/features/authentication/bloc/sign_in/sign_in_bloc.dart'
 import 'package:pdpa/app/features/data_subject_right/bloc/data_subject_right/data_subject_right_bloc.dart';
 import 'package:pdpa/app/features/data_subject_right/routes/data_subject_right_route.dart';
 import 'package:pdpa/app/features/data_subject_right/widgets/data_subject_right_card.dart';
+import 'package:pdpa/app/features/data_subject_right/widgets/search_data_subject_right_modal.dart';
 import 'package:pdpa/app/services/apis/data_subject_right_api.dart';
 import 'package:pdpa/app/shared/drawers/pdpa_drawer.dart';
 import 'package:pdpa/app/shared/utils/constants.dart';
+import 'package:pdpa/app/shared/utils/functions.dart';
 import 'package:pdpa/app/shared/utils/toast.dart';
 import 'package:pdpa/app/shared/widgets/content_wrapper.dart';
-import 'package:pdpa/app/shared/widgets/customs/custom_button.dart';
 import 'package:pdpa/app/shared/widgets/customs/custom_container.dart';
+import 'package:pdpa/app/shared/widgets/customs/custom_dropdown_button.dart';
 import 'package:pdpa/app/shared/widgets/customs/custom_icon_button.dart';
+import 'package:pdpa/app/shared/widgets/customs/custom_text_field.dart';
 import 'package:pdpa/app/shared/widgets/loading_indicator.dart';
+import 'package:pdpa/app/shared/widgets/material_ink_well.dart';
 import 'package:pdpa/app/shared/widgets/screens/example_screen.dart';
 import 'package:pdpa/app/shared/widgets/templates/pdpa_app_bar.dart';
+import 'package:qr_flutter/qr_flutter.dart';
+import 'package:pdpa/app/features/consent_management/consent_form/widgets/download_fuctions/netive_download.dart'
+    if (dart.library.html) 'package:pdpa/app/features/consent_management/consent_form/widgets/download_fuctions/web_download.dart'
+    // ignore: library_prefixes
+    as downloadQrCode;
 
 class DataSubjectRightScreen extends StatefulWidget {
   const DataSubjectRightScreen({super.key});
@@ -84,6 +95,46 @@ class DataSubjectRightView extends StatefulWidget {
 
 class _DataSubjectRightViewState extends State<DataSubjectRightView> {
   final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
+  void _openSeachConsentFormModal() {
+    final bloc = context.read<DataSubjectRightBloc>();
+
+    List<DataSubjectRightModel> dataSubjectRights = [];
+    List<RequestTypeModel> requestTypes = [];
+    if (bloc.state is GotDataSubjectRights) {
+      dataSubjectRights =
+          (bloc.state as GotDataSubjectRights).dataSubjectRights;
+      requestTypes = (bloc.state as GotDataSubjectRights).requestTypes;
+    }
+
+    showBarModalBottomSheet(
+      context: context,
+      backgroundColor: Colors.transparent,
+      builder: (context) => SearchDataSubjectRightModal(
+        initialDataSubjectRights: dataSubjectRights,
+        initialRequestTypes: requestTypes,
+        language: widget.language,
+      ),
+    );
+  }
+
+  final qrCodeKey = GlobalKey();
+  String _selectedChoice = 'ทั้งหมด';
+
+  // List of choices
+  final List<String> _choices = [
+    'ทั้งหมด',
+    'ยังไม่ดำเนินการ',
+    'กำลังดำเนินการ',
+    'ดำเนินการเสร็จสิ้น',
+    'ปฏิเสธการดำเนินการ'
+  ];
+  void _setPeriodUnit(String? value) {
+    if (value != null) {
+      setState(() {
+        _selectedChoice = value;
+      });
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -104,13 +155,25 @@ class _DataSubjectRightViewState extends State<DataSubjectRightView> {
         ),
         actions: [
           CustomIconButton(
-            onPressed: () {},
+            onPressed: () {
+              showModalBottomSheet(
+                context: context,
+                builder: (context) => Padding(
+                  padding: const EdgeInsets.only(top: 20.0),
+                  child: SingleChildScrollView(
+                    child: CustomContainer(
+                      child: _buildShareConsentForm(context),
+                    ),
+                  ),
+                ),
+              );
+            },
             icon: Ionicons.link_outline,
             iconColor: Theme.of(context).colorScheme.primary,
             backgroundColor: Theme.of(context).colorScheme.onBackground,
           ),
           CustomIconButton(
-            onPressed: () {},
+            onPressed: _openSeachConsentFormModal,
             icon: Ionicons.search_outline,
             iconColor: Theme.of(context).colorScheme.primary,
             backgroundColor: Theme.of(context).colorScheme.onBackground,
@@ -124,6 +187,7 @@ class _DataSubjectRightViewState extends State<DataSubjectRightView> {
               return _buildDataSubjectRightView(
                 context,
                 dataSubjectRights: state.dataSubjectRights,
+                processRequests: state.processRequests,
                 requestTypes: state.requestTypes,
               );
             }
@@ -175,12 +239,13 @@ class _DataSubjectRightViewState extends State<DataSubjectRightView> {
   Column _buildDataSubjectRightView(
     BuildContext context, {
     required List<DataSubjectRightModel> dataSubjectRights,
+    required List<Map<String, ProcessRequestModel>> processRequests,
     required List<RequestTypeModel> requestTypes,
   }) {
     return Column(
       children: <Widget>[
         const SizedBox(height: UiConfig.lineSpacing),
-        if (dataSubjectRights.isNotEmpty)
+        if (processRequests.isNotEmpty)
           Padding(
             padding: const EdgeInsets.only(
               left: UiConfig.lineGap * 2,
@@ -197,33 +262,25 @@ class _DataSubjectRightViewState extends State<DataSubjectRightView> {
                     maxLines: 1,
                   ),
                 ),
-                CustomButton(
-                  padding: const EdgeInsets.symmetric(
-                    vertical: 2.0,
-                    horizontal: 8.0,
-                  ),
-                  onPressed: () {
-                    // _sortConsentForms(!_sortAscending);
-                  },
-                  buttonType: CustomButtonType.text,
-                  child: Row(
-                    mainAxisSize: MainAxisSize.min,
-                    children: <Widget>[
-                      Text(
-                        'ทั้งหมด',
-                        style: Theme.of(context).textTheme.titleMedium,
-                      ),
-                      const SizedBox(width: 2.0),
-                      Icon(
-                        1 != 1 //_sortAscending
-                            ? Icons.arrow_drop_up
-                            : Icons.arrow_drop_down,
-                        size: 20.0,
-                        color: Theme.of(context).colorScheme.onSurface,
-                      ),
-                    ],
+                SizedBox(
+                  width: 200,
+                  child: CustomDropdownButton<String>(
+                    value: _selectedChoice,
+                    items: _choices.map(
+                      (unit) {
+                        return DropdownMenuItem(
+                          value: unit,
+                          child: Text(
+                            unit,
+                            style: Theme.of(context).textTheme.bodyMedium,
+                          ),
+                        );
+                      },
+                    ).toList(),
+                    onSelected: _setPeriodUnit,
                   ),
                 ),
+              
               ],
             ),
           ),
@@ -236,6 +293,7 @@ class _DataSubjectRightViewState extends State<DataSubjectRightView> {
               child: _buildDataSubjectRightListView(
                 context,
                 dataSubjectRights: dataSubjectRights,
+                processRequests: processRequests,
                 requestTypes: requestTypes,
               ),
             ),
@@ -248,9 +306,10 @@ class _DataSubjectRightViewState extends State<DataSubjectRightView> {
   Widget _buildDataSubjectRightListView(
     BuildContext context, {
     required List<DataSubjectRightModel> dataSubjectRights,
+    required List<Map<String, ProcessRequestModel>> processRequests,
     required List<RequestTypeModel> requestTypes,
   }) {
-    if (dataSubjectRights.isEmpty) {
+    if (processRequests.isEmpty) {
       return ExampleScreen(
         headderText: tr(
           'consentManagement.consentForm.consentForms',
@@ -446,26 +505,11 @@ class _DataSubjectRightViewState extends State<DataSubjectRightView> {
       physics: const NeverScrollableScrollPhysics(),
       shrinkWrap: true,
       itemBuilder: (context, index) {
-        return _buildDataSubjectRightGroup(
-          context,
-          dataSubjectRight: dataSubjectRights[index],
-          requestTypes: requestTypes,
+        final entry = processRequests[index].entries.first;
+        final dataSubjectRight = UtilFunctions.getDataSubjectRightById(
+          dataSubjectRights,
+          entry.key,
         );
-      },
-      itemCount: dataSubjectRights.length,
-    );
-  }
-
-  ListView _buildDataSubjectRightGroup(
-    BuildContext context, {
-    required DataSubjectRightModel dataSubjectRight,
-    required List<RequestTypeModel> requestTypes,
-  }) {
-    return ListView.builder(
-      physics: const NeverScrollableScrollPhysics(),
-      shrinkWrap: true,
-      itemBuilder: (context, index) {
-        final processRequest = dataSubjectRight.processRequests[index];
 
         return Padding(
           padding: const EdgeInsets.only(
@@ -473,13 +517,173 @@ class _DataSubjectRightViewState extends State<DataSubjectRightView> {
           ),
           child: DataSubjectRightCard(
             dataSubjectRight: dataSubjectRight,
-            processRequest: processRequest,
+            processRequest: entry.value,
             requestTypes: requestTypes,
             language: widget.language,
           ),
         );
       },
-      itemCount: dataSubjectRight.processRequests.length,
+      itemCount: processRequests.length,
+    );
+  }
+
+  Column _buildShareConsentForm(BuildContext context) {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: <Widget>[
+        Align(
+          alignment: Alignment.topRight,
+          child: MaterialInkWell(
+            borderRadius: BorderRadius.circular(13.0),
+            backgroundColor:
+                Theme.of(context).colorScheme.outlineVariant.withOpacity(0.4),
+            onTap: () async {
+              Navigator.of(context).pop();
+            },
+            child: Padding(
+              padding: const EdgeInsets.only(
+                left: 2.0,
+                top: 1.0,
+                right: 2.0,
+                bottom: 3.0,
+              ),
+              child: Icon(
+                Ionicons.close_outline,
+                size: 16.0,
+                color: Theme.of(context).colorScheme.onPrimary,
+              ),
+            ),
+          ),
+        ),
+        Padding(
+          padding: const EdgeInsets.all(UiConfig.textLineSpacing),
+          child: Text(
+            tr("consentManagement.consentForm.consentFormDetails.form.shareLinkForm"),
+            style: Theme.of(context).textTheme.titleLarge,
+          ),
+        ),
+        Padding(
+          padding: const EdgeInsets.all(UiConfig.textLineSpacing),
+          child: Text(
+            tr("consentManagement.consentForm.consentFormDetails.form.descriptionShare"),
+            style: Theme.of(context).textTheme.labelLarge,
+          ),
+        ),
+        Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: <Widget>[
+            const SizedBox(height: UiConfig.lineSpacing),
+            _buildQrDataSubjectRight(context),
+            const SizedBox(height: UiConfig.lineSpacing),
+            _buildDatSubjectRightLink(context),
+            const SizedBox(height: UiConfig.lineSpacing),
+          ],
+        ),
+      ],
+    );
+  }
+
+  Row _buildQrDataSubjectRight(BuildContext context) {
+    return Row(
+      children: <Widget>[
+        Expanded(
+          child: Container(
+            padding: const EdgeInsets.all(15.0),
+            decoration: BoxDecoration(
+              color: Theme.of(context).colorScheme.onBackground,
+              borderRadius: BorderRadius.circular(10.0),
+              border: Border.all(
+                width: 1.0,
+                color: Theme.of(context).colorScheme.outlineVariant,
+              ),
+            ),
+            child: Align(
+              alignment: Alignment.centerLeft,
+              child: GestureDetector(
+                child: Column(
+                  children: <Widget>[
+                    Align(
+                      alignment: Alignment.centerLeft,
+                      child: RepaintBoundary(
+                        key: qrCodeKey,
+                        child: QrImageView(
+                          data: 'www.google.com',
+                          size: 160,
+                          backgroundColor: Colors.white,
+                          version: QrVersions.auto,
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+            ),
+          ),
+        ),
+        Padding(
+          padding: const EdgeInsets.only(left: 10.0),
+          child: CustomIconButton(
+            onPressed: () async {
+              // downloadQrCode.downloadQrcode(qrKey);
+              await downloadQrCode.downloadQrCode(qrCodeKey).then((value) {
+                if (value) {
+                  showToast(
+                    context,
+                    text: tr(
+                      'consentManagement.consentForm.urltab.qrCodeHasBeenDownloaded',
+                    ),
+                  );
+                } else {
+                  showToast(
+                    context,
+                    text: tr(
+                      'consentManagement.consentForm.urltab.failedToDownloadQrCode',
+                    ),
+                  );
+                }
+              });
+            },
+            icon: Icons.file_download_outlined,
+            iconColor: Theme.of(context).colorScheme.primary,
+            backgroundColor: Theme.of(context).colorScheme.onBackground,
+          ),
+        ),
+      ],
+    );
+  }
+
+  Row _buildDatSubjectRightLink(BuildContext context) {
+    return Row(
+      children: <Widget>[
+        Expanded(
+          child: CustomTextField(
+            controller: TextEditingController(
+              text: 'www.google.com',
+            ),
+            readOnly: true,
+          ),
+        ),
+        Padding(
+          padding: const EdgeInsets.only(left: 10.0),
+          child: CustomIconButton(
+            onPressed: () {
+              Clipboard.setData(
+                const ClipboardData(text: 'www.google.com'),
+              );
+
+              showToast(
+                context,
+                text: tr(
+                  'consentManagement.consentForm.urltab.urlCopied',
+                ),
+              );
+            },
+            icon: Ionicons.copy_outline,
+            iconColor: Theme.of(context).colorScheme.primary,
+            backgroundColor: Theme.of(context).colorScheme.onBackground,
+          ),
+        ),
+      ],
     );
   }
 }

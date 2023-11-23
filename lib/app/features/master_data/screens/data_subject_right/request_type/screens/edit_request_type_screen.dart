@@ -386,7 +386,7 @@ class _EditRequestTypeViewState extends State<EditRequestTypeView> {
           ),
           const SizedBox(height: UiConfig.lineSpacing),
           TitleRequiredText(
-            text: tr('Reject Type'), //!
+            text: tr('ประเภทการปฏิเสธ'), //!
           ),
           const SizedBox(height: UiConfig.lineSpacing),
           _buildRejectTypesection(context,
@@ -519,7 +519,7 @@ class _EditRequestTypeViewState extends State<EditRequestTypeView> {
             const SizedBox(width: UiConfig.actionSpacing + 11),
             Expanded(
               child: Text(
-                tr('masterData.cm.purposeCategory.addPurpose'),
+                tr('เพิ่มประเภทการปฏิเสธ'),
                 style: Theme.of(context).textTheme.bodyMedium,
               ),
             ),
