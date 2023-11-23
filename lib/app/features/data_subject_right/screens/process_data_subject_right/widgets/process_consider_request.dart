@@ -67,9 +67,20 @@ class _ProcessConsiderRequestState extends State<ProcessConsiderRequest> {
     }
 
     final cubit = context.read<ProcessDataSubjectRightCubit>();
+
+    final emailParams = _getEmailParams();
+    final fromName = '${cubit.state.currentUser.firstName}'
+        '${cubit.state.currentUser.lastName.isNotEmpty ? cubit.state.currentUser.lastName : ''}';
+
     cubit.submitConsiderRequest(
       widget.processRequest.id,
-      emailParams: _getEmailParams(),
+      toRequesterParams: emailParams,
+      toUserParams: emailParams?.copyWith(
+        toName: '',
+        toEmail: '',
+        fromName: fromName,
+        fromEmail: cubit.state.currentUser.email,
+      ),
     );
   }
 
@@ -112,7 +123,7 @@ class _ProcessConsiderRequestState extends State<ProcessConsiderRequest> {
       return ProcessRequestTemplateParams(
         toName: dataSubjectRight.dataRequester[0].text,
         toEmail: dataSubjectRight.dataRequester[2].text,
-        dataSubjectRightId: dataSubjectRight.id,
+        id: dataSubjectRight.id,
         processRequest: description.text,
         processStatus: '${statusTexts[status]}$rejectReason',
       );

@@ -80,14 +80,6 @@ class DataSubjectRightBloc
 
         updated.sort((a, b) => b.updatedDate.compareTo(a.updatedDate));
 
-        //? Get process request from all data subject right
-        List<Map<String, ProcessRequestModel>> processRequests = [];
-        for (DataSubjectRightModel from in updated) {
-          for (ProcessRequestModel request in from.processRequests) {
-            processRequests.add({from.id: request});
-          }
-        }
-
         List<RequestTypeModel> gotRequestTypes = requestTypesPreset;
         final result = await _masterDataRepository.getRequestTypes(
           event.companyId,
@@ -97,7 +89,7 @@ class DataSubjectRightBloc
           (requestTypes) => gotRequestTypes.addAll(requestTypes),
         );
 
-        emit(GotDataSubjectRights(updated, processRequests, gotRequestTypes));
+        emit(GotDataSubjectRights(updated, gotRequestTypes));
       },
     );
   }
@@ -136,15 +128,7 @@ class DataSubjectRightBloc
 
       updated.sort((a, b) => b.updatedDate.compareTo(a.updatedDate));
 
-      //? Get process request from all data subject right
-      List<Map<String, ProcessRequestModel>> processRequests = [];
-      for (DataSubjectRightModel from in updated) {
-        for (ProcessRequestModel request in from.processRequests) {
-          processRequests.add({from.id: request});
-        }
-      }
-
-      emit(GotDataSubjectRights(updated, processRequests, requestTypes));
+      emit(GotDataSubjectRights(updated, requestTypes));
     }
   }
 }

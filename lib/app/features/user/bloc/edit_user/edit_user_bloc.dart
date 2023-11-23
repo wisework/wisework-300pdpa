@@ -193,7 +193,10 @@ class EditUserBloc extends Bloc<EditUserEvent, EditUserState> {
           message: 'Email: ${user.email}\nPassword: $password',
         );
 
-        final result = await _emailJsRepository.sendSignedUpEmail(params);
+        final result = await _emailJsRepository.sendEmail(
+          AppConfig.signedUpTemplateId,
+          params.toMap(),
+        );
 
         result.fold(
           (failure) => emit(EditUserError(failure.errorMessage)),

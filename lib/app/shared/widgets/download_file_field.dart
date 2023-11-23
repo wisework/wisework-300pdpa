@@ -10,10 +10,12 @@ class DownloadFileField extends StatefulWidget {
     super.key,
     required this.fileUrl,
     required this.onDownloaded,
+    this.alignment = Alignment.center,
   });
 
   final String fileUrl;
   final Function(String path) onDownloaded;
+  final Alignment alignment;
 
   @override
   State<DownloadFileField> createState() => _DownloadFileFieldState();
@@ -26,7 +28,10 @@ class _DownloadFileFieldState extends State<DownloadFileField> {
       children: <Widget>[
         Visibility(
           visible: widget.fileUrl.isNotEmpty,
-          child: _buildFilePreview(),
+          child: Align(
+            alignment: widget.alignment,
+            child: _buildFilePreview(),
+          ),
         ),
         Row(
           children: <Widget>[
@@ -60,6 +65,7 @@ class _DownloadFileFieldState extends State<DownloadFileField> {
 
   Column _buildFilePreview() {
     return Column(
+      mainAxisSize: MainAxisSize.min,
       children: <Widget>[
         SizedBox(
           height: 180.0,

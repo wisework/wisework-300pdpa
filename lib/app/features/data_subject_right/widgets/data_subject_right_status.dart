@@ -16,10 +16,10 @@ class DataSubjectRightStatus extends StatefulWidget {
 
 class _DataSubjectRightStatusState extends State<DataSubjectRightStatus> {
   final Map<ProcessRequestStatus, String> statusTexts = {
-    ProcessRequestStatus.notProcessed: 'ยังไม่ดำเนินการ',
-    ProcessRequestStatus.inProgress: 'อยู่ระหว่างการดำเนินการ',
-    ProcessRequestStatus.refused: 'ปฏิเสธการดำเนินการ',
-    ProcessRequestStatus.completed: 'ดำเนินการเสร็จสิ้น',
+    ProcessRequestStatus.notProcessed: 'ยังไม่เริ่ม',
+    ProcessRequestStatus.inProgress: 'ระหว่างดำเนินการ',
+    ProcessRequestStatus.refused: 'ปฏิเสธคำร้อง',
+    ProcessRequestStatus.completed: 'เสร็จสิ้น',
   };
   final Map<ProcessRequestStatus, Color> statusColors = {
     ProcessRequestStatus.notProcessed: const Color(0xFF878787),
@@ -50,7 +50,7 @@ class _DataSubjectRightStatusState extends State<DataSubjectRightStatus> {
           Expanded(
             child: Text(
               statusTexts[widget.status].toString(),
-              style: Theme.of(context).textTheme.labelMedium,
+              style: Theme.of(context).textTheme.labelLarge,
             ),
           ),
         ],
