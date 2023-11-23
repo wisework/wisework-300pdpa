@@ -37,7 +37,6 @@ class SearchDataSubjectRightCubit extends Cubit<SearchDataSubjectRightState> {
       return;
     }
     List<DataSubjectRightModel> searchResult = [];
-    List<Map<String, ProcessRequestModel>> processRequests = [];
 
     searchResult = state.dataSubjectRightForms.where((dataSubjectRight) {
       if (dataSubjectRight.dataRequester.isNotEmpty) {
@@ -54,8 +53,6 @@ class SearchDataSubjectRightCubit extends Cubit<SearchDataSubjectRightState> {
     final searchAtRequester =
         state.dataSubjectRightForms.where((dataSubjectRight) {
       for (ProcessRequestModel request in dataSubjectRight.processRequests) {
-        processRequests.add({dataSubjectRight.id: request});
-
         final title = request.requestType;
 
         final description = state.requestTypes
@@ -83,11 +80,20 @@ class SearchDataSubjectRightCubit extends Cubit<SearchDataSubjectRightState> {
         searchResult.add(dataSubjectRight);
       }
     }
-    print(processRequests);
+
+    searchResult.sort(((a, b) => b.updatedDate.compareTo(a.updatedDate)));
+
+    //? Get process request from all data subject right
+    List<Map<String, ProcessRequestModel>> processRequests = [];
+    for (DataSubjectRightModel from in searchResult) {
+      for (ProcessRequestModel request in from.processRequests) {
+        processRequests.add({from.id: request});
+      }
+    }
+
     emit(
       state.copyWith(
-          dataSubjectRightForms: searchResult
-            ..sort(((a, b) => b.updatedDate.compareTo(a.updatedDate))),
+          dataSubjectRightForms: searchResult,
           processRequests: processRequests),
     );
   }
