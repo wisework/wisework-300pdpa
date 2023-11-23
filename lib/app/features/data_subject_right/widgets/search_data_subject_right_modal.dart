@@ -5,10 +5,12 @@ import 'package:ionicons/ionicons.dart';
 import 'package:pdpa/app/config/config.dart';
 import 'package:pdpa/app/data/models/authentication/user_model.dart';
 import 'package:pdpa/app/data/models/data_subject_right/data_subject_right_model.dart';
+import 'package:pdpa/app/data/models/data_subject_right/process_request_model.dart';
 import 'package:pdpa/app/data/models/master_data/request_type_model.dart';
 import 'package:pdpa/app/features/authentication/bloc/sign_in/sign_in_bloc.dart';
 import 'package:pdpa/app/features/data_subject_right/cubit/search_data_subject_right/search_data_subject_right_cubit.dart';
 import 'package:pdpa/app/features/data_subject_right/widgets/data_subject_right_card.dart';
+import 'package:pdpa/app/shared/utils/functions.dart';
 import 'package:pdpa/app/shared/widgets/customs/custom_container.dart';
 import 'package:pdpa/app/shared/widgets/customs/custom_icon_button.dart';
 import 'package:pdpa/app/shared/widgets/customs/custom_text_field.dart';
@@ -141,6 +143,8 @@ class _SearchDataSubjectRightModalState
                         return _buildDataSubjectRightGroup(
                           context,
                           dataSubjectRight: state.dataSubjectRightForms[index],
+                          dataSubjectRights: state.dataSubjectRightForms,
+                          processRequests: state.processRequests,
                           requestTypes: state.requestTypes,
                         );
                       },
@@ -161,13 +165,43 @@ class _SearchDataSubjectRightModalState
   ListView _buildDataSubjectRightGroup(
     BuildContext context, {
     required DataSubjectRightModel dataSubjectRight,
+    required List<DataSubjectRightModel> dataSubjectRights,
+    required List<Map<String, ProcessRequestModel>> processRequests,
     required List<RequestTypeModel> requestTypes,
   }) {
+    if (processRequests.isEmpty) {
+      return ListView.builder(
+        physics: const NeverScrollableScrollPhysics(),
+        shrinkWrap: true,
+        itemBuilder: (context, index) {
+          final processRequest = dataSubjectRight.processRequests[index];
+
+          return Padding(
+            padding: const EdgeInsets.only(
+              bottom: UiConfig.lineSpacing,
+            ),
+            child: DataSubjectRightCard(
+              dataSubjectRight: dataSubjectRight,
+              processRequest: processRequest,
+              requestTypes: requestTypes,
+              language: widget.language,
+            ),
+          );
+        },
+        itemCount: dataSubjectRight.processRequests.length,
+      );
+    }
     return ListView.builder(
       physics: const NeverScrollableScrollPhysics(),
       shrinkWrap: true,
       itemBuilder: (context, index) {
-        final processRequest = dataSubjectRight.processRequests[index];
+        // final processRequest = dataSubjectRight.processRequests[index];
+
+        final entry = processRequests[index].entries.first;
+        final dataSubjectRight = UtilFunctions.getDataSubjectRightById(
+          dataSubjectRights,
+          entry.key,
+        );
 
         return Padding(
           padding: const EdgeInsets.only(
@@ -175,13 +209,13 @@ class _SearchDataSubjectRightModalState
           ),
           child: DataSubjectRightCard(
             dataSubjectRight: dataSubjectRight,
-            processRequest: processRequest,
+            processRequest: entry.value,
             requestTypes: requestTypes,
             language: widget.language,
           ),
         );
       },
-      itemCount: dataSubjectRight.processRequests.length,
+      itemCount: processRequests.length,
     );
   }
 

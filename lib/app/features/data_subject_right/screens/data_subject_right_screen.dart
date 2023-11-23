@@ -19,13 +19,15 @@ import 'package:pdpa/app/features/authentication/bloc/sign_in/sign_in_bloc.dart'
 import 'package:pdpa/app/features/data_subject_right/bloc/data_subject_right/data_subject_right_bloc.dart';
 import 'package:pdpa/app/features/data_subject_right/routes/data_subject_right_route.dart';
 import 'package:pdpa/app/features/data_subject_right/widgets/data_subject_right_card.dart';
+import 'package:pdpa/app/features/data_subject_right/widgets/search_data_subject_right_modal.dart';
 import 'package:pdpa/app/services/apis/data_subject_right_api.dart';
 import 'package:pdpa/app/shared/drawers/pdpa_drawer.dart';
 import 'package:pdpa/app/shared/utils/constants.dart';
+import 'package:pdpa/app/shared/utils/functions.dart';
 import 'package:pdpa/app/shared/utils/toast.dart';
 import 'package:pdpa/app/shared/widgets/content_wrapper.dart';
-import 'package:pdpa/app/shared/widgets/customs/custom_button.dart';
 import 'package:pdpa/app/shared/widgets/customs/custom_container.dart';
+import 'package:pdpa/app/shared/widgets/customs/custom_dropdown_button.dart';
 import 'package:pdpa/app/shared/widgets/customs/custom_icon_button.dart';
 import 'package:pdpa/app/shared/widgets/customs/custom_text_field.dart';
 import 'package:pdpa/app/shared/widgets/loading_indicator.dart';
@@ -93,7 +95,46 @@ class DataSubjectRightView extends StatefulWidget {
 
 class _DataSubjectRightViewState extends State<DataSubjectRightView> {
   final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
+  void _openSeachConsentFormModal() {
+    final bloc = context.read<DataSubjectRightBloc>();
+
+    List<DataSubjectRightModel> dataSubjectRights = [];
+    List<RequestTypeModel> requestTypes = [];
+    if (bloc.state is GotDataSubjectRights) {
+      dataSubjectRights =
+          (bloc.state as GotDataSubjectRights).dataSubjectRights;
+      requestTypes = (bloc.state as GotDataSubjectRights).requestTypes;
+    }
+
+    showBarModalBottomSheet(
+      context: context,
+      backgroundColor: Colors.transparent,
+      builder: (context) => SearchDataSubjectRightModal(
+        initialDataSubjectRights: dataSubjectRights,
+        initialRequestTypes: requestTypes,
+        language: widget.language,
+      ),
+    );
+  }
+
   final qrCodeKey = GlobalKey();
+  String _selectedChoice = 'ทั้งหมด';
+
+  // List of choices
+  final List<String> _choices = [
+    'ทั้งหมด',
+    'ยังไม่ดำเนินการ',
+    'กำลังดำเนินการ',
+    'ดำเนินการเสร็จสิ้น',
+    'ปฏิเสธการดำเนินการ'
+  ];
+  void _setPeriodUnit(String? value) {
+    if (value != null) {
+      setState(() {
+        _selectedChoice = value;
+      });
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -127,7 +168,7 @@ class _DataSubjectRightViewState extends State<DataSubjectRightView> {
                     child: ContentWrapper(
                       child: CustomContainer(
                         margin: EdgeInsets.zero,
-                        child: _buildShareConsentForm(
+                        child: _buildShareDataSubjectRight(
                           context,
                           url: dsrFormUrl,
                         ),
@@ -156,6 +197,7 @@ class _DataSubjectRightViewState extends State<DataSubjectRightView> {
               return _buildDataSubjectRightView(
                 context,
                 dataSubjectRights: state.dataSubjectRights,
+                processRequests: state.processRequests,
                 requestTypes: state.requestTypes,
               );
             }
@@ -207,12 +249,13 @@ class _DataSubjectRightViewState extends State<DataSubjectRightView> {
   Column _buildDataSubjectRightView(
     BuildContext context, {
     required List<DataSubjectRightModel> dataSubjectRights,
+    required List<Map<String, ProcessRequestModel>> processRequests,
     required List<RequestTypeModel> requestTypes,
   }) {
     return Column(
       children: <Widget>[
         const SizedBox(height: UiConfig.lineSpacing),
-        if (dataSubjectRights.isNotEmpty)
+        if (processRequests.isNotEmpty)
           Padding(
             padding: const EdgeInsets.only(
               left: UiConfig.lineGap * 2,
@@ -229,33 +272,25 @@ class _DataSubjectRightViewState extends State<DataSubjectRightView> {
                     maxLines: 1,
                   ),
                 ),
-                CustomButton(
-                  padding: const EdgeInsets.symmetric(
-                    vertical: 2.0,
-                    horizontal: 8.0,
-                  ),
-                  onPressed: () {
-                    // _sortConsentForms(!_sortAscending);
-                  },
-                  buttonType: CustomButtonType.text,
-                  child: Row(
-                    mainAxisSize: MainAxisSize.min,
-                    children: <Widget>[
-                      Text(
-                        tr('dataSubjectRight.Listpage.filter.all'),
-                        style: Theme.of(context).textTheme.titleMedium,
-                      ),
-                      const SizedBox(width: 2.0),
-                      Icon(
-                        1 != 1 //_sortAscending
-                            ? Icons.arrow_drop_up
-                            : Icons.arrow_drop_down,
-                        size: 20.0,
-                        color: Theme.of(context).colorScheme.onSurface,
-                      ),
-                    ],
+                SizedBox(
+                  width: 200,
+                  child: CustomDropdownButton<String>(
+                    value: _selectedChoice,
+                    items: _choices.map(
+                      (unit) {
+                        return DropdownMenuItem(
+                          value: unit,
+                          child: Text(
+                            unit,
+                            style: Theme.of(context).textTheme.bodyMedium,
+                          ),
+                        );
+                      },
+                    ).toList(),
+                    onSelected: _setPeriodUnit,
                   ),
                 ),
+              
               ],
             ),
           ),
@@ -268,6 +303,7 @@ class _DataSubjectRightViewState extends State<DataSubjectRightView> {
               child: _buildDataSubjectRightListView(
                 context,
                 dataSubjectRights: dataSubjectRights,
+                processRequests: processRequests,
                 requestTypes: requestTypes,
               ),
             ),
@@ -280,9 +316,10 @@ class _DataSubjectRightViewState extends State<DataSubjectRightView> {
   Widget _buildDataSubjectRightListView(
     BuildContext context, {
     required List<DataSubjectRightModel> dataSubjectRights,
+    required List<Map<String, ProcessRequestModel>> processRequests,
     required List<RequestTypeModel> requestTypes,
   }) {
-    if (dataSubjectRights.isEmpty) {
+    if (processRequests.isEmpty) {
       return ExampleScreen(
         headderText: tr(
           'consentManagement.consentForm.consentForms',
@@ -478,26 +515,11 @@ class _DataSubjectRightViewState extends State<DataSubjectRightView> {
       physics: const NeverScrollableScrollPhysics(),
       shrinkWrap: true,
       itemBuilder: (context, index) {
-        return _buildDataSubjectRightGroup(
-          context,
-          dataSubjectRight: dataSubjectRights[index],
-          requestTypes: requestTypes,
+        final entry = processRequests[index].entries.first;
+        final dataSubjectRight = UtilFunctions.getDataSubjectRightById(
+          dataSubjectRights,
+          entry.key,
         );
-      },
-      itemCount: dataSubjectRights.length,
-    );
-  }
-
-  ListView _buildDataSubjectRightGroup(
-    BuildContext context, {
-    required DataSubjectRightModel dataSubjectRight,
-    required List<RequestTypeModel> requestTypes,
-  }) {
-    return ListView.builder(
-      physics: const NeverScrollableScrollPhysics(),
-      shrinkWrap: true,
-      itemBuilder: (context, index) {
-        final processRequest = dataSubjectRight.processRequests[index];
 
         return Padding(
           padding: const EdgeInsets.only(
@@ -505,17 +527,17 @@ class _DataSubjectRightViewState extends State<DataSubjectRightView> {
           ),
           child: DataSubjectRightCard(
             dataSubjectRight: dataSubjectRight,
-            processRequest: processRequest,
+            processRequest: entry.value,
             requestTypes: requestTypes,
             language: widget.language,
           ),
         );
       },
-      itemCount: dataSubjectRight.processRequests.length,
+      itemCount: processRequests.length,
     );
   }
 
-  Column _buildShareConsentForm(
+  Column _buildShareDataSubjectRight(
     BuildContext context, {
     required String url,
   }) {
