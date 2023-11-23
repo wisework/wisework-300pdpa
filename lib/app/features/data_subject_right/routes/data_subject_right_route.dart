@@ -12,10 +12,8 @@ class DataSubjectRightRoute {
   );
 
   static final GoRoute createDataSubjectRight = GoRoute(
-    path: '/data-subject-rights/:id/create',
-    builder: (context, state) => FormDataSubjectRight(
-      companyId: state.pathParameters['id'] ?? '',
-    ),
+    path: '/data-subject-rights/create',
+    builder: (context, state) => const FormDataSubjectRight(),
   );
 
   static final GoRoute editDataSubjectRight = GoRoute(

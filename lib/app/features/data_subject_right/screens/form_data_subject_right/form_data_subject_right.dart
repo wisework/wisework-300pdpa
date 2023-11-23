@@ -3,12 +3,14 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
 import 'package:pdpa/app/config/config.dart';
+import 'package:pdpa/app/data/models/authentication/user_model.dart';
 
 import 'package:pdpa/app/data/models/master_data/reason_type_model.dart';
 
 import 'package:pdpa/app/data/models/master_data/request_type_model.dart';
 import 'package:pdpa/app/data/presets/reason_types_preset.dart';
 import 'package:pdpa/app/data/presets/request_types_preset.dart';
+import 'package:pdpa/app/features/authentication/bloc/sign_in/sign_in_bloc.dart';
 import 'package:pdpa/app/features/data_subject_right/bloc/form_data_sub_ject_right/form_data_sub_ject_right_bloc.dart';
 import 'package:pdpa/app/features/data_subject_right/cubit/form_data_subject_right/form_data_subject_right_cubit.dart';
 import 'package:pdpa/app/features/data_subject_right/screens/form_data_subject_right/pages/acknowledge_page.dart';
@@ -27,16 +29,31 @@ import 'package:pdpa/app/shared/widgets/templates/pdpa_app_bar.dart';
 class FormDataSubjectRight extends StatefulWidget {
   const FormDataSubjectRight({
     super.key,
-    required this.companyId,
   });
-
-  final String companyId;
 
   @override
   State<FormDataSubjectRight> createState() => _FormDataSubjectRightState();
 }
 
 class _FormDataSubjectRightState extends State<FormDataSubjectRight> {
+  late UserModel currentUser;
+
+  @override
+  void initState() {
+    super.initState();
+
+    _initialData();
+  }
+
+  void _initialData() {
+    final bloc = context.read<SignInBloc>();
+    if (bloc.state is SignedInUser) {
+      currentUser = (bloc.state as SignedInUser).user;
+    } else {
+      currentUser = UserModel.empty();
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return BlocProvider(
@@ -50,7 +67,7 @@ class _FormDataSubjectRightState extends State<FormDataSubjectRight> {
           title: const Text('แบบฟอร์มขอใช้สิทธิ์ตามกฏหมาย'), //!
         ),
         body: FormDataSubjectRightView(
-          companyId: widget.companyId,
+          companyId: currentUser.currentCompany,
         ),
       ),
     );
@@ -114,7 +131,9 @@ class _FormDataSubjectRightViewState extends State<FormDataSubjectRightView> {
     final currentPage = context.select(
       (FormDataSubjectRightCubit cubit) => cubit.state.currentPage,
     );
-
+    final isAcknowledge = context.select(
+      (FormDataSubjectRightCubit cubit) => cubit.state.isAcknowledge,
+    );
     return Column(
       children: [
         Expanded(
@@ -244,6 +263,12 @@ class _FormDataSubjectRightViewState extends State<FormDataSubjectRightView> {
                                 curve: Curves.easeInOut,
                               );
                             }
+                          }
+                          if (currentPage == 7 && isAcknowledge) {
+                            print(dataSubjectRight);
+                            // context
+                            //     .read<FormDataSubjectRightCubit>()
+                            //     .createDatasubjectRight(widget.companyId);
                           }
                         },
                         child: currentPage != 7

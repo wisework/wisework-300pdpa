@@ -4,10 +4,14 @@ import 'dart:typed_data';
 
 // ignore: depend_on_referenced_packages
 import 'package:bloc/bloc.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:equatable/equatable.dart';
 import 'package:pdpa/app/data/models/data_subject_right/data_subject_right_model.dart';
 import 'package:pdpa/app/data/models/data_subject_right/power_verification_model.dart';
+import 'package:pdpa/app/data/models/data_subject_right/process_request_model.dart';
 import 'package:pdpa/app/data/models/data_subject_right/requester_verification_model.dart';
+import 'package:pdpa/app/data/models/etc/user_input_text.dart';
+import 'package:pdpa/app/data/repositories/data_subject_right_repository.dart';
 import 'package:pdpa/app/data/repositories/general_repository.dart';
 
 part 'form_data_subject_right_state.dart';
@@ -15,18 +19,26 @@ part 'form_data_subject_right_state.dart';
 class FormDataSubjectRightCubit extends Cubit<FormDataSubjectRightState> {
   FormDataSubjectRightCubit({
     required GeneralRepository generalRepository,
+    required DataSubjectRightRepository dataSubjectRightRepository,
   })  : _generalRepository = generalRepository,
+        _dataSubjectRightRepository = dataSubjectRightRepository,
         super(
           FormDataSubjectRightState(
             currentPage: 0,
             dataSubjectRight: DataSubjectRightModel.empty(),
+            isAcknowledge: false,
           ),
         );
 
   final GeneralRepository _generalRepository;
+  final DataSubjectRightRepository _dataSubjectRightRepository;
 
   void setDataSubjectRight(DataSubjectRightModel dataSubjectRight) {
     emit(state.copyWith(dataSubjectRight: dataSubjectRight));
+  }
+
+  void setAcknowledge(bool isCheck) {
+    emit(state.copyWith(isAcknowledge: isCheck));
   }
 
   void nextPage(int page) {
@@ -95,6 +107,99 @@ class FormDataSubjectRightCubit extends Cubit<FormDataSubjectRightState> {
       identityVerifications: identityVerifications,
     );
     emit(state.copyWith(dataSubjectRight: update));
+  }
+
+  void formDataSubjectRightProcessRequestChecked(String processRequestModelId) {
+    if (processRequestModelId.isEmpty) return;
+    List<ProcessRequestModel> processRequests =
+        state.dataSubjectRight.processRequests.isNotEmpty
+            ? state.dataSubjectRight.processRequests
+                .map((verification) => verification)
+                .toList()
+            : [];
+    List<String> requests = state.dataSubjectRight.processRequests.isNotEmpty
+        ? state.dataSubjectRight.processRequests
+            .map((verification) => verification.id)
+            .toList()
+        : [];
+
+    if (requests.contains(processRequestModelId)) {
+      processRequests.removeWhere(
+          (verification) => verification.id == processRequestModelId);
+    } else {
+      final verification =
+          ProcessRequestModel.empty().copyWith(id: processRequestModelId);
+      processRequests.add(verification);
+    }
+
+    final update = state.dataSubjectRight.copyWith(
+      processRequests: processRequests,
+    );
+    emit(state.copyWith(dataSubjectRight: update));
+  }
+
+  void formDataSubjectRightReasonChecked(
+    String requestId,
+    String reasonId,
+  ) {
+    List<ProcessRequestModel> processRequests = [];
+    for (ProcessRequestModel request
+        in state.dataSubjectRight.processRequests) {
+      List<UserInputText> reasonInputs =
+          request.reasonTypes.map((reason) => reason).toList();
+      final isReasonFound =
+          reasonInputs.map((reason) => reason.id).toList().contains(reasonId);
+
+      if (isReasonFound) {
+        reasonInputs.removeWhere((reason) => reason.id == reasonId);
+      } else {
+        final reasonInput = UserInputText(id: reasonId, text: '');
+        reasonInputs.add(reasonInput);
+      }
+      processRequests.add(request.copyWith(
+        reasonTypes: reasonInputs,
+      ));
+    }
+    final newDataRequest = state.dataSubjectRight.copyWith(
+      processRequests: processRequests,
+    );
+
+    emit(state.copyWith(
+      dataSubjectRight: newDataRequest,
+    ));
+  }
+
+  void formDataSubjectRightReasonInput(
+    String text,
+    String requestId,
+    String reasonId,
+  ) {
+    List<ProcessRequestModel> processRequests = [];
+    for (ProcessRequestModel request
+        in state.dataSubjectRight.processRequests) {
+      List<UserInputText> reasonInputs = [];
+      for (UserInputText reason in request.reasonTypes) {
+        if (reason.id == reasonId) {
+          reasonInputs.add(reason.copyWith(
+            text: text,
+          ));
+        } else {
+          reasonInputs.add(reason);
+        }
+      }
+      processRequests.add(request.copyWith(
+        reasonTypes: reasonInputs,
+      ));
+    }
+    final newDataRequest = state.dataSubjectRight.copyWith(
+      processRequests: processRequests,
+    );
+
+    print(state.dataSubjectRight.processRequests);
+
+    emit(state.copyWith(
+      dataSubjectRight: newDataRequest,
+    ));
   }
 
   Future<void> uploadPowerVerificationFile(
@@ -226,6 +331,36 @@ class FormDataSubjectRightCubit extends Cubit<FormDataSubjectRightState> {
           powerVerifications: requesterVerification,
         ),
       ),
+    );
+  }
+
+  Future<void> createDatasubjectRight(
+    String companyId,
+  ) async {
+    final requester = state.dataSubjectRight.dataRequester.first.text;
+    final dataSubjectRight = state.dataSubjectRight.copyWith(
+      dataOwner: state.dataSubjectRight.isDataOwner
+          ? state.dataSubjectRight.dataRequester
+          : state.dataSubjectRight.dataOwner,
+      requestExpirationDate: DateTime.now().add(const Duration(days: 30)),
+      createdBy: requester,
+      createdDate: DateTime.now(),
+      updatedBy: '',
+      updatedDate: DateTime.now(),
+    );
+
+    final result = await _dataSubjectRightRepository.createDataSubjectRight(
+        dataSubjectRight, companyId);
+    await Future.delayed(const Duration(milliseconds: 800));
+    result.fold(
+      (failure) {},
+      (fileUrl) {
+        DataSubjectRightModel dataSubjectRight = state.dataSubjectRight;
+
+        emit(
+          state.copyWith(dataSubjectRight: dataSubjectRight),
+        );
+      },
     );
   }
 }

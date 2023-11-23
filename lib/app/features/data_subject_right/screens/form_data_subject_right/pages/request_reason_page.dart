@@ -1,10 +1,15 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 
 import 'package:pdpa/app/config/config.dart';
+import 'package:pdpa/app/data/models/data_subject_right/data_subject_right_model.dart';
+import 'package:pdpa/app/data/models/data_subject_right/process_request_model.dart';
 
 import 'package:pdpa/app/data/models/master_data/localized_model.dart';
 import 'package:pdpa/app/data/models/master_data/reason_type_model.dart';
 import 'package:pdpa/app/data/models/master_data/request_type_model.dart';
+import 'package:pdpa/app/data/presets/request_actions_preset.dart';
+import 'package:pdpa/app/features/data_subject_right/cubit/form_data_subject_right/form_data_subject_right_cubit.dart';
 
 import 'package:pdpa/app/features/data_subject_right/widgets/data_subject_right_list_tile.dart';
 import 'package:pdpa/app/shared/widgets/customs/custom_checkbox.dart';
@@ -29,31 +34,20 @@ class RequestReasonPage extends StatefulWidget {
 }
 
 class _RequestReasonPageState extends State<RequestReasonPage> {
-  bool? checkboxValue1 = false;
-  bool? checkboxValue2 = false;
-
-  late TextEditingController identityDataController;
-  late TextEditingController foundedPlaceTextController;
   late int selectedRadioTile;
+
+  List<ProcessRequestModel> precessRequests = [];
 
   List<RequestTypeModel> selectRequestType = [];
   List<ReasonTypeModel> selectReasonType = [];
 
-  void _setRequestType(RequestTypeModel requestType) {
-    final selectIds = selectRequestType.map((selected) => selected.id).toList();
-
-    setState(() {
-      if (selectIds.contains(requestType.id)) {
-        selectRequestType = selectRequestType
-            .where((selected) => selected.id != requestType.id)
-            .toList();
-      } else {
-        selectRequestType = selectRequestType
-            .map((selected) => selected)
-            .toList()
-          ..add(requestType);
-      }
-    });
+  late DataSubjectRightModel dataSubjectRight;
+  @override
+  void initState() {
+    dataSubjectRight =
+        context.read<FormDataSubjectRightCubit>().state.dataSubjectRight;
+    selectedRadioTile = 1;
+    super.initState();
   }
 
   void _setReasonType(ReasonTypeModel reasonType) {
@@ -71,29 +65,11 @@ class _RequestReasonPageState extends State<RequestReasonPage> {
     });
   }
 
-  @override
-  void initState() {
-    identityDataController = TextEditingController();
-    foundedPlaceTextController = TextEditingController();
-
-    selectedRadioTile = 1;
-
-    super.initState();
-  }
-
-  @override
-  void dispose() {
-    identityDataController.dispose();
-    foundedPlaceTextController.dispose();
-
-    super.dispose();
-  }
-
-  setSelectedRadioTile(int val) {
-    setState(() {
-      selectedRadioTile = val;
-    });
-  }
+  // setSelectedRadioTile(int val, String requestAction) {
+  //   setState(() {
+  //     selectedRadioTile = val;
+  //   });
+  // }
 
   @override
   Widget build(BuildContext context) {
@@ -145,8 +121,13 @@ class _RequestReasonPageState extends State<RequestReasonPage> {
   //? Checkbox List
   Widget _buildCheckBoxTile(
       BuildContext context, RequestTypeModel requestType) {
-    final selectRequestTypeIds =
-        selectRequestType.map((category) => category.id).toList();
+    final data = context
+        .read<FormDataSubjectRightCubit>()
+        .state
+        .dataSubjectRight
+        .processRequests;
+    final selectRequestTypeIds = data.map((category) => category.id).toList();
+
     return Column(
       children: [
         Row(
@@ -158,8 +139,11 @@ class _RequestReasonPageState extends State<RequestReasonPage> {
               ),
               child: CustomCheckBox(
                 value: selectRequestTypeIds.contains(requestType.id),
-                onChanged: (bool? value) {
-                  _setRequestType(requestType);
+                onChanged: (_) {
+                  context
+                      .read<FormDataSubjectRightCubit>()
+                      .formDataSubjectRightProcessRequestChecked(
+                          requestType.id);
                 },
               ),
             ),
@@ -193,10 +177,7 @@ class _RequestReasonPageState extends State<RequestReasonPage> {
             top: UiConfig.lineGap,
           ),
           child: _buildExpandedContainer(
-            context,
-            widget.reasonType,
-            selectRequestTypeIds.contains(requestType.id),
-          ),
+              context, widget.reasonType, requestType, data),
         ), //? Reasons Id
       ],
     );
@@ -204,11 +185,17 @@ class _RequestReasonPageState extends State<RequestReasonPage> {
 
   //? Expanded Children
   ExpandedContainer _buildExpandedContainer(
-      BuildContext context, List<ReasonTypeModel> reasonType, bool isExpanded) {
-    final selectReasonTypeIds =
-        selectReasonType.map((category) => category.id).toList();
+      BuildContext context,
+      List<ReasonTypeModel> reasonType,
+      RequestTypeModel requestType,
+      List<ProcessRequestModel> data) {
+    final selectRequestTypeIds = data.map((category) => category.id).toList();
+    final reasonTypes = data
+        .expand((processRequest) =>
+            processRequest.reasonTypes.map((userInputText) => userInputText.id))
+        .toList();
     return ExpandedContainer(
-      expand: isExpanded,
+      expand: selectRequestTypeIds.contains(requestType.id),
       duration: const Duration(milliseconds: 400),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start, // กำหนดให้ชิดซ้าย
@@ -227,68 +214,137 @@ class _RequestReasonPageState extends State<RequestReasonPage> {
           ),
           CustomTextField(
             hintText: 'กรอกข้อมูลส่วนบุคคล', //!
-            controller: identityDataController,
             required: true,
+            onChanged: (value) {
+              if (selectRequestTypeIds.contains(requestType.id)) {
+                final updatedData = data.map((item) {
+                  if (item.id == requestType.id) {
+                    return item.copyWith(personalData: value);
+                  } else {
+                    return item;
+                  }
+                }).toList();
+
+                setState(() {
+                  precessRequests = updatedData;
+                });
+
+                context.read<FormDataSubjectRightCubit>().setDataSubjectRight(
+                    dataSubjectRight.copyWith(processRequests: updatedData));
+              }
+            },
           ),
           const SizedBox(height: UiConfig.lineSpacing),
           const TitleRequiredText(
             text: 'สถานที่พบเจอ', //!
           ),
           CustomTextField(
-            controller: foundedPlaceTextController,
-            hintText: 'กรอกสถานที่พบเจอ', //!
+            hintText: 'กรอกสถานที่พบเจอ',
+            onChanged: (value) {
+              if (selectRequestTypeIds.contains(requestType.id)) {
+                final updatedData = data.map((item) {
+                  if (item.id == requestType.id) {
+                    return item.copyWith(foundSource: value);
+                  } else {
+                    return item;
+                  }
+                }).toList();
+
+                setState(() {
+                  precessRequests = updatedData;
+                });
+
+                context.read<FormDataSubjectRightCubit>().setDataSubjectRight(
+                    dataSubjectRight.copyWith(processRequests: updatedData));
+              }
+            },
           ),
           const SizedBox(height: UiConfig.lineSpacing),
           const TitleRequiredText(
             text: 'การดำเนินการ', //!
             required: true,
           ),
-          DataSubjectRightListTile(
-            title: 'ลบ',
-            onTap: () {
-              setSelectedRadioTile(1);
-            },
-            leading: CustomRadioButton(
-              value: 1,
-              selected: selectedRadioTile,
-              onChanged: (val) {
-                setSelectedRadioTile(val!);
-              },
-            ),
-          ),
-          Divider(
-            color:
-                Theme.of(context).colorScheme.outlineVariant.withOpacity(0.5),
-          ),
-          DataSubjectRightListTile(
-            title: 'ไม่ทำลาย',
-            onTap: () {
-              setSelectedRadioTile(2);
-            },
-            leading: CustomRadioButton(
-              value: 2,
-              selected: selectedRadioTile,
-              onChanged: (val) {
-                setSelectedRadioTile(val!);
-              },
-            ),
-          ),
-          Divider(
-            color:
-                Theme.of(context).colorScheme.outlineVariant.withOpacity(0.5),
-          ),
-          DataSubjectRightListTile(
-            title: 'ทำให้ไม่สามารถระบุตัวตน',
-            onTap: () {
-              setSelectedRadioTile(3);
-            },
-            leading: CustomRadioButton(
-              value: 3,
-              selected: selectedRadioTile,
-              onChanged: (val) {
-                setSelectedRadioTile(val!);
-              },
-            ),
+          Column(
+            children: requestActionsPreset
+                .map((requestActions) => Padding(
+                      padding: const EdgeInsets.only(
+                        bottom: UiConfig.lineGap,
+                      ),
+                      child: DataSubjectRightListTile(
+                        title: requestActions.title
+                            .firstWhere(
+                              (item) => item.language == 'th-TH',
+                              orElse: () => const LocalizedModel.empty(),
+                            )
+                            .text,
+                        onTap: () {
+                          setState(() {
+                            selectedRadioTile = requestActions.priority;
+                          });
+                          if (selectRequestTypeIds.contains(requestType.id)) {
+                            final updatedData = data.map((item) {
+                              if (item.id == requestType.id) {
+                                return item.copyWith(
+                                    requestAction: requestActions.id);
+                              } else {
+                                return item;
+                              }
+                            }).toList();
+
+                            setState(() {
+                              precessRequests = updatedData;
+                            });
+
+                            context
+                                .read<FormDataSubjectRightCubit>()
+                                .setDataSubjectRight(dataSubjectRight.copyWith(
+                                    processRequests: updatedData));
+
+                            print(context
+                                .read<FormDataSubjectRightCubit>()
+                                .state
+                                .dataSubjectRight
+                                .processRequests);
+                          }
+                          // setSelectedRadioTile(
+                          //     requestActions.priority, requestActions.id);
+                        },
+                        leading: CustomRadioButton(
+                          value: requestActions.priority,
+                          selected: selectedRadioTile,
+                          onChanged: (val) {
+                            setState(() {
+                              selectedRadioTile = requestActions.priority;
+                            });
+                            if (selectRequestTypeIds.contains(requestType.id)) {
+                              final updatedData = data.map((item) {
+                                if (item.id == requestType.id) {
+                                  return item.copyWith(
+                                      requestAction: requestActions.id);
+                                } else {
+                                  return item;
+                                }
+                              }).toList();
+
+                              setState(() {
+                                precessRequests = updatedData;
+                              });
+
+                              context
+                                  .read<FormDataSubjectRightCubit>()
+                                  .setDataSubjectRight(dataSubjectRight
+                                      .copyWith(processRequests: updatedData));
+                            }
+                            print(context
+                                .read<FormDataSubjectRightCubit>()
+                                .state
+                                .dataSubjectRight
+                                .processRequests);
+                          },
+                        ),
+                      ),
+                    ))
+                .toList(),
           ),
           const SizedBox(height: UiConfig.lineSpacing),
           Text(
@@ -320,10 +376,17 @@ class _RequestReasonPageState extends State<RequestReasonPage> {
                                   right: UiConfig.actionSpacing,
                                 ),
                                 child: CustomCheckBox(
-                                  value:
-                                      selectReasonTypeIds.contains(reason.id),
+                                  value: reasonTypes.contains(reason.id),
                                   onChanged: (_) {
-                                    _setReasonType(reason);
+                                    context
+                                        .read<FormDataSubjectRightCubit>()
+                                        .formDataSubjectRightReasonChecked(
+                                            requestType.id, reason.id);
+                                    // print(context
+                                    //     .read<FormDataSubjectRightCubit>()
+                                    //     .state
+                                    //     .dataSubjectRight
+                                    //     .processRequests);
                                   },
                                 ),
                               ),
@@ -338,19 +401,19 @@ class _RequestReasonPageState extends State<RequestReasonPage> {
                                               const LocalizedModel.empty(),
                                         )
                                         .text, //!
-                                    style:
-                                        !selectReasonTypeIds.contains(reason.id)
-                                            ? Theme.of(context)
-                                                .textTheme
-                                                .bodyMedium
-                                                ?.copyWith()
-                                            : Theme.of(context)
-                                                .textTheme
-                                                .bodyMedium
-                                                ?.copyWith(
-                                                    color: Theme.of(context)
-                                                        .colorScheme
-                                                        .primary),
+                                    style: !selectRequestTypeIds
+                                            .contains(reason.id)
+                                        ? Theme.of(context)
+                                            .textTheme
+                                            .bodyMedium
+                                            ?.copyWith()
+                                        : Theme.of(context)
+                                            .textTheme
+                                            .bodyMedium
+                                            ?.copyWith(
+                                                color: Theme.of(context)
+                                                    .colorScheme
+                                                    .primary),
                                   ),
                                 ),
                               ),
@@ -358,27 +421,34 @@ class _RequestReasonPageState extends State<RequestReasonPage> {
                           ),
                           if (reason.requiredInputReasonText == true)
                             ExpandedContainer(
-                              expand: selectReasonTypeIds.contains(reason.id),
+                              expand: reasonTypes.contains(reason.id),
                               duration: const Duration(milliseconds: 400),
                               child: Padding(
-                                padding: const EdgeInsets.only(
+                                padding: EdgeInsets.only(
                                   left: UiConfig.defaultPaddingSpacing * 3,
                                   bottom: UiConfig.lineGap,
                                 ),
                                 child: Column(
                                   crossAxisAlignment: CrossAxisAlignment.start,
                                   children: [
-                                    const TitleRequiredText(
+                                    TitleRequiredText(
                                       text: 'เหตุผล', //!
                                       required: true,
                                     ),
                                     CustomTextField(
                                       hintText: 'กรอกเหตุผล', //!
-                                      controller: identityDataController,
+
                                       required: true,
+                                      onChanged: (text) {
+                                        context
+                                            .read<FormDataSubjectRightCubit>()
+                                            .formDataSubjectRightReasonInput(
+                                                text,
+                                                requestType.id,
+                                                reason.id);
+                                      },
                                     ),
-                                    const SizedBox(
-                                        height: UiConfig.lineSpacing),
+                                    SizedBox(height: UiConfig.lineSpacing),
                                   ],
                                 ),
                               ),
