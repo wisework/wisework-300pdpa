@@ -1,16 +1,23 @@
+import 'package:bot_toast/bot_toast.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
 import 'package:pdpa/app/config/config.dart';
+import 'package:pdpa/app/data/models/authentication/user_model.dart';
+import 'package:pdpa/app/data/models/data_subject_right/process_request_model.dart';
+
+import 'package:pdpa/app/data/models/data_subject_right/requester_verification_model.dart';
 
 import 'package:pdpa/app/data/models/master_data/reason_type_model.dart';
 
 import 'package:pdpa/app/data/models/master_data/request_type_model.dart';
 import 'package:pdpa/app/data/presets/reason_types_preset.dart';
 import 'package:pdpa/app/data/presets/request_types_preset.dart';
+import 'package:pdpa/app/features/authentication/bloc/sign_in/sign_in_bloc.dart';
 import 'package:pdpa/app/features/data_subject_right/bloc/form_data_sub_ject_right/form_data_sub_ject_right_bloc.dart';
 import 'package:pdpa/app/features/data_subject_right/cubit/form_data_subject_right/form_data_subject_right_cubit.dart';
+import 'package:pdpa/app/features/data_subject_right/routes/data_subject_right_route.dart';
 import 'package:pdpa/app/features/data_subject_right/screens/form_data_subject_right/pages/acknowledge_page.dart';
 import 'package:pdpa/app/features/data_subject_right/screens/form_data_subject_right/pages/data_owner_detail_page.dart';
 import 'package:pdpa/app/features/data_subject_right/screens/form_data_subject_right/pages/identity_verification_page.dart';
@@ -19,24 +26,44 @@ import 'package:pdpa/app/features/data_subject_right/screens/form_data_subject_r
 import 'package:pdpa/app/features/data_subject_right/screens/form_data_subject_right/pages/power_verification_page.dart';
 import 'package:pdpa/app/features/data_subject_right/screens/form_data_subject_right/pages/request_reason_page.dart';
 import 'package:pdpa/app/features/data_subject_right/screens/form_data_subject_right/pages/reserve_the_right_page.dart';
+import 'package:pdpa/app/features/data_subject_right/screens/form_data_subject_right/widgets/summit_screen.dart';
 import 'package:pdpa/app/injection.dart';
+import 'package:pdpa/app/shared/utils/constants.dart';
 import 'package:pdpa/app/shared/widgets/content_wrapper.dart';
+import 'package:pdpa/app/shared/widgets/customs/custom_container.dart';
+
 import 'package:pdpa/app/shared/widgets/customs/custom_icon_button.dart';
+import 'package:pdpa/app/shared/widgets/loading_indicator.dart';
 import 'package:pdpa/app/shared/widgets/templates/pdpa_app_bar.dart';
 
 class FormDataSubjectRight extends StatefulWidget {
   const FormDataSubjectRight({
     super.key,
-    required this.companyId,
   });
-
-  final String companyId;
 
   @override
   State<FormDataSubjectRight> createState() => _FormDataSubjectRightState();
 }
 
 class _FormDataSubjectRightState extends State<FormDataSubjectRight> {
+  late UserModel currentUser;
+
+  @override
+  void initState() {
+    super.initState();
+
+    _initialData();
+  }
+
+  void _initialData() {
+    final bloc = context.read<SignInBloc>();
+    if (bloc.state is SignedInUser) {
+      currentUser = (bloc.state as SignedInUser).user;
+    } else {
+      currentUser = UserModel.empty();
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return BlocProvider(
@@ -49,8 +76,28 @@ class _FormDataSubjectRightState extends State<FormDataSubjectRight> {
           leadingIcon: _buildPopButton(),
           title: const Text('แบบฟอร์มขอใช้สิทธิ์ตามกฏหมาย'), //!
         ),
-        body: FormDataSubjectRightView(
-          companyId: widget.companyId,
+        body: BlocBuilder<FormDataSubjectRightCubit, FormDataSubjectRightState>(
+          builder: (context, state) {
+            if (state.requestFormState == RequestFormState.requesting) {
+              return FormDataSubjectRightView(
+                companyId: currentUser.currentCompany,
+              );
+            }
+            if (state.requestFormState == RequestFormState.summarize) {
+              return const SubmitScreen();
+            }
+            return const CustomContainer(
+              margin: EdgeInsets.all(UiConfig.lineSpacing),
+              child: Padding(
+                padding: EdgeInsets.symmetric(
+                  vertical: UiConfig.defaultPaddingSpacing * 4,
+                ),
+                child: Center(
+                  child: LoadingIndicator(),
+                ),
+              ),
+            );
+          },
         ),
       ),
     );
@@ -58,7 +105,9 @@ class _FormDataSubjectRightState extends State<FormDataSubjectRight> {
 
   CustomIconButton _buildPopButton() {
     return CustomIconButton(
-      onPressed: () => context.pop(),
+      onPressed: () => context.pushReplacement(
+        DataSubjectRightRoute.dataSubjectRight.path,
+      ),
       icon: Icons.chevron_left_outlined,
       iconColor: Theme.of(context).colorScheme.primary,
       backgroundColor: Theme.of(context).colorScheme.onBackground,
@@ -114,7 +163,9 @@ class _FormDataSubjectRightViewState extends State<FormDataSubjectRightView> {
     final currentPage = context.select(
       (FormDataSubjectRightCubit cubit) => cubit.state.currentPage,
     );
-
+    final isAcknowledge = context.select(
+      (FormDataSubjectRightCubit cubit) => cubit.state.isAcknowledge,
+    );
     return Column(
       children: [
         Expanded(
@@ -162,79 +213,202 @@ class _FormDataSubjectRightViewState extends State<FormDataSubjectRightView> {
                   ),
                 ],
               ),
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              child: Stack(
                 children: [
-                  TextButton(
-                    style: TextButton.styleFrom(
-                      textStyle:
-                          Theme.of(context).textTheme.bodyMedium?.copyWith(
+                  if (currentPage != 1)
+                    Align(
+                      alignment: const Alignment(-0.9, -0.9),
+                      child: TextButton(
+                        style: TextButton.styleFrom(
+                          textStyle: Theme.of(context)
+                              .textTheme
+                              .bodyMedium
+                              ?.copyWith(
                                 color: Theme.of(context).colorScheme.primary,
                               ),
-                    ),
-                    onPressed: () {
-                      if (dataSubjectRight.isDataOwner == true &&
-                          currentPage == 4) {
-                        context
-                            .read<FormDataSubjectRightCubit>()
-                            .previousPage(1);
-                        context
-                            .read<FormDataSubjectRightCubit>()
-                            .setDataSubjectRight(
-                                dataSubjectRight.copyWith(dataOwner: []));
-
-                        _controller.jumpToPage(1);
-                      } else {
-                        context
-                            .read<FormDataSubjectRightCubit>()
-                            .previousPage(currentPage - 1);
-                        _controller.previousPage(
-                          duration: const Duration(microseconds: 1),
-                          curve: Curves.easeInOut,
-                        );
-                      }
-                    },
-                    child: Text(
-                      tr("app.previous"),
-                    ),
-                  ),
-                  Text("$currentPage/7"),
-                  TextButton(
-                      style: TextButton.styleFrom(
-                        textStyle:
-                            Theme.of(context).textTheme.bodyMedium?.copyWith(
-                                  color: Theme.of(context).colorScheme.primary,
-                                ),
-                      ),
-                      onPressed: () {
-                        if (currentPage != 7) {
+                        ),
+                        onPressed: () {
                           if (dataSubjectRight.isDataOwner == true &&
-                              currentPage == 1) {
+                              currentPage == 4) {
                             context
                                 .read<FormDataSubjectRightCubit>()
-                                .nextPage(4);
+                                .previousPage(1);
                             context
                                 .read<FormDataSubjectRightCubit>()
-                                .setDataSubjectRight(dataSubjectRight.copyWith(
-                                    dataOwner: dataSubjectRight.dataRequester));
+                                .setDataSubjectRight(
+                                    dataSubjectRight.copyWith(dataOwner: []));
 
-                            _controller.jumpToPage(4);
+                            _controller.jumpToPage(1);
                           } else {
                             context
                                 .read<FormDataSubjectRightCubit>()
-                                .nextPage(currentPage + 1);
-                            _controller.nextPage(
+                                .previousPage(currentPage - 1);
+                            _controller.previousPage(
                               duration: const Duration(microseconds: 1),
                               curve: Curves.easeInOut,
                             );
                           }
-                        }
-                      },
-                      child: currentPage != 7
-                          ? Text(
-                              tr("app.next"),
-                            )
-                          : Text(tr("dataSubjectRight.submitRequestForm"))),
+                        },
+                        child: Text(
+                          tr("app.previous"),
+                        ),
+                      ),
+                    ),
+                  Align(
+                      alignment: Alignment.bottomCenter,
+                      child: Text(
+                        "$currentPage/7",
+                        style: Theme.of(context).textTheme.bodyMedium,
+                      )),
+                  Align(
+                    alignment: const Alignment(0.9, -0.9),
+                    child: TextButton(
+                        style: TextButton.styleFrom(
+                          textStyle: Theme.of(context)
+                              .textTheme
+                              .bodyMedium
+                              ?.copyWith(
+                                color: Theme.of(context).colorScheme.primary,
+                              ),
+                        ),
+                        onPressed: () {
+                          bool verified = true;
+                          switch (currentPage) {
+                            case 1:
+                              final dataRequester = dataSubjectRight
+                                  .dataRequester
+                                  .map((requester) => requester)
+                                  .toList();
+
+                              if (dataRequester.isEmpty ||
+                                  dataRequester.length != 4) {
+                                verified = false;
+                              }
+                              break;
+
+                            case 2:
+                              final powerVerifications = dataSubjectRight
+                                  .powerVerifications
+                                  .map((verification) => verification)
+                                  .toList();
+
+                              if (powerVerifications.isEmpty) verified = false;
+                              for (RequesterVerificationModel verification
+                                  in powerVerifications) {
+                                if (verification.imageUrl.isEmpty) {
+                                  verified = false;
+                                }
+                              }
+                              break;
+                            case 3:
+                              final dataOwner = dataSubjectRight.dataOwner
+                                  .map((requester) => requester)
+                                  .toList();
+
+                              if (dataOwner.isEmpty || dataOwner.length != 4) {
+                                verified = false;
+                              }
+                              break;
+                            case 4:
+                              final identityVerifications = dataSubjectRight
+                                  .identityVerifications
+                                  .map((verification) => verification)
+                                  .toList();
+
+                              if (identityVerifications.isEmpty) {
+                                verified = false;
+                              }
+
+                              for (RequesterVerificationModel verification
+                                  in identityVerifications) {
+                                if (verification.imageUrl.isEmpty) {
+                                  verified = false;
+                                }
+                              }
+                              break;
+                            case 5:
+                              final processRequests = dataSubjectRight
+                                  .processRequests
+                                  .map((process) => process)
+                                  .toList();
+                              if (processRequests.isEmpty) verified = false;
+                              for (ProcessRequestModel process
+                                  in processRequests) {
+                                if (process.id.isEmpty) {
+                                  verified = false;
+                                }
+
+                                if (process.requestAction.isEmpty) {
+                                  verified = false;
+                                }
+
+                                if (process.reasonTypes.isEmpty) {
+                                  verified = false;
+                                }
+                              }
+                              break;
+                            default:
+                          }
+                          if (currentPage != 7 && verified) {
+                            if (dataSubjectRight.isDataOwner == true &&
+                                currentPage == 1) {
+                              context
+                                  .read<FormDataSubjectRightCubit>()
+                                  .nextPage(4);
+                              context
+                                  .read<FormDataSubjectRightCubit>()
+                                  .setDataSubjectRight(
+                                      dataSubjectRight.copyWith(
+                                          dataOwner:
+                                              dataSubjectRight.dataRequester));
+
+                              _controller.jumpToPage(4);
+                            } else {
+                              context
+                                  .read<FormDataSubjectRightCubit>()
+                                  .nextPage(currentPage + 1);
+                              _controller.nextPage(
+                                duration: const Duration(microseconds: 1),
+                                curve: Curves.easeInOut,
+                              );
+                            }
+                          }
+                          if (currentPage == 7) {
+                            if (!isAcknowledge) {
+                              BotToast.showText(
+                                text: tr(
+                                    'consentManagement.userConsent.consentFormDetails.edit.pleaseAcceptConsent'),
+                                contentColor: Theme.of(context)
+                                    .colorScheme
+                                    .secondary
+                                    .withOpacity(0.75),
+                                borderRadius: BorderRadius.circular(8.0),
+                                textStyle: Theme.of(context)
+                                    .textTheme
+                                    .bodyMedium!
+                                    .copyWith(
+                                        color: Theme.of(context)
+                                            .colorScheme
+                                            .onPrimary),
+                                duration: UiConfig.toastDuration,
+                              );
+                            } else {
+                              context
+                                  .read<FormDataSubjectRightCubit>()
+                                  .createDatasubjectRight(widget.companyId);
+
+                              context
+                                  .read<FormDataSubjectRightCubit>()
+                                  .setSubmited();
+                            }
+                          }
+                        },
+                        child: currentPage != 7
+                            ? Text(
+                                tr("app.next"),
+                              )
+                            : const Text("ส่งแบบคำร้อง")),
+                  ),
                 ],
               ),
             ),

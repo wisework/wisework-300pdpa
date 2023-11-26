@@ -5,18 +5,26 @@ class FormDataSubjectRightState extends Equatable {
   const FormDataSubjectRightState({
     required this.dataSubjectRight,
     required this.currentPage,
+    required this.isAcknowledge,
+    required this.requestFormState,
   });
 
   final DataSubjectRightModel dataSubjectRight;
   final int currentPage;
+  final bool isAcknowledge;
+  final RequestFormState requestFormState;
 
   FormDataSubjectRightState copyWith({
-    int? currentPage,
     DataSubjectRightModel? dataSubjectRight,
+    int? currentPage,
+    bool? isAcknowledge,
+    RequestFormState? requestFormState,
   }) {
     return FormDataSubjectRightState(
-      currentPage: currentPage ?? this.currentPage,
       dataSubjectRight: dataSubjectRight ?? this.dataSubjectRight,
+      currentPage: currentPage ?? this.currentPage,
+      isAcknowledge: isAcknowledge ?? this.isAcknowledge,
+      requestFormState: requestFormState ?? this.requestFormState,
     );
   }
 
@@ -24,5 +32,7 @@ class FormDataSubjectRightState extends Equatable {
   List<Object> get props => [
         currentPage,
         dataSubjectRight,
+        isAcknowledge,
+        requestFormState,
       ];
 }
