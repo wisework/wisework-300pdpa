@@ -24,7 +24,6 @@ import 'package:pdpa/app/shared/widgets/customs/custom_icon_button.dart';
 import 'package:pdpa/app/shared/widgets/customs/custom_text_field.dart';
 import 'package:pdpa/app/shared/widgets/loading_indicator.dart';
 import 'package:pdpa/app/shared/widgets/material_ink_well.dart';
-import 'package:pdpa/app/shared/widgets/screens/example_screen.dart';
 import 'package:pdpa/app/shared/widgets/templates/pdpa_app_bar.dart';
 import 'package:qr_flutter/qr_flutter.dart';
 import 'package:pdpa/app/features/consent_management/consent_form/widgets/download_fuctions/netive_download.dart'
@@ -311,22 +310,7 @@ class _DataSubjectRightViewState extends State<DataSubjectRightView> {
     required List<RequestTypeModel> requestTypes,
   }) {
     if (dataSubjectRights.isEmpty) {
-      return ExampleScreen(
-        headderText: tr(
-          'consentManagement.consentForm.consentForms',
-        ),
-        buttonText: tr(
-          'consentManagement.consentForm.createForm.create',
-        ),
-        descriptionText: tr(
-          'consentManagement.consentForm.explain',
-        ),
-        onPress: () {
-          context.push(
-            DataSubjectRightRoute.createDataSubjectRight.path,
-          );
-        },
-      );
+      return _buildResultNotFound(context);
     }
 
     final processRequestFiltered = UtilFunctions.filterAllProcessRequest(

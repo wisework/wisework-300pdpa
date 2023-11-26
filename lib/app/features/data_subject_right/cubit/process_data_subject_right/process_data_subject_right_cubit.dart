@@ -289,7 +289,6 @@ class ProcessDataSubjectRightCubit extends Cubit<ProcessDataSubjectRightState> {
         toRequesterParams.toMap(),
       );
     }
-    print(toRequesterParams?.link);
 
     //? Send email to another user
     if (toUserParams != null) {
