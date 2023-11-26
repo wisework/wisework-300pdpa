@@ -1,10 +1,15 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 
 import 'package:pdpa/app/config/config.dart';
+import 'package:pdpa/app/data/models/data_subject_right/data_subject_right_model.dart';
+import 'package:pdpa/app/data/models/data_subject_right/process_request_model.dart';
 
 import 'package:pdpa/app/data/models/master_data/localized_model.dart';
 import 'package:pdpa/app/data/models/master_data/reason_type_model.dart';
 import 'package:pdpa/app/data/models/master_data/request_type_model.dart';
+import 'package:pdpa/app/data/presets/request_actions_preset.dart';
+import 'package:pdpa/app/features/data_subject_right/cubit/form_data_subject_right/form_data_subject_right_cubit.dart';
 
 import 'package:pdpa/app/features/data_subject_right/widgets/data_subject_right_list_tile.dart';
 import 'package:pdpa/app/shared/widgets/customs/custom_checkbox.dart';
@@ -29,70 +34,13 @@ class RequestReasonPage extends StatefulWidget {
 }
 
 class _RequestReasonPageState extends State<RequestReasonPage> {
-  bool? checkboxValue1 = false;
-  bool? checkboxValue2 = false;
-
-  late TextEditingController identityDataController;
-  late TextEditingController foundedPlaceTextController;
-  late int selectedRadioTile;
-
-  List<RequestTypeModel> selectRequestType = [];
-  List<ReasonTypeModel> selectReasonType = [];
-
-  void _setRequestType(RequestTypeModel requestType) {
-    final selectIds = selectRequestType.map((selected) => selected.id).toList();
-
-    setState(() {
-      if (selectIds.contains(requestType.id)) {
-        selectRequestType = selectRequestType
-            .where((selected) => selected.id != requestType.id)
-            .toList();
-      } else {
-        selectRequestType = selectRequestType
-            .map((selected) => selected)
-            .toList()
-          ..add(requestType);
-      }
-    });
-  }
-
-  void _setReasonType(ReasonTypeModel reasonType) {
-    final selectIds = selectReasonType.map((selected) => selected.id).toList();
-
-    setState(() {
-      if (selectIds.contains(reasonType.id)) {
-        selectReasonType = selectReasonType
-            .where((selected) => selected.id != reasonType.id)
-            .toList();
-      } else {
-        selectReasonType = selectReasonType.map((selected) => selected).toList()
-          ..add(reasonType);
-      }
-    });
-  }
-
+  late DataSubjectRightModel dataSubjectRight;
   @override
   void initState() {
-    identityDataController = TextEditingController();
-    foundedPlaceTextController = TextEditingController();
-
-    selectedRadioTile = 1;
+    dataSubjectRight =
+        context.read<FormDataSubjectRightCubit>().state.dataSubjectRight;
 
     super.initState();
-  }
-
-  @override
-  void dispose() {
-    identityDataController.dispose();
-    foundedPlaceTextController.dispose();
-
-    super.dispose();
-  }
-
-  setSelectedRadioTile(int val) {
-    setState(() {
-      selectedRadioTile = val;
-    });
   }
 
   @override
@@ -123,16 +71,21 @@ class _RequestReasonPageState extends State<RequestReasonPage> {
                       color: Theme.of(context).colorScheme.onSurface),
                 ),
                 const SizedBox(height: UiConfig.lineSpacing),
-                // _checkOtherFile(),
-                Column(
-                  children: widget.requestType
-                      .map((item) => Padding(
-                            padding: const EdgeInsets.only(
-                              bottom: UiConfig.lineGap,
-                            ),
-                            child: _buildCheckBoxTile(context, item),
-                          ))
-                      .toList(),
+                ListView.builder(
+                  physics: const NeverScrollableScrollPhysics(),
+                  shrinkWrap: true,
+                  itemCount: widget.requestType.length,
+                  itemBuilder: (_, index) {
+                    return Padding(
+                      padding: const EdgeInsets.only(
+                        bottom: UiConfig.lineGap,
+                      ),
+                      child: _buildCheckBoxTile(
+                        context,
+                        widget.requestType[index],
+                      ),
+                    );
+                  },
                 ),
               ],
             ),
@@ -145,8 +98,13 @@ class _RequestReasonPageState extends State<RequestReasonPage> {
   //? Checkbox List
   Widget _buildCheckBoxTile(
       BuildContext context, RequestTypeModel requestType) {
-    final selectRequestTypeIds =
-        selectRequestType.map((category) => category.id).toList();
+    final data = context
+        .read<FormDataSubjectRightCubit>()
+        .state
+        .dataSubjectRight
+        .processRequests;
+    final selectRequestTypeIds = data.map((category) => category.id).toList();
+
     return Column(
       children: [
         Row(
@@ -158,8 +116,11 @@ class _RequestReasonPageState extends State<RequestReasonPage> {
               ),
               child: CustomCheckBox(
                 value: selectRequestTypeIds.contains(requestType.id),
-                onChanged: (bool? value) {
-                  _setRequestType(requestType);
+                onChanged: (_) {
+                  context
+                      .read<FormDataSubjectRightCubit>()
+                      .formDataSubjectRightProcessRequestChecked(
+                          requestType.id);
                 },
               ),
             ),
@@ -194,206 +155,361 @@ class _RequestReasonPageState extends State<RequestReasonPage> {
             top: UiConfig.lineGap,
           ),
           child: _buildExpandedContainer(
-            context,
-            widget.reasonType,
-            selectRequestTypeIds.contains(requestType.id),
-          ),
-        ), //? Reasons Id
+              context, widget.reasonType, requestType, data),
+        ),
       ],
     );
   }
 
   //? Expanded Children
   ExpandedContainer _buildExpandedContainer(
-      BuildContext context, List<ReasonTypeModel> reasonType, bool isExpanded) {
-    final selectReasonTypeIds =
-        selectReasonType.map((category) => category.id).toList();
+      BuildContext context,
+      List<ReasonTypeModel> reasonType,
+      RequestTypeModel requestType,
+      List<ProcessRequestModel> data) {
+    final selectRequestTypeIds = data.map((category) => category.id).toList();
+
     return ExpandedContainer(
-      expand: isExpanded,
+      expand: selectRequestTypeIds.contains(requestType.id),
       duration: const Duration(milliseconds: 400),
-      child: CustomContainer(
-        margin: EdgeInsets.zero,
-        color: Theme.of(context).colorScheme.background,
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start, // กำหนดให้ชิดซ้าย
-          children: [
-            Text(
-              'ข้อมูลและรายละเอียดการดำเนินการ', //!
-              style: Theme.of(context)
-                  .textTheme
-                  .titleMedium
-                  ?.copyWith(color: Theme.of(context).colorScheme.primary),
-            ),
-            const SizedBox(height: UiConfig.lineSpacing),
-            const TitleRequiredText(
-              text: 'ข้อมูลส่วนบุคคล', //!
-              required: true,
-            ),
-            CustomTextField(
-              hintText: 'กรอกข้อมูลส่วนบุคคล', //!
-              controller: identityDataController,
-              required: true,
-            ),
-            const SizedBox(height: UiConfig.lineSpacing),
-            const TitleRequiredText(
-              text: 'สถานที่พบเจอ', //!
-            ),
-            CustomTextField(
-              controller: foundedPlaceTextController,
-              hintText: 'กรอกสถานที่พบเจอ', //!
-            ),
-            const SizedBox(height: UiConfig.lineSpacing),
-            const TitleRequiredText(
-              text: 'การดำเนินการ', //!
-              required: true,
-            ),
-            DataSubjectRightListTile(
-              title: 'ลบ',
-              onTap: () {
-                setSelectedRadioTile(1);
-              },
-              leading: CustomRadioButton(
-                value: 1,
-                selected: selectedRadioTile,
-                onChanged: (val) {
-                  setSelectedRadioTile(val!);
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start, // กำหนดให้ชิดซ้าย
+        children: [
+          Text(
+            'ข้อมูลและรายละเอียดการดำเนินการ', //!
+            style: Theme.of(context)
+                .textTheme
+                .titleMedium
+                ?.copyWith(color: Theme.of(context).colorScheme.primary),
+          ),
+          const SizedBox(height: UiConfig.lineSpacing),
+          const TitleRequiredText(
+            text: 'ข้อมูลส่วนบุคคล', //!
+            required: true,
+          ),
+
+          CustomTextField(
+            hintText: 'กรอกข้อมูลส่วนบุคคล', //!
+            required: true,
+            onChanged: (value) {
+              if (selectRequestTypeIds.contains(requestType.id)) {
+                final updatedData = data.map((item) {
+                  if (item.id == requestType.id) {
+                    return item.copyWith(personalData: value);
+                  } else {
+                    return item;
+                  }
+                }).toList();
+
+                context.read<FormDataSubjectRightCubit>().setDataSubjectRight(
+                    dataSubjectRight.copyWith(processRequests: updatedData));
+              }
+            },
+          ),
+          const SizedBox(height: UiConfig.lineSpacing),
+          const TitleRequiredText(
+            text: 'สถานที่พบเจอ', //!
+          ),
+          CustomTextField(
+            hintText: 'กรอกสถานที่พบเจอ',
+            onChanged: (value) {
+              if (selectRequestTypeIds.contains(requestType.id)) {
+                final updatedData = data.map((item) {
+                  if (item.id == requestType.id) {
+                    return item.copyWith(foundSource: value);
+                  } else {
+                    return item;
+                  }
+                }).toList();
+
+                context.read<FormDataSubjectRightCubit>().setDataSubjectRight(
+                    dataSubjectRight.copyWith(processRequests: updatedData));
+              }
+            },
+          ),
+          const SizedBox(height: UiConfig.lineSpacing),
+          const TitleRequiredText(
+            text: 'การดำเนินการ', //!
+            required: true,
+          ),
+          ListView.builder(
+            physics: const NeverScrollableScrollPhysics(),
+            shrinkWrap: true,
+            itemCount: requestActionsPreset.length,
+            itemBuilder: (_, index) {
+              return DataSubjectRightListTile(
+                title: requestActionsPreset[index]
+                    .title
+                    .firstWhere(
+                      (item) => item.language == 'th-TH',
+                      orElse: () => const LocalizedModel.empty(),
+                    )
+                    .text,
+                onTap: () {
+                  if (selectRequestTypeIds.contains(requestType.id)) {
+                    final updatedData = data.map((item) {
+                      if (item.id == requestType.id) {
+                        return item.copyWith(
+                            requestAction: requestActionsPreset[index].id);
+                      } else {
+                        return item;
+                      }
+                    }).toList();
+
+                    context
+                        .read<FormDataSubjectRightCubit>()
+                        .setDataSubjectRight(dataSubjectRight.copyWith(
+                            processRequests: updatedData));
+                  }
                 },
-              ),
-            ),
-            Divider(
-              color:
-                  Theme.of(context).colorScheme.outlineVariant.withOpacity(0.5),
-            ),
-            DataSubjectRightListTile(
-              title: 'ไม่ทำลาย',
-              onTap: () {
-                setSelectedRadioTile(2);
-              },
-              leading: CustomRadioButton(
-                value: 2,
-                selected: selectedRadioTile,
-                onChanged: (val) {
-                  setSelectedRadioTile(val!);
-                },
-              ),
-            ),
-            Divider(
-              color:
-                  Theme.of(context).colorScheme.outlineVariant.withOpacity(0.5),
-            ),
-            DataSubjectRightListTile(
-              title: 'ทำให้ไม่สามารถระบุตัวตน',
-              onTap: () {
-                setSelectedRadioTile(3);
-              },
-              leading: CustomRadioButton(
-                value: 3,
-                selected: selectedRadioTile,
-                onChanged: (val) {
-                  setSelectedRadioTile(val!);
-                },
-              ),
-            ),
-            const SizedBox(height: UiConfig.lineSpacing),
-            Text(
-              'เหตุผลประกอบคำร้อง',
-              style: Theme.of(context)
-                  .textTheme
-                  .titleMedium
-                  ?.copyWith(color: Theme.of(context).colorScheme.primary),
-            ),
-            const SizedBox(height: UiConfig.lineSpacing),
-            Column(
-              children: reasonType
-                  .map(
-                    (reason) => Padding(
-                        padding: const EdgeInsets.only(
-                          bottom: UiConfig.lineGap,
-                        ),
-                        child: Column(
-                          mainAxisSize: MainAxisSize.min,
-                          children: [
-                            Row(
-                              mainAxisSize: MainAxisSize.min,
-                              mainAxisAlignment: MainAxisAlignment.start,
+                leading: CustomRadioButton(
+                  value: requestActionsPreset[index].id,
+                  selected: data
+                      .firstWhere((request) => request.id == requestType.id,
+                          orElse: () => ProcessRequestModel.empty())
+                      .requestAction,
+                  onChanged: (val) {
+                    if (selectRequestTypeIds.contains(requestType.id)) {
+                      final updatedData = data.map((item) {
+                        if (item.id == requestType.id) {
+                          return item.copyWith(
+                              requestAction: requestActionsPreset[index].id);
+                        } else {
+                          return item;
+                        }
+                      }).toList();
+
+                      context
+                          .read<FormDataSubjectRightCubit>()
+                          .setDataSubjectRight(dataSubjectRight.copyWith(
+                              processRequests: updatedData));
+                    }
+                  },
+                ),
+              );
+            },
+          ),
+          const SizedBox(height: UiConfig.lineSpacing),
+          Text(
+            'เหตุผลประกอบคำร้อง',
+            style: Theme.of(context)
+                .textTheme
+                .titleMedium
+                ?.copyWith(color: Theme.of(context).colorScheme.primary),
+          ),
+          const SizedBox(height: UiConfig.lineSpacing),
+          ListView.builder(
+            physics: const NeverScrollableScrollPhysics(),
+            shrinkWrap: true,
+            itemCount: reasonType.length,
+            itemBuilder: (_, index) {
+              final processRequest = data.firstWhere(
+                  (request) => request.id == requestType.id,
+                  orElse: () => ProcessRequestModel.empty());
+              final reasonSelected = processRequest.reasonTypes
+                  .map((reason) => reason.id)
+                  .toList();
+              return Padding(
+                  padding: const EdgeInsets.only(
+                    bottom: UiConfig.lineGap,
+                  ),
+                  child: Column(
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      Row(
+                        mainAxisSize: MainAxisSize.min,
+                        mainAxisAlignment: MainAxisAlignment.start,
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Padding(
+                            padding: const EdgeInsets.only(
+                              left: 4.0,
+                              right: UiConfig.actionSpacing,
+                            ),
+                            child: CustomCheckBox(
+                              value:
+                                  reasonSelected.contains(reasonType[index].id),
+                              onChanged: (_) {
+                                context
+                                    .read<FormDataSubjectRightCubit>()
+                                    .formDataSubjectRightReasonChecked(
+                                        requestType.id, reasonType[index].id);
+                              },
+                            ),
+                          ),
+                          Expanded(
+                            child: Padding(
+                              padding: const EdgeInsets.only(top: 4.0),
+                              child: Text(
+                                reasonType[index]
+                                    .description
+                                    .firstWhere(
+                                      (item) => item.language == 'th-TH',
+                                      orElse: () =>
+                                          const LocalizedModel.empty(),
+                                    )
+                                    .text, //!
+                                style: !selectRequestTypeIds
+                                        .contains(reasonType[index].id)
+                                    ? Theme.of(context)
+                                        .textTheme
+                                        .bodyMedium
+                                        ?.copyWith()
+                                    : Theme.of(context)
+                                        .textTheme
+                                        .bodyMedium
+                                        ?.copyWith(
+                                            color: Theme.of(context)
+                                                .colorScheme
+                                                .primary),
+                              ),
+                            ),
+                          ),
+                        ],
+                      ),
+                      if (reasonType[index].requiredInputReasonText == true)
+                        ExpandedContainer(
+                          expand: reasonSelected.contains(reasonType[index].id),
+                          duration: const Duration(milliseconds: 400),
+                          child: Padding(
+                            padding: const EdgeInsets.only(
+                              left: UiConfig.defaultPaddingSpacing * 3,
+                              bottom: UiConfig.lineGap,
+                            ),
+                            child: Column(
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
-                                Padding(
-                                  padding: const EdgeInsets.only(
-                                    left: 4.0,
-                                    right: UiConfig.actionSpacing,
-                                  ),
-                                  child: CustomCheckBox(
-                                    value:
-                                        selectReasonTypeIds.contains(reason.id),
-                                    onChanged: (_) {
-                                      _setReasonType(reason);
-                                    },
-                                  ),
+                                const TitleRequiredText(
+                                  text: 'เหตุผล', //!
+                                  required: true,
                                 ),
-                                Expanded(
-                                  child: Padding(
-                                    padding: const EdgeInsets.only(top: 4.0),
-                                    child: Text(
-                                      reason.description
-                                          .firstWhere(
-                                            (item) => item.language == 'th-TH',
-                                            orElse: () =>
-                                                const LocalizedModel.empty(),
-                                          )
-                                          .text, //!
-                                      style: !selectReasonTypeIds
-                                              .contains(reason.id)
-                                          ? Theme.of(context)
-                                              .textTheme
-                                              .bodyMedium
-                                          : Theme.of(context)
-                                              .textTheme
-                                              .titleMedium
-                                              ?.copyWith(
-                                                  color: Theme.of(context)
-                                                      .colorScheme
-                                                      .primary),
-                                    ),
-                                  ),
+                                CustomTextField(
+                                  hintText: 'กรอกเหตุผล', //!
+
+                                  required: true,
+                                  onChanged: (text) {
+                                    context
+                                        .read<FormDataSubjectRightCubit>()
+                                        .formDataSubjectRightReasonInput(
+                                            text,
+                                            requestType.id,
+                                            reasonType[index].id);
+                                  },
                                 ),
+                                const SizedBox(height: UiConfig.lineSpacing),
                               ],
                             ),
-                            if (reason.requiredInputReasonText == true)
-                              ExpandedContainer(
-                                expand: selectReasonTypeIds.contains(reason.id),
-                                duration: const Duration(milliseconds: 400),
-                                child: Padding(
-                                  padding: const EdgeInsets.only(
-                                    left: UiConfig.defaultPaddingSpacing * 3,
-                                    bottom: UiConfig.lineGap,
-                                  ),
-                                  child: Column(
-                                    crossAxisAlignment:
-                                        CrossAxisAlignment.start,
-                                    children: [
-                                      const TitleRequiredText(
-                                        text: 'เหตุผล', //!
-                                        required: true,
-                                      ),
-                                      CustomTextField(
-                                        hintText: 'กรอกเหตุผล', //!
-                                        controller: identityDataController,
-                                        required: true,
-                                      ),
-                                      const SizedBox(
-                                          height: UiConfig.lineSpacing),
-                                    ],
-                                  ),
-                                ),
-                              )
-                          ],
-                        )),
-                  )
-                  .toList(),
-            )
-          ],
-        ),
+                          ),
+                        )
+                    ],
+                  ));
+            },
+          ),
+          // Column(
+          //   children: reasonType
+          //       .map(
+          //         (reason) => Padding(
+          //             padding: const EdgeInsets.only(
+          //               bottom: UiConfig.lineGap,
+          //             ),
+          //             child: Column(
+          //               mainAxisSize: MainAxisSize.min,
+          //               children: [
+          //                 Row(
+          //                   mainAxisSize: MainAxisSize.min,
+          //                   mainAxisAlignment: MainAxisAlignment.start,
+          //                   crossAxisAlignment: CrossAxisAlignment.start,
+          //                   children: [
+          //                     Padding(
+          //                       padding: const EdgeInsets.only(
+          //                         left: 4.0,
+          //                         right: UiConfig.actionSpacing,
+          //                       ),
+          //                       child: CustomCheckBox(
+          //                         value: reasonTypes.contains(reason.id),
+          //                         onChanged: (_) {
+          //                           context
+          //                               .read<FormDataSubjectRightCubit>()
+          //                               .formDataSubjectRightReasonChecked(
+          //                                   requestType.id, reason.id);
+          //                           // print(context
+          //                           //     .read<FormDataSubjectRightCubit>()
+          //                           //     .state
+          //                           //     .dataSubjectRight
+          //                           //     .processRequests);
+          //                         },
+          //                       ),
+          //                     ),
+          //                     Expanded(
+          //                       child: Padding(
+          //                         padding: const EdgeInsets.only(top: 4.0),
+          //                         child: Text(
+          //                           reason.description
+          //                               .firstWhere(
+          //                                 (item) => item.language == 'th-TH',
+          //                                 orElse: () =>
+          //                                     const LocalizedModel.empty(),
+          //                               )
+          //                               .text, //!
+          //                           style: !selectRequestTypeIds
+          //                                   .contains(reason.id)
+          //                               ? Theme.of(context)
+          //                                   .textTheme
+          //                                   .bodyMedium
+          //                                   ?.copyWith()
+          //                               : Theme.of(context)
+          //                                   .textTheme
+          //                                   .bodyMedium
+          //                                   ?.copyWith(
+          //                                       color: Theme.of(context)
+          //                                           .colorScheme
+          //                                           .primary),
+          //                         ),
+          //                       ),
+          //                     ),
+          //                   ],
+          //                 ),
+          //                 if (reason.requiredInputReasonText == true)
+          //                   ExpandedContainer(
+          //                     expand: reasonTypes.contains(reason.id),
+          //                     duration: const Duration(milliseconds: 400),
+          //                     child: Padding(
+          //                       padding: const EdgeInsets.only(
+          //                         left: UiConfig.defaultPaddingSpacing * 3,
+          //                         bottom: UiConfig.lineGap,
+          //                       ),
+          //                       child: Column(
+          //                         crossAxisAlignment: CrossAxisAlignment.start,
+          //                         children: [
+          //                           const TitleRequiredText(
+          //                             text: 'เหตุผล', //!
+          //                             required: true,
+          //                           ),
+          //                           CustomTextField(
+          //                             hintText: 'กรอกเหตุผล', //!
+
+          //                             required: true,
+          //                             onChanged: (text) {
+          //                               context
+          //                                   .read<FormDataSubjectRightCubit>()
+          //                                   .formDataSubjectRightReasonInput(
+          //                                       text,
+          //                                       requestType.id,
+          //                                       reason.id);
+          //                             },
+          //                           ),
+          //                           const SizedBox(
+          //                               height: UiConfig.lineSpacing),
+          //                         ],
+          //                       ),
+          //                     ),
+          //                   )
+          //               ],
+          //             )),
+          //       )
+          //       .toList(),
+          // )
+        ],
       ),
     );
   }

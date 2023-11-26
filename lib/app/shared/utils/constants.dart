@@ -42,6 +42,8 @@ enum UserRoles { owner, editor, viewer }
 
 enum UpdateType { created, updated, deleted }
 
+enum RequestFormState { requesting, summarize }
+
 final Map<TextInputType, String> textInputTypeNames = {
   TextInputType.text: 'Text',
   TextInputType.multiline: 'Multiline',
@@ -87,3 +89,25 @@ enum ProcessRequestStatus { notProcessed, inProgress, refused, completed }
 enum ProcessRequestFilter { all, notProcessed, inProgress, refused, completed }
 
 const fileImageType = <String>['jpg', 'jpeg', 'png'];
+
+const fileType = <String>[
+  'jpg',
+  'jpeg',
+  'png',
+  'pdf',
+  'txt',
+  'csv',
+  'doc',
+  'docx',
+  'xls',
+  'xlsx',
+  'ppt',
+  'pptx',
+  'vsd',
+  'vsdx',
+  'xml',
+  'rtf',
+  'zip',
+  'rar',
+  '7z',
+];
