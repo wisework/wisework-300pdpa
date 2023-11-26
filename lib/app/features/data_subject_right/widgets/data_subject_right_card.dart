@@ -71,11 +71,10 @@ class DataSubjectRightCard extends StatelessWidget {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: <Widget>[
                   Expanded(
-                    flex: 2,
                     child: _buildProcessRequestInfo(context),
                   ),
-                  Expanded(
-                    flex: 1,
+                  SizedBox(
+                    width: 150.0,
                     child: DataSubjectRightStatus(
                       status: UtilFunctions.getProcessRequestStatus(
                         dataSubjectRight,
@@ -107,8 +106,8 @@ class DataSubjectRightCard extends StatelessWidget {
                       ],
                     ),
                   ),
-                  Expanded(
-                    flex: 1,
+                  SizedBox(
+                    width: 150.0,
                     child: Column(
                       mainAxisSize: MainAxisSize.min,
                       crossAxisAlignment: CrossAxisAlignment.start,

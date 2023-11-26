@@ -3,22 +3,22 @@ import 'package:pdpa/app/data/models/data_subject_right/power_verification_model
 
 List<PowerVerificationModel> identityProofingPreset = [
   PowerVerificationModel(
-    id: '1',
+    id: 'DSR-IV-001',
     title: tr('dataSubjectRight.identityVerification.copyOfHouseRegistration'),
     additionalReq: false,
   ),
   PowerVerificationModel(
-    id: '2',
+    id: 'DSR-IV-002',
     title: tr('dataSubjectRight.identityVerification.copyOfIdentificationCare'),
     additionalReq: false,
   ),
   PowerVerificationModel(
-    id: '3',
+    id: 'DSR-IV-003',
     title: tr('dataSubjectRight.identityVerification.copyOfPassport'),
     additionalReq: false,
   ),
   PowerVerificationModel(
-    id: '4',
+    id: 'DSR-IV-004',
     title: tr('dataSubjectRight.identityVerification.other'),
     additionalReq: true,
   ),

@@ -136,11 +136,12 @@ class _RequestReasonPageState extends State<RequestReasonPage> {
                           (item) => item.language == 'th-TH',
                           orElse: () => const LocalizedModel.empty(),
                         )
-                        .text, //!
+                        .text,
                     style: !selectRequestTypeIds.contains(requestType.id)
-                        ? Theme.of(context).textTheme.bodyMedium?.copyWith()
-                        : Theme.of(context).textTheme.bodyMedium?.copyWith(
-                            color: Theme.of(context).colorScheme.primary),
+                        ? Theme.of(context).textTheme.bodyMedium
+                        : Theme.of(context).textTheme.titleMedium?.copyWith(
+                              color: Theme.of(context).colorScheme.primary,
+                            ),
                   ),
                 ],
               ),
