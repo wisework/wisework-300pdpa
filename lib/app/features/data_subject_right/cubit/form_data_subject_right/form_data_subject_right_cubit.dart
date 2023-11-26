@@ -3,15 +3,16 @@ import 'dart:typed_data';
 
 // ignore: depend_on_referenced_packages
 import 'package:bloc/bloc.dart';
-import 'package:cloud_firestore/cloud_firestore.dart';
+
 import 'package:equatable/equatable.dart';
 import 'package:pdpa/app/data/models/data_subject_right/data_subject_right_model.dart';
-import 'package:pdpa/app/data/models/data_subject_right/power_verification_model.dart';
+
 import 'package:pdpa/app/data/models/data_subject_right/process_request_model.dart';
 import 'package:pdpa/app/data/models/data_subject_right/requester_verification_model.dart';
 import 'package:pdpa/app/data/models/etc/user_input_text.dart';
 import 'package:pdpa/app/data/repositories/data_subject_right_repository.dart';
 import 'package:pdpa/app/data/repositories/general_repository.dart';
+import 'package:pdpa/app/shared/utils/constants.dart';
 
 part 'form_data_subject_right_state.dart';
 
@@ -26,6 +27,7 @@ class FormDataSubjectRightCubit extends Cubit<FormDataSubjectRightState> {
             currentPage: 0,
             dataSubjectRight: DataSubjectRightModel.empty(),
             isAcknowledge: false,
+            requestFormState: RequestFormState.requesting,
           ),
         );
 
@@ -38,6 +40,10 @@ class FormDataSubjectRightCubit extends Cubit<FormDataSubjectRightState> {
 
   void setAcknowledge(bool isCheck) {
     emit(state.copyWith(isAcknowledge: isCheck));
+  }
+
+  void setSubmited() {
+    emit(state.copyWith(requestFormState: RequestFormState.summarize));
   }
 
   void nextPage(int page) {
@@ -126,8 +132,8 @@ class FormDataSubjectRightCubit extends Cubit<FormDataSubjectRightState> {
       processRequests.removeWhere(
           (verification) => verification.id == processRequestModelId);
     } else {
-      final verification =
-          ProcessRequestModel.empty().copyWith(id: processRequestModelId);
+      final verification = ProcessRequestModel.empty().copyWith(
+          id: processRequestModelId, requestType: processRequestModelId);
       processRequests.add(verification);
     }
 
@@ -144,25 +150,31 @@ class FormDataSubjectRightCubit extends Cubit<FormDataSubjectRightState> {
     List<ProcessRequestModel> processRequests = [];
     for (ProcessRequestModel request
         in state.dataSubjectRight.processRequests) {
-      List<UserInputText> reasonInputs =
-          request.reasonTypes.map((reason) => reason).toList();
-      final isReasonFound =
-          reasonInputs.map((reason) => reason.id).toList().contains(reasonId);
+      if (request.requestType == requestId) {
+        List<UserInputText> reasonInputs =
+            request.reasonTypes.map((reason) => reason).toList();
+        final isReasonFound =
+            reasonInputs.map((reason) => reason.id).toList().contains(reasonId);
 
-      if (isReasonFound) {
-        reasonInputs.removeWhere((reason) => reason.id == reasonId);
+        if (isReasonFound) {
+          reasonInputs.removeWhere((reason) => reason.id == reasonId);
+        } else {
+          final reasonInput = UserInputText(
+            id: reasonId,
+            text: '',
+          );
+          reasonInputs.add(reasonInput);
+        }
+        processRequests.add(request.copyWith(
+          reasonTypes: reasonInputs,
+        ));
       } else {
-        final reasonInput = UserInputText(id: reasonId, text: '');
-        reasonInputs.add(reasonInput);
+        processRequests.add(request);
       }
-      processRequests.add(request.copyWith(
-        reasonTypes: reasonInputs,
-      ));
     }
     final newDataRequest = state.dataSubjectRight.copyWith(
       processRequests: processRequests,
     );
-
     emit(state.copyWith(
       dataSubjectRight: newDataRequest,
     ));
@@ -193,8 +205,6 @@ class FormDataSubjectRightCubit extends Cubit<FormDataSubjectRightState> {
     final newDataRequest = state.dataSubjectRight.copyWith(
       processRequests: processRequests,
     );
-
-    print(state.dataSubjectRight.processRequests);
 
     emit(state.copyWith(
       dataSubjectRight: newDataRequest,

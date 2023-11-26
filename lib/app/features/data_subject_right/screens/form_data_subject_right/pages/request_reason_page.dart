@@ -34,42 +34,14 @@ class RequestReasonPage extends StatefulWidget {
 }
 
 class _RequestReasonPageState extends State<RequestReasonPage> {
-  late int selectedRadioTile;
-
-  List<ProcessRequestModel> precessRequests = [];
-
-  List<RequestTypeModel> selectRequestType = [];
-  List<ReasonTypeModel> selectReasonType = [];
-
   late DataSubjectRightModel dataSubjectRight;
   @override
   void initState() {
     dataSubjectRight =
         context.read<FormDataSubjectRightCubit>().state.dataSubjectRight;
-    selectedRadioTile = 1;
+
     super.initState();
   }
-
-  void _setReasonType(ReasonTypeModel reasonType) {
-    final selectIds = selectReasonType.map((selected) => selected.id).toList();
-
-    setState(() {
-      if (selectIds.contains(reasonType.id)) {
-        selectReasonType = selectReasonType
-            .where((selected) => selected.id != reasonType.id)
-            .toList();
-      } else {
-        selectReasonType = selectReasonType.map((selected) => selected).toList()
-          ..add(reasonType);
-      }
-    });
-  }
-
-  // setSelectedRadioTile(int val, String requestAction) {
-  //   setState(() {
-  //     selectedRadioTile = val;
-  //   });
-  // }
 
   @override
   Widget build(BuildContext context) {
@@ -99,16 +71,21 @@ class _RequestReasonPageState extends State<RequestReasonPage> {
                       color: Theme.of(context).colorScheme.onSurface),
                 ),
                 const SizedBox(height: UiConfig.lineSpacing),
-                // _checkOtherFile(),
-                Column(
-                  children: widget.requestType
-                      .map((item) => Padding(
-                            padding: const EdgeInsets.only(
-                              bottom: UiConfig.lineGap,
-                            ),
-                            child: _buildCheckBoxTile(context, item),
-                          ))
-                      .toList(),
+                ListView.builder(
+                  physics: const NeverScrollableScrollPhysics(),
+                  shrinkWrap: true,
+                  itemCount: widget.requestType.length,
+                  itemBuilder: (_, index) {
+                    return Padding(
+                      padding: const EdgeInsets.only(
+                        bottom: UiConfig.lineGap,
+                      ),
+                      child: _buildCheckBoxTile(
+                        context,
+                        widget.requestType[index],
+                      ),
+                    );
+                  },
                 ),
               ],
             ),
@@ -178,7 +155,7 @@ class _RequestReasonPageState extends State<RequestReasonPage> {
           ),
           child: _buildExpandedContainer(
               context, widget.reasonType, requestType, data),
-        ), //? Reasons Id
+        ),
       ],
     );
   }
@@ -190,10 +167,7 @@ class _RequestReasonPageState extends State<RequestReasonPage> {
       RequestTypeModel requestType,
       List<ProcessRequestModel> data) {
     final selectRequestTypeIds = data.map((category) => category.id).toList();
-    final reasonTypes = data
-        .expand((processRequest) =>
-            processRequest.reasonTypes.map((userInputText) => userInputText.id))
-        .toList();
+
     return ExpandedContainer(
       expand: selectRequestTypeIds.contains(requestType.id),
       duration: const Duration(milliseconds: 400),
@@ -212,6 +186,7 @@ class _RequestReasonPageState extends State<RequestReasonPage> {
             text: 'ข้อมูลส่วนบุคคล', //!
             required: true,
           ),
+
           CustomTextField(
             hintText: 'กรอกข้อมูลส่วนบุคคล', //!
             required: true,
@@ -224,10 +199,6 @@ class _RequestReasonPageState extends State<RequestReasonPage> {
                     return item;
                   }
                 }).toList();
-
-                setState(() {
-                  precessRequests = updatedData;
-                });
 
                 context.read<FormDataSubjectRightCubit>().setDataSubjectRight(
                     dataSubjectRight.copyWith(processRequests: updatedData));
@@ -250,10 +221,6 @@ class _RequestReasonPageState extends State<RequestReasonPage> {
                   }
                 }).toList();
 
-                setState(() {
-                  precessRequests = updatedData;
-                });
-
                 context.read<FormDataSubjectRightCubit>().setDataSubjectRight(
                     dataSubjectRight.copyWith(processRequests: updatedData));
               }
@@ -264,87 +231,62 @@ class _RequestReasonPageState extends State<RequestReasonPage> {
             text: 'การดำเนินการ', //!
             required: true,
           ),
-          Column(
-            children: requestActionsPreset
-                .map((requestActions) => Padding(
-                      padding: const EdgeInsets.only(
-                        bottom: UiConfig.lineGap,
-                      ),
-                      child: DataSubjectRightListTile(
-                        title: requestActions.title
-                            .firstWhere(
-                              (item) => item.language == 'th-TH',
-                              orElse: () => const LocalizedModel.empty(),
-                            )
-                            .text,
-                        onTap: () {
-                          setState(() {
-                            selectedRadioTile = requestActions.priority;
-                          });
-                          if (selectRequestTypeIds.contains(requestType.id)) {
-                            final updatedData = data.map((item) {
-                              if (item.id == requestType.id) {
-                                return item.copyWith(
-                                    requestAction: requestActions.id);
-                              } else {
-                                return item;
-                              }
-                            }).toList();
+          ListView.builder(
+            physics: const NeverScrollableScrollPhysics(),
+            shrinkWrap: true,
+            itemCount: requestActionsPreset.length,
+            itemBuilder: (_, index) {
+              return DataSubjectRightListTile(
+                title: requestActionsPreset[index]
+                    .title
+                    .firstWhere(
+                      (item) => item.language == 'th-TH',
+                      orElse: () => const LocalizedModel.empty(),
+                    )
+                    .text,
+                onTap: () {
+                  if (selectRequestTypeIds.contains(requestType.id)) {
+                    final updatedData = data.map((item) {
+                      if (item.id == requestType.id) {
+                        return item.copyWith(
+                            requestAction: requestActionsPreset[index].id);
+                      } else {
+                        return item;
+                      }
+                    }).toList();
 
-                            setState(() {
-                              precessRequests = updatedData;
-                            });
+                    context
+                        .read<FormDataSubjectRightCubit>()
+                        .setDataSubjectRight(dataSubjectRight.copyWith(
+                            processRequests: updatedData));
+                  }
+                },
+                leading: CustomRadioButton(
+                  value: requestActionsPreset[index].id,
+                  selected: data
+                      .firstWhere((request) => request.id == requestType.id,
+                          orElse: () => ProcessRequestModel.empty())
+                      .requestAction,
+                  onChanged: (val) {
+                    if (selectRequestTypeIds.contains(requestType.id)) {
+                      final updatedData = data.map((item) {
+                        if (item.id == requestType.id) {
+                          return item.copyWith(
+                              requestAction: requestActionsPreset[index].id);
+                        } else {
+                          return item;
+                        }
+                      }).toList();
 
-                            context
-                                .read<FormDataSubjectRightCubit>()
-                                .setDataSubjectRight(dataSubjectRight.copyWith(
-                                    processRequests: updatedData));
-
-                            print(context
-                                .read<FormDataSubjectRightCubit>()
-                                .state
-                                .dataSubjectRight
-                                .processRequests);
-                          }
-                          // setSelectedRadioTile(
-                          //     requestActions.priority, requestActions.id);
-                        },
-                        leading: CustomRadioButton(
-                          value: requestActions.priority,
-                          selected: selectedRadioTile,
-                          onChanged: (val) {
-                            setState(() {
-                              selectedRadioTile = requestActions.priority;
-                            });
-                            if (selectRequestTypeIds.contains(requestType.id)) {
-                              final updatedData = data.map((item) {
-                                if (item.id == requestType.id) {
-                                  return item.copyWith(
-                                      requestAction: requestActions.id);
-                                } else {
-                                  return item;
-                                }
-                              }).toList();
-
-                              setState(() {
-                                precessRequests = updatedData;
-                              });
-
-                              context
-                                  .read<FormDataSubjectRightCubit>()
-                                  .setDataSubjectRight(dataSubjectRight
-                                      .copyWith(processRequests: updatedData));
-                            }
-                            print(context
-                                .read<FormDataSubjectRightCubit>()
-                                .state
-                                .dataSubjectRight
-                                .processRequests);
-                          },
-                        ),
-                      ),
-                    ))
-                .toList(),
+                      context
+                          .read<FormDataSubjectRightCubit>()
+                          .setDataSubjectRight(dataSubjectRight.copyWith(
+                              processRequests: updatedData));
+                    }
+                  },
+                ),
+              );
+            },
           ),
           const SizedBox(height: UiConfig.lineSpacing),
           Text(
@@ -355,109 +297,217 @@ class _RequestReasonPageState extends State<RequestReasonPage> {
                 ?.copyWith(color: Theme.of(context).colorScheme.primary),
           ),
           const SizedBox(height: UiConfig.lineSpacing),
-          Column(
-            children: reasonType
-                .map(
-                  (reason) => Padding(
-                      padding: const EdgeInsets.only(
-                        bottom: UiConfig.lineGap,
-                      ),
-                      child: Column(
+          ListView.builder(
+            physics: const NeverScrollableScrollPhysics(),
+            shrinkWrap: true,
+            itemCount: reasonType.length,
+            itemBuilder: (_, index) {
+              final processRequest = data.firstWhere(
+                  (request) => request.id == requestType.id,
+                  orElse: () => ProcessRequestModel.empty());
+              final reasonSelected = processRequest.reasonTypes
+                  .map((reason) => reason.id)
+                  .toList();
+              return Padding(
+                  padding: const EdgeInsets.only(
+                    bottom: UiConfig.lineGap,
+                  ),
+                  child: Column(
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      Row(
                         mainAxisSize: MainAxisSize.min,
+                        mainAxisAlignment: MainAxisAlignment.start,
+                        crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
-                          Row(
-                            mainAxisSize: MainAxisSize.min,
-                            mainAxisAlignment: MainAxisAlignment.start,
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              Padding(
-                                padding: const EdgeInsets.only(
-                                  left: 4.0,
-                                  right: UiConfig.actionSpacing,
+                          Padding(
+                            padding: const EdgeInsets.only(
+                              left: 4.0,
+                              right: UiConfig.actionSpacing,
+                            ),
+                            child: CustomCheckBox(
+                              value:
+                                  reasonSelected.contains(reasonType[index].id),
+                              onChanged: (_) {
+                                context
+                                    .read<FormDataSubjectRightCubit>()
+                                    .formDataSubjectRightReasonChecked(
+                                        requestType.id, reasonType[index].id);
+                              },
+                            ),
+                          ),
+                          Expanded(
+                            child: Padding(
+                              padding: const EdgeInsets.only(top: 4.0),
+                              child: Text(
+                                reasonType[index]
+                                    .description
+                                    .firstWhere(
+                                      (item) => item.language == 'th-TH',
+                                      orElse: () =>
+                                          const LocalizedModel.empty(),
+                                    )
+                                    .text, //!
+                                style: !selectRequestTypeIds
+                                        .contains(reasonType[index].id)
+                                    ? Theme.of(context)
+                                        .textTheme
+                                        .bodyMedium
+                                        ?.copyWith()
+                                    : Theme.of(context)
+                                        .textTheme
+                                        .bodyMedium
+                                        ?.copyWith(
+                                            color: Theme.of(context)
+                                                .colorScheme
+                                                .primary),
+                              ),
+                            ),
+                          ),
+                        ],
+                      ),
+                      if (reasonType[index].requiredInputReasonText == true)
+                        ExpandedContainer(
+                          expand: reasonSelected.contains(reasonType[index].id),
+                          duration: const Duration(milliseconds: 400),
+                          child: Padding(
+                            padding: const EdgeInsets.only(
+                              left: UiConfig.defaultPaddingSpacing * 3,
+                              bottom: UiConfig.lineGap,
+                            ),
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                const TitleRequiredText(
+                                  text: 'เหตุผล', //!
+                                  required: true,
                                 ),
-                                child: CustomCheckBox(
-                                  value: reasonTypes.contains(reason.id),
-                                  onChanged: (_) {
+                                CustomTextField(
+                                  hintText: 'กรอกเหตุผล', //!
+
+                                  required: true,
+                                  onChanged: (text) {
                                     context
                                         .read<FormDataSubjectRightCubit>()
-                                        .formDataSubjectRightReasonChecked(
-                                            requestType.id, reason.id);
-                                    // print(context
-                                    //     .read<FormDataSubjectRightCubit>()
-                                    //     .state
-                                    //     .dataSubjectRight
-                                    //     .processRequests);
+                                        .formDataSubjectRightReasonInput(
+                                            text,
+                                            requestType.id,
+                                            reasonType[index].id);
                                   },
                                 ),
-                              ),
-                              Expanded(
-                                child: Padding(
-                                  padding: const EdgeInsets.only(top: 4.0),
-                                  child: Text(
-                                    reason.description
-                                        .firstWhere(
-                                          (item) => item.language == 'th-TH',
-                                          orElse: () =>
-                                              const LocalizedModel.empty(),
-                                        )
-                                        .text, //!
-                                    style: !selectRequestTypeIds
-                                            .contains(reason.id)
-                                        ? Theme.of(context)
-                                            .textTheme
-                                            .bodyMedium
-                                            ?.copyWith()
-                                        : Theme.of(context)
-                                            .textTheme
-                                            .bodyMedium
-                                            ?.copyWith(
-                                                color: Theme.of(context)
-                                                    .colorScheme
-                                                    .primary),
-                                  ),
-                                ),
-                              ),
-                            ],
+                                const SizedBox(height: UiConfig.lineSpacing),
+                              ],
+                            ),
                           ),
-                          if (reason.requiredInputReasonText == true)
-                            ExpandedContainer(
-                              expand: reasonTypes.contains(reason.id),
-                              duration: const Duration(milliseconds: 400),
-                              child: Padding(
-                                padding: EdgeInsets.only(
-                                  left: UiConfig.defaultPaddingSpacing * 3,
-                                  bottom: UiConfig.lineGap,
-                                ),
-                                child: Column(
-                                  crossAxisAlignment: CrossAxisAlignment.start,
-                                  children: [
-                                    TitleRequiredText(
-                                      text: 'เหตุผล', //!
-                                      required: true,
-                                    ),
-                                    CustomTextField(
-                                      hintText: 'กรอกเหตุผล', //!
+                        )
+                    ],
+                  ));
+            },
+          ),
+          // Column(
+          //   children: reasonType
+          //       .map(
+          //         (reason) => Padding(
+          //             padding: const EdgeInsets.only(
+          //               bottom: UiConfig.lineGap,
+          //             ),
+          //             child: Column(
+          //               mainAxisSize: MainAxisSize.min,
+          //               children: [
+          //                 Row(
+          //                   mainAxisSize: MainAxisSize.min,
+          //                   mainAxisAlignment: MainAxisAlignment.start,
+          //                   crossAxisAlignment: CrossAxisAlignment.start,
+          //                   children: [
+          //                     Padding(
+          //                       padding: const EdgeInsets.only(
+          //                         left: 4.0,
+          //                         right: UiConfig.actionSpacing,
+          //                       ),
+          //                       child: CustomCheckBox(
+          //                         value: reasonTypes.contains(reason.id),
+          //                         onChanged: (_) {
+          //                           context
+          //                               .read<FormDataSubjectRightCubit>()
+          //                               .formDataSubjectRightReasonChecked(
+          //                                   requestType.id, reason.id);
+          //                           // print(context
+          //                           //     .read<FormDataSubjectRightCubit>()
+          //                           //     .state
+          //                           //     .dataSubjectRight
+          //                           //     .processRequests);
+          //                         },
+          //                       ),
+          //                     ),
+          //                     Expanded(
+          //                       child: Padding(
+          //                         padding: const EdgeInsets.only(top: 4.0),
+          //                         child: Text(
+          //                           reason.description
+          //                               .firstWhere(
+          //                                 (item) => item.language == 'th-TH',
+          //                                 orElse: () =>
+          //                                     const LocalizedModel.empty(),
+          //                               )
+          //                               .text, //!
+          //                           style: !selectRequestTypeIds
+          //                                   .contains(reason.id)
+          //                               ? Theme.of(context)
+          //                                   .textTheme
+          //                                   .bodyMedium
+          //                                   ?.copyWith()
+          //                               : Theme.of(context)
+          //                                   .textTheme
+          //                                   .bodyMedium
+          //                                   ?.copyWith(
+          //                                       color: Theme.of(context)
+          //                                           .colorScheme
+          //                                           .primary),
+          //                         ),
+          //                       ),
+          //                     ),
+          //                   ],
+          //                 ),
+          //                 if (reason.requiredInputReasonText == true)
+          //                   ExpandedContainer(
+          //                     expand: reasonTypes.contains(reason.id),
+          //                     duration: const Duration(milliseconds: 400),
+          //                     child: Padding(
+          //                       padding: const EdgeInsets.only(
+          //                         left: UiConfig.defaultPaddingSpacing * 3,
+          //                         bottom: UiConfig.lineGap,
+          //                       ),
+          //                       child: Column(
+          //                         crossAxisAlignment: CrossAxisAlignment.start,
+          //                         children: [
+          //                           const TitleRequiredText(
+          //                             text: 'เหตุผล', //!
+          //                             required: true,
+          //                           ),
+          //                           CustomTextField(
+          //                             hintText: 'กรอกเหตุผล', //!
 
-                                      required: true,
-                                      onChanged: (text) {
-                                        context
-                                            .read<FormDataSubjectRightCubit>()
-                                            .formDataSubjectRightReasonInput(
-                                                text,
-                                                requestType.id,
-                                                reason.id);
-                                      },
-                                    ),
-                                    SizedBox(height: UiConfig.lineSpacing),
-                                  ],
-                                ),
-                              ),
-                            )
-                        ],
-                      )),
-                )
-                .toList(),
-          )
+          //                             required: true,
+          //                             onChanged: (text) {
+          //                               context
+          //                                   .read<FormDataSubjectRightCubit>()
+          //                                   .formDataSubjectRightReasonInput(
+          //                                       text,
+          //                                       requestType.id,
+          //                                       reason.id);
+          //                             },
+          //                           ),
+          //                           const SizedBox(
+          //                               height: UiConfig.lineSpacing),
+          //                         ],
+          //                       ),
+          //                     ),
+          //                   )
+          //               ],
+          //             )),
+          //       )
+          //       .toList(),
+          // )
         ],
       ),
     );

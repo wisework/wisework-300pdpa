@@ -42,6 +42,8 @@ enum UserRoles { owner, editor, viewer }
 
 enum UpdateType { created, updated, deleted }
 
+enum RequestFormState { requesting, summarize }
+
 final Map<TextInputType, String> textInputTypeNames = {
   TextInputType.text: 'Text',
   TextInputType.multiline: 'Multiline',
