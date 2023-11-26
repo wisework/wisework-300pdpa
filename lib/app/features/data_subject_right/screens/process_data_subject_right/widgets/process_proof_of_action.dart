@@ -59,7 +59,7 @@ class _ProcessProofOfActionState extends State<ProcessProofOfAction> {
 
   void _onDownloadProofOfActionFile(String path) {
     final cubit = context.read<ProcessDataSubjectRightCubit>();
-    cubit.downloadProofFile(path);
+    cubit.downloadFile(path);
 
     showToast(context, text: 'ดาวน์โหลดไฟล์สำเร็จ');
   }
@@ -73,9 +73,20 @@ class _ProcessProofOfActionState extends State<ProcessProofOfAction> {
     if (!_proofFormKey.currentState!.validate()) return;
 
     final cubit = context.read<ProcessDataSubjectRightCubit>();
+
+    final emailParams = _getEmailParams();
+    final fromName = '${cubit.state.currentUser.firstName}'
+        '${cubit.state.currentUser.lastName.isNotEmpty ? cubit.state.currentUser.lastName : ''}';
+
     cubit.submitProcessRequest(
       widget.processRequest.id,
-      emailParams: _getEmailParams(),
+      toRequesterParams: emailParams,
+      toUserParams: emailParams?.copyWith(
+        toName: '',
+        toEmail: '',
+        fromName: fromName,
+        fromEmail: cubit.state.currentUser.email,
+      ),
     );
   }
 
@@ -113,9 +124,10 @@ class _ProcessProofOfActionState extends State<ProcessProofOfAction> {
       return ProcessRequestTemplateParams(
         toName: dataSubjectRight.dataRequester[0].text,
         toEmail: dataSubjectRight.dataRequester[2].text,
-        dataSubjectRightId: dataSubjectRight.id,
+        id: dataSubjectRight.id,
         processRequest: description.text,
         processStatus: '${statusTexts[status]}',
+        link: processRequest.proofOfActionFile,
       );
     }
 

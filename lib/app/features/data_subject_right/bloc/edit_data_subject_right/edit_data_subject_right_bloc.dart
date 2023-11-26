@@ -11,6 +11,7 @@ import 'package:pdpa/app/data/presets/reason_types_preset.dart';
 import 'package:pdpa/app/data/presets/reject_types_preset.dart';
 import 'package:pdpa/app/data/presets/request_types_preset.dart';
 import 'package:pdpa/app/data/repositories/data_subject_right_repository.dart';
+import 'package:pdpa/app/data/repositories/general_repository.dart';
 import 'package:pdpa/app/data/repositories/master_data_repository.dart';
 import 'package:pdpa/app/data/repositories/user_repository.dart';
 
@@ -23,19 +24,23 @@ class EditDataSubjectRightBloc
     required DataSubjectRightRepository dataSubjectRightRepository,
     required MasterDataRepository masterDataRepository,
     required UserRepository userRepository,
+    required GeneralRepository generalRepository,
   })  : _dataSubjectRightRepository = dataSubjectRightRepository,
         _masterDataRepository = masterDataRepository,
         _userRepository = userRepository,
+        _generalRepository = generalRepository,
         super(const EditDataSubjectRightInitial()) {
     on<GetCurrentDataSubjectRightEvent>(_getCurrentDsrHandler);
     on<CreateCurrentDataSubjectRightEvent>(_createCurrentDsrHandler);
     on<UpdateCurrentDataSubjectRightEvent>(_updateCurrentDsrHandler);
     on<UpdateEditDataSubjectRightStateEvent>(_updateEditDsrStateHandler);
+    on<DownloadDataSubjectRightFileEvent>(_downloadDsrFileHandler);
   }
 
   final DataSubjectRightRepository _dataSubjectRightRepository;
   final MasterDataRepository _masterDataRepository;
   final UserRepository _userRepository;
+  final GeneralRepository _generalRepository;
 
   Future<void> _getCurrentDsrHandler(
     GetCurrentDataSubjectRightEvent event,
@@ -262,5 +267,12 @@ class EditDataSubjectRightBloc
         ),
       );
     }
+  }
+
+  Future<void> _downloadDsrFileHandler(
+    DownloadDataSubjectRightFileEvent event,
+    Emitter<EditDataSubjectRightState> emit,
+  ) async {
+    await _generalRepository.downloadFirebaseStorageFile(event.path);
   }
 }

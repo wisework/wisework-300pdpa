@@ -206,6 +206,7 @@ Future<void> _dataSubjectRight() async {
         dataSubjectRightRepository: serviceLocator(),
         masterDataRepository: serviceLocator(),
         userRepository: serviceLocator(),
+        generalRepository: serviceLocator(),
       ),
     )
     ..registerFactory(

@@ -56,3 +56,14 @@ class UpdateEditDataSubjectRightStateEvent extends EditDataSubjectRightEvent {
   @override
   List<Object> get props => [dataSubjectRight];
 }
+
+class DownloadDataSubjectRightFileEvent extends EditDataSubjectRightEvent {
+  const DownloadDataSubjectRightFileEvent({
+    required this.path,
+  });
+
+  final String path;
+
+  @override
+  List<Object> get props => [path];
+}

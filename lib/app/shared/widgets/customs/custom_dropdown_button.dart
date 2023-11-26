@@ -7,13 +7,14 @@ class CustomDropdownButton<T> extends StatelessWidget {
     required this.value,
     required this.items,
     required this.onSelected,
+    this.height = 48.0,
     this.colorBorder,
   });
 
   final T value;
   final List<DropdownMenuItem<T>> items;
   final Function(T? value) onSelected;
-
+  final double? height;
   final Color? colorBorder;
 
   @override
@@ -25,7 +26,7 @@ class CustomDropdownButton<T> extends StatelessWidget {
         value: value,
         onChanged: onSelected,
         buttonStyleData: ButtonStyleData(
-          height: 48.0,
+          height: height,
           padding: const EdgeInsets.only(right: 10.0),
           decoration: BoxDecoration(
             color: Theme.of(context).colorScheme.onBackground,

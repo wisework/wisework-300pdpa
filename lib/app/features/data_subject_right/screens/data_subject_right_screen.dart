@@ -118,20 +118,21 @@ class _DataSubjectRightViewState extends State<DataSubjectRightView> {
   }
 
   final qrCodeKey = GlobalKey();
-  String _selectedChoice = 'ทั้งหมด';
 
-  // List of choices
-  final List<String> _choices = [
-    'ทั้งหมด',
-    'ยังไม่ดำเนินการ',
-    'กำลังดำเนินการ',
-    'ดำเนินการเสร็จสิ้น',
-    'ปฏิเสธการดำเนินการ'
-  ];
-  void _setPeriodUnit(String? value) {
+  ProcessRequestFilter filterSelected = ProcessRequestFilter.all;
+
+  final Map<ProcessRequestFilter, String> filterTexts = {
+    ProcessRequestFilter.all: 'ทั้งหมด',
+    ProcessRequestFilter.notProcessed: 'ยังไม่เริ่ม',
+    ProcessRequestFilter.inProgress: 'ระหว่างดำเนินการ',
+    ProcessRequestFilter.refused: 'ปฏิเสธคำร้อง',
+    ProcessRequestFilter.completed: 'เสร็จสิ้น',
+  };
+
+  void _setFilter(ProcessRequestFilter? value) {
     if (value != null) {
       setState(() {
-        _selectedChoice = value;
+        filterSelected = value;
       });
     }
   }
@@ -187,7 +188,6 @@ class _DataSubjectRightViewState extends State<DataSubjectRightView> {
               return _buildDataSubjectRightView(
                 context,
                 dataSubjectRights: state.dataSubjectRights,
-                processRequests: state.processRequests,
                 requestTypes: state.requestTypes,
               );
             }
@@ -239,13 +239,12 @@ class _DataSubjectRightViewState extends State<DataSubjectRightView> {
   Column _buildDataSubjectRightView(
     BuildContext context, {
     required List<DataSubjectRightModel> dataSubjectRights,
-    required List<Map<String, ProcessRequestModel>> processRequests,
     required List<RequestTypeModel> requestTypes,
   }) {
     return Column(
       children: <Widget>[
         const SizedBox(height: UiConfig.lineSpacing),
-        if (processRequests.isNotEmpty)
+        if (dataSubjectRights.isNotEmpty)
           Padding(
             padding: const EdgeInsets.only(
               left: UiConfig.lineGap * 2,
@@ -263,37 +262,38 @@ class _DataSubjectRightViewState extends State<DataSubjectRightView> {
                   ),
                 ),
                 SizedBox(
-                  width: 200,
-                  child: CustomDropdownButton<String>(
-                    value: _selectedChoice,
-                    items: _choices.map(
-                      (unit) {
+                  width: 190.0,
+                  child: CustomDropdownButton<ProcessRequestFilter>(
+                    value: filterSelected,
+                    items: ProcessRequestFilter.values.map(
+                      (value) {
                         return DropdownMenuItem(
-                          value: unit,
+                          value: value,
                           child: Text(
-                            unit,
+                            filterTexts[value] ?? '',
                             style: Theme.of(context).textTheme.bodyMedium,
                           ),
                         );
                       },
                     ).toList(),
-                    onSelected: _setPeriodUnit,
+                    onSelected: _setFilter,
+                    height: 38.0,
                   ),
                 ),
-              
               ],
             ),
           ),
         Expanded(
           child: SingleChildScrollView(
             child: Padding(
-              padding: const EdgeInsets.symmetric(
-                horizontal: UiConfig.lineGap * 2,
+              padding: const EdgeInsets.only(
+                left: UiConfig.lineGap * 2,
+                right: UiConfig.lineGap * 2,
+                bottom: UiConfig.lineSpacing,
               ),
               child: _buildDataSubjectRightListView(
                 context,
                 dataSubjectRights: dataSubjectRights,
-                processRequests: processRequests,
                 requestTypes: requestTypes,
               ),
             ),
@@ -306,10 +306,9 @@ class _DataSubjectRightViewState extends State<DataSubjectRightView> {
   Widget _buildDataSubjectRightListView(
     BuildContext context, {
     required List<DataSubjectRightModel> dataSubjectRights,
-    required List<Map<String, ProcessRequestModel>> processRequests,
     required List<RequestTypeModel> requestTypes,
   }) {
-    if (processRequests.isEmpty) {
+    if (dataSubjectRights.isEmpty) {
       return ExampleScreen(
         headderText: tr(
           'consentManagement.consentForm.consentForms',
@@ -501,20 +500,36 @@ class _DataSubjectRightViewState extends State<DataSubjectRightView> {
         },
       );
     }
-    return ListView.builder(
+
+    final processRequestFiltered = UtilFunctions.filterAllProcessRequest(
+      dataSubjectRights,
+      filterSelected,
+    );
+
+    if (processRequestFiltered.isEmpty) {
+      return Padding(
+        padding: const EdgeInsets.symmetric(
+          vertical: UiConfig.lineSpacing * 4,
+        ),
+        child: Text(
+          'ไม่พบคำร้องที่ตรงกัน',
+          style: Theme.of(context).textTheme.bodyMedium,
+        ),
+      );
+    }
+
+    return ListView.separated(
       physics: const NeverScrollableScrollPhysics(),
       shrinkWrap: true,
       itemBuilder: (context, index) {
-        final entry = processRequests[index].entries.first;
+        final entry = processRequestFiltered[index].entries.first;
         final dataSubjectRight = UtilFunctions.getDataSubjectRightById(
           dataSubjectRights,
           entry.key,
         );
 
         return Padding(
-          padding: const EdgeInsets.only(
-            bottom: UiConfig.lineSpacing,
-          ),
+          padding: const EdgeInsets.only(),
           child: DataSubjectRightCard(
             dataSubjectRight: dataSubjectRight,
             processRequest: entry.value,
@@ -523,7 +538,10 @@ class _DataSubjectRightViewState extends State<DataSubjectRightView> {
           ),
         );
       },
-      itemCount: processRequests.length,
+      itemCount: processRequestFiltered.length,
+      separatorBuilder: (context, index) => const SizedBox(
+        height: UiConfig.lineSpacing,
+      ),
     );
   }
 

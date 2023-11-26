@@ -50,6 +50,7 @@ class _AcknowledgePageState extends State<AcknowledgePage> {
                         });
                       },
                     ),
+                    const SizedBox(width: UiConfig.actionSpacing),
                     Expanded(
                       child: Padding(
                         padding: const EdgeInsets.only(top: 4.0),
@@ -63,7 +64,7 @@ class _AcknowledgePageState extends State<AcknowledgePage> {
                           textAlign: TextAlign.left,
                           style: Theme.of(context)
                               .textTheme
-                              .bodySmall
+                              .bodyMedium
                               ?.copyWith(
                                   color:
                                       Theme.of(context).colorScheme.onSurface),

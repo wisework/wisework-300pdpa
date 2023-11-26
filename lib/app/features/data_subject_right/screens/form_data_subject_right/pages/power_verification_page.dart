@@ -133,8 +133,8 @@ class _PowerVerificationPageState extends State<PowerVerificationPage> {
               child: Text(
                 powerVerification.title,
                 style: !selectIds.contains(powerVerification.id)
-                    ? Theme.of(context).textTheme.bodyMedium?.copyWith()
-                    : Theme.of(context).textTheme.bodyMedium?.copyWith(
+                    ? Theme.of(context).textTheme.bodyMedium
+                    : Theme.of(context).textTheme.titleMedium?.copyWith(
                         color: Theme.of(context).colorScheme.primary),
               ),
             ),
