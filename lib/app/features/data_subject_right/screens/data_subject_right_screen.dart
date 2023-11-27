@@ -1,4 +1,3 @@
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -8,19 +7,12 @@ import 'package:ionicons/ionicons.dart';
 import 'package:modal_bottom_sheet/modal_bottom_sheet.dart';
 import 'package:pdpa/app/config/config.dart';
 import 'package:pdpa/app/data/models/data_subject_right/data_subject_right_model.dart';
-import 'package:pdpa/app/data/models/data_subject_right/process_request_model.dart';
-import 'package:pdpa/app/data/models/data_subject_right/requester_input_model.dart';
-import 'package:pdpa/app/data/models/data_subject_right/requester_verification_model.dart';
-import 'package:pdpa/app/data/models/etc/user_input_text.dart';
-import 'package:pdpa/app/data/models/master_data/localized_model.dart';
 import 'package:pdpa/app/data/models/master_data/request_type_model.dart';
-import 'package:pdpa/app/data/repositories/data_subject_right_repository.dart';
 import 'package:pdpa/app/features/authentication/bloc/sign_in/sign_in_bloc.dart';
 import 'package:pdpa/app/features/data_subject_right/bloc/data_subject_right/data_subject_right_bloc.dart';
 import 'package:pdpa/app/features/data_subject_right/routes/data_subject_right_route.dart';
 import 'package:pdpa/app/features/data_subject_right/widgets/data_subject_right_card.dart';
 import 'package:pdpa/app/features/data_subject_right/widgets/search_data_subject_right_modal.dart';
-import 'package:pdpa/app/services/apis/data_subject_right_api.dart';
 import 'package:pdpa/app/shared/drawers/pdpa_drawer.dart';
 import 'package:pdpa/app/shared/utils/constants.dart';
 import 'package:pdpa/app/shared/utils/functions.dart';
@@ -32,7 +24,6 @@ import 'package:pdpa/app/shared/widgets/customs/custom_icon_button.dart';
 import 'package:pdpa/app/shared/widgets/customs/custom_text_field.dart';
 import 'package:pdpa/app/shared/widgets/loading_indicator.dart';
 import 'package:pdpa/app/shared/widgets/material_ink_well.dart';
-import 'package:pdpa/app/shared/widgets/screens/example_screen.dart';
 import 'package:pdpa/app/shared/widgets/templates/pdpa_app_bar.dart';
 import 'package:qr_flutter/qr_flutter.dart';
 import 'package:pdpa/app/features/consent_management/consent_form/widgets/download_fuctions/netive_download.dart'
@@ -157,13 +148,23 @@ class _DataSubjectRightViewState extends State<DataSubjectRightView> {
         actions: [
           CustomIconButton(
             onPressed: () {
-              showModalBottomSheet(
+              final path = DataSubjectRightRoute.userDataSubjectRightForm.path;
+              final dsrFormUrl =
+                  '${AppConfig.baseUrl}/#${path.replaceFirst(':id', widget.companyId)}';
+
+              showMaterialModalBottomSheet(
                 context: context,
-                builder: (context) => Padding(
-                  padding: const EdgeInsets.only(top: 20.0),
-                  child: SingleChildScrollView(
-                    child: CustomContainer(
-                      child: _buildShareConsentForm(context),
+                backgroundColor: Colors.transparent,
+                builder: (context) => SingleChildScrollView(
+                  child: Center(
+                    child: ContentWrapper(
+                      child: CustomContainer(
+                        margin: EdgeInsets.zero,
+                        child: _buildShareDataSubjectRight(
+                          context,
+                          url: dsrFormUrl,
+                        ),
+                      ),
                     ),
                   ),
                 ),
@@ -255,7 +256,7 @@ class _DataSubjectRightViewState extends State<DataSubjectRightView> {
               children: <Widget>[
                 Expanded(
                   child: Text(
-                    tr('consentManagement.consentForm.consentList'), //!
+                    tr('consentManagement.consentForm.consentList'),
                     style: Theme.of(context).textTheme.titleMedium,
                     overflow: TextOverflow.ellipsis,
                     maxLines: 1,
@@ -309,196 +310,7 @@ class _DataSubjectRightViewState extends State<DataSubjectRightView> {
     required List<RequestTypeModel> requestTypes,
   }) {
     if (dataSubjectRights.isEmpty) {
-      return ExampleScreen(
-        headderText: tr(
-          'consentManagement.consentForm.consentForms',
-        ),
-        buttonText: tr(
-          'consentManagement.consentForm.createForm.create',
-        ),
-        descriptionText: tr(
-          'consentManagement.consentForm.explain',
-        ),
-        onPress: () {
-          // context.push(
-          //   DataSubjectRightRoute.createDataSubjectRight.path,
-          // );
-
-          final now = DateTime.now();
-          final dsr = DataSubjectRightModel(
-            id: '',
-            dataRequester: const [
-              RequesterInputModel(
-                id: 'DSR-DATA-REQ-001',
-                title: [
-                  LocalizedModel(
-                    language: 'en-US',
-                    text: 'Name',
-                  ),
-                  LocalizedModel(
-                    language: 'th-TH',
-                    text: 'ชื่อ - นามสกุล',
-                  ),
-                ],
-                text: 'เหมียว เหมียว',
-                priority: 1,
-              ),
-              RequesterInputModel(
-                id: 'DSR-DATA-REQ-002',
-                title: [
-                  LocalizedModel(language: 'en-US', text: 'Address'),
-                  LocalizedModel(language: 'th-TH', text: 'ที่อยู่'),
-                ],
-                text: 'โคราชซิตี้',
-                priority: 2,
-              ),
-              RequesterInputModel(
-                id: 'DSR-DATA-REQ-003',
-                title: [
-                  LocalizedModel(language: 'en-US', text: 'Email'),
-                  LocalizedModel(language: 'th-TH', text: 'อีเมล'),
-                ],
-                text: 'Sage.Online2000@gmail.com',
-                priority: 3,
-              ),
-              RequesterInputModel(
-                id: 'DSR-DATA-REQ-004',
-                title: [
-                  LocalizedModel(
-                    language: 'en-US',
-                    text: 'Phone Number',
-                  ),
-                  LocalizedModel(
-                    language: 'th-TH',
-                    text: 'หมายเลขโทรศัพท์',
-                  ),
-                ],
-                text: '0612345678',
-                priority: 4,
-              ),
-            ],
-            dataOwner: const [
-              RequesterInputModel(
-                id: 'DSR-DATA-OWN-001',
-                title: [
-                  LocalizedModel(
-                    language: 'en-US',
-                    text: 'Name',
-                  ),
-                  LocalizedModel(
-                    language: 'th-TH',
-                    text: 'ชื่อ - นามสกุล',
-                  ),
-                ],
-                text: 'กานต์ ขุนทิพย์',
-                priority: 1,
-              ),
-              RequesterInputModel(
-                id: 'DSR-DATA-OWN-002',
-                title: [
-                  LocalizedModel(language: 'en-US', text: 'Address'),
-                  LocalizedModel(language: 'th-TH', text: 'ที่อยู่'),
-                ],
-                text: 'ปากช่องซิตี้',
-                priority: 2,
-              ),
-              RequesterInputModel(
-                id: 'DSR-DATA-OWN-003',
-                title: [
-                  LocalizedModel(language: 'en-US', text: 'Email'),
-                  LocalizedModel(language: 'th-TH', text: 'อีเมล'),
-                ],
-                text: 'khunthip.city@gmail.com',
-                priority: 3,
-              ),
-              RequesterInputModel(
-                id: 'DSR-DATA-OWN-004',
-                title: [
-                  LocalizedModel(
-                    language: 'en-US',
-                    text: 'Phone Number',
-                  ),
-                  LocalizedModel(
-                    language: 'th-TH',
-                    text: 'หมายเลขโทรศัพท์',
-                  ),
-                ],
-                text: '0981234567',
-                priority: 4,
-              ),
-            ],
-            isDataOwner: false,
-            powerVerifications: const [
-              RequesterVerificationModel(
-                id: 'DSR-PV-001',
-                text: 'Profile',
-                imageUrl: 'karnza.jpg',
-              ),
-            ],
-            identityVerifications: const [
-              RequesterVerificationModel(
-                id: 'DSR-IV-001',
-                text: 'Proof',
-                imageUrl: 'karnza.jpg',
-              ),
-            ],
-            processRequests: const [
-              ProcessRequestModel(
-                id: 'DSR-PR-001',
-                personalData: 'รูปโปรไฟล์',
-                foundSource: 'www.mock-web.co.th/info',
-                requestType: 'DSR-REQ-002',
-                requestAction: 'DSR-REA-001',
-                reasonTypes: [
-                  UserInputText(id: 'DSR-RES-002', text: ''),
-                  UserInputText(id: 'DSR-RES-003', text: ''),
-                  UserInputText(
-                    id: 'DSR-RES-004',
-                    text: 'เหตุผลส่วนตัวเด้อสู',
-                  ),
-                ],
-                considerRequestStatus: RequestResultStatus.none,
-                rejectTypes: [],
-                rejectConsiderReason: '',
-                notifyEmail: [],
-                proofOfActionFile: '',
-                proofOfActionText: '',
-              ),
-              ProcessRequestModel(
-                id: 'DSR-PR-002',
-                personalData: 'ข้อมูลส่วนตัว',
-                foundSource: 'www.mock-web.co.th/news',
-                requestType: 'DSR-REQ-003',
-                requestAction: 'DSR-REA-001',
-                reasonTypes: [
-                  UserInputText(id: 'DSR-RES-002', text: ''),
-                  UserInputText(id: 'DSR-RES-004', text: 'เหตุผลส่วนตัวเด้อสู'),
-                ],
-                considerRequestStatus: RequestResultStatus.none,
-                rejectTypes: [],
-                rejectConsiderReason: '',
-                notifyEmail: [],
-                proofOfActionFile: '',
-                proofOfActionText: '',
-              ),
-            ],
-            requestExpirationDate: now.add(const Duration(days: 30)),
-            verifyFormStatus: RequestResultStatus.none,
-            rejectVerifyReason: '',
-            lastSeenBy: '',
-            createdBy: 'Sage.Online2000@gmail.com',
-            createdDate: now,
-            updatedBy: 'Sage.Online2000@gmail.com',
-            updatedDate: now,
-          );
-          final repository = DataSubjectRightRepository(
-            DataSubjectRightApi(FirebaseFirestore.instance),
-          );
-          repository
-              .createDataSubjectRight(dsr, 'Y7gRT2kc3bC1i80iKVaF')
-              .then((value) => showToast(context, text: 'success'));
-        },
-      );
+      return _buildResultNotFound(context);
     }
 
     final processRequestFiltered = UtilFunctions.filterAllProcessRequest(
@@ -545,7 +357,10 @@ class _DataSubjectRightViewState extends State<DataSubjectRightView> {
     );
   }
 
-  Column _buildShareConsentForm(BuildContext context) {
+  Column _buildShareDataSubjectRight(
+    BuildContext context, {
+    required String url,
+  }) {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: <Widget>[
@@ -591,9 +406,9 @@ class _DataSubjectRightViewState extends State<DataSubjectRightView> {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: <Widget>[
             const SizedBox(height: UiConfig.lineSpacing),
-            _buildQrDataSubjectRight(context),
+            _buildQrDataSubjectRight(context, url: url),
             const SizedBox(height: UiConfig.lineSpacing),
-            _buildDatSubjectRightLink(context),
+            _buildDataSubjectRightLink(context, url: url),
             const SizedBox(height: UiConfig.lineSpacing),
           ],
         ),
@@ -601,7 +416,10 @@ class _DataSubjectRightViewState extends State<DataSubjectRightView> {
     );
   }
 
-  Row _buildQrDataSubjectRight(BuildContext context) {
+  Row _buildQrDataSubjectRight(
+    BuildContext context, {
+    required String url,
+  }) {
     return Row(
       children: <Widget>[
         Expanded(
@@ -625,7 +443,7 @@ class _DataSubjectRightViewState extends State<DataSubjectRightView> {
                       child: RepaintBoundary(
                         key: qrCodeKey,
                         child: QrImageView(
-                          data: 'www.google.com',
+                          data: url,
                           size: 160,
                           backgroundColor: Colors.white,
                           version: QrVersions.auto,
@@ -670,13 +488,16 @@ class _DataSubjectRightViewState extends State<DataSubjectRightView> {
     );
   }
 
-  Row _buildDatSubjectRightLink(BuildContext context) {
+  Row _buildDataSubjectRightLink(
+    BuildContext context, {
+    required String url,
+  }) {
     return Row(
       children: <Widget>[
         Expanded(
           child: CustomTextField(
             controller: TextEditingController(
-              text: 'www.google.com',
+              text: url,
             ),
             readOnly: true,
           ),
@@ -686,7 +507,7 @@ class _DataSubjectRightViewState extends State<DataSubjectRightView> {
           child: CustomIconButton(
             onPressed: () {
               Clipboard.setData(
-                const ClipboardData(text: 'www.google.com'),
+                ClipboardData(text: url),
               );
 
               showToast(
@@ -699,6 +520,35 @@ class _DataSubjectRightViewState extends State<DataSubjectRightView> {
             icon: Ionicons.copy_outline,
             iconColor: Theme.of(context).colorScheme.primary,
             backgroundColor: Theme.of(context).colorScheme.onBackground,
+          ),
+        ),
+      ],
+    );
+  }
+
+  Column _buildResultNotFound(BuildContext context) {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.center,
+      mainAxisAlignment: MainAxisAlignment.center,
+      children: [
+        const SizedBox(height: UiConfig.lineSpacing),
+        Image.asset(
+          'assets/images/general/result-not-found-dsr.png',
+        ),
+        const SizedBox(height: UiConfig.lineSpacing),
+        Text(
+          tr('app.features.resultNotFound'),
+          style: Theme.of(context).textTheme.titleMedium,
+        ),
+        const SizedBox(height: UiConfig.lineSpacing),
+        Padding(
+          padding: const EdgeInsets.symmetric(
+            horizontal: UiConfig.defaultPaddingSpacing * 2,
+          ),
+          child: Text(
+            tr('app.features.description'),
+            textAlign: TextAlign.center,
+            style: Theme.of(context).textTheme.labelLarge,
           ),
         ),
       ],

@@ -1,3 +1,4 @@
+import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:pdpa/app/config/config.dart';
@@ -93,7 +94,7 @@ class _SummaryRequestStepState extends State<SummaryRequestStep> {
     return BlocBuilder<ProcessDataSubjectRightCubit,
         ProcessDataSubjectRightState>(
       builder: (context, state) {
-        final indexes = _getStepIndexByProcess(state.dataSubjectRight);
+        final indexes = _getStepIndexByProcess(state.initialDataSubjectRight);
 
         return Column(
           children: <Widget>[
@@ -105,13 +106,13 @@ class _SummaryRequestStepState extends State<SummaryRequestStep> {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: <Widget>[
                   Text(
-                    'สรุปผลการดำเนินการคำร้องขอ',
+                    tr('dataSubjectRight.StepProcessDsr.summaryRequest.summary'),
                     style: Theme.of(context).textTheme.titleLarge?.copyWith(
                         color: Theme.of(context).colorScheme.primary),
                   ),
                   const SizedBox(height: UiConfig.lineSpacing),
                   Text(
-                    'ผลการตรวจสอบแบบฟอร์มคำขอใช้สิทธิ์ตามกฎหมายคุ้มครองข้อมูลส่วนบุคคล',
+                    tr('dataSubjectRight.StepProcessDsr.summaryRequest.result'),
                     style: Theme.of(context).textTheme.bodyMedium,
                   ),
                 ],
@@ -123,7 +124,7 @@ class _SummaryRequestStepState extends State<SummaryRequestStep> {
               shrinkWrap: true,
               itemBuilder: (context, index) {
                 final processRequest =
-                    state.dataSubjectRight.processRequests[index];
+                    state.initialDataSubjectRight.processRequests[index];
 
                 return _buildSummaryRequestCard(
                   context,
@@ -131,12 +132,12 @@ class _SummaryRequestStepState extends State<SummaryRequestStep> {
                       ? requestSelectedKey
                       : null,
                   index: index + 1,
-                  dataSubjectRight: state.dataSubjectRight,
+                  dataSubjectRight: state.initialDataSubjectRight,
                   processRequest: processRequest,
                   stepIndex: indexes[processRequest.id] ?? 0,
                 );
               },
-              itemCount: state.dataSubjectRight.processRequests.length,
+              itemCount: state.initialDataSubjectRight.processRequests.length,
               separatorBuilder: (context, index) => const SizedBox(
                 height: UiConfig.lineSpacing,
               ),
@@ -168,14 +169,14 @@ class _SummaryRequestStepState extends State<SummaryRequestStep> {
     final steps = <CustomStep>[
       CustomStep(
         title: Text(
-          'รายละเอียดคำร้องขอใช้สิทธิ์',
+          tr('dataSubjectRight.StepProcessDsr.summaryRequest.title'),
           style: Theme.of(context).textTheme.bodyMedium,
         ),
         content: _buildFormDetailStep(context),
       ),
       CustomStep(
         title: Text(
-          'ตรวจสอบแบบฟอร์ม',
+          tr('dataSubjectRight.StepProcessDsr.summaryRequest.check'),
           style: Theme.of(context).textTheme.bodyMedium,
         ),
         content: _buildVerifyFormStep(
@@ -186,7 +187,7 @@ class _SummaryRequestStepState extends State<SummaryRequestStep> {
       ),
       CustomStep(
         title: Text(
-          'พิจารณาการดำเนินการ',
+          tr('dataSubjectRight.StepProcessDsr.summaryRequest.consider'),
           style: Theme.of(context).textTheme.bodyMedium,
         ),
         content: _buildConsiderRequestStep(
@@ -197,7 +198,7 @@ class _SummaryRequestStepState extends State<SummaryRequestStep> {
       ),
       CustomStep(
         title: Text(
-          'ผลการดำเนินการ',
+          tr('dataSubjectRight.StepProcessDsr.summaryRequest.results'),
           style: Theme.of(context).textTheme.bodyMedium,
         ),
         content: _buildProcessRequestStep(
@@ -275,7 +276,7 @@ class _SummaryRequestStepState extends State<SummaryRequestStep> {
       crossAxisAlignment: CrossAxisAlignment.start,
       children: <Widget>[
         Text(
-          'ได้รับคำร้องแล้ว',
+          tr('dataSubjectRight.StepProcessDsr.summaryRequest.requestReceived'),
           style: Theme.of(context).textTheme.bodySmall,
         ),
         const SizedBox(height: UiConfig.lineGap),
@@ -294,10 +295,11 @@ class _SummaryRequestStepState extends State<SummaryRequestStep> {
       children: <Widget>[
         Text(
           status == RequestResultStatus.pass
-              ? 'ผ่าน'
+              ? tr('dataSubjectRight.StepProcessDsr.summaryRequest.pass')
               : status == RequestResultStatus.fail
-                  ? 'ไม่ผ่าน'
-                  : 'ยังไม่ได้ดำเนินการ',
+                  ? tr('dataSubjectRight.StepProcessDsr.summaryRequest.notPass')
+                  : tr(
+                      'dataSubjectRight.StepProcessDsr.summaryRequest.notYetProcessed'),
           style: Theme.of(context).textTheme.bodySmall,
         ),
         Visibility(
@@ -305,7 +307,7 @@ class _SummaryRequestStepState extends State<SummaryRequestStep> {
           child: Padding(
             padding: const EdgeInsets.only(top: UiConfig.textSpacing),
             child: Text(
-              'เหตุผล: $reasonText',
+              '${tr('dataSubjectRight.StepProcessDsr.summaryRequest.reason')} : $reasonText',
               style: Theme.of(context).textTheme.bodySmall,
             ),
           ),
@@ -326,10 +328,12 @@ class _SummaryRequestStepState extends State<SummaryRequestStep> {
       children: <Widget>[
         Text(
           status == RequestResultStatus.pass
-              ? 'ดำเนินการ'
+              ? tr('dataSubjectRight.StepProcessDsr.summaryRequest.carryOut')
               : status == RequestResultStatus.fail
-                  ? 'ปฏิเสธการดำเนินการ'
-                  : 'อยู่ระหว่างการดำเนินการ',
+                  ? tr(
+                      'dataSubjectRight.StepProcessDsr.summaryRequest.refuseProcessing')
+                  : tr(
+                      'dataSubjectRight.StepProcessDsr.summaryRequest.inProgress'),
           style: Theme.of(context).textTheme.bodySmall,
         ),
         Visibility(
@@ -337,7 +341,7 @@ class _SummaryRequestStepState extends State<SummaryRequestStep> {
           child: Padding(
             padding: const EdgeInsets.only(top: UiConfig.textSpacing),
             child: Text(
-              'เหตุผล: $reasonText',
+              '${tr('dataSubjectRight.StepProcessDsr.summaryRequest.reason')} : $reasonText',
               style: Theme.of(context).textTheme.bodySmall,
             ),
           ),
@@ -356,7 +360,9 @@ class _SummaryRequestStepState extends State<SummaryRequestStep> {
       crossAxisAlignment: CrossAxisAlignment.start,
       children: <Widget>[
         Text(
-          status ? 'ดำเนินการเสร็จสิ้น' : 'อยู่ระหว่างการดำเนินการ',
+          status
+              ? tr('dataSubjectRight.StepProcessDsr.summaryRequest.completed')
+              : tr('dataSubjectRight.StepProcessDsr.summaryRequest.inProgress'),
           style: Theme.of(context).textTheme.bodySmall,
         ),
         const SizedBox(height: UiConfig.lineGap),

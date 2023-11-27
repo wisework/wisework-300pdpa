@@ -1,5 +1,6 @@
 import 'dart:async';
 
+import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
@@ -21,6 +22,7 @@ import 'package:pdpa/app/features/data_subject_right/screens/process_data_subjec
 import 'package:pdpa/app/injection.dart';
 import 'package:pdpa/app/shared/utils/constants.dart';
 import 'package:pdpa/app/shared/utils/functions.dart';
+import 'package:pdpa/app/shared/utils/toast.dart';
 import 'package:pdpa/app/shared/widgets/content_wrapper.dart';
 import 'package:pdpa/app/shared/widgets/customs/custom_button.dart';
 import 'package:pdpa/app/shared/widgets/customs/custom_icon_button.dart';
@@ -139,6 +141,16 @@ class _ProcessDataSubjectRightViewState
           stepLength,
           emailParams: _getEmailParams(),
         );
+      } else if (stepIndex == 1) {
+        final current = cubit.state.dataSubjectRight;
+        final initial = cubit.state.initialDataSubjectRight;
+
+        if (current.processRequests != initial.processRequests) {
+          showToast(context, text: 'กรุณาส่งผลการตรวจสอบ');
+          return;
+        }
+
+        cubit.onNextStepPressed(stepLength);
       } else {
         cubit.onNextStepPressed(stepLength);
       }
@@ -170,14 +182,14 @@ class _ProcessDataSubjectRightViewState
     }
 
     final rejectReason = dataSubjectRight.rejectVerifyReason.isNotEmpty
-        ? '\nเหตุผล: ${dataSubjectRight.rejectVerifyReason}'
+        ? '${tr('dataSubjectRight.processDsr.reason')}: ${dataSubjectRight.rejectVerifyReason}'
         : '';
 
     final status = dataSubjectRight.verifyFormStatus == RequestResultStatus.pass
-        ? 'ผ่านการตรวจสอบแล้ว'
+        ? tr('dataSubjectRight.processDsr.pass')
         : dataSubjectRight.verifyFormStatus == RequestResultStatus.fail
-            ? 'ไม่ผ่านการตรวจสอบ$rejectReason'
-            : 'ยังไม่ได้ตรวจสอบ';
+            ? '${tr('dataSubjectRight.processDsr.notPass')}: $rejectReason'
+            : tr('dataSubjectRight.processDsr.notYetVerified');
 
     if (requests.isNotEmpty) {
       return ProcessRequestTemplateParams(
@@ -202,10 +214,10 @@ class _ProcessDataSubjectRightViewState
           builder: (context, state) {
             return Text(
               state.stepIndex == 0
-                  ? 'ตรวจสอบแบบฟอร์ม'
+                  ? tr('dataSubjectRight.processDsr.check')
                   : state.stepIndex == 2
-                      ? 'สรุปผลการดำเนินการคำร้องขอ'
-                      : 'การดำเนินการ',
+                      ? tr('dataSubjectRight.processDsr.summary')
+                      : tr('dataSubjectRight.processDsr.operation'),
               style: Theme.of(context).textTheme.titleLarge,
             );
           },
@@ -285,7 +297,7 @@ class _ProcessDataSubjectRightViewState
                     horizontal: 12.0,
                   ),
                   child: Text(
-                    'ย้อนกลับ',
+                    tr('app.back'),
                     style: Theme.of(context).textTheme.bodyMedium?.copyWith(
                         color: currentIndex != 0
                             ? Theme.of(context).colorScheme.primary
@@ -322,7 +334,7 @@ class _ProcessDataSubjectRightViewState
                           loadingType: LoadingType.horizontalRotatingDots,
                         )
                       : Text(
-                          currentIndex != 2 ? 'ถัดไป' : 'เสร็จสิ้น',
+                          currentIndex != 2 ? tr('app.next') : tr('app.finish'),
                           style: Theme.of(context)
                               .textTheme
                               .bodyMedium

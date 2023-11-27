@@ -1,3 +1,4 @@
+import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
@@ -56,7 +57,7 @@ class _RequestReasonPageState extends State<RequestReasonPage> {
               mainAxisAlignment: MainAxisAlignment.start,
               children: [
                 Text(
-                  'ต้องการยื่นคำร้องขอเพื่อจุดประสงค์ดังต่อไปนี้',
+                  tr('dataSubjectRight.requestReason.title'),
                   textAlign: TextAlign.left,
                   style: Theme.of(context)
                       .textTheme
@@ -65,7 +66,7 @@ class _RequestReasonPageState extends State<RequestReasonPage> {
                 ),
                 const SizedBox(height: UiConfig.lineSpacing),
                 Text(
-                  'โปรดเลือกจุดประสงค์ที่ท่านต้องการ',
+                  tr('dataSubjectRight.requestReason.pleaseSelect'),
                   textAlign: TextAlign.left,
                   style: Theme.of(context).textTheme.bodyMedium?.copyWith(
                       color: Theme.of(context).colorScheme.onSurface),
@@ -176,20 +177,20 @@ class _RequestReasonPageState extends State<RequestReasonPage> {
         crossAxisAlignment: CrossAxisAlignment.start, // กำหนดให้ชิดซ้าย
         children: [
           Text(
-            'ข้อมูลและรายละเอียดการดำเนินการ', //!
+            tr('dataSubjectRight.requestReason.iadoperations'), 
             style: Theme.of(context)
                 .textTheme
                 .titleMedium
                 ?.copyWith(color: Theme.of(context).colorScheme.primary),
           ),
           const SizedBox(height: UiConfig.lineSpacing),
-          const TitleRequiredText(
-            text: 'ข้อมูลส่วนบุคคล', //!
+           TitleRequiredText(
+            text: tr('dataSubjectRight.requestReason.personalInformation'), 
             required: true,
           ),
 
           CustomTextField(
-            hintText: 'กรอกข้อมูลส่วนบุคคล', //!
+            hintText: tr('dataSubjectRight.requestReason.hintpersonalInformation'), 
             required: true,
             onChanged: (value) {
               if (selectRequestTypeIds.contains(requestType.id)) {
@@ -207,11 +208,11 @@ class _RequestReasonPageState extends State<RequestReasonPage> {
             },
           ),
           const SizedBox(height: UiConfig.lineSpacing),
-          const TitleRequiredText(
-            text: 'สถานที่พบเจอ', //!
+           TitleRequiredText(
+            text: tr('dataSubjectRight.requestReason.place'), 
           ),
           CustomTextField(
-            hintText: 'กรอกสถานที่พบเจอ',
+            hintText: tr('dataSubjectRight.requestReason.hintPlace'),
             onChanged: (value) {
               if (selectRequestTypeIds.contains(requestType.id)) {
                 final updatedData = data.map((item) {
@@ -228,8 +229,8 @@ class _RequestReasonPageState extends State<RequestReasonPage> {
             },
           ),
           const SizedBox(height: UiConfig.lineSpacing),
-          const TitleRequiredText(
-            text: 'การดำเนินการ', //!
+           TitleRequiredText(
+            text: tr('dataSubjectRight.requestReason.operation'), 
             required: true,
           ),
           ListView.builder(
@@ -291,7 +292,7 @@ class _RequestReasonPageState extends State<RequestReasonPage> {
           ),
           const SizedBox(height: UiConfig.lineSpacing),
           Text(
-            'เหตุผลประกอบคำร้อง',
+            tr('dataSubjectRight.requestReason.reasonsRequest'),
             style: Theme.of(context)
                 .textTheme
                 .titleMedium
@@ -348,7 +349,7 @@ class _RequestReasonPageState extends State<RequestReasonPage> {
                                       orElse: () =>
                                           const LocalizedModel.empty(),
                                     )
-                                    .text, //!
+                                    .text, 
                                 style: !selectRequestTypeIds
                                         .contains(reasonType[index].id)
                                     ? Theme.of(context)
@@ -379,12 +380,12 @@ class _RequestReasonPageState extends State<RequestReasonPage> {
                             child: Column(
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
-                                const TitleRequiredText(
-                                  text: 'เหตุผล', //!
+                                 TitleRequiredText(
+                                  text: tr('dataSubjectRight.requestReason.reason'), 
                                   required: true,
                                 ),
                                 CustomTextField(
-                                  hintText: 'กรอกเหตุผล', //!
+                                  hintText: tr('dataSubjectRight.requestReason.hintReason'), 
 
                                   required: true,
                                   onChanged: (text) {

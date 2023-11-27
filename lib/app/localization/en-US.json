@@ -12,6 +12,7 @@
         "done": "Done",
         "previous": "Previous",
         "next": "Next",
+        "finish": "Finish",
         "features": {
             "home": "Home",
             "consentmanagement": "Consent Management",
@@ -61,7 +62,8 @@
             "forgotDescription": "Please enter an email linked to your account. We’ll send a link that will sign you into the app instantly.",
             "passwordResetSent": "Password reset email sent.",
             "resendDescription": "We have sent you an email to reset your password. If you do not receive another email Please press send again.",
-            "sendAgain": "Send again"
+            "sendAgain": "Send again",
+            "incorrect": "Incorrect email or password"
         },
         "resetPassword": {
             "title": "Reset Password",
@@ -363,21 +365,29 @@
         "dsr": {
             "datasubjectright": "Data Subject Right",
             "request": {
-                "title1": "คำขอขั้นต้น",
-                "title2": "คำขอที่สามารถแก้ไขได้",
+                "title1": "Initial request",
+                "descriptiontitle1": "รายการคำร้องขอใช้สิทธิ์ของเจ้าของข้อมูลภายใต้ พ.ร.บ.คุ้มครองข้อมูลส่วนบุคคล",
+                "title2": "Requests that can be edited",
+                "descriptiontitle2": "ท่านสามารถปรับปรุง แก้ไข รายละเอียดของรายการคำร้องขอที่สร้างเพิ่มเติมได้",
+                "title3": "ท่านสามารถสร้างรายการคำร้องขอใช้สิทธิ์เพิ่มเติมได้ที่นี่",
                 "title": "Request types",
                 "list": "Requests",
-                "list2": "ตัวเลือกประเภทคำขอ",
+                "list2": "Request type options",
                 "create": "Create request type",
                 "edit": "Edit request type",
                 "requestcode": "Request code",
                 "requestcodeHint": "Request code",
                 "description": "Request description",
-                "descriptionHint": "Request description"
+                "descriptionHint": "Request description",
+                "rejectType": "Reject type",
+                "addRejectType": "Add reject type"
             },
             "rejections": {
-                "title1": "การปฏิเสธคำร้องขอขั้นต้น",
-                "title2": "การปฏิเสธคำร้องขอที่สามารถแก้ไขได้",
+                "title1": "Initial denial of request",
+                "descriptiontitle1": "รายการการปฏิเสธคำร้องขอของเจ้าของข้อมูลภายใต้ พ.ร.บ.คุ้มครองข้อมูลส่วนบุคคล",
+                "title2": "Denial of a request that can be modified",
+                "descriptiontitle2": "ท่านสามารถปรับปรุง แก้ไข รายการการปฏิเสธคำร้องขอที่สร้างเพิ่มเติมได้",
+                "title3": "ท่านสามารถสร้างรายการเหตุผลการปฏิเสธคำขอเพิ่มเติมได้ที่นี่",
                 "title": "Reject type",
                 "list": "Rejections",
                 "create": "Create teject type",
@@ -388,8 +398,11 @@
                 "descriptionHint": "Reject description"
             },
             "reason": {
-                "title1": "ประเภทของเหตุผลขั้นต้น",
-                "title2": "ประเภทของเหตุผลที่สามารถแก้ไขได้",
+                "title1": "Types of primary reasons",
+                "descriptiontitle1": "รายการเหตุผลประกอบคำร้องของข้อมูลภายใต้ พ.ร.บ.คุ้มครองข้อมูลส่วนบุคคล",
+                "title2": "Types of reasons that can be fixed",
+                "descriptiontitle2": "ท่านสามารถปรับปรุง แก้ไข รายการเหตุผลประกอบคำร้องที่สร้างเพิ่มเติมได้",
+                "title3": "ท่านสามารถสร้างรายการเหตุผลประกอบคำร้องเพิ่มเติมได้ที่นี่",
                 "title": "Reason type",
                 "list": "Reasons",
                 "create": "Create reason type",
@@ -439,6 +452,8 @@
     },
     "dataSubjectRight": {
         "datasubjectright": "Data Subject Right",
+        "submitRequestForm": "Submit request form",
+        "form": "Legal rights request form",
         "status": {
             "newRequest": "New Request",
             "pending": "Pending",
@@ -469,32 +484,69 @@
             "operation": "Operation",
             "reasonsRequest": "Reason request",
             "createSuccess": "Create successfully",
-            "updateSuccess": "Update successfully"
+            "updateSuccess": "Update successfully",
+            "dlSuccess": "File downloaded successfully."
+        },
+        "submit": {
+            "submitted": "You have submitted your request form.",
+            "notify": "We will review the form and notify you via email within 30 days of completing your request."
         },
         "processDsr": {
+            "check": "Check the form",
+            "summary": "Summary of request processing results",
+            "operation": "Operation",
             "processDataSubjectRight": "Process the rights of data owners",
             "datasubjectright": "Data Subject Right",
             "verifyRequest": "Verify request",
             "considerTakingAction": "Consider taking action",
             "carryOut": "carry out",
-            "results": "Results"
+            "results": "Results",
+            "reason:": "เหตุผล:",
+            "pass": "ผ่านการตรวจสอบแล้ว",
+            "notPass": "ไม่ผ่านการตรวจสอบ",
+            "notYetVerified": "ยังไม่ได้ตรวจสอบ"
         },
         "StepProcessDsr": {
             "considering": {
+                "notYetProcessed": "Not yet processed",
+                "inProgress": "In progress",
+                "refuseProcessing": "refuse processing",
+                "completed": "Completed",
+                "status": "Status",
+                "personalInformation": "Personal information",
+                "place": "Place of encounter",
+                "operation": "Operation",
                 "resultOfInspection": "Process the rights of data owners",
                 "carryOut": "Carry out",
                 "refuse": "Refuse request",
                 "reason": "Reason",
                 "since": "Since..."
             },
-            "processResult": {},
-            "processing": {},
+            "summaryRequest": {
+                "summary": "สรุปผลการดำเนินการคำร้องขอ",
+                "result": "Result of inspection of request form to exercise rights according to personal data protection law",
+                "title": "Details of request data subject rights",
+                "check": "Check the form",
+                "consider": "Consider the operation",
+                "results": "Results",
+                "requestReceived": "Request received",
+                "pass": "Pass",
+                "notPass": "Not pass",
+                "notYetProcessed": "Not yet processed",
+                "reason": "Reason :",
+                "carryOut": "carry out",
+                "refuseProcessing": "refuse processing",
+                "inProgress": "In progress",
+                "completed": "Completed"
+            },
             "verifying": {
-                "resultOfInspection": "ผลการตรวจสอบแบบฟอร์มคำขอใช้สิทธิ์ตามกฎหมายคุ้มครองข้อมูลส่วนบุคคล",
+                "check ": "Check the form",
+                "resultOfInspection": "Result of inspection of request form to exercise rights according to personal data protection law",
                 "pass": "Pass",
                 "notPass": "Not pass",
                 "reason": "Reason",
-                "since": "Since..."
+                "since": "Since...",
+                "pleaseSelect": "Please select an option to continue."
             }
         },
         "intro": {
@@ -549,16 +601,29 @@
             "copyFile": "Copy file",
             "fileNotSelected": "File not selected"
         },
-        "step5": {
-            "applicantDs": "Applicant is the data subject",
-            "ApplicantAds": "Applicant is the agent of the data subject."
+        "requestReason": {
+            "title": "I would like to submit a request for the following purposes.",
+            "pleaseSelect": "Please select your desired purpose.",
+            "iadoperations": "Information and details of operations",
+            "personalInformation": "Personal information",
+            "hintpersonalInformation": "Fill in personal information",
+            "place": "Place of encounter",
+            "hintPlace": "Enter Place of encounter",
+            "operation": "Operation",
+            "delete": "Delete",
+            "nonDestructive": "non-destructive",
+            "impossibleToIdentifyYourself": "Makes it impossible to identify yourself",
+            "reasonsRequest": "Reasons for the request",
+            "other": "Other (please specify)",
+            "reason": "Reason",
+            "hintReason": "Enter Reason"
         },
         "condition": {
             "title": "Data Controller disclaimer",
             "subtitle": "In order to comply with the relevant laws, the Company may have to deny your request in some cases including but not limited to the following cases where:",
-            "decription": "1)You are not able to clearly verify that the applicant is the data subject or authorized to submit the request.2)Your request is unreasonable, e.g., the applicant may not have the right to delete personal data or the Company does not have such personal data.3)Such request is redundant, e.g., such request is repeatedly submitted or duplicated without reasonable reason.4)Retention of such personal data is for establishing legal claims, legal compliance, exercise of legal rights or defenses.5)Proceeding your request may adversely affect and harm rights and freedom of other people.6)Processing of such personal data is necessary for performance of contracts between the data subject and the Company.7)Processing of such personal data is necessary for legitimate interests of the Company.8)Other cases prescribed by the relevant law. In general, you will not be charged for the process in relation to the request. However, if your request is manifestly unreasonable or redundant, the Company may charge a processing fee at a reasonable cost."
+            "decription": "1)You are not able to clearly verify that the applicant is the data subject or authorized to submit the request.\n2)Your request is unreasonable, e.g., the applicant may not have the right to delete personal data or the Company does not have such personal data.\n3)Such request is redundant, e.g., such request is repeatedly submitted or duplicated without reasonable reason.\n4)Retention of such personal data is for establishing legal claims, legal compliance, exercise of legal rights or defenses.\n5)Proceeding your request may adversely affect and harm rights and freedom of other people.\n6)Processing of such personal data is necessary for performance of contracts between the data subject and the Company.\n7)Processing of such personal data is necessary for legitimate interests of the Company.\n8)Other cases prescribed by the relevant law. In general, you will not be charged for the process in relation to the request. However, if your request is manifestly unreasonable or redundant, the Company may charge a processing fee at a reasonable cost."
         },
-        "accepteTerm": {
+        "acknowledge": {
             "title": "Acknowledgment and Acceptance is require",
             "subtitle": "The applicant has read and understood this form thoroughly. The applicant confirms that the information provided to the Company is true and accurate. The applicant understands that the verification of authorization, identification and residency is necessary for processing your request. Providing false information with bad faith may result in legal prosecution. In order to properly proceed with your request, the Company may request for additional information from you for verification purpose."
         }

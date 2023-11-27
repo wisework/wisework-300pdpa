@@ -74,7 +74,7 @@ class _FormDataSubjectRightState extends State<FormDataSubjectRight> {
       child: Scaffold(
         appBar: PdpaAppBar(
           leadingIcon: _buildPopButton(),
-          title: const Text('แบบฟอร์มขอใช้สิทธิ์ตามกฏหมาย'), //!
+          title: Text(tr('dataSubjectRight.form')),
         ),
         body: BlocBuilder<FormDataSubjectRightCubit, FormDataSubjectRightState>(
           builder: (context, state) {
@@ -407,7 +407,7 @@ class _FormDataSubjectRightViewState extends State<FormDataSubjectRightView> {
                             ? Text(
                                 tr("app.next"),
                               )
-                            : const Text("ส่งแบบคำร้อง")),
+                            :  Text(tr("dataSubjectRight.submitRequestForm"))),
                   ),
                 ],
               ),
