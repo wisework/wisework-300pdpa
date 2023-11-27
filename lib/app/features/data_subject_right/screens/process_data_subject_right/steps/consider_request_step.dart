@@ -83,13 +83,13 @@ class _ConsiderRequestStepState extends State<ConsiderRequestStep> {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: <Widget>[
                   Text(
-                    'พิจารณาดำเนินการ',
+                    tr('dataSubjectRight.processDsr.considerTakingAction'),
                     style: Theme.of(context).textTheme.titleLarge?.copyWith(
                         color: Theme.of(context).colorScheme.primary),
                   ),
                   const SizedBox(height: UiConfig.lineSpacing),
                   Text(
-                    'ผลการตรวจสอบแบบฟอร์มคำขอใช้สิทธิ์ตามกฎหมายคุ้มครองข้อมูลส่วนบุคคล',
+                    tr('dataSubjectRight.StepProcessDsr.considering.resultOfInspection'),
                     style: Theme.of(context).textTheme.bodyMedium,
                   ),
                 ],
@@ -277,7 +277,7 @@ class _ConsiderRequestStepState extends State<ConsiderRequestStep> {
         right: 18.0,
       ),
       child: Text(
-        tr('dataSubjectRight.StepProcessDsr.considering.status ${statusTexts[status]}'),
+        '${tr('dataSubjectRight.StepProcessDsr.considering.status')}: ${statusTexts[status]}',
         style: Theme.of(context)
             .textTheme
             .bodyMedium

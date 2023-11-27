@@ -453,6 +453,7 @@
     "dataSubjectRight": {
         "datasubjectright": "Data Subject Right",
         "submitRequestForm": "Submit request form",
+        "form" : "Legal rights request form",
         "status": {
             "newRequest": "New Request",
             "pending": "Pending",
@@ -485,6 +486,10 @@
             "createSuccess": "Create successfully",
             "updateSuccess": "Update successfully"
         },
+        "submit": {
+            "submitted": "You have submitted your request form.",
+            "notify": "We will review the form and notify you via email within 30 days of completing your request."
+        },
         "processDsr": {
             "check": "Check the form",
             "summary": "Summary of request processing results",
@@ -506,7 +511,7 @@
                 "inProgress": "In progress",
                 "refuseProcessing": "refuse processing",
                 "completed": "Completed",
-                "status": "status",
+                "status": "Status",
                 "personalInformation": "Personal information",
                 "place": "Place of encounter",
                 "operation": "Operation",

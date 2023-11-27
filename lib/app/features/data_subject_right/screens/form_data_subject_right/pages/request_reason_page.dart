@@ -177,20 +177,20 @@ class _RequestReasonPageState extends State<RequestReasonPage> {
         crossAxisAlignment: CrossAxisAlignment.start, // กำหนดให้ชิดซ้าย
         children: [
           Text(
-            'ข้อมูลและรายละเอียดการดำเนินการ', //!
+            tr('dataSubjectRight.requestReason.iadoperations'), 
             style: Theme.of(context)
                 .textTheme
                 .titleMedium
                 ?.copyWith(color: Theme.of(context).colorScheme.primary),
           ),
           const SizedBox(height: UiConfig.lineSpacing),
-          const TitleRequiredText(
-            text: 'ข้อมูลส่วนบุคคล', //!
+           TitleRequiredText(
+            text: tr('dataSubjectRight.requestReason.personalInformation'), 
             required: true,
           ),
 
           CustomTextField(
-            hintText: 'กรอกข้อมูลส่วนบุคคล', //!
+            hintText: tr('dataSubjectRight.requestReason.hintpersonalInformation'), 
             required: true,
             onChanged: (value) {
               if (selectRequestTypeIds.contains(requestType.id)) {
@@ -208,11 +208,11 @@ class _RequestReasonPageState extends State<RequestReasonPage> {
             },
           ),
           const SizedBox(height: UiConfig.lineSpacing),
-          const TitleRequiredText(
-            text: 'สถานที่พบเจอ', //!
+           TitleRequiredText(
+            text: tr('dataSubjectRight.requestReason.place'), 
           ),
           CustomTextField(
-            hintText: 'กรอกสถานที่พบเจอ',
+            hintText: tr('dataSubjectRight.requestReason.hintPlace'),
             onChanged: (value) {
               if (selectRequestTypeIds.contains(requestType.id)) {
                 final updatedData = data.map((item) {
@@ -229,8 +229,8 @@ class _RequestReasonPageState extends State<RequestReasonPage> {
             },
           ),
           const SizedBox(height: UiConfig.lineSpacing),
-          const TitleRequiredText(
-            text: 'การดำเนินการ', //!
+           TitleRequiredText(
+            text: tr('dataSubjectRight.requestReason.operation'), 
             required: true,
           ),
           ListView.builder(
@@ -292,7 +292,7 @@ class _RequestReasonPageState extends State<RequestReasonPage> {
           ),
           const SizedBox(height: UiConfig.lineSpacing),
           Text(
-            'เหตุผลประกอบคำร้อง',
+            tr('dataSubjectRight.requestReason.reasonsRequest'),
             style: Theme.of(context)
                 .textTheme
                 .titleMedium
@@ -349,7 +349,7 @@ class _RequestReasonPageState extends State<RequestReasonPage> {
                                       orElse: () =>
                                           const LocalizedModel.empty(),
                                     )
-                                    .text, //!
+                                    .text, 
                                 style: !selectRequestTypeIds
                                         .contains(reasonType[index].id)
                                     ? Theme.of(context)
@@ -380,12 +380,12 @@ class _RequestReasonPageState extends State<RequestReasonPage> {
                             child: Column(
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
-                                const TitleRequiredText(
-                                  text: 'เหตุผล', //!
+                                 TitleRequiredText(
+                                  text: tr('dataSubjectRight.requestReason.reason'), 
                                   required: true,
                                 ),
                                 CustomTextField(
-                                  hintText: 'กรอกเหตุผล', //!
+                                  hintText: tr('dataSubjectRight.requestReason.hintReason'), 
 
                                   required: true,
                                   onChanged: (text) {
