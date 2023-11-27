@@ -121,14 +121,23 @@ class _RequestTypeViewState extends State<RequestTypeView> {
         builder: (context, state) {
           if (state is GotRequestTypes) {
             return CustomContainer(
-              margin: const EdgeInsets.all(UiConfig.lineSpacing),
               child: state.requestTypes.isNotEmpty
                   ? Column(
                       children: [
                         Text(
-                          'masterData.dsr.request.title2',
+                          tr(
+                            'masterData.dsr.request.title2',
+                          ),
                           style: Theme.of(context).textTheme.titleLarge,
-                        ), //!
+                        ),
+                        const SizedBox(height: UiConfig.textSpacing),
+                        Text(
+                          tr(
+                            'masterData.dsr.request.descriptiontitle2',
+                          ),
+                          style: Theme.of(context).textTheme.labelMedium,
+                        ),
+                        const SizedBox(height: UiConfig.lineGap),
                         ListView.builder(
                           physics: const NeverScrollableScrollPhysics(),
                           shrinkWrap: true,
@@ -146,13 +155,10 @@ class _RequestTypeViewState extends State<RequestTypeView> {
                     )
                   : ExampleScreen(
                       headderText: tr(
-                        'masterData.dsr.request.title2',
+                        'masterData.dsr.request.title3',
                       ),
                       buttonText: tr(
                         'masterData.dsr.request.create',
-                      ),
-                      descriptionText: tr(
-                        'masterData.dsr.request.description',
                       ),
                       onPress: () {
                         context.push(MasterDataRoute.createRequestType.path);
@@ -162,7 +168,6 @@ class _RequestTypeViewState extends State<RequestTypeView> {
           }
           if (state is RequestTypeError) {
             return CustomContainer(
-              margin: const EdgeInsets.all(UiConfig.lineSpacing),
               child: Padding(
                 padding: const EdgeInsets.symmetric(
                   vertical: UiConfig.defaultPaddingSpacing * 4,
@@ -202,7 +207,13 @@ class _RequestTypeViewState extends State<RequestTypeView> {
                   Text(
                     tr('masterData.dsr.request.title1'),
                     style: Theme.of(context).textTheme.titleLarge,
-                  ), //!
+                  ),
+                  const SizedBox(height: UiConfig.textSpacing),
+                  Text(
+                    tr('masterData.dsr.request.descriptiontitle1'),
+                    style: Theme.of(context).textTheme.labelMedium,
+                  ),
+                  const SizedBox(height: UiConfig.lineGap),
                   ListView.builder(
                     physics: const NeverScrollableScrollPhysics(),
                     shrinkWrap: true,
@@ -223,9 +234,6 @@ class _RequestTypeViewState extends State<RequestTypeView> {
                 ),
                 buttonText: tr(
                   'masterData.dsr.request.create',
-                ),
-                descriptionText: tr(
-                  'masterData.dsr.request.description',
                 ),
                 onPress: () {
                   context.push(MasterDataRoute.createRequestType.path);

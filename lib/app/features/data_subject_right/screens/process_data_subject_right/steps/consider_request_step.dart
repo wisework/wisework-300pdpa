@@ -1,3 +1,4 @@
+import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:pdpa/app/config/config.dart';
@@ -82,13 +83,13 @@ class _ConsiderRequestStepState extends State<ConsiderRequestStep> {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: <Widget>[
                   Text(
-                    'พิจารณาดำเนินการ',
+                    tr('dataSubjectRight.processDsr.considerTakingAction'),
                     style: Theme.of(context).textTheme.titleLarge?.copyWith(
                         color: Theme.of(context).colorScheme.primary),
                   ),
                   const SizedBox(height: UiConfig.lineSpacing),
                   Text(
-                    'ผลการตรวจสอบแบบฟอร์มคำขอใช้สิทธิ์ตามกฎหมายคุ้มครองข้อมูลส่วนบุคคล',
+                    tr('dataSubjectRight.StepProcessDsr.considering.resultOfInspection'),
                     style: Theme.of(context).textTheme.bodyMedium,
                   ),
                 ],
@@ -245,10 +246,14 @@ class _ConsiderRequestStepState extends State<ConsiderRequestStep> {
       processRequest,
     );
     final Map<ProcessRequestStatus, String> statusTexts = {
-      ProcessRequestStatus.notProcessed: 'ยังไม่ดำเนินการ',
-      ProcessRequestStatus.inProgress: 'อยู่ระหว่างการดำเนินการ',
-      ProcessRequestStatus.refused: 'ปฏิเสธการดำเนินการ',
-      ProcessRequestStatus.completed: 'ดำเนินการเสร็จสิ้น',
+      ProcessRequestStatus.notProcessed:
+          tr('dataSubjectRight.StepProcessDsr.considering.notYetProcessed'),
+      ProcessRequestStatus.inProgress:
+          tr('dataSubjectRight.StepProcessDsr.considering.inProgress'),
+      ProcessRequestStatus.refused:
+          tr('dataSubjectRight.StepProcessDsr.considering.refuseProcessing'),
+      ProcessRequestStatus.completed:
+          tr('dataSubjectRight.StepProcessDsr.considering.completed'),
     };
     final Map<ProcessRequestStatus, Color> statusColors = {
       ProcessRequestStatus.notProcessed: const Color(0xFF878787),
@@ -272,7 +277,7 @@ class _ConsiderRequestStepState extends State<ConsiderRequestStep> {
         right: 18.0,
       ),
       child: Text(
-        'สถานะ: ${statusTexts[status]}',
+        '${tr('dataSubjectRight.StepProcessDsr.considering.status')}: ${statusTexts[status]}',
         style: Theme.of(context)
             .textTheme
             .bodyMedium
@@ -298,7 +303,10 @@ class _ConsiderRequestStepState extends State<ConsiderRequestStep> {
       mainAxisSize: MainAxisSize.min,
       crossAxisAlignment: CrossAxisAlignment.start,
       children: <Widget>[
-        const TitleRequiredText(text: 'ข้อมูลส่วนบุคคล'),
+        TitleRequiredText(
+          text: tr(
+              'dataSubjectRight.StepProcessDsr.considering.personalInformation'),
+        ),
         CustomTextField(
           controller: TextEditingController(
             text: processRequest.personalData,
@@ -306,7 +314,9 @@ class _ConsiderRequestStepState extends State<ConsiderRequestStep> {
           readOnly: true,
         ),
         const SizedBox(height: UiConfig.lineSpacing),
-        const TitleRequiredText(text: 'สถานที่พบเจอ'),
+        TitleRequiredText(
+          text: tr('dataSubjectRight.StepProcessDsr.considering.place'),
+        ),
         CustomTextField(
           controller: TextEditingController(
             text: processRequest.foundSource,
@@ -314,7 +324,9 @@ class _ConsiderRequestStepState extends State<ConsiderRequestStep> {
           readOnly: true,
         ),
         const SizedBox(height: UiConfig.lineSpacing),
-        const TitleRequiredText(text: 'การดำเนินการ'),
+        TitleRequiredText(
+          text: tr('dataSubjectRight.StepProcessDsr.considering.operation'),
+        ),
         CustomTextField(
           controller: TextEditingController(
             text: title.text,
@@ -334,7 +346,7 @@ class _ConsiderRequestStepState extends State<ConsiderRequestStep> {
       crossAxisAlignment: CrossAxisAlignment.start,
       children: <Widget>[
         Text(
-          'เหตุผลประกอบคำร้อง',
+          tr('dataSubjectRight.StepProcessDsr.considering.reason'),
           style: Theme.of(context).textTheme.bodyMedium,
         ),
         const SizedBox(height: UiConfig.lineGap),

@@ -52,7 +52,7 @@ class _IdentityVerificationPageState extends State<IdentityVerificationPage> {
               mainAxisAlignment: MainAxisAlignment.start,
               children: [
                 Text(
-                  'เอกสารพิสูจน์ตัวตนและพิสูจน์ถิ่นที่อยู่เจ้าของข้อมูล', //!
+                  tr('dataSubjectRight.identityVerification.title'), 
                   textAlign: TextAlign.left,
                   style: Theme.of(context)
                       .textTheme
@@ -61,7 +61,7 @@ class _IdentityVerificationPageState extends State<IdentityVerificationPage> {
                 ),
                 const SizedBox(height: UiConfig.lineSpacing),
                 Text(
-                  'ข้าพเจ้าได้แนบเอกสารดังต่อไปนี้เพื่อการตรวจสอบตัวตน', //!
+                  tr('dataSubjectRight.identityVerification.subtitle'), 
                   textAlign: TextAlign.left,
                   style: Theme.of(context).textTheme.bodyMedium?.copyWith(
                       color: Theme.of(context).colorScheme.onSurface),

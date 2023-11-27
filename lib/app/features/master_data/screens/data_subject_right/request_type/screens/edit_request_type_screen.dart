@@ -359,34 +359,34 @@ class _EditRequestTypeViewState extends State<EditRequestTypeView> {
           Row(
             children: <Widget>[
               Text(
-                tr('masterData.dsr.request.title'), //!
+                tr('masterData.dsr.request.title'), 
                 style: Theme.of(context).textTheme.titleLarge,
               ),
             ],
           ),
           const SizedBox(height: UiConfig.lineSpacing),
           TitleRequiredText(
-            text: tr('masterData.dsr.request.requestcode'), //!
+            text: tr('masterData.dsr.request.requestcode'), 
             required: true,
           ),
           CustomTextField(
             controller: requestTypeCodeController,
-            hintText: tr('masterData.dsr.request.requestcodeHint'), //!
+            hintText: tr('masterData.dsr.request.requestcodeHint'), 
             onChanged: _setRequestCode,
             required: true,
           ),
           const SizedBox(height: UiConfig.lineSpacing),
           TitleRequiredText(
-            text: tr('masterData.dsr.request.description'), //!
+            text: tr('masterData.dsr.request.description'), 
           ),
           CustomTextField(
             controller: descriptionController,
-            hintText: tr('masterData.dsr.request.descriptionHint'), //!
+            hintText: tr('masterData.dsr.request.descriptionHint'), 
             onChanged: _setDescription,
           ),
           const SizedBox(height: UiConfig.lineSpacing),
           TitleRequiredText(
-            text: tr('ประเภทการปฏิเสธ'), //!
+            text: tr('masterData.dsr.request.rejectType'), 
           ),
           const SizedBox(height: UiConfig.lineSpacing),
           _buildRejectTypesection(context,
@@ -519,7 +519,7 @@ class _EditRequestTypeViewState extends State<EditRequestTypeView> {
             const SizedBox(width: UiConfig.actionSpacing + 11),
             Expanded(
               child: Text(
-                tr('เพิ่มประเภทการปฏิเสธ'),
+                tr('masterData.dsr.request.addRejectType'),
                 style: Theme.of(context).textTheme.bodyMedium,
               ),
             ),

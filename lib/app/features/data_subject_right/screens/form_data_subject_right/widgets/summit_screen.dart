@@ -1,3 +1,4 @@
+import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:pdpa/app/config/config.dart';
 import 'package:pdpa/app/shared/widgets/customs/custom_container.dart';
@@ -15,7 +16,7 @@ class SubmitScreen extends StatelessWidget {
         crossAxisAlignment: CrossAxisAlignment.center,
         children: <Widget>[
           Text(
-            "คุณได้ส่งแบบฟอร์มคำร้องแล้ว",
+            tr("dataSubjectRight.submit.submitted"),
             style: Theme.of(context)
                 .textTheme
                 .titleLarge
@@ -23,7 +24,7 @@ class SubmitScreen extends StatelessWidget {
           ),
           const SizedBox(height: UiConfig.lineGap),
           Text(
-            "เราจะดำเนินการตรวจสอบแบบฟอร์มและแจ้งให้ท่านทราบทางอีเมลภายใน 30 วันหลังจากที่กรอกแบบฟอร์มคำร้อง",
+            tr("dataSubjectRight.submit.notify"),
             style: Theme.of(context)
                 .textTheme
                 .bodyMedium

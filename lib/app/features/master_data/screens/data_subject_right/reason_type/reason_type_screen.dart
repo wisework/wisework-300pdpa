@@ -129,6 +129,12 @@ class _ReasonTypeViewState extends State<ReasonTypeView> {
                           tr('masterData.dsr.reason.title2'),
                           style: Theme.of(context).textTheme.titleLarge,
                         ),
+                        const SizedBox(height: UiConfig.textSpacing),
+                        Text(
+                          tr('masterData.dsr.reason.descriptiontitle2'),
+                          style: Theme.of(context).textTheme.labelMedium,
+                        ),
+                        const SizedBox(height: UiConfig.lineGap),
                         ListView.builder(
                           physics: const NeverScrollableScrollPhysics(),
                           shrinkWrap: true,
@@ -146,13 +152,13 @@ class _ReasonTypeViewState extends State<ReasonTypeView> {
                     )
                   : ExampleScreen(
                       headderText: tr(
-                        tr('masterData.dsr.reason.title2'),
+                       'masterData.dsr.reason.title2',
                       ),
                       buttonText: tr(
                         'masterData.dsr.reason.create',
                       ),
                       descriptionText: tr(
-                        'masterData.dsr.reason.descriptionHint',
+                        '',
                       ),
                       onPress: () {
                         context.push(MasterDataRoute.createReasonType.path);
@@ -195,7 +201,6 @@ class _ReasonTypeViewState extends State<ReasonTypeView> {
   ContentWrapper buildPresetSection(String language, BuildContext context) {
     return ContentWrapper(
       child: CustomContainer(
-        margin: const EdgeInsets.all(UiConfig.lineSpacing),
         child: reasonTypesPreset.isNotEmpty
             ? Column(
                 children: [
@@ -203,6 +208,12 @@ class _ReasonTypeViewState extends State<ReasonTypeView> {
                     tr('masterData.dsr.reason.title1'),
                     style: Theme.of(context).textTheme.titleLarge,
                   ),
+                  const SizedBox(height: UiConfig.textSpacing),
+                   Text(
+                    tr('masterData.dsr.reason.descriptiontitle1'),
+                    style: Theme.of(context).textTheme.labelMedium,
+                  ),
+                  const SizedBox(height: UiConfig.lineGap),
                   ListView.builder(
                     physics: const NeverScrollableScrollPhysics(),
                     shrinkWrap: true,
@@ -225,7 +236,7 @@ class _ReasonTypeViewState extends State<ReasonTypeView> {
                   'masterData.dsr.reason.create',
                 ),
                 descriptionText: tr(
-                  'masterData.dsr.reason.description',
+                  '',
                 ),
                 onPress: () {
                   context.push(MasterDataRoute.createReasonType.path);

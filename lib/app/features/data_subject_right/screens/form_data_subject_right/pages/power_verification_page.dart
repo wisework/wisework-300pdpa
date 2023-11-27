@@ -61,7 +61,7 @@ class _PowerVerificationPageState extends State<PowerVerificationPage> {
               mainAxisAlignment: MainAxisAlignment.start,
               children: [
                 Text(
-                  'เอกสารพิสูจน์อำนาจดำเนินการแทน', //!
+                  tr('dataSubjectRight.powerVerification.title'), 
                   textAlign: TextAlign.left,
                   style: Theme.of(context)
                       .textTheme
@@ -70,7 +70,7 @@ class _PowerVerificationPageState extends State<PowerVerificationPage> {
                 ),
                 const SizedBox(height: UiConfig.lineSpacing),
                 Text(
-                  'ทั้งนี้ข้าพเจ้าได้แนบเอกสารดังต่อไปนี้เพื่อการตรวจสอบอำนาจตัวตนและถิ่นที่อยู่ของผู้ยื่นคำร้องและเจ้าของข้อมูลส่วนบุคคลเพื่อให้บริษัทสามารถดำเนินการตามสิทธิที่ร้องขอได้อย่างถูกต้อง', //!
+                  tr('dataSubjectRight.powerVerification.subtitle'), 
                   textAlign: TextAlign.left,
                   style: Theme.of(context).textTheme.bodyMedium?.copyWith(
                       color: Theme.of(context).colorScheme.onSurface),

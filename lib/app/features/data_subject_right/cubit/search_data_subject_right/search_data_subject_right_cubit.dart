@@ -83,18 +83,19 @@ class SearchDataSubjectRightCubit extends Cubit<SearchDataSubjectRightState> {
 
     searchResult.sort(((a, b) => b.updatedDate.compareTo(a.updatedDate)));
 
-    //? Get process request from all data subject right
-    List<Map<String, ProcessRequestModel>> processRequests = [];
-    for (DataSubjectRightModel from in searchResult) {
-      for (ProcessRequestModel request in from.processRequests) {
-        processRequests.add({from.id: request});
-      }
-    }
+    // //? Get process request from all data subject right
+    // List<Map<String, ProcessRequestModel>> processRequests = [];
+    // for (DataSubjectRightModel from in searchResult) {
+    //   for (ProcessRequestModel request in from.processRequests) {
+    //     processRequests.add({from.id: request});
+    //   }
+    // }
 
     emit(
       state.copyWith(
-          dataSubjectRightForms: searchResult,
-          processRequests: processRequests),
+        dataSubjectRightForms: searchResult,
+      ),
+      // processRequests: processRequests),
     );
   }
 }
