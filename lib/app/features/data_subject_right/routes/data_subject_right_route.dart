@@ -3,6 +3,7 @@ import 'package:go_router/go_router.dart';
 import 'package:pdpa/app/features/data_subject_right/screens/data_subject_right_screen.dart';
 import 'package:pdpa/app/features/data_subject_right/screens/edit_data_subject_right/edit_data_subject_right_screen.dart';
 import 'package:pdpa/app/features/data_subject_right/screens/form_data_subject_right/form_data_subject_right.dart';
+import 'package:pdpa/app/features/data_subject_right/screens/form_data_subject_right/widgets/summit_screen.dart';
 import 'package:pdpa/app/features/data_subject_right/screens/user_data_subject_right_form_screen.dart';
 
 class DataSubjectRightRoute {
@@ -12,10 +13,13 @@ class DataSubjectRightRoute {
   );
 
   static final GoRoute createDataSubjectRight = GoRoute(
-    path: '/data-subject-rights/:id/create',
-    builder: (context, state) => FormDataSubjectRight(
-      companyId: state.pathParameters['id'] ?? '',
-    ),
+    path: '/data-subject-rights/create',
+    builder: (context, state) => const FormDataSubjectRight(),
+  );
+
+  static final GoRoute submit = GoRoute(
+    path: '/data-subject-rights/create/submit',
+    builder: (context, state) => const SubmitScreen(),
   );
 
   static final GoRoute editDataSubjectRight = GoRoute(
@@ -47,5 +51,6 @@ class DataSubjectRightRoute {
     editDataSubjectRight,
     formDataSubjectRight,
     userDataSubjectRightForm,
+    submit,
   ];
 }
