@@ -294,7 +294,7 @@ class _CustomStepperState extends State<CustomStepper> {
                       horizontal: 10.0,
                     ),
                     child: Text(
-                      widget.nextButtonText ?? 'ถัดไป',
+                      widget.nextButtonText ?? ('app.next'),
                       style: Theme.of(context).textTheme.bodySmall?.copyWith(
                           color: Theme.of(context).colorScheme.onPrimary),
                     ),

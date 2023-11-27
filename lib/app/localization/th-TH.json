@@ -484,7 +484,8 @@
             "operation": "การดำเนินการ",
             "reasonsRequest": "เหตุผลประกอบคำร้อง",
             "createSuccess": "สร้างสำเร็จ",
-            "updateSuccess": "อัปเดตสำเร็จ"
+            "updateSuccess": "อัปเดตสำเร็จ",
+            "dlSuccess": "ดาวน์โหลดไฟล์สำเร็จ"
         },
         "submit": {
             "submitted": "คุณได้ส่งแบบฟอร์มคำร้องแล้ว",
@@ -500,7 +501,7 @@
             "considerTakingAction": "พิจารณาดำเนินการ",
             "carryOut": "ดำเนินการ",
             "results": "ผลการดำเนินการ",
-            "reason:": "เหตุผล:",
+            "reason:": "เหตุผล",
             "pass": "ผ่านการตรวจสอบแล้ว",
             "notPass": "ไม่ผ่านการตรวจสอบ",
             "notYetVerified": "ยังไม่ได้ตรวจสอบ"
@@ -532,7 +533,7 @@
                 "pass": "ผ่าน",
                 "notPass": "ไม่ผ่าน",
                 "notYetProcessed": "ยังไม่ได้ดำเนินการ",
-                "reason": "เหตุผล :",
+                "reason": "เหตุผล",
                 "carryOut": "ดำเนินการ",
                 "refuseProcessing": "ปฏิเสธการดำเนินการ",
                 "inProgress": "อยู่ระหว่างการดำเนินการ",

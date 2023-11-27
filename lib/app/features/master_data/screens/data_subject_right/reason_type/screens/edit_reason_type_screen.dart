@@ -71,7 +71,7 @@ class _EditReasonTypeScreenState extends State<EditReasonTypeScreen> {
             showToast(
               context,
               text: tr(
-                  'consentManagement.consentForm.editConsentTheme.createSuccess'), //!
+                  'consentManagement.consentForm.editConsentTheme.createSuccess'), 
             ); 
 
             context.pop(

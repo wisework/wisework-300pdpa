@@ -223,7 +223,8 @@ class _EditDataSubjectRightViewState extends State<EditDataSubjectRightView> {
     final event = DownloadDataSubjectRightFileEvent(path: path);
     context.read<EditDataSubjectRightBloc>().add(event);
 
-    showToast(context, text: 'ดาวน์โหลดไฟล์สำเร็จ');
+    showToast(context,
+        text: tr('dataSubjectRight.editDataSubjectRight.dlSuccess'));
   }
 
   @override
@@ -454,7 +455,7 @@ class _EditDataSubjectRightViewState extends State<EditDataSubjectRightView> {
       crossAxisAlignment: CrossAxisAlignment.start,
       children: <Widget>[
         Text(
-          'เอกสารพิสูจน์อำนาจดำเนินการแทน',
+          tr('dataSubjectRight.powerVerification.title'),
           style: Theme.of(context)
               .textTheme
               .titleLarge
@@ -462,7 +463,7 @@ class _EditDataSubjectRightViewState extends State<EditDataSubjectRightView> {
         ),
         const SizedBox(height: UiConfig.lineSpacing),
         Text(
-          'ทั้งนี้ข้าพเจ้าได้แนบเอกสารดังต่อไปนี้เพื่อการตรวจสอบอำนาจตัวตนและถิ่นที่อยู่ของผู้ยื่นคำร้องและเจ้าของข้อมูลส่วนบุคคลเพื่อให้บริษัทสามารถดำเนินการตามสิทธิที่ร้องขอได้อย่างถูกต้อง',
+          tr('dataSubjectRight.powerVerification.subtitle'),
           style: Theme.of(context).textTheme.bodyMedium,
         ),
         const SizedBox(height: UiConfig.lineSpacing),
@@ -486,7 +487,7 @@ class _EditDataSubjectRightViewState extends State<EditDataSubjectRightView> {
                   Padding(
                     padding: const EdgeInsets.only(top: UiConfig.lineGap),
                     child: Text(
-                      'ประเภทเอกสาร: ${verifications[index].text}',
+                      '${tr('dataSubjectRight.powerVerification.documentType')} : ${verifications[index].text}',
                       style: Theme.of(context).textTheme.bodyMedium,
                     ),
                   ),
@@ -558,7 +559,7 @@ class _EditDataSubjectRightViewState extends State<EditDataSubjectRightView> {
       crossAxisAlignment: CrossAxisAlignment.start,
       children: <Widget>[
         Text(
-          'เอกสารพิสูจน์ตัวตนและ/หรือพิสูจน์ถิ่นที่อยู่เจ้าของข้อมูล',
+          tr('dataSubjectRight.identityVerification.title'),
           style: Theme.of(context)
               .textTheme
               .titleLarge
@@ -566,7 +567,7 @@ class _EditDataSubjectRightViewState extends State<EditDataSubjectRightView> {
         ),
         const SizedBox(height: UiConfig.lineSpacing),
         Text(
-          'ข้าพเจ้าได้แนบเอกสารดังต่อไปนี้เพื่อการตรวจสอบตัวตนและที่อยู่ของผู้ยื่นคำร้องเพื่อให้บริษัทฯสามารถดำเนินการตามสิทธิที่ร้องขอได้อย่างถูกต้อง',
+          tr('dataSubjectRight.identityVerification.subtitle'),
           style: Theme.of(context).textTheme.bodyMedium,
         ),
         const SizedBox(height: UiConfig.lineSpacing),
@@ -590,7 +591,7 @@ class _EditDataSubjectRightViewState extends State<EditDataSubjectRightView> {
                   Padding(
                     padding: const EdgeInsets.only(top: UiConfig.lineGap),
                     child: Text(
-                      'ประเภทเอกสาร: ${verifications[index].text}',
+                      '${tr('dataSubjectRight.identityVerification.documentType')} : ${verifications[index].text}',
                       style: Theme.of(context).textTheme.bodyMedium,
                     ),
                   ),
