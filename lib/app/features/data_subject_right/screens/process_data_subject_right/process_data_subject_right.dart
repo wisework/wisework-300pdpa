@@ -171,13 +171,13 @@ class _ProcessDataSubjectRightViewState
     }
 
     final rejectReason = dataSubjectRight.rejectVerifyReason.isNotEmpty
-        ? tr('\ndataSubjectRight.processDsr.reason ${dataSubjectRight.rejectVerifyReason}')
+        ? '${tr('dataSubjectRight.processDsr.reason')}: ${dataSubjectRight.rejectVerifyReason}'
         : '';
 
     final status = dataSubjectRight.verifyFormStatus == RequestResultStatus.pass
         ? tr('dataSubjectRight.processDsr.pass')
         : dataSubjectRight.verifyFormStatus == RequestResultStatus.fail
-            ? tr('dataSubjectRight.processDsr.notPass$rejectReason')
+            ? '${tr('dataSubjectRight.processDsr.notPass')}: $rejectReason'
             : tr('dataSubjectRight.processDsr.notYetVerified');
 
     if (requests.isNotEmpty) {

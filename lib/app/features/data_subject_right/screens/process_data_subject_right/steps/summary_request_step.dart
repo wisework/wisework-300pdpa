@@ -306,7 +306,7 @@ class _SummaryRequestStepState extends State<SummaryRequestStep> {
           child: Padding(
             padding: const EdgeInsets.only(top: UiConfig.textSpacing),
             child: Text(
-              tr('dataSubjectRight.StepProcessDsr.summaryRequest.reason$reasonText'),
+              '${tr('dataSubjectRight.StepProcessDsr.summaryRequest.reason')} : $reasonText',
               style: Theme.of(context).textTheme.bodySmall,
             ),
           ),
@@ -338,7 +338,7 @@ class _SummaryRequestStepState extends State<SummaryRequestStep> {
           child: Padding(
             padding: const EdgeInsets.only(top: UiConfig.textSpacing),
             child: Text(
-              tr('dataSubjectRight.StepProcessDsr.summaryRequest.reason$reasonText'),
+              '${tr('dataSubjectRight.StepProcessDsr.summaryRequest.reason')} : $reasonText',
               style: Theme.of(context).textTheme.bodySmall,
             ),
           ),

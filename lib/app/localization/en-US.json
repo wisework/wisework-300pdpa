@@ -63,7 +63,7 @@
             "passwordResetSent": "Password reset email sent.",
             "resendDescription": "We have sent you an email to reset your password. If you do not receive another email Please press send again.",
             "sendAgain": "Send again",
-            "incorrect" : "Incorrect email or password"
+            "incorrect": "Incorrect email or password"
         },
         "resetPassword": {
             "title": "Reset Password",
@@ -453,7 +453,7 @@
     "dataSubjectRight": {
         "datasubjectright": "Data Subject Right",
         "submitRequestForm": "Submit request form",
-        "form" : "Legal rights request form",
+        "form": "Legal rights request form",
         "status": {
             "newRequest": "New Request",
             "pending": "Pending",
@@ -484,7 +484,8 @@
             "operation": "Operation",
             "reasonsRequest": "Reason request",
             "createSuccess": "Create successfully",
-            "updateSuccess": "Update successfully"
+            "updateSuccess": "Update successfully",
+            "dlSuccess": "File downloaded successfully."
         },
         "submit": {
             "submitted": "You have submitted your request form.",

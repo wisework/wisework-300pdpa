@@ -155,18 +155,19 @@ class _RejectTypeViewState extends State<RejectTypeView> {
                     )
                   : ExampleScreen(
                       headderText: tr(
-                        tr(
-                          'masterData.dsr.rejections.title2',
-                        ),
+                        'masterData.dsr.rejections.title2',
                       ),
                       buttonText: tr(
                         'masterData.dsr.rejections.create',
                       ),
-                      descriptionText: tr(
-                        '',
-                      ),
-                      onPress: () {
-                        context.push(MasterDataRoute.createRejectType.path);
+                      onPress: () async {
+                        await context
+                            .push(MasterDataRoute.createRejectType.path)
+                            .then((value) {
+                          if (value != null) {
+                            _onUpdated(value as UpdatedReturn<RejectTypeModel>);
+                          }
+                        });
                       },
                     ),
             );
@@ -244,9 +245,6 @@ class _RejectTypeViewState extends State<RejectTypeView> {
                 ),
                 buttonText: tr(
                   'masterData.dsr.rejections.create',
-                ),
-                descriptionText: tr(
-                  '',
                 ),
                 onPress: () {
                   context.push(MasterDataRoute.createRejectType.path);
