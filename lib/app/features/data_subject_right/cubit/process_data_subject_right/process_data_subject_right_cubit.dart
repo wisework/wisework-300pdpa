@@ -173,7 +173,6 @@ class ProcessDataSubjectRightCubit extends Cubit<ProcessDataSubjectRightState> {
   Future<void> submitConsiderRequest(
     String processRequestId, {
     ProcessRequestTemplateParams? toRequesterParams,
-    ProcessRequestTemplateParams? toUserParams,
   }) async {
     ProcessRequestModel currentRequest = ProcessRequestModel.empty();
 
@@ -226,20 +225,6 @@ class ProcessDataSubjectRightCubit extends Cubit<ProcessDataSubjectRightState> {
       );
     }
 
-    //? Send email to another user
-    if (toUserParams != null) {
-      for (ProcessRequestModel request in updated.processRequests) {
-        if (request.id == processRequestId) {
-          for (String email in request.notifyEmail) {
-            await _emailJsRepository.sendEmail(
-              AppConfig.processDsrTemplateId,
-              toUserParams.copyWith(toEmail: email).toMap(),
-            );
-          }
-        }
-      }
-    }
-
     emit(
       state.copyWith(
         dataSubjectRight: updated,
@@ -260,7 +245,6 @@ class ProcessDataSubjectRightCubit extends Cubit<ProcessDataSubjectRightState> {
   Future<void> submitProcessRequest(
     String processRequestId, {
     ProcessRequestTemplateParams? toRequesterParams,
-    ProcessRequestTemplateParams? toUserParams,
   }) async {
     emit(
       state.copyWith(
@@ -288,20 +272,6 @@ class ProcessDataSubjectRightCubit extends Cubit<ProcessDataSubjectRightState> {
             : AppConfig.requestTemplateId,
         toRequesterParams.toMap(),
       );
-    }
-
-    //? Send email to another user
-    if (toUserParams != null) {
-      for (ProcessRequestModel request in updated.processRequests) {
-        if (request.id == processRequestId) {
-          for (String email in request.notifyEmail) {
-            await _emailJsRepository.sendEmail(
-              AppConfig.processDsrTemplateId,
-              toUserParams.copyWith(toEmail: email).toMap(),
-            );
-          }
-        }
-      }
     }
 
     emit(
@@ -443,6 +413,74 @@ class ProcessDataSubjectRightCubit extends Cubit<ProcessDataSubjectRightState> {
         ),
       ),
     );
+  }
+
+  Future<void> sendRequestEmails(
+    String processRequestId,
+    List<String> emails, {
+    ProcessRequestTemplateParams? emailParams,
+  }) async {
+    if (emailParams != null && emails.isNotEmpty) {
+      emit(
+        state.copyWith(
+          loadingStatus: state.loadingStatus.copyWith(sendingEmail: true),
+        ),
+      );
+
+      List<ProcessRequestModel> processRequests = [];
+      for (ProcessRequestModel process
+          in state.dataSubjectRight.processRequests) {
+        if (process.id == processRequestId) {
+          processRequests.add(
+            process.copyWith(notifyEmail: emails),
+          );
+        } else {
+          processRequests.add(process);
+        }
+      }
+
+      List<ProcessRequestModel> initialProcessRequests = [];
+      for (ProcessRequestModel process
+          in state.initialDataSubjectRight.processRequests) {
+        if (process.id == processRequestId) {
+          initialProcessRequests.add(
+            process.copyWith(notifyEmail: emails),
+          );
+        } else {
+          initialProcessRequests.add(process);
+        }
+      }
+
+      for (String email in emails) {
+        //? Send email to another users
+        await _emailJsRepository.sendEmail(
+          AppConfig.requestProcessTemplateId,
+          emailParams.copyWith(toEmail: email, processStatus: '').toMap(),
+        );
+      }
+
+      final now = DateTime.now();
+      final updated = state.dataSubjectRight
+          .setUpdate(state.currentUser.email, now)
+          .copyWith(processRequests: processRequests);
+
+      final initialUpdated = state.initialDataSubjectRight
+          .setUpdate(state.currentUser.email, now)
+          .copyWith(processRequests: initialProcessRequests);
+
+      await _dataSubjectRightRepository.updateDataSubjectRight(
+        initialUpdated,
+        state.currentUser.currentCompany,
+      );
+
+      emit(
+        state.copyWith(
+          dataSubjectRight: updated,
+          initialDataSubjectRight: initialUpdated,
+          loadingStatus: state.loadingStatus.copyWith(sendingEmail: false),
+        ),
+      );
+    }
   }
 
   Future<void> uploadProofOfActionFile(

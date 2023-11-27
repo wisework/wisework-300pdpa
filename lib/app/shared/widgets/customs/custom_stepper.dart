@@ -78,7 +78,10 @@ class _CustomStepperState extends State<CustomStepper> {
         physics: widget.physics,
         shrinkWrap: widget.shrinkWrap,
         itemBuilder: (context, index) {
-          return _buildStepItem(context, index);
+          return Opacity(
+            opacity: widget.currentStep >= index ? 1.0 : 0.5,
+            child: _buildStepItem(context, index),
+          );
         },
         itemCount: widget.steps.length,
       ),
@@ -184,7 +187,7 @@ class _CustomStepperState extends State<CustomStepper> {
               child: SizedBox(
                 width: 1.0,
                 child: Container(
-                  color: widget.currentStep > index
+                  color: widget.currentStep >= index
                       ? widget.activeColor ??
                           Theme.of(context).colorScheme.primary
                       : Theme.of(context)

@@ -22,6 +22,7 @@ import 'package:pdpa/app/features/data_subject_right/screens/process_data_subjec
 import 'package:pdpa/app/injection.dart';
 import 'package:pdpa/app/shared/utils/constants.dart';
 import 'package:pdpa/app/shared/utils/functions.dart';
+import 'package:pdpa/app/shared/utils/toast.dart';
 import 'package:pdpa/app/shared/widgets/content_wrapper.dart';
 import 'package:pdpa/app/shared/widgets/customs/custom_button.dart';
 import 'package:pdpa/app/shared/widgets/customs/custom_icon_button.dart';
@@ -140,6 +141,16 @@ class _ProcessDataSubjectRightViewState
           stepLength,
           emailParams: _getEmailParams(),
         );
+      } else if (stepIndex == 1) {
+        final current = cubit.state.dataSubjectRight;
+        final initial = cubit.state.initialDataSubjectRight;
+
+        if (current.processRequests != initial.processRequests) {
+          showToast(context, text: 'กรุณาส่งผลการตรวจสอบ');
+          return;
+        }
+
+        cubit.onNextStepPressed(stepLength);
       } else {
         cubit.onNextStepPressed(stepLength);
       }

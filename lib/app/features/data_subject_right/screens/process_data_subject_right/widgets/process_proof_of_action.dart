@@ -75,18 +75,10 @@ class _ProcessProofOfActionState extends State<ProcessProofOfAction> {
     final cubit = context.read<ProcessDataSubjectRightCubit>();
 
     final emailParams = _getEmailParams();
-    final fromName = '${cubit.state.currentUser.firstName}'
-        '${cubit.state.currentUser.lastName.isNotEmpty ? cubit.state.currentUser.lastName : ''}';
 
     cubit.submitProcessRequest(
       widget.processRequest.id,
       toRequesterParams: emailParams,
-      toUserParams: emailParams?.copyWith(
-        toName: '',
-        toEmail: '',
-        fromName: fromName,
-        fromEmail: cubit.state.currentUser.email,
-      ),
     );
   }
 
