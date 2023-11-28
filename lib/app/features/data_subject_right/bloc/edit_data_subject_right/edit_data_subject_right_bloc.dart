@@ -63,31 +63,40 @@ class EditDataSubjectRightBloc
     await result.fold((failure) {
       emit(EditDataSubjectRightError(failure.errorMessage));
     }, (dataSubjectRight) async {
-      List<RequestTypeModel> gotRequestTypes = requestTypesPreset;
+      List<RequestTypeModel> gotRequestTypes = [];
       final requestTypeResult = await _masterDataRepository.getRequestTypes(
         event.companyId,
       );
       requestTypeResult.fold(
         (failure) => emit(EditDataSubjectRightError(failure.errorMessage)),
-        (requestTypes) => gotRequestTypes.addAll(requestTypes),
+        (requestTypes) {
+          gotRequestTypes.addAll(requestTypesPreset);
+          gotRequestTypes.addAll(requestTypes);
+        },
       );
 
-      List<ReasonTypeModel> gotReasonTypes = reasonTypesPreset;
+      List<ReasonTypeModel> gotReasonTypes = [];
       final reasonTypeResult = await _masterDataRepository.getReasonTypes(
         event.companyId,
       );
       reasonTypeResult.fold(
         (failure) => emit(EditDataSubjectRightError(failure.errorMessage)),
-        (reasonTypes) => gotReasonTypes.addAll(reasonTypes),
+        (reasonTypes) {
+          gotReasonTypes.addAll(reasonTypesPreset);
+          gotReasonTypes.addAll(reasonTypes);
+        },
       );
 
-      List<RejectTypeModel> gotRejectTypes = rejectTypesPreset;
+      List<RejectTypeModel> gotRejectTypes = [];
       final rejectTypeResult = await _masterDataRepository.getRejectTypes(
         event.companyId,
       );
       rejectTypeResult.fold(
         (failure) => emit(EditDataSubjectRightError(failure.errorMessage)),
-        (rejectTypes) => gotRejectTypes.addAll(rejectTypes),
+        (rejectTypes) {
+          gotRejectTypes.addAll(rejectTypesPreset);
+          gotRejectTypes.addAll(rejectTypes);
+        },
       );
 
       List<String> gotEmails = [];

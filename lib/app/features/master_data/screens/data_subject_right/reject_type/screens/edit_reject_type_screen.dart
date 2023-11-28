@@ -72,7 +72,7 @@ class _EditRejectTypeScreenState extends State<EditRejectTypeScreen> {
               context,
               text: tr(
                   'consentManagement.consentForm.editConsentTheme.createSuccess'), //!
-            ); 
+            );
 
             context.pop(
               UpdatedReturn<RejectTypeModel>(
@@ -87,7 +87,7 @@ class _EditRejectTypeScreenState extends State<EditRejectTypeScreen> {
               context,
               text: tr(
                   'consentManagement.consentForm.editConsentTheme.updateSuccess'),
-            ); 
+            );
           }
 
           if (state is DeletedCurrentRejectType) {
@@ -95,7 +95,7 @@ class _EditRejectTypeScreenState extends State<EditRejectTypeScreen> {
               context,
               text: tr(
                   'consentManagement.consentForm.editConsentTheme.deleteSuccess'),
-            ); 
+            );
 
             final deleted =
                 RejectTypeModel.empty().copyWith(id: state.rejectTypeId);
@@ -156,6 +156,7 @@ class _EditRejectTypeViewState extends State<EditRejectTypeView> {
   late TextEditingController rejectTypeCodeController;
   late TextEditingController descriptionController;
 
+  late bool isNeedInfo;
   late bool isActivated;
 
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
@@ -183,6 +184,7 @@ class _EditRejectTypeViewState extends State<EditRejectTypeView> {
     rejectTypeCodeController = TextEditingController();
     descriptionController = TextEditingController();
 
+    isNeedInfo = false;
     isActivated = true;
 
     if (rejectType != RejectTypeModel.empty()) {
@@ -204,6 +206,7 @@ class _EditRejectTypeViewState extends State<EditRejectTypeView> {
         );
       }
 
+      isNeedInfo = rejectType.requiredInputReasonText;
       isActivated = rejectType.status == ActiveStatus.active;
     }
   }
@@ -229,6 +232,17 @@ class _EditRejectTypeViewState extends State<EditRejectTypeView> {
         rejectType = rejectType.copyWith(description: description);
       },
     );
+  }
+
+  void _setNeedInfo(bool value) {
+    setState(() {
+      isNeedInfo = value;
+
+      final requiredInputReasonText = isNeedInfo ? true : false;
+
+      rejectType =
+          rejectType.copyWith(requiredInputReasonText: requiredInputReasonText);
+    });
   }
 
   void _setActiveStatus(bool value) {
@@ -336,30 +350,44 @@ class _EditRejectTypeViewState extends State<EditRejectTypeView> {
           Row(
             children: <Widget>[
               Text(
-                tr('masterData.dsr.rejections.title'), 
+                tr('masterData.dsr.rejections.title'),
                 style: Theme.of(context).textTheme.titleLarge,
               ),
             ],
           ),
           const SizedBox(height: UiConfig.lineSpacing),
           TitleRequiredText(
-            text: tr('masterData.dsr.rejections.rejectcode'), 
+            text: tr('masterData.dsr.rejections.rejectcode'),
             required: true,
           ),
           CustomTextField(
             controller: rejectTypeCodeController,
-            hintText: tr('masterData.dsr.rejections.rejectcodeHint'), 
+            hintText: tr('masterData.dsr.rejections.rejectcodeHint'),
             onChanged: _setRejectCode,
             required: true,
           ),
           const SizedBox(height: UiConfig.lineSpacing),
           TitleRequiredText(
-            text: tr('masterData.dsr.rejections.description'), 
+            text: tr('masterData.dsr.rejections.description'),
           ),
           CustomTextField(
             controller: descriptionController,
-            hintText: tr('masterData.dsr.rejections.descriptionHint'), 
+            hintText: tr('masterData.dsr.rejections.descriptionHint'),
             onChanged: _setDescription,
+          ),
+          const SizedBox(height: UiConfig.lineSpacing),
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: <Widget>[
+              Text(
+                tr('masterData.dsr.reason.needmoreinformation'),
+                style: Theme.of(context).textTheme.bodyMedium,
+              ),
+              CustomSwitchButton(
+                value: isNeedInfo,
+                onChanged: _setNeedInfo,
+              ),
+            ],
           ),
           const SizedBox(height: UiConfig.lineSpacing),
         ],

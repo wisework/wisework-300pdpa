@@ -1,7 +1,9 @@
 // ignore: depend_on_referenced_packages
 import 'package:bloc/bloc.dart';
 import 'package:equatable/equatable.dart';
+import 'package:pdpa/app/data/models/data_subject_right/data_subject_right_model.dart';
 import 'package:pdpa/app/data/models/master_data/reason_type_model.dart';
+import 'package:pdpa/app/data/repositories/data_subject_right_repository.dart';
 import 'package:pdpa/app/data/repositories/master_data_repository.dart';
 
 part 'edit_reason_type_event.dart';
@@ -11,7 +13,9 @@ class EditReasonTypeBloc
     extends Bloc<EditReasonTypeEvent, EditReasonTypeState> {
   EditReasonTypeBloc({
     required MasterDataRepository masterDataRepository,
+    required DataSubjectRightRepository dataSubjectRightRepository,
   })  : _masterDataRepository = masterDataRepository,
+        _dataSubjectRightRepository = dataSubjectRightRepository,
         super(const EditReasonTypeInitial()) {
     on<GetCurrentReasonTypeEvent>(_getCurrentReasonTypeHandler);
     on<CreateCurrentReasonTypeEvent>(_createCurrentReasonTypeHandler);
@@ -19,6 +23,7 @@ class EditReasonTypeBloc
     on<DeleteCurrentReasonTypeEvent>(_deleteCurrentReasonTypeHandler);
   }
 
+  final DataSubjectRightRepository _dataSubjectRightRepository;
   final MasterDataRepository _masterDataRepository;
 
   Future<void> _getCurrentReasonTypeHandler(
@@ -26,7 +31,12 @@ class EditReasonTypeBloc
     Emitter<EditReasonTypeState> emit,
   ) async {
     if (event.reasonTypeId.isEmpty) {
-      emit(GotCurrentReasonType(ReasonTypeModel.empty()));
+      emit(
+        GotCurrentReasonType(
+          ReasonTypeModel.empty(),
+          [DataSubjectRightModel.empty()],
+        ),
+      );
       return;
     }
     if (event.companyId.isEmpty) {
@@ -36,6 +46,17 @@ class EditReasonTypeBloc
 
     emit(const GetingCurrentReasonType());
 
+    List<DataSubjectRightModel> gotDSR = [];
+    if (event.companyId.isNotEmpty) {
+      final resultDSR = await _dataSubjectRightRepository.getDataSubjectRights(
+        event.companyId,
+      );
+
+      resultDSR.fold(
+        (failure) => emit(EditReasonTypeError(failure.errorMessage)),
+        (dsr) => gotDSR.addAll(dsr),
+      );
+    }
     final result = await _masterDataRepository.getReasonTypeById(
       event.reasonTypeId,
       event.companyId,
@@ -45,7 +66,10 @@ class EditReasonTypeBloc
 
     result.fold(
       (failure) => emit(EditReasonTypeError(failure.errorMessage)),
-      (reasonType) => emit(GotCurrentReasonType(reasonType)),
+      (reasonType) => emit(GotCurrentReasonType(
+        reasonType,
+        gotDSR,
+      )),
     );
   }
 
@@ -84,6 +108,8 @@ class EditReasonTypeBloc
 
     emit(const UpdatingCurrentReasonType());
 
+    final reasonTypes = state as GotCurrentReasonType;
+
     final result = await _masterDataRepository.updateReasonType(
       event.reasonType,
       event.companyId,
@@ -93,7 +119,10 @@ class EditReasonTypeBloc
 
     result.fold(
       (failure) => emit(EditReasonTypeError(failure.errorMessage)),
-      (_) => emit(UpdatedCurrentReasonType(event.reasonType)),
+      (_) => emit(UpdatedCurrentReasonType(
+        event.reasonType,
+        reasonTypes.dataSubjectRights,
+      )),
     );
   }
 

@@ -22,7 +22,7 @@ class SubmitScreen extends StatelessWidget {
             constraints: const BoxConstraints(maxWidth: 500.0),
             child: Column(
               mainAxisSize: MainAxisSize.min,
-              crossAxisAlignment: CrossAxisAlignment.start,
+              crossAxisAlignment: CrossAxisAlignment.center,
               children: <Widget>[
                 Text(
                   tr("dataSubjectRight.submit.submitted"),
@@ -36,28 +36,33 @@ class SubmitScreen extends StatelessWidget {
                       color: Theme.of(context).colorScheme.secondary),
                 ),
                 const SizedBox(height: UiConfig.lineGap),
-                ConstrainedBox(
-                  constraints: const BoxConstraints(maxWidth: 260.0),
-                  child: CustomButton(
-                    height: 40.0,
-                    onPressed: () {
-                      final RequestFormState requestFormState = context
-                          .read<FormDataSubjectRightCubit>()
-                          .state
-                          .requestFormState;
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    ConstrainedBox(
+                      constraints: const BoxConstraints(maxWidth: 260.0),
+                      child: CustomButton(
+                        height: 40.0,
+                        onPressed: () {
+                          final RequestFormState requestFormState = context
+                              .read<FormDataSubjectRightCubit>()
+                              .state
+                              .requestFormState;
 
-                      if (requestFormState == RequestFormState.summarize) {
-                        context
-                            .read<FormDataSubjectRightCubit>()
-                            .resetFormDataSubjectRight();
-                      }
-                    },
-                    child: Text(
-                      tr('userSubjectRight.fillAgain'),
-                      style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                          color: Theme.of(context).colorScheme.onPrimary),
+                          if (requestFormState == RequestFormState.summarize) {
+                            context
+                                .read<FormDataSubjectRightCubit>()
+                                .resetFormDataSubjectRight();
+                          }
+                        },
+                        child: Text(
+                          tr('userSubjectRight.fillAgain'),
+                          style: Theme.of(context).textTheme.bodyMedium?.copyWith(
+                              color: Theme.of(context).colorScheme.onPrimary),
+                        ),
+                      ),
                     ),
-                  ),
+                  ],
                 ),
               ],
             ),
