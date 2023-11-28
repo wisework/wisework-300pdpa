@@ -31,12 +31,19 @@ class GetingCurrentReasonType extends EditReasonTypeState {
 }
 
 class GotCurrentReasonType extends EditReasonTypeState {
-  const GotCurrentReasonType(this.reasonType);
+  const GotCurrentReasonType(
+    this.reasonType,
+    this.dataSubjectRights,
+  );
 
   final ReasonTypeModel reasonType;
+  final List<DataSubjectRightModel> dataSubjectRights;
 
   @override
-  List<Object> get props => [reasonType];
+  List<Object> get props => [
+        reasonType,
+        dataSubjectRights,
+      ];
 }
 
 class CreatingCurrentReasonType extends EditReasonTypeState {
@@ -63,12 +70,19 @@ class UpdatingCurrentReasonType extends EditReasonTypeState {
 }
 
 class UpdatedCurrentReasonType extends EditReasonTypeState {
-  const UpdatedCurrentReasonType(this.reasonType);
+  const UpdatedCurrentReasonType(
+    this.reasonType,
+    this.dataSubjectRights,
+  );
 
   final ReasonTypeModel reasonType;
+  final List<DataSubjectRightModel> dataSubjectRights;
 
   @override
-  List<Object> get props => [reasonType];
+  List<Object> get props => [
+        reasonType,
+        dataSubjectRights,
+      ];
 }
 
 class DeletingCurrentReasonType extends EditReasonTypeState {
