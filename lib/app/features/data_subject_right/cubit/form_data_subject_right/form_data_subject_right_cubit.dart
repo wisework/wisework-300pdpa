@@ -38,12 +38,23 @@ class FormDataSubjectRightCubit extends Cubit<FormDataSubjectRightState> {
     emit(state.copyWith(dataSubjectRight: dataSubjectRight));
   }
 
+  void resetFormDataSubjectRight() {
+    emit(state.copyWith(
+      requestFormState: RequestFormState.requesting,
+      dataSubjectRight: DataSubjectRightModel.empty(),
+      currentPage: 0,
+      isAcknowledge: false,
+    ));
+  }
+
   void setAcknowledge(bool isCheck) {
     emit(state.copyWith(isAcknowledge: isCheck));
   }
 
   void setSubmited() {
-    emit(state.copyWith(requestFormState: RequestFormState.summarize));
+    emit(state.copyWith(
+      requestFormState: RequestFormState.summarize,
+    ));
   }
 
   void nextPage(int page) {
