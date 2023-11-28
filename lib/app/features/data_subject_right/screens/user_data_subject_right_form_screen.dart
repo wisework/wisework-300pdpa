@@ -9,9 +9,6 @@ import 'package:pdpa/app/features/data_subject_right/cubit/form_data_subject_rig
 import 'package:pdpa/app/features/data_subject_right/screens/form_data_subject_right/form_data_subject_right.dart';
 import 'package:pdpa/app/features/data_subject_right/screens/form_data_subject_right/widgets/summit_screen.dart';
 import 'package:pdpa/app/shared/utils/constants.dart';
-import 'package:pdpa/app/shared/widgets/customs/custom_button.dart';
-import 'package:pdpa/app/shared/widgets/customs/custom_container.dart';
-import 'package:pdpa/app/shared/widgets/screens/error_message_screen.dart';
 import 'package:pdpa/app/shared/widgets/templates/pdpa_app_bar.dart';
 import 'package:pdpa/app/shared/widgets/wise_work_shimmer.dart';
 
