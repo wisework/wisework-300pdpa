@@ -80,13 +80,16 @@ class DataSubjectRightBloc
 
         updated.sort((a, b) => b.updatedDate.compareTo(a.updatedDate));
 
-        List<RequestTypeModel> gotRequestTypes = requestTypesPreset;
+        List<RequestTypeModel> gotRequestTypes = [];
         final result = await _masterDataRepository.getRequestTypes(
           event.companyId,
         );
         result.fold(
           (failure) => emit(DataSubjectRightError(failure.errorMessage)),
-          (requestTypes) => gotRequestTypes.addAll(requestTypes),
+          (requestTypes) {
+            gotRequestTypes.addAll(requestTypesPreset);
+            gotRequestTypes.addAll(requestTypes);
+          },
         );
 
         emit(GotDataSubjectRights(updated, gotRequestTypes));
