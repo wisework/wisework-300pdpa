@@ -160,8 +160,15 @@ class _RequestTypeViewState extends State<RequestTypeView> {
                       buttonText: tr(
                         'masterData.dsr.request.create',
                       ),
-                      onPress: () {
-                        context.push(MasterDataRoute.createRequestType.path);
+                      onPress: () async {
+                        await context
+                            .push(MasterDataRoute.createRequestType.path)
+                            .then((value) {
+                          if (value != null) {
+                            _onUpdated(
+                                value as UpdatedReturn<RequestTypeModel>);
+                          }
+                        });
                       },
                     ),
             );

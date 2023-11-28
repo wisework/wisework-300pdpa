@@ -226,7 +226,7 @@ class _UserConsentViewState extends State<UserConsentView> {
               children: <Widget>[
                 Expanded(
                   child: Text(
-                    'รายการความยินยอมที่ได้รับ', //!
+                    tr('consentManagement.userConsent.listOfConsentsReceived'),
                     style: Theme.of(context).textTheme.titleMedium,
                     overflow: TextOverflow.ellipsis,
                     maxLines: 1,

@@ -152,16 +152,19 @@ class _ReasonTypeViewState extends State<ReasonTypeView> {
                     )
                   : ExampleScreen(
                       headderText: tr(
-                       'masterData.dsr.reason.title2',
+                        'masterData.dsr.reason.title2',
                       ),
                       buttonText: tr(
                         'masterData.dsr.reason.create',
                       ),
-                      descriptionText: tr(
-                        '',
-                      ),
-                      onPress: () {
-                        context.push(MasterDataRoute.createReasonType.path);
+                      onPress: () async {
+                        await context
+                            .push(MasterDataRoute.createReasonType.path)
+                            .then((value) {
+                          if (value != null) {
+                            _onUpdated(value as UpdatedReturn<ReasonTypeModel>);
+                          }
+                        });
                       },
                     ),
             );
@@ -209,7 +212,7 @@ class _ReasonTypeViewState extends State<ReasonTypeView> {
                     style: Theme.of(context).textTheme.titleLarge,
                   ),
                   const SizedBox(height: UiConfig.textSpacing),
-                   Text(
+                  Text(
                     tr('masterData.dsr.reason.descriptiontitle1'),
                     style: Theme.of(context).textTheme.labelMedium,
                   ),
@@ -234,9 +237,6 @@ class _ReasonTypeViewState extends State<ReasonTypeView> {
                 ),
                 buttonText: tr(
                   'masterData.dsr.reason.create',
-                ),
-                descriptionText: tr(
-                  '',
                 ),
                 onPress: () {
                   context.push(MasterDataRoute.createReasonType.path);

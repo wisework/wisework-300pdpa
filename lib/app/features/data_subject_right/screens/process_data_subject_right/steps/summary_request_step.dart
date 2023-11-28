@@ -94,7 +94,7 @@ class _SummaryRequestStepState extends State<SummaryRequestStep> {
     return BlocBuilder<ProcessDataSubjectRightCubit,
         ProcessDataSubjectRightState>(
       builder: (context, state) {
-        final indexes = _getStepIndexByProcess(state.dataSubjectRight);
+        final indexes = _getStepIndexByProcess(state.initialDataSubjectRight);
 
         return Column(
           children: <Widget>[
@@ -124,7 +124,7 @@ class _SummaryRequestStepState extends State<SummaryRequestStep> {
               shrinkWrap: true,
               itemBuilder: (context, index) {
                 final processRequest =
-                    state.dataSubjectRight.processRequests[index];
+                    state.initialDataSubjectRight.processRequests[index];
 
                 return _buildSummaryRequestCard(
                   context,
@@ -132,12 +132,12 @@ class _SummaryRequestStepState extends State<SummaryRequestStep> {
                       ? requestSelectedKey
                       : null,
                   index: index + 1,
-                  dataSubjectRight: state.dataSubjectRight,
+                  dataSubjectRight: state.initialDataSubjectRight,
                   processRequest: processRequest,
                   stepIndex: indexes[processRequest.id] ?? 0,
                 );
               },
-              itemCount: state.dataSubjectRight.processRequests.length,
+              itemCount: state.initialDataSubjectRight.processRequests.length,
               separatorBuilder: (context, index) => const SizedBox(
                 height: UiConfig.lineSpacing,
               ),
@@ -298,7 +298,8 @@ class _SummaryRequestStepState extends State<SummaryRequestStep> {
               ? tr('dataSubjectRight.StepProcessDsr.summaryRequest.pass')
               : status == RequestResultStatus.fail
                   ? tr('dataSubjectRight.StepProcessDsr.summaryRequest.notPass')
-                  : tr('dataSubjectRight.StepProcessDsr.summaryRequest.notYetProcessed'),
+                  : tr(
+                      'dataSubjectRight.StepProcessDsr.summaryRequest.notYetProcessed'),
           style: Theme.of(context).textTheme.bodySmall,
         ),
         Visibility(
@@ -306,7 +307,7 @@ class _SummaryRequestStepState extends State<SummaryRequestStep> {
           child: Padding(
             padding: const EdgeInsets.only(top: UiConfig.textSpacing),
             child: Text(
-              tr('dataSubjectRight.StepProcessDsr.summaryRequest.reason$reasonText'),
+              '${tr('dataSubjectRight.StepProcessDsr.summaryRequest.reason')} : $reasonText',
               style: Theme.of(context).textTheme.bodySmall,
             ),
           ),
@@ -329,8 +330,10 @@ class _SummaryRequestStepState extends State<SummaryRequestStep> {
           status == RequestResultStatus.pass
               ? tr('dataSubjectRight.StepProcessDsr.summaryRequest.carryOut')
               : status == RequestResultStatus.fail
-                  ? tr('dataSubjectRight.StepProcessDsr.summaryRequest.refuseProcessing')
-                  : tr('dataSubjectRight.StepProcessDsr.summaryRequest.inProgress'),
+                  ? tr(
+                      'dataSubjectRight.StepProcessDsr.summaryRequest.refuseProcessing')
+                  : tr(
+                      'dataSubjectRight.StepProcessDsr.summaryRequest.inProgress'),
           style: Theme.of(context).textTheme.bodySmall,
         ),
         Visibility(
@@ -338,7 +341,7 @@ class _SummaryRequestStepState extends State<SummaryRequestStep> {
           child: Padding(
             padding: const EdgeInsets.only(top: UiConfig.textSpacing),
             child: Text(
-              tr('dataSubjectRight.StepProcessDsr.summaryRequest.reason$reasonText'),
+              '${tr('dataSubjectRight.StepProcessDsr.summaryRequest.reason')} : $reasonText',
               style: Theme.of(context).textTheme.bodySmall,
             ),
           ),
@@ -357,7 +360,9 @@ class _SummaryRequestStepState extends State<SummaryRequestStep> {
       crossAxisAlignment: CrossAxisAlignment.start,
       children: <Widget>[
         Text(
-          status ? tr('dataSubjectRight.StepProcessDsr.summaryRequest.completed') : tr('dataSubjectRight.StepProcessDsr.summaryRequest.inProgress'),
+          status
+              ? tr('dataSubjectRight.StepProcessDsr.summaryRequest.completed')
+              : tr('dataSubjectRight.StepProcessDsr.summaryRequest.inProgress'),
           style: Theme.of(context).textTheme.bodySmall,
         ),
         const SizedBox(height: UiConfig.lineGap),

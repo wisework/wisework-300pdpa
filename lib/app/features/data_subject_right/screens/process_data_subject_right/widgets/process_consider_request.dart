@@ -53,6 +53,25 @@ class _ProcessConsiderRequestState extends State<ProcessConsiderRequest> {
     cubit.selectNotifyEmail(email, widget.processRequest.id);
   }
 
+  void _sendEmails() {
+    final cubit = context.read<ProcessDataSubjectRightCubit>();
+
+    final emailParams = _getEmailParams();
+    final fromName = '${cubit.state.currentUser.firstName}'
+        '${cubit.state.currentUser.lastName.isNotEmpty ? cubit.state.currentUser.lastName : ''}';
+
+    cubit.sendRequestEmails(
+      widget.processRequest.id,
+      widget.processRequest.notifyEmail,
+      emailParams: emailParams?.copyWith(
+        toName: '',
+        toEmail: '',
+        fromName: fromName,
+        fromEmail: cubit.state.currentUser.email,
+      ),
+    );
+  }
+
   void _onSubmitPressed() {
     //? If consider request status of initial process request not none,
     //? exist function.
@@ -69,18 +88,10 @@ class _ProcessConsiderRequestState extends State<ProcessConsiderRequest> {
     final cubit = context.read<ProcessDataSubjectRightCubit>();
 
     final emailParams = _getEmailParams();
-    final fromName = '${cubit.state.currentUser.firstName}'
-        '${cubit.state.currentUser.lastName.isNotEmpty ? cubit.state.currentUser.lastName : ''}';
 
     cubit.submitConsiderRequest(
       widget.processRequest.id,
       toRequesterParams: emailParams,
-      toUserParams: emailParams?.copyWith(
-        toName: '',
-        toEmail: '',
-        fromName: fromName,
-        fromEmail: cubit.state.currentUser.email,
-      ),
     );
   }
 
@@ -141,19 +152,6 @@ class _ProcessConsiderRequestState extends State<ProcessConsiderRequest> {
         mainAxisSize: MainAxisSize.min,
         crossAxisAlignment: CrossAxisAlignment.start,
         children: <Widget>[
-          Text(
-            'พิจารณาดำเนินการ',
-            style: Theme.of(context).textTheme.titleMedium,
-          ),
-          const SizedBox(height: UiConfig.lineGap),
-          _buildRadioOption(
-            context,
-            onChanged: (value) {
-              if (value != null) {
-                _onOptionChanged(value, widget.processRequest.id);
-              }
-            },
-          ),
           BlocBuilder<ProcessDataSubjectRightCubit,
               ProcessDataSubjectRightState>(
             builder: (context, state) {
@@ -167,12 +165,30 @@ class _ProcessConsiderRequestState extends State<ProcessConsiderRequest> {
                     context,
                     userEmails: state.userEmails,
                     emailSelected: widget.processRequest.notifyEmail,
-                    readOnly:
+                    readOnly: widget.processRequest.notifyEmail ==
+                                widget.initialProcessRequest.notifyEmail &&
+                            widget
+                                .initialProcessRequest.notifyEmail.isNotEmpty ||
                         widget.initialProcessRequest.considerRequestStatus !=
                             RequestResultStatus.none,
+                    isLoading: state.loadingStatus.sendingEmail,
                   ),
                 ),
               );
+            },
+          ),
+          const SizedBox(height: UiConfig.lineGap),
+          Text(
+            'พิจารณาดำเนินการ',
+            style: Theme.of(context).textTheme.titleMedium,
+          ),
+          const SizedBox(height: UiConfig.lineGap),
+          _buildRadioOption(
+            context,
+            onChanged: (value) {
+              if (value != null) {
+                _onOptionChanged(value, widget.processRequest.id);
+              }
             },
           ),
           ExpandedContainer(
@@ -186,6 +202,95 @@ class _ProcessConsiderRequestState extends State<ProcessConsiderRequest> {
           ),
         ],
       ),
+    );
+  }
+
+  Column _buildEmailNotification(
+    BuildContext context, {
+    required List<String> userEmails,
+    required List<String> emailSelected,
+    bool readOnly = false,
+    bool isLoading = false,
+  }) {
+    final isEqual = emailSelected.length ==
+            widget.initialProcessRequest.notifyEmail.length &&
+        emailSelected.every((email) =>
+            widget.initialProcessRequest.notifyEmail.contains(email));
+
+    return Column(
+      mainAxisSize: MainAxisSize.min,
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: <Widget>[
+        Text(
+          'ส่งการแจ้งเตือนทางอีเมล',
+          style: Theme.of(context).textTheme.titleMedium,
+        ),
+        const SizedBox(height: UiConfig.lineGap),
+        ListView.separated(
+          physics: const NeverScrollableScrollPhysics(),
+          shrinkWrap: true,
+          itemBuilder: (context, index) {
+            return Row(
+              children: <Widget>[
+                Padding(
+                  padding: const EdgeInsets.only(
+                    left: 4.0,
+                    right: UiConfig.actionSpacing,
+                  ),
+                  child: CustomCheckBox(
+                    value: emailSelected.contains(userEmails[index]),
+                    onChanged: !readOnly
+                        ? (_) {
+                            _onEmailSelected(userEmails[index]);
+                          }
+                        : null,
+                    activeColor: readOnly
+                        ? Theme.of(context).colorScheme.outlineVariant
+                        : null,
+                  ),
+                ),
+                Expanded(
+                  child: Text(
+                    userEmails[index],
+                    style: Theme.of(context).textTheme.bodyMedium,
+                  ),
+                ),
+              ],
+            );
+          },
+          itemCount: userEmails.length,
+          separatorBuilder: (context, index) => const SizedBox(
+            height: UiConfig.lineGap,
+          ),
+        ),
+        const SizedBox(height: UiConfig.lineGap),
+        Row(
+          mainAxisAlignment: MainAxisAlignment.end,
+          children: <Widget>[
+            CustomButton(
+              padding: const EdgeInsets.symmetric(
+                vertical: 2.0,
+                horizontal: 10.0,
+              ),
+              onPressed: !readOnly ? _sendEmails : () {},
+              buttonType: CustomButtonType.text,
+              child: isLoading
+                  ? LoadingIndicator(
+                      color: Theme.of(context).colorScheme.primary,
+                      size: 28.0,
+                      loadingType: LoadingType.horizontalRotatingDots,
+                    )
+                  : Text(
+                      'ยืนยัน',
+                      style: Theme.of(context).textTheme.bodyMedium?.copyWith(
+                          color: !isEqual
+                              ? Theme.of(context).colorScheme.primary
+                              : Theme.of(context).colorScheme.outlineVariant),
+                    ),
+            ),
+          ],
+        ),
+      ],
     );
   }
 
@@ -349,62 +454,6 @@ class _ProcessConsiderRequestState extends State<ProcessConsiderRequest> {
           ],
         ),
       ),
-    );
-  }
-
-  Column _buildEmailNotification(
-    BuildContext context, {
-    required List<String> userEmails,
-    required List<String> emailSelected,
-    bool readOnly = false,
-  }) {
-    return Column(
-      mainAxisSize: MainAxisSize.min,
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: <Widget>[
-        Text(
-          'ส่งการแจ้งเตือนทางอีเมล',
-          style: Theme.of(context).textTheme.titleMedium,
-        ),
-        const SizedBox(height: UiConfig.lineGap),
-        ListView.separated(
-          physics: const NeverScrollableScrollPhysics(),
-          shrinkWrap: true,
-          itemBuilder: (context, index) {
-            return Row(
-              children: <Widget>[
-                Padding(
-                  padding: const EdgeInsets.only(
-                    left: 4.0,
-                    right: UiConfig.actionSpacing,
-                  ),
-                  child: CustomCheckBox(
-                    value: emailSelected.contains(userEmails[index]),
-                    onChanged: !readOnly
-                        ? (_) {
-                            _onEmailSelected(userEmails[index]);
-                          }
-                        : null,
-                    activeColor: readOnly
-                        ? Theme.of(context).colorScheme.outlineVariant
-                        : null,
-                  ),
-                ),
-                Expanded(
-                  child: Text(
-                    userEmails[index],
-                    style: Theme.of(context).textTheme.bodyMedium,
-                  ),
-                ),
-              ],
-            );
-          },
-          itemCount: userEmails.length,
-          separatorBuilder: (context, index) => const SizedBox(
-            height: UiConfig.lineGap,
-          ),
-        ),
-      ],
     );
   }
 
