@@ -144,6 +144,8 @@ class _HomeViewState extends State<HomeView> {
     showMaterialModalBottomSheet(
       context: context,
       backgroundColor: Colors.transparent,
+      isDismissible: false,
+      enableDrag: false,
       builder: (context) {
         return SingleChildScrollView(
           child: Center(
