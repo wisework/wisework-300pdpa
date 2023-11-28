@@ -461,6 +461,7 @@
         "datasubjectright": "Data Subject Right",
         "submitRequestForm": "Submit request form",
         "form": "Legal rights request form",
+        "noMatching": "No matching requests found.",
         "formData": {
             "infocomplete": "Please fill in the submitter's information completely.",
             "doc": "Please select a document to prove your authority to act.",
@@ -510,6 +511,13 @@
             "submitted": "You have submitted your request form.",
             "notify": "We will review the form and notify you via email within 30 days of completing your request."
         },
+        "processRequestFilter": {
+            "all": "All",
+            "notStarted": "Not started",
+            "process": "Process",
+            "refuse": "Reject",
+            "finish": "Finish"
+        },
         "processDsr": {
             "check": "Check the form",
             "summary": "Summary of request processing results",
@@ -523,7 +531,8 @@
             "reason:": "Reason",
             "pass": "Passed inspection",
             "notPass": "Not verified",
-            "notYetVerified": "not yet verified"
+            "notYetVerified": "not yet verified",
+            "test": "Please submit the inspection results."
         },
         "StepProcessDsr": {
             "considering": {

@@ -113,11 +113,11 @@ class _DataSubjectRightViewState extends State<DataSubjectRightView> {
   ProcessRequestFilter filterSelected = ProcessRequestFilter.all;
 
   final Map<ProcessRequestFilter, String> filterTexts = {
-    ProcessRequestFilter.all: 'ทั้งหมด',
-    ProcessRequestFilter.notProcessed: 'ยังไม่เริ่ม',
-    ProcessRequestFilter.inProgress: 'ระหว่างดำเนินการ',
-    ProcessRequestFilter.refused: 'ปฏิเสธคำร้อง',
-    ProcessRequestFilter.completed: 'เสร็จสิ้น',
+    ProcessRequestFilter.all: tr('dataSubjectRight.processRequestFilter.all'),
+    ProcessRequestFilter.notProcessed: tr('dataSubjectRight.processRequestFilter.notStarted'),
+    ProcessRequestFilter.inProgress: tr('dataSubjectRight.processRequestFilter.process'),
+    ProcessRequestFilter.refused: tr('dataSubjectRight.processRequestFilter.refuse'),
+    ProcessRequestFilter.completed: tr('dataSubjectRight.processRequestFilter.finish'),
   };
 
   void _setFilter(ProcessRequestFilter? value) {
@@ -324,7 +324,7 @@ class _DataSubjectRightViewState extends State<DataSubjectRightView> {
           vertical: UiConfig.lineSpacing * 4,
         ),
         child: Text(
-          'ไม่พบคำร้องที่ตรงกัน',
+          tr('dataSubjectRight.noMatching'),
           style: Theme.of(context).textTheme.bodyMedium,
         ),
       );
