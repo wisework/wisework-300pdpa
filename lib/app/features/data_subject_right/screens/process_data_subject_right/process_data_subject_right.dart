@@ -146,7 +146,7 @@ class _ProcessDataSubjectRightViewState
         final initial = cubit.state.initialDataSubjectRight;
 
         if (current.processRequests != initial.processRequests) {
-          showToast(context, text: 'กรุณาส่งผลการตรวจสอบ');
+          showToast(context, text: tr('dataSubjectRight.processDsr.test'));
           return;
         }
 

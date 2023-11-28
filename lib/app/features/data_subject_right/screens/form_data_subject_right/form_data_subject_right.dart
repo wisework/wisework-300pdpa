@@ -294,7 +294,7 @@ class _FormDataSubjectRightViewState extends State<FormDataSubjectRightView> {
                                 verified = false;
                                 BotToast.showText(
                                   text:
-                                      tr('กรุณากรอกข้อมูลของผู้ยื่นให้ครบถ้วน'),
+                                      tr('dataSubjectRight.formData.infocomplete'),
                                   contentColor: Theme.of(context)
                                       .colorScheme
                                       .secondary
@@ -321,8 +321,7 @@ class _FormDataSubjectRightViewState extends State<FormDataSubjectRightView> {
                               if (powerVerifications.isEmpty) {
                                 verified = false;
                                 BotToast.showText(
-                                  text: tr(
-                                      'กรุณาเลือกเอกสารพิสูจน์อำนาจดำเนินการ'),
+                                  text: tr('dataSubjectRight.formData.doc'),
                                   contentColor: Theme.of(context)
                                       .colorScheme
                                       .secondary
@@ -343,7 +342,7 @@ class _FormDataSubjectRightViewState extends State<FormDataSubjectRightView> {
                                 if (verification.imageUrl.isEmpty) {
                                   verified = false;
                                   BotToast.showText(
-                                    text: tr('กรุณาเลือกไฟล์สำเนา'),
+                                    text: tr('dataSubjectRight.formData.copy'),
                                     contentColor: Theme.of(context)
                                         .colorScheme
                                         .secondary
@@ -369,8 +368,7 @@ class _FormDataSubjectRightViewState extends State<FormDataSubjectRightView> {
                               if (dataOwner.isEmpty || dataOwner.length != 4) {
                                 verified = false;
                                 BotToast.showText(
-                                  text: tr(
-                                      'กรุณากรอกรายละเอียดเจ้าของข้อมูลให้ครบถ้วน'),
+                                  text: tr('dataSubjectRight.formData.detail'),
                                   contentColor: Theme.of(context)
                                       .colorScheme
                                       .secondary
@@ -396,7 +394,7 @@ class _FormDataSubjectRightViewState extends State<FormDataSubjectRightView> {
                               if (identityVerifications.isEmpty) {
                                 verified = false;
                                 BotToast.showText(
-                                  text: tr('กรุณาเลือกเอกสารพิสูจน์ตัวตน'),
+                                  text: tr('dataSubjectRight.formData.identity'),
                                   contentColor: Theme.of(context)
                                       .colorScheme
                                       .secondary
@@ -418,7 +416,7 @@ class _FormDataSubjectRightViewState extends State<FormDataSubjectRightView> {
                                 if (verification.imageUrl.isEmpty) {
                                   verified = false;
                                   BotToast.showText(
-                                    text: tr('กรุณาเลือกไฟล์สำเนา'),
+                                    text: tr('dataSubjectRight.formData.copy'),
                                     contentColor: Theme.of(context)
                                         .colorScheme
                                         .secondary
@@ -444,7 +442,7 @@ class _FormDataSubjectRightViewState extends State<FormDataSubjectRightView> {
                               if (processRequests.isEmpty) {
                                 verified = false;
                                 BotToast.showText(
-                                  text: tr('กรุณาเลือกจุดประสงค์การยื่นคำร้อง'),
+                                  text: tr('dataSubjectRight.formData.purpose'),
                                   contentColor: Theme.of(context)
                                       .colorScheme
                                       .secondary
@@ -465,7 +463,7 @@ class _FormDataSubjectRightViewState extends State<FormDataSubjectRightView> {
                                 if (process.personalData.isEmpty) {
                                   verified = false;
                                   BotToast.showText(
-                                    text: tr('กรุณากรอกข้อมูลส่วนบุคคล'),
+                                    text: tr('dataSubjectRight.formData.personal'),
                                     contentColor: Theme.of(context)
                                         .colorScheme
                                         .secondary
@@ -485,7 +483,7 @@ class _FormDataSubjectRightViewState extends State<FormDataSubjectRightView> {
                                 if (process.requestAction.isEmpty) {
                                   verified = false;
                                   BotToast.showText(
-                                    text: tr('กรุณาเลือกการดำเนินการ'),
+                                    text: tr('dataSubjectRight.formData.acton'),
                                     contentColor: Theme.of(context)
                                         .colorScheme
                                         .secondary
@@ -505,7 +503,7 @@ class _FormDataSubjectRightViewState extends State<FormDataSubjectRightView> {
                                 if (process.reasonTypes.isEmpty) {
                                   verified = false;
                                   BotToast.showText(
-                                    text: tr('กรุณาเลือกเหตุผลประกอบคำร้อง'),
+                                    text: tr('dataSubjectRight.formData.reason'),
                                     contentColor: Theme.of(context)
                                         .colorScheme
                                         .secondary
@@ -605,6 +603,6 @@ class TEsttt extends StatefulWidget {
 class _TEstttState extends State<TEsttt> {
   @override
   Widget build(BuildContext context) {
-    return Text("data");
+    return Text(tr('dataSubjectRight.formData.data'));
   }
 }

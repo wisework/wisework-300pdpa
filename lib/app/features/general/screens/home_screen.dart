@@ -144,6 +144,8 @@ class _HomeViewState extends State<HomeView> {
     showMaterialModalBottomSheet(
       context: context,
       backgroundColor: Colors.transparent,
+      isDismissible: false,
+      enableDrag: false,
       builder: (context) {
         return SingleChildScrollView(
           child: Center(
@@ -496,34 +498,29 @@ class _HomeViewState extends State<HomeView> {
   }) {
     final List<ExploreActivity> activities = [
       ExploreActivity(
-        title: tr('app.features.consent'),
-        subTitle: tr('app.features.createcsf'),
+        title: tr('general.exploreActivity.create'),
         icon: Ionicons.add_circle_outline,
         path: ConsentFormRoute.createConsentForm.path,
       ),
       ExploreActivity(
-        title: tr('app.features.consent'),
-        subTitle: tr('app.features.userconsents'),
+        title: tr('general.exploreActivity.usercs'),
         icon: Ionicons.people_outline,
         path: UserConsentRoute.userConsentScreen.path,
       ),
       ExploreActivity(
-        title: tr('app.features.consent'),
-        subTitle: tr('app.features.consentforms'),
+        title: tr('general.exploreActivity.csform'),
         icon: Ionicons.clipboard_outline,
         path: ConsentFormRoute.consentForm.path,
       ),
       ExploreActivity(
-        title: tr('app.features.datasubjectright'),
-        subTitle: 'แบบฟอร์มคำร้อง',
+        title: tr('general.exploreActivity.dsr'),
         icon: Ionicons.shield_checkmark_outline,
         path: DataSubjectRightRoute.dataSubjectRight.path,
       ),
       ExploreActivity(
-        title: tr('app.features.masterdata'),
-        subTitle: tr('masterData.cm.purposeCategory.title'),
+        title: tr('general.exploreActivity.mtd'),
         icon: Ionicons.server_outline,
-        path: MasterDataRoute.purposesCategories.path,
+        path: MasterDataRoute.masterData.path,
       ),
     ];
 
@@ -626,12 +623,6 @@ class _HomeViewState extends State<HomeView> {
               const SizedBox(height: UiConfig.lineSpacing),
               Text(
                 activity.title,
-                style: Theme.of(context).textTheme.bodySmall,
-                overflow: TextOverflow.ellipsis,
-                maxLines: 1,
-              ),
-              Text(
-                activity.subTitle,
                 style: Theme.of(context).textTheme.bodySmall,
                 overflow: TextOverflow.ellipsis,
                 maxLines: 1,

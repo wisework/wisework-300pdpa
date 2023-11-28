@@ -4,13 +4,13 @@ import 'package:flutter/material.dart';
 class ExploreActivity extends Equatable {
   const ExploreActivity({
     required this.title,
-    required this.subTitle,
+    this.subTitle,
     required this.icon,
     required this.path,
   });
 
   final String title;
-  final String subTitle;
+  final String? subTitle;
   final IconData icon;
   final String path;
 
@@ -29,5 +29,5 @@ class ExploreActivity extends Equatable {
   }
 
   @override
-  List<Object> get props => [title, subTitle, icon, path];
+  List<Object> get props => [title, subTitle ?? "", icon, path];
 }
