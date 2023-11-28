@@ -205,9 +205,8 @@ class _EditDataSubjectRightViewState extends State<EditDataSubjectRightView> {
     ).then((result) {
       if (result != null) {
         final updated = result as DataSubjectRightModel;
-        if (dataSubjectRight != updated) {
-          _updateEditDsrState(updated);
-        }
+
+        _updateEditDsrState(updated);
       }
     });
   }
@@ -215,6 +214,7 @@ class _EditDataSubjectRightViewState extends State<EditDataSubjectRightView> {
   void _updateEditDsrState(DataSubjectRightModel dataSubjectRight) {
     final event = UpdateEditDataSubjectRightStateEvent(
       dataSubjectRight: dataSubjectRight,
+      companyId: widget.currentUser.currentCompany,
     );
     context.read<EditDataSubjectRightBloc>().add(event);
   }

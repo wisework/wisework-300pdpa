@@ -1,16 +1,23 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:ionicons/ionicons.dart';
+import 'package:modal_bottom_sheet/modal_bottom_sheet.dart';
 import 'package:pdpa/app/config/config.dart';
+import 'package:pdpa/app/data/models/authentication/user_model.dart';
 import 'package:pdpa/app/data/models/data_subject_right/process_request_model.dart';
 import 'package:pdpa/app/data/models/email_js/process_request_params.dart';
+import 'package:pdpa/app/data/models/etc/updated_return.dart';
 import 'package:pdpa/app/data/models/master_data/localized_model.dart';
+import 'package:pdpa/app/data/models/master_data/reject_type_model.dart';
 import 'package:pdpa/app/data/models/master_data/request_type_model.dart';
 import 'package:pdpa/app/features/data_subject_right/cubit/process_data_subject_right/process_data_subject_right_cubit.dart';
+import 'package:pdpa/app/features/master_data/screens/data_subject_right/request_type/widgets/choose_reject_modal.dart';
 import 'package:pdpa/app/shared/utils/constants.dart';
 import 'package:pdpa/app/shared/utils/functions.dart';
 import 'package:pdpa/app/shared/widgets/customs/custom_button.dart';
 import 'package:pdpa/app/shared/widgets/customs/custom_checkbox.dart';
 import 'package:pdpa/app/shared/widgets/customs/custom_container.dart';
+import 'package:pdpa/app/shared/widgets/customs/custom_icon_button.dart';
 import 'package:pdpa/app/shared/widgets/customs/custom_radio_button.dart';
 import 'package:pdpa/app/shared/widgets/customs/custom_text_field.dart';
 import 'package:pdpa/app/shared/widgets/expanded_container.dart';
@@ -23,13 +30,13 @@ class ProcessConsiderRequest extends StatefulWidget {
     required this.processRequest,
     required this.initialProcessRequest,
     required this.requestTypes,
-    required this.language,
+    required this.currentUser,
   });
 
   final ProcessRequestModel processRequest;
   final ProcessRequestModel initialProcessRequest;
   final List<RequestTypeModel> requestTypes;
-  final String language;
+  final UserModel currentUser;
 
   @override
   State<ProcessConsiderRequest> createState() => _ProcessConsiderRequestState();
@@ -41,6 +48,21 @@ class _ProcessConsiderRequestState extends State<ProcessConsiderRequest> {
   void _onOptionChanged(RequestResultStatus value, String id) {
     final cubit = context.read<ProcessDataSubjectRightCubit>();
     cubit.setConsiderOption(value, id);
+  }
+
+  void _setRejectTypes(List<String> value) {
+    final cubit = context.read<ProcessDataSubjectRightCubit>();
+    cubit.setProcessRejectTypes(value, widget.processRequest.id);
+  }
+
+  void _addRejectType(UpdatedReturn<RejectTypeModel> updated) {
+    final cubit = context.read<ProcessDataSubjectRightCubit>();
+    cubit.addRejectType([updated.object]);
+  }
+
+  void _removeRejectType(String value) {
+    final cubit = context.read<ProcessDataSubjectRightCubit>();
+    cubit.removeProcessRejectType(value, widget.processRequest.id);
   }
 
   void _onRejectReasonChanged(String value) {
@@ -80,12 +102,16 @@ class _ProcessConsiderRequestState extends State<ProcessConsiderRequest> {
       return;
     }
 
+    final cubit = context.read<ProcessDataSubjectRightCubit>();
+
     if (widget.processRequest.considerRequestStatus ==
         RequestResultStatus.fail) {
+      if (widget.processRequest.rejectTypes.isEmpty) {
+        cubit.setRejectTypeError(true);
+        return;
+      }
       if (!_considerFormKey.currentState!.validate()) return;
     }
-
-    final cubit = context.read<ProcessDataSubjectRightCubit>();
 
     final emailParams = _getEmailParams();
 
@@ -122,7 +148,7 @@ class _ProcessConsiderRequestState extends State<ProcessConsiderRequest> {
         processRequest.requestType,
       );
       final description = requestType.description.firstWhere(
-        (item) => item.language == widget.language,
+        (item) => item.language == widget.currentUser.defaultLanguage,
         orElse: () => const LocalizedModel.empty(),
       );
 
@@ -365,6 +391,16 @@ class _ProcessConsiderRequestState extends State<ProcessConsiderRequest> {
                           mainAxisSize: MainAxisSize.min,
                           children: <Widget>[
                             const SizedBox(height: UiConfig.lineGap),
+                            BlocBuilder<ProcessDataSubjectRightCubit,
+                                ProcessDataSubjectRightState>(
+                              builder: (context, state) {
+                                return _buildRejectTypeSelection(
+                                  context,
+                                  initialRejectTypes: state.rejectTypes,
+                                );
+                              },
+                            ),
+                            const SizedBox(height: UiConfig.lineSpacing),
                             TitleRequiredText(
                               text: 'เหตุผลประกอบ',
                               required: widget.initialProcessRequest
@@ -402,6 +438,7 @@ class _ProcessConsiderRequestState extends State<ProcessConsiderRequest> {
               builder: (context, state) {
                 return _buildWarningContainer(
                   context,
+                  text: 'โปรดเลือกตัวเลือกเพื่อดำเนินการต่อ',
                   isWarning:
                       state.considerError.contains(widget.processRequest.id),
                 );
@@ -413,8 +450,139 @@ class _ProcessConsiderRequestState extends State<ProcessConsiderRequest> {
     );
   }
 
+  Column _buildRejectTypeSelection(
+    BuildContext context, {
+    required List<RejectTypeModel> initialRejectTypes,
+  }) {
+    final rejectTypesSelected = UtilFunctions.filterRejectTypesByIds(
+      initialRejectTypes,
+      widget.processRequest.rejectTypes,
+    );
+
+    return Column(
+      children: <Widget>[
+        ExpandedContainer(
+          expand: rejectTypesSelected.isNotEmpty,
+          duration: const Duration(milliseconds: 400),
+          child: Padding(
+            padding: const EdgeInsets.only(bottom: UiConfig.lineSpacing),
+            child: ListView.separated(
+              physics: const NeverScrollableScrollPhysics(),
+              shrinkWrap: true,
+              itemBuilder: (context, index) {
+                final rejectTypeId = rejectTypesSelected[index].id;
+                final description = rejectTypesSelected[index]
+                    .description
+                    .firstWhere(
+                      (item) =>
+                          item.language == widget.currentUser.defaultLanguage,
+                      orElse: () => const LocalizedModel.empty(),
+                    )
+                    .text;
+
+                return Row(
+                  children: <Widget>[
+                    Expanded(
+                      child: Padding(
+                        padding: const EdgeInsets.symmetric(
+                          vertical: UiConfig.textSpacing,
+                        ),
+                        child: Text(
+                          description,
+                          style: Theme.of(context).textTheme.bodyMedium,
+                        ),
+                      ),
+                    ),
+                    if (widget.initialProcessRequest.considerRequestStatus !=
+                        RequestResultStatus.fail)
+                      Padding(
+                        padding: const EdgeInsets.only(
+                          left: UiConfig.actionSpacing,
+                        ),
+                        child: CustomIconButton(
+                          onPressed: () {
+                            _removeRejectType(rejectTypeId);
+                          },
+                          icon: Ionicons.trash_outline,
+                          iconSize: 18.0,
+                          iconColor: Theme.of(context).colorScheme.primary,
+                          backgroundColor: Colors.transparent,
+                        ),
+                      ),
+                  ],
+                );
+              },
+              itemCount: rejectTypesSelected.length,
+              separatorBuilder: (context, index) => Divider(
+                color: Theme.of(context)
+                    .colorScheme
+                    .outlineVariant
+                    .withOpacity(0.5),
+              ),
+            ),
+          ),
+        ),
+        CustomButton(
+          height: 50.0,
+          onPressed: () {
+            showBarModalBottomSheet(
+              context: context,
+              backgroundColor: Colors.transparent,
+              builder: (context) => ChooseRejectTypeModal(
+                rejectTypes: initialRejectTypes,
+                initialRejectTypes: rejectTypesSelected,
+                onChanged: (rejectTypes) {
+                  final ids = rejectTypes.map((reject) => reject.id).toList();
+                  _setRejectTypes(ids);
+                },
+                onUpdated: _addRejectType,
+                language: widget.currentUser.defaultLanguage,
+              ),
+            );
+          },
+          buttonType: CustomButtonType.outlined,
+          backgroundColor: Theme.of(context).colorScheme.onBackground,
+          borderColor: Theme.of(context).colorScheme.outlineVariant,
+          child: Padding(
+            padding: const EdgeInsets.symmetric(
+              horizontal: UiConfig.defaultPaddingSpacing,
+            ),
+            child: Row(
+              children: <Widget>[
+                Expanded(
+                  child: Text(
+                    'เพิ่มเหตุผลในการปฏิเสธ',
+                    style: Theme.of(context).textTheme.bodyMedium,
+                  ),
+                ),
+                Icon(
+                  Icons.arrow_forward_ios_rounded,
+                  size: 18.0,
+                  color: Theme.of(context).colorScheme.onSurface,
+                ),
+              ],
+            ),
+          ),
+        ),
+        BlocBuilder<ProcessDataSubjectRightCubit, ProcessDataSubjectRightState>(
+          builder: (context, state) {
+            return Padding(
+              padding: const EdgeInsets.only(top: UiConfig.lineGap),
+              child: _buildWarningContainer(
+                context,
+                text: 'โปรดเลือกเหตุผลในการปฏิเสธ',
+                isWarning: state.rejectError,
+              ),
+            );
+          },
+        ),
+      ],
+    );
+  }
+
   ExpandedContainer _buildWarningContainer(
     BuildContext context, {
+    required String text,
     required bool isWarning,
   }) {
     return ExpandedContainer(
@@ -444,7 +612,7 @@ class _ProcessConsiderRequestState extends State<ProcessConsiderRequest> {
             const SizedBox(width: UiConfig.textSpacing),
             Expanded(
               child: Text(
-                'โปรดเลือกตัวเลือกเพื่อดำเนินการต่อ',
+                text,
                 style: Theme.of(context)
                     .textTheme
                     .bodyMedium

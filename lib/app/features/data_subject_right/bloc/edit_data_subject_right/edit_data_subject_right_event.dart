@@ -49,12 +49,14 @@ class UpdateCurrentDataSubjectRightEvent extends EditDataSubjectRightEvent {
 class UpdateEditDataSubjectRightStateEvent extends EditDataSubjectRightEvent {
   const UpdateEditDataSubjectRightStateEvent({
     required this.dataSubjectRight,
+    required this.companyId,
   });
 
   final DataSubjectRightModel dataSubjectRight;
+  final String companyId;
 
   @override
-  List<Object> get props => [dataSubjectRight];
+  List<Object> get props => [dataSubjectRight, companyId];
 }
 
 class DownloadDataSubjectRightFileEvent extends EditDataSubjectRightEvent {
