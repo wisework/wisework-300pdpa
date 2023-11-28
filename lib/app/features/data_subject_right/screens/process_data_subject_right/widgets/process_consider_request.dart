@@ -394,13 +394,17 @@ class _ProcessConsiderRequestState extends State<ProcessConsiderRequest> {
                             BlocBuilder<ProcessDataSubjectRightCubit,
                                 ProcessDataSubjectRightState>(
                               builder: (context, state) {
-                                return _buildRejectTypeSelection(
-                                  context,
-                                  initialRejectTypes: state.rejectTypes,
+                                return Padding(
+                                  padding: const EdgeInsets.only(
+                                    bottom: UiConfig.lineSpacing,
+                                  ),
+                                  child: _buildRejectTypeSelection(
+                                    context,
+                                    initialRejectTypes: state.rejectTypes,
+                                  ),
                                 );
                               },
                             ),
-                            const SizedBox(height: UiConfig.lineSpacing),
                             TitleRequiredText(
                               text: 'เหตุผลประกอบ',
                               required: widget.initialProcessRequest
@@ -465,7 +469,12 @@ class _ProcessConsiderRequestState extends State<ProcessConsiderRequest> {
           expand: rejectTypesSelected.isNotEmpty,
           duration: const Duration(milliseconds: 400),
           child: Padding(
-            padding: const EdgeInsets.only(bottom: UiConfig.lineSpacing),
+            padding: EdgeInsets.only(
+              bottom: widget.initialProcessRequest.considerRequestStatus !=
+                      RequestResultStatus.fail
+                  ? UiConfig.lineSpacing
+                  : 0,
+            ),
             child: ListView.separated(
               physics: const NeverScrollableScrollPhysics(),
               shrinkWrap: true,
@@ -522,52 +531,59 @@ class _ProcessConsiderRequestState extends State<ProcessConsiderRequest> {
             ),
           ),
         ),
-        CustomButton(
-          height: 50.0,
-          onPressed: () {
-            showBarModalBottomSheet(
-              context: context,
-              backgroundColor: Colors.transparent,
-              builder: (context) => ChooseRejectTypeModal(
-                rejectTypes: initialRejectTypes,
-                initialRejectTypes: rejectTypesSelected,
-                onChanged: (rejectTypes) {
-                  final ids = rejectTypes.map((reject) => reject.id).toList();
-                  _setRejectTypes(ids);
-                },
-                onUpdated: _addRejectType,
-                language: widget.currentUser.defaultLanguage,
+        if (widget.initialProcessRequest.considerRequestStatus !=
+            RequestResultStatus.fail)
+          CustomButton(
+            height: 50.0,
+            onPressed: () {
+              showBarModalBottomSheet(
+                context: context,
+                backgroundColor: Colors.transparent,
+                builder: (context) => ChooseRejectTypeModal(
+                  rejectTypes: initialRejectTypes,
+                  initialRejectTypes: rejectTypesSelected,
+                  onChanged: (rejectTypes) {
+                    final ids = rejectTypes.map((reject) => reject.id).toList();
+                    _setRejectTypes(ids);
+                  },
+                  onUpdated: _addRejectType,
+                  language: widget.currentUser.defaultLanguage,
+                ),
+              );
+            },
+            buttonType: CustomButtonType.outlined,
+            backgroundColor: Theme.of(context).colorScheme.onBackground,
+            borderColor: Theme.of(context).colorScheme.outlineVariant,
+            child: Padding(
+              padding: const EdgeInsets.symmetric(
+                horizontal: UiConfig.defaultPaddingSpacing,
               ),
-            );
-          },
-          buttonType: CustomButtonType.outlined,
-          backgroundColor: Theme.of(context).colorScheme.onBackground,
-          borderColor: Theme.of(context).colorScheme.outlineVariant,
-          child: Padding(
-            padding: const EdgeInsets.symmetric(
-              horizontal: UiConfig.defaultPaddingSpacing,
-            ),
-            child: Row(
-              children: <Widget>[
-                Expanded(
-                  child: Text(
-                    'เพิ่มเหตุผลในการปฏิเสธ',
-                    style: Theme.of(context).textTheme.bodyMedium,
+              child: Row(
+                children: <Widget>[
+                  Expanded(
+                    child: Text(
+                      'เพิ่มเหตุผลในการปฏิเสธ',
+                      style: Theme.of(context).textTheme.bodyMedium,
+                    ),
                   ),
-                ),
-                Icon(
-                  Icons.arrow_forward_ios_rounded,
-                  size: 18.0,
-                  color: Theme.of(context).colorScheme.onSurface,
-                ),
-              ],
+                  Icon(
+                    Icons.arrow_forward_ios_rounded,
+                    size: 18.0,
+                    color: Theme.of(context).colorScheme.onSurface,
+                  ),
+                ],
+              ),
             ),
           ),
-        ),
         BlocBuilder<ProcessDataSubjectRightCubit, ProcessDataSubjectRightState>(
           builder: (context, state) {
             return Padding(
-              padding: const EdgeInsets.only(top: UiConfig.lineGap),
+              padding: EdgeInsets.only(
+                top: widget.initialProcessRequest.considerRequestStatus !=
+                        RequestResultStatus.fail
+                    ? UiConfig.lineGap
+                    : 0,
+              ),
               child: _buildWarningContainer(
                 context,
                 text: 'โปรดเลือกเหตุผลในการปฏิเสธ',
