@@ -306,6 +306,7 @@ Future<void> _masterData() async {
     ..registerFactory(
       () => EditReasonTypeBloc(
         masterDataRepository: serviceLocator(),
+        dataSubjectRightRepository: serviceLocator(),
       ),
     )
     ..registerFactory(

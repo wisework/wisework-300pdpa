@@ -12,9 +12,8 @@ import 'package:pdpa/app/data/models/data_subject_right/requester_verification_m
 import 'package:pdpa/app/data/models/master_data/reason_type_model.dart';
 
 import 'package:pdpa/app/data/models/master_data/request_type_model.dart';
-import 'package:pdpa/app/data/presets/reason_types_preset.dart';
-import 'package:pdpa/app/data/presets/request_types_preset.dart';
 import 'package:pdpa/app/features/authentication/bloc/sign_in/sign_in_bloc.dart';
+import 'package:pdpa/app/features/data_subject_right/bloc/data_subject_right/data_subject_right_bloc.dart';
 import 'package:pdpa/app/features/data_subject_right/bloc/form_data_sub_ject_right/form_data_sub_ject_right_bloc.dart';
 import 'package:pdpa/app/features/data_subject_right/cubit/form_data_subject_right/form_data_subject_right_cubit.dart';
 import 'package:pdpa/app/features/data_subject_right/routes/data_subject_right_route.dart';
@@ -151,11 +150,18 @@ class _FormDataSubjectRightViewState extends State<FormDataSubjectRightView> {
 
   void _initialData() {
     final cubit = context.read<FormDataSubjectRightCubit>();
+    final bloc = context.read<DataSubjectRightBloc>();
+    List<RequestTypeModel> requestTypes = [];
+    List<ReasonTypeModel> reasonTypes = [];
+    if (bloc.state is GotDataSubjectRights) {
+      requestTypes = (bloc.state as GotDataSubjectRights).requestTypes;
+      reasonTypes = (bloc.state as GotDataSubjectRights).reasonTypes;
+    }
     _controller = PageController(
       initialPage: cubit.state.currentPage,
     );
-    requestType = requestTypesPreset;
-    reasonType = reasonTypesPreset;
+    requestType = requestTypes;
+    reasonType = reasonTypes;
   }
 
   @override
@@ -293,8 +299,8 @@ class _FormDataSubjectRightViewState extends State<FormDataSubjectRightView> {
                                   dataRequester.length != 4) {
                                 verified = false;
                                 BotToast.showText(
-                                  text:
-                                      tr('dataSubjectRight.formData.infocomplete'),
+                                  text: tr(
+                                      'dataSubjectRight.formData.infocomplete'),
                                   contentColor: Theme.of(context)
                                       .colorScheme
                                       .secondary
@@ -394,7 +400,8 @@ class _FormDataSubjectRightViewState extends State<FormDataSubjectRightView> {
                               if (identityVerifications.isEmpty) {
                                 verified = false;
                                 BotToast.showText(
-                                  text: tr('dataSubjectRight.formData.identity'),
+                                  text:
+                                      tr('dataSubjectRight.formData.identity'),
                                   contentColor: Theme.of(context)
                                       .colorScheme
                                       .secondary
@@ -463,7 +470,8 @@ class _FormDataSubjectRightViewState extends State<FormDataSubjectRightView> {
                                 if (process.personalData.isEmpty) {
                                   verified = false;
                                   BotToast.showText(
-                                    text: tr('dataSubjectRight.formData.personal'),
+                                    text: tr(
+                                        'dataSubjectRight.formData.personal'),
                                     contentColor: Theme.of(context)
                                         .colorScheme
                                         .secondary
@@ -503,7 +511,8 @@ class _FormDataSubjectRightViewState extends State<FormDataSubjectRightView> {
                                 if (process.reasonTypes.isEmpty) {
                                   verified = false;
                                   BotToast.showText(
-                                    text: tr('dataSubjectRight.formData.reason'),
+                                    text:
+                                        tr('dataSubjectRight.formData.reason'),
                                     contentColor: Theme.of(context)
                                         .colorScheme
                                         .secondary

@@ -5,6 +5,8 @@ import 'package:go_router/go_router.dart';
 import 'package:ionicons/ionicons.dart';
 import 'package:pdpa/app/config/config.dart';
 import 'package:pdpa/app/data/models/authentication/user_model.dart';
+import 'package:pdpa/app/data/models/data_subject_right/data_subject_right_model.dart';
+import 'package:pdpa/app/data/models/data_subject_right/process_request_model.dart';
 import 'package:pdpa/app/data/models/etc/updated_return.dart';
 import 'package:pdpa/app/data/models/master_data/localized_model.dart';
 import 'package:pdpa/app/data/models/master_data/reason_type_model.dart';
@@ -15,6 +17,7 @@ import 'package:pdpa/app/injection.dart';
 import 'package:pdpa/app/shared/utils/constants.dart';
 import 'package:pdpa/app/shared/utils/toast.dart';
 import 'package:pdpa/app/shared/widgets/content_wrapper.dart';
+import 'package:pdpa/app/shared/widgets/customs/custom_button.dart';
 import 'package:pdpa/app/shared/widgets/customs/custom_container.dart';
 import 'package:pdpa/app/shared/widgets/customs/custom_icon_button.dart';
 import 'package:pdpa/app/shared/widgets/customs/custom_switch_button.dart';
@@ -48,6 +51,7 @@ class _EditReasonTypeScreenState extends State<EditReasonTypeScreen> {
 
   void _initialData() {
     final bloc = context.read<SignInBloc>();
+
     if (bloc.state is SignedInUser) {
       currentUser = (bloc.state as SignedInUser).user;
     } else {
@@ -71,8 +75,8 @@ class _EditReasonTypeScreenState extends State<EditReasonTypeScreen> {
             showToast(
               context,
               text: tr(
-                  'consentManagement.consentForm.editConsentTheme.createSuccess'), 
-            ); 
+                  'consentManagement.consentForm.editConsentTheme.createSuccess'),
+            );
 
             context.pop(
               UpdatedReturn<ReasonTypeModel>(
@@ -87,7 +91,7 @@ class _EditReasonTypeScreenState extends State<EditReasonTypeScreen> {
               context,
               text: tr(
                   'consentManagement.consentForm.editConsentTheme.updateSuccess'),
-            ); 
+            );
           }
 
           if (state is DeletedCurrentReasonType) {
@@ -95,7 +99,7 @@ class _EditReasonTypeScreenState extends State<EditReasonTypeScreen> {
               context,
               text: tr(
                   'consentManagement.consentForm.editConsentTheme.deleteSuccess'),
-            ); 
+            );
 
             final deleted =
                 ReasonTypeModel.empty().copyWith(id: state.reasonTypeId);
@@ -114,6 +118,7 @@ class _EditReasonTypeScreenState extends State<EditReasonTypeScreen> {
               initialReasonType: state.reasonType,
               currentUser: currentUser,
               isNewReasonType: widget.reasonTypeId.isEmpty,
+              dataSubjectRights: state.dataSubjectRights,
             );
           }
           if (state is UpdatedCurrentReasonType) {
@@ -121,6 +126,7 @@ class _EditReasonTypeScreenState extends State<EditReasonTypeScreen> {
               initialReasonType: state.reasonType,
               currentUser: currentUser,
               isNewReasonType: widget.reasonTypeId.isEmpty,
+              dataSubjectRights: state.dataSubjectRights,
             );
           }
           if (state is EditReasonTypeError) {
@@ -140,11 +146,13 @@ class EditReasonTypeView extends StatefulWidget {
     required this.initialReasonType,
     required this.currentUser,
     required this.isNewReasonType,
+    required this.dataSubjectRights,
   });
 
   final ReasonTypeModel initialReasonType;
   final UserModel currentUser;
   final bool isNewReasonType;
+  final List<DataSubjectRightModel> dataSubjectRights;
 
   @override
   State<EditReasonTypeView> createState() => _EditReasonTypeViewState();
@@ -156,7 +164,10 @@ class _EditReasonTypeViewState extends State<EditReasonTypeView> {
   late TextEditingController reasonTypeCodeController;
   late TextEditingController descriptionController;
 
+  late bool isNeedInfo;
   late bool isActivated;
+
+  late List<String> usedDataSubjectRightIds;
 
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
 
@@ -183,7 +194,11 @@ class _EditReasonTypeViewState extends State<EditReasonTypeView> {
     reasonTypeCodeController = TextEditingController();
     descriptionController = TextEditingController();
 
+    isNeedInfo = false;
+
     isActivated = true;
+
+    usedDataSubjectRightIds = [];
 
     if (reasonType != ReasonTypeModel.empty()) {
       if (reasonType.reasonCode.isNotEmpty) {
@@ -204,7 +219,26 @@ class _EditReasonTypeViewState extends State<EditReasonTypeView> {
         );
       }
 
+      isNeedInfo = reasonType.requiredInputReasonText;
+
       isActivated = reasonType.status == ActiveStatus.active;
+    }
+
+    if (widget.dataSubjectRights.isNotEmpty) {
+      for (DataSubjectRightModel from in widget.dataSubjectRights) {
+        //? Sort Process Requests
+        List<String> dsrId = [];
+
+        for (ProcessRequestModel request in from.processRequests) {
+          final reasonIds =
+              request.reasonTypes.firstWhere((element) => element.id != '').id;
+
+          if (reasonIds == reasonType.id) {
+            dsrId.add(from.id);
+          } 
+        }
+        usedDataSubjectRightIds.addAll(dsrId);
+      }
     }
   }
 
@@ -229,6 +263,17 @@ class _EditReasonTypeViewState extends State<EditReasonTypeView> {
         reasonType = reasonType.copyWith(description: description);
       },
     );
+  }
+
+  void _setNeedInfo(bool value) {
+    setState(() {
+      isNeedInfo = value;
+
+      final requiredInputReasonText = isNeedInfo ? true : false;
+
+      reasonType =
+          reasonType.copyWith(requiredInputReasonText: requiredInputReasonText);
+    });
   }
 
   void _setActiveStatus(bool value) {
@@ -270,11 +315,65 @@ class _EditReasonTypeViewState extends State<EditReasonTypeView> {
   }
 
   void _deleteReasonType() {
-    final event = DeleteCurrentReasonTypeEvent(
-      reasonTypeId: reasonType.id,
-      companyId: widget.currentUser.currentCompany,
-    );
-    context.read<EditReasonTypeBloc>().add(event);
+    if (widget.dataSubjectRights.isNotEmpty) {
+      showDialog(
+        context: context,
+        builder: (_) => AlertDialog(
+          title: Text(
+            tr('เกิดข้อผิดพลาด'),
+            style: Theme.of(context).textTheme.titleLarge,
+          ),
+          content: Column(
+            children: [
+              Text(tr(
+                  'ไม่สามารถลบเหตุผลนี้นี้ได้เนื่องจากมีการถูกใช้ในแบบฟอร์มดังนี้ :')),
+              Column(
+                children: usedDataSubjectRightIds.map((id) {
+                  return Row(children: [
+                    const Text(
+                      "\u2022",
+                    ), //bullet text
+                    const SizedBox(
+                      height: UiConfig.lineGap,
+                    ), //space between bullet and text
+                    Expanded(
+                      child: Text(
+                        id,
+                      ), //text
+                    )
+                  ]);
+                }).toList(),
+              )
+            ],
+          ),
+          actions: [
+            CustomButton(
+              height: 40.0,
+              onPressed: () => context.pop(),
+              child: Text(
+                tr('consentManagement.consentForm.congratulations.ok'),
+                style: Theme.of(context)
+                    .textTheme
+                    .bodyMedium
+                    ?.copyWith(color: Theme.of(context).colorScheme.onPrimary),
+              ),
+            ),
+          ],
+          backgroundColor: Theme.of(context).colorScheme.onBackground,
+          surfaceTintColor: Theme.of(context).colorScheme.onBackground,
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(10.0),
+          ),
+          scrollable: true,
+        ),
+      );
+    } else {
+      final event = DeleteCurrentReasonTypeEvent(
+        reasonTypeId: reasonType.id,
+        companyId: widget.currentUser.currentCompany,
+      );
+      context.read<EditReasonTypeBloc>().add(event);
+    }
   }
 
   void _goBackAndUpdate() {
@@ -336,30 +435,44 @@ class _EditReasonTypeViewState extends State<EditReasonTypeView> {
           Row(
             children: <Widget>[
               Text(
-                tr('masterData.dsr.reason.title'), 
+                tr('masterData.dsr.reason.title'),
                 style: Theme.of(context).textTheme.titleLarge,
               ),
             ],
           ),
           const SizedBox(height: UiConfig.lineSpacing),
           TitleRequiredText(
-            text: tr('masterData.dsr.reason.reasoncode'), 
+            text: tr('masterData.dsr.reason.reasoncode'),
             required: true,
           ),
           CustomTextField(
             controller: reasonTypeCodeController,
-            hintText: tr('masterData.dsr.reason.reasoncodeHint'), 
+            hintText: tr('masterData.dsr.reason.reasoncodeHint'),
             onChanged: _setReasonCode,
             required: true,
           ),
           const SizedBox(height: UiConfig.lineSpacing),
           TitleRequiredText(
-            text: tr('masterData.dsr.reason.description'), 
+            text: tr('masterData.dsr.reason.description'),
           ),
           CustomTextField(
             controller: descriptionController,
-            hintText: tr('masterData.dsr.reason.descriptionHint'), 
+            hintText: tr('masterData.dsr.reason.descriptionHint'),
             onChanged: _setDescription,
+          ),
+          const SizedBox(height: UiConfig.lineSpacing),
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: <Widget>[
+              Text(
+                tr('masterData.dsr.reason.needmoreinformation'),
+                style: Theme.of(context).textTheme.bodyMedium,
+              ),
+              CustomSwitchButton(
+                value: isNeedInfo,
+                onChanged: _setNeedInfo,
+              ),
+            ],
           ),
           const SizedBox(height: UiConfig.lineSpacing),
         ],

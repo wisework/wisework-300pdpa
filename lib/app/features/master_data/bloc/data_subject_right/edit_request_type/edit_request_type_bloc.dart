@@ -3,6 +3,7 @@ import 'package:bloc/bloc.dart';
 import 'package:equatable/equatable.dart';
 import 'package:pdpa/app/data/models/master_data/reject_type_model.dart';
 import 'package:pdpa/app/data/models/master_data/request_type_model.dart';
+import 'package:pdpa/app/data/presets/reject_types_preset.dart';
 import 'package:pdpa/app/data/repositories/master_data_repository.dart';
 
 part 'edit_request_type_event.dart';
@@ -51,7 +52,6 @@ class EditRequestTypeBloc
         },
         (requestType) {
           gotRequestType = requestType;
-
         },
       );
     }
@@ -66,8 +66,8 @@ class EditRequestTypeBloc
         return;
       },
       (rejects) {
-        gotRejects = rejects;
-
+        gotRejects.addAll(rejectTypesPreset);
+        gotRejects.addAll(rejects);
       },
     );
 
