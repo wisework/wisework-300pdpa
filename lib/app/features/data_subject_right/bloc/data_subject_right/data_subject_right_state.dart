@@ -31,11 +31,16 @@ class GettingDataSubjectRights extends DataSubjectRightState {
 }
 
 class GotDataSubjectRights extends DataSubjectRightState {
-  const GotDataSubjectRights(this.dataSubjectRights, this.requestTypes);
+  const GotDataSubjectRights(
+    this.dataSubjectRights,
+    this.requestTypes,
+    this.reasonTypes,
+  );
 
   final List<DataSubjectRightModel> dataSubjectRights;
   final List<RequestTypeModel> requestTypes;
+  final List<ReasonTypeModel> reasonTypes;
 
   @override
-  List<Object> get props => [dataSubjectRights, requestTypes];
+  List<Object> get props => [dataSubjectRights, requestTypes, reasonTypes];
 }

@@ -3,7 +3,9 @@ import 'package:bloc/bloc.dart';
 import 'package:equatable/equatable.dart';
 import 'package:pdpa/app/data/models/data_subject_right/data_subject_right_model.dart';
 import 'package:pdpa/app/data/models/data_subject_right/process_request_model.dart';
+import 'package:pdpa/app/data/models/master_data/reason_type_model.dart';
 import 'package:pdpa/app/data/models/master_data/request_type_model.dart';
+import 'package:pdpa/app/data/presets/reason_types_preset.dart';
 import 'package:pdpa/app/data/presets/request_types_preset.dart';
 import 'package:pdpa/app/data/repositories/data_subject_right_repository.dart';
 import 'package:pdpa/app/data/repositories/master_data_repository.dart';
@@ -92,7 +94,23 @@ class DataSubjectRightBloc
           },
         );
 
-        emit(GotDataSubjectRights(updated, gotRequestTypes));
+        List<ReasonTypeModel> gotReasonTypes = [];
+        final resultReason = await _masterDataRepository.getReasonTypes(
+          event.companyId,
+        );
+        resultReason.fold(
+          (failure) => emit(DataSubjectRightError(failure.errorMessage)),
+          (reasonTypes) {
+            gotReasonTypes.addAll(reasonTypesPreset);
+            gotReasonTypes.addAll(reasonTypes);
+          },
+        );
+
+        emit(GotDataSubjectRights(
+          updated,
+          gotRequestTypes,
+          gotReasonTypes,
+        ));
       },
     );
   }
@@ -105,6 +123,7 @@ class DataSubjectRightBloc
       final dataSubjectRights =
           (state as GotDataSubjectRights).dataSubjectRights;
       final requestTypes = (state as GotDataSubjectRights).requestTypes;
+      final reasonTypes = (state as GotDataSubjectRights).reasonTypes;
 
       List<DataSubjectRightModel> updated = [];
 
@@ -131,7 +150,11 @@ class DataSubjectRightBloc
 
       updated.sort((a, b) => b.updatedDate.compareTo(a.updatedDate));
 
-      emit(GotDataSubjectRights(updated, requestTypes));
+      emit(GotDataSubjectRights(
+        updated,
+        requestTypes,
+        reasonTypes,
+      ));
     }
   }
 }
