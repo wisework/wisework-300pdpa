@@ -105,9 +105,18 @@ class _FormDataSubjectRightState extends State<FormDataSubjectRight> {
 
   CustomIconButton _buildPopButton() {
     return CustomIconButton(
-      onPressed: () => context.pushReplacement(
-        DataSubjectRightRoute.dataSubjectRight.path,
-      ),
+      onPressed: () {
+        context.pushReplacement(
+          DataSubjectRightRoute.dataSubjectRight.path,
+        );
+
+        final RequestFormState requestFormState =
+            context.read<FormDataSubjectRightCubit>().state.requestFormState;
+
+        if (requestFormState == RequestFormState.summarize) {
+          context.read<FormDataSubjectRightCubit>().resetFormDataSubjectRight();
+        }
+      },
       icon: Icons.chevron_left_outlined,
       iconColor: Theme.of(context).colorScheme.primary,
       backgroundColor: Theme.of(context).colorScheme.onBackground,
@@ -283,6 +292,23 @@ class _FormDataSubjectRightViewState extends State<FormDataSubjectRightView> {
                               if (dataRequester.isEmpty ||
                                   dataRequester.length != 4) {
                                 verified = false;
+                                BotToast.showText(
+                                  text:
+                                      tr('กรุณากรอกข้อมูลของผู้ยื่นให้ครบถ้วน'),
+                                  contentColor: Theme.of(context)
+                                      .colorScheme
+                                      .secondary
+                                      .withOpacity(0.75),
+                                  borderRadius: BorderRadius.circular(8.0),
+                                  textStyle: Theme.of(context)
+                                      .textTheme
+                                      .bodyMedium!
+                                      .copyWith(
+                                          color: Theme.of(context)
+                                              .colorScheme
+                                              .onPrimary),
+                                  duration: UiConfig.toastDuration,
+                                );
                               }
                               break;
 
@@ -292,11 +318,46 @@ class _FormDataSubjectRightViewState extends State<FormDataSubjectRightView> {
                                   .map((verification) => verification)
                                   .toList();
 
-                              if (powerVerifications.isEmpty) verified = false;
+                              if (powerVerifications.isEmpty) {
+                                verified = false;
+                                BotToast.showText(
+                                  text: tr(
+                                      'กรุณาเลือกเอกสารพิสูจน์อำนาจดำเนินการ'),
+                                  contentColor: Theme.of(context)
+                                      .colorScheme
+                                      .secondary
+                                      .withOpacity(0.75),
+                                  borderRadius: BorderRadius.circular(8.0),
+                                  textStyle: Theme.of(context)
+                                      .textTheme
+                                      .bodyMedium!
+                                      .copyWith(
+                                          color: Theme.of(context)
+                                              .colorScheme
+                                              .onPrimary),
+                                  duration: UiConfig.toastDuration,
+                                );
+                              }
                               for (RequesterVerificationModel verification
                                   in powerVerifications) {
                                 if (verification.imageUrl.isEmpty) {
                                   verified = false;
+                                  BotToast.showText(
+                                    text: tr('กรุณาเลือกไฟล์สำเนา'),
+                                    contentColor: Theme.of(context)
+                                        .colorScheme
+                                        .secondary
+                                        .withOpacity(0.75),
+                                    borderRadius: BorderRadius.circular(8.0),
+                                    textStyle: Theme.of(context)
+                                        .textTheme
+                                        .bodyMedium!
+                                        .copyWith(
+                                            color: Theme.of(context)
+                                                .colorScheme
+                                                .onPrimary),
+                                    duration: UiConfig.toastDuration,
+                                  );
                                 }
                               }
                               break;
@@ -307,6 +368,23 @@ class _FormDataSubjectRightViewState extends State<FormDataSubjectRightView> {
 
                               if (dataOwner.isEmpty || dataOwner.length != 4) {
                                 verified = false;
+                                BotToast.showText(
+                                  text: tr(
+                                      'กรุณากรอกรายละเอียดเจ้าของข้อมูลให้ครบถ้วน'),
+                                  contentColor: Theme.of(context)
+                                      .colorScheme
+                                      .secondary
+                                      .withOpacity(0.75),
+                                  borderRadius: BorderRadius.circular(8.0),
+                                  textStyle: Theme.of(context)
+                                      .textTheme
+                                      .bodyMedium!
+                                      .copyWith(
+                                          color: Theme.of(context)
+                                              .colorScheme
+                                              .onPrimary),
+                                  duration: UiConfig.toastDuration,
+                                );
                               }
                               break;
                             case 4:
@@ -317,12 +395,44 @@ class _FormDataSubjectRightViewState extends State<FormDataSubjectRightView> {
 
                               if (identityVerifications.isEmpty) {
                                 verified = false;
+                                BotToast.showText(
+                                  text: tr('กรุณาเลือกเอกสารพิสูจน์ตัวตน'),
+                                  contentColor: Theme.of(context)
+                                      .colorScheme
+                                      .secondary
+                                      .withOpacity(0.75),
+                                  borderRadius: BorderRadius.circular(8.0),
+                                  textStyle: Theme.of(context)
+                                      .textTheme
+                                      .bodyMedium!
+                                      .copyWith(
+                                          color: Theme.of(context)
+                                              .colorScheme
+                                              .onPrimary),
+                                  duration: UiConfig.toastDuration,
+                                );
                               }
 
                               for (RequesterVerificationModel verification
                                   in identityVerifications) {
                                 if (verification.imageUrl.isEmpty) {
                                   verified = false;
+                                  BotToast.showText(
+                                    text: tr('กรุณาเลือกไฟล์สำเนา'),
+                                    contentColor: Theme.of(context)
+                                        .colorScheme
+                                        .secondary
+                                        .withOpacity(0.75),
+                                    borderRadius: BorderRadius.circular(8.0),
+                                    textStyle: Theme.of(context)
+                                        .textTheme
+                                        .bodyMedium!
+                                        .copyWith(
+                                            color: Theme.of(context)
+                                                .colorScheme
+                                                .onPrimary),
+                                    duration: UiConfig.toastDuration,
+                                  );
                                 }
                               }
                               break;
@@ -331,19 +441,85 @@ class _FormDataSubjectRightViewState extends State<FormDataSubjectRightView> {
                                   .processRequests
                                   .map((process) => process)
                                   .toList();
-                              if (processRequests.isEmpty) verified = false;
+                              if (processRequests.isEmpty) {
+                                verified = false;
+                                BotToast.showText(
+                                  text: tr('กรุณาเลือกจุดประสงค์การยื่นคำร้อง'),
+                                  contentColor: Theme.of(context)
+                                      .colorScheme
+                                      .secondary
+                                      .withOpacity(0.75),
+                                  borderRadius: BorderRadius.circular(8.0),
+                                  textStyle: Theme.of(context)
+                                      .textTheme
+                                      .bodyMedium!
+                                      .copyWith(
+                                          color: Theme.of(context)
+                                              .colorScheme
+                                              .onPrimary),
+                                  duration: UiConfig.toastDuration,
+                                );
+                              }
                               for (ProcessRequestModel process
                                   in processRequests) {
-                                if (process.id.isEmpty) {
+                                if (process.personalData.isEmpty) {
                                   verified = false;
+                                  BotToast.showText(
+                                    text: tr('กรุณากรอกข้อมูลส่วนบุคคล'),
+                                    contentColor: Theme.of(context)
+                                        .colorScheme
+                                        .secondary
+                                        .withOpacity(0.75),
+                                    borderRadius: BorderRadius.circular(8.0),
+                                    textStyle: Theme.of(context)
+                                        .textTheme
+                                        .bodyMedium!
+                                        .copyWith(
+                                            color: Theme.of(context)
+                                                .colorScheme
+                                                .onPrimary),
+                                    duration: UiConfig.toastDuration,
+                                  );
                                 }
 
                                 if (process.requestAction.isEmpty) {
                                   verified = false;
+                                  BotToast.showText(
+                                    text: tr('กรุณาเลือกการดำเนินการ'),
+                                    contentColor: Theme.of(context)
+                                        .colorScheme
+                                        .secondary
+                                        .withOpacity(0.75),
+                                    borderRadius: BorderRadius.circular(8.0),
+                                    textStyle: Theme.of(context)
+                                        .textTheme
+                                        .bodyMedium!
+                                        .copyWith(
+                                            color: Theme.of(context)
+                                                .colorScheme
+                                                .onPrimary),
+                                    duration: UiConfig.toastDuration,
+                                  );
                                 }
 
                                 if (process.reasonTypes.isEmpty) {
                                   verified = false;
+                                  BotToast.showText(
+                                    text: tr('กรุณาเลือกเหตุผลประกอบคำร้อง'),
+                                    contentColor: Theme.of(context)
+                                        .colorScheme
+                                        .secondary
+                                        .withOpacity(0.75),
+                                    borderRadius: BorderRadius.circular(8.0),
+                                    textStyle: Theme.of(context)
+                                        .textTheme
+                                        .bodyMedium!
+                                        .copyWith(
+                                            color: Theme.of(context)
+                                                .colorScheme
+                                                .onPrimary),
+                                    duration: UiConfig.toastDuration,
+                                  );
                                 }
                               }
                               break;
@@ -407,7 +583,7 @@ class _FormDataSubjectRightViewState extends State<FormDataSubjectRightView> {
                             ? Text(
                                 tr("app.next"),
                               )
-                            :  Text(tr("dataSubjectRight.submitRequestForm"))),
+                            : Text(tr("dataSubjectRight.submitRequestForm"))),
                   ),
                 ],
               ),
@@ -416,5 +592,19 @@ class _FormDataSubjectRightViewState extends State<FormDataSubjectRightView> {
         )
       ],
     );
+  }
+}
+
+class TEsttt extends StatefulWidget {
+  const TEsttt({super.key});
+
+  @override
+  State<TEsttt> createState() => _TEstttState();
+}
+
+class _TEstttState extends State<TEsttt> {
+  @override
+  Widget build(BuildContext context) {
+    return Text("data");
   }
 }

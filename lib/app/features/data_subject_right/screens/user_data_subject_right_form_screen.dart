@@ -5,6 +5,10 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:pdpa/app/config/config.dart';
 import 'package:pdpa/app/data/models/data_subject_right/data_subject_right_model.dart';
 import 'package:pdpa/app/features/data_subject_right/bloc/user_data_subject_right_form/user_data_subject_right_form_bloc.dart';
+import 'package:pdpa/app/features/data_subject_right/cubit/form_data_subject_right/form_data_subject_right_cubit.dart';
+import 'package:pdpa/app/features/data_subject_right/screens/form_data_subject_right/form_data_subject_right.dart';
+import 'package:pdpa/app/features/data_subject_right/screens/form_data_subject_right/widgets/summit_screen.dart';
+import 'package:pdpa/app/shared/utils/constants.dart';
 import 'package:pdpa/app/shared/widgets/customs/custom_button.dart';
 import 'package:pdpa/app/shared/widgets/customs/custom_container.dart';
 import 'package:pdpa/app/shared/widgets/screens/error_message_screen.dart';
@@ -42,10 +46,9 @@ class _UserDataSubjectRightFormScreenState
 
   @override
   Widget build(BuildContext context) {
-    return BlocConsumer<UserDataSubjectRightFormBloc,
-        UserDataSubjectRightFormState>(
+    return BlocConsumer<FormDataSubjectRightCubit, FormDataSubjectRightState>(
       listener: (context, state) {
-        if (state is SubmittedUserDataSubjectRightForm) {
+        if (state.requestFormState == RequestFormState.summarize) {
           BotToast.showText(
             text: tr(
                 'consentManagement.consentForm.consentFormDetails.edit.submitSuccess'), //!
@@ -61,18 +64,15 @@ class _UserDataSubjectRightFormScreenState
         }
       },
       builder: (context, state) {
-        if (state is GotUserDataSubjectRightForm) {
-          return const UserDataSubjectRightView();
-          // return BlocProvider<CurrentUserConsentFormCubit>(
-          //   create: (context) => CurrentUserConsentFormCubit()
-          //     ..initialUserConsent(state.consentForm, state.purposeCategories),
-          //   child: const UserDataSubjectRightView(),
-          // );
+        if (state.requestFormState == RequestFormState.requesting) {
+          return UserDataSubjectRightView(
+            companyId: widget.companyId,
+          );
         }
-        if (state is UserDataSubjectRightFormError) {
-          return ErrorMessageScreen(message: state.message);
-        }
-        if (state is SubmittedUserDataSubjectRightForm) {
+        // if (state is UserDataSubjectRightFormError) {
+        //   return ErrorMessageScreen(message: state.message);
+        // }
+        if (state.requestFormState == RequestFormState.summarize) {
           return _buildSubmittedScreen(
             context,
             dataSubjectRight: state.dataSubjectRight,
@@ -106,58 +106,18 @@ class _UserDataSubjectRightFormScreenState
           ),
         ),
       ),
-      body: SingleChildScrollView(
-        child: Column(
-          mainAxisSize: MainAxisSize.min,
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: <Widget>[
-            const SizedBox(height: UiConfig.lineSpacing),
-            CustomContainer(
-              child: Column(
-                mainAxisSize: MainAxisSize.min,
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: <Widget>[
-                  Text(
-                    tr('userSubjectRight.collectedYourConsent'),
-                    style: Theme.of(context).textTheme.bodyMedium,
-                  ),
-                  const SizedBox(height: UiConfig.lineGap),
-                  Text(
-                    tr('userSubjectRight.dataSubjectRightForm'),
-                    style: Theme.of(context).textTheme.titleLarge?.copyWith(
-                        color: Theme.of(context).colorScheme.primary),
-                  ),
-                  const SizedBox(height: UiConfig.lineSpacing),
-                  ConstrainedBox(
-                    constraints: const BoxConstraints(maxWidth: 260.0),
-                    child: CustomButton(
-                      height: 40.0,
-                      onPressed: () {
-                        final event = GetUserDataSubjectRightFormEvent(
-                          companyId: widget.companyId,
-                        );
-                        context.read<UserDataSubjectRightFormBloc>().add(event);
-                      },
-                      child: Text(
-                        tr('userSubjectRight.fillAgain'),
-                        style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                            color: Theme.of(context).colorScheme.onPrimary),
-                      ),
-                    ),
-                  ),
-                ],
-              ),
-            ),
-            const SizedBox(height: UiConfig.lineSpacing),
-          ],
-        ),
-      ),
+      body: const SubmitScreen(),
     );
   }
 }
 
 class UserDataSubjectRightView extends StatefulWidget {
-  const UserDataSubjectRightView({super.key});
+  const UserDataSubjectRightView({
+    super.key,
+    required this.companyId,
+  });
+
+  final String companyId;
 
   @override
   State<UserDataSubjectRightView> createState() =>
@@ -167,11 +127,18 @@ class UserDataSubjectRightView extends StatefulWidget {
 class _UserDataSubjectRightViewState extends State<UserDataSubjectRightView> {
   @override
   Widget build(BuildContext context) {
-    return const Scaffold(
-      body: SingleChildScrollView(
-        child: Column(
-          children: <Widget>[],
+    return Scaffold(
+      appBar: PdpaAppBar(
+        title: SizedBox(
+          height: 40.0,
+          child: Image.asset(
+            'assets/images/general/dpo_online_mini.png',
+            fit: BoxFit.contain,
+          ),
         ),
+      ),
+      body: FormDataSubjectRightView(
+        companyId: widget.companyId,
       ),
     );
   }
