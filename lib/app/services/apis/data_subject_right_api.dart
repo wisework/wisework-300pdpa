@@ -1,3 +1,5 @@
+import 'dart:math';
+
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:pdpa/app/data/models/data_subject_right/data_subject_right_model.dart';
 
@@ -38,11 +40,13 @@ class DataSubjectRightApi {
     DataSubjectRightModel dataSubjectRight,
     String companyId,
   ) async {
-    final ref =
-        _firestore.collection('Companies/$companyId/DataSubjectRights').doc();
-    final created = dataSubjectRight.copyWith(id: ref.id);
+    final id = _generateDsrId();
+    final created = dataSubjectRight.copyWith(id: id);
 
-    await ref.set(created.toMap());
+    await _firestore
+        .collection('Companies/$companyId/DataSubjectRights')
+        .doc(id)
+        .set(created.toMap());
 
     return created;
   }
@@ -67,5 +71,19 @@ class DataSubjectRightApi {
           .doc(dataSubjectRightId)
           .delete();
     }
+  }
+
+  String _generateDsrId() {
+    final random = (Random().nextInt(9000) + 1000).toString();
+    final now = DateTime.now();
+
+    final year = now.year;
+    final date = '${now.month.toString().padLeft(2, '0')}'
+        '${now.day.toString().padLeft(2, '0')}';
+    final time = '${now.hour.toString().padLeft(2, '0')}'
+        '${now.minute.toString().padLeft(2, '0')}';
+    final second = now.second.toString().padLeft(2, '0');
+
+    return 'DSR-$year-$date-$time-$second-$random';
   }
 }
