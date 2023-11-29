@@ -143,7 +143,23 @@ class _ProcessDataSubjectRightViewState
         final current = cubit.state.dataSubjectRight;
         final initial = cubit.state.initialDataSubjectRight;
 
-        if (current.processRequests != initial.processRequests) {
+        ProcessRequestModel processRequest = ProcessRequestModel.empty();
+        for (ProcessRequestModel request in current.processRequests) {
+          if (request.id == cubit.state.processRequestSelected) {
+            processRequest = request;
+          }
+        }
+
+        ProcessRequestModel initProcessRequest = ProcessRequestModel.empty();
+        for (ProcessRequestModel request in initial.processRequests) {
+          if (request.id == cubit.state.processRequestSelected) {
+            initProcessRequest = request.copyWith(
+              notifyEmail: processRequest.notifyEmail,
+            );
+          }
+        }
+
+        if (processRequest != initProcessRequest) {
           showToast(context, text: tr('dataSubjectRight.processDsr.test'));
           return;
         }
