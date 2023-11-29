@@ -106,7 +106,7 @@ class _ChooseRejectTypeModalState extends State<ChooseRejectTypeModal> {
               children: <Widget>[
                 Expanded(
                   child: Text(
-                    'รายการการปฏิเสธ',
+                    tr('dataSubjectRight.chooseReject.refusal'),
                     style: Theme.of(context).textTheme.titleLarge,
                   ),
                 ),
@@ -132,7 +132,7 @@ class _ChooseRejectTypeModalState extends State<ChooseRejectTypeModal> {
               ],
             ),
           ),
-        ), //!
+        ), 
         const SizedBox(height: UiConfig.lineSpacing),
         Expanded(
           child: ListView.builder(
@@ -143,9 +143,9 @@ class _ChooseRejectTypeModalState extends State<ChooseRejectTypeModal> {
             itemBuilder: (_, index) {
               if (rejectTypes.isEmpty) {
                 return Text(
-                  'ไม่พบข้อมูล',
+                  tr('dataSubjectRight.chooseReject.notFound'),
                   style: Theme.of(context).textTheme.bodyMedium,
-                ); //!
+                ); 
               }
               return Column(
                 children: <Widget>[

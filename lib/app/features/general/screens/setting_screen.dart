@@ -196,7 +196,7 @@ class _SettingViewState extends State<SettingView> {
           Row(
             children: <Widget>[
               Text(
-                'การตั้งค่าทั่วไป',
+                'app.features.generalSetting',
                 style: Theme.of(context).textTheme.titleLarge,
               ),
             ],

@@ -235,7 +235,7 @@ class _EditReasonTypeViewState extends State<EditReasonTypeView> {
 
           if (reasonIds == reasonType.id) {
             dsrId.add(from.id);
-          } 
+          }
         }
         usedDataSubjectRightIds.addAll(dsrId);
       }
@@ -320,13 +320,14 @@ class _EditReasonTypeViewState extends State<EditReasonTypeView> {
         context: context,
         builder: (_) => AlertDialog(
           title: Text(
-            tr('เกิดข้อผิดพลาด'),
+            tr('masterData.dsr.rejections.error'),
             style: Theme.of(context).textTheme.titleLarge,
           ),
           content: Column(
             children: [
-              Text(tr(
-                  'ไม่สามารถลบเหตุผลนี้นี้ได้เนื่องจากมีการถูกใช้ในแบบฟอร์มดังนี้ :')),
+              Text(
+                tr('masterData.dsr.rejections.canNotRemoved'),
+              ),
               Column(
                 children: usedDataSubjectRightIds.map((id) {
                   return Row(children: [

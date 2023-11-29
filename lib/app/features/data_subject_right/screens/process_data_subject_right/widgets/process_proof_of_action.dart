@@ -1,3 +1,4 @@
+import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -61,7 +62,7 @@ class _ProcessProofOfActionState extends State<ProcessProofOfAction> {
     final cubit = context.read<ProcessDataSubjectRightCubit>();
     cubit.downloadFile(path);
 
-    showToast(context, text: 'ดาวน์โหลดไฟล์สำเร็จ');
+    showToast(context, text: tr('dataSubjectRight.processProof.dlSuccess'));
   }
 
   void _onProofOfActionChanged(String value, String id) {
@@ -94,10 +95,10 @@ class _ProcessProofOfActionState extends State<ProcessProofOfAction> {
 
     if (processRequest != emptyRequest) {
       final Map<ProcessRequestStatus, String> statusTexts = {
-        ProcessRequestStatus.notProcessed: 'ยังไม่ดำเนินการ',
-        ProcessRequestStatus.inProgress: 'อยู่ระหว่างการดำเนินการ',
-        ProcessRequestStatus.refused: 'ปฏิเสธการดำเนินการ',
-        ProcessRequestStatus.completed: 'ดำเนินการเสร็จสิ้น',
+        ProcessRequestStatus.notProcessed: tr('dataSubjectRight.processProof.notYetProcessed'),
+        ProcessRequestStatus.inProgress: tr('dataSubjectRight.processProof.inProgress'),
+        ProcessRequestStatus.refused: tr('dataSubjectRight.processProof.refuseProcessing'),
+        ProcessRequestStatus.completed: tr('dataSubjectRight.processProof.completed'),
       };
 
       final status = UtilFunctions.getProcessRequestStatus(
@@ -136,7 +137,7 @@ class _ProcessProofOfActionState extends State<ProcessProofOfAction> {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: <Widget>[
           Text(
-            'ดำเนินการ',
+            tr('dataSubjectRight.processCondider.carryOut'),
             style: Theme.of(context).textTheme.titleMedium,
           ),
           const SizedBox(height: UiConfig.lineGap),
@@ -161,7 +162,7 @@ class _ProcessProofOfActionState extends State<ProcessProofOfAction> {
       mainAxisSize: MainAxisSize.min,
       crossAxisAlignment: CrossAxisAlignment.start,
       children: <Widget>[
-        const TitleRequiredText(text: 'หลักฐานดำเนินการ'),
+         TitleRequiredText(text: tr('dataSubjectRight.processProof.completed')),
         widget.initialProcessRequest.proofOfActionFile.isEmpty
             ? UploadFileField(
                 fileUrl: widget.processRequest.proofOfActionFile,
@@ -183,12 +184,12 @@ class _ProcessProofOfActionState extends State<ProcessProofOfAction> {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: <Widget>[
           TitleRequiredText(
-            text: 'รายละเอียดดำเนินการ',
+            text: tr('dataSubjectRight.processProof.details'),
             required: widget.initialProcessRequest.proofOfActionText.isEmpty,
           ),
           CustomTextField(
             initialValue: widget.processRequest.proofOfActionText,
-            hintText: 'เนื่องด้วย...',
+            hintText: tr('dataSubjectRight.processCondider.since'),
             maxLines: 5,
             onChanged: (value) {
               _onProofOfActionChanged(
@@ -221,7 +222,7 @@ class _ProcessProofOfActionState extends State<ProcessProofOfAction> {
                   loadingType: LoadingType.horizontalRotatingDots,
                 )
               : Text(
-                  'ส่งผลการตรวจสอบ',
+                  tr('dataSubjectRight.processProof.submit'),
                   style: Theme.of(context).textTheme.titleMedium?.copyWith(
                       color: Theme.of(context).colorScheme.onPrimary),
                 ),

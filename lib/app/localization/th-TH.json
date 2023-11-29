@@ -23,6 +23,7 @@
             "datasubjectright": "สิทธิของเจ้าของข้อมูล",
             "masterdata": "ข้อมูลหลัก",
             "setting": "การตั้งค่า",
+            "generalSetting": "การตั้งค่าทั่วไป",
             "createNewConsentForm": "สร้างแบบฟอร์มยินยอมใหม่",
             "seeMore": "เพิ่มเติม",
             "resultNotFound": "ไม่พบผลลัพธ์!",
@@ -402,7 +403,9 @@
                 "rejectcode": "รหัสการปฏิเสธ",
                 "rejectcodeHint": "รหัสการปฏิเสธ",
                 "description": "รายละเอียดการปฏิเสธ",
-                "descriptionHint": "รายละเอียดการปฏิเสธ"
+                "descriptionHint": "รายละเอียดการปฏิเสธ",
+                "error": "เกิดข้อผิดพลาด",
+                "canNotRemoved :": "ไม่สามารถลบเหตุผลนี้ได้เนื่องจากมีการถูกใช้ในแบบฟอร์มดังนี้ :"
             },
             "reason": {
                 "title1": "รายการเหตุผลประกอบคำร้อง",
@@ -533,6 +536,38 @@
             "notPass": "ไม่ผ่านการตรวจสอบ",
             "notYetVerified": "ยังไม่ได้ตรวจสอบ",
             "test": "กรุณาส่งผลการตรวจสอบ"
+        },
+        "chooseReject": {
+            "refusal": "รายการการปฏิเสธ",
+            "notFound": "ไม่พบข้อมูล"
+        },
+        "processCondider": {
+            "notYetProcessed": "ยังไม่ดำเนินการ",
+            "inProgress": "อยู่ระหว่างการดำเนินการ",
+            "refuseProcessing": "ปฏิเสธการดำเนินการ",
+            "completed": "ดำเนินการเสร็จสิ้น",
+            "reason:": "เหตุผล:",
+            "considerTakingAction": "พิจารณาดำเนินการ",
+            "sendEmail ": "ส่งการแจ้งเตือนทางอีเมล",
+            "confirm": "ยืนยัน",
+            "carryOut": "ดำเนินการ",
+            "list": "ปฏิเสธคำขอ",
+            "reason": "เหตุผลประกอบ",
+            "since": "เนื่องด้วย...",
+            "pleaseSelect": "โปรดเลือกตัวเลือกเพื่อดำเนินการต่อ",
+            "addReasons": "เพิ่มเหตุผลในการปฏิเสธ",
+            "selectReject": "โปรดเลือกเหตุผลในการปฏิเสธ",
+            "submit": "ส่งผลการตรวจสอบ"
+        },
+        "processProof": {
+            "dlSuccess": "ดาวน์โหลดไฟล์สำเร็จ",
+            "notYetProcessed": "ยังไม่ดำเนินการ",
+            "inProgress": "อยู่ระหว่างการดำเนินการ",
+            "refuseProcessing": "ปฏิเสธการดำเนินการ",
+            "completed": "ดำเนินการเสร็จสิ้น",
+            "proof": "หลักฐานดำเนินการ",
+            "details": "รายละเอียดดำเนินการ",
+            "submit": "ส่งผลการตรวจสอบ"
         },
         "StepProcessDsr": {
             "considering": {

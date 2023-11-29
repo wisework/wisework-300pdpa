@@ -561,6 +561,7 @@ class _HomeViewState extends State<HomeView> {
     required ExploreActivity activity,
   }) {
     return SizedBox(
+      height: 114,
       width: 160.0,
       child: MaterialInkWell(
         backgroundColor: Theme.of(context).colorScheme.onBackground,
@@ -624,8 +625,7 @@ class _HomeViewState extends State<HomeView> {
               Text(
                 activity.title,
                 style: Theme.of(context).textTheme.bodySmall,
-                overflow: TextOverflow.ellipsis,
-                maxLines: 1,
+                maxLines: 2,
               ),
             ],
           ),

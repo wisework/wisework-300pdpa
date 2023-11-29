@@ -23,6 +23,7 @@
             "datasubjectright": "Data Subject Right",
             "masterdata": "Master Data",
             "setting": "Setting",
+            "generalSetting": "General settings",
             "createNewConsentForm": "Create New Consent Form",
             "seeMore": "See more",
             "resultNotFound": "Result Not Found!",
@@ -402,7 +403,9 @@
                 "rejectcode": "Reject code",
                 "rejectcodeHint": "Reject code",
                 "description": "Reject description",
-                "descriptionHint": "Reject description"
+                "descriptionHint": "Reject description",
+                "error": "An error occurred.",
+                "canNotRemoved :": "This reason cannot be removed because it is used in the form as follows:"
             },
             "reason": {
                 "title1": "Types of primary reasons",
@@ -533,6 +536,38 @@
             "notPass": "Not verified",
             "notYetVerified": "not yet verified",
             "test": "Please submit the inspection results."
+        },
+        "chooseReject": {
+            "refusal": "Refusal list",
+            "notFound": "No information found"
+        },
+        "processCondider": {
+            "notYetProcessed": "Not yet processed",
+            "inProgress": "In progress",
+            "refuseProcessing": "Refuse processing",
+            "completed": "Completed",
+            "reason:": "Reason:",
+            "considerTakingAction": "Consider taking action",
+            "sendEmail ": "Send email notifications",
+            "confirm": "Confirm",
+            "carryOut": "Carry out",
+            "list": "Refuse request",
+            "reason": "Reason",
+            "since": "Since...",
+            "pleaseSelect": "Please select an option to continue.",
+            "addReasons": "Add reasons for refusal",
+            "selectReject": "Please select a reason for refusal.",
+            "submit": "Submit inspection results"
+        },
+        "processProof": {
+            "dlSuccess": "File downloaded successfully.",
+            "notYetProcessed": "Not yet processed",
+            "inProgress": "In progress",
+            "refuseProcessing": "Refuse processing",
+            "completed": "Completed",
+            "proof": "Proof of action",
+            "details": "Process details",
+            "submit": "Submit inspection results"
         },
         "StepProcessDsr": {
             "considering": {
