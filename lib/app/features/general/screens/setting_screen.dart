@@ -1,15 +1,20 @@
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
 import 'package:pdpa/app/config/config.dart';
 import 'package:pdpa/app/config/provider/theme_provider.dart';
 import 'package:pdpa/app/config/themes/pdpa_theme_data.dart';
 import 'package:pdpa/app/data/models/authentication/user_model.dart';
 import 'package:pdpa/app/features/authentication/bloc/sign_in/sign_in_bloc.dart';
+import 'package:pdpa/app/features/data_subject_right/routes/data_subject_right_route.dart';
+import 'package:pdpa/app/features/general/routes/general_route.dart';
 import 'package:pdpa/app/shared/drawers/pdpa_drawer.dart';
+import 'package:pdpa/app/shared/utils/constants.dart';
 import 'package:pdpa/app/shared/widgets/content_wrapper.dart';
 import 'package:pdpa/app/shared/widgets/customs/custom_container.dart';
 import 'package:pdpa/app/shared/widgets/customs/custom_icon_button.dart';
 import 'package:pdpa/app/shared/widgets/customs/custom_switch_button.dart';
+import 'package:pdpa/app/shared/widgets/material_ink_well.dart';
 import 'package:pdpa/app/shared/widgets/templates/pdpa_app_bar.dart';
 import 'package:provider/provider.dart';
 
@@ -133,6 +138,8 @@ class _SettingViewState extends State<SettingView> {
               // _buildGeneralSection(),
               const SizedBox(height: UiConfig.lineSpacing),
               _buildThemeSwitchButton(themeProvider),
+              const SizedBox(height: UiConfig.lineSpacing),
+              _buildShowWhatNewButton(),
             ],
           ),
         ),
@@ -217,6 +224,71 @@ class _SettingViewState extends State<SettingView> {
                 },
               ),
             ],
+          ),
+          Divider(
+            color:
+                Theme.of(context).colorScheme.outlineVariant.withOpacity(0.5),
+          ),
+        ],
+      ),
+    );
+  }
+
+  CustomContainer _buildShowWhatNewButton() {
+    return CustomContainer(
+      child: Column(
+        mainAxisSize: MainAxisSize.min,
+        children: <Widget>[
+          Row(
+            children: <Widget>[
+              Text(
+                'เกี่ยวกับแอป',
+                style: Theme.of(context).textTheme.titleLarge,
+              ),
+            ],
+          ),
+          const SizedBox(height: UiConfig.lineSpacing),
+          MaterialInkWell(
+            onTap: () {
+              context.push(GeneralRoute.board.path);
+            },
+            child: Padding(
+              padding: const EdgeInsets.symmetric(
+                  vertical: UiConfig.textLineSpacing),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: <Widget>[
+                  Text(
+                    "What's new",
+                    style: Theme.of(context).textTheme.bodyMedium,
+                  ),
+                ],
+              ),
+            ),
+          ),
+          Divider(
+            color:
+                Theme.of(context).colorScheme.outlineVariant.withOpacity(0.5),
+          ),
+          Padding(
+            padding:
+                const EdgeInsets.symmetric(vertical: UiConfig.textLineSpacing),
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: <Widget>[
+                Text(
+                  "Version",
+                  style: Theme.of(context).textTheme.bodyMedium,
+                ),
+                Padding(
+                  padding: const EdgeInsets.only(right: 8.0),
+                  child: Text(
+                    versionApp,
+                    style: Theme.of(context).textTheme.bodyMedium,
+                  ),
+                ),
+              ],
+            ),
           ),
           Divider(
             color:
