@@ -1,6 +1,7 @@
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/services.dart';
 
+const String versionApp = "1.0.2";
 final List<String> alphabets = [
   'a',
   'b',
