@@ -114,10 +114,14 @@ class _DataSubjectRightViewState extends State<DataSubjectRightView> {
 
   final Map<ProcessRequestFilter, String> filterTexts = {
     ProcessRequestFilter.all: tr('dataSubjectRight.processRequestFilter.all'),
-    ProcessRequestFilter.notProcessed: tr('dataSubjectRight.processRequestFilter.notStarted'),
-    ProcessRequestFilter.inProgress: tr('dataSubjectRight.processRequestFilter.process'),
-    ProcessRequestFilter.refused: tr('dataSubjectRight.processRequestFilter.refuse'),
-    ProcessRequestFilter.completed: tr('dataSubjectRight.processRequestFilter.finish'),
+    ProcessRequestFilter.notProcessed:
+        tr('dataSubjectRight.processRequestFilter.notStarted'),
+    ProcessRequestFilter.inProgress:
+        tr('dataSubjectRight.processRequestFilter.process'),
+    ProcessRequestFilter.refused:
+        tr('dataSubjectRight.processRequestFilter.refuse'),
+    ProcessRequestFilter.completed:
+        tr('dataSubjectRight.processRequestFilter.finish'),
   };
 
   void _setFilter(ProcessRequestFilter? value) {
@@ -340,14 +344,11 @@ class _DataSubjectRightViewState extends State<DataSubjectRightView> {
           entry.key,
         );
 
-        return Padding(
-          padding: const EdgeInsets.only(),
-          child: DataSubjectRightCard(
-            dataSubjectRight: dataSubjectRight,
-            processRequest: entry.value,
-            requestTypes: requestTypes,
-            language: widget.language,
-          ),
+        return DataSubjectRightCard(
+          dataSubjectRight: dataSubjectRight,
+          processRequest: entry.value,
+          requestTypes: requestTypes,
+          language: widget.language,
         );
       },
       itemCount: processRequestFiltered.length,

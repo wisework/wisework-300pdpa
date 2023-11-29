@@ -10,18 +10,25 @@ import 'package:pdpa/app/data/models/authentication/company_model.dart';
 import 'package:pdpa/app/data/models/authentication/user_model.dart';
 import 'package:pdpa/app/data/models/consent_management/consent_form_model.dart';
 import 'package:pdpa/app/data/models/consent_management/user_consent_model.dart';
+import 'package:pdpa/app/data/models/data_subject_right/data_subject_right_model.dart';
+import 'package:pdpa/app/data/models/data_subject_right/process_request_model.dart';
 import 'package:pdpa/app/data/models/etc/explore_activity.dart';
 import 'package:pdpa/app/data/models/etc/user_input_text.dart';
+import 'package:pdpa/app/data/models/master_data/localized_model.dart';
+import 'package:pdpa/app/data/models/master_data/request_type_model.dart';
 import 'package:pdpa/app/features/authentication/bloc/sign_in/sign_in_bloc.dart';
 import 'package:pdpa/app/features/consent_management/consent_form/routes/consent_form_route.dart';
 import 'package:pdpa/app/features/consent_management/user_consent/bloc/user_consent/user_consent_bloc.dart';
 import 'package:pdpa/app/features/consent_management/user_consent/routes/user_consent_route.dart';
+import 'package:pdpa/app/features/data_subject_right/bloc/data_subject_right/data_subject_right_bloc.dart';
 import 'package:pdpa/app/features/data_subject_right/routes/data_subject_right_route.dart';
 import 'package:pdpa/app/features/general/routes/general_route.dart';
 import 'package:pdpa/app/features/master_data/routes/master_data_route.dart';
 import 'package:pdpa/app/shared/drawers/bloc/drawer_bloc.dart';
 import 'package:pdpa/app/shared/drawers/models/drawer_menu_models.dart';
 import 'package:pdpa/app/shared/drawers/pdpa_drawer.dart';
+import 'package:pdpa/app/shared/utils/constants.dart';
+import 'package:pdpa/app/shared/utils/functions.dart';
 import 'package:pdpa/app/shared/utils/user_preferences.dart';
 import 'package:pdpa/app/shared/widgets/customs/custom_button.dart';
 import 'package:pdpa/app/shared/widgets/customs/custom_container.dart';
@@ -77,6 +84,10 @@ class _HomeScreenState extends State<HomeScreen> {
     context
         .read<UserConsentBloc>()
         .add(GetUserConsentsEvent(companyId: companyId));
+
+    context
+        .read<DataSubjectRightBloc>()
+        .add(GetDataSubjectRightsEvent(companyId: companyId));
   }
 
   @override
@@ -202,7 +213,7 @@ class _HomeViewState extends State<HomeView> {
               child: Center(
                 child: Column(
                   children: <Widget>[
-                    const SizedBox(height: UiConfig.lineSpacing + 5),
+                    const SizedBox(height: UiConfig.lineGap * 2),
                     _buildBannerSection(
                       context,
                       screenSize: screenSize,
@@ -217,7 +228,12 @@ class _HomeViewState extends State<HomeView> {
                       context,
                       screenSize: screenSize,
                     ),
-                    const SizedBox(height: UiConfig.lineSpacing + 5),
+                    const SizedBox(height: UiConfig.lineGap * 3),
+                    _buildRecentlyDsrSection(
+                      context,
+                      screenSize: screenSize,
+                    ),
+                    const SizedBox(height: UiConfig.lineGap * 2),
                   ],
                 ),
               ),
@@ -280,14 +296,14 @@ class _HomeViewState extends State<HomeView> {
             children: <Widget>[
               const SizedBox(height: UiConfig.lineGap),
               Text(
-                tr('app.disvover.discover'),
+                "DPO มีอะไรใหม่!",
                 style: Theme.of(context).textTheme.headlineMedium,
               ),
             ],
           ),
           const SizedBox(height: UiConfig.lineGap * 2),
           Text(
-            tr('app.disvover.description'),
+            "อัปเดตฟีเจอร์ใหม่ ที่จะช่วยให้คุณจัดการกับเรื่องข้อมูล ส่วนบุคคลได้ครบถ้วนมากยิ่งขึ้น สะดวก มั่นใจ ถูกต้องตามกรอบของ พ.ร.บ.คุ้มครองข้อมูลส่วนบุคคล",
             style: Theme.of(context).textTheme.bodySmall,
           ),
           const SizedBox(height: UiConfig.lineGap * 2),
@@ -335,13 +351,13 @@ class _HomeViewState extends State<HomeView> {
                 bottom: 4.0,
               ),
               child: Icon(
-                Ionicons.home_outline,
+                Ionicons.shield_checkmark_outline,
                 size: 20.0,
                 color: Theme.of(context).colorScheme.onSurface,
               ),
             ),
             Text(
-              tr('app.features.home'),
+              "จัดการคำร้องขอใช้สิทธิ์",
               style: Theme.of(context).textTheme.titleMedium,
             ),
           ],
@@ -356,55 +372,13 @@ class _HomeViewState extends State<HomeView> {
                 bottom: 4.0,
               ),
               child: Icon(
-                Ionicons.reader_outline,
+                Ionicons.moon_outline,
                 size: 20.0,
                 color: Theme.of(context).colorScheme.onSurface,
               ),
             ),
             Text(
-              tr('app.features.consentmanagement'),
-              style: Theme.of(context).textTheme.titleMedium,
-            ),
-          ],
-        ),
-        const SizedBox(height: UiConfig.lineGap),
-        Row(
-          mainAxisAlignment: MainAxisAlignment.start,
-          children: <Widget>[
-            Padding(
-              padding: const EdgeInsets.only(
-                right: UiConfig.defaultPaddingSpacing,
-                bottom: 4.0,
-              ),
-              child: Icon(
-                Ionicons.server_outline,
-                size: 20.0,
-                color: Theme.of(context).colorScheme.onSurface,
-              ),
-            ),
-            Text(
-              tr('app.features.masterdata'),
-              style: Theme.of(context).textTheme.titleMedium,
-            ),
-          ],
-        ),
-        const SizedBox(height: UiConfig.lineGap),
-        Row(
-          mainAxisAlignment: MainAxisAlignment.start,
-          children: <Widget>[
-            Padding(
-              padding: const EdgeInsets.only(
-                right: UiConfig.defaultPaddingSpacing,
-                bottom: 4.0,
-              ),
-              child: Icon(
-                Ionicons.settings_outline,
-                size: 20.0,
-                color: Theme.of(context).colorScheme.onSurface,
-              ),
-            ),
-            Text(
-              tr('app.features.setting'),
+              "โหมดกลางคืน",
               style: Theme.of(context).textTheme.titleMedium,
             ),
           ],
@@ -713,7 +687,7 @@ class _HomeViewState extends State<HomeView> {
                   shrinkWrap: true,
                   itemCount: min(3, state.userConsents.length),
                   itemBuilder: (context, index) {
-                    return _buildItemCard(
+                    return _buildUserConsentItemCard(
                       context,
                       userConsent: state.userConsents[index],
                       consentForm: state.consentForms.firstWhere(
@@ -772,7 +746,7 @@ class _HomeViewState extends State<HomeView> {
     );
   }
 
-  Container _buildItemCard(
+  Container _buildUserConsentItemCard(
     BuildContext context, {
     required UserConsentModel userConsent,
     required ConsentFormModel consentForm,
@@ -835,6 +809,211 @@ class _HomeViewState extends State<HomeView> {
                               consentForm.title.first.text,
                               style: Theme.of(context).textTheme.bodySmall,
                             ),
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                  Padding(
+                    padding: const EdgeInsets.only(left: 40.0),
+                    child: Text(
+                      dateConsentForm,
+                      style: Theme.of(context).textTheme.bodySmall,
+                    ),
+                  ),
+                ],
+              ),
+            ],
+          ),
+        ),
+      ),
+    );
+  }
+
+  Container _buildRecentlyDsrSection(
+    BuildContext context, {
+    required Size screenSize,
+  }) {
+    return Container(
+      width: screenSize.width,
+      constraints: const BoxConstraints(
+        maxWidth: UiConfig.maxWidthContent,
+      ),
+      margin: const EdgeInsets.symmetric(
+        horizontal: UiConfig.defaultPaddingSpacing + UiConfig.textSpacing,
+      ),
+      child: Column(
+        children: <Widget>[
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: <Widget>[
+              Expanded(
+                child: Text(
+                  'รายการแบบฟอร์มล่าสุด',
+                  style: Theme.of(context).textTheme.titleLarge,
+                  overflow: TextOverflow.ellipsis,
+                  maxLines: 1,
+                ),
+              ),
+              BlocBuilder<UserConsentBloc, UserConsentState>(
+                builder: (context, state) {
+                  if (state is GotUserConsents) {
+                    if (state.userConsents.isNotEmpty) {
+                      return MouseRegion(
+                        cursor: SystemMouseCursors.click,
+                        child: GestureDetector(
+                          onTap: () {
+                            final dataSubjectRightMenu = DrawerMenuModel(
+                              value: 'data_subject_right',
+                              title: tr('app.features.datasubjectright'),
+                              icon: Ionicons.shield_checkmark_outline,
+                              route: DataSubjectRightRoute.dataSubjectRight,
+                            );
+
+                            context.read<DrawerBloc>().add(
+                                SelectMenuDrawerEvent(
+                                    menu: dataSubjectRightMenu));
+                            context.pushReplacement(
+                                DataSubjectRightRoute.dataSubjectRight.path);
+                          },
+                          child: Text(
+                            tr('app.features.seeMore'),
+                            style: Theme.of(context)
+                                .textTheme
+                                .titleSmall
+                                ?.copyWith(
+                                  decoration: TextDecoration.underline,
+                                  decorationColor:
+                                      Theme.of(context).colorScheme.primary,
+                                  color: Theme.of(context).colorScheme.primary,
+                                ),
+                          ),
+                        ),
+                      );
+                    }
+                  }
+                  return const SizedBox();
+                },
+              ),
+            ],
+          ),
+          const SizedBox(height: UiConfig.lineSpacing),
+          BlocBuilder<DataSubjectRightBloc, DataSubjectRightState>(
+            builder: (context, state) {
+              if (state is GotDataSubjectRights) {
+                if (state.dataSubjectRights.isEmpty) {
+                  return _buildResultNotFound(context);
+                }
+                final processRequestFiltered =
+                    UtilFunctions.filterAllProcessRequest(
+                  state.dataSubjectRights,
+                  ProcessRequestFilter.all,
+                );
+
+                return ListView.separated(
+                  physics: const NeverScrollableScrollPhysics(),
+                  shrinkWrap: true,
+                  itemCount: min(3, state.dataSubjectRights.length),
+                  itemBuilder: (context, index) {
+                    final entry = processRequestFiltered[index].entries.first;
+                    final dataSubjectRight =
+                        UtilFunctions.getDataSubjectRightById(
+                      state.dataSubjectRights,
+                      entry.key,
+                    );
+
+                    return _buildDataSubjectRightItemCard(
+                      context,
+                      dataSubjectRight: dataSubjectRight,
+                      processRequest: entry.value,
+                      requestTypes: state.requestTypes,
+                    );
+                  },
+                  separatorBuilder: (context, index) => const SizedBox(
+                    height: UiConfig.lineSpacing,
+                  ),
+                );
+              }
+              return const Padding(
+                padding: EdgeInsets.symmetric(
+                  vertical: UiConfig.defaultPaddingSpacing * 4,
+                ),
+                child: Center(
+                  child: LoadingIndicator(),
+                ),
+              );
+            },
+          ),
+        ],
+      ),
+    );
+  }
+
+  Container _buildDataSubjectRightItemCard(
+    BuildContext context, {
+    required DataSubjectRightModel dataSubjectRight,
+    required ProcessRequestModel processRequest,
+    required List<RequestTypeModel> requestTypes,
+  }) {
+    final requestType = UtilFunctions.getRequestTypeById(
+      requestTypes,
+      processRequest.requestType,
+    );
+    final description = requestType.description.firstWhere(
+      (item) => item.language == user.defaultLanguage,
+      orElse: () => const LocalizedModel.empty(),
+    );
+
+    final requester = dataSubjectRight.dataRequester.first.text;
+
+    final dateConsentForm =
+        DateFormat("dd.MM.yy").format(dataSubjectRight.updatedDate);
+
+    return Container(
+      decoration: BoxDecoration(
+        boxShadow: [
+          BoxShadow(
+            color: Theme.of(context).colorScheme.outline,
+            blurRadius: 6.0,
+            offset: const Offset(0, 4.0),
+          ),
+        ],
+      ),
+      child: MaterialInkWell(
+        backgroundColor: Theme.of(context).colorScheme.onBackground,
+        onTap: () {
+          String path = DataSubjectRightRoute.editDataSubjectRight.path;
+          path = path.replaceFirst(':id1', dataSubjectRight.id);
+          path = path.replaceFirst(':id2', processRequest.id);
+
+          context.push(path);
+        },
+        hoverColor: Theme.of(context).colorScheme.primary.withOpacity(0.15),
+        child: Padding(
+          padding: const EdgeInsets.all(UiConfig.defaultPaddingSpacing),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: <Widget>[
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: <Widget>[
+                  Expanded(
+                    child: Column(
+                      mainAxisSize: MainAxisSize.min,
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: <Widget>[
+                        Text(
+                          description.text,
+                          style: Theme.of(context).textTheme.titleMedium,
+                        ),
+                        Padding(
+                          padding: const EdgeInsets.only(
+                            top: UiConfig.textLineSpacing,
+                          ),
+                          child: Text(
+                            requester,
+                            style: Theme.of(context).textTheme.bodySmall,
                           ),
                         ),
                       ],
