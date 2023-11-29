@@ -13,6 +13,8 @@
         "previous": "Previous",
         "next": "Next",
         "finish": "Finish",
+        "version" : "Version",
+        "about" : "About the app",
         "features": {
             "home": "Home",
             "consentmanagement": "Consent Management",

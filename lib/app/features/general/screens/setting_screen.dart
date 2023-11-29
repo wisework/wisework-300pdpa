@@ -203,7 +203,7 @@ class _SettingViewState extends State<SettingView> {
           Row(
             children: <Widget>[
               Text(
-                'app.features.generalSetting',
+                tr('app.features.generalSetting'),
                 style: Theme.of(context).textTheme.titleLarge,
               ),
             ],
@@ -242,7 +242,7 @@ class _SettingViewState extends State<SettingView> {
           Row(
             children: <Widget>[
               Text(
-                'เกี่ยวกับแอป',
+                tr('app.about'),
                 style: Theme.of(context).textTheme.titleLarge,
               ),
             ],
@@ -259,7 +259,7 @@ class _SettingViewState extends State<SettingView> {
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: <Widget>[
                   Text(
-                    "What's new",
+                    tr("app.disvover.seewhatnew"),
                     style: Theme.of(context).textTheme.bodyMedium,
                   ),
                 ],
@@ -277,7 +277,7 @@ class _SettingViewState extends State<SettingView> {
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: <Widget>[
                 Text(
-                  "Version",
+                  tr("app.version"),
                   style: Theme.of(context).textTheme.bodyMedium,
                 ),
                 Padding(

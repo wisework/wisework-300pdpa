@@ -134,10 +134,14 @@ class _ProcessConsiderRequestState extends State<ProcessConsiderRequest> {
 
     if (processRequest != emptyRequest) {
       final Map<ProcessRequestStatus, String> statusTexts = {
-        ProcessRequestStatus.notProcessed: tr('dataSubjectRight.processCondider.notYetProcessed'),
-        ProcessRequestStatus.inProgress: tr('dataSubjectRight.processCondider.inProgress'),
-        ProcessRequestStatus.refused: tr('dataSubjectRight.processCondider.refuseProcessing'),
-        ProcessRequestStatus.completed: tr('dataSubjectRight.processCondider.completed'),
+        ProcessRequestStatus.notProcessed:
+            tr('dataSubjectRight.processCondider.notYetProcessed'),
+        ProcessRequestStatus.inProgress:
+            tr('dataSubjectRight.processCondider.inProgress'),
+        ProcessRequestStatus.refused:
+            tr('dataSubjectRight.processCondider.refuseProcessing'),
+        ProcessRequestStatus.completed:
+            tr('dataSubjectRight.processCondider.completed'),
       };
 
       final status = UtilFunctions.getProcessRequestStatus(
@@ -153,10 +157,10 @@ class _ProcessConsiderRequestState extends State<ProcessConsiderRequest> {
         orElse: () => const LocalizedModel.empty(),
       );
 
-      final rejectReason =
-          processRequest.considerRequestStatus == RequestResultStatus.fail
-              ? '\n${tr('dataSubjectRight.processCondiDDder.completed')} ${processRequest.rejectConsiderReason}'
-              : '';
+      final rejectReason = processRequest.considerRequestStatus ==
+              RequestResultStatus.fail
+          ? '\n${tr('dataSubjectRight.processCondiDDder.completed')} ${processRequest.rejectConsiderReason}'
+          : '';
 
       return ProcessRequestTemplateParams(
         toName: dataSubjectRight.dataRequester[0].text,
@@ -313,7 +317,7 @@ class _ProcessConsiderRequestState extends State<ProcessConsiderRequest> {
                         loadingType: LoadingType.horizontalRotatingDots,
                       )
                     : Text(
-                        'ยืนยัน',
+                        tr('dataSubjectRight.processCondider.confirm'),
                         style: Theme.of(context).textTheme.bodyMedium?.copyWith(
                             color: Theme.of(context).colorScheme.onPrimary),
                       ),
@@ -410,7 +414,8 @@ class _ProcessConsiderRequestState extends State<ProcessConsiderRequest> {
                               },
                             ),
                             TitleRequiredText(
-                              text: tr('dataSubjectRight.processCondider.reason'),
+                              text:
+                                  tr('dataSubjectRight.processCondider.reason'),
                               required: widget.initialProcessRequest
                                       .considerRequestStatus ==
                                   RequestResultStatus.none,
@@ -418,7 +423,8 @@ class _ProcessConsiderRequestState extends State<ProcessConsiderRequest> {
                             CustomTextField(
                               initialValue:
                                   widget.processRequest.rejectConsiderReason,
-                              hintText: tr('dataSubjectRight.processCondider.since'),
+                              hintText:
+                                  tr('dataSubjectRight.processCondider.since'),
                               maxLines: 5,
                               onChanged: (value) {
                                 _onRejectReasonChanged(value);
