@@ -296,14 +296,14 @@ class _HomeViewState extends State<HomeView> {
             children: <Widget>[
               const SizedBox(height: UiConfig.lineGap),
               Text(
-                tr('app.disvover.discover'),
+                "DPO มีอะไรใหม่!",
                 style: Theme.of(context).textTheme.headlineMedium,
               ),
             ],
           ),
           const SizedBox(height: UiConfig.lineGap * 2),
           Text(
-            tr('app.disvover.description'),
+            "อัปเดตฟีเจอร์ใหม่ ที่จะช่วยให้คุณจัดการกับเรื่องข้อมูล ส่วนบุคคลได้ครบถ้วนมากยิ่งขึ้น สะดวก มั่นใจ ถูกต้องตามกรอบของ พ.ร.บ.คุ้มครองข้อมูลส่วนบุคคล",
             style: Theme.of(context).textTheme.bodySmall,
           ),
           const SizedBox(height: UiConfig.lineGap * 2),
@@ -351,13 +351,13 @@ class _HomeViewState extends State<HomeView> {
                 bottom: 4.0,
               ),
               child: Icon(
-                Ionicons.home_outline,
+                Ionicons.shield_checkmark_outline,
                 size: 20.0,
                 color: Theme.of(context).colorScheme.onSurface,
               ),
             ),
             Text(
-              tr('app.features.home'),
+              "จัดการคำร้องขอใช้สิทธิ์",
               style: Theme.of(context).textTheme.titleMedium,
             ),
           ],
@@ -372,55 +372,13 @@ class _HomeViewState extends State<HomeView> {
                 bottom: 4.0,
               ),
               child: Icon(
-                Ionicons.reader_outline,
+                Ionicons.moon_outline,
                 size: 20.0,
                 color: Theme.of(context).colorScheme.onSurface,
               ),
             ),
             Text(
-              tr('app.features.consentmanagement'),
-              style: Theme.of(context).textTheme.titleMedium,
-            ),
-          ],
-        ),
-        const SizedBox(height: UiConfig.lineGap),
-        Row(
-          mainAxisAlignment: MainAxisAlignment.start,
-          children: <Widget>[
-            Padding(
-              padding: const EdgeInsets.only(
-                right: UiConfig.defaultPaddingSpacing,
-                bottom: 4.0,
-              ),
-              child: Icon(
-                Ionicons.server_outline,
-                size: 20.0,
-                color: Theme.of(context).colorScheme.onSurface,
-              ),
-            ),
-            Text(
-              tr('app.features.masterdata'),
-              style: Theme.of(context).textTheme.titleMedium,
-            ),
-          ],
-        ),
-        const SizedBox(height: UiConfig.lineGap),
-        Row(
-          mainAxisAlignment: MainAxisAlignment.start,
-          children: <Widget>[
-            Padding(
-              padding: const EdgeInsets.only(
-                right: UiConfig.defaultPaddingSpacing,
-                bottom: 4.0,
-              ),
-              child: Icon(
-                Ionicons.settings_outline,
-                size: 20.0,
-                color: Theme.of(context).colorScheme.onSurface,
-              ),
-            ),
-            Text(
-              tr('app.features.setting'),
+              "โหมดกลางคืน",
               style: Theme.of(context).textTheme.titleMedium,
             ),
           ],
