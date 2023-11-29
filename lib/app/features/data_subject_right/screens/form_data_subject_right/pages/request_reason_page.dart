@@ -174,7 +174,7 @@ class _RequestReasonPageState extends State<RequestReasonPage> {
       expand: selectRequestTypeIds.contains(requestType.id),
       duration: const Duration(milliseconds: 400),
       child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start, // กำหนดให้ชิดซ้าย
+        crossAxisAlignment: CrossAxisAlignment.start, 
         children: [
           Text(
             tr('dataSubjectRight.requestReason.iadoperations'), 

@@ -206,7 +206,7 @@ class _SettingViewState extends State<SettingView> {
           Row(
             children: <Widget>[
               Text(
-                'การตั้งค่าทั่วไป',
+                tr('app.features.generalSetting'),
                 style: Theme.of(context).textTheme.titleLarge,
               ),
             ],
@@ -245,7 +245,7 @@ class _SettingViewState extends State<SettingView> {
           Row(
             children: <Widget>[
               Text(
-                'เกี่ยวกับแอป',
+                tr('app.about'),
                 style: Theme.of(context).textTheme.titleLarge,
               ),
             ],
@@ -262,7 +262,7 @@ class _SettingViewState extends State<SettingView> {
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: <Widget>[
                   Text(
-                    "What's new",
+                    tr("app.disvover.seewhatnew"),
                     style: Theme.of(context).textTheme.bodyMedium,
                   ),
                 ],
@@ -280,7 +280,7 @@ class _SettingViewState extends State<SettingView> {
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: <Widget>[
                 Text(
-                  "เวอร์ชัน",
+                  tr("app.version"),
                   style: Theme.of(context).textTheme.bodyMedium,
                 ),
                 Padding(
@@ -368,14 +368,14 @@ class _SettingViewState extends State<SettingView> {
             children: <Widget>[
               const SizedBox(height: UiConfig.lineGap),
               Text(
-                "DPO มีอะไรใหม่!",
+                "app.disvover.new",
                 style: Theme.of(context).textTheme.headlineMedium,
               ),
             ],
           ),
           const SizedBox(height: UiConfig.lineGap * 2),
           Text(
-            "อัปเดตฟีเจอร์ใหม่ ที่จะช่วยให้คุณจัดการกับเรื่องข้อมูล ส่วนบุคคลได้ครบถ้วนมากยิ่งขึ้น สะดวก มั่นใจ ถูกต้องตามกรอบของ พ.ร.บ.คุ้มครองข้อมูลส่วนบุคคล",
+            "app.disvover.descriptionNew",
             style: Theme.of(context).textTheme.bodySmall,
           ),
           const SizedBox(height: UiConfig.lineGap * 2),
@@ -429,7 +429,7 @@ class _SettingViewState extends State<SettingView> {
               ),
             ),
             Text(
-              "จัดการคำร้องขอใช้สิทธิ์",
+              tr("dataSubjectRight.manageRequests"),
               style: Theme.of(context).textTheme.titleMedium,
             ),
           ],
@@ -450,7 +450,7 @@ class _SettingViewState extends State<SettingView> {
               ),
             ),
             Text(
-              "โหมดกลางคืน",
+              tr("app.mode"),
               style: Theme.of(context).textTheme.titleMedium,
             ),
           ],

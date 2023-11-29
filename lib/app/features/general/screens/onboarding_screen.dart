@@ -139,12 +139,12 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
                 child: Column(
                   children: [
                     Text(
-                      "จัดการคำร้องขอใช้สิทธิ์",
+                      tr("dataSubjectRight.manageRequests"),
                       style: Theme.of(context).textTheme.titleLarge,
                     ),
                     const SizedBox(height: 16.0),
                     Text(
-                      "ให้คุณจัดการกับคำร้องขอใช้สิทธิ์ของ เจ้าของข้อมูลส่วนบุคคลได้ครบถ้วนตาม พ.ร.บ.ฯ มั่นใจ ครบถ้วนทุกขั้นตอนการจัดการที่ฟังก์ชันนี้ ได้แก่ การตรวจสอบคำร้อง การพิจารณาและ ดำเนินการ และดูการสรุปผลของแต่ละรายการได้ อีกทั้งมาพร้อมแบบฟอร์มการขอใช้สิทธิ์ที่สามารถ ส่งต่อให้กับเจ้าของข้อมูลได้อย่างสะดวก รวดเร็ว",
+                      tr('app.board.decription3'),
                       style: Theme.of(context).textTheme.bodyMedium,
                       textAlign: TextAlign.center,
                     ),
@@ -200,12 +200,12 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
                 child: Column(
                   children: [
                     Text(
-                      "โหมดกลางคืน",
+                      tr("app.mode"),
                       style: Theme.of(context).textTheme.titleLarge,
                     ),
                     const SizedBox(height: 16.0),
                     Text(
-                      "ปรับปรุงประสบการณ์การใช้งานของคุณในสภาพแวดล้อมที่มีแสงน้อย โหมดกลางคืน (Dark mode) ที่เมนูการตั้งค่าระบบ พร้อมสร้างประสบการณ์ที่ดีสำหรับผู้ใช้งาน และไม่เป็นภาระต่อสุขภาพดวงตา",
+                      tr("app.board.decription4"),
                       style: Theme.of(context).textTheme.bodyMedium,
                       textAlign: TextAlign.center,
                     ),
@@ -216,7 +216,13 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
                         CustomButton(
                           height: 40.0,
                           width: 120,
-                          onPressed: next,
+                          onPressed: () async {
+                            await UserPreferences.setBool(
+                              AppPreferences.isFirstLaunch,
+                              false,
+                            ).then((_) => GoRouter.of(context)
+                                .go(GeneralRoute.home.path));
+                          },
                           child: Text(
                             tr('app.board.getstared'),
                             style: TextStyle(

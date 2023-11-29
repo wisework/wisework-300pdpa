@@ -13,6 +13,8 @@
         "previous": "Previous",
         "next": "Next",
         "finish": "Finish",
+        "version": "Version",
+        "about": "About the app",
         "features": {
             "home": "Home",
             "consentmanagement": "Consent Management",
@@ -23,22 +25,29 @@
             "datasubjectright": "Data Subject Right",
             "masterdata": "Master Data",
             "setting": "Setting",
+            "generalSetting": "General settings",
             "createNewConsentForm": "Create New Consent Form",
             "seeMore": "See more",
             "resultNotFound": "Result Not Found!",
-            "description": "You have not created the form yet. Add some consent form, just click create new consent form button and go ahead."
+            "description": "You have not created the form yet. Add some consent form, just click create new consent form button and go ahead.",
+            "Latest": "Latest form list"
         },
         "disvover": {
             "discover": "Discover What’s New",
+            "new": "DPO What’s New!",
+            "descriptionNew": "Update new features that will help you deal with data matters Personal information is more complete, convenient, confident, and accurate according to the framework of Personal Data Protection Act",
             "description": "Getting start of your journey with our data management tools. This brief guide will introduce you to our powerful PDPA application, helping you simplify data management and compliance with the PDPA Act.",
-            "seewhatnew": "See What’s New!"
+            "seewhatnew": "See What’s New!",
+            "dataNotStored": "This data is not stored."
         },
         "board": {
             "skip": "Skip",
             "description": "You can easily craft consent forms, and automatically generate them from specified master data. Tailor them to your needs, experiment with themes, and have the world at your fingertips with real-time previews. Then, share your creations effortlessly via QR codes or URLs.",
             "decription2": "Control over consent-related parameters, including purpose, purpose categories, and mandatory fields, ensuring data integrity and accuracy in the system.",
             "next": "Next",
-            "getstared": "Get Started"
+            "getstared": "Get Started",
+            "decription3": "Allows you to handle requests to exercise your rights. Owners of personal information are completely in accordance with the Act, confident that every step of management at this function is complete, including request verification. Consider and process and view the summary of each item. It also comes with a rights request form that can be used. Forward to the owner of the information conveniently and quickly",
+            "decription4": "Improve your user experience in low-light environments. Night mode (Dark mode) in the system settings menu. Ready to create a good experience for users and is not a burden on eye health"
         },
         "search": "Search",
         "agree": "Agree",
@@ -402,7 +411,9 @@
                 "rejectcode": "Reject code",
                 "rejectcodeHint": "Reject code",
                 "description": "Reject description",
-                "descriptionHint": "Reject description"
+                "descriptionHint": "Reject description",
+                "error": "An error occurred.",
+                "canNotRemoved :": "This reason cannot be removed because it is used in the form as follows:"
             },
             "reason": {
                 "title1": "Types of primary reasons",
@@ -533,6 +544,38 @@
             "notPass": "Not verified",
             "notYetVerified": "not yet verified",
             "test": "Please submit the inspection results."
+        },
+        "chooseReject": {
+            "refusal": "Refusal list",
+            "notFound": "No information found"
+        },
+        "processCondider": {
+            "notYetProcessed": "Not yet processed",
+            "inProgress": "In progress",
+            "refuseProcessing": "Refuse processing",
+            "completed": "Completed",
+            "reason:": "Reason:",
+            "considerTakingAction": "Consider taking action",
+            "sendEmail ": "Send email notifications",
+            "confirm": "Confirm",
+            "carryOut": "Carry out",
+            "list": "Refuse request",
+            "reason": "Reason",
+            "since": "Since...",
+            "pleaseSelect": "Please select an option to continue.",
+            "addReasons": "Add reasons for refusal",
+            "selectReject": "Please select a reason for refusal.",
+            "submit": "Submit inspection results"
+        },
+        "processProof": {
+            "dlSuccess": "File downloaded successfully.",
+            "notYetProcessed": "Not yet processed",
+            "inProgress": "In progress",
+            "refuseProcessing": "Refuse processing",
+            "completed": "Completed",
+            "proof": "Proof of action",
+            "details": "Process details",
+            "submit": "Submit inspection results"
         },
         "StepProcessDsr": {
             "considering": {
