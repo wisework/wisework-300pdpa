@@ -58,6 +58,7 @@ class ProcessDataSubjectRightScreen extends StatelessWidget {
         emailJsRepository: serviceLocator(),
       )..initialSettings(
           initialDataSubjectRight,
+          rejectTypes,
           processRequestSelected,
           currentUser,
           userEmails,
@@ -65,8 +66,7 @@ class ProcessDataSubjectRightScreen extends StatelessWidget {
       child: ProcessDataSubjectRightView(
         requestTypes: requestTypes,
         reasonTypes: reasonTypes,
-        rejectTypes: rejectTypes,
-        language: currentUser.defaultLanguage,
+        currentUser: currentUser,
       ),
     );
   }
@@ -77,14 +77,12 @@ class ProcessDataSubjectRightView extends StatefulWidget {
     super.key,
     required this.requestTypes,
     required this.reasonTypes,
-    required this.rejectTypes,
-    required this.language,
+    required this.currentUser,
   });
 
   final List<RequestTypeModel> requestTypes;
   final List<ReasonTypeModel> reasonTypes;
-  final List<RejectTypeModel> rejectTypes;
-  final String language;
+  final UserModel currentUser;
 
   @override
   State<ProcessDataSubjectRightView> createState() =>
@@ -174,7 +172,7 @@ class _ProcessDataSubjectRightViewState
         request.requestType,
       );
       final description = requestType.description.firstWhere(
-        (item) => item.language == widget.language,
+        (item) => item.language == widget.currentUser.defaultLanguage,
         orElse: () => const LocalizedModel.empty(),
       );
 
@@ -238,12 +236,11 @@ class _ProcessDataSubjectRightViewState
                       ConsiderRequestStep(
                         requestTypes: widget.requestTypes,
                         reasonTypes: widget.reasonTypes,
-                        rejectTypes: widget.rejectTypes,
-                        language: widget.language,
+                        currentUser: widget.currentUser,
                       ),
                       SummaryRequestStep(
                         requestTypes: widget.requestTypes,
-                        language: widget.language,
+                        language: widget.currentUser.defaultLanguage,
                       ),
                     ].elementAt(state.stepIndex),
                   ),

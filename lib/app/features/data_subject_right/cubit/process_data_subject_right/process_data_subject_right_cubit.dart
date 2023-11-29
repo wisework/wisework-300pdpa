@@ -8,6 +8,7 @@ import 'package:pdpa/app/data/models/authentication/user_model.dart';
 import 'package:pdpa/app/data/models/data_subject_right/data_subject_right_model.dart';
 import 'package:pdpa/app/data/models/data_subject_right/process_request_model.dart';
 import 'package:pdpa/app/data/models/email_js/process_request_params.dart';
+import 'package:pdpa/app/data/models/master_data/reject_type_model.dart';
 import 'package:pdpa/app/data/repositories/data_subject_right_repository.dart';
 import 'package:pdpa/app/data/repositories/emailjs_repository.dart';
 import 'package:pdpa/app/data/repositories/general_repository.dart';
@@ -27,6 +28,7 @@ class ProcessDataSubjectRightCubit extends Cubit<ProcessDataSubjectRightState> {
         super(ProcessDataSubjectRightState(
           dataSubjectRight: DataSubjectRightModel.empty(),
           initialDataSubjectRight: DataSubjectRightModel.empty(),
+          rejectTypes: const [],
           processRequestSelected: '',
           currentUser: UserModel.empty(),
           userEmails: const [],
@@ -34,6 +36,7 @@ class ProcessDataSubjectRightCubit extends Cubit<ProcessDataSubjectRightState> {
           requestExpanded: const [],
           verifyError: false,
           considerError: const [],
+          rejectError: false,
           loadingStatus: ProcessRequestLoadingStatus.initial,
         ));
 
@@ -43,6 +46,7 @@ class ProcessDataSubjectRightCubit extends Cubit<ProcessDataSubjectRightState> {
 
   void initialSettings(
     DataSubjectRightModel dataSubjectRight,
+    List<RejectTypeModel> rejectTypes,
     String processRequestSelected,
     UserModel currentUser,
     List<String> userEmails,
@@ -57,6 +61,7 @@ class ProcessDataSubjectRightCubit extends Cubit<ProcessDataSubjectRightState> {
         state.copyWith(
           dataSubjectRight: dataSubjectRight,
           initialDataSubjectRight: dataSubjectRight,
+          rejectTypes: rejectTypes,
           processRequestSelected: processRequestSelected,
           currentUser: currentUser,
           userEmails: userEmails,
@@ -81,6 +86,7 @@ class ProcessDataSubjectRightCubit extends Cubit<ProcessDataSubjectRightState> {
       state.copyWith(
         dataSubjectRight: dataSubjectRight,
         initialDataSubjectRight: dataSubjectRight,
+        rejectTypes: rejectTypes,
         processRequestSelected: processRequestSelected,
         currentUser: currentUser,
         userEmails: userEmails,
@@ -358,6 +364,71 @@ class ProcessDataSubjectRightCubit extends Cubit<ProcessDataSubjectRightState> {
         considerError: considerError,
       ),
     );
+  }
+
+  void addRejectType(List<RejectTypeModel> rejectTypes) {
+    emit(
+      state.copyWith(
+        rejectTypes: state.rejectTypes..addAll(rejectTypes),
+      ),
+    );
+  }
+
+  void setProcessRejectTypes(List<String> ids, String processRequestId) {
+    DataSubjectRightModel dataSubjectRight = state.dataSubjectRight;
+    List<ProcessRequestModel> processRequests = [];
+
+    for (ProcessRequestModel process in dataSubjectRight.processRequests) {
+      if (process.id == processRequestId) {
+        processRequests.add(
+          process.copyWith(rejectTypes: ids),
+        );
+      } else {
+        processRequests.add(process);
+      }
+    }
+
+    emit(
+      state.copyWith(
+        dataSubjectRight: dataSubjectRight.copyWith(
+          processRequests: processRequests,
+        ),
+        rejectError: ids.isEmpty,
+      ),
+    );
+  }
+
+  void removeProcessRejectType(String id, String processRequestId) {
+    DataSubjectRightModel dataSubjectRight = state.dataSubjectRight;
+    List<ProcessRequestModel> processRequests = [];
+    bool isEmpty = false;
+
+    for (ProcessRequestModel process in dataSubjectRight.processRequests) {
+      if (process.id == processRequestId) {
+        final updated =
+            process.rejectTypes.where((rejectId) => rejectId != id).toList();
+
+        processRequests.add(
+          process.copyWith(rejectTypes: updated),
+        );
+        isEmpty = updated.isEmpty;
+      } else {
+        processRequests.add(process);
+      }
+    }
+
+    emit(
+      state.copyWith(
+        dataSubjectRight: dataSubjectRight.copyWith(
+          processRequests: processRequests,
+        ),
+        rejectError: isEmpty,
+      ),
+    );
+  }
+
+  void setRejectTypeError(bool value) {
+    emit(state.copyWith(rejectError: value));
   }
 
   void setRejectConsiderReason(String value, String processRequestId) {

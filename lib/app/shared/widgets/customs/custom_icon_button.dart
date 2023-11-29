@@ -7,6 +7,7 @@ class CustomIconButton extends StatelessWidget {
     this.borderRadius = 8.0,
     this.onPressed,
     required this.icon,
+    this.iconSize,
     this.iconColor,
     this.backgroundColor,
     this.splashColor,
@@ -16,6 +17,7 @@ class CustomIconButton extends StatelessWidget {
   final double borderRadius;
   final VoidCallback? onPressed;
   final IconData icon;
+  final double? iconSize;
   final Color? iconColor;
   final Color? backgroundColor;
   final Color? splashColor;
@@ -34,6 +36,7 @@ class CustomIconButton extends StatelessWidget {
           padding: padding ?? const EdgeInsets.all(8.0),
           child: Icon(
             icon,
+            size: iconSize,
             color: iconColor ?? Theme.of(context).colorScheme.onPrimary,
           ),
         ),

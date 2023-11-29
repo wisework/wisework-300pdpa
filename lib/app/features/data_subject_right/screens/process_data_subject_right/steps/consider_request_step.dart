@@ -2,11 +2,11 @@ import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:pdpa/app/config/config.dart';
+import 'package:pdpa/app/data/models/authentication/user_model.dart';
 import 'package:pdpa/app/data/models/data_subject_right/data_subject_right_model.dart';
 import 'package:pdpa/app/data/models/data_subject_right/process_request_model.dart';
 import 'package:pdpa/app/data/models/master_data/localized_model.dart';
 import 'package:pdpa/app/data/models/master_data/reason_type_model.dart';
-import 'package:pdpa/app/data/models/master_data/reject_type_model.dart';
 import 'package:pdpa/app/data/models/master_data/request_type_model.dart';
 import 'package:pdpa/app/data/presets/request_actions_preset.dart';
 import 'package:pdpa/app/features/data_subject_right/cubit/process_data_subject_right/process_data_subject_right_cubit.dart';
@@ -26,14 +26,12 @@ class ConsiderRequestStep extends StatefulWidget {
     super.key,
     required this.requestTypes,
     required this.reasonTypes,
-    required this.rejectTypes,
-    required this.language,
+    required this.currentUser,
   });
 
   final List<RequestTypeModel> requestTypes;
   final List<ReasonTypeModel> reasonTypes;
-  final List<RejectTypeModel> rejectTypes;
-  final String language;
+  final UserModel currentUser;
 
   @override
   State<ConsiderRequestStep> createState() => _ConsiderRequestStepState();
@@ -146,7 +144,7 @@ class _ConsiderRequestStepState extends State<ConsiderRequestStep> {
       processRequest.requestType,
     );
     final description = requestType.description.firstWhere(
-      (item) => item.language == widget.language,
+      (item) => item.language == widget.currentUser.defaultLanguage,
       orElse: () => const LocalizedModel.empty(),
     );
 
@@ -207,7 +205,7 @@ class _ConsiderRequestStepState extends State<ConsiderRequestStep> {
                     processRequest: processRequest,
                     initialProcessRequest: initialProcessRequest,
                     requestTypes: widget.requestTypes,
-                    language: widget.language,
+                    currentUser: widget.currentUser,
                   ),
                   ExpandedContainer(
                     expand: initialProcessRequest.considerRequestStatus ==
@@ -222,7 +220,7 @@ class _ConsiderRequestStepState extends State<ConsiderRequestStep> {
                         processRequest: processRequest,
                         initialProcessRequest: initialProcessRequest,
                         requestTypes: widget.requestTypes,
-                        language: widget.language,
+                        language: widget.currentUser.defaultLanguage,
                       ),
                     ),
                   ),
@@ -295,7 +293,7 @@ class _ConsiderRequestStepState extends State<ConsiderRequestStep> {
       processRequest.requestAction,
     );
     final title = requestAction.title.firstWhere(
-      (item) => item.language == widget.language,
+      (item) => item.language == widget.currentUser.defaultLanguage,
       orElse: () => const LocalizedModel.empty(),
     );
 
@@ -359,7 +357,7 @@ class _ConsiderRequestStepState extends State<ConsiderRequestStep> {
               processRequest.reasonTypes[index].id,
             );
             final description = reasonType.description.firstWhere(
-              (item) => item.language == widget.language,
+              (item) => item.language == widget.currentUser.defaultLanguage,
               orElse: () => const LocalizedModel.empty(),
             );
 

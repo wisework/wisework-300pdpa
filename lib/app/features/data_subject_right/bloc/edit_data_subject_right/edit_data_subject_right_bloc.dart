@@ -63,39 +63,57 @@ class EditDataSubjectRightBloc
     await result.fold((failure) {
       emit(EditDataSubjectRightError(failure.errorMessage));
     }, (dataSubjectRight) async {
-      List<RequestTypeModel> gotRequestTypes = [];
+      List<RequestTypeModel> gotRequestTypes = requestTypesPreset;
       final requestTypeResult = await _masterDataRepository.getRequestTypes(
         event.companyId,
       );
       requestTypeResult.fold(
         (failure) => emit(EditDataSubjectRightError(failure.errorMessage)),
         (requestTypes) {
-          gotRequestTypes.addAll(requestTypesPreset);
-          gotRequestTypes.addAll(requestTypes);
+          requestTypes.sort((a, b) => a.updatedDate.compareTo(b.updatedDate));
+
+          final ids = gotRequestTypes.map((type) => type.id).toList();
+          for (RequestTypeModel request in requestTypes) {
+            if (!ids.contains(request.id)) {
+              gotRequestTypes.add(request);
+            }
+          }
         },
       );
 
-      List<ReasonTypeModel> gotReasonTypes = [];
+      List<ReasonTypeModel> gotReasonTypes = reasonTypesPreset;
       final reasonTypeResult = await _masterDataRepository.getReasonTypes(
         event.companyId,
       );
       reasonTypeResult.fold(
         (failure) => emit(EditDataSubjectRightError(failure.errorMessage)),
         (reasonTypes) {
-          gotReasonTypes.addAll(reasonTypesPreset);
-          gotReasonTypes.addAll(reasonTypes);
+          reasonTypes.sort((a, b) => a.updatedDate.compareTo(b.updatedDate));
+
+          final ids = gotReasonTypes.map((type) => type.id).toList();
+          for (ReasonTypeModel reason in reasonTypes) {
+            if (!ids.contains(reason.id)) {
+              gotReasonTypes.add(reason);
+            }
+          }
         },
       );
 
-      List<RejectTypeModel> gotRejectTypes = [];
+      List<RejectTypeModel> gotRejectTypes = rejectTypesPreset;
       final rejectTypeResult = await _masterDataRepository.getRejectTypes(
         event.companyId,
       );
       rejectTypeResult.fold(
         (failure) => emit(EditDataSubjectRightError(failure.errorMessage)),
         (rejectTypes) {
-          gotRejectTypes.addAll(rejectTypesPreset);
-          gotRejectTypes.addAll(rejectTypes);
+          rejectTypes.sort((a, b) => a.updatedDate.compareTo(b.updatedDate));
+
+          final ids = gotRejectTypes.map((type) => type.id).toList();
+          for (RejectTypeModel reject in rejectTypes) {
+            if (!ids.contains(reject.id)) {
+              gotRejectTypes.add(reject);
+            }
+          }
         },
       );
 
@@ -230,7 +248,6 @@ class EditDataSubjectRightBloc
   ) async {
     List<RequestTypeModel> requestTypes = [];
     List<ReasonTypeModel> reasonTypes = [];
-    List<RejectTypeModel> rejectTypes = [];
     List<String> emails = [];
 
     if (state is GotCurrentDataSubjectRight) {
@@ -238,19 +255,36 @@ class EditDataSubjectRightBloc
 
       requestTypes = settings.requestTypes;
       reasonTypes = settings.reasonTypes;
-      rejectTypes = settings.rejectTypes;
       emails = settings.userEmails;
 
       emit(const UpdatingCurrentDataSubjectRight());
 
       await Future.delayed(const Duration(milliseconds: 800));
 
+      List<RejectTypeModel> gotRejectTypes = rejectTypesPreset;
+      final rejectTypeResult = await _masterDataRepository.getRejectTypes(
+        event.companyId,
+      );
+      rejectTypeResult.fold(
+        (failure) => emit(EditDataSubjectRightError(failure.errorMessage)),
+        (rejectTypes) {
+          rejectTypes.sort((a, b) => a.updatedDate.compareTo(b.updatedDate));
+
+          final ids = gotRejectTypes.map((type) => type.id).toList();
+          for (RejectTypeModel reject in rejectTypes) {
+            if (!ids.contains(reject.id)) {
+              gotRejectTypes.add(reject);
+            }
+          }
+        },
+      );
+
       emit(
         GotCurrentDataSubjectRight(
           event.dataSubjectRight,
           requestTypes,
           reasonTypes,
-          rejectTypes,
+          gotRejectTypes,
           emails,
         ),
       );
@@ -259,19 +293,36 @@ class EditDataSubjectRightBloc
 
       requestTypes = settings.requestTypes;
       reasonTypes = settings.reasonTypes;
-      rejectTypes = settings.rejectTypes;
       emails = settings.userEmails;
 
       emit(const UpdatingCurrentDataSubjectRight());
 
       await Future.delayed(const Duration(milliseconds: 800));
 
+      List<RejectTypeModel> gotRejectTypes = rejectTypesPreset;
+      final rejectTypeResult = await _masterDataRepository.getRejectTypes(
+        event.companyId,
+      );
+      rejectTypeResult.fold(
+        (failure) => emit(EditDataSubjectRightError(failure.errorMessage)),
+        (rejectTypes) {
+          rejectTypes.sort((a, b) => a.updatedDate.compareTo(b.updatedDate));
+
+          final ids = gotRejectTypes.map((type) => type.id).toList();
+          for (RejectTypeModel reject in rejectTypes) {
+            if (!ids.contains(reject.id)) {
+              gotRejectTypes.add(reject);
+            }
+          }
+        },
+      );
+
       emit(
         UpdatedCurrentDataSubjectRight(
           event.dataSubjectRight,
           requestTypes,
           reasonTypes,
-          rejectTypes,
+          gotRejectTypes,
           emails,
         ),
       );

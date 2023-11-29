@@ -245,6 +245,15 @@ class UtilFunctions {
     );
   }
 
+  static List<RejectTypeModel> filterRejectTypesByIds(
+    List<RejectTypeModel> rejectTypes,
+    List<String> rejectTypeIds,
+  ) {
+    return rejectTypes
+        .where((reject) => rejectTypeIds.contains(reject.id))
+        .toList();
+  }
+
   static RequestActionModel getRequestActionById(
     List<RequestActionModel> requestActions,
     String requestActionId,

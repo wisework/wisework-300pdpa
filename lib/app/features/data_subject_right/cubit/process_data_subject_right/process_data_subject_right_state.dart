@@ -4,6 +4,7 @@ class ProcessDataSubjectRightState extends Equatable {
   const ProcessDataSubjectRightState({
     required this.dataSubjectRight,
     required this.initialDataSubjectRight,
+    required this.rejectTypes,
     required this.processRequestSelected,
     required this.currentUser,
     required this.userEmails,
@@ -11,11 +12,13 @@ class ProcessDataSubjectRightState extends Equatable {
     required this.requestExpanded,
     required this.verifyError,
     required this.considerError,
+    required this.rejectError,
     required this.loadingStatus,
   });
 
   final DataSubjectRightModel dataSubjectRight;
   final DataSubjectRightModel initialDataSubjectRight;
+  final List<RejectTypeModel> rejectTypes;
   final String processRequestSelected;
   final UserModel currentUser;
   final List<String> userEmails;
@@ -23,11 +26,13 @@ class ProcessDataSubjectRightState extends Equatable {
   final List<String> requestExpanded;
   final bool verifyError;
   final List<String> considerError;
+  final bool rejectError;
   final ProcessRequestLoadingStatus loadingStatus;
 
   ProcessDataSubjectRightState copyWith({
     DataSubjectRightModel? dataSubjectRight,
     DataSubjectRightModel? initialDataSubjectRight,
+    List<RejectTypeModel>? rejectTypes,
     String? processRequestSelected,
     UserModel? currentUser,
     List<String>? userEmails,
@@ -35,12 +40,14 @@ class ProcessDataSubjectRightState extends Equatable {
     List<String>? requestExpanded,
     bool? verifyError,
     List<String>? considerError,
+    bool? rejectError,
     ProcessRequestLoadingStatus? loadingStatus,
   }) {
     return ProcessDataSubjectRightState(
       dataSubjectRight: dataSubjectRight ?? this.dataSubjectRight,
       initialDataSubjectRight:
           initialDataSubjectRight ?? this.initialDataSubjectRight,
+      rejectTypes: rejectTypes ?? this.rejectTypes,
       processRequestSelected:
           processRequestSelected ?? this.processRequestSelected,
       currentUser: currentUser ?? this.currentUser,
@@ -49,6 +56,7 @@ class ProcessDataSubjectRightState extends Equatable {
       requestExpanded: requestExpanded ?? this.requestExpanded,
       verifyError: verifyError ?? this.verifyError,
       considerError: considerError ?? this.considerError,
+      rejectError: rejectError ?? this.rejectError,
       loadingStatus: loadingStatus ?? this.loadingStatus,
     );
   }
@@ -58,6 +66,7 @@ class ProcessDataSubjectRightState extends Equatable {
     return [
       dataSubjectRight,
       initialDataSubjectRight,
+      rejectTypes,
       processRequestSelected,
       currentUser,
       userEmails,
@@ -65,6 +74,7 @@ class ProcessDataSubjectRightState extends Equatable {
       requestExpanded,
       verifyError,
       considerError,
+      rejectError,
       loadingStatus,
     ];
   }
