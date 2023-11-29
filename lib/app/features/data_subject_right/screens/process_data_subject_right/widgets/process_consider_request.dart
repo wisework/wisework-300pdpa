@@ -171,63 +171,65 @@ class _ProcessConsiderRequestState extends State<ProcessConsiderRequest> {
 
   @override
   Widget build(BuildContext context) {
-    return CustomContainer(
-      margin: EdgeInsets.zero,
-      color: Theme.of(context).colorScheme.background,
-      child: Column(
-        mainAxisSize: MainAxisSize.min,
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: <Widget>[
-          BlocBuilder<ProcessDataSubjectRightCubit,
-              ProcessDataSubjectRightState>(
-            builder: (context, state) {
-              return Visibility(
-                visible: state.userEmails.isNotEmpty,
-                child: Padding(
-                  padding: const EdgeInsets.symmetric(
-                    vertical: 5.0,
-                  ),
-                  child: _buildEmailNotification(
-                    context,
-                    userEmails: state.userEmails,
-                    emailSelected: widget.processRequest.notifyEmail,
-                    readOnly: widget.processRequest.notifyEmail ==
-                                widget.initialProcessRequest.notifyEmail &&
-                            widget
-                                .initialProcessRequest.notifyEmail.isNotEmpty ||
-                        widget.initialProcessRequest.considerRequestStatus !=
-                            RequestResultStatus.none,
-                    isLoading: state.loadingStatus.sendingEmail,
-                  ),
+    return Column(
+      children: <Widget>[
+        BlocBuilder<ProcessDataSubjectRightCubit, ProcessDataSubjectRightState>(
+          builder: (context, state) {
+            return Visibility(
+              visible: state.userEmails.isNotEmpty,
+              child: CustomContainer(
+                margin: const EdgeInsets.only(
+                  bottom: UiConfig.lineSpacing,
                 ),
-              );
-            },
+                color: Theme.of(context).colorScheme.background,
+                child: _buildEmailNotification(
+                  context,
+                  userEmails: state.userEmails,
+                  emailSelected: widget.processRequest.notifyEmail,
+                  readOnly: widget.processRequest.notifyEmail ==
+                              widget.initialProcessRequest.notifyEmail &&
+                          widget.initialProcessRequest.notifyEmail.isNotEmpty ||
+                      widget.initialProcessRequest.considerRequestStatus !=
+                          RequestResultStatus.none,
+                  isLoading: state.loadingStatus.sendingEmail,
+                ),
+              ),
+            );
+          },
+        ),
+        CustomContainer(
+          margin: EdgeInsets.zero,
+          color: Theme.of(context).colorScheme.background,
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: <Widget>[
+              Text(
+                'พิจารณาดำเนินการ',
+                style: Theme.of(context).textTheme.titleMedium,
+              ),
+              const SizedBox(height: UiConfig.lineGap),
+              _buildRadioOption(
+                context,
+                onChanged: (value) {
+                  if (value != null) {
+                    _onOptionChanged(value, widget.processRequest.id);
+                  }
+                },
+              ),
+              ExpandedContainer(
+                expand: widget.initialProcessRequest.considerRequestStatus ==
+                    RequestResultStatus.none,
+                duration: const Duration(milliseconds: 400),
+                child: Padding(
+                  padding: const EdgeInsets.only(top: UiConfig.lineGap),
+                  child: _buildSubmitButton(context),
+                ),
+              ),
+            ],
           ),
-          const SizedBox(height: UiConfig.lineGap),
-          Text(
-            'พิจารณาดำเนินการ',
-            style: Theme.of(context).textTheme.titleMedium,
-          ),
-          const SizedBox(height: UiConfig.lineGap),
-          _buildRadioOption(
-            context,
-            onChanged: (value) {
-              if (value != null) {
-                _onOptionChanged(value, widget.processRequest.id);
-              }
-            },
-          ),
-          ExpandedContainer(
-            expand: widget.initialProcessRequest.considerRequestStatus ==
-                RequestResultStatus.none,
-            duration: const Duration(milliseconds: 400),
-            child: Padding(
-              padding: const EdgeInsets.only(top: UiConfig.lineGap),
-              child: _buildSubmitButton(context),
-            ),
-          ),
-        ],
-      ),
+        ),
+      ],
     );
   }
 
@@ -289,33 +291,34 @@ class _ProcessConsiderRequestState extends State<ProcessConsiderRequest> {
             height: UiConfig.lineGap,
           ),
         ),
-        const SizedBox(height: UiConfig.lineGap),
-        Row(
-          mainAxisAlignment: MainAxisAlignment.end,
-          children: <Widget>[
-            CustomButton(
-              padding: const EdgeInsets.symmetric(
-                vertical: 2.0,
-                horizontal: 10.0,
+        if (!readOnly)
+          Row(
+            mainAxisAlignment: MainAxisAlignment.end,
+            children: <Widget>[
+              CustomButton(
+                width: 65.0,
+                padding: const EdgeInsets.symmetric(
+                  vertical: 4.0,
+                ),
+                margin: const EdgeInsets.only(top: UiConfig.lineGap),
+                onPressed: !readOnly ? _sendEmails : () {},
+                backgroundColor: isEqual
+                    ? Theme.of(context).colorScheme.outlineVariant
+                    : null,
+                child: isLoading
+                    ? LoadingIndicator(
+                        color: Theme.of(context).colorScheme.onPrimary,
+                        size: 28.0,
+                        loadingType: LoadingType.horizontalRotatingDots,
+                      )
+                    : Text(
+                        'ยืนยัน',
+                        style: Theme.of(context).textTheme.bodyMedium?.copyWith(
+                            color: Theme.of(context).colorScheme.onPrimary),
+                      ),
               ),
-              onPressed: !readOnly ? _sendEmails : () {},
-              buttonType: CustomButtonType.text,
-              child: isLoading
-                  ? LoadingIndicator(
-                      color: Theme.of(context).colorScheme.primary,
-                      size: 28.0,
-                      loadingType: LoadingType.horizontalRotatingDots,
-                    )
-                  : Text(
-                      'ยืนยัน',
-                      style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                          color: !isEqual
-                              ? Theme.of(context).colorScheme.primary
-                              : Theme.of(context).colorScheme.outlineVariant),
-                    ),
-            ),
-          ],
-        ),
+            ],
+          ),
       ],
     );
   }
