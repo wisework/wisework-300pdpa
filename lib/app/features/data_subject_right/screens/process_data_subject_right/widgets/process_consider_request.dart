@@ -210,7 +210,7 @@ class _ProcessConsiderRequestState extends State<ProcessConsiderRequest> {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: <Widget>[
               Text(
-                'พิจารณาดำเนินการ',
+                tr('dataSubjectRight.processCondiDDder.considerTakingAction'),
                 style: Theme.of(context).textTheme.titleMedium,
               ),
               const SizedBox(height: UiConfig.lineGap),

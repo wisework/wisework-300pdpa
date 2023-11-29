@@ -296,14 +296,14 @@ class _HomeViewState extends State<HomeView> {
             children: <Widget>[
               const SizedBox(height: UiConfig.lineGap),
               Text(
-                "DPO มีอะไรใหม่!",
+                tr("app.disvover.new"),
                 style: Theme.of(context).textTheme.headlineMedium,
               ),
             ],
           ),
           const SizedBox(height: UiConfig.lineGap * 2),
           Text(
-            "อัปเดตฟีเจอร์ใหม่ ที่จะช่วยให้คุณจัดการกับเรื่องข้อมูล ส่วนบุคคลได้ครบถ้วนมากยิ่งขึ้น สะดวก มั่นใจ ถูกต้องตามกรอบของ พ.ร.บ.คุ้มครองข้อมูลส่วนบุคคล",
+            tr("app.disvover.descriptionNew"),
             style: Theme.of(context).textTheme.bodySmall,
           ),
           const SizedBox(height: UiConfig.lineGap * 2),
@@ -357,7 +357,7 @@ class _HomeViewState extends State<HomeView> {
               ),
             ),
             Text(
-              "จัดการคำร้องขอใช้สิทธิ์",
+              tr("dataSubjectRight.manageRequests"),
               style: Theme.of(context).textTheme.titleMedium,
             ),
           ],
@@ -378,7 +378,7 @@ class _HomeViewState extends State<HomeView> {
               ),
             ),
             Text(
-              "โหมดกลางคืน",
+              tr("app.mode"),
               style: Theme.of(context).textTheme.titleMedium,
             ),
           ],
@@ -796,7 +796,7 @@ class _HomeViewState extends State<HomeView> {
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: <Widget>[
                         Text(
-                          title.isNotEmpty ? title : 'This data is not stored.',
+                          title.isNotEmpty ? title : tr('app.disvover.dataNotStored'),
                           style: Theme.of(context).textTheme.titleMedium,
                         ),
                         Visibility(
@@ -849,7 +849,7 @@ class _HomeViewState extends State<HomeView> {
             children: <Widget>[
               Expanded(
                 child: Text(
-                  'รายการแบบฟอร์มล่าสุด',
+                  tr('app.features.Latest'),
                   style: Theme.of(context).textTheme.titleLarge,
                   overflow: TextOverflow.ellipsis,
                   maxLines: 1,
