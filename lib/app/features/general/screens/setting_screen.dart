@@ -8,7 +8,6 @@ import 'package:pdpa/app/config/provider/theme_provider.dart';
 import 'package:pdpa/app/config/themes/pdpa_theme_data.dart';
 import 'package:pdpa/app/data/models/authentication/user_model.dart';
 import 'package:pdpa/app/features/authentication/bloc/sign_in/sign_in_bloc.dart';
-import 'package:pdpa/app/features/data_subject_right/routes/data_subject_right_route.dart';
 import 'package:pdpa/app/features/general/routes/general_route.dart';
 import 'package:pdpa/app/shared/drawers/pdpa_drawer.dart';
 import 'package:pdpa/app/shared/utils/constants.dart';
