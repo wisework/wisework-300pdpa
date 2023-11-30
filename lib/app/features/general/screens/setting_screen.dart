@@ -368,14 +368,14 @@ class _SettingViewState extends State<SettingView> {
             children: <Widget>[
               const SizedBox(height: UiConfig.lineGap),
               Text(
-                "app.disvover.new",
+                tr("app.disvover.new"),
                 style: Theme.of(context).textTheme.headlineMedium,
               ),
             ],
           ),
           const SizedBox(height: UiConfig.lineGap * 2),
           Text(
-            "app.disvover.descriptionNew",
+            tr("app.disvover.descriptionNew"),
             style: Theme.of(context).textTheme.bodySmall,
           ),
           const SizedBox(height: UiConfig.lineGap * 2),
