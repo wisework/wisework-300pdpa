@@ -415,7 +415,7 @@ class _ProcessConsiderRequestState extends State<ProcessConsiderRequest> {
                             ),
                             TitleRequiredText(
                               text:
-                                  tr('dataSubjectRight.processConsider.reason2'),
+                                  tr('dataSubjectRight.processConsider.reason'),
                               required: widget.initialProcessRequest
                                       .considerRequestStatus ==
                                   RequestResultStatus.none,

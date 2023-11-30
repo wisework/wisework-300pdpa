@@ -554,7 +554,7 @@
             "inProgress": "อยู่ระหว่างการดำเนินการ",
             "refuseProcessing": "ปฏิเสธการดำเนินการ",
             "completed": "ดำเนินการเสร็จสิ้น",
-            "reason:": "เหตุผล:",
+            "reason2": "เหตุผล",
             "considerTakingAction": "พิจารณาดำเนินการ",
             "sendEmail": "ส่งการแจ้งเตือนทางอีเมล",
             "confirm": "ยืนยัน",

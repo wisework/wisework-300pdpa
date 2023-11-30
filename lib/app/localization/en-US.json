@@ -554,7 +554,7 @@
             "inProgress": "In progress",
             "refuseProcessing": "Refuse processing",
             "completed": "Completed",
-            "reason:": "Reason:",
+            "reason2": "Reason",
             "considerTakingAction": "Consider taking action",
             "sendEmail ": "Send email notifications",
             "confirm": "Confirm",
