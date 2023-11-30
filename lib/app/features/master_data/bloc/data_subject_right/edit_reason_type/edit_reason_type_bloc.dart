@@ -106,9 +106,14 @@ class EditReasonTypeBloc
       return;
     }
 
-    emit(const UpdatingCurrentReasonType());
+    List<DataSubjectRightModel> dsr = [];
+    if (state is GotCurrentReasonType) {
+      dsr = (state as GotCurrentReasonType).dataSubjectRights;
+    } else if (state is UpdatedCurrentReasonType) {
+      dsr = (state as UpdatedCurrentReasonType).dataSubjectRights;
+    }
 
-    final reasonTypes = state as GotCurrentReasonType;
+    emit(const UpdatingCurrentReasonType());
 
     final result = await _masterDataRepository.updateReasonType(
       event.reasonType,
@@ -121,7 +126,7 @@ class EditReasonTypeBloc
       (failure) => emit(EditReasonTypeError(failure.errorMessage)),
       (_) => emit(UpdatedCurrentReasonType(
         event.reasonType,
-        reasonTypes.dataSubjectRights,
+        dsr,
       )),
     );
   }

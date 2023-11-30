@@ -5,6 +5,8 @@ import 'package:go_router/go_router.dart';
 import 'package:ionicons/ionicons.dart';
 import 'package:pdpa/app/config/config.dart';
 import 'package:pdpa/app/data/models/authentication/user_model.dart';
+import 'package:pdpa/app/data/models/data_subject_right/data_subject_right_model.dart';
+import 'package:pdpa/app/data/models/data_subject_right/process_request_model.dart';
 import 'package:pdpa/app/data/models/etc/updated_return.dart';
 import 'package:pdpa/app/data/models/master_data/localized_model.dart';
 import 'package:pdpa/app/data/models/master_data/reject_type_model.dart';
@@ -15,6 +17,7 @@ import 'package:pdpa/app/injection.dart';
 import 'package:pdpa/app/shared/utils/constants.dart';
 import 'package:pdpa/app/shared/utils/toast.dart';
 import 'package:pdpa/app/shared/widgets/content_wrapper.dart';
+import 'package:pdpa/app/shared/widgets/customs/custom_button.dart';
 import 'package:pdpa/app/shared/widgets/customs/custom_container.dart';
 import 'package:pdpa/app/shared/widgets/customs/custom_icon_button.dart';
 import 'package:pdpa/app/shared/widgets/customs/custom_switch_button.dart';
@@ -114,6 +117,7 @@ class _EditRejectTypeScreenState extends State<EditRejectTypeScreen> {
               initialRejectType: state.rejectType,
               currentUser: currentUser,
               isNewRejectType: widget.rejectTypeId.isEmpty,
+              dataSubjectRights: state.dataSubjectRights,
             );
           }
           if (state is UpdatedCurrentRejectType) {
@@ -121,6 +125,7 @@ class _EditRejectTypeScreenState extends State<EditRejectTypeScreen> {
               initialRejectType: state.rejectType,
               currentUser: currentUser,
               isNewRejectType: widget.rejectTypeId.isEmpty,
+              dataSubjectRights: state.dataSubjectRights,
             );
           }
           if (state is EditRejectTypeError) {
@@ -140,11 +145,13 @@ class EditRejectTypeView extends StatefulWidget {
     required this.initialRejectType,
     required this.currentUser,
     required this.isNewRejectType,
+    required this.dataSubjectRights,
   });
 
   final RejectTypeModel initialRejectType;
   final UserModel currentUser;
   final bool isNewRejectType;
+  final List<DataSubjectRightModel> dataSubjectRights;
 
   @override
   State<EditRejectTypeView> createState() => _EditRejectTypeViewState();
@@ -158,6 +165,8 @@ class _EditRejectTypeViewState extends State<EditRejectTypeView> {
 
   late bool isNeedInfo;
   late bool isActivated;
+
+  late List<String> usedDataSubjectRightIds;
 
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
 
@@ -187,6 +196,8 @@ class _EditRejectTypeViewState extends State<EditRejectTypeView> {
     isNeedInfo = false;
     isActivated = true;
 
+    usedDataSubjectRightIds = [];
+
     if (rejectType != RejectTypeModel.empty()) {
       if (rejectType.rejectCode.isNotEmpty) {
         rejectTypeCodeController = TextEditingController(
@@ -208,6 +219,23 @@ class _EditRejectTypeViewState extends State<EditRejectTypeView> {
 
       isNeedInfo = rejectType.requiredInputReasonText;
       isActivated = rejectType.status == ActiveStatus.active;
+    }
+
+    if (widget.dataSubjectRights.isNotEmpty) {
+      for (DataSubjectRightModel from in widget.dataSubjectRights) {
+        //? Sort Process Requests
+        List<String> dsrId = [];
+
+        for (ProcessRequestModel request in from.processRequests) {
+          final rejectIds =
+              request.rejectTypes;
+
+          if (rejectIds.contains(rejectType.id)) {
+            dsrId.add(from.id);
+          }
+        }
+        usedDataSubjectRightIds.addAll(dsrId);
+      }
     }
   }
 
@@ -284,11 +312,66 @@ class _EditRejectTypeViewState extends State<EditRejectTypeView> {
   }
 
   void _deleteRejectType() {
-    final event = DeleteCurrentRejectTypeEvent(
-      rejectTypeId: rejectType.id,
-      companyId: widget.currentUser.currentCompany,
-    );
-    context.read<EditRejectTypeBloc>().add(event);
+    if (usedDataSubjectRightIds.isNotEmpty) {
+      showDialog(
+        context: context,
+        builder: (_) => AlertDialog(
+          title: Text(
+            tr('masterData.dsr.rejections.error'),
+            style: Theme.of(context).textTheme.titleLarge,
+          ),
+          content: Column(
+            children: [
+              Text(
+                tr('masterData.dsr.rejections.canNotRemoved'),
+              ),
+              Column(
+                children: usedDataSubjectRightIds.map((id) {
+                  return Row(children: [
+                    const Text(
+                      "\u2022",
+                    ), //bullet text
+                    const SizedBox(
+                      height: UiConfig.lineGap,
+                    ), //space between bullet and text
+                    Expanded(
+                      child: Text(
+                        id,
+                      ), //text
+                    )
+                  ]);
+                }).toList(),
+              )
+            ],
+          ),
+          actions: [
+            CustomButton(
+              height: 40.0,
+              onPressed: () => context.pop(),
+              child: Text(
+                tr('consentManagement.consentForm.congratulations.ok'),
+                style: Theme.of(context)
+                    .textTheme
+                    .bodyMedium
+                    ?.copyWith(color: Theme.of(context).colorScheme.onPrimary),
+              ),
+            ),
+          ],
+          backgroundColor: Theme.of(context).colorScheme.onBackground,
+          surfaceTintColor: Theme.of(context).colorScheme.onBackground,
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(10.0),
+          ),
+          scrollable: true,
+        ),
+      );
+    } else {
+      final event = DeleteCurrentRejectTypeEvent(
+        rejectTypeId: rejectType.id,
+        companyId: widget.currentUser.currentCompany,
+      );
+      context.read<EditRejectTypeBloc>().add(event);
+    }
   }
 
   void _goBackAndUpdate() {
