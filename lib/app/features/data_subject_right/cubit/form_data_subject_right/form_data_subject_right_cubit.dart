@@ -91,6 +91,7 @@ class FormDataSubjectRightCubit extends Cubit<FormDataSubjectRightState> {
     emit(state.copyWith(
       requestFormState: RequestFormState.requesting,
       dataSubjectRight: DataSubjectRightModel.empty(),
+      processRequests: const [],
       currentPage: 0,
       isAcknowledge: false,
     ));

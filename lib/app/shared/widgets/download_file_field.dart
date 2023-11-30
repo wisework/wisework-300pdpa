@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:pdpa/app/config/config.dart';
 import 'package:pdpa/app/shared/utils/functions.dart';
+import 'package:path/path.dart' as p;
 
 import 'customs/custom_icon_button.dart';
 import 'customs/custom_text_field.dart';
@@ -41,7 +42,7 @@ class _DownloadFileFieldState extends State<DownloadFileField> {
                   text: UtilFunctions.getFileNameFromUrl(widget.fileUrl),
                 ),
                 hintText: 'ไม่ได้ระบุลิงก์ URL',
-                maxLines: 5,
+                maxLines: 2,
                 readOnly: true,
               ),
             ),
@@ -64,16 +65,36 @@ class _DownloadFileFieldState extends State<DownloadFileField> {
   }
 
   Column _buildFilePreview() {
+    final extension = p.extension(
+      UtilFunctions.getFileNameFromUrl(widget.fileUrl),
+    );
+    const color = Colors.blue;
     return Column(
-      mainAxisSize: MainAxisSize.min,
       children: <Widget>[
-        SizedBox(
-          height: 180.0,
-          child: Image.network(
-            widget.fileUrl,
-            fit: BoxFit.contain,
-          ),
-        ),
+        extension == '.jpg' || extension == '.png'
+            ? SizedBox(
+                height: 180.0,
+                child: Image.network(
+                  widget.fileUrl,
+                  fit: BoxFit.contain,
+                ),
+              )
+            : Container(
+                height: 120.0,
+                width: 120.0,
+                alignment: Alignment.center,
+                decoration: BoxDecoration(
+                  color: color,
+                  borderRadius: BorderRadius.circular(12),
+                ),
+                child: Text(
+                  extension,
+                  style: Theme.of(context)
+                      .textTheme
+                      .displayLarge
+                      ?.copyWith(color: Colors.white),
+                ),
+              ),
         const SizedBox(height: UiConfig.lineSpacing),
       ],
     );
