@@ -175,6 +175,9 @@ class _FormDataSubjectRightViewState extends State<FormDataSubjectRightView> {
     final dataSubjectRight = context.select(
       (FormDataSubjectRightCubit cubit) => cubit.state.dataSubjectRight,
     );
+    final processRequests = context.select(
+      (FormDataSubjectRightCubit cubit) => cubit.state.processRequests,
+    );
     final currentPage = context.select(
       (FormDataSubjectRightCubit cubit) => cubit.state.currentPage,
     );
@@ -442,11 +445,10 @@ class _FormDataSubjectRightViewState extends State<FormDataSubjectRightView> {
                               }
                               break;
                             case 5:
-                              final processRequests = dataSubjectRight
-                                  .processRequests
+                              final processRequest = processRequests
                                   .map((process) => process)
                                   .toList();
-                              if (processRequests.isEmpty) {
+                              if (processRequest.isEmpty) {
                                 verified = false;
                                 BotToast.showText(
                                   text: tr('dataSubjectRight.formData.purpose'),
@@ -466,7 +468,7 @@ class _FormDataSubjectRightViewState extends State<FormDataSubjectRightView> {
                                 );
                               }
                               for (ProcessRequestModel process
-                                  in processRequests) {
+                                  in processRequest) {
                                 if (process.personalData.isEmpty) {
                                   verified = false;
                                   BotToast.showText(

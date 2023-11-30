@@ -296,14 +296,14 @@ class _HomeViewState extends State<HomeView> {
             children: <Widget>[
               const SizedBox(height: UiConfig.lineGap),
               Text(
-                tr('app.disvover.discover'),
+                tr("app.disvover.new"),
                 style: Theme.of(context).textTheme.headlineMedium,
               ),
             ],
           ),
           const SizedBox(height: UiConfig.lineGap * 2),
           Text(
-            tr('app.disvover.description'),
+            tr("app.disvover.descriptionNew"),
             style: Theme.of(context).textTheme.bodySmall,
           ),
           const SizedBox(height: UiConfig.lineGap * 2),
@@ -351,13 +351,13 @@ class _HomeViewState extends State<HomeView> {
                 bottom: 4.0,
               ),
               child: Icon(
-                Ionicons.home_outline,
+                Ionicons.shield_checkmark_outline,
                 size: 20.0,
                 color: Theme.of(context).colorScheme.onSurface,
               ),
             ),
             Text(
-              tr('app.features.home'),
+              tr("dataSubjectRight.manageRequests"),
               style: Theme.of(context).textTheme.titleMedium,
             ),
           ],
@@ -372,55 +372,13 @@ class _HomeViewState extends State<HomeView> {
                 bottom: 4.0,
               ),
               child: Icon(
-                Ionicons.reader_outline,
+                Ionicons.moon_outline,
                 size: 20.0,
                 color: Theme.of(context).colorScheme.onSurface,
               ),
             ),
             Text(
-              tr('app.features.consentmanagement'),
-              style: Theme.of(context).textTheme.titleMedium,
-            ),
-          ],
-        ),
-        const SizedBox(height: UiConfig.lineGap),
-        Row(
-          mainAxisAlignment: MainAxisAlignment.start,
-          children: <Widget>[
-            Padding(
-              padding: const EdgeInsets.only(
-                right: UiConfig.defaultPaddingSpacing,
-                bottom: 4.0,
-              ),
-              child: Icon(
-                Ionicons.server_outline,
-                size: 20.0,
-                color: Theme.of(context).colorScheme.onSurface,
-              ),
-            ),
-            Text(
-              tr('app.features.masterdata'),
-              style: Theme.of(context).textTheme.titleMedium,
-            ),
-          ],
-        ),
-        const SizedBox(height: UiConfig.lineGap),
-        Row(
-          mainAxisAlignment: MainAxisAlignment.start,
-          children: <Widget>[
-            Padding(
-              padding: const EdgeInsets.only(
-                right: UiConfig.defaultPaddingSpacing,
-                bottom: 4.0,
-              ),
-              child: Icon(
-                Ionicons.settings_outline,
-                size: 20.0,
-                color: Theme.of(context).colorScheme.onSurface,
-              ),
-            ),
-            Text(
-              tr('app.features.setting'),
+              tr("app.mode"),
               style: Theme.of(context).textTheme.titleMedium,
             ),
           ],
@@ -577,6 +535,7 @@ class _HomeViewState extends State<HomeView> {
     required ExploreActivity activity,
   }) {
     return SizedBox(
+      height: 114,
       width: 160.0,
       child: MaterialInkWell(
         backgroundColor: Theme.of(context).colorScheme.onBackground,
@@ -671,8 +630,7 @@ class _HomeViewState extends State<HomeView> {
               Text(
                 activity.title,
                 style: Theme.of(context).textTheme.bodySmall,
-                overflow: TextOverflow.ellipsis,
-                maxLines: 1,
+                maxLines: 2,
               ),
             ],
           ),
@@ -924,7 +882,7 @@ class _HomeViewState extends State<HomeView> {
             children: <Widget>[
               Expanded(
                 child: Text(
-                  'รายการแบบฟอร์มล่าสุด',
+                  tr('app.features.Latest'),
                   style: Theme.of(context).textTheme.titleLarge,
                   overflow: TextOverflow.ellipsis,
                   maxLines: 1,

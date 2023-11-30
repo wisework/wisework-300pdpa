@@ -1,3 +1,4 @@
+import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:ionicons/ionicons.dart';
@@ -133,10 +134,14 @@ class _ProcessConsiderRequestState extends State<ProcessConsiderRequest> {
 
     if (processRequest != emptyRequest) {
       final Map<ProcessRequestStatus, String> statusTexts = {
-        ProcessRequestStatus.notProcessed: 'ยังไม่ดำเนินการ',
-        ProcessRequestStatus.inProgress: 'อยู่ระหว่างการดำเนินการ',
-        ProcessRequestStatus.refused: 'ปฏิเสธการดำเนินการ',
-        ProcessRequestStatus.completed: 'ดำเนินการเสร็จสิ้น',
+        ProcessRequestStatus.notProcessed:
+            tr('dataSubjectRight.processConsider.notYetProcessed'),
+        ProcessRequestStatus.inProgress:
+            tr('dataSubjectRight.processConsider.inProgress'),
+        ProcessRequestStatus.refused:
+            tr('dataSubjectRight.processConsider.refuseProcessing'),
+        ProcessRequestStatus.completed:
+            tr('dataSubjectRight.processConsider.completed'),
       };
 
       final status = UtilFunctions.getProcessRequestStatus(
@@ -152,10 +157,10 @@ class _ProcessConsiderRequestState extends State<ProcessConsiderRequest> {
         orElse: () => const LocalizedModel.empty(),
       );
 
-      final rejectReason =
-          processRequest.considerRequestStatus == RequestResultStatus.fail
-              ? '\nเหตุผล: ${processRequest.rejectConsiderReason}'
-              : '';
+      final rejectReason = processRequest.considerRequestStatus ==
+              RequestResultStatus.fail
+          ? '\n${tr('dataSubjectRight.processConsider.completed')} ${processRequest.rejectConsiderReason}'
+          : '';
 
       return ProcessRequestTemplateParams(
         toName: dataSubjectRight.dataRequester[0].text,
@@ -205,7 +210,7 @@ class _ProcessConsiderRequestState extends State<ProcessConsiderRequest> {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: <Widget>[
               Text(
-                'พิจารณาดำเนินการ',
+                tr('dataSubjectRight.processConsider.considerTakingAction'),
                 style: Theme.of(context).textTheme.titleMedium,
               ),
               const SizedBox(height: UiConfig.lineGap),
@@ -250,7 +255,7 @@ class _ProcessConsiderRequestState extends State<ProcessConsiderRequest> {
       crossAxisAlignment: CrossAxisAlignment.start,
       children: <Widget>[
         Text(
-          'ส่งการแจ้งเตือนทางอีเมล',
+          tr('dataSubjectRight.processConsider.sendEmail'),
           style: Theme.of(context).textTheme.titleMedium,
         ),
         const SizedBox(height: UiConfig.lineGap),
@@ -312,7 +317,7 @@ class _ProcessConsiderRequestState extends State<ProcessConsiderRequest> {
                         loadingType: LoadingType.horizontalRotatingDots,
                       )
                     : Text(
-                        'ยืนยัน',
+                        tr('dataSubjectRight.processConsider.confirm'),
                         style: Theme.of(context).textTheme.bodyMedium?.copyWith(
                             color: Theme.of(context).colorScheme.onPrimary),
                       ),
@@ -349,7 +354,7 @@ class _ProcessConsiderRequestState extends State<ProcessConsiderRequest> {
               child: Padding(
                 padding: const EdgeInsets.symmetric(vertical: 5.0),
                 child: Text(
-                  'ดำเนินการ',
+                  tr('dataSubjectRight.processConsider.carryOut'),
                   style: Theme.of(context).textTheme.bodyMedium,
                 ),
               ),
@@ -381,7 +386,7 @@ class _ProcessConsiderRequestState extends State<ProcessConsiderRequest> {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: <Widget>[
                     Text(
-                      'ปฏิเสธคำขอ',
+                      tr('dataSubjectRight.processConsider.list'),
                       style: Theme.of(context).textTheme.bodyMedium,
                     ),
                     ExpandedContainer(
@@ -409,7 +414,8 @@ class _ProcessConsiderRequestState extends State<ProcessConsiderRequest> {
                               },
                             ),
                             TitleRequiredText(
-                              text: 'เหตุผลประกอบ',
+                              text:
+                                  tr('dataSubjectRight.processConsider.reason'),
                               required: widget.initialProcessRequest
                                       .considerRequestStatus ==
                                   RequestResultStatus.none,
@@ -417,7 +423,8 @@ class _ProcessConsiderRequestState extends State<ProcessConsiderRequest> {
                             CustomTextField(
                               initialValue:
                                   widget.processRequest.rejectConsiderReason,
-                              hintText: 'เนื่องด้วย...',
+                              hintText:
+                                  tr('dataSubjectRight.processConsider.since'),
                               maxLines: 5,
                               onChanged: (value) {
                                 _onRejectReasonChanged(value);
@@ -445,7 +452,7 @@ class _ProcessConsiderRequestState extends State<ProcessConsiderRequest> {
               builder: (context, state) {
                 return _buildWarningContainer(
                   context,
-                  text: 'โปรดเลือกตัวเลือกเพื่อดำเนินการต่อ',
+                  text: tr('dataSubjectRight.processConsider.pleaseSelect'),
                   isWarning:
                       state.considerError.contains(widget.processRequest.id),
                 );
@@ -565,7 +572,7 @@ class _ProcessConsiderRequestState extends State<ProcessConsiderRequest> {
                 children: <Widget>[
                   Expanded(
                     child: Text(
-                      'เพิ่มเหตุผลในการปฏิเสธ',
+                      tr('dataSubjectRight.processConsider.addReasons'),
                       style: Theme.of(context).textTheme.bodyMedium,
                     ),
                   ),
@@ -589,7 +596,7 @@ class _ProcessConsiderRequestState extends State<ProcessConsiderRequest> {
               ),
               child: _buildWarningContainer(
                 context,
-                text: 'โปรดเลือกเหตุผลในการปฏิเสธ',
+                text: tr('dataSubjectRight.processConsider.selectReject'),
                 isWarning: state.rejectError,
               ),
             );
@@ -661,7 +668,7 @@ class _ProcessConsiderRequestState extends State<ProcessConsiderRequest> {
                   loadingType: LoadingType.horizontalRotatingDots,
                 )
               : Text(
-                  'ส่งผลการตรวจสอบ',
+                  tr('dataSubjectRight.processConsider.submit'),
                   style: Theme.of(context).textTheme.titleMedium?.copyWith(
                       color: Theme.of(context).colorScheme.onPrimary),
                 ),
