@@ -1,6 +1,7 @@
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
+import 'package:ionicons/ionicons.dart';
 
 import 'package:pdpa/app/config/config.dart';
 import 'package:pdpa/app/features/master_data/routes/master_data_route.dart';
@@ -40,16 +41,21 @@ class MasterDataScreen extends StatelessWidget {
             children: <Widget>[
               const SizedBox(height: UiConfig.lineSpacing),
               CustomContainer(
-                padding: EdgeInsets.zero,
                 child: Column(
-                  children: [
-                    const SizedBox(height: UiConfig.lineSpacing),
+                  children: <Widget>[
                     Row(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        Text(
-                          tr('app.features.consentmanagement'),
-                          style: Theme.of(context).textTheme.titleLarge,
+                      children: <Widget>[
+                        Icon(
+                          Ionicons.reader_outline,
+                          size: 20.0,
+                          color: Theme.of(context).colorScheme.onSurface,
+                        ),
+                        const SizedBox(width: UiConfig.actionSpacing),
+                        Expanded(
+                          child: Text(
+                            tr('app.features.consentmanagement'),
+                            style: Theme.of(context).textTheme.titleLarge,
+                          ),
                         ),
                       ],
                     ),
@@ -62,13 +68,16 @@ class MasterDataScreen extends StatelessWidget {
               ),
               const SizedBox(height: UiConfig.lineSpacing),
               CustomContainer(
-                padding: EdgeInsets.zero,
                 child: Column(
-                  children: [
-                    const SizedBox(height: UiConfig.lineSpacing),
+                  children: <Widget>[
                     Row(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
+                      children: <Widget>[
+                        Icon(
+                          Ionicons.shield_checkmark_outline,
+                          size: 20.0,
+                          color: Theme.of(context).colorScheme.onSurface,
+                        ),
+                        const SizedBox(width: UiConfig.actionSpacing),
                         Text(
                           tr('app.features.datasubjectright'),
                           style: Theme.of(context).textTheme.titleLarge,
@@ -95,123 +104,118 @@ class MasterDataScreen extends StatelessWidget {
     );
   }
 
-  CustomContainer _buildMandatorySection(BuildContext context) {
-    return CustomContainer(
-      child: Column(
-        children: <Widget>[
-          Row(
-            children: <Widget>[
-              Text(
-                tr('masterData.main.mandatories'),
-                style: Theme.of(context).textTheme.titleMedium,
-              ),
-            ],
-          ),
-          const SizedBox(height: UiConfig.lineSpacing),
-          MasterDataListTile(
-            trail: true,
-            title: tr('masterData.main.mandatoryFields.list'),
-            onTap: () {
-              context.push(MasterDataRoute.mandatoryFields.path);
-            },
-          ),
-        ],
-      ),
+  Column _buildMandatorySection(BuildContext context) {
+    return Column(
+      children: <Widget>[
+        Row(
+          children: <Widget>[
+            Text(
+              tr('masterData.main.mandatories'),
+              style: Theme.of(context).textTheme.titleMedium,
+            ),
+          ],
+        ),
+        const SizedBox(height: UiConfig.lineSpacing),
+        MasterDataListTile(
+          trail: true,
+          title: tr('masterData.main.mandatoryFields.list'),
+          onTap: () {
+            context.push(MasterDataRoute.mandatoryFields.path);
+          },
+        ),
+      ],
     );
   }
 
-  CustomContainer _buildConsentSection(BuildContext context) {
-    return CustomContainer(
-      child: Column(
-        children: <Widget>[
-          Row(
-            children: <Widget>[
-              Text(
-                tr('masterData.cm.consents'),
-                style: Theme.of(context).textTheme.titleMedium,
-              ),
-            ],
-          ),
-          const SizedBox(height: UiConfig.lineSpacing),
-          // MasterDataListTile(
-          //   trail: true,
-          //   title: tr('masterData.cm.customfields.list'),
-          //   onTap: () {
-          //     context.push(MasterDataRoute.customFields.path);
-          //   },
-          // ),
-          MasterDataListTile(
-            trail: true,
-            title: tr('masterData.cm.purpose.list'),
-            onTap: () {
-              context.push(MasterDataRoute.purposes.path);
-            },
-          ),
-          MasterDataListTile(
-            trail: true,
-            title: tr('masterData.cm.purposeCategory.list'),
-            onTap: () {
-              context.push(MasterDataRoute.purposesCategories.path);
-            },
-          ),
-        ],
-      ),
+  Column _buildConsentSection(BuildContext context) {
+    return Column(
+      children: <Widget>[
+        Row(
+          children: <Widget>[
+            Text(
+              tr('masterData.cm.consents'),
+              style: Theme.of(context).textTheme.titleMedium,
+            ),
+          ],
+        ),
+        const SizedBox(height: UiConfig.lineSpacing),
+        // MasterDataListTile(
+        //   trail: true,
+        //   title: tr('masterData.cm.customfields.list'),
+        //   onTap: () {
+        //     context.push(MasterDataRoute.customFields.path);
+        //   },
+        // ),
+        MasterDataListTile(
+          trail: true,
+          title: tr('masterData.cm.purpose.list'),
+          onTap: () {
+            context.push(MasterDataRoute.purposes.path);
+          },
+        ),
+        MasterDataListTile(
+          trail: true,
+          title: tr('masterData.cm.purposeCategory.list'),
+          onTap: () {
+            context.push(MasterDataRoute.purposesCategories.path);
+          },
+        ),
+      ],
     );
   }
 
-  CustomContainer _buildDataSubjectRightSection(BuildContext context) {
-    return CustomContainer(
-      child: Column(
-        children: <Widget>[
-          Row(
-            children: <Widget>[
-              Text(
-                tr('masterData.dsr.datasubjectright'),
-                style: Theme.of(context).textTheme.titleMedium,
-              ),
-            ],
-          ),
-          const SizedBox(height: UiConfig.lineSpacing),
-          MasterDataListTile(
-            trail: true,
-            title: tr('masterData.dsr.request.list'),
-            onTap: () {
-              context.push(MasterDataRoute.requestType.path);
-            },
-          ),
-          MasterDataListTile(
-            trail: true,
-            title: tr('masterData.dsr.rejections.list'),
-            onTap: () {
-              context.push(MasterDataRoute.rejectType.path);
-            },
-          ),
-          MasterDataListTile(
-            trail: true,
-            title: tr('masterData.dsr.reason.list'),
-            onTap: () {
-              context.push(MasterDataRoute.reasonType.path);
-            },
-          ),
-          // MasterDataListTile(
-          //   trail: true,
-          //   title: tr('masterData.dsr.requestrejects.list'),
-          //   onTap: () {
-          //     context.push(MasterDataRoute.requestReject.path);
-          //   },
-          // ),
-          // MasterDataListTile(
-          //   trail: true,
-          //   title: tr('masterData.dsr.requestreasons.list'),
-          //   onTap: () {
-          //     context.push(MasterDataRoute.requestReason.path);
-          //   },
-          // ),
-        ],
-      ),
+  Column _buildDataSubjectRightSection(BuildContext context) {
+    return Column(
+      children: <Widget>[
+        Row(
+          children: <Widget>[
+            Text(
+              tr('masterData.dsr.datasubjectright'),
+              style: Theme.of(context).textTheme.titleMedium,
+            ),
+          ],
+        ),
+        const SizedBox(height: UiConfig.lineSpacing),
+        MasterDataListTile(
+          trail: true,
+          title: tr('masterData.dsr.request.list'),
+          onTap: () {
+            context.push(MasterDataRoute.requestType.path);
+          },
+        ),
+        MasterDataListTile(
+          trail: true,
+          title: tr('masterData.dsr.rejections.list'),
+          onTap: () {
+            context.push(MasterDataRoute.rejectType.path);
+          },
+        ),
+        MasterDataListTile(
+          trail: true,
+          title: tr('masterData.dsr.reason.list'),
+          onTap: () {
+            context.push(MasterDataRoute.reasonType.path);
+          },
+        ),
+        // MasterDataListTile(
+        //   trail: true,
+        //   title: tr('masterData.dsr.requestrejects.list'),
+        //   onTap: () {
+        //     context.push(MasterDataRoute.requestReject.path);
+        //   },
+        // ),
+        // MasterDataListTile(
+        //   trail: true,
+        //   title: tr('masterData.dsr.requestreasons.list'),
+        //   onTap: () {
+        //     context.push(MasterDataRoute.requestReason.path);
+        //   },
+        // ),
+      ],
     );
   }
 
+  // ignore: unused_element
   CustomContainer _buildRequestAction(BuildContext context) {
     return CustomContainer(
       child: Column(

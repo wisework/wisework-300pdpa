@@ -256,8 +256,7 @@ class _SettingViewState extends State<SettingView> {
               showModalBottomSheet();
             },
             child: Padding(
-              padding: const EdgeInsets.symmetric(
-                  vertical: UiConfig.textLineSpacing),
+              padding: const EdgeInsets.symmetric(vertical: 12.0),
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: <Widget>[
@@ -274,8 +273,7 @@ class _SettingViewState extends State<SettingView> {
                 Theme.of(context).colorScheme.outlineVariant.withOpacity(0.5),
           ),
           Padding(
-            padding:
-                const EdgeInsets.symmetric(vertical: UiConfig.textLineSpacing),
+            padding: const EdgeInsets.symmetric(vertical: 12.0),
             child: Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: <Widget>[

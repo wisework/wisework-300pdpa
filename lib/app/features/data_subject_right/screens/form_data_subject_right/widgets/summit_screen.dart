@@ -13,62 +13,68 @@ class SubmitScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return SingleChildScrollView(
-      child: Column(
-        mainAxisSize: MainAxisSize.min,
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          CustomContainer(
-            margin: const EdgeInsets.all(UiConfig.lineSpacing),
-            constraints: const BoxConstraints(maxWidth: 500.0),
-            child: Column(
-              mainAxisSize: MainAxisSize.min,
-              crossAxisAlignment: CrossAxisAlignment.center,
-              children: <Widget>[
-                Text(
-                  tr("dataSubjectRight.submit.submitted"),
-                  style: Theme.of(context).textTheme.titleLarge?.copyWith(
-                      color: Theme.of(context).colorScheme.secondary),
-                ),
-                const SizedBox(height: UiConfig.lineGap),
-                Text(
-                  tr("dataSubjectRight.submit.notify"),
-                  style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                      color: Theme.of(context).colorScheme.secondary),
-                ),
-                const SizedBox(height: UiConfig.lineGap),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    ConstrainedBox(
-                      constraints: const BoxConstraints(maxWidth: 260.0),
-                      child: CustomButton(
-                        height: 40.0,
-                        onPressed: () {
-                          final RequestFormState requestFormState = context
-                              .read<FormDataSubjectRightCubit>()
-                              .state
-                              .requestFormState;
-
-                          if (requestFormState == RequestFormState.summarize) {
-                            context
+      child: Center(
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            CustomContainer(
+              margin: const EdgeInsets.all(UiConfig.lineSpacing),
+              constraints: const BoxConstraints(maxWidth: 500.0),
+              child: Column(
+                mainAxisSize: MainAxisSize.min,
+                crossAxisAlignment: CrossAxisAlignment.center,
+                children: <Widget>[
+                  Text(
+                    tr("dataSubjectRight.submit.submitted"),
+                    style: Theme.of(context).textTheme.titleLarge,
+                  ),
+                  const SizedBox(height: UiConfig.lineGap),
+                  Text(
+                    tr("dataSubjectRight.submit.notify"),
+                    style: Theme.of(context).textTheme.bodyMedium,
+                  ),
+                  const SizedBox(height: UiConfig.lineGap),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      ConstrainedBox(
+                        constraints: const BoxConstraints(maxWidth: 260.0),
+                        child: CustomButton(
+                          height: 40.0,
+                          onPressed: () {
+                            final RequestFormState requestFormState = context
                                 .read<FormDataSubjectRightCubit>()
-                                .resetFormDataSubjectRight();
-                          }
-                        },
-                        child: Text(
-                          tr('userSubjectRight.fillAgain'),
-                          style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                              color: Theme.of(context).colorScheme.onPrimary),
+                                .state
+                                .requestFormState;
+
+                            if (requestFormState ==
+                                RequestFormState.summarize) {
+                              context
+                                  .read<FormDataSubjectRightCubit>()
+                                  .resetFormDataSubjectRight();
+                            }
+                          },
+                          child: Text(
+                            tr('userSubjectRight.fillAgain'),
+                            style: Theme.of(context)
+                                .textTheme
+                                .bodyMedium
+                                ?.copyWith(
+                                    color: Theme.of(context)
+                                        .colorScheme
+                                        .onPrimary),
+                          ),
                         ),
                       ),
-                    ),
-                  ],
-                ),
-              ],
+                    ],
+                  ),
+                ],
+              ),
             ),
-          ),
-          const SizedBox(height: UiConfig.lineSpacing),
-        ],
+            const SizedBox(height: UiConfig.lineSpacing),
+          ],
+        ),
       ),
     );
   }
