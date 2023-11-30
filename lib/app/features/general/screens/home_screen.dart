@@ -593,9 +593,7 @@ class _HomeViewState extends State<HomeView> {
             context
                 .read<DrawerBloc>()
                 .add(SelectMenuDrawerEvent(menu: menuSelect));
-          }
-
-          if (activity.path == "/consent-form") {
+          } else if (activity.path == "/consent-form") {
             final DrawerMenuModel menuSelect;
             menuSelect = DrawerMenuModel(
               value: 'consent_forms',
@@ -603,6 +601,39 @@ class _HomeViewState extends State<HomeView> {
               icon: Ionicons.clipboard_outline,
               route: ConsentFormRoute.consentForm,
               parent: 'consent_management',
+            );
+            context
+                .read<DrawerBloc>()
+                .add(SelectMenuDrawerEvent(menu: menuSelect));
+          } else if (activity.path == "/data-subject-rights") {
+            final DrawerMenuModel menuSelect;
+            menuSelect = DrawerMenuModel(
+              value: 'data_subject_right',
+              title: tr('app.features.datasubjectright'),
+              icon: Ionicons.shield_checkmark_outline,
+              route: DataSubjectRightRoute.dataSubjectRight,
+            );
+            context
+                .read<DrawerBloc>()
+                .add(SelectMenuDrawerEvent(menu: menuSelect));
+          } else if (activity.path == "/master-data") {
+            final DrawerMenuModel menuSelect;
+            menuSelect = DrawerMenuModel(
+              value: 'master_data',
+              title: tr('app.features.masterdata'),
+              icon: Ionicons.server_outline,
+              route: MasterDataRoute.masterData,
+            );
+            context
+                .read<DrawerBloc>()
+                .add(SelectMenuDrawerEvent(menu: menuSelect));
+          } else if (activity.path == "/settings") {
+            final DrawerMenuModel menuSelect;
+            menuSelect = DrawerMenuModel(
+              value: 'settings',
+              title: tr('app.features.setting'),
+              icon: Ionicons.settings_outline,
+              route: GeneralRoute.setting,
             );
             context
                 .read<DrawerBloc>()
@@ -838,7 +869,9 @@ class _HomeViewState extends State<HomeView> {
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: <Widget>[
                         Text(
-                          title.isNotEmpty ? title : 'This data is not stored.',
+                          title.isNotEmpty
+                              ? title
+                              : tr('app.disvover.dataNotStored'),
                           style: Theme.of(context).textTheme.titleMedium,
                         ),
                         Visibility(
