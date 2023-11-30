@@ -69,7 +69,7 @@ class _UploadFileFieldState extends State<UploadFileField> {
                   text: UtilFunctions.getFileNameFromUrl(widget.fileUrl),
                 ),
                 hintText: 'ไม่ได้เลือกไฟล์',
-                maxLines: 5,
+                maxLines: 2,
                 readOnly: true,
               ),
             ),
