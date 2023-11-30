@@ -48,8 +48,8 @@ class MasterDataScreen extends StatelessWidget {
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
                         Text(
-                          tr('Consent Management'),
-                          style: Theme.of(context).textTheme.titleMedium,
+                          tr('app.features.consentmanagement'),
+                          style: Theme.of(context).textTheme.titleLarge,
                         ),
                       ],
                     ),
@@ -70,15 +70,15 @@ class MasterDataScreen extends StatelessWidget {
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
                         Text(
-                          tr('DataSubjectRight Management'),
-                          style: Theme.of(context).textTheme.titleMedium,
+                          tr('app.features.datasubjectright'),
+                          style: Theme.of(context).textTheme.titleLarge,
                         ),
                       ],
                     ),
                     const SizedBox(height: UiConfig.lineSpacing),
                     _buildDataSubjectRightSection(context),
-                    const SizedBox(height: UiConfig.lineSpacing),
-                    _buildRequestAction(context)
+                    // const SizedBox(height: UiConfig.lineSpacing),
+                    // _buildRequestAction(context)
                   ],
                 ),
               ),
@@ -103,7 +103,7 @@ class MasterDataScreen extends StatelessWidget {
             children: <Widget>[
               Text(
                 tr('masterData.main.mandatories'),
-                style: Theme.of(context).textTheme.titleLarge,
+                style: Theme.of(context).textTheme.titleMedium,
               ),
             ],
           ),
@@ -128,7 +128,7 @@ class MasterDataScreen extends StatelessWidget {
             children: <Widget>[
               Text(
                 tr('masterData.cm.consents'),
-                style: Theme.of(context).textTheme.titleLarge,
+                style: Theme.of(context).textTheme.titleMedium,
               ),
             ],
           ),
@@ -167,7 +167,7 @@ class MasterDataScreen extends StatelessWidget {
             children: <Widget>[
               Text(
                 tr('masterData.dsr.datasubjectright'),
-                style: Theme.of(context).textTheme.titleLarge,
+                style: Theme.of(context).textTheme.titleMedium,
               ),
             ],
           ),

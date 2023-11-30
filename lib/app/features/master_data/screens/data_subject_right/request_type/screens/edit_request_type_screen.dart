@@ -319,7 +319,7 @@ class _EditRequestTypeViewState extends State<EditRequestTypeView> {
           content: Column(
             children: [
               Text(
-                tr('masterData.dsr.rejections.canNotRemoved'),
+                tr('masterData.dsr.request.canNotRemoved'),
               ),
               Column(
                 children: usedDataSubjectRightIds.map((id) {

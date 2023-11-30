@@ -106,9 +106,14 @@ class EditRejectTypeBloc
       return;
     }
 
-    emit(const UpdatingCurrentRejectType());
+    List<DataSubjectRightModel> dsr = [];
+    if (state is GotCurrentRejectType) {
+      dsr = (state as GotCurrentRejectType).dataSubjectRights;
+    } else if (state is UpdatedCurrentRejectType) {
+      dsr = (state as UpdatedCurrentRejectType).dataSubjectRights;
+    }
 
-    final rejectTypes = state as GotCurrentRejectType;
+    emit(const UpdatingCurrentRejectType());
 
     final result = await _masterDataRepository.updateRejectType(
       event.rejectType,
@@ -121,7 +126,7 @@ class EditRejectTypeBloc
       (failure) => emit(EditRejectTypeError(failure.errorMessage)),
       (_) => emit(UpdatedCurrentRejectType(
         event.rejectType,
-        rejectTypes.dataSubjectRights,
+        dsr,
       )),
     );
   }

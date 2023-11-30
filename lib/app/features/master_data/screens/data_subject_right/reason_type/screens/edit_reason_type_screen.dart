@@ -326,7 +326,7 @@ class _EditReasonTypeViewState extends State<EditReasonTypeView> {
           content: Column(
             children: [
               Text(
-                tr('masterData.dsr.rejections.canNotRemoved'),
+                tr('masterData.dsr.reason.canNotRemoved'),
               ),
               Column(
                 children: usedDataSubjectRightIds.map((id) {

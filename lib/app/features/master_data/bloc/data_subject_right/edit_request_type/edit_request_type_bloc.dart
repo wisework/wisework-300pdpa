@@ -142,15 +142,16 @@ class EditRequestTypeBloc
     }
 
     List<RejectTypeModel> rejectTypes = [];
+    List<DataSubjectRightModel> dsr = [];
     if (state is GotCurrentRequestType) {
       rejectTypes = (state as GotCurrentRequestType).rejectTypes;
+      dsr = (state as GotCurrentRequestType).dataSubjectRights;
     } else if (state is UpdatedCurrentRequestType) {
       rejectTypes = (state as UpdatedCurrentRequestType).rejectTypes;
+      dsr = (state as UpdatedCurrentRequestType).dataSubjectRights;
     }
 
     emit(const UpdatingCurrentRequestType());
-
-    final gotDSR = state as GotCurrentRequestType;
 
     final result = await _masterDataRepository.updateRequestType(
       event.requestType,
@@ -164,7 +165,7 @@ class EditRequestTypeBloc
       (_) => emit(UpdatedCurrentRequestType(
         event.requestType,
         rejectTypes,
-        gotDSR.dataSubjectRights,
+        dsr,
       )),
     );
   }
