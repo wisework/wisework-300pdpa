@@ -549,7 +549,7 @@
             "refusal": "รายการการปฏิเสธ",
             "notFound": "ไม่พบข้อมูล"
         },
-        "processCondider": {
+        "processConsider": {
             "notYetProcessed": "ยังไม่ดำเนินการ",
             "inProgress": "อยู่ระหว่างการดำเนินการ",
             "refuseProcessing": "ปฏิเสธการดำเนินการ",

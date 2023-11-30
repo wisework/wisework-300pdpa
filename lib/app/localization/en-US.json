@@ -549,7 +549,7 @@
             "refusal": "Refusal list",
             "notFound": "No information found"
         },
-        "processCondider": {
+        "processConsider": {
             "notYetProcessed": "Not yet processed",
             "inProgress": "In progress",
             "refuseProcessing": "Refuse processing",
