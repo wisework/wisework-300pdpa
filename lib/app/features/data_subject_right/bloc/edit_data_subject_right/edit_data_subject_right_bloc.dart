@@ -63,7 +63,8 @@ class EditDataSubjectRightBloc
     await result.fold((failure) {
       emit(EditDataSubjectRightError(failure.errorMessage));
     }, (dataSubjectRight) async {
-      List<RequestTypeModel> gotRequestTypes = requestTypesPreset;
+      List<RequestTypeModel> gotRequestTypes =
+          requestTypesPreset.map((request) => request).toList();
       final requestTypeResult = await _masterDataRepository.getRequestTypes(
         event.companyId,
       );
@@ -81,7 +82,8 @@ class EditDataSubjectRightBloc
         },
       );
 
-      List<ReasonTypeModel> gotReasonTypes = reasonTypesPreset;
+      List<ReasonTypeModel> gotReasonTypes =
+          reasonTypesPreset.map((reason) => reason).toList();
       final reasonTypeResult = await _masterDataRepository.getReasonTypes(
         event.companyId,
       );
@@ -99,7 +101,8 @@ class EditDataSubjectRightBloc
         },
       );
 
-      List<RejectTypeModel> gotRejectTypes = rejectTypesPreset;
+      List<RejectTypeModel> gotRejectTypes =
+          rejectTypesPreset.map((reject) => reject).toList();
       final rejectTypeResult = await _masterDataRepository.getRejectTypes(
         event.companyId,
       );
@@ -261,7 +264,8 @@ class EditDataSubjectRightBloc
 
       await Future.delayed(const Duration(milliseconds: 800));
 
-      List<RejectTypeModel> gotRejectTypes = rejectTypesPreset;
+      List<RejectTypeModel> gotRejectTypes =
+          rejectTypesPreset.map((reject) => reject).toList();
       final rejectTypeResult = await _masterDataRepository.getRejectTypes(
         event.companyId,
       );
@@ -299,7 +303,8 @@ class EditDataSubjectRightBloc
 
       await Future.delayed(const Duration(milliseconds: 800));
 
-      List<RejectTypeModel> gotRejectTypes = rejectTypesPreset;
+      List<RejectTypeModel> gotRejectTypes =
+          rejectTypesPreset.map((reject) => reject).toList();
       final rejectTypeResult = await _masterDataRepository.getRejectTypes(
         event.companyId,
       );

@@ -82,6 +82,7 @@ class _RejectTypeViewState extends State<RejectTypeView> {
         leadingIcon: CustomIconButton(
           onPressed: () {
             context.pop();
+            // print(rejectTypesPreset);
           },
           icon: Icons.chevron_left_outlined,
           iconColor: Theme.of(context).colorScheme.primary,

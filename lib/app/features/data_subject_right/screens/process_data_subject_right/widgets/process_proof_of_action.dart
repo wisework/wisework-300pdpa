@@ -137,7 +137,7 @@ class _ProcessProofOfActionState extends State<ProcessProofOfAction> {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: <Widget>[
           Text(
-            tr('dataSubjectRight.processCondider.carryOut'),
+            tr('dataSubjectRight.processConsider.carryOut'),
             style: Theme.of(context).textTheme.titleMedium,
           ),
           const SizedBox(height: UiConfig.lineGap),
@@ -189,7 +189,7 @@ class _ProcessProofOfActionState extends State<ProcessProofOfAction> {
           ),
           CustomTextField(
             initialValue: widget.processRequest.proofOfActionText,
-            hintText: tr('dataSubjectRight.processCondider.since'),
+            hintText: tr('dataSubjectRight.processConsider.since'),
             maxLines: 5,
             onChanged: (value) {
               _onProofOfActionChanged(

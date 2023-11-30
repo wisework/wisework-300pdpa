@@ -315,7 +315,7 @@ class _EditReasonTypeViewState extends State<EditReasonTypeView> {
   }
 
   void _deleteReasonType() {
-    if (widget.dataSubjectRights.isNotEmpty) {
+    if (usedDataSubjectRightIds.isNotEmpty) {
       showDialog(
         context: context,
         builder: (_) => AlertDialog(
@@ -326,7 +326,7 @@ class _EditReasonTypeViewState extends State<EditReasonTypeView> {
           content: Column(
             children: [
               Text(
-                tr('masterData.dsr.rejections.canNotRemoved'),
+                tr('masterData.dsr.reason.canNotRemoved'),
               ),
               Column(
                 children: usedDataSubjectRightIds.map((id) {

@@ -396,7 +396,9 @@
                 "description": "Request description",
                 "descriptionHint": "Request description",
                 "rejectType": "Reject type",
-                "addRejectType": "Add reject type"
+                "addRejectType": "Add reject type",
+                "error": "Can not remove.",
+                "canNotRemoved" : "This request cannot be removed because it is used in the form as follows:"
             },
             "rejections": {
                 "title1": "Initial denial of request",
@@ -412,8 +414,8 @@
                 "rejectcodeHint": "Reject code",
                 "description": "Reject description",
                 "descriptionHint": "Reject description",
-                "error": "An error occurred.",
-                "canNotRemoved :": "This reason cannot be removed because it is used in the form as follows:"
+                "error": "Can not remove.",
+                "canNotRemoved" : "This reject cannot be removed because it is used in the form as follows:"
             },
             "reason": {
                 "title1": "Types of primary reasons",
@@ -429,7 +431,9 @@
                 "reasoncodeHint": "Enter code",
                 "description": "Description",
                 "descriptionHint": "Enter description",
-                "needmoreinformation": "Need more information"
+                "needmoreinformation": "Need more information",
+                "error": "Can not remove.",
+                "canNotRemoved" : "This reason cannot be removed because it is used in the form as follows:"
             },
             "requestrejects": {
                 "title": "Request rejects",
@@ -549,12 +553,12 @@
             "refusal": "Refusal list",
             "notFound": "No information found"
         },
-        "processCondider": {
+        "processConsider": {
             "notYetProcessed": "Not yet processed",
             "inProgress": "In progress",
             "refuseProcessing": "Refuse processing",
             "completed": "Completed",
-            "reason:": "Reason:",
+            "reason2": "Reason",
             "considerTakingAction": "Consider taking action",
             "sendEmail ": "Send email notifications",
             "confirm": "Confirm",
