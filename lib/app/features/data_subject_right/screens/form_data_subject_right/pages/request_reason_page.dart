@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -35,8 +37,10 @@ class RequestReasonPage extends StatefulWidget {
 }
 
 class _RequestReasonPageState extends State<RequestReasonPage> {
+  late Timer _debounceTimer;
   @override
   void initState() {
+    _debounceTimer = Timer(Duration.zero, () {});
     super.initState();
   }
 
@@ -179,9 +183,13 @@ class _RequestReasonPageState extends State<RequestReasonPage> {
                 tr('dataSubjectRight.requestReason.hintpersonalInformation'),
             required: true,
             onChanged: (value) {
-              context
-                  .read<FormDataSubjectRightCubit>()
-                  .personalDataChanged(value, requestType.id);
+              _debounceTimer.cancel();
+
+              _debounceTimer = Timer(const Duration(milliseconds: 250), () {
+                context
+                    .read<FormDataSubjectRightCubit>()
+                    .personalDataChanged(value, requestType.id);
+              });
             },
           ),
           const SizedBox(height: UiConfig.lineSpacing),
@@ -191,9 +199,13 @@ class _RequestReasonPageState extends State<RequestReasonPage> {
           CustomTextField(
             hintText: tr('dataSubjectRight.requestReason.hintPlace'),
             onChanged: (value) {
-              context
-                  .read<FormDataSubjectRightCubit>()
-                  .foundSourceChanged(value, requestType.id);
+              _debounceTimer.cancel();
+
+              _debounceTimer = Timer(const Duration(milliseconds: 250), () {
+                context
+                    .read<FormDataSubjectRightCubit>()
+                    .foundSourceChanged(value, requestType.id);
+              });
             },
           ),
           const SizedBox(height: UiConfig.lineSpacing),
@@ -350,13 +362,18 @@ class _RequestReasonPageState extends State<RequestReasonPage> {
                                   'dataSubjectRight.requestReason.hintReason'),
                               required: true,
                               onChanged: (text) {
-                                context
-                                    .read<FormDataSubjectRightCubit>()
-                                    .formDataSubjectRightReasonInput(
-                                      text,
-                                      requestType.id,
-                                      reasonId,
-                                    );
+                                _debounceTimer.cancel();
+
+                                _debounceTimer = Timer(
+                                    const Duration(milliseconds: 250), () {
+                                  context
+                                      .read<FormDataSubjectRightCubit>()
+                                      .formDataSubjectRightReasonInput(
+                                        text,
+                                        requestType.id,
+                                        reasonId,
+                                      );
+                                });
                               },
                             ),
                             const SizedBox(height: UiConfig.lineSpacing),
