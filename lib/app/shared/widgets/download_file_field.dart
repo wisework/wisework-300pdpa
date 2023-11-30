@@ -42,7 +42,7 @@ class _DownloadFileFieldState extends State<DownloadFileField> {
                   text: UtilFunctions.getFileNameFromUrl(widget.fileUrl),
                 ),
                 hintText: 'ไม่ได้ระบุลิงก์ URL',
-                maxLines: 5,
+                maxLines: 2,
                 readOnly: true,
               ),
             ),
