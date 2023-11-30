@@ -6,6 +6,8 @@ import 'package:ionicons/ionicons.dart';
 import 'package:modal_bottom_sheet/modal_bottom_sheet.dart';
 import 'package:pdpa/app/config/config.dart';
 import 'package:pdpa/app/data/models/authentication/user_model.dart';
+import 'package:pdpa/app/data/models/data_subject_right/data_subject_right_model.dart';
+import 'package:pdpa/app/data/models/data_subject_right/process_request_model.dart';
 import 'package:pdpa/app/data/models/etc/updated_return.dart';
 import 'package:pdpa/app/data/models/master_data/localized_model.dart';
 import 'package:pdpa/app/data/models/master_data/reject_type_model.dart';
@@ -125,6 +127,7 @@ class _EditRequestTypeScreenState extends State<EditRequestTypeScreen> {
               rejectTypes: state.rejectTypes,
               currentUser: currentUser,
               isNewRequestType: widget.requestTypeId.isEmpty,
+              dataSubjectRights: state.dataSubjectRights,
             );
           }
           if (state is UpdatedCurrentRequestType) {
@@ -133,6 +136,7 @@ class _EditRequestTypeScreenState extends State<EditRequestTypeScreen> {
               rejectTypes: state.rejectTypes,
               currentUser: currentUser,
               isNewRequestType: widget.requestTypeId.isEmpty,
+              dataSubjectRights: state.dataSubjectRights,
             );
           }
           if (state is EditRequestTypeError) {
@@ -153,12 +157,14 @@ class EditRequestTypeView extends StatefulWidget {
     required this.rejectTypes,
     required this.currentUser,
     required this.isNewRequestType,
+    required this.dataSubjectRights,
   });
 
   final RequestTypeModel initialRequestType;
   final List<RejectTypeModel> rejectTypes;
   final UserModel currentUser;
   final bool isNewRequestType;
+  final List<DataSubjectRightModel> dataSubjectRights;
 
   @override
   State<EditRequestTypeView> createState() => _EditRequestTypeViewState();
@@ -171,6 +177,8 @@ class _EditRequestTypeViewState extends State<EditRequestTypeView> {
   late TextEditingController descriptionController;
 
   late bool isActivated;
+
+  late List<String> usedDataSubjectRightIds;
 
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
 
@@ -198,6 +206,8 @@ class _EditRequestTypeViewState extends State<EditRequestTypeView> {
 
     isActivated = true;
 
+    usedDataSubjectRightIds = [];
+
     if (requestType != RequestTypeModel.empty()) {
       if (requestType.requestCode.isNotEmpty) {
         requestTypeCodeController = TextEditingController(
@@ -218,6 +228,22 @@ class _EditRequestTypeViewState extends State<EditRequestTypeView> {
       }
 
       isActivated = requestType.status == ActiveStatus.active;
+    }
+
+    if (widget.dataSubjectRights.isNotEmpty) {
+      for (DataSubjectRightModel from in widget.dataSubjectRights) {
+        //? Sort Process Requests
+        List<String> dsrId = [];
+
+        for (ProcessRequestModel request in from.processRequests) {
+          final requestIds = request.requestType;
+
+          if (requestIds == requestType.id) {
+            dsrId.add(from.id);
+          }
+        }
+        usedDataSubjectRightIds.addAll(dsrId);
+      }
     }
   }
 
@@ -282,11 +308,66 @@ class _EditRequestTypeViewState extends State<EditRequestTypeView> {
   }
 
   void _deleteRequestType() {
-    final event = DeleteCurrentRequestTypeEvent(
-      requestTypeId: requestType.id,
-      companyId: widget.currentUser.currentCompany,
-    );
-    context.read<EditRequestTypeBloc>().add(event);
+    if (usedDataSubjectRightIds.isNotEmpty) {
+      showDialog(
+        context: context,
+        builder: (_) => AlertDialog(
+          title: Text(
+            tr('masterData.dsr.rejections.error'),
+            style: Theme.of(context).textTheme.titleLarge,
+          ),
+          content: Column(
+            children: [
+              Text(
+                tr('masterData.dsr.rejections.canNotRemoved'),
+              ),
+              Column(
+                children: usedDataSubjectRightIds.map((id) {
+                  return Row(children: [
+                    const Text(
+                      "\u2022",
+                    ), //bullet text
+                    const SizedBox(
+                      height: UiConfig.lineGap,
+                    ), //space between bullet and text
+                    Expanded(
+                      child: Text(
+                        id,
+                      ), //text
+                    )
+                  ]);
+                }).toList(),
+              )
+            ],
+          ),
+          actions: [
+            CustomButton(
+              height: 40.0,
+              onPressed: () => context.pop(),
+              child: Text(
+                tr('consentManagement.consentForm.congratulations.ok'),
+                style: Theme.of(context)
+                    .textTheme
+                    .bodyMedium
+                    ?.copyWith(color: Theme.of(context).colorScheme.onPrimary),
+              ),
+            ),
+          ],
+          backgroundColor: Theme.of(context).colorScheme.onBackground,
+          surfaceTintColor: Theme.of(context).colorScheme.onBackground,
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(10.0),
+          ),
+          scrollable: true,
+        ),
+      );
+    } else {
+      final event = DeleteCurrentRequestTypeEvent(
+        requestTypeId: requestType.id,
+        companyId: widget.currentUser.currentCompany,
+      );
+      context.read<EditRequestTypeBloc>().add(event);
+    }
   }
 
   void _goBackAndUpdate() {
@@ -359,34 +440,34 @@ class _EditRequestTypeViewState extends State<EditRequestTypeView> {
           Row(
             children: <Widget>[
               Text(
-                tr('masterData.dsr.request.title'), 
+                tr('masterData.dsr.request.title'),
                 style: Theme.of(context).textTheme.titleLarge,
               ),
             ],
           ),
           const SizedBox(height: UiConfig.lineSpacing),
           TitleRequiredText(
-            text: tr('masterData.dsr.request.requestcode'), 
+            text: tr('masterData.dsr.request.requestcode'),
             required: true,
           ),
           CustomTextField(
             controller: requestTypeCodeController,
-            hintText: tr('masterData.dsr.request.requestcodeHint'), 
+            hintText: tr('masterData.dsr.request.requestcodeHint'),
             onChanged: _setRequestCode,
             required: true,
           ),
           const SizedBox(height: UiConfig.lineSpacing),
           TitleRequiredText(
-            text: tr('masterData.dsr.request.description'), 
+            text: tr('masterData.dsr.request.description'),
           ),
           CustomTextField(
             controller: descriptionController,
-            hintText: tr('masterData.dsr.request.descriptionHint'), 
+            hintText: tr('masterData.dsr.request.descriptionHint'),
             onChanged: _setDescription,
           ),
           const SizedBox(height: UiConfig.lineSpacing),
           TitleRequiredText(
-            text: tr('masterData.dsr.request.rejectType'), 
+            text: tr('masterData.dsr.request.rejectType'),
           ),
           const SizedBox(height: UiConfig.lineSpacing),
           _buildRejectTypesection(context,

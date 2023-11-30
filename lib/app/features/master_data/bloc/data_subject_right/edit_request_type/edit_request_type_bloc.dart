@@ -1,9 +1,11 @@
 // ignore: depend_on_referenced_packages
 import 'package:bloc/bloc.dart';
 import 'package:equatable/equatable.dart';
+import 'package:pdpa/app/data/models/data_subject_right/data_subject_right_model.dart';
 import 'package:pdpa/app/data/models/master_data/reject_type_model.dart';
 import 'package:pdpa/app/data/models/master_data/request_type_model.dart';
 import 'package:pdpa/app/data/presets/reject_types_preset.dart';
+import 'package:pdpa/app/data/repositories/data_subject_right_repository.dart';
 import 'package:pdpa/app/data/repositories/master_data_repository.dart';
 
 part 'edit_request_type_event.dart';
@@ -13,7 +15,9 @@ class EditRequestTypeBloc
     extends Bloc<EditRequestTypeEvent, EditRequestTypeState> {
   EditRequestTypeBloc({
     required MasterDataRepository masterDataRepository,
+    required DataSubjectRightRepository dataSubjectRightRepository,
   })  : _masterDataRepository = masterDataRepository,
+        _dataSubjectRightRepository = dataSubjectRightRepository,
         super(const EditRequestTypeInitial()) {
     on<GetCurrentRequestTypeEvent>(_getCurrentRequestTypeHandler);
     on<CreateCurrentRequestTypeEvent>(_createCurrentRequestTypeHandler);
@@ -22,6 +26,7 @@ class EditRequestTypeBloc
     on<UpdateEditRequestTypeStateEvent>(_updateEditRequestTypeStateHandler);
   }
 
+  final DataSubjectRightRepository _dataSubjectRightRepository;
   final MasterDataRepository _masterDataRepository;
 
   Future<void> _getCurrentRequestTypeHandler(
@@ -81,7 +86,26 @@ class EditRequestTypeBloc
         }).toList(),
       );
     }
-    emit(GotCurrentRequestType(gotRequestType, gotRejects));
+
+    List<DataSubjectRightModel> gotDSR = [];
+    if (event.companyId.isNotEmpty) {
+      final resultDSR = await _dataSubjectRightRepository.getDataSubjectRights(
+        event.companyId,
+      );
+
+      resultDSR.fold(
+        (failure) => emit(EditRequestTypeError(failure.errorMessage)),
+        (dsr) => gotDSR.addAll(dsr),
+      );
+    }
+
+    await Future.delayed(const Duration(milliseconds: 800));
+
+    emit(GotCurrentRequestType(
+      gotRequestType,
+      gotRejects,
+      gotDSR,
+    ));
   }
 
   Future<void> _createCurrentRequestTypeHandler(
@@ -126,6 +150,8 @@ class EditRequestTypeBloc
 
     emit(const UpdatingCurrentRequestType());
 
+    final gotDSR = state as GotCurrentRequestType;
+
     final result = await _masterDataRepository.updateRequestType(
       event.requestType,
       event.companyId,
@@ -138,6 +164,7 @@ class EditRequestTypeBloc
       (_) => emit(UpdatedCurrentRequestType(
         event.requestType,
         rejectTypes,
+        gotDSR.dataSubjectRights,
       )),
     );
   }
@@ -175,7 +202,7 @@ class EditRequestTypeBloc
     List<RejectTypeModel> rejectTypes = [];
 
     if (state is GotCurrentRequestType) {
-      final requestType = (state as GotCurrentRequestType).requestType;
+      final gotRequestType = state as GotCurrentRequestType;
 
       rejectTypes = (state as GotCurrentRequestType)
           .rejectTypes
@@ -183,9 +210,13 @@ class EditRequestTypeBloc
           .toList();
       rejectTypes.add(event.reject);
 
-      emit(GotCurrentRequestType(requestType, rejectTypes));
+      emit(GotCurrentRequestType(
+        gotRequestType.requestType,
+        rejectTypes,
+        gotRequestType.dataSubjectRights,
+      ));
     } else if (state is UpdatedCurrentRequestType) {
-      final requestType = (state as UpdatedCurrentRequestType).requestType;
+      final gotRequestType = state as GotCurrentRequestType;
 
       rejectTypes = (state as UpdatedCurrentRequestType)
           .rejectTypes
@@ -193,7 +224,11 @@ class EditRequestTypeBloc
           .toList();
       rejectTypes.add(event.reject);
 
-      emit(UpdatedCurrentRequestType(requestType, rejectTypes));
+      emit(UpdatedCurrentRequestType(
+        gotRequestType.requestType,
+        rejectTypes,
+        gotRequestType.dataSubjectRights,
+      ));
     }
   }
 }

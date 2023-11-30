@@ -39,11 +39,49 @@ class MasterDataScreen extends StatelessWidget {
           child: Column(
             children: <Widget>[
               const SizedBox(height: UiConfig.lineSpacing),
-              _buildMandatorySection(context),
+              CustomContainer(
+                padding: EdgeInsets.zero,
+                child: Column(
+                  children: [
+                    const SizedBox(height: UiConfig.lineSpacing),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        Text(
+                          tr('Consent Management'),
+                          style: Theme.of(context).textTheme.titleMedium,
+                        ),
+                      ],
+                    ),
+                    const SizedBox(height: UiConfig.lineSpacing),
+                    _buildMandatorySection(context),
+                    const SizedBox(height: UiConfig.lineSpacing),
+                    _buildConsentSection(context),
+                  ],
+                ),
+              ),
               const SizedBox(height: UiConfig.lineSpacing),
-              _buildConsentSection(context),
-              const SizedBox(height: UiConfig.lineSpacing),
-              _buildDataSubjectRightSection(context),
+              CustomContainer(
+                padding: EdgeInsets.zero,
+                child: Column(
+                  children: [
+                    const SizedBox(height: UiConfig.lineSpacing),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        Text(
+                          tr('DataSubjectRight Management'),
+                          style: Theme.of(context).textTheme.titleMedium,
+                        ),
+                      ],
+                    ),
+                    const SizedBox(height: UiConfig.lineSpacing),
+                    _buildDataSubjectRightSection(context),
+                    const SizedBox(height: UiConfig.lineSpacing),
+                    _buildRequestAction(context)
+                  ],
+                ),
+              ),
               const SizedBox(height: UiConfig.lineSpacing),
             ],
           ),
@@ -169,6 +207,31 @@ class MasterDataScreen extends StatelessWidget {
           //     context.push(MasterDataRoute.requestReason.path);
           //   },
           // ),
+        ],
+      ),
+    );
+  }
+
+  CustomContainer _buildRequestAction(BuildContext context) {
+    return CustomContainer(
+      child: Column(
+        children: <Widget>[
+          Row(
+            children: <Widget>[
+              Text(
+                tr('Request Action'),
+                style: Theme.of(context).textTheme.titleLarge,
+              ),
+            ],
+          ),
+          const SizedBox(height: UiConfig.lineSpacing),
+          MasterDataListTile(
+            trail: true,
+            title: tr('masterData.dsr.request.list'),
+            onTap: () {
+              context.push(MasterDataRoute.requestType.path);
+            },
+          ),
         ],
       ),
     );

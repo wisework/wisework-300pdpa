@@ -13,6 +13,7 @@ class EditRejectTypeInitial extends EditRejectTypeState {
   @override
   List<Object> get props => [];
 }
+
 class EditRejectTypeError extends EditRejectTypeState {
   const EditRejectTypeError(this.message);
 
@@ -30,12 +31,19 @@ class GetingCurrentRejectType extends EditRejectTypeState {
 }
 
 class GotCurrentRejectType extends EditRejectTypeState {
-  const GotCurrentRejectType(this.rejectType);
+  const GotCurrentRejectType(
+    this.rejectType,
+    this.dataSubjectRights,
+  );
 
   final RejectTypeModel rejectType;
+  final List<DataSubjectRightModel> dataSubjectRights;
 
   @override
-  List<Object> get props => [rejectType];
+  List<Object> get props => [
+        rejectType,
+        dataSubjectRights,
+      ];
 }
 
 class CreatingCurrentRejectType extends EditRejectTypeState {
@@ -62,12 +70,19 @@ class UpdatingCurrentRejectType extends EditRejectTypeState {
 }
 
 class UpdatedCurrentRejectType extends EditRejectTypeState {
-  const UpdatedCurrentRejectType(this.rejectType);
+  const UpdatedCurrentRejectType(
+    this.rejectType,
+    this.dataSubjectRights,
+  );
 
   final RejectTypeModel rejectType;
+  final List<DataSubjectRightModel> dataSubjectRights;
 
   @override
-  List<Object> get props => [rejectType];
+  List<Object> get props => [
+        rejectType,
+        dataSubjectRights,
+      ];
 }
 
 class DeletingCurrentRejectType extends EditRejectTypeState {

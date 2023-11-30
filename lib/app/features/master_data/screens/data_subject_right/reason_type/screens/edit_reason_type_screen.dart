@@ -315,7 +315,7 @@ class _EditReasonTypeViewState extends State<EditReasonTypeView> {
   }
 
   void _deleteReasonType() {
-    if (widget.dataSubjectRights.isNotEmpty) {
+    if (usedDataSubjectRightIds.isNotEmpty) {
       showDialog(
         context: context,
         builder: (_) => AlertDialog(
