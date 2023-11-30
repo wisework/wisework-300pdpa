@@ -28,6 +28,7 @@ class FormDataSubjectRightCubit extends Cubit<FormDataSubjectRightState> {
             dataSubjectRight: DataSubjectRightModel.empty(),
             isAcknowledge: false,
             requestFormState: RequestFormState.requesting,
+            processRequests: const [],
           ),
         );
 
@@ -37,6 +38,54 @@ class FormDataSubjectRightCubit extends Cubit<FormDataSubjectRightState> {
   void setDataSubjectRight(DataSubjectRightModel dataSubjectRight) {
     emit(state.copyWith(dataSubjectRight: dataSubjectRight));
   }
+
+  void setProcessRequests(List<ProcessRequestModel> processRequests) {
+    emit(state.copyWith(processRequests: processRequests));
+  }
+
+  void personalDataChanged(String text, String requestId) {
+    if (requestId.isEmpty) return;
+    List<ProcessRequestModel> processRequests = [];
+    for (ProcessRequestModel request in state.processRequests) {
+      if (request.requestType == requestId) {
+        processRequests.add(request.copyWith(
+          personalData: text,
+        ));
+      } else {
+        processRequests.add(request);
+      }
+    }
+
+    emit(state.copyWith(processRequests: processRequests));
+  }
+
+  void foundSourceChanged(String text, String requestId) {
+    if (requestId.isEmpty) return;
+    List<ProcessRequestModel> processRequests = [];
+    for (ProcessRequestModel request in state.processRequests) {
+      if (request.requestType == requestId) {
+        processRequests.add(request.copyWith(
+          foundSource: text,
+        ));
+      } else {
+        processRequests.add(request);
+      }
+    }
+
+    emit(state.copyWith(processRequests: processRequests));
+  }
+
+  // void requestActionChecked(String text, String requestId) {
+  //   if (requestId.isEmpty) return;
+  //   final newDataRequest = state.processRequests.map((request) {
+  //     return request.requestType == requestId
+  //         ? request.copyWith(personalData: text)
+  //         : request;
+  //   }).toList();
+  //   emit(state.copyWith(
+  //     processRequests: newDataRequest,
+  //   ));
+  // }
 
   void resetFormDataSubjectRight() {
     emit(state.copyWith(
@@ -127,31 +176,25 @@ class FormDataSubjectRightCubit extends Cubit<FormDataSubjectRightState> {
 
   void formDataSubjectRightProcessRequestChecked(String processRequestModelId) {
     if (processRequestModelId.isEmpty) return;
-    List<ProcessRequestModel> processRequests =
-        state.dataSubjectRight.processRequests.isNotEmpty
-            ? state.dataSubjectRight.processRequests
-                .map((verification) => verification)
-                .toList()
-            : [];
-    List<String> requests = state.dataSubjectRight.processRequests.isNotEmpty
-        ? state.dataSubjectRight.processRequests
-            .map((verification) => verification.id)
-            .toList()
-        : [];
 
-    if (requests.contains(processRequestModelId)) {
+    // Create a copy of the list to avoid mutating the original state
+    List<ProcessRequestModel> processRequests =
+        List.from(state.processRequests);
+    List<String> requestIds =
+        processRequests.map((verification) => verification.id).toList();
+
+    if (requestIds.contains(processRequestModelId)) {
       processRequests.removeWhere(
           (verification) => verification.id == processRequestModelId);
     } else {
       final verification = ProcessRequestModel.empty().copyWith(
-          id: processRequestModelId, requestType: processRequestModelId);
+        id: processRequestModelId,
+        requestType: processRequestModelId,
+      );
       processRequests.add(verification);
     }
 
-    final update = state.dataSubjectRight.copyWith(
-      processRequests: processRequests,
-    );
-    emit(state.copyWith(dataSubjectRight: update));
+    emit(state.copyWith(processRequests: processRequests));
   }
 
   void formDataSubjectRightReasonChecked(
@@ -159,8 +202,7 @@ class FormDataSubjectRightCubit extends Cubit<FormDataSubjectRightState> {
     String reasonId,
   ) {
     List<ProcessRequestModel> processRequests = [];
-    for (ProcessRequestModel request
-        in state.dataSubjectRight.processRequests) {
+    for (ProcessRequestModel request in state.processRequests) {
       if (request.requestType == requestId) {
         List<UserInputText> reasonInputs =
             request.reasonTypes.map((reason) => reason).toList();
@@ -183,11 +225,9 @@ class FormDataSubjectRightCubit extends Cubit<FormDataSubjectRightState> {
         processRequests.add(request);
       }
     }
-    final newDataRequest = state.dataSubjectRight.copyWith(
-      processRequests: processRequests,
-    );
+    final newDataRequest = processRequests;
     emit(state.copyWith(
-      dataSubjectRight: newDataRequest,
+      processRequests: newDataRequest,
     ));
   }
 
@@ -196,29 +236,30 @@ class FormDataSubjectRightCubit extends Cubit<FormDataSubjectRightState> {
     String requestId,
     String reasonId,
   ) {
+    if (reasonId.isEmpty || requestId.isEmpty) return;
     List<ProcessRequestModel> processRequests = [];
-    for (ProcessRequestModel request
-        in state.dataSubjectRight.processRequests) {
-      List<UserInputText> reasonInputs = [];
-      for (UserInputText reason in request.reasonTypes) {
-        if (reason.id == reasonId) {
-          reasonInputs.add(reason.copyWith(
-            text: text,
-          ));
-        } else {
-          reasonInputs.add(reason);
+    for (ProcessRequestModel request in state.processRequests) {
+      if (request.requestType == requestId) {
+        List<UserInputText> reasonInputs = [];
+        for (UserInputText reason in request.reasonTypes) {
+          if (reason.id == reasonId) {
+            reasonInputs.add(reason.copyWith(
+              text: text,
+            ));
+          } else {
+            reasonInputs.add(reason);
+          }
         }
+        processRequests.add(request.copyWith(
+          reasonTypes: reasonInputs,
+        ));
+      } else {
+        processRequests.add(request);
       }
-      processRequests.add(request.copyWith(
-        reasonTypes: reasonInputs,
-      ));
     }
-    final newDataRequest = state.dataSubjectRight.copyWith(
-      processRequests: processRequests,
-    );
 
     emit(state.copyWith(
-      dataSubjectRight: newDataRequest,
+      processRequests: processRequests,
     ));
   }
 
@@ -362,6 +403,7 @@ class FormDataSubjectRightCubit extends Cubit<FormDataSubjectRightState> {
       dataOwner: state.dataSubjectRight.isDataOwner
           ? state.dataSubjectRight.dataRequester
           : state.dataSubjectRight.dataOwner,
+      processRequests: state.processRequests,
       requestExpirationDate: DateTime.now().add(const Duration(days: 30)),
       createdBy: requester,
       createdDate: DateTime.now(),

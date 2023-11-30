@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 import 'package:pdpa/app/config/config.dart';
-import 'package:pdpa/app/data/models/data_subject_right/data_subject_right_model.dart';
+
 import 'package:pdpa/app/data/models/data_subject_right/process_request_model.dart';
 
 import 'package:pdpa/app/data/models/master_data/localized_model.dart';
@@ -35,17 +35,16 @@ class RequestReasonPage extends StatefulWidget {
 }
 
 class _RequestReasonPageState extends State<RequestReasonPage> {
-  late DataSubjectRightModel dataSubjectRight;
   @override
   void initState() {
-    dataSubjectRight =
-        context.read<FormDataSubjectRightCubit>().state.dataSubjectRight;
-
     super.initState();
   }
 
   @override
   Widget build(BuildContext context) {
+    final processRequests = context.select(
+      (FormDataSubjectRightCubit cubit) => cubit.state.processRequests,
+    );
     return SingleChildScrollView(
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -72,20 +71,15 @@ class _RequestReasonPageState extends State<RequestReasonPage> {
                       color: Theme.of(context).colorScheme.onSurface),
                 ),
                 const SizedBox(height: UiConfig.lineSpacing),
-                ListView.builder(
+                ListView.separated(
                   physics: const NeverScrollableScrollPhysics(),
                   shrinkWrap: true,
                   itemCount: widget.requestType.length,
+                  separatorBuilder: (_, __) =>
+                      const SizedBox(height: UiConfig.lineGap),
                   itemBuilder: (_, index) {
-                    return Padding(
-                      padding: const EdgeInsets.only(
-                        bottom: UiConfig.lineGap,
-                      ),
-                      child: _buildCheckBoxTile(
-                        context,
-                        widget.requestType[index],
-                      ),
-                    );
+                    return _buildCheckBoxTile(
+                        context, widget.requestType[index], processRequests);
                   },
                 ),
               ],
@@ -97,15 +91,10 @@ class _RequestReasonPageState extends State<RequestReasonPage> {
   }
 
   //? Checkbox List
-  Widget _buildCheckBoxTile(
-      BuildContext context, RequestTypeModel requestType) {
-    final data = context
-        .read<FormDataSubjectRightCubit>()
-        .state
-        .dataSubjectRight
-        .processRequests;
-    final selectRequestTypeIds = data.map((category) => category.id).toList();
-
+  Widget _buildCheckBoxTile(BuildContext context, RequestTypeModel requestType,
+      List<ProcessRequestModel> processRequests) {
+    final selectRequestTypeIds =
+        processRequests.map((category) => category.id).toList();
     return Column(
       children: [
         Row(
@@ -155,88 +144,69 @@ class _RequestReasonPageState extends State<RequestReasonPage> {
             left: UiConfig.defaultPaddingSpacing * 3,
             top: UiConfig.lineGap,
           ),
-          child: _buildExpandedContainer(
-              context, widget.reasonType, requestType, data),
+          child: _buildExpandedContainer(context, requestType, processRequests),
         ),
       ],
     );
   }
 
   //? Expanded Children
-  ExpandedContainer _buildExpandedContainer(
-      BuildContext context,
-      List<ReasonTypeModel> reasonType,
-      RequestTypeModel requestType,
-      List<ProcessRequestModel> data) {
-    final selectRequestTypeIds = data.map((category) => category.id).toList();
+  ExpandedContainer _buildExpandedContainer(BuildContext context,
+      RequestTypeModel requestType, List<ProcessRequestModel> processRequests) {
+    final selectRequestTypeIds =
+        Set.from(processRequests.map((category) => category.id));
 
     return ExpandedContainer(
       expand: selectRequestTypeIds.contains(requestType.id),
       duration: const Duration(milliseconds: 400),
       child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start, 
+        crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Text(
-            tr('dataSubjectRight.requestReason.iadoperations'), 
+            tr('dataSubjectRight.requestReason.iadoperations'),
             style: Theme.of(context)
                 .textTheme
                 .titleMedium
                 ?.copyWith(color: Theme.of(context).colorScheme.primary),
           ),
           const SizedBox(height: UiConfig.lineSpacing),
-           TitleRequiredText(
-            text: tr('dataSubjectRight.requestReason.personalInformation'), 
+          TitleRequiredText(
+            text: tr('dataSubjectRight.requestReason.personalInformation'),
             required: true,
           ),
-
           CustomTextField(
-            hintText: tr('dataSubjectRight.requestReason.hintpersonalInformation'), 
+            hintText:
+                tr('dataSubjectRight.requestReason.hintpersonalInformation'),
             required: true,
             onChanged: (value) {
-              if (selectRequestTypeIds.contains(requestType.id)) {
-                final updatedData = data.map((item) {
-                  if (item.id == requestType.id) {
-                    return item.copyWith(personalData: value);
-                  } else {
-                    return item;
-                  }
-                }).toList();
-
-                context.read<FormDataSubjectRightCubit>().setDataSubjectRight(
-                    dataSubjectRight.copyWith(processRequests: updatedData));
-              }
+              context
+                  .read<FormDataSubjectRightCubit>()
+                  .personalDataChanged(value, requestType.id);
             },
           ),
           const SizedBox(height: UiConfig.lineSpacing),
-           TitleRequiredText(
-            text: tr('dataSubjectRight.requestReason.place'), 
+          TitleRequiredText(
+            text: tr('dataSubjectRight.requestReason.place'),
           ),
           CustomTextField(
             hintText: tr('dataSubjectRight.requestReason.hintPlace'),
             onChanged: (value) {
-              if (selectRequestTypeIds.contains(requestType.id)) {
-                final updatedData = data.map((item) {
-                  if (item.id == requestType.id) {
-                    return item.copyWith(foundSource: value);
-                  } else {
-                    return item;
-                  }
-                }).toList();
-
-                context.read<FormDataSubjectRightCubit>().setDataSubjectRight(
-                    dataSubjectRight.copyWith(processRequests: updatedData));
-              }
+              context
+                  .read<FormDataSubjectRightCubit>()
+                  .foundSourceChanged(value, requestType.id);
             },
           ),
           const SizedBox(height: UiConfig.lineSpacing),
-           TitleRequiredText(
-            text: tr('dataSubjectRight.requestReason.operation'), 
+          TitleRequiredText(
+            text: tr('dataSubjectRight.requestReason.operation'),
             required: true,
           ),
-          ListView.builder(
+          ListView.separated(
             physics: const NeverScrollableScrollPhysics(),
             shrinkWrap: true,
             itemCount: requestActionsPreset.length,
+            separatorBuilder: (_, __) =>
+                const SizedBox(height: UiConfig.lineGap), // ตัวคั่นระหว่าง Item
             itemBuilder: (_, index) {
               return DataSubjectRightListTile(
                 title: requestActionsPreset[index]
@@ -248,42 +218,36 @@ class _RequestReasonPageState extends State<RequestReasonPage> {
                     .text,
                 onTap: () {
                   if (selectRequestTypeIds.contains(requestType.id)) {
-                    final updatedData = data.map((item) {
-                      if (item.id == requestType.id) {
-                        return item.copyWith(
-                            requestAction: requestActionsPreset[index].id);
-                      } else {
-                        return item;
-                      }
+                    final updatedData = processRequests.map((item) {
+                      return (item.id == requestType.id)
+                          ? item.copyWith(
+                              requestAction: requestActionsPreset[index].id)
+                          : item;
                     }).toList();
 
                     context
                         .read<FormDataSubjectRightCubit>()
-                        .setDataSubjectRight(dataSubjectRight.copyWith(
-                            processRequests: updatedData));
+                        .setProcessRequests(updatedData);
                   }
                 },
                 leading: CustomRadioButton(
                   value: requestActionsPreset[index].id,
-                  selected: data
+                  selected: processRequests
                       .firstWhere((request) => request.id == requestType.id,
                           orElse: () => ProcessRequestModel.empty())
                       .requestAction,
                   onChanged: (val) {
                     if (selectRequestTypeIds.contains(requestType.id)) {
-                      final updatedData = data.map((item) {
-                        if (item.id == requestType.id) {
-                          return item.copyWith(
-                              requestAction: requestActionsPreset[index].id);
-                        } else {
-                          return item;
-                        }
+                      final updatedData = processRequests.map((item) {
+                        return (item.id == requestType.id)
+                            ? item.copyWith(
+                                requestAction: requestActionsPreset[index].id)
+                            : item;
                       }).toList();
 
                       context
                           .read<FormDataSubjectRightCubit>()
-                          .setDataSubjectRight(dataSubjectRight.copyWith(
-                              processRequests: updatedData));
+                          .setProcessRequests(updatedData);
                     }
                   },
                 ),
@@ -299,217 +263,111 @@ class _RequestReasonPageState extends State<RequestReasonPage> {
                 ?.copyWith(color: Theme.of(context).colorScheme.primary),
           ),
           const SizedBox(height: UiConfig.lineSpacing),
-          ListView.builder(
+          ListView.separated(
             physics: const NeverScrollableScrollPhysics(),
             shrinkWrap: true,
-            itemCount: reasonType.length,
+            itemCount: widget.reasonType.length,
+            separatorBuilder: (_, __) =>
+                const SizedBox(height: UiConfig.lineGap),
             itemBuilder: (_, index) {
-              final processRequest = data.firstWhere(
-                  (request) => request.id == requestType.id,
-                  orElse: () => ProcessRequestModel.empty());
-              final reasonSelected = processRequest.reasonTypes
+              final processRequest = processRequests.firstWhere(
+                (request) => request.id == requestType.id,
+                orElse: () => ProcessRequestModel.empty(),
+              );
+              final reason = widget.reasonType[index];
+              final reasonId = reason.id;
+              final isReasonSelected = processRequest.reasonTypes
                   .map((reason) => reason.id)
-                  .toList();
-              return Padding(
-                  padding: const EdgeInsets.only(
-                    bottom: UiConfig.lineGap,
-                  ),
-                  child: Column(
+                  .contains(reasonId);
+
+              return Column(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  Row(
                     mainAxisSize: MainAxisSize.min,
+                    mainAxisAlignment: MainAxisAlignment.start,
+                    crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      Row(
-                        mainAxisSize: MainAxisSize.min,
-                        mainAxisAlignment: MainAxisAlignment.start,
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Padding(
-                            padding: const EdgeInsets.only(
-                              left: 4.0,
-                              right: UiConfig.actionSpacing,
+                      Padding(
+                        padding: const EdgeInsets.only(
+                          left: 4.0,
+                          right: UiConfig.actionSpacing,
+                        ),
+                        child: CustomCheckBox(
+                          value: isReasonSelected,
+                          onChanged: (_) {
+                            context
+                                .read<FormDataSubjectRightCubit>()
+                                .formDataSubjectRightReasonChecked(
+                                  requestType.id,
+                                  reasonId,
+                                );
+                          },
+                        ),
+                      ),
+                      Expanded(
+                        child: Padding(
+                          padding: const EdgeInsets.only(top: 4.0),
+                          child: Text(
+                            reason.description
+                                .firstWhere(
+                                  (item) => item.language == 'th-TH',
+                                  orElse: () => const LocalizedModel.empty(),
+                                )
+                                .text,
+                            style: isReasonSelected
+                                ? Theme.of(context)
+                                    .textTheme
+                                    .bodyMedium
+                                    ?.copyWith(
+                                      color:
+                                          Theme.of(context).colorScheme.primary,
+                                    )
+                                : null,
+                          ),
+                        ),
+                      ),
+                    ],
+                  ),
+                  if (reason.requiredInputReasonText == true)
+                    ExpandedContainer(
+                      expand: isReasonSelected,
+                      duration: const Duration(milliseconds: 400),
+                      child: Padding(
+                        padding: const EdgeInsets.only(
+                          left: UiConfig.defaultPaddingSpacing * 3,
+                          bottom: UiConfig.lineGap,
+                        ),
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            TitleRequiredText(
+                              text: tr('dataSubjectRight.requestReason.reason'),
+                              required: true,
                             ),
-                            child: CustomCheckBox(
-                              value:
-                                  reasonSelected.contains(reasonType[index].id),
-                              onChanged: (_) {
+                            CustomTextField(
+                              hintText: tr(
+                                  'dataSubjectRight.requestReason.hintReason'),
+                              required: true,
+                              onChanged: (text) {
                                 context
                                     .read<FormDataSubjectRightCubit>()
-                                    .formDataSubjectRightReasonChecked(
-                                        requestType.id, reasonType[index].id);
+                                    .formDataSubjectRightReasonInput(
+                                      text,
+                                      requestType.id,
+                                      reasonId,
+                                    );
                               },
                             ),
-                          ),
-                          Expanded(
-                            child: Padding(
-                              padding: const EdgeInsets.only(top: 4.0),
-                              child: Text(
-                                reasonType[index]
-                                    .description
-                                    .firstWhere(
-                                      (item) => item.language == 'th-TH',
-                                      orElse: () =>
-                                          const LocalizedModel.empty(),
-                                    )
-                                    .text, 
-                                style: !selectRequestTypeIds
-                                        .contains(reasonType[index].id)
-                                    ? Theme.of(context)
-                                        .textTheme
-                                        .bodyMedium
-                                        ?.copyWith()
-                                    : Theme.of(context)
-                                        .textTheme
-                                        .bodyMedium
-                                        ?.copyWith(
-                                            color: Theme.of(context)
-                                                .colorScheme
-                                                .primary),
-                              ),
-                            ),
-                          ),
-                        ],
+                            const SizedBox(height: UiConfig.lineSpacing),
+                          ],
+                        ),
                       ),
-                      if (reasonType[index].requiredInputReasonText == true)
-                        ExpandedContainer(
-                          expand: reasonSelected.contains(reasonType[index].id),
-                          duration: const Duration(milliseconds: 400),
-                          child: Padding(
-                            padding: const EdgeInsets.only(
-                              left: UiConfig.defaultPaddingSpacing * 3,
-                              bottom: UiConfig.lineGap,
-                            ),
-                            child: Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                 TitleRequiredText(
-                                  text: tr('dataSubjectRight.requestReason.reason'), 
-                                  required: true,
-                                ),
-                                CustomTextField(
-                                  hintText: tr('dataSubjectRight.requestReason.hintReason'), 
-
-                                  required: true,
-                                  onChanged: (text) {
-                                    context
-                                        .read<FormDataSubjectRightCubit>()
-                                        .formDataSubjectRightReasonInput(
-                                            text,
-                                            requestType.id,
-                                            reasonType[index].id);
-                                  },
-                                ),
-                                const SizedBox(height: UiConfig.lineSpacing),
-                              ],
-                            ),
-                          ),
-                        )
-                    ],
-                  ));
+                    ),
+                ],
+              );
             },
           ),
-          // Column(
-          //   children: reasonType
-          //       .map(
-          //         (reason) => Padding(
-          //             padding: const EdgeInsets.only(
-          //               bottom: UiConfig.lineGap,
-          //             ),
-          //             child: Column(
-          //               mainAxisSize: MainAxisSize.min,
-          //               children: [
-          //                 Row(
-          //                   mainAxisSize: MainAxisSize.min,
-          //                   mainAxisAlignment: MainAxisAlignment.start,
-          //                   crossAxisAlignment: CrossAxisAlignment.start,
-          //                   children: [
-          //                     Padding(
-          //                       padding: const EdgeInsets.only(
-          //                         left: 4.0,
-          //                         right: UiConfig.actionSpacing,
-          //                       ),
-          //                       child: CustomCheckBox(
-          //                         value: reasonTypes.contains(reason.id),
-          //                         onChanged: (_) {
-          //                           context
-          //                               .read<FormDataSubjectRightCubit>()
-          //                               .formDataSubjectRightReasonChecked(
-          //                                   requestType.id, reason.id);
-          //                           // print(context
-          //                           //     .read<FormDataSubjectRightCubit>()
-          //                           //     .state
-          //                           //     .dataSubjectRight
-          //                           //     .processRequests);
-          //                         },
-          //                       ),
-          //                     ),
-          //                     Expanded(
-          //                       child: Padding(
-          //                         padding: const EdgeInsets.only(top: 4.0),
-          //                         child: Text(
-          //                           reason.description
-          //                               .firstWhere(
-          //                                 (item) => item.language == 'th-TH',
-          //                                 orElse: () =>
-          //                                     const LocalizedModel.empty(),
-          //                               )
-          //                               .text, //!
-          //                           style: !selectRequestTypeIds
-          //                                   .contains(reason.id)
-          //                               ? Theme.of(context)
-          //                                   .textTheme
-          //                                   .bodyMedium
-          //                                   ?.copyWith()
-          //                               : Theme.of(context)
-          //                                   .textTheme
-          //                                   .bodyMedium
-          //                                   ?.copyWith(
-          //                                       color: Theme.of(context)
-          //                                           .colorScheme
-          //                                           .primary),
-          //                         ),
-          //                       ),
-          //                     ),
-          //                   ],
-          //                 ),
-          //                 if (reason.requiredInputReasonText == true)
-          //                   ExpandedContainer(
-          //                     expand: reasonTypes.contains(reason.id),
-          //                     duration: const Duration(milliseconds: 400),
-          //                     child: Padding(
-          //                       padding: const EdgeInsets.only(
-          //                         left: UiConfig.defaultPaddingSpacing * 3,
-          //                         bottom: UiConfig.lineGap,
-          //                       ),
-          //                       child: Column(
-          //                         crossAxisAlignment: CrossAxisAlignment.start,
-          //                         children: [
-          //                           const TitleRequiredText(
-          //                             text: 'เหตุผล', //!
-          //                             required: true,
-          //                           ),
-          //                           CustomTextField(
-          //                             hintText: 'กรอกเหตุผล', //!
-
-          //                             required: true,
-          //                             onChanged: (text) {
-          //                               context
-          //                                   .read<FormDataSubjectRightCubit>()
-          //                                   .formDataSubjectRightReasonInput(
-          //                                       text,
-          //                                       requestType.id,
-          //                                       reason.id);
-          //                             },
-          //                           ),
-          //                           const SizedBox(
-          //                               height: UiConfig.lineSpacing),
-          //                         ],
-          //                       ),
-          //                     ),
-          //                   )
-          //               ],
-          //             )),
-          //       )
-          //       .toList(),
-          // )
         ],
       ),
     );
