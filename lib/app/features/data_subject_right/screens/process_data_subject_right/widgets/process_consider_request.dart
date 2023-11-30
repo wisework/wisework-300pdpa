@@ -135,13 +135,13 @@ class _ProcessConsiderRequestState extends State<ProcessConsiderRequest> {
     if (processRequest != emptyRequest) {
       final Map<ProcessRequestStatus, String> statusTexts = {
         ProcessRequestStatus.notProcessed:
-            tr('dataSubjectRight.processCondider.notYetProcessed'),
+            tr('dataSubjectRight.processConsider.notYetProcessed'),
         ProcessRequestStatus.inProgress:
-            tr('dataSubjectRight.processCondider.inProgress'),
+            tr('dataSubjectRight.processConsider.inProgress'),
         ProcessRequestStatus.refused:
-            tr('dataSubjectRight.processCondider.refuseProcessing'),
+            tr('dataSubjectRight.processConsider.refuseProcessing'),
         ProcessRequestStatus.completed:
-            tr('dataSubjectRight.processCondider.completed'),
+            tr('dataSubjectRight.processConsider.completed'),
       };
 
       final status = UtilFunctions.getProcessRequestStatus(
@@ -159,7 +159,7 @@ class _ProcessConsiderRequestState extends State<ProcessConsiderRequest> {
 
       final rejectReason = processRequest.considerRequestStatus ==
               RequestResultStatus.fail
-          ? '\n${tr('dataSubjectRight.processCondiDDder.completed')} ${processRequest.rejectConsiderReason}'
+          ? '\n${tr('dataSubjectRight.processConsider.completed')} ${processRequest.rejectConsiderReason}'
           : '';
 
       return ProcessRequestTemplateParams(
@@ -210,7 +210,7 @@ class _ProcessConsiderRequestState extends State<ProcessConsiderRequest> {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: <Widget>[
               Text(
-                tr('dataSubjectRight.processCondiDDder.considerTakingAction'),
+                tr('dataSubjectRight.processConsider.considerTakingAction'),
                 style: Theme.of(context).textTheme.titleMedium,
               ),
               const SizedBox(height: UiConfig.lineGap),
@@ -255,7 +255,7 @@ class _ProcessConsiderRequestState extends State<ProcessConsiderRequest> {
       crossAxisAlignment: CrossAxisAlignment.start,
       children: <Widget>[
         Text(
-          tr('dataSubjectRight.processCondider.sendEmail'),
+          tr('dataSubjectRight.processConsider.sendEmail'),
           style: Theme.of(context).textTheme.titleMedium,
         ),
         const SizedBox(height: UiConfig.lineGap),
@@ -317,7 +317,7 @@ class _ProcessConsiderRequestState extends State<ProcessConsiderRequest> {
                         loadingType: LoadingType.horizontalRotatingDots,
                       )
                     : Text(
-                        tr('dataSubjectRight.processCondider.confirm'),
+                        tr('dataSubjectRight.processConsider.confirm'),
                         style: Theme.of(context).textTheme.bodyMedium?.copyWith(
                             color: Theme.of(context).colorScheme.onPrimary),
                       ),
@@ -354,7 +354,7 @@ class _ProcessConsiderRequestState extends State<ProcessConsiderRequest> {
               child: Padding(
                 padding: const EdgeInsets.symmetric(vertical: 5.0),
                 child: Text(
-                  tr('dataSubjectRight.processCondider.carryOut'),
+                  tr('dataSubjectRight.processConsider.carryOut'),
                   style: Theme.of(context).textTheme.bodyMedium,
                 ),
               ),
@@ -386,7 +386,7 @@ class _ProcessConsiderRequestState extends State<ProcessConsiderRequest> {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: <Widget>[
                     Text(
-                      tr('dataSubjectRight.processCondider.list'),
+                      tr('dataSubjectRight.processConsider.list'),
                       style: Theme.of(context).textTheme.bodyMedium,
                     ),
                     ExpandedContainer(
@@ -415,7 +415,7 @@ class _ProcessConsiderRequestState extends State<ProcessConsiderRequest> {
                             ),
                             TitleRequiredText(
                               text:
-                                  tr('dataSubjectRight.processCondider.reason'),
+                                  tr('dataSubjectRight.processConsider.reason'),
                               required: widget.initialProcessRequest
                                       .considerRequestStatus ==
                                   RequestResultStatus.none,
@@ -424,7 +424,7 @@ class _ProcessConsiderRequestState extends State<ProcessConsiderRequest> {
                               initialValue:
                                   widget.processRequest.rejectConsiderReason,
                               hintText:
-                                  tr('dataSubjectRight.processCondider.since'),
+                                  tr('dataSubjectRight.processConsider.since'),
                               maxLines: 5,
                               onChanged: (value) {
                                 _onRejectReasonChanged(value);
@@ -452,7 +452,7 @@ class _ProcessConsiderRequestState extends State<ProcessConsiderRequest> {
               builder: (context, state) {
                 return _buildWarningContainer(
                   context,
-                  text: tr('dataSubjectRight.processCondider.pleaseSelect'),
+                  text: tr('dataSubjectRight.processConsider.pleaseSelect'),
                   isWarning:
                       state.considerError.contains(widget.processRequest.id),
                 );
@@ -572,7 +572,7 @@ class _ProcessConsiderRequestState extends State<ProcessConsiderRequest> {
                 children: <Widget>[
                   Expanded(
                     child: Text(
-                      tr('dataSubjectRight.processCondider.addReasons'),
+                      tr('dataSubjectRight.processConsider.addReasons'),
                       style: Theme.of(context).textTheme.bodyMedium,
                     ),
                   ),
@@ -596,7 +596,7 @@ class _ProcessConsiderRequestState extends State<ProcessConsiderRequest> {
               ),
               child: _buildWarningContainer(
                 context,
-                text: tr('dataSubjectRight.processCondider.selectReject'),
+                text: tr('dataSubjectRight.processConsider.selectReject'),
                 isWarning: state.rejectError,
               ),
             );
@@ -668,7 +668,7 @@ class _ProcessConsiderRequestState extends State<ProcessConsiderRequest> {
                   loadingType: LoadingType.horizontalRotatingDots,
                 )
               : Text(
-                  tr('dataSubjectRight.processCondider.submit'),
+                  tr('dataSubjectRight.processConsider.submit'),
                   style: Theme.of(context).textTheme.titleMedium?.copyWith(
                       color: Theme.of(context).colorScheme.onPrimary),
                 ),
