@@ -337,6 +337,10 @@ class _EditDataSubjectRightViewState extends State<EditDataSubjectRightView> {
               _buildDivider(context),
             ],
           ),
+        _buildIdentityProofInfo(
+          context,
+          verifications: dataSubjectRight.identityVerifications,
+        ),
         _buildProcessRequestInfo(context),
       ],
     );
