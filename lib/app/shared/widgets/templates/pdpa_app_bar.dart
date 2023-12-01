@@ -44,17 +44,15 @@ class PdpaAppBar extends StatelessWidget implements PreferredSizeWidget {
               : title,
         ],
       ),
-      actions: actions != null
-          ? actions!.map((action) {
-              if (action == actions!.last) {
-                return Padding(
-                  padding: const EdgeInsets.only(right: 15.0),
-                  child: action,
-                );
-              }
-              return action;
-            }).toList()
-          : null,
+      actions: actions?.map((action) {
+        if (action == actions!.last) {
+          return Padding(
+            padding: const EdgeInsets.only(right: 15.0),
+            child: action,
+          );
+        }
+        return action;
+      }).toList(),
       bottom: bottom,
       elevation: 1.0,
       shadowColor: Theme.of(context).colorScheme.background,

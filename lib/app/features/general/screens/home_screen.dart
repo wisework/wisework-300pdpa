@@ -5,6 +5,7 @@ import 'package:flutter_staggered_grid_view/flutter_staggered_grid_view.dart';
 import 'package:go_router/go_router.dart';
 import 'package:ionicons/ionicons.dart';
 import 'package:modal_bottom_sheet/modal_bottom_sheet.dart';
+import 'package:package_info_plus/package_info_plus.dart';
 import 'package:pdpa/app/config/config.dart';
 import 'package:pdpa/app/data/models/authentication/company_model.dart';
 import 'package:pdpa/app/data/models/authentication/user_model.dart';
@@ -130,9 +131,10 @@ class _HomeViewState extends State<HomeView> {
   }
 
   Future<void> _checkIsFirstLaunch() async {
-    final result = await UserPreferences.getBool(
-      AppPreferences.isFirstLaunch,
-    );
+    final packageInfo = await PackageInfo.fromPlatform();
+    final version = packageInfo.version;
+
+    final result = await UserPreferences.getBool(version);
 
     if (result != null || !(result ?? true)) return;
 
@@ -261,7 +263,7 @@ class _HomeViewState extends State<HomeView> {
   Container _buildModalInfo(BuildContext context) {
     return Container(
       padding: const EdgeInsets.all(
-        UiConfig.defaultPaddingSpacing,
+        UiConfig.defaultPaddingSpacing * 2,
       ),
       child: Column(
         children: <Widget>[
@@ -272,8 +274,11 @@ class _HomeViewState extends State<HomeView> {
               backgroundColor:
                   Theme.of(context).colorScheme.outlineVariant.withOpacity(0.4),
               onTap: () async {
+                final packageInfo = await PackageInfo.fromPlatform();
+                final version = packageInfo.version;
+
                 await UserPreferences.setBool(
-                  AppPreferences.isFirstLaunch,
+                  version,
                   false,
                 ).then((_) => Navigator.of(context).pop());
               },

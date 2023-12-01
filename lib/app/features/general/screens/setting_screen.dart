@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:ionicons/ionicons.dart';
 import 'package:modal_bottom_sheet/modal_bottom_sheet.dart';
+import 'package:package_info_plus/package_info_plus.dart';
 import 'package:pdpa/app/config/config.dart';
 import 'package:pdpa/app/config/provider/theme_provider.dart';
 import 'package:pdpa/app/config/themes/pdpa_theme_data.dart';
@@ -342,8 +343,11 @@ class _SettingViewState extends State<SettingView> {
               backgroundColor:
                   Theme.of(context).colorScheme.outlineVariant.withOpacity(0.4),
               onTap: () async {
+                final packageInfo = await PackageInfo.fromPlatform();
+                final version = packageInfo.version;
+
                 await UserPreferences.setBool(
-                  AppPreferences.isFirstLaunch,
+                  version,
                   false,
                 ).then((_) => Navigator.of(context).pop());
               },

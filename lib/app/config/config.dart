@@ -35,7 +35,6 @@ class AppConfig {
 
 class AppPreferences {
   static const String rememberEmail = 'remember_email';
-  static const String isFirstLaunch = 'is_first_launch';
   static const String isDarkMode = 'is_dark_mode';
 }
 
