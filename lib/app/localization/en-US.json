@@ -42,8 +42,8 @@
         },
         "board": {
             "skip": "Skip",
-            "description": "You can easily craft consent forms, and automatically generate them from specified master data. Tailor them to your needs, experiment with themes, and have the world at your fingertips with real-time previews. Then, share your creations effortlessly via QR codes or URLs.",
-            "decription2": "Control over consent-related parameters, including purpose, purpose categories, and mandatory fields, ensuring data integrity and accuracy in the system.",
+            "description": "Allows you to use the request to exercise your rights in full accordance with the Act. Read and follow requests and check request status information. All management steps are complete at this function.",
+            "decription2": "Complete with a request form to exercise rights that can be Forward to data owners conveniently and quickly, without missing any request items sent into the system. and you can see the details of various request information Rest assured that all requests will be handled within 30 days in accordance with the PDPA legal framework.",
             "next": "Next",
             "getstared": "Get Started",
             "decription3": "Allows you to handle requests to exercise your rights. Owners of personal information are completely in accordance with the Act, confident that every step of management at this function is complete, including request verification. Consider and process and view the summary of each item. It also comes with a rights request form that can be used. Forward to the owner of the information conveniently and quickly",

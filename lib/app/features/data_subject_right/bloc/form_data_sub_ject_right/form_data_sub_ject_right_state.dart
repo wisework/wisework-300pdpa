@@ -30,11 +30,15 @@ class GettingFormDataSubJectRight extends FormDataSubJectRightState {
   List<Object> get props => [];
 }
 
-class GotRequestReson extends FormDataSubJectRightState {
-  const GotRequestReson(this.requestResons);
+class GotTypeofRequest extends FormDataSubJectRightState {
+  const GotTypeofRequest(this.requestTypes, this.reasonTypes);
 
-  final List<RequestReasonTemplateModel> requestResons;
+  final List<RequestTypeModel> requestTypes;
+  final List<ReasonTypeModel> reasonTypes;
 
   @override
-  List<Object> get props => [requestResons];
+  List<Object> get props => [
+        requestTypes,
+        reasonTypes,
+      ];
 }
