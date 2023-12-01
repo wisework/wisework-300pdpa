@@ -156,6 +156,14 @@ class EditDataSubjectRightBloc
               ..sort(
                 (a, b) => a.priority.compareTo(b.priority),
               ),
+            powerVerifications: dataSubjectRight.powerVerifications
+              ..sort(
+                (a, b) => a.id.compareTo(b.id),
+              ),
+            identityVerifications: dataSubjectRight.identityVerifications
+              ..sort(
+                (a, b) => a.id.compareTo(b.id),
+              ),
             processRequests: processRequestSorted,
           ),
           gotRequestTypes,

@@ -26,7 +26,7 @@ import 'package:pdpa/app/shared/widgets/loading_indicator.dart';
 import 'package:pdpa/app/shared/widgets/material_ink_well.dart';
 import 'package:pdpa/app/shared/widgets/templates/pdpa_app_bar.dart';
 import 'package:qr_flutter/qr_flutter.dart';
-import 'package:pdpa/app/features/consent_management/consent_form/widgets/download_fuctions/netive_download.dart'
+import 'package:pdpa/app/features/consent_management/consent_form/widgets/download_fuctions/native_download.dart'
     if (dart.library.html) 'package:pdpa/app/features/consent_management/consent_form/widgets/download_fuctions/web_download.dart'
     // ignore: library_prefixes
     as downloadQrCode;
