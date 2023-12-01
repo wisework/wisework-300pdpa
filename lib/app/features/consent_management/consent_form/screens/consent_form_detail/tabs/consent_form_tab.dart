@@ -15,7 +15,7 @@ import 'package:pdpa/app/data/models/master_data/mandatory_field_model.dart';
 import 'package:pdpa/app/data/models/master_data/purpose_category_model.dart';
 import 'package:pdpa/app/data/models/master_data/purpose_model.dart';
 import 'package:pdpa/app/features/consent_management/consent_form/widgets/consent_form_preview.dart';
-import 'package:pdpa/app/features/consent_management/consent_form/widgets/download_fuctions/netive_download.dart'
+import 'package:pdpa/app/features/consent_management/consent_form/widgets/download_fuctions/native_download.dart'
     if (dart.library.html) 'package:pdpa/app/features/consent_management/consent_form/widgets/download_fuctions/web_download.dart'
     // ignore: library_prefixes
     as downloadQrCode;

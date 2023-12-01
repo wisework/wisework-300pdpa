@@ -187,6 +187,7 @@ class _ConsentFormSettingViewState extends State<ConsentFormSettingView> {
     final consentTheme = context.select(
       (CurrentConsentFormSettingsCubit cubit) => cubit.state.consentTheme,
     );
+    final screenSize = MediaQuery.of(context).size;
 
     return _buildTabController(
       child: Scaffold(
@@ -241,6 +242,7 @@ class _ConsentFormSettingViewState extends State<ConsentFormSettingView> {
           context,
           consentForm: consentForm,
           consentTheme: consentTheme,
+          screenSize: screenSize,
         ),
       ),
     );
@@ -280,9 +282,14 @@ class _ConsentFormSettingViewState extends State<ConsentFormSettingView> {
     BuildContext context, {
     required ConsentFormModel consentForm,
     required ConsentThemeModel consentTheme,
+    required Size screenSize,
   }) {
     return FractionallySizedBox(
-      widthFactor: 0.85,
+      widthFactor: screenSize.width > 1100.0
+          ? 0.4
+          : screenSize.width > UiConfig.maxWidthContent
+              ? 0.6
+              : 0.85,
       child: Drawer(
         backgroundColor: Theme.of(context).colorScheme.onBackground,
         surfaceTintColor: Theme.of(context).colorScheme.onBackground,
