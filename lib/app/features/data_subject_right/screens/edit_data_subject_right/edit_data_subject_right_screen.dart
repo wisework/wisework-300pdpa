@@ -336,10 +336,19 @@ class _EditDataSubjectRightViewState extends State<EditDataSubjectRightView> {
               ),
               _buildDivider(context),
             ],
-          ), 
+          ),
         _buildIdentityProofInfo(
           context,
           verifications: dataSubjectRight.identityVerifications,
+        ),
+        Padding(
+          padding: const EdgeInsets.symmetric(
+            vertical: UiConfig.lineGap,
+          ),
+          child: Divider(
+            color:
+                Theme.of(context).colorScheme.outlineVariant.withOpacity(0.5),
+          ),
         ),
         _buildProcessRequestInfo(context),
       ],
@@ -605,6 +614,7 @@ class _EditDataSubjectRightViewState extends State<EditDataSubjectRightView> {
                   onDownloaded: _onDownloadFile,
                   alignment: Alignment.centerLeft,
                 ),
+                const SizedBox(height: UiConfig.lineGap),
               ],
             );
           },

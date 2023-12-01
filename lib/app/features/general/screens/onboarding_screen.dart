@@ -76,6 +76,7 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
           child: CarouselSlider(
             items: [
               buildDataSubjectRightNews(context),
+              buildDataSubjectRightNewsII(context),
               buildDarkModeNews(context),
               // buildBoard1(context),
               // buildBoard2(context),
@@ -120,7 +121,7 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
         children: [
           Flexible(
             child: Image.asset(
-              'assets/images/general/dataSubjectRightNews.png',
+              'assets/images/general/onboarding_1.png',
               width: 700,
               fit: BoxFit.cover,
             ),
@@ -144,7 +145,68 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
                     ),
                     const SizedBox(height: 16.0),
                     Text(
-                      tr('app.board.decription3'),
+                      tr("app.board.description"),
+                      style: Theme.of(context).textTheme.bodyMedium,
+                      textAlign: TextAlign.center,
+                    ),
+                    const Spacer(),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        CustomButton(
+                          height: 40.0,
+                          width: 120,
+                          onPressed: next,
+                          child: Text(
+                            tr('app.board.next'),
+                            style: TextStyle(
+                              color: Theme.of(context).colorScheme.onPrimary,
+                            ),
+                          ),
+                        ),
+                      ],
+                    ),
+                  ],
+                ),
+              ),
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
+  ContentWrapper buildDataSubjectRightNewsII(BuildContext context) {
+    return ContentWrapper(
+      child: Column(
+        children: [
+          Flexible(
+            child: Image.asset(
+              'assets/images/general/onboarding_2.png',
+              width: 700,
+              fit: BoxFit.cover,
+            ),
+          ),
+          Expanded(
+            child: Container(
+              decoration: BoxDecoration(
+                color: Theme.of(context).colorScheme.background,
+                borderRadius: const BorderRadius.only(
+                  topLeft: Radius.circular(20),
+                  topRight: Radius.circular(20),
+                ),
+              ),
+              child: Padding(
+                padding: const EdgeInsets.all(20),
+                child: Column(
+                  children: [
+                    Text(
+                      tr("dataSubjectRight.manageRequests"),
+                      style: Theme.of(context).textTheme.titleLarge,
+                    ),
+                    const SizedBox(height: 16.0),
+                    Text(
+                      tr("app.board.decription2"),
                       style: Theme.of(context).textTheme.bodyMedium,
                       textAlign: TextAlign.center,
                     ),

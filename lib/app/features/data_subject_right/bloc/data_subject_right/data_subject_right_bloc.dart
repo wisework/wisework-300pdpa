@@ -82,27 +82,41 @@ class DataSubjectRightBloc
 
         updated.sort((a, b) => b.updatedDate.compareTo(a.updatedDate));
 
-        List<RequestTypeModel> gotRequestTypes = [];
-        final result = await _masterDataRepository.getRequestTypes(
+        List<RequestTypeModel> gotRequestTypes =
+            requestTypesPreset.map((reject) => reject).toList();
+        final requestTypeResult = await _masterDataRepository.getRequestTypes(
           event.companyId,
         );
-        result.fold(
+        requestTypeResult.fold(
           (failure) => emit(DataSubjectRightError(failure.errorMessage)),
           (requestTypes) {
-            gotRequestTypes.addAll(requestTypesPreset);
-            gotRequestTypes.addAll(requestTypes);
+            requestTypes.sort((a, b) => a.updatedDate.compareTo(b.updatedDate));
+
+            final ids = gotRequestTypes.map((type) => type.id).toList();
+            for (RequestTypeModel request in requestTypes) {
+              if (!ids.contains(request.id)) {
+                gotRequestTypes.add(request);
+              }
+            }
           },
         );
 
-        List<ReasonTypeModel> gotReasonTypes = [];
-        final resultReason = await _masterDataRepository.getReasonTypes(
+        List<ReasonTypeModel> gotReasonTypes =
+            reasonTypesPreset.map((reject) => reject).toList();
+        final reasonTypeResult = await _masterDataRepository.getReasonTypes(
           event.companyId,
         );
-        resultReason.fold(
+        reasonTypeResult.fold(
           (failure) => emit(DataSubjectRightError(failure.errorMessage)),
           (reasonTypes) {
-            gotReasonTypes.addAll(reasonTypesPreset);
-            gotReasonTypes.addAll(reasonTypes);
+            reasonTypes.sort((a, b) => a.updatedDate.compareTo(b.updatedDate));
+
+            final ids = gotRequestTypes.map((type) => type.id).toList();
+            for (ReasonTypeModel reason in reasonTypes) {
+              if (!ids.contains(reason.id)) {
+                gotReasonTypes.add(reason);
+              }
+            }
           },
         );
 

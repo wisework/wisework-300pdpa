@@ -13,7 +13,7 @@ import 'package:pdpa/app/data/models/master_data/reason_type_model.dart';
 
 import 'package:pdpa/app/data/models/master_data/request_type_model.dart';
 import 'package:pdpa/app/features/authentication/bloc/sign_in/sign_in_bloc.dart';
-import 'package:pdpa/app/features/data_subject_right/bloc/data_subject_right/data_subject_right_bloc.dart';
+
 import 'package:pdpa/app/features/data_subject_right/bloc/form_data_sub_ject_right/form_data_sub_ject_right_bloc.dart';
 import 'package:pdpa/app/features/data_subject_right/cubit/form_data_subject_right/form_data_subject_right_cubit.dart';
 import 'package:pdpa/app/features/data_subject_right/routes/data_subject_right_route.dart';
@@ -66,10 +66,10 @@ class _FormDataSubjectRightState extends State<FormDataSubjectRight> {
   @override
   Widget build(BuildContext context) {
     return BlocProvider(
-      create: (context) => serviceLocator<FormDataSubJectRightBloc>(),
-      // ..add(
-      //   GetFormDataSubJectRightEvent(companyId: widget.companyId),
-      // ),
+      create: (context) => serviceLocator<FormDataSubJectRightBloc>()
+        ..add(
+          GetFormDataSubJectRightEvent(companyId: currentUser.currentCompany),
+        ),
       child: Scaffold(
         appBar: PdpaAppBar(
           leadingIcon: _buildPopButton(),
@@ -138,8 +138,6 @@ class FormDataSubjectRightView extends StatefulWidget {
 
 class _FormDataSubjectRightViewState extends State<FormDataSubjectRightView> {
   late PageController _controller;
-  late List<RequestTypeModel> requestType;
-  late List<ReasonTypeModel> reasonType;
 
   @override
   void initState() {
@@ -150,18 +148,10 @@ class _FormDataSubjectRightViewState extends State<FormDataSubjectRightView> {
 
   void _initialData() {
     final cubit = context.read<FormDataSubjectRightCubit>();
-    final bloc = context.read<DataSubjectRightBloc>();
-    List<RequestTypeModel> requestTypes = [];
-    List<ReasonTypeModel> reasonTypes = [];
-    if (bloc.state is GotDataSubjectRights) {
-      requestTypes = (bloc.state as GotDataSubjectRights).requestTypes;
-      reasonTypes = (bloc.state as GotDataSubjectRights).reasonTypes;
-    }
+
     _controller = PageController(
       initialPage: cubit.state.currentPage,
     );
-    requestType = requestTypes;
-    reasonType = reasonTypes;
   }
 
   @override
@@ -184,436 +174,476 @@ class _FormDataSubjectRightViewState extends State<FormDataSubjectRightView> {
     final isAcknowledge = context.select(
       (FormDataSubjectRightCubit cubit) => cubit.state.isAcknowledge,
     );
-    return Column(
-      children: [
-        Expanded(
-          child: ContentWrapper(
-            child: PageView(
-              physics: const NeverScrollableScrollPhysics(),
-              controller: _controller,
-              children: <Widget>[
-                IntroPage(
-                  controller: _controller,
-                  currentPage: currentPage,
-                ),
-                const OwnerVerifyPage(),
-                PowerVerificationPage(
-                  companyId: widget.companyId,
-                ),
-                const DataOwnerDetailPage(),
-                IdentityVerificationPage(
-                  companyId: widget.companyId,
-                ),
-                RequestReasonPage(
-                  requestType: requestType,
-                  reasonType: reasonType,
-                ),
-                const ReserveTheRightPage(),
-                const AcknowledgePage(),
-              ],
-            ),
-          ),
-        ),
-        Visibility(
-          visible: currentPage != 0,
-          child: ContentWrapper(
-            child: Container(
-              padding: const EdgeInsets.all(
-                UiConfig.defaultPaddingSpacing,
-              ),
-              decoration: BoxDecoration(
-                color: Theme.of(context).colorScheme.onBackground,
-                boxShadow: [
-                  BoxShadow(
-                    color: Theme.of(context).colorScheme.outline,
-                    blurRadius: 1.0,
-                    offset: const Offset(0, -2.0),
-                  ),
-                ],
-              ),
-              child: Stack(
-                children: [
-                  if (currentPage != 1)
-                    Align(
-                      alignment: const Alignment(-0.9, -0.9),
-                      child: TextButton(
-                        style: TextButton.styleFrom(
-                          textStyle: Theme.of(context)
-                              .textTheme
-                              .bodyMedium
-                              ?.copyWith(
-                                color: Theme.of(context).colorScheme.primary,
-                              ),
-                        ),
-                        onPressed: () {
-                          if (dataSubjectRight.isDataOwner == true &&
-                              currentPage == 4) {
-                            context
-                                .read<FormDataSubjectRightCubit>()
-                                .previousPage(1);
-                            context
-                                .read<FormDataSubjectRightCubit>()
-                                .setDataSubjectRight(
-                                    dataSubjectRight.copyWith(dataOwner: []));
-
-                            _controller.jumpToPage(1);
-                          } else {
-                            context
-                                .read<FormDataSubjectRightCubit>()
-                                .previousPage(currentPage - 1);
-                            _controller.previousPage(
-                              duration: const Duration(microseconds: 1),
-                              curve: Curves.easeInOut,
-                            );
-                          }
-                        },
-                        child: Text(
-                          tr("app.previous"),
-                        ),
+    return BlocBuilder<FormDataSubJectRightBloc, FormDataSubJectRightState>(
+      builder: (context, state) {
+        if (state is GotTypeofRequest) {
+          return Column(
+            children: [
+              Expanded(
+                child: ContentWrapper(
+                  child: PageView(
+                    physics: const NeverScrollableScrollPhysics(),
+                    controller: _controller,
+                    children: <Widget>[
+                      IntroPage(
+                        controller: _controller,
+                        currentPage: currentPage,
                       ),
+                      const OwnerVerifyPage(),
+                      PowerVerificationPage(
+                        companyId: widget.companyId,
+                      ),
+                      const DataOwnerDetailPage(),
+                      IdentityVerificationPage(
+                        companyId: widget.companyId,
+                      ),
+                      RequestReasonPage(
+                        requestType: state.requestTypes,
+                        reasonType: state.reasonTypes,
+                      ),
+                      const ReserveTheRightPage(),
+                      const AcknowledgePage(),
+                    ],
+                  ),
+                ),
+              ),
+              Visibility(
+                visible: currentPage != 0,
+                child: ContentWrapper(
+                  child: Container(
+                    padding: const EdgeInsets.all(
+                      UiConfig.defaultPaddingSpacing,
                     ),
-                  Align(
-                      alignment: Alignment.bottomCenter,
-                      child: Text(
-                        "$currentPage/7",
-                        style: Theme.of(context).textTheme.bodyMedium,
-                      )),
-                  Align(
-                    alignment: const Alignment(0.9, -0.9),
-                    child: TextButton(
-                        style: TextButton.styleFrom(
-                          textStyle: Theme.of(context)
-                              .textTheme
-                              .bodyMedium
-                              ?.copyWith(
-                                color: Theme.of(context).colorScheme.primary,
-                              ),
+                    decoration: BoxDecoration(
+                      color: Theme.of(context).colorScheme.onBackground,
+                      boxShadow: [
+                        BoxShadow(
+                          color: Theme.of(context).colorScheme.outline,
+                          blurRadius: 1.0,
+                          offset: const Offset(0, -2.0),
                         ),
-                        onPressed: () {
-                          bool verified = true;
-                          switch (currentPage) {
-                            case 1:
-                              final dataRequester = dataSubjectRight
-                                  .dataRequester
-                                  .map((requester) => requester)
-                                  .toList();
-
-                              if (dataRequester.isEmpty ||
-                                  dataRequester.length != 4) {
-                                verified = false;
-                                BotToast.showText(
-                                  text: tr(
-                                      'dataSubjectRight.formData.infocomplete'),
-                                  contentColor: Theme.of(context)
-                                      .colorScheme
-                                      .secondary
-                                      .withOpacity(0.75),
-                                  borderRadius: BorderRadius.circular(8.0),
-                                  textStyle: Theme.of(context)
-                                      .textTheme
-                                      .bodyMedium!
-                                      .copyWith(
-                                          color: Theme.of(context)
-                                              .colorScheme
-                                              .onPrimary),
-                                  duration: UiConfig.toastDuration,
-                                );
-                              }
-                              break;
-
-                            case 2:
-                              final powerVerifications = dataSubjectRight
-                                  .powerVerifications
-                                  .map((verification) => verification)
-                                  .toList();
-
-                              if (powerVerifications.isEmpty) {
-                                verified = false;
-                                BotToast.showText(
-                                  text: tr('dataSubjectRight.formData.doc'),
-                                  contentColor: Theme.of(context)
-                                      .colorScheme
-                                      .secondary
-                                      .withOpacity(0.75),
-                                  borderRadius: BorderRadius.circular(8.0),
-                                  textStyle: Theme.of(context)
-                                      .textTheme
-                                      .bodyMedium!
-                                      .copyWith(
-                                          color: Theme.of(context)
-                                              .colorScheme
-                                              .onPrimary),
-                                  duration: UiConfig.toastDuration,
-                                );
-                              }
-                              for (RequesterVerificationModel verification
-                                  in powerVerifications) {
-                                if (verification.imageUrl.isEmpty) {
-                                  verified = false;
-                                  BotToast.showText(
-                                    text: tr('dataSubjectRight.formData.copy'),
-                                    contentColor: Theme.of(context)
-                                        .colorScheme
-                                        .secondary
-                                        .withOpacity(0.75),
-                                    borderRadius: BorderRadius.circular(8.0),
-                                    textStyle: Theme.of(context)
-                                        .textTheme
-                                        .bodyMedium!
-                                        .copyWith(
-                                            color: Theme.of(context)
-                                                .colorScheme
-                                                .onPrimary),
-                                    duration: UiConfig.toastDuration,
-                                  );
-                                }
-                              }
-                              break;
-                            case 3:
-                              final dataOwner = dataSubjectRight.dataOwner
-                                  .map((requester) => requester)
-                                  .toList();
-
-                              if (dataOwner.isEmpty || dataOwner.length != 4) {
-                                verified = false;
-                                BotToast.showText(
-                                  text: tr('dataSubjectRight.formData.detail'),
-                                  contentColor: Theme.of(context)
-                                      .colorScheme
-                                      .secondary
-                                      .withOpacity(0.75),
-                                  borderRadius: BorderRadius.circular(8.0),
-                                  textStyle: Theme.of(context)
-                                      .textTheme
-                                      .bodyMedium!
-                                      .copyWith(
-                                          color: Theme.of(context)
-                                              .colorScheme
-                                              .onPrimary),
-                                  duration: UiConfig.toastDuration,
-                                );
-                              }
-                              break;
-                            case 4:
-                              final identityVerifications = dataSubjectRight
-                                  .identityVerifications
-                                  .map((verification) => verification)
-                                  .toList();
-
-                              if (identityVerifications.isEmpty) {
-                                verified = false;
-                                BotToast.showText(
-                                  text:
-                                      tr('dataSubjectRight.formData.identity'),
-                                  contentColor: Theme.of(context)
-                                      .colorScheme
-                                      .secondary
-                                      .withOpacity(0.75),
-                                  borderRadius: BorderRadius.circular(8.0),
-                                  textStyle: Theme.of(context)
-                                      .textTheme
-                                      .bodyMedium!
-                                      .copyWith(
-                                          color: Theme.of(context)
-                                              .colorScheme
-                                              .onPrimary),
-                                  duration: UiConfig.toastDuration,
-                                );
-                              }
-
-                              for (RequesterVerificationModel verification
-                                  in identityVerifications) {
-                                if (verification.imageUrl.isEmpty) {
-                                  verified = false;
-                                  BotToast.showText(
-                                    text: tr('dataSubjectRight.formData.copy'),
-                                    contentColor: Theme.of(context)
-                                        .colorScheme
-                                        .secondary
-                                        .withOpacity(0.75),
-                                    borderRadius: BorderRadius.circular(8.0),
-                                    textStyle: Theme.of(context)
-                                        .textTheme
-                                        .bodyMedium!
-                                        .copyWith(
-                                            color: Theme.of(context)
-                                                .colorScheme
-                                                .onPrimary),
-                                    duration: UiConfig.toastDuration,
-                                  );
-                                }
-                              }
-                              break;
-                            case 5:
-                              final processRequest = processRequests
-                                  .map((process) => process)
-                                  .toList();
-                              if (processRequest.isEmpty) {
-                                verified = false;
-                                BotToast.showText(
-                                  text: tr('dataSubjectRight.formData.purpose'),
-                                  contentColor: Theme.of(context)
-                                      .colorScheme
-                                      .secondary
-                                      .withOpacity(0.75),
-                                  borderRadius: BorderRadius.circular(8.0),
-                                  textStyle: Theme.of(context)
-                                      .textTheme
-                                      .bodyMedium!
-                                      .copyWith(
-                                          color: Theme.of(context)
-                                              .colorScheme
-                                              .onPrimary),
-                                  duration: UiConfig.toastDuration,
-                                );
-                              }
-                              for (ProcessRequestModel process
-                                  in processRequest) {
-                                if (process.personalData.isEmpty) {
-                                  verified = false;
-                                  BotToast.showText(
-                                    text: tr(
-                                        'dataSubjectRight.formData.personal'),
-                                    contentColor: Theme.of(context)
-                                        .colorScheme
-                                        .secondary
-                                        .withOpacity(0.75),
-                                    borderRadius: BorderRadius.circular(8.0),
-                                    textStyle: Theme.of(context)
-                                        .textTheme
-                                        .bodyMedium!
-                                        .copyWith(
-                                            color: Theme.of(context)
-                                                .colorScheme
-                                                .onPrimary),
-                                    duration: UiConfig.toastDuration,
-                                  );
-                                }
-
-                                if (process.requestAction.isEmpty) {
-                                  verified = false;
-                                  BotToast.showText(
-                                    text: tr('dataSubjectRight.formData.acton'),
-                                    contentColor: Theme.of(context)
-                                        .colorScheme
-                                        .secondary
-                                        .withOpacity(0.75),
-                                    borderRadius: BorderRadius.circular(8.0),
-                                    textStyle: Theme.of(context)
-                                        .textTheme
-                                        .bodyMedium!
-                                        .copyWith(
-                                            color: Theme.of(context)
-                                                .colorScheme
-                                                .onPrimary),
-                                    duration: UiConfig.toastDuration,
-                                  );
-                                }
-
-                                if (process.reasonTypes.isEmpty) {
-                                  verified = false;
-                                  BotToast.showText(
-                                    text:
-                                        tr('dataSubjectRight.formData.reason'),
-                                    contentColor: Theme.of(context)
-                                        .colorScheme
-                                        .secondary
-                                        .withOpacity(0.75),
-                                    borderRadius: BorderRadius.circular(8.0),
-                                    textStyle: Theme.of(context)
-                                        .textTheme
-                                        .bodyMedium!
-                                        .copyWith(
-                                            color: Theme.of(context)
-                                                .colorScheme
-                                                .onPrimary),
-                                    duration: UiConfig.toastDuration,
-                                  );
-                                }
-                              }
-                              break;
-                            default:
-                          }
-                          if (currentPage != 7 && verified) {
-                            if (dataSubjectRight.isDataOwner == true &&
-                                currentPage == 1) {
-                              context
-                                  .read<FormDataSubjectRightCubit>()
-                                  .nextPage(4);
-                              context
-                                  .read<FormDataSubjectRightCubit>()
-                                  .setDataSubjectRight(
-                                      dataSubjectRight.copyWith(
-                                          dataOwner:
-                                              dataSubjectRight.dataRequester));
-
-                              _controller.jumpToPage(4);
-                            } else {
-                              context
-                                  .read<FormDataSubjectRightCubit>()
-                                  .nextPage(currentPage + 1);
-                              _controller.nextPage(
-                                duration: const Duration(microseconds: 1),
-                                curve: Curves.easeInOut,
-                              );
-                            }
-                          }
-                          if (currentPage == 7) {
-                            if (!isAcknowledge) {
-                              BotToast.showText(
-                                text: tr(
-                                    'consentManagement.userConsent.consentFormDetails.edit.pleaseAcceptConsent'),
-                                contentColor: Theme.of(context)
-                                    .colorScheme
-                                    .secondary
-                                    .withOpacity(0.75),
-                                borderRadius: BorderRadius.circular(8.0),
+                      ],
+                    ),
+                    child: Stack(
+                      children: [
+                        if (currentPage != 1)
+                          Align(
+                            alignment: const Alignment(-0.9, -0.9),
+                            child: TextButton(
+                              style: TextButton.styleFrom(
                                 textStyle: Theme.of(context)
                                     .textTheme
-                                    .bodyMedium!
-                                    .copyWith(
-                                        color: Theme.of(context)
-                                            .colorScheme
-                                            .onPrimary),
-                                duration: UiConfig.toastDuration,
-                              );
-                            } else {
-                              context
-                                  .read<FormDataSubjectRightCubit>()
-                                  .createDatasubjectRight(widget.companyId);
+                                    .bodyMedium
+                                    ?.copyWith(
+                                      color:
+                                          Theme.of(context).colorScheme.primary,
+                                    ),
+                              ),
+                              onPressed: () {
+                                if (dataSubjectRight.isDataOwner == true &&
+                                    currentPage == 4) {
+                                  context
+                                      .read<FormDataSubjectRightCubit>()
+                                      .previousPage(1);
+                                  context
+                                      .read<FormDataSubjectRightCubit>()
+                                      .setDataSubjectRight(dataSubjectRight
+                                          .copyWith(dataOwner: []));
 
-                              context
-                                  .read<FormDataSubjectRightCubit>()
-                                  .setSubmited();
-                            }
-                          }
-                        },
-                        child: currentPage != 7
-                            ? Text(
-                                tr("app.next"),
-                              )
-                            : Text(tr("dataSubjectRight.submitRequestForm"))),
+                                  _controller.jumpToPage(1);
+                                } else {
+                                  context
+                                      .read<FormDataSubjectRightCubit>()
+                                      .previousPage(currentPage - 1);
+                                  _controller.previousPage(
+                                    duration: const Duration(microseconds: 1),
+                                    curve: Curves.easeInOut,
+                                  );
+                                }
+                              },
+                              child: Text(
+                                tr("app.previous"),
+                              ),
+                            ),
+                          ),
+                        Align(
+                            alignment: Alignment.bottomCenter,
+                            child: Text(
+                              "$currentPage/7",
+                              style: Theme.of(context).textTheme.bodyMedium,
+                            )),
+                        Align(
+                          alignment: const Alignment(0.9, -0.9),
+                          child: TextButton(
+                              style: TextButton.styleFrom(
+                                textStyle: Theme.of(context)
+                                    .textTheme
+                                    .bodyMedium
+                                    ?.copyWith(
+                                      color:
+                                          Theme.of(context).colorScheme.primary,
+                                    ),
+                              ),
+                              onPressed: () {
+                                bool verified = true;
+                                switch (currentPage) {
+                                  case 1:
+                                    final dataRequester = dataSubjectRight
+                                        .dataRequester
+                                        .map((requester) => requester)
+                                        .toList();
+
+                                    if (dataRequester.isEmpty ||
+                                        dataRequester.length != 4) {
+                                      verified = false;
+                                      BotToast.showText(
+                                        text: tr(
+                                            'dataSubjectRight.formData.infocomplete'),
+                                        contentColor: Theme.of(context)
+                                            .colorScheme
+                                            .secondary
+                                            .withOpacity(0.75),
+                                        borderRadius:
+                                            BorderRadius.circular(8.0),
+                                        textStyle: Theme.of(context)
+                                            .textTheme
+                                            .bodyMedium!
+                                            .copyWith(
+                                                color: Theme.of(context)
+                                                    .colorScheme
+                                                    .onPrimary),
+                                        duration: UiConfig.toastDuration,
+                                      );
+                                    }
+                                    break;
+
+                                  case 2:
+                                    final powerVerifications = dataSubjectRight
+                                        .powerVerifications
+                                        .map((verification) => verification)
+                                        .toList();
+
+                                    if (powerVerifications.isEmpty) {
+                                      verified = false;
+                                      BotToast.showText(
+                                        text:
+                                            tr('dataSubjectRight.formData.doc'),
+                                        contentColor: Theme.of(context)
+                                            .colorScheme
+                                            .secondary
+                                            .withOpacity(0.75),
+                                        borderRadius:
+                                            BorderRadius.circular(8.0),
+                                        textStyle: Theme.of(context)
+                                            .textTheme
+                                            .bodyMedium!
+                                            .copyWith(
+                                                color: Theme.of(context)
+                                                    .colorScheme
+                                                    .onPrimary),
+                                        duration: UiConfig.toastDuration,
+                                      );
+                                    }
+                                    for (RequesterVerificationModel verification
+                                        in powerVerifications) {
+                                      if (verification.imageUrl.isEmpty) {
+                                        verified = false;
+                                        BotToast.showText(
+                                          text: tr(
+                                              'dataSubjectRight.formData.copy'),
+                                          contentColor: Theme.of(context)
+                                              .colorScheme
+                                              .secondary
+                                              .withOpacity(0.75),
+                                          borderRadius:
+                                              BorderRadius.circular(8.0),
+                                          textStyle: Theme.of(context)
+                                              .textTheme
+                                              .bodyMedium!
+                                              .copyWith(
+                                                  color: Theme.of(context)
+                                                      .colorScheme
+                                                      .onPrimary),
+                                          duration: UiConfig.toastDuration,
+                                        );
+                                      }
+                                    }
+                                    break;
+                                  case 3:
+                                    final dataOwner = dataSubjectRight.dataOwner
+                                        .map((requester) => requester)
+                                        .toList();
+
+                                    if (dataOwner.isEmpty ||
+                                        dataOwner.length != 4) {
+                                      verified = false;
+                                      BotToast.showText(
+                                        text: tr(
+                                            'dataSubjectRight.formData.detail'),
+                                        contentColor: Theme.of(context)
+                                            .colorScheme
+                                            .secondary
+                                            .withOpacity(0.75),
+                                        borderRadius:
+                                            BorderRadius.circular(8.0),
+                                        textStyle: Theme.of(context)
+                                            .textTheme
+                                            .bodyMedium!
+                                            .copyWith(
+                                                color: Theme.of(context)
+                                                    .colorScheme
+                                                    .onPrimary),
+                                        duration: UiConfig.toastDuration,
+                                      );
+                                    }
+                                    break;
+                                  case 4:
+                                    final identityVerifications =
+                                        dataSubjectRight.identityVerifications
+                                            .map((verification) => verification)
+                                            .toList();
+
+                                    if (identityVerifications.isEmpty) {
+                                      verified = false;
+                                      BotToast.showText(
+                                        text: tr(
+                                            'dataSubjectRight.formData.identity'),
+                                        contentColor: Theme.of(context)
+                                            .colorScheme
+                                            .secondary
+                                            .withOpacity(0.75),
+                                        borderRadius:
+                                            BorderRadius.circular(8.0),
+                                        textStyle: Theme.of(context)
+                                            .textTheme
+                                            .bodyMedium!
+                                            .copyWith(
+                                                color: Theme.of(context)
+                                                    .colorScheme
+                                                    .onPrimary),
+                                        duration: UiConfig.toastDuration,
+                                      );
+                                    }
+
+                                    for (RequesterVerificationModel verification
+                                        in identityVerifications) {
+                                      if (verification.imageUrl.isEmpty) {
+                                        verified = false;
+                                        BotToast.showText(
+                                          text: tr(
+                                              'dataSubjectRight.formData.copy'),
+                                          contentColor: Theme.of(context)
+                                              .colorScheme
+                                              .secondary
+                                              .withOpacity(0.75),
+                                          borderRadius:
+                                              BorderRadius.circular(8.0),
+                                          textStyle: Theme.of(context)
+                                              .textTheme
+                                              .bodyMedium!
+                                              .copyWith(
+                                                  color: Theme.of(context)
+                                                      .colorScheme
+                                                      .onPrimary),
+                                          duration: UiConfig.toastDuration,
+                                        );
+                                      }
+                                    }
+                                    break;
+                                  case 5:
+                                    final processRequest = processRequests
+                                        .map((process) => process)
+                                        .toList();
+                                    if (processRequest.isEmpty) {
+                                      verified = false;
+                                      BotToast.showText(
+                                        text: tr(
+                                            'dataSubjectRight.formData.purpose'),
+                                        contentColor: Theme.of(context)
+                                            .colorScheme
+                                            .secondary
+                                            .withOpacity(0.75),
+                                        borderRadius:
+                                            BorderRadius.circular(8.0),
+                                        textStyle: Theme.of(context)
+                                            .textTheme
+                                            .bodyMedium!
+                                            .copyWith(
+                                                color: Theme.of(context)
+                                                    .colorScheme
+                                                    .onPrimary),
+                                        duration: UiConfig.toastDuration,
+                                      );
+                                    }
+                                    for (ProcessRequestModel process
+                                        in processRequest) {
+                                      if (process.personalData.isEmpty) {
+                                        verified = false;
+                                        BotToast.showText(
+                                          text: tr(
+                                              'dataSubjectRight.formData.personal'),
+                                          contentColor: Theme.of(context)
+                                              .colorScheme
+                                              .secondary
+                                              .withOpacity(0.75),
+                                          borderRadius:
+                                              BorderRadius.circular(8.0),
+                                          textStyle: Theme.of(context)
+                                              .textTheme
+                                              .bodyMedium!
+                                              .copyWith(
+                                                  color: Theme.of(context)
+                                                      .colorScheme
+                                                      .onPrimary),
+                                          duration: UiConfig.toastDuration,
+                                        );
+                                      }
+
+                                      if (process.requestAction.isEmpty) {
+                                        verified = false;
+                                        BotToast.showText(
+                                          text: tr(
+                                              'dataSubjectRight.formData.acton'),
+                                          contentColor: Theme.of(context)
+                                              .colorScheme
+                                              .secondary
+                                              .withOpacity(0.75),
+                                          borderRadius:
+                                              BorderRadius.circular(8.0),
+                                          textStyle: Theme.of(context)
+                                              .textTheme
+                                              .bodyMedium!
+                                              .copyWith(
+                                                  color: Theme.of(context)
+                                                      .colorScheme
+                                                      .onPrimary),
+                                          duration: UiConfig.toastDuration,
+                                        );
+                                      }
+
+                                      if (process.reasonTypes.isEmpty) {
+                                        verified = false;
+                                        BotToast.showText(
+                                          text: tr(
+                                              'dataSubjectRight.formData.reason'),
+                                          contentColor: Theme.of(context)
+                                              .colorScheme
+                                              .secondary
+                                              .withOpacity(0.75),
+                                          borderRadius:
+                                              BorderRadius.circular(8.0),
+                                          textStyle: Theme.of(context)
+                                              .textTheme
+                                              .bodyMedium!
+                                              .copyWith(
+                                                  color: Theme.of(context)
+                                                      .colorScheme
+                                                      .onPrimary),
+                                          duration: UiConfig.toastDuration,
+                                        );
+                                      }
+                                    }
+                                    break;
+                                  default:
+                                }
+                                if (currentPage != 7 && verified) {
+                                  if (dataSubjectRight.isDataOwner == true &&
+                                      currentPage == 1) {
+                                    context
+                                        .read<FormDataSubjectRightCubit>()
+                                        .nextPage(4);
+                                    context
+                                        .read<FormDataSubjectRightCubit>()
+                                        .setDataSubjectRight(
+                                            dataSubjectRight.copyWith(
+                                                dataOwner: dataSubjectRight
+                                                    .dataRequester));
+
+                                    _controller.jumpToPage(4);
+                                  } else {
+                                    context
+                                        .read<FormDataSubjectRightCubit>()
+                                        .nextPage(currentPage + 1);
+                                    _controller.nextPage(
+                                      duration: const Duration(microseconds: 1),
+                                      curve: Curves.easeInOut,
+                                    );
+                                  }
+                                }
+                                if (currentPage == 7) {
+                                  if (!isAcknowledge) {
+                                    BotToast.showText(
+                                      text: tr(
+                                          'consentManagement.userConsent.consentFormDetails.edit.pleaseAcceptConsent'),
+                                      contentColor: Theme.of(context)
+                                          .colorScheme
+                                          .secondary
+                                          .withOpacity(0.75),
+                                      borderRadius: BorderRadius.circular(8.0),
+                                      textStyle: Theme.of(context)
+                                          .textTheme
+                                          .bodyMedium!
+                                          .copyWith(
+                                              color: Theme.of(context)
+                                                  .colorScheme
+                                                  .onPrimary),
+                                      duration: UiConfig.toastDuration,
+                                    );
+                                  } else {
+                                    context
+                                        .read<FormDataSubjectRightCubit>()
+                                        .createDatasubjectRight(
+                                            widget.companyId);
+
+                                    context
+                                        .read<FormDataSubjectRightCubit>()
+                                        .setSubmited();
+                                  }
+                                }
+                              },
+                              child: currentPage != 7
+                                  ? Text(
+                                      tr("app.next"),
+                                    )
+                                  : Text(tr(
+                                      "dataSubjectRight.submitRequestForm"))),
+                        ),
+                      ],
+                    ),
                   ),
-                ],
+                ),
+              )
+            ],
+          );
+        }
+        if (state is FormDataSubJectRightError) {
+          return CustomContainer(
+            margin: const EdgeInsets.all(UiConfig.lineSpacing),
+            child: Padding(
+              padding: const EdgeInsets.symmetric(
+                vertical: UiConfig.defaultPaddingSpacing * 4,
+              ),
+              child: Center(
+                child: Text(
+                  state.message,
+                  style: Theme.of(context).textTheme.bodyMedium,
+                ),
               ),
             ),
+          );
+        }
+        return const CustomContainer(
+          margin: EdgeInsets.all(UiConfig.lineSpacing),
+          child: Padding(
+            padding: EdgeInsets.symmetric(
+              vertical: UiConfig.defaultPaddingSpacing * 4,
+            ),
+            child: Center(
+              child: LoadingIndicator(),
+            ),
           ),
-        )
-      ],
+        );
+      },
     );
-  }
-}
-
-class TEsttt extends StatefulWidget {
-  const TEsttt({super.key});
-
-  @override
-  State<TEsttt> createState() => _TEstttState();
-}
-
-class _TEstttState extends State<TEsttt> {
-  @override
-  Widget build(BuildContext context) {
-    return Text(tr('dataSubjectRight.formData.data'));
   }
 }
