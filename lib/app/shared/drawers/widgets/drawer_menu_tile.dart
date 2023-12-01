@@ -243,7 +243,7 @@ class _DrawerMenuTileState extends State<DrawerMenuTile> {
                 ),
               ),
             );
-          }).toList(),
+          }),
         ],
       ),
     );

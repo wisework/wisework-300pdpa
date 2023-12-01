@@ -2,11 +2,9 @@
 import 'package:bloc/bloc.dart';
 import 'package:equatable/equatable.dart';
 import 'package:pdpa/app/data/models/master_data/reason_type_model.dart';
-import 'package:pdpa/app/data/models/master_data/request_reason_template_model.dart';
 import 'package:pdpa/app/data/models/master_data/request_type_model.dart';
 import 'package:pdpa/app/data/presets/reason_types_preset.dart';
 import 'package:pdpa/app/data/presets/request_types_preset.dart';
-import 'package:pdpa/app/data/repositories/data_subject_right_repository.dart';
 import 'package:pdpa/app/data/repositories/master_data_repository.dart';
 
 part 'form_data_sub_ject_right_event.dart';

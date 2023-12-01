@@ -178,9 +178,7 @@ class _ConsentFormPreviewState extends State<ConsentFormPreview> {
             AcceptConsentCheckbox(
               consentForm: widget.consentForm,
               consentTheme: widget.consentTheme,
-              initialValue: widget.userConsent != null
-                  ? widget.userConsent!.isAcceptConsent
-                  : null,
+              initialValue: widget.userConsent?.isAcceptConsent,
               onChanged: (value) {
                 if (widget.onConsentAccepted != null) {
                   widget.onConsentAccepted!(value);

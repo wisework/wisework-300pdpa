@@ -4,7 +4,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:pdpa/app/config/config.dart';
 import 'package:pdpa/app/data/models/data_subject_right/data_subject_right_model.dart';
-import 'package:pdpa/app/features/data_subject_right/bloc/user_data_subject_right_form/user_data_subject_right_form_bloc.dart';
 import 'package:pdpa/app/features/data_subject_right/cubit/form_data_subject_right/form_data_subject_right_cubit.dart';
 import 'package:pdpa/app/features/data_subject_right/screens/form_data_subject_right/form_data_subject_right.dart';
 import 'package:pdpa/app/features/data_subject_right/screens/form_data_subject_right/widgets/summit_screen.dart';
@@ -27,20 +26,6 @@ class UserDataSubjectRightFormScreen extends StatefulWidget {
 
 class _UserDataSubjectRightFormScreenState
     extends State<UserDataSubjectRightFormScreen> {
-  @override
-  void initState() {
-    super.initState();
-
-    _getUserDataSubjectRightForm();
-  }
-
-  void _getUserDataSubjectRightForm() {
-    final bloc = context.read<UserDataSubjectRightFormBloc>();
-    bloc.add(GetUserDataSubjectRightFormEvent(
-      companyId: widget.companyId,
-    ));
-  }
-
   @override
   Widget build(BuildContext context) {
     return BlocConsumer<FormDataSubjectRightCubit, FormDataSubjectRightState>(

@@ -323,14 +323,28 @@ class _DataSubjectRightViewState extends State<DataSubjectRightView> {
     );
 
     if (processRequestFiltered.isEmpty) {
-      return Padding(
-        padding: const EdgeInsets.symmetric(
-          vertical: UiConfig.lineSpacing * 4,
-        ),
-        child: Text(
-          tr('dataSubjectRight.noMatching'),
-          style: Theme.of(context).textTheme.bodyMedium,
-        ),
+      return Row(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: <Widget>[
+          Padding(
+            padding: const EdgeInsets.symmetric(
+              vertical: UiConfig.lineSpacing * 3,
+            ),
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              children: <Widget>[
+                Image.asset(
+                  'assets/images/general/result-not-found.png',
+                ),
+                const SizedBox(height: UiConfig.lineSpacing),
+                Text(
+                  tr('dataSubjectRight.noMatching'),
+                  style: Theme.of(context).textTheme.bodyMedium,
+                ),
+              ],
+            ),
+          ),
+        ],
       );
     }
 

@@ -3,25 +3,20 @@ import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
+
 import 'package:pdpa/app/config/config.dart';
 import 'package:pdpa/app/data/models/authentication/user_model.dart';
 import 'package:pdpa/app/data/models/data_subject_right/process_request_model.dart';
-
 import 'package:pdpa/app/data/models/data_subject_right/requester_verification_model.dart';
-
-import 'package:pdpa/app/data/models/master_data/reason_type_model.dart';
-
-import 'package:pdpa/app/data/models/master_data/request_type_model.dart';
 import 'package:pdpa/app/features/authentication/bloc/sign_in/sign_in_bloc.dart';
-
 import 'package:pdpa/app/features/data_subject_right/bloc/form_data_sub_ject_right/form_data_sub_ject_right_bloc.dart';
 import 'package:pdpa/app/features/data_subject_right/cubit/form_data_subject_right/form_data_subject_right_cubit.dart';
 import 'package:pdpa/app/features/data_subject_right/routes/data_subject_right_route.dart';
 import 'package:pdpa/app/features/data_subject_right/screens/form_data_subject_right/pages/acknowledge_page.dart';
 import 'package:pdpa/app/features/data_subject_right/screens/form_data_subject_right/pages/data_owner_detail_page.dart';
 import 'package:pdpa/app/features/data_subject_right/screens/form_data_subject_right/pages/identity_verification_page.dart';
-import 'package:pdpa/app/features/data_subject_right/screens/form_data_subject_right/pages/owner_verify_page.dart';
 import 'package:pdpa/app/features/data_subject_right/screens/form_data_subject_right/pages/intro_page.dart';
+import 'package:pdpa/app/features/data_subject_right/screens/form_data_subject_right/pages/owner_verify_page.dart';
 import 'package:pdpa/app/features/data_subject_right/screens/form_data_subject_right/pages/power_verification_page.dart';
 import 'package:pdpa/app/features/data_subject_right/screens/form_data_subject_right/pages/request_reason_page.dart';
 import 'package:pdpa/app/features/data_subject_right/screens/form_data_subject_right/pages/reserve_the_right_page.dart';
@@ -30,7 +25,6 @@ import 'package:pdpa/app/injection.dart';
 import 'package:pdpa/app/shared/utils/constants.dart';
 import 'package:pdpa/app/shared/widgets/content_wrapper.dart';
 import 'package:pdpa/app/shared/widgets/customs/custom_container.dart';
-
 import 'package:pdpa/app/shared/widgets/customs/custom_icon_button.dart';
 import 'package:pdpa/app/shared/widgets/loading_indicator.dart';
 import 'package:pdpa/app/shared/widgets/templates/pdpa_app_bar.dart';

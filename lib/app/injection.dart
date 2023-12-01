@@ -30,7 +30,6 @@ import 'features/consent_management/user_consent/bloc/user_consent/user_consent_
 import 'features/consent_management/user_consent/bloc/user_consent_detail/user_consent_detail_bloc.dart';
 import 'features/data_subject_right/bloc/data_subject_right/data_subject_right_bloc.dart';
 import 'features/data_subject_right/bloc/edit_data_subject_right/edit_data_subject_right_bloc.dart';
-import 'features/data_subject_right/bloc/user_data_subject_right_form/user_data_subject_right_form_bloc.dart';
 import 'features/general/bloc/app_settings/app_settings_bloc.dart';
 import 'features/master_data/bloc/consent/custom_field/custom_field_bloc.dart';
 import 'features/master_data/bloc/consent/edit_custom_field/bloc/edit_custom_field_bloc.dart';
@@ -218,12 +217,6 @@ Future<void> _dataSubjectRight() async {
       () => FormDataSubjectRightCubit(
         generalRepository: serviceLocator(),
         dataSubjectRightRepository: serviceLocator(),
-      ),
-    )
-    ..registerFactory(
-      () => UserDataSubjectRightFormBloc(
-        dataSubjectRightRepository: serviceLocator(),
-        masterDataRepository: serviceLocator(),
       ),
     )
     //? Repositories
