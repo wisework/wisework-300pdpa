@@ -32,16 +32,6 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
     controller.nextPage();
   }
 
-  // void _onPreviousPressed() {
-  //   if (pageIndex > 0) {
-  //     setState(() {
-  //       pageIndex -= 1;
-  //     });
-  //   }
-
-  //   controller.previousPage();
-  // }
-
   Future<void> _onStartPressed() async {
     final packageInfo = await PackageInfo.fromPlatform();
     final version = packageInfo.version;
@@ -251,7 +241,7 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
                 margin: const EdgeInsets.only(
                   top: UiConfig.lineSpacing,
                 ),
-                onPressed: _onNextPressed,
+                onPressed: onButtonPressed,
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: <Widget>[
@@ -270,132 +260,4 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
       ),
     );
   }
-
-  // ContentWrapper buildBoard1(BuildContext context) {
-  //   return ContentWrapper(
-  //     child: Column(
-  //       children: [
-  //         Flexible(
-  //           child: Image.asset(
-  //             'assets/images/consent_management/onboarding.png',
-  //             width: 700,
-  //             fit: BoxFit.cover,
-  //           ),
-  //         ),
-  //         Expanded(
-  //           child: Container(
-  //             decoration: BoxDecoration(
-  //               color: Theme.of(context).colorScheme.background,
-  //               borderRadius: const BorderRadius.only(
-  //                 topLeft: Radius.circular(20),
-  //                 topRight: Radius.circular(20),
-  //               ),
-  //             ),
-  //             child: Padding(
-  //               padding: const EdgeInsets.all(20),
-  //               child: Column(
-  //                 children: [
-  //                   Text(
-  //                     tr('app.features.consentmanagement'),
-  //                     style: Theme.of(context).textTheme.titleLarge,
-  //                   ),
-  //                   const SizedBox(height: 16.0),
-  //                   Text(
-  //                     tr('app.board.description'),
-  //                     style: Theme.of(context).textTheme.bodyMedium,
-  //                     textAlign: TextAlign.center,
-  //                   ),
-  //                   const Spacer(),
-  //                   Row(
-  //                     mainAxisAlignment: MainAxisAlignment.center,
-  //                     children: [
-  //                       CustomButton(
-  //                         height: 40.0,
-  //                         width: 120,
-  //                         onPressed: next,
-  //                         child: Text(
-  //                           tr('app.board.next'),
-  //                           style: TextStyle(
-  //                             color: Theme.of(context).colorScheme.onPrimary,
-  //                           ),
-  //                         ),
-  //                       ),
-  //                     ],
-  //                   ),
-  //                 ],
-  //               ),
-  //             ),
-  //           ),
-  //         ),
-  //       ],
-  //     ),
-  //   );
-  // }
-
-  // ContentWrapper buildBoard2(BuildContext context) {
-  //   return ContentWrapper(
-  //     child: Column(
-  //       children: [
-  //         Flexible(
-  //           child: Image.asset(
-  //             'assets/images/master_data/onboarding.png',
-  //             width: 700,
-  //             fit: BoxFit.cover,
-  //           ),
-  //         ),
-  //         Expanded(
-  //           child: Container(
-  //             decoration: BoxDecoration(
-  //               color: Theme.of(context).colorScheme.background,
-  //               borderRadius: const BorderRadius.only(
-  //                 topLeft: Radius.circular(20),
-  //                 topRight: Radius.circular(20),
-  //               ),
-  //             ),
-  //             child: Padding(
-  //               padding: const EdgeInsets.all(20),
-  //               child: Column(
-  //                 children: [
-  //                   Text(
-  //                     tr('app.features.masterdata'),
-  //                     style: Theme.of(context).textTheme.titleLarge,
-  //                   ),
-  //                   const SizedBox(height: 16.0),
-  //                   Text(
-  //                     tr('app.board.decription2'),
-  //                     style: Theme.of(context).textTheme.bodyMedium,
-  //                     textAlign: TextAlign.center,
-  //                   ),
-  //                   const Spacer(),
-  //                   Row(
-  //                     mainAxisAlignment: MainAxisAlignment.center,
-  //                     children: [
-  //                       CustomButton(
-  //                         height: 40.0,
-  //                         width: 120,
-  //                         onPressed: () async {
-  //                           await UserPreferences.setBool(
-  //                             AppPreferences.isFirstLaunch,
-  //                             false,
-  //                           ).then((_) => GoRouter.of(context)
-  //                               .go(GeneralRoute.home.path));
-  //                         },
-  //                         child: Text(
-  //                           tr('app.board.getstared'),
-  //                           style: TextStyle(
-  //                             color: Theme.of(context).colorScheme.onPrimary,
-  //                           ),
-  //                         ),
-  //                       ),
-  //                     ],
-  //                   ),
-  //                 ],
-  //               ),
-  //             ),
-  //           ),
-  //         ),
-  //       ],
-  //     ),
-  //   );
-  // }
 }
