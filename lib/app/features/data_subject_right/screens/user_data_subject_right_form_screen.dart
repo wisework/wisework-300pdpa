@@ -4,9 +4,11 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:pdpa/app/config/config.dart';
 import 'package:pdpa/app/data/models/data_subject_right/data_subject_right_model.dart';
+import 'package:pdpa/app/features/data_subject_right/bloc/form_data_sub_ject_right/form_data_sub_ject_right_bloc.dart';
 import 'package:pdpa/app/features/data_subject_right/cubit/form_data_subject_right/form_data_subject_right_cubit.dart';
 import 'package:pdpa/app/features/data_subject_right/screens/form_data_subject_right/form_data_subject_right.dart';
 import 'package:pdpa/app/features/data_subject_right/screens/form_data_subject_right/widgets/summit_screen.dart';
+import 'package:pdpa/app/injection.dart';
 import 'package:pdpa/app/shared/utils/constants.dart';
 import 'package:pdpa/app/shared/widgets/templates/pdpa_app_bar.dart';
 import 'package:pdpa/app/shared/widgets/wise_work_shimmer.dart';
@@ -51,15 +53,14 @@ class _UserDataSubjectRightFormScreenState
             companyId: widget.companyId,
           );
         }
-        // if (state is UserDataSubjectRightFormError) {
-        //   return ErrorMessageScreen(message: state.message);
-        // }
+
         if (state.requestFormState == RequestFormState.summarize) {
           return _buildSubmittedScreen(
             context,
             dataSubjectRight: state.dataSubjectRight,
           );
         }
+
         return _buildLoadingScreen(context);
       },
     );
@@ -93,7 +94,7 @@ class _UserDataSubjectRightFormScreenState
   }
 }
 
-class UserDataSubjectRightView extends StatefulWidget {
+class UserDataSubjectRightView extends StatelessWidget {
   const UserDataSubjectRightView({
     super.key,
     required this.companyId,
@@ -101,12 +102,6 @@ class UserDataSubjectRightView extends StatefulWidget {
 
   final String companyId;
 
-  @override
-  State<UserDataSubjectRightView> createState() =>
-      _UserDataSubjectRightViewState();
-}
-
-class _UserDataSubjectRightViewState extends State<UserDataSubjectRightView> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -119,8 +114,14 @@ class _UserDataSubjectRightViewState extends State<UserDataSubjectRightView> {
           ),
         ),
       ),
-      body: FormDataSubjectRightView(
-        companyId: widget.companyId,
+      body: BlocProvider<FormDataSubJectRightBloc>(
+        create: (context) => serviceLocator<FormDataSubJectRightBloc>()
+          ..add(
+            GetFormDataSubJectRightEvent(companyId: companyId),
+          ),
+        child: FormDataSubjectRightView(
+          companyId: companyId,
+        ),
       ),
     );
   }
