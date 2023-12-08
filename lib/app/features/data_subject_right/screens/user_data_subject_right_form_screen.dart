@@ -49,14 +49,8 @@ class _UserDataSubjectRightFormScreenState
       },
       builder: (context, state) {
         if (state.requestFormState == RequestFormState.requesting) {
-          return BlocProvider<FormDataSubJectRightBloc>(
-            create: (context) => serviceLocator<FormDataSubJectRightBloc>()
-              ..add(
-                GetFormDataSubJectRightEvent(companyId: widget.companyId),
-              ),
-            child: UserDataSubjectRightView(
-              companyId: widget.companyId,
-            ),
+          return UserDataSubjectRightView(
+            companyId: widget.companyId,
           );
         }
 
@@ -120,8 +114,14 @@ class UserDataSubjectRightView extends StatelessWidget {
           ),
         ),
       ),
-      body: FormDataSubjectRightView(
-        companyId: companyId,
+      body: BlocProvider<FormDataSubJectRightBloc>(
+        create: (context) => serviceLocator<FormDataSubJectRightBloc>()
+          ..add(
+            GetFormDataSubJectRightEvent(companyId: companyId),
+          ),
+        child: FormDataSubjectRightView(
+          companyId: companyId,
+        ),
       ),
     );
   }
