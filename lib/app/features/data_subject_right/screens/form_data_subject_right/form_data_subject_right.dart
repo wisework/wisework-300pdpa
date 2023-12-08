@@ -59,7 +59,7 @@ class _FormDataSubjectRightState extends State<FormDataSubjectRight> {
 
   @override
   Widget build(BuildContext context) {
-    return BlocProvider(
+    return BlocProvider<FormDataSubJectRightBloc>(
       create: (context) => serviceLocator<FormDataSubJectRightBloc>()
         ..add(
           GetFormDataSubJectRightEvent(companyId: currentUser.currentCompany),
